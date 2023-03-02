@@ -1,0 +1,47 @@
+package com.meistercharts.history.impl
+
+import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.history.SamplingPeriod
+import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import org.junit.jupiter.api.Test
+
+/**
+ */
+class MockSinusHistoryStorageTest {
+  @Test
+  fun testIt() {
+    val storage = MockSinusHistoryStorage()
+    val millis = 1.584360973214E12
+    val bucket = storage.get(HistoryBucketDescriptor.Companion.forTimestamp(millis, SamplingPeriod.EveryTenSeconds))
+
+    val chunk = bucket.chunk
+    val historyValues = chunk.values
+
+
+    for (dataSeriesIndex in 0 until chunk.decimalDataSeriesCount) {
+      val (min, max) = chunk.findMinMaxValue(DecimalDataSeriesIndex(dataSeriesIndex))
+
+      assertThat(min).isGreaterThan(-11000.0)
+      assertThat(max).isLessThan(11000.0)
+
+      assertThat(MockSinusHistoryStorage.valueRange.contains(min)).isTrue()
+      assertThat(MockSinusHistoryStorage.valueRange.contains(max)).isTrue()
+    }
+  }
+
+  @Test
+  fun testCreateSinus() {
+    val descriptor = HistoryBucketDescriptor.forTimestamp(100000.0, SamplingPeriod.EveryTenMillis)
+    val historyChunk = createSinusChunk(descriptor)
+
+    assertThat(historyChunk).isNotNull()
+    assertThat(historyChunk.decimalDataSeriesCount).isEqualTo(3)
+    assertThat(historyChunk.enumDataSeriesCount).isEqualTo(0)
+
+    assertThat(historyChunk.timeStampsCount).isEqualTo(500)
+
+    assertThat(historyChunk.values.decimalHistoryValues.values.size).isEqualTo(500 * 3)
+    assertThat(historyChunk.values.enumHistoryValues.values.size).isEqualTo(0)
+  }
+}

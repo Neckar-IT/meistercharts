@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A MeisterCharts example with React</title>
+  <style>
+    .meisterChartContainer {
+      width: 85vw;
+      height: 85vh;
+      margin: 0;
+      box-sizing: border-box;
+      border: 1px solid #aaaaaa;
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- This will hold the MeisterCharts React component -->
+<div id="MeisterChartContainer" class="meisterChartContainer"></div>
+
+<!--Load MeisterCharts related JavaScript files (minimized build) -->
+<script src="meistercharts-demos-js.js"></script>
+
+
+<!-- Load React. -->
+<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<!-- Load our MeisterCharts React component. -->
+<script type="text/javascript" src="MeisterChartReact.js"></script>
+
+<script type="text/javascript">
+  const domContainer = document.getElementById("MeisterChartContainer");
+  ReactDOM.render(React.createElement(MeisterChartReact, {chart: "CircularChart"}), domContainer);
+</script>
+
+</body>
+</html>

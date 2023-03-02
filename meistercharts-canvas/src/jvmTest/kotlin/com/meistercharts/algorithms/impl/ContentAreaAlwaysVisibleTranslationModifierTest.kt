@@ -1,0 +1,102 @@
+package com.meistercharts.algorithms.impl
+
+import assertk.*
+import assertk.assertions.*
+import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.algorithms.ZoomAndTranslationModifier
+import com.meistercharts.model.Distance
+import com.meistercharts.model.Size
+import com.meistercharts.model.Zoom
+import org.junit.jupiter.api.Test
+
+/**
+ */
+class ContentAreaAlwaysVisibleTranslationModifierTest {
+  @Test
+  fun testCompletelyVisible() {
+    val chartState = DefaultChartState()
+    val calculator = ChartCalculator(chartState)
+    chartState.contentAreaSize = Size(800.0, 600.0)
+    chartState.windowSize = Size(800.0, 600.0)
+
+    val modifier = ContentAreaAlwaysCompletelyVisibleTranslationModifier(delegate = ZoomAndTranslationModifier.none)
+
+    modifier.modifyTranslation(Distance.none, calculator).let {
+      assertThat(it.x).isEqualTo(0.0)
+      assertThat(it.y).isEqualTo(0.0)
+    }
+
+    modifier.modifyTranslation(Distance.of(17.0, 34234.0), calculator).let {
+      assertThat(it.x).isEqualTo(0.0)
+      assertThat(it.y).isEqualTo(0.0)
+    }
+
+    modifier.modifyTranslation(Distance.of(-17.0, -34234.0), calculator).let {
+      assertThat(it.x).isEqualTo(0.0)
+      assertThat(it.y).isEqualTo(0.0)
+    }
+  }
+
+  @Test
+  fun testBasics() {
+    val chartState = DefaultChartState()
+    val calculator = ChartCalculator(chartState)
+    chartState.contentAreaSize = Size(800.0, 600.0)
+
+    val modifier = ContentAreaAlwaysBarelyVisibleTranslationModifier(ZoomAndTranslationModifier.none)
+
+    val modifiedZoomFactors = modifier.modifyZoom(Zoom(100.0, 100.0), calculator)
+    assertThat(modifiedZoomFactors.scaleX).isEqualTo(100.0)
+    assertThat(modifiedZoomFactors.scaleY).isEqualTo(100.0)
+
+    val modifiedPanning = modifier.modifyTranslation(Distance.none, calculator)
+    assertThat(modifiedPanning.x).isEqualTo(0.0)
+    assertThat(modifiedPanning.y).isEqualTo(0.0)
+  }
+
+  @Test
+  fun testLimitWithZoomFactor1() {
+    val chartState = DefaultChartState()
+    chartState.contentAreaSize = Size(800.0, 600.0)
+    val calculator = ChartCalculator(chartState)
+
+    val modifier = ContentAreaAlwaysBarelyVisibleTranslationModifier(ZoomAndTranslationModifier.none)
+
+
+    modifier.modifyTranslation(Distance.of(5000.0, 5000.0), calculator)
+      .also {
+        assertThat(it.x).isEqualTo(800.0)
+        assertThat(it.y).isEqualTo(600.0)
+      }
+
+    modifier.modifyTranslation(Distance.of(-5000.0, -5000.0), calculator)
+      .also {
+        assertThat(it.x).isEqualTo(-800.0)
+        assertThat(it.y).isEqualTo(-600.0)
+      }
+  }
+
+  @Test
+  fun testLimitWithZoomFactor2() {
+    val chartState = DefaultChartState()
+    val calculator = ChartCalculator(chartState)
+
+    chartState.contentAreaSize = Size(800.0, 600.0)
+    chartState.zoom = Zoom.of(2.0, 2.0)
+
+    val modifier = ContentAreaAlwaysBarelyVisibleTranslationModifier(ZoomAndTranslationModifier.none)
+
+    //Max panning to the bottom right
+    modifier.modifyTranslation(Distance.of(5000.0, 5000.0), calculator)
+      .also {
+        assertThat(it.x).isEqualTo(800.0)
+        assertThat(it.y).isEqualTo(600.0)
+      }
+
+    modifier.modifyTranslation(Distance.of(-5000.0, -5000.0), calculator)
+      .also {
+        assertThat(it.x).isEqualTo(-800.0 * 2)
+        assertThat(it.y).isEqualTo(-600.0 * 2)
+      }
+  }
+}

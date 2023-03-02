@@ -1,0 +1,25 @@
+/**
+ * CSS file for the demo runner
+ */
+
+.demo-root-pane {
+  -fx-background-color: SILVER;
+  -fx-padding: 15px;
+}
+
+.headline-1 {
+  -fx-font-size: 14;
+  -fx-font-weight: bold;
+}
+
+.headline-2 {
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+}
+
+.box-content {
+  -fx-background-color: #EFF3F5;
+  -fx-background-radius: 3px;
+  -fx-spacing: 10px;
+  -fx-padding: 10px;
+}

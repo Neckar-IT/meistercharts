@@ -1,0 +1,117 @@
+package com.meistercharts.charts
+
+import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.algorithms.layers.ResizablePaintableLayer
+import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.compass.CompassTriangleValuePainter
+import com.meistercharts.algorithms.layers.compass.GaugePaintable
+import com.meistercharts.algorithms.layers.compass.ModernCompassPainter
+import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
+import com.meistercharts.algorithms.layers.text.TextLayer
+import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.canvas.FontSize
+import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.model.Direction
+import com.meistercharts.model.Insets
+import com.meistercharts.model.RotationDirection
+import com.meistercharts.model.Size
+import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.provider.delegate
+import it.neckar.open.provider.DoubleProvider
+import it.neckar.open.provider.asDoubleProvider
+import it.neckar.open.provider.delegate
+import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.observable.ObservableObject
+import it.neckar.open.unit.other.deg
+import kotlin.math.PI
+
+/**
+ * A modern compass
+ */
+class ModernCompassGestalt(
+  val data: Data = Data(),
+  styleConfiguration: Style.() -> Unit = {}
+) : ChartGestalt {
+  val style: Style = Style().also(styleConfiguration)
+
+  val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt()
+
+  val modernCompassPainter: ModernCompassPainter = ModernCompassPainter()
+  val compassTriangleValuePainter: CompassTriangleValuePainter = CompassTriangleValuePainter {
+    lineWidth = 3.0
+    stroke = Color("#185ba6")
+    fill = Color("rgba(24, 91, 166, 0.5)")
+  }
+
+  val gaugePaintable: GaugePaintable = GaugePaintable(
+    data::valueRangeProvider.delegate(),
+    data::currentValueProvider.delegate(),
+    Size(100.0, 100.0)
+  ) {
+    basePainter = modernCompassPainter
+    valuePainter = compassTriangleValuePainter
+
+    startAt = -PI / 2.0
+    extend = 2 * PI
+    rotationDirection = RotationDirection.Clockwise
+  }
+
+  val resizablePaintableLayer: ResizablePaintableLayer = ResizablePaintableLayer(Insets.empty) {
+    gaugePaintable
+  }
+
+  val valueLayer: TextLayer = TextLayer {
+    font = FontDescriptorFragment(size = FontSize(50.0))
+    anchorDirection = Direction.BottomCenter
+  }
+
+  val subValueLayer: TextLayer = TextLayer {
+    font = FontDescriptorFragment(size = FontSize(20.0))
+    margin = Insets.of(500.0, 0.0, 0.0, 0.0)
+    anchorDirection = Direction.TopCenter
+  }
+
+  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+    style.marginProperty.consumeImmediately {
+      fixedChartGestalt.contentViewportMargin = it
+      resizablePaintableLayer.insets = it
+    }
+
+    valueLayer.data.linesProvider = { _, i18nConfiguration ->
+      val value = data.currentValueProvider()
+      listOf("${decimalFormat.format(value, i18nConfiguration)}°")
+    }
+
+    fixedChartGestalt.configure(meisterChartBuilder)
+
+    meisterChartBuilder.configure {
+      layers.addClearBackground()
+      this.layers.addLayer(resizablePaintableLayer)
+      this.layers.addLayer(valueLayer)
+      this.layers.addLayer(subValueLayer)
+
+      layers.addVersionNumberHidden()
+    }
+  }
+
+  class Data(
+    /**
+     * Provides the current value of the compass
+     */
+    var currentValueProvider: @deg DoubleProvider = 0.0.asDoubleProvider(),
+    var valueRangeProvider: ValueRangeProvider = ValueRange.degrees.asProvider(),
+  )
+
+  @StyleDsl
+  class Style {
+    val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(0.0))
+
+    /**
+     * The  margin around the chart
+     */
+    var margin: Insets by marginProperty
+  }
+}

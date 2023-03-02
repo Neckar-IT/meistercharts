@@ -1,0 +1,211 @@
+package com.meistercharts.history.generator
+
+import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesIndex
+import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.HistoryUnit
+import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.history.WritableHistoryStorage
+import com.meistercharts.history.historyConfiguration
+import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.impl.chunk
+import com.meistercharts.history.valueAt
+import it.neckar.open.time.nowMillis
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.formatting.formatUtc
+import it.neckar.open.i18n.TextKey
+import it.neckar.open.unit.si.ms
+
+/**
+ * Generates [HistoryChunk]s with sample data.
+ */
+class HistoryChunkGenerator constructor(
+  /**
+   * The place where to store the chunks
+   */
+  val historyStorage: WritableHistoryStorage,
+
+  /**
+   * The sampling period to be used to compute the timestamps
+   */
+  val samplingPeriod: SamplingPeriod,
+
+  /**
+   * The generators to be used to compute the values - one generator for one (decimal) data series
+   */
+  val decimalValueGenerators: MultiProvider<DecimalDataSeriesIndex, DecimalValueGenerator>,
+
+  /**
+   * The enum value generators
+   */
+  val enumValueGenerators: MultiProvider<EnumDataSeriesIndex, EnumValueGenerator>,
+
+  /**
+   * The generators for the reference entry data series
+   */
+  val referenceEntryGenerators: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryGenerator>,
+
+  /**
+   * The history configuration that is used as base for the generated chunks.
+   * If the history configuration should be created automatically, use the secondary constructor (with lists) instead
+   */
+  val historyConfiguration: HistoryConfiguration,
+) {
+  constructor(
+    historyStorage: WritableHistoryStorage,
+    samplingPeriod: SamplingPeriod,
+
+    /**
+     * The generators to be used to compute the values - one generator for one data series
+     */
+    decimalValueGenerators: List<DecimalValueGenerator>,
+    enumValueGenerators: List<EnumValueGenerator>,
+    referenceEntryGenerators: List<ReferenceEntryGenerator>,
+
+    historyConfiguration: HistoryConfiguration = createDefaultHistoryConfiguration(decimalValueGenerators.size, enumValueGenerators.size, referenceEntryGenerators.size),
+  ) : this(
+    historyStorage, samplingPeriod,
+    MultiProvider.forListModulo(decimalValueGenerators),
+    MultiProvider.forListModulo(enumValueGenerators),
+    MultiProvider.forListModulo(referenceEntryGenerators),
+    historyConfiguration,
+  ) {
+    require(decimalValueGenerators.size == historyConfiguration.decimalDataSeriesCount) {
+      "Invalid decimal value generators size. Was ${decimalValueGenerators.size} but require ${historyConfiguration.decimalDataSeriesCount}"
+    }
+    require(enumValueGenerators.size == historyConfiguration.enumDataSeriesCount) {
+      "Invalid enum value generators size. Was ${enumValueGenerators.size} but require ${historyConfiguration.enumDataSeriesCount}"
+    }
+    require(referenceEntryGenerators.size == historyConfiguration.referenceEntryDataSeriesCount) {
+      "Invalid reference entry value generators size. Was ${referenceEntryGenerators.size} but require ${historyConfiguration.referenceEntryDataSeriesCount}"
+    }
+  }
+
+  val decimalDataSeriesCount: Int
+    get() = historyConfiguration.decimalDataSeriesCount
+
+  val enumDataSeriesCount: Int
+    get() = historyConfiguration.enumDataSeriesCount
+
+  val referenceEntryDataSeriesCount: Int
+    get() = historyConfiguration.referenceEntryDataSeriesCount
+
+
+  val totalDataSeriesCount: Int
+    get() = historyConfiguration.totalDataSeriesCount
+
+  /**
+   * The timestamp of the last created sample
+   */
+  var lastCreatedTimeStamp: @ms Double? = null
+    private set
+
+  /**
+   * Creates a [HistoryChunk] that contains samples for timestamps from [lastCreatedTimeStamp] to [nowMillis] with each timestamp being [samplingPeriod] apart.
+   *
+   * @return null if [historyStorage] already contains samples for the computed timestamps or if no value generator are defined
+   */
+  fun next(until: @ms Double = nowMillis()): HistoryChunk? {
+    if (totalDataSeriesCount < 1) {
+      return null
+    }
+    val timestamps = mutableListOf<@ms Double>()
+
+    @ms val lastTimestamp = lastCreatedTimeStamp
+    if (lastTimestamp == null) {
+      timestamps.add(until)
+    } else {
+      @ms var timestampToAdd = lastTimestamp + samplingPeriod.distance
+      while (timestampToAdd <= until) {
+        timestamps.add(timestampToAdd)
+        timestampToAdd += samplingPeriod.distance
+      }
+    }
+    return generate(timestamps)
+  }
+
+  /**
+   * Creates a [HistoryChunk] that contains samples for the given time range.
+   *
+   * * Start of the time range is inclusive
+   * * end of the time range is exclusive
+   *
+   * @return null if [historyStorage] already contains samples for the time range or if no value generator are defined
+   */
+  fun forTimeRange(timeRange: TimeRange): HistoryChunk? {
+    if (totalDataSeriesCount < 1) {
+      return null
+    }
+
+    lastCreatedTimeStamp?.let { lastCreatedTimeStamp ->
+      require(lastCreatedTimeStamp < timeRange.start) { "time range $timeRange must lie before last created timestamp ${lastCreatedTimeStamp.formatUtc()}" }
+    }
+
+    @ms val timestamps = mutableListOf<@ms Double>()
+    @ms var timestampToAdd = timeRange.start
+    while (timestampToAdd < timeRange.end) {
+      timestamps.add(timestampToAdd)
+      timestampToAdd += samplingPeriod.distance
+    }
+
+    return generate(timestamps)
+  }
+
+  /**
+   * Creates a [HistoryChunk] that contains a sample for the current time.
+   *
+   * @return null if [historyStorage] already contains a sample for the computed timestamp
+   */
+  fun forNow(): HistoryChunk? {
+    return generate(listOf(nowMillis()))
+  }
+
+  private fun generate(timestamps: List<@ms Double>): HistoryChunk? {
+    if (timestamps.isEmpty()) {
+      return null
+    }
+    if (totalDataSeriesCount < 1) {
+      return null
+    }
+
+    val chunk = historyConfiguration.chunk(timestamps.size) { timestampIndex ->
+      @ms val timestamp = timestamps[timestampIndex.value]
+
+      addValues(timestamp,
+        decimalValuesProvider = { dataSeriesIndex: DecimalDataSeriesIndex -> decimalValueGenerators.valueAt(dataSeriesIndex).generate(timestamp) },
+        enumValuesProvider = { dataSeriesIndex ->
+          val historyEnum = historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
+          enumValueGenerators.valueAt(dataSeriesIndex).generate(timestamp, historyEnum)
+        },
+        referenceEntryIdProvider = { dataSeriesIndex -> referenceEntryGenerators.valueAt(dataSeriesIndex).generate(timestamp) })
+    }
+
+    lastCreatedTimeStamp = chunk.lastTimeStamp()
+    return chunk
+  }
+}
+
+private fun createDefaultHistoryConfiguration(
+  decimalValuesCount: Int,
+  enumValuesCount: Int,
+  referenceEntrySeriesCount: Int,
+) = historyConfiguration(decimalValuesCount, enumValuesCount, referenceEntrySeriesCount,
+
+  decimalDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
+    decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
+  }, enumDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 1000)
+    //TODO how to configure the enum?
+    enumDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Boolean)
+  },
+
+  referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10_000)
+    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), ReferenceEntriesDataMap.generated)
+  })
