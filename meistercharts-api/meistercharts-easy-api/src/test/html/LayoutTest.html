@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neckar IT GmbH, Mössingen, Java Developement">
+  <meta name="author" content="Neckar IT GmbH">
+  <title>Layout Test</title>
+  <style>
+    .unselectable {
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    .navigation {
+      flex-grow: 0;
+      flex-shrink: 0;
+      overflow: auto;
+      border-right: 1px solid #aaaaaa;
+      padding: 5px;
+      white-space: nowrap;
+      background-color: white
+    }
+
+    .navButton {
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .navButton:hover {
+      color: dodgerblue;
+    }
+
+    .tabPane {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 3;
+      overflow: hidden;
+      background-color: #d9d9d9;
+    }
+
+    .tabControl {
+      height: 40px;
+      flex-grow: 0;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      align-items: stretch;
+      overflow-y: hidden;
+      border-bottom: 1px solid gray;
+    }
+
+    .tabPaneContent {
+      width: 100%;
+      height: 100%;
+      background-color: aquamarine;
+    }
+
+    .tabButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      border: 2px solid gray;
+      padding: 5px;
+      margin-right: 2px;
+      white-space: nowrap;
+      background-color: #e6e6e6;
+      cursor: pointer;
+    }
+
+    .demoContent {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: green;
+    }
+
+    .demoControls {
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+      max-height: 85%;
+      background-color: darkgoldenrod
+    }
+
+    .view {
+      flex-grow: 1;
+      background-color: greenyellow;
+    }
+
+    .controls {
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 350px;
+      border-left: 1px solid #aaaaaa;
+      background-color: #ffaffe;
+    }
+
+    .descriptionPane {
+      flex-grow: 0;
+      max-height: 15%;
+      box-sizing: border-box;
+      border-top: 1px solid #aaaaaa;
+      padding: 5px;
+      overflow: auto;
+      background-color: #ffffff
+    }
+  </style>
+</head>
+<body style="background-color: #333; margin: 0">
+
+<div id="myDemo" class="unselectable" style="width:100vw;height:85vh; margin: 0;box-sizing: border-box; border: 1px solid #aaaaaa;">
+  <div id="main" class="main">
+    <div id="navigation" class="navigation">
+      <div class="navButton">Hello World</div>
+      <div class="navButton">Cross Wire Overlay</div>
+      <div class="navButton">Cross wire overlay - mouse over</div>
+      <div class="navButton">Cross wire overlay - movable</div>
+      <div class="navButton">Content Area</div>
+      <div class="navButton">Content Area - Fixed Size</div>
+      <div class="navButton">FPS Overlay</div>
+      <div class="navButton">Hide After Timeout</div>
+      <div class="navButton">Image overlay</div>
+      <div class="navButton">Interactive Consumed</div>
+      <div class="navButton">Log Messages</div>
+      <div class="navButton">Messages</div>
+      <div class="navButton">Messages</div>
+      <div class="navButton">Mouse Events</div>
+      <div class="navButton">Multi line Messages</div>
+      <div class="navButton">Interactions</div>
+      <div class="navButton">Visibility</div>
+      <div class="navButton">Toggle Visibility on shortcut</div>
+      <div class="navButton">Overscan</div>
+      <div class="navButton">Overscan (Padding)</div>
+      <div class="navButton">Passpartout</div>
+      <div class="navButton">Repaint Performance</div>
+      <div class="navButton">Scroll without modifier warning</div>
+      <div class="navButton">Time axis overlay</div>
+      <div class="navButton">Toolbar</div>
+      <div class="navButton">Tooltip</div>
+      <div class="navButton">Value axis</div>
+      <div class="navButton">Multple values axis</div>
+      <div class="navButton">Version Number</div>
+      <div class="navButton">Zero Size</div>
+      <div class="navButton">Show Zoom Level</div>
+      <div class="navButton">Show info about environment</div>
+      <div class="navButton">Fonts</div>
+      <div class="navButton">Configurable Fonts</div>
+      <div class="navButton">Interactions</div>
+    </div>
+    <div id="tabPane" class="tabPane">
+      <div id="tabControl" class="tabControl">
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+        <div class="tabButton">
+          <span style="padding-right: 5px;">Hello World</span>
+          <button type="button">x</button>
+        </div>
+
+      </div>
+      <div id="tabPaneContent" class="tabPaneContent">
+        <div class="demoContent">
+          <div class="demoControls">
+            <div class="view" id="view">
+            </div>
+            <div class="controls">
+              Controls
+            </div>
+          </div>
+          <div class="descriptionPane">
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+            sit
+            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor
+            sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum
+            dolor sit amet.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+            sit
+            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor
+            sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum
+            dolor sit amet.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+            sit
+            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor
+            sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum
+            dolor sit amet.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+            sit
+            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor
+            sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum
+            dolor sit amet.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+            sit
+            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor
+            sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum
+            dolor sit amet.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<span style="font:12px sans-serif;color:whitesmoke;margin-left:10px;">MeisterCharts by Neckar IT GmbH</span>
+
+<button type="button" onclick="go()">Go!</button>
+
+<script type="text/javascript">
+  function go() {
+    const view = document.getElementById("view");
+    const canvas = document.createElement("CANVAS");
+    canvas.setAttribute("id", "myCanvas");
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    //canvas.setAttribute("width", "100");
+    //canvas.setAttribute("height", "100");
+    canvas.style.backgroundColor = "#994422";
+    view.appendChild(canvas);
+    window.setInterval(function () {
+      updateSize()
+    }, 100);
+  }
+
+  function updateSize() {
+    const canvas = document.getElementById("myCanvas");
+    const bounds = canvas.getBoundingClientRect();
+    const canvasWidth = Math.round(bounds.width);
+    const canvasHeight = Math.round(bounds.height);
+    canvas.setAttribute("width", canvasWidth);
+    canvas.setAttribute("height", canvasHeight);
+  }
+</script>
+
+</body>
+</html>

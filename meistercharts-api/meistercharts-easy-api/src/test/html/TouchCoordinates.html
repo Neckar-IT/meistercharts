@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Touch Coordinates</title>
+  <style>
+    body {
+      font-family: "Open Sans", sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Berechnung der Touch-Koordinaten</h2>
+
+<p>Testseite, anhand der herausgefunden werden soll, wie man zuverlässig die Koordinaten eines Touches relativ zum Canvas-Element berechnen kann.</p>
+<p>
+  Mögliche <a href="https://developer.mozilla.org/en-US/docs/Web/API/Touch">Touch</a>-Properties:
+<ul>
+  <li>Touch.screenX - Returns the X coordinate of the touch point relative to the left edge of the screen.</li>
+  <li>Touch.screenY - Returns the Y coordinate of the touch point relative to the top edge of the screen.</li>
+  <li>Touch.clientX - Returns the X coordinate of the touch point relative to the left edge of the browser viewport, not including any scroll offset.</li>
+  <li>Touch.clientY - Returns the Y coordinate of the touch point relative to the top edge of the browser viewport, not including any scroll offset.</li>
+  <li>Touch.pageX - Returns the X coordinate of the touch point relative to the left edge of the document. Unlike clientX, this value includes the horizontal scroll offset, if any.</li>
+  <li>Touch.pageY - Returns the Y coordinate of the touch point relative to the top of the document. Unlike clientY, this value includes the vertical scroll offset, if any.</li>
+</ul>
+</p>
+<p>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect">Element.getBoundingClientRect()</a>
+<ul>
+  <li>left: linker Rand des Elements, inklusive horizontales Scrolling des Viewports</li>
+  <li>top: oberer Rand des Elements, inklusive vertikales Scrolling des Viewports</li>
+</ul>
+</p>
+<p>
+  window
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollX">window.scrollX</a> - returns the number of pixels that the document is currently scrolled horizontally</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollY">window.scrollY</a> - returns the number of pixels that the document is currently scrolled vertically</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollX">Window.pageXOffset</a> - An alias for window.scrollX.</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollY">Window.pageYOffset</a> - An alias for window.scrollY.</li>
+</ul>
+</p>
+
+
+<canvas id="myCanvas" width="200" height="200" style="margin: 50px; width: 200px; height: 200px; background-color: rgb(242,242,242)"></canvas>
+
+<div style="position: relative; margin: 50px; width: 220px; height: 220px; overflow: auto; border: 1px solid black;">
+  <canvas id="myWrappedCanvas" width="200" height="200" style="position: absolute; left: 50px; top: 500px; width: 200px; height: 200px; background-color: rgb(242,242,242)"></canvas>
+</div>
+
+<canvas id="myScrolledCanvas" width="200" height="200" style="margin: 1000px 50px 50px 50px; left: 50px; top: 1500px; width: 200px; height: 200px; background-color: rgb(242,242,242)"></canvas>
+
+
+<script type="text/javascript">
+  const canvasElements = [document.getElementById('myCanvas'), document.getElementById('myWrappedCanvas'), document.getElementById('myScrolledCanvas')];
+  const contexts = canvasElements.map(ele => ele.getContext('2d'));
+
+  function paintTouch(context, x, y) {
+    const canvasWidth = 200;
+    const canvasHeight = 200;
+    context.clearRect(-100, -100, canvasWidth + 200, canvasHeight + 200);
+    context.strokeWidth = 1.0;
+    context.strokeStyle = 'orange';
+
+    context.beginPath();
+    context.moveTo(x - 0.5, 0);
+    context.lineTo(x - 0.5, canvasHeight);
+    context.stroke();
+
+    context.beginPath();
+    context.moveTo(0, y - 0.5);
+    context.lineTo(canvasWidth, y - 0.5);
+    context.stroke();
+  }
+
+  canvasElements.forEach((canvasElement, index) => {
+    canvasElement.addEventListener('touchstart', event => {
+      const touches = event.changedTouches;
+      if (!touches.length) {
+        return;
+      }
+      const boundingClientRect = canvasElement.getBoundingClientRect();
+      const firstTouch = touches[0];
+      // alternative
+      const x1 = firstTouch.clientX - boundingClientRect.left;
+      const y1 = firstTouch.clientY - boundingClientRect.top;
+      const x = firstTouch.pageX - boundingClientRect.left - window.pageXOffset;
+      const y = firstTouch.pageY - boundingClientRect.top - window.pageYOffset;
+      console.log(`boundingClientRect.left=${boundingClientRect.left}, boundingClientRect.top=${boundingClientRect.top}`);
+      console.log(`touch.pageX=${firstTouch.pageX}, touch.pageY=${firstTouch.pageY}`);
+      console.log(`pageXOffset=${window.pageXOffset}, pageYOffset=${window.pageYOffset}`);
+      console.log(`scrollX=${window.scrollX}, scrollY=${window.scrollY}`);
+      console.log(`${x1}/${y1} or ${x}/${y}`);
+      console.log('----------------------------------------------------');
+      paintTouch(contexts[index], x, y);
+    });
+  });
+
+</script>
+
+</body>
+</html>

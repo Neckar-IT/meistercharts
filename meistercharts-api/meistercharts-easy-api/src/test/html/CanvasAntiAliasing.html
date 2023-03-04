@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neckar IT GmbH, Mössingen, Java Developement">
+  <meta name="author" content="Neckar IT GmbH">
+
+  <title>Anti-aliasing</title>
+</head>
+<body>
+
+<h1>Anti-aliasing</h1>
+
+<h2>Anti-aliasing of 1px-lines painted on a canvas</h2>
+
+<div style="display: flex; flex-direction: row;">
+  <div style="margin: 25px;">
+    <h4>Integer coordinates</h4>
+    <canvas id="original" width="250" height="250" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+
+  <div style="margin: 25px;">
+    <h4>Half-pixel coordinates (+0.5/+0.5)</h4>
+    <canvas id="translated" width="250" height="250" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+
+  <div style="margin: 25px;">
+    <h4>Half-pixel coordinates (-0.5/-0.5)</h4>
+    <canvas id="translatedNegative" width="250" height="250" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+</div>
+
+<h2>Anti-aliasing of images painted on a canvas</h2>
+
+<div style="display: flex; flex-direction: row;">
+  <div style="margin: 25px;">
+    <h4>Integer coordinates</h4>
+    <canvas id="original2" width="300" height="300" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+
+  <div style="margin: 25px;">
+    <h4>Half-pixel coordinates (+0.5/+0.5)</h4>
+    <canvas id="translated2" width="300" height="300" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+
+  <div style="margin: 25px;">
+    <h4>Half-pixel coordinates (-0.5/-0.5)</h4>
+    <canvas id="translatedNegative2" width="300" height="300" style="border:1px solid #d3d3d3;">
+      Your browser does not support the HTML5 canvas tag.
+    </canvas>
+  </div>
+</div>
+
+<h3>Related tests</h3>
+<p><a href="CanvasImageAntiAliasing.html">CanvasImageAntiAliasing</a></p>
+<p><a href="CanvasImageAnimation.html">CanvasImageAnimation</a></p>
+
+
+<script>
+  function drawVLine(context, translateX, translateY) {
+    context.strokeStyle = 'red';
+    context.beginPath();
+    context.moveTo(125 + translateX, 20 + translateY);
+    context.lineTo(125 + translateX, 230 + translateY);
+    context.stroke();
+  }
+
+  function drawHLine(context, translateX, translateY) {
+    context.strokeStyle = 'black';
+    context.beginPath();
+    context.moveTo(20 + translateX, 125 + translateY);
+    context.lineTo(230 + translateX, 125 + translateY);
+    context.stroke();
+  }
+
+  function drawImage(img, canvasId, translateX, translateY) {
+    const canvas = document.getElementById(canvasId);
+    const context = canvas.getContext('2d');
+    context.drawImage(img, 20.0 + translateX, 20.0 + translateY);
+  }
+
+  function onImgReady(img) {
+    drawImage(img, "original2", 0.0, 0.0);
+    drawImage(img, "translated2", 0.5, 0.5);
+    drawImage(img, "translatedNegative2", -0.5, -0.5);
+  }
+
+  function drawLines(canvasId, translateX, translateY) {
+    const canvas = document.getElementById(canvasId);
+    const context = canvas.getContext('2d');
+    drawHLine(context, translateX, translateY);
+    drawVLine(context, translateX, translateY);
+  }
+
+  window.onload = function () {
+    drawLines("original", 0.0, 0.0);
+    drawLines("translated", 0.5, 0.5);
+    drawLines("translatedNegative", -0.5, -0.5);
+
+    const img = new Image();
+    img.src = "img/map.png";
+    img.onload = function () {
+      onImgReady(img);
+    }
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+package com.meistercharts.api.line
+
+import com.meistercharts.api.MeisterChartsApiLegacy
+import com.meistercharts.api.category.CategoryConverter
+import com.meistercharts.api.category.applySickDefaults
+import com.meistercharts.api.category.applyStyle
+import com.meistercharts.api.setImagesProvider
+import com.meistercharts.charts.CategoryLineChartGestalt
+import com.meistercharts.js.MeisterChartJS
+import it.neckar.open.provider.MultiProvider
+
+/**
+ * Simple line chart
+ */
+@JsExport
+class LineChartSimple internal constructor(
+  internal val gestalt: CategoryLineChartGestalt,
+  meisterChart: MeisterChartJS,
+) : MeisterChartsApiLegacy<LineChartSimpleData, LineChartSimpleStyle>(meisterChart) {
+
+  init {
+    gestalt.applySickDefaults()
+  }
+
+  override fun setData(jsData: LineChartSimpleData) {
+    CategoryConverter.toCategoryModel(jsData)?.let {
+      gestalt.configuration.categorySeriesModel = it
+    }
+
+    CategoryConverter.toCategoryImages(jsData)?.let { images ->
+      gestalt.categoryAxisLayer.style.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
+    }
+
+    markAsDirty()
+  }
+
+  override fun setStyle(jsStyle: LineChartSimpleStyle) {
+    gestalt.applyStyle(jsStyle)
+
+    markAsDirty()
+  }
+}
