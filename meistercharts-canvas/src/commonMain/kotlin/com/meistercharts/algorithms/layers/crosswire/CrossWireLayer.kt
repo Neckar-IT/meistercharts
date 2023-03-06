@@ -318,12 +318,12 @@ class CrossWireLayer(
     /**
      * Provides the minimum y-value for the value-labels
      */
-    var valueLabelsStart: (paintingContext: LayerPaintingContext) -> @Window Double = { it.chartCalculator.contentAreaRelative2windowYInViewport(0.0) }
+    var valueLabelsStart: (paintingContext: LayerPaintingContext) -> @Window Double = { it.chartCalculator.contentViewportMinY() }
 
     /**
      * Provides the maximum y-value for the cross wire
      */
-    var valueLabelsEnd: (paintingContext: LayerPaintingContext) -> @Window Double = { it.chartCalculator.contentAreaRelative2windowYInViewport(1.0) }
+    var valueLabelsEnd: (paintingContext: LayerPaintingContext) -> @Window Double = { it.chartCalculator.contentViewportMaxY() }
 
     /**
      * The box style for the location-label

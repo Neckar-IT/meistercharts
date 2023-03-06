@@ -222,27 +222,6 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
     //Hide the cross wire line - the line is painted by crossWireLayerBackground
     showCrossWireLine = false
-
-    valueLabelsStart = { paintingContext ->
-      if (categoryAxisLayer.style.side != Side.Top) {
-        //Paint to the top - if the axis is not at the top
-        0.0
-      } else {
-        //Only paint to the axis
-        paintingContext.chartCalculator.contentAreaRelative2windowY(0.0)
-      }
-    }
-
-    valueLabelsEnd = { paintingContext ->
-      if (categoryAxisLayer.style.side != Side.Bottom) {
-        //Paint to the bottom - the axis is not at the bottom
-        paintingContext.height
-      } else {
-        //Only paint to the axis
-        paintingContext.chartCalculator.contentAreaRelative2windowY(1.0)
-      }
-    }
-
     locationX = crossWireLineLayer.style.locationX
   }
 
