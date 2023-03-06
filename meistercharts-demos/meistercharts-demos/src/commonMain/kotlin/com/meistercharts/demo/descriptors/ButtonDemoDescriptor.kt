@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.demo.descriptors
 
 import com.meistercharts.algorithms.layers.AbstractLayer
@@ -100,8 +115,8 @@ class ButtonDemoDescriptor : ChartingDemoDescriptor<Nothing> {
     val secondaryButton = Button(DefaultSecondaryButtonPainter(TextKey.simple("Secondary")), 100.0, 40.0)
 
     val buttonImage1 = Button({ _: ButtonState ->
-                                Icons.error(Size.PX_40, Color.red)
-                              }.toButtonPainter(), 40.0, 40.0)
+      Icons.error(Size.PX_40, Color.red)
+    }.toButtonPainter(), 40.0, 40.0)
 
     val buttonImageToggle = Button(
       { buttonState: ButtonState ->
@@ -112,14 +127,14 @@ class ButtonDemoDescriptor : ChartingDemoDescriptor<Nothing> {
     )
 
     val buttonZoomIn = Button({ buttonState: ButtonState ->
-                                when {
-                                  buttonState.disabled -> ZoomInPaintable(Color.web("#8A8A8A"), Color.web("#CCCCCC"), 44.0, 44.0)
-                                  buttonState.pressed  -> ZoomInPaintable(Color.white, Color.orange, 44.0, 44.0)
-                                  buttonState.hover    -> ZoomInPaintable(Color.white, Color.web("#9452F3"), 36.0, 36.0)
-                                  buttonState.focused  -> ZoomInPaintable(Color.white, Color.web("#873DF2"), 36.0, 36.0)
-                                  else                 -> ZoomInPaintable(Color.white, Color.web("#6200EE"), 36.0, 36.0)
-                                }
-                              }.toButtonPainter(), 44.0, 44.0)
+      when {
+        buttonState.disabled -> ZoomInPaintable(Color.web("#8A8A8A"), Color.web("#CCCCCC"), 44.0, 44.0)
+        buttonState.pressed  -> ZoomInPaintable(Color.white, Color.orange, 44.0, 44.0)
+        buttonState.hover    -> ZoomInPaintable(Color.white, Color.web("#9452F3"), 36.0, 36.0)
+        buttonState.focused  -> ZoomInPaintable(Color.white, Color.web("#873DF2"), 36.0, 36.0)
+        else                 -> ZoomInPaintable(Color.white, Color.web("#6200EE"), 36.0, 36.0)
+      }
+    }.toButtonPainter(), 44.0, 44.0)
 
     private var lastClicked = ""
 

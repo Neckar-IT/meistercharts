@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.algorithms.axis
 
 import com.meistercharts.algorithms.time.PredefinedDuration
@@ -147,24 +162,31 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
         minTickDistance > PredefinedDuration.Duration365Days.millis -> {
           DistanceYears.atLeast(minTickDistance, Factors.All)
         }
+
         minTickDistance > PredefinedDuration.Duration168Days.millis -> {
           DistanceYears(1)
         }
+
         minTickDistance > PredefinedDuration.Duration15Days.millis -> {
           DistanceMonths.atLeast(minTickDistance)
         }
+
         minTickDistance > PredefinedDuration.Duration12Hours.millis -> {
           DistanceDays.atLeast(minTickDistance)
         }
+
         minTickDistance > PredefinedDuration.Duration30Minutes.millis -> {
           DistanceHours.atLeast(minTickDistance)
         }
+
         minTickDistance > PredefinedDuration.Duration1Minute.millis -> {
           DistanceMinutes.atLeast(minTickDistance)
         }
+
         minTickDistance > 500.0 -> {
           DistanceSeconds.atLeast(minTickDistance)
         }
+
         else -> {
           /**
            * If the min tick distance is smaller than 500 millis, find the smaller magnitude
@@ -184,18 +206,23 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
         minTickDistance > 60.days.milliseconds -> {
           DistanceYears.atLeast(minTickDistance, Factors.Only10s)
         }
+
         minTickDistance > 2.days.milliseconds -> {
           DistanceMonths(1)
         }
+
         minTickDistance > 2.hours.milliseconds -> {
           DistanceDays(1)
         }
+
         minTickDistance > 2.minutes.milliseconds -> {
           DistanceHours(1)
         }
+
         minTickDistance > 2.seconds.milliseconds -> {
           DistanceMinutes(1)
         }
+
         minTickDistance > 500.0 -> {
           DistanceSeconds(1)
         }

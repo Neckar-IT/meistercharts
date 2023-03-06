@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.charts
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
@@ -190,6 +205,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
           } else {
             1.0
           }
+
           PixelValueVisualizationMode.HeldAverages -> if (index == 0) {
             //The youngest line is a little bit thicker
             1.5
@@ -402,6 +418,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
             else -> Palette.getChartColor(seriesIndex)
           }
         }
+
         PixelValueVisualizationMode.HeldAverages -> {
           val opacity = (1 - seriesIndex * 0.1)
           Color.rgba(0, 0, 0, opacity)
@@ -622,6 +639,7 @@ open class PixelValuesModel(
         3 -> stdDeviation(index)
         else -> throw IllegalArgumentException("Invalid series index: <$lineIndex>")
       }
+
       PixelValueVisualizationMode.HeldAverages -> {
         heldAverageValues[lineIndex][index]
       }

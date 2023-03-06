@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.canvas.paintable
 
 import it.neckar.open.annotations.Internal
@@ -258,6 +273,7 @@ interface Paintable {
         val paintableAlignment = currentBoundingBox.location
         paint(paintingContext, alignmentX - paintableAlignment.x, alignmentY - paintableAlignment.y)
       }
+
       ObjectFit.ContainNoGrow -> {
         //The target size
         val targetSize = size.withMax(width, height).fitWithAspectRatio(size.aspectRatio)
@@ -271,6 +287,7 @@ interface Paintable {
 
         paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
       }
+
       ObjectFit.Contain -> {
         //The target size
         val targetSize = Size(width, height).fitWithAspectRatio(size.aspectRatio)
@@ -284,6 +301,7 @@ interface Paintable {
 
         paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
       }
+
       ObjectFit.Fill -> {
         paintSizeForced(paintingContext, alignmentX, alignmentY, Size(width, height))
       }

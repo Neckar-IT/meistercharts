@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.svg
 
 import com.meistercharts.algorithms.painter.Path
@@ -93,6 +108,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           currentPosition++
           return false
         }
+
         '1' -> {
           currentPosition++
           return true
@@ -116,8 +132,10 @@ class SVGPathParser(private val svgPathAsString: String) {
           }
           canBeComma = false
         }
+
         ' ', '\t', '\r', '\n' -> {
         }
+
         else                  -> return currentPosition
       }
       currentPosition++
@@ -137,6 +155,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           }
           allowSign = false
         }
+
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> allowSign = false
         'E', 'e'                                         -> {
           if (hasExp) {
@@ -147,6 +166,7 @@ class SVGPathParser(private val svgPathAsString: String) {
             hasExp = allowSign
           }
         }
+
         '.'                                              -> {
           if (hasExp || hasDecimal) {
             return currentPosition
@@ -154,6 +174,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           hasDecimal = true
           allowSign = false
         }
+
         else                                             -> return currentPosition
       }
       currentPosition++
@@ -441,12 +462,14 @@ class SVGPathParser(private val svgPathAsString: String) {
           } while (this.nextIsNumber())
           elementCount++
         }
+
         'Z', 'z' -> {
           path.closePath()
           lastX = path.currentPoint.x
           lastY = path.currentPoint.y
           elementCount++
         }
+
         else     -> throw IllegalArgumentException("""invalid command ($commandChar) in SVG polygon at pos=${this.currentPosition}. Path: <$svgPathAsString>""")
       }
       this.allowComma = (false)
