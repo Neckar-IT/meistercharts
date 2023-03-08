@@ -17,16 +17,15 @@ package com.meistercharts.algorithms
 
 import com.meistercharts.annotations.TimeRelative
 import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.kotlin.lang.setLast
-import it.neckar.open.time.nowMillis
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.setLast
 import it.neckar.open.time.TimeConstants
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms
-import kotlinx.serialization.Serializable
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
@@ -258,7 +257,9 @@ class TimeRange(
      *
      * Attention: The uncompressed list must be sorted
      *
+     * @param uncompressed List of time ranges to be compressed
      * @param maxAcceptedGap: If the gap between two gap is smaller/equal to [maxAcceptedGap] the time ranges are merged
+     * @return List of compressed time ranges
      */
     fun compress(uncompressed: List<@Sorted TimeRange>, maxAcceptedGap: @ms Double = 0.0): List<@Sorted TimeRange> {
       if (uncompressed.size <= 1) {

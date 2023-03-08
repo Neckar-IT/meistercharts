@@ -221,8 +221,15 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Creates a color with RGB values (0..1) and opacity (0..1)
-     * @param opacity 0..1
+     * Creates a color with red, green, and blue values in the range of 0 to 1, and an optional opacity value in the
+     * range of 0 to 1.
+     *
+     * @param red The red value of the color, in the range of 0 to 1.
+     * @param green The green value of the color, in the range of 0 to 1.
+     * @param blue The blue value of the color, in the range of 0 to 1.
+     * @param opacity An optional opacity value for the color, in the range of 0 to 1. If not specified, the color will be fully opaque.
+     *
+     * @return An RgbaColor object representing the specified color and opacity.
      */
     @JvmStatic
     fun color(red: Double, green: Double, blue: Double, opacity: Double?): RgbaColor {
@@ -238,8 +245,15 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Creates a color with RGB values (0..255) and opacity (0..1)
-     * @param opacity 0..1
+     * Creates a color with red, green, and blue values in the range of 0 to 255, and an optional opacity value in the
+     * range of 0 to 1.
+     *
+     * @param red The red value of the color, in the range of 0 to 255.
+     * @param green The green value of the color, in the range of 0 to 255.
+     * @param blue The blue value of the color, in the range of 0 to 255.
+     * @param opacity An optional opacity value for the color, in the range of 0 to 1. If not specified, the color will be fully opaque.
+     *
+     * @return An RgbaColor object representing the specified color and opacity.
      */
     @JvmStatic
     fun rgba(red: Int, green: Int, blue: Int, opacity: Double?): RgbaColor {

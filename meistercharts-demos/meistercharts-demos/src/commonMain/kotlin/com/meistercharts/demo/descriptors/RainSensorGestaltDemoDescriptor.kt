@@ -20,7 +20,7 @@ import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
-import it.neckar.charting.custom.rainsensor.RainSensorGestalt
+import com.meistercharts.custom.rainsensor.RainSensorGestalt
 import com.meistercharts.custom.rainsensor.WindowAction
 
 /**

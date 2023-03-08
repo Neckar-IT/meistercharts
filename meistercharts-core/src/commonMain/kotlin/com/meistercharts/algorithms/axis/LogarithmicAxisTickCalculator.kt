@@ -26,8 +26,13 @@ import kotlin.math.pow
 object LogarithmicAxisTickCalculator {
   /**
    * Calculates the tick values for the given max tick count and minimum tick distance.
-   * @param maxTickCount the maximum number of ticks this function may return
-   * @param minTickDistance the minimum distance between two consecutive ticks
+   *
+   * @param lower The lower bound of the axis.
+   * @param upper The upper bound of the axis.
+   * @param maxTickCount The maximum number of tick values to return.
+   * @param minTickDistance The minimum distance between tick values. If the calculated distance is less than this value, the distance will be increased to this value.
+   *
+   * @return An array of tick values.
    */
   fun calculateTickValues(
     lower: @Domain Double,

@@ -50,7 +50,7 @@ import com.meistercharts.fx.MeisterChartsPlatform
 import com.meistercharts.fx.binding.toJavaFx
 import com.meistercharts.fx.debug.ChartingStateDebugPane
 import com.meistercharts.fx.debug.MeisterChartsMemoryLeakDetector
-import com.meistercharts.layer.DumpPaintingVariablesLayer
+import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import it.neckar.open.collections.cacheStatsHandler
 import it.neckar.open.kotlin.lang.ceil
 import it.neckar.open.resources.getResourceSafe

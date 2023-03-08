@@ -29,8 +29,11 @@ import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
 /**
- * Offers calculations for a single tile
- * @property tileSize the size of the tiles in pixels
+ * The `TileChartCalculator` class provides a calculator for charts displayed in tiled form.
+ *
+ * @param chartState The chart state
+ * @param tileIndex The tile index for this tile
+ * @param tileSize The size of the tiles
  */
 class TileChartCalculator(
   chartState: ChartState,

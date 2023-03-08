@@ -20,7 +20,7 @@ import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
-import com.meistercharts.layer.InteractiveKeyDemoLayer
+import com.meistercharts.demo.layer.InteractiveKeyDemoLayer
 import com.meistercharts.demo.InteractiveMouseClicksDemoLayer
 import com.meistercharts.demo.InteractiveMouseDragsDemoLayer
 

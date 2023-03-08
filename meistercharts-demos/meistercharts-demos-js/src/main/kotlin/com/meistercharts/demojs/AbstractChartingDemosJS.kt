@@ -17,7 +17,7 @@ package com.meistercharts.demojs
 
 import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.layer.DumpPaintingVariablesLayer
+import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.EventsDebugLayer

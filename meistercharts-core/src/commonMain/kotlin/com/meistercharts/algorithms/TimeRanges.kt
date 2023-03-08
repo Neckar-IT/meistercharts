@@ -67,17 +67,28 @@ data class TimeRanges(val timeRanges: List<@Sorted @Serializable(with = TimeRang
   }
 
   companion object {
+
     /**
-     * Creates a merged time ranges
-     * @param maxAcceptedGap: If the gap between two gap is smaller/equal to [maxAcceptedGap] the time ranges are merged
+     * Merges an array of time ranges into a single TimeRanges object, where adjacent time ranges with gaps less
+     * than or equal to the specified maximum accepted gap are merged into a single range.
+     *
+     * @param timeRanges An array of TimeRange objects to be merged. These objects must be sorted in ascending order.
+     * @param maxAcceptedGap The maximum allowed gap between adjacent time ranges before they are considered separate. Defaults to 0.0.
+     *
+     * @return A TimeRanges object representing the merged time ranges.
      */
     fun createMerged(vararg timeRanges: @Sorted TimeRange, maxAcceptedGap: @ms Double = 0.0): TimeRanges {
       return createMerged(timeRanges.toList(), maxAcceptedGap)
     }
 
     /**
-     * Creates a new time ranges object - merges the given time ranges
-     * @param maxAcceptedGap: If the gap between two gap is smaller/equal to [maxAcceptedGap] the time ranges are merged
+     * Merges a list of time ranges into a single TimeRanges object, where adjacent time ranges with gaps less
+     * than or equal to the specified maximum accepted gap are merged into a single range.
+     *
+     * @param timeRanges A list of TimeRange objects to be merged. The list must be sorted in ascending order by the start times of the time ranges.
+     * @param maxAcceptedGap The maximum allowed gap between adjacent time ranges before they are considered separate. Defaults to 0.0.
+     *
+     * @return A TimeRanges object representing the merged time ranges.
      */
     fun createMerged(timeRanges: List<@Sorted TimeRange>, maxAcceptedGap: @ms Double = 0.0): TimeRanges {
       return TimeRanges(TimeRange.compress(timeRanges, maxAcceptedGap))

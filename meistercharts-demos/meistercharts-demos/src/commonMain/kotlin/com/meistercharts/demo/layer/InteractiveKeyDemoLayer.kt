@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.layer
+package com.meistercharts.demo.layer
 
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -84,6 +84,6 @@ class InteractiveKeyDemoLayer : AbstractLayer() {
   }
 
   companion object {
-    val logger = LoggerFactory.getLogger("com.meistercharts.layer.InteractiveKeyDemoLayer")
+    val logger = LoggerFactory.getLogger("com.meistercharts.demo.layer.InteractiveKeyDemoLayer")
   }
 }

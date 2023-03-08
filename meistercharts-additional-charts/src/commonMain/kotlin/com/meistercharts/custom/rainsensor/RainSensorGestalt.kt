@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.charting.custom.rainsensor
+package com.meistercharts.custom.rainsensor
 
 import com.meistercharts.algorithms.BinaryValueRange
 import com.meistercharts.algorithms.ChartCalculator
@@ -57,13 +57,6 @@ import com.meistercharts.canvas.timerSupport
 import com.meistercharts.charts.ChartGestalt
 import com.meistercharts.charts.FixedChartGestalt
 import com.meistercharts.charts.ToolbarGestalt
-import com.meistercharts.custom.rainsensor.RainLayer
-import com.meistercharts.custom.rainsensor.RainSensorAnimationManager
-import com.meistercharts.custom.rainsensor.RainSensorLayer
-import com.meistercharts.custom.rainsensor.RainSensorModel
-import com.meistercharts.custom.rainsensor.RainSensorResources
-import com.meistercharts.custom.rainsensor.Weather
-import com.meistercharts.custom.rainsensor.WindowAction
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Distance

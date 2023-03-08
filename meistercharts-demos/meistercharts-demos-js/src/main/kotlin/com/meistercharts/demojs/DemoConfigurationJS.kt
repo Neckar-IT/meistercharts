@@ -30,10 +30,8 @@ import kotlin.math.round
 
 
 /**
- * Creates HTML elements in accordance with a demo configuration.
- *
- * @param table the table the generated elements are appended to
- *
+ * A class representing a configuration for a demo on a web page.
+ * @property table The HTML table element that the demo will be displayed in.
  */
 class DemoConfigurationJS(private val table: HTMLTableElement) : DemoConfiguration {
 

@@ -30,11 +30,16 @@ import kotlin.math.pow
  */
 object LinearAxisTickCalculator {
   /**
-   * Calculates the tick values for the given max tick count and minimum tick distance.
-   * @param maxTickCount the maximum number of ticks this function may return
-   * @param minTickDistance the minimum distance between two consecutive ticks
-   * @param axisEndConfiguration how the values at the end are calculated
-   * @param intermediateValuesMode the type of intermediate values
+   * Calculates the tick values for a linear axis.
+   *
+   * @param lower The lower bound of the axis.
+   * @param upper The upper bound of the axis.
+   * @param axisEndConfiguration Determines whether the returned tick values must include the lower and upper bounds of the axis.
+   * @param maxTickCount The maximum number of tick values to return.
+   * @param minTickDistance The minimum distance between tick values. If the calculated distance is less than this value, the distance will be increased to this value.
+   * @param intermediateValuesMode Determines whether intermediate values between ticks are allowed, and if so, how to calculate them.
+   * @return An array of tick values.
+   * @throws IllegalArgumentException if maxTickCount is less than zero, minTickDistance is less than zero, or if lower or upper are not finite, or if lower is greater than upper.
    */
   fun calculateTickValues(
     lower: @Domain Double,
@@ -109,9 +114,7 @@ object LinearAxisTickCalculator {
   /**
    * Calculates the distance between ticks with the given max ticks.
    *
-   * @param maxTickCount the maximum number of ticks
-   *
-   * This methods tries to find "nice" values between from/to, so that the amount of ticks
+   * This method tries to find "nice" values between from/to, so that the amount of ticks
    * is same or lower than [maxTickCount].
    *
    *
@@ -133,6 +136,13 @@ object LinearAxisTickCalculator {
    * ### Step 3: Optimize ticks
    * To improve the ticks, we check if we can apply some factors to get additional ticks.
    *
+   *
+   * @param delta The range of values to be ticked.
+   * @param deltaRounded The rounded range of values to be ticked.
+   * @param maxTickCount The maximum number of tick values to return.
+   * @param intermediateValuesMode Determines whether intermediate values between ticks are allowed, and if so, how to calculate them.
+   *
+   * @return The optimal tick distance.
    */
   @Deprecated("Do not call this method from outside!")
   fun calculateTickDistance(

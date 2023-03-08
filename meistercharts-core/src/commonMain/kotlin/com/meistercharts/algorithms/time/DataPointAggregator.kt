@@ -24,9 +24,13 @@ import it.neckar.open.unit.si.ms
  */
 class DataPointAggregator {
   /**
-   * Aggregates the given data points
+   * Aggregates a list of data points into a list of aggregated values, where each aggregated value represents a
+   * span of time with a fixed duration specified by the timeSpan parameter.
    *
-   * @param dataPoints the data points
+   * @param dataPoints A list of data points to be aggregated.
+   * @param timeSpan The duration of each time span for which an aggregated value will be calculated, in milliseconds.
+   *
+   * @return A list of aggregated values.
    */
   fun aggregate(dataPoints: List<DataPoint<Double>>, @ms timeSpan: Double): List<AggregatedValue> {
     val builder: MutableList<AggregatedValue> = mutableListOf()

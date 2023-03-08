@@ -34,6 +34,7 @@ fun startChartingDemos(container: HTMLElement) {
  * Starts a single demo
  * @param container the element that will hold the demo
  * @param searchTerms a comma-separated list of terms to identify the demo to start (must match all)
+ * @param showConfigurationPane if set to true, the configuration pane is added
  */
 @JsExport
 @Suppress("unused") // public API
