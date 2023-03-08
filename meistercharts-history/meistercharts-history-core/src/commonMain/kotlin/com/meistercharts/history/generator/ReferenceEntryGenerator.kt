@@ -40,7 +40,11 @@ fun interface ReferenceEntryGenerator {
     }
 
     /**
-     * Returns increasing values for each provided [step]
+     * Returns a [ReferenceEntryGenerator] that generates increasing [ReferenceEntryId] values based on the given time step.
+     *
+     * @param step the time step between generated [ReferenceEntryId] values.
+     * @param max the maximum value that can be generated (inclusive). Default value is [ReferenceEntryId] with id 100,000.
+     * @return a [ReferenceEntryGenerator] that generates increasing [ReferenceEntryId] values based on the given time step.
      */
     fun increasing(
       step: Duration,
@@ -54,8 +58,12 @@ fun interface ReferenceEntryGenerator {
     }
 
     /**
-     * Generates random values
-     * @param randomGenerator the random generator that is used
+     * Returns a [ReferenceEntryGenerator] that generates random [ReferenceEntryId]s within the range [0, max.id], with an optional chance of generating a [ReferenceEntryId.NoValue].
+     *
+     * @param noValuePercentage the percentage chance of generating a [ReferenceEntryId.NoValue] value. Default value is 0.05.
+     * @param max the maximum value that can be generated (inclusive). Default value is [ReferenceEntryId] with id 100,000.
+     * @param randomGenerator the [Random] object used to generate the values. Defaults to [it.neckar.open.kotlin.lang.random].
+     * @return a [ReferenceEntryGenerator] that generates random [ReferenceEntryId]s within the specified range, with an optional chance of generating a [ReferenceEntryId.NoValue].
      */
     fun random(
       /**

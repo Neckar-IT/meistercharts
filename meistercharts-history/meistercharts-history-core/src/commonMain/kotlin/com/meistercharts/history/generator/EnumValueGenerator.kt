@@ -42,9 +42,11 @@ fun interface EnumValueGenerator {
     }
 
     /**
-     * Generates random values for the given enum
+     * Returns an [EnumValueGenerator] that generates random [HistoryEnumSet] values for the given enum, with an optional chance of generating a [HistoryEnumSet.NoValue].
      *
-     * @param randomGenerator the random generator that is used
+     * @param noValuePercentage the percentage chance of generating a [HistoryEnumSet.NoValue] value. Default value is 0.05.
+     * @param randomGenerator the [Random] object used to generate the values. Defaults to [it.neckar.open.kotlin.lang.random].
+     * @return an [EnumValueGenerator] that generates random [HistoryEnumSet] values for the given enum, with an optional chance of generating a [HistoryEnumSet.NoValue].
      */
     fun random(
       /**

@@ -17,10 +17,9 @@ package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.linechart.LineStyle as ModelLineStyle
 import com.meistercharts.api.LineStyle as JsLineStyle
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.painter.SplineLinePainter
-import com.meistercharts.api.sanitizing.sanitize
+import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.PointConnectionStyle
 import com.meistercharts.api.PointConnectionType
 import com.meistercharts.api.PointType

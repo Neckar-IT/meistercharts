@@ -23,8 +23,11 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import it.neckar.open.provider.MultiProvider
 
 /**
- * Describes a usage
- * @param T the type that will be returned
+ * A key that represents a style or value associated with a corporate design.
+ *
+ * @param T the type of the value or style associated with this theme key.
+ * @property id the unique identifier of the theme key.
+ * @property defaultStyleProvider a function that returns the default style or value associated with this theme key for the given [CorporateDesign].
  */
 data class ThemeKey<T>(val id: String, val defaultStyleProvider: (CorporateDesign) -> T) {
   /**

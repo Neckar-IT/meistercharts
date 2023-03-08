@@ -36,13 +36,16 @@ interface LinesChartModel {
    * The x-value of the line [lineIndex] at position [index]
    *
    * @param lineIndex must be within 0..[linesCount] -1
+   * @param index the index of the value to retrieve.
    */
   fun valueX(lineIndex: Int, index: Int): Double
 
   /**
    * The Y-value of the line [lineIndex] at position [index]
    *
-   * @param lineIndex must be within 0..[linesCount] -1
+   * @param lineIndex the index of the line. Must be within the range 0..[linesCount]-1.
+   * @param index the index of the value to retrieve.
+   * @return the Y-value of the line at the specified [index].
    */
   fun valueY(lineIndex: Int, index: Int): Double
 }

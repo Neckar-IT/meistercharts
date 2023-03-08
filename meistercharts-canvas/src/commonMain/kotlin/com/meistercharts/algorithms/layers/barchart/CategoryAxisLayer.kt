@@ -105,6 +105,7 @@ class CategoryAxisLayer(
    * ├
    * ├
    *```
+   * @param paintingContext the layer painting context
    * @param direction in which direction lies the axis line
    */
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {
@@ -173,6 +174,7 @@ class CategoryAxisLayer(
    * ```
    * ┬┬┬┬┬┬┬┬┬┬┬┬
    *```
+   * @param paintingContext the layer painting context
    * @param direction in which direction lies the axis line
    */
   override fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction) {

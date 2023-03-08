@@ -50,8 +50,10 @@ interface CategoryPainter<in T : CategoryModel> {
    * Paints a category of a chart with vertical chart orientation.
    *
    * This method is called with the context translated to the center of the category area
+   * @param paintingContext the painting context for the layer.
    * @param categoryWidth the width of the category
    * @param categoryIndex the index of the category to be painted
+   * @param isLast true if this is the last category in the chart, false otherwise.
    * @param categoryModel the category model
    *
    * ```
@@ -73,15 +75,18 @@ interface CategoryPainter<in T : CategoryModel> {
    *
    * This method is called with the context translated to the center of the category area
    *
-   * @param categoryHeight the height of the category
-   * @param categoryIndex the index of the category to be painted
-   * @param categoryModel the category model
    * ```
    * ━━━
    * ━━
    * ━━━━━━━
    * ━━━━
    *```
+   *
+   * @param paintingContext the painting context for the layer.
+   * @param categoryHeight the height of the category.
+   * @param categoryIndex the index of the category to be painted.
+   * @param isLast true if this is the last category in the chart, false otherwise.
+   * @param categoryModel the model for the category to be painted.
    */
   fun paintCategoryHorizontal(
     paintingContext: LayerPaintingContext,

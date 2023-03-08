@@ -27,8 +27,14 @@ import it.neckar.open.collections.emptyDoubleArray
  */
 fun interface TickProvider {
   /**
-   * Returns the ticks
-   * @param minTickDistance describes the minimum distance between two ticks. This parameter can be used to avoid too many ticks when zoomed in that have the same label (because of the precision of the used format)
+   * Returns an array of ticks for the given range of domain values, with a maximum count and a minimum distance between ticks.
+   *
+   * @param lowerValue the lower value of the domain range.
+   * @param upperValue the upper value of the domain range.
+   * @param maxTickCount the maximum number of ticks to be generated.
+   * @param minTickDistance the minimum distance between two ticks, used to avoid too many ticks with the same label when zoomed in. This parameter should not be used anymore.
+   * @param axisEndConfiguration the configuration for the axis end points.
+   * @return an array of ticks for the given range of domain values.
    */
   fun getTicks(
     /**
@@ -52,7 +58,7 @@ fun interface TickProvider {
     /**
      * The axis end configuration
      */
-    axisEndConfiguration: AxisEndConfiguration
+    axisEndConfiguration: AxisEndConfiguration,
   ): @Domain DoubleArray
 
   companion object {

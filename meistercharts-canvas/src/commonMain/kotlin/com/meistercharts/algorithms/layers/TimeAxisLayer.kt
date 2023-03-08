@@ -45,18 +45,17 @@ import com.meistercharts.model.Vicinity
 import com.meistercharts.time.TimeUnits
 import it.neckar.open.collections.fastContains
 import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.kotlin.lang.betweenInclusive
-import it.neckar.open.time.nowMillis
-import it.neckar.open.provider.MultiProvider
 import it.neckar.open.formatting.DateTimeFormat
 import it.neckar.open.formatting.dateFormat
 import it.neckar.open.formatting.dateTimeFormatIso8601
 import it.neckar.open.formatting.secondMillisFormat
 import it.neckar.open.formatting.timeFormat
 import it.neckar.open.formatting.yearFormat
-import it.neckar.open.formatting.yearMonthFormat
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.betweenInclusive
+import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.TimeConstants
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.Positive
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
@@ -67,7 +66,8 @@ import kotlin.math.min
 
 /**
  * Paints a time axis at the bottom of the canvas
- * @param data - contains the timeRange the time range to be displayed at 100% zoom and with no translation
+ * @property data - contains the timeRange the time range to be displayed at 100% zoom and with no translation
+ * @param styleConfiguration the style configuration that is applied
  */
 class TimeAxisLayer(
   val data: Data = Data(),

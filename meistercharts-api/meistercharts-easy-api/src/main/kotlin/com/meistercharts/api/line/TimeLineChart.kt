@@ -26,7 +26,7 @@ import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
-import com.meistercharts.api.sanitizing.sanitize
+import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.StripeStyle
 import com.meistercharts.api.TimeRange

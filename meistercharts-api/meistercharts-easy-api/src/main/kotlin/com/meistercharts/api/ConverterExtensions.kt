@@ -37,7 +37,7 @@ import com.meistercharts.algorithms.model.CategoryIndex
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.api.sanitizing.sanitize
+import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.canvas.CanvasStringShortener
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize

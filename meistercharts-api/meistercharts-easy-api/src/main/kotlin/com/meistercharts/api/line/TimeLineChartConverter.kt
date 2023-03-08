@@ -18,7 +18,7 @@ package com.meistercharts.api.line
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
-import com.meistercharts.api.sanitizing.sanitize
+import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.DataSeriesNumberFormat
 import com.meistercharts.api.PointConnectionStyle
 import com.meistercharts.api.toColor

@@ -73,7 +73,6 @@ class MouseSpeedCalculator {
 
   /**
    * Adds a new entry
-   * @param deltaTime the delta time
    */
   fun add(@ms deltaTime: Double, @px distance: Distance) {
     add(deltaTime, distance.x, distance.y)
