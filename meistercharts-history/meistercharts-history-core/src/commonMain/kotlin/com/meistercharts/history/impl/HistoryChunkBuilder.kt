@@ -15,7 +15,6 @@
  */
 package com.meistercharts.history.impl
 
-import it.neckar.open.annotations.Slow
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
@@ -23,10 +22,15 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
+import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.annotations.ForOnePointInTime
+import it.neckar.open.annotations.Slow
+import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.kotlin.lang.fastFor
@@ -89,16 +93,29 @@ class HistoryChunkBuilder(
     addEnumValues(timestamp, enumValues, null)
   }
 
+  @TestOnly
   @Deprecated("Use addValues")
-  fun addReferenceEntryValues(timestamp: @ms Double, vararg referenceEntryValues: @ReferenceEntryIdInt Int) {
-    addReferenceEntryValues(timestamp, referenceEntryValues, null)
+  @ForOnePointInTime
+  fun addReferenceEntryValues(
+    timestamp: @ms Double,
+    vararg referenceEntryValues: @ReferenceEntryIdInt Int,
+    referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
+  ) {
+    addReferenceEntryValues(timestamp, referenceEntryValues, null, referenceEntriesDataMap)
   }
 
+  @TestOnly
   @Deprecated("Use addValues")
-  fun addReferenceEntryValues(timestamp: @ms Double, referenceEntryValues: @ReferenceEntryIdInt IntArray, referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null) {
+  @ForOnePointInTime
+  fun addReferenceEntryValues(
+    timestamp: @ms Double,
+    referenceEntryValues: @ReferenceEntryIdInt IntArray,
+    referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
+    referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
+  ) {
     require(referenceEntryValues.size == historyConfiguration.referenceEntryDataSeriesCount) { "Invalid referenceEntryValues size. Was <${referenceEntryValues.size}> but expected <${historyConfiguration.referenceEntryDataSeriesCount}>" }
 
-    setReferenceEntryValues(nextTimestampIndex, timestamp, referenceEntryValues, referenceEntryIdsCount)
+    setReferenceEntryValues(nextTimestampIndex, timestamp, referenceEntryValues, referenceEntryIdsCount, referenceEntriesDataMap)
     nextTimestampIndex++
   }
 
@@ -107,6 +124,7 @@ class HistoryChunkBuilder(
    */
   @Slow
   @Deprecated("Use addValues")
+  @TestOnly
   fun addDecimalValues(timestamp: @ms Double, vararg values: @Domain Double) {
     require(values.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${values.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
@@ -120,10 +138,17 @@ class HistoryChunkBuilder(
     decimalValues: @Domain DoubleArray,
     enumValues: @HistoryEnumSetInt IntArray,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    entryDataSet: Set<ReferenceEntryData>,
   ) {
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
-    setValues(nextTimestampIndex, timestamp, decimalValues = decimalValues, enumValues = enumValues, referenceEntryIds = referenceEntryIds)
+    setValues(
+      timestampIndex = nextTimestampIndex, timestamp = timestamp,
+      decimalValues = decimalValues,
+      enumValues = enumValues,
+      referenceEntryIds = referenceEntryIds,
+      entryDataSet = entryDataSet,
+    )
     nextTimestampIndex++
   }
 
@@ -134,6 +159,7 @@ class HistoryChunkBuilder(
    */
   @Deprecated("Use addValues instead")
   @Slow
+  @TestOnly
   fun addDecimalValues(timestamp: @ms Double, valuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double) {
     addDecimalValues(timestamp, *DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> valuesProvider(DecimalDataSeriesIndex(i)) })
   }
@@ -149,32 +175,23 @@ class HistoryChunkBuilder(
     addEnumValues(timestamp, *IntArray(historyConfiguration.enumDataSeriesCount) { i -> valuesProvider(EnumDataSeriesIndex(i)).bitset })
   }
 
-  /**
-   * Adds the values for the next timestamp index.
-   *
-   * ATTENTION: Does *only* add referenceEntry values
-   */
-  @Deprecated("Use addValues instead")
-  @Slow
-  fun addReferenceEntryValues(timestamp: @ms Double, valuesProvider: (dataStructureIndex: ReferenceEntryDataSeriesIndex) -> ReferenceEntryId) {
-    addReferenceEntryValues(timestamp, *IntArray(historyConfiguration.referenceEntryDataSeriesCount) { i ->
-      valuesProvider(ReferenceEntryDataSeriesIndex(i)).id
-    })
-  }
-
-
   @Slow
   fun addValues(
     timestamp: @ms Double,
     decimalValuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double,
     enumValuesProvider: (dataSeriesIndex: EnumDataSeriesIndex) -> HistoryEnumSet,
     referenceEntryIdProvider: (dataSeriesIndex: ReferenceEntryDataSeriesIndex) -> ReferenceEntryId,
+    referenceEntriesDataMap: ReferenceEntriesDataMap,
   ) {
+    val referenceEntryIds: @ReferenceEntryIdInt IntArray = IntArray(historyConfiguration.referenceEntryDataSeriesCount) { i -> referenceEntryIdProvider(ReferenceEntryDataSeriesIndex(i)).id }
+    val entryDataSet = referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int -> referenceEntriesDataMap.get(ReferenceEntryId(idAsInt)) }.filterNotNull().toSet()
+
     addValues(
-      timestamp,
-      DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> decimalValuesProvider(DecimalDataSeriesIndex(i)) },
-      IntArray(historyConfiguration.enumDataSeriesCount) { i -> enumValuesProvider(EnumDataSeriesIndex(i)).bitset },
-      IntArray(historyConfiguration.referenceEntryDataSeriesCount) { i -> referenceEntryIdProvider(ReferenceEntryDataSeriesIndex(i)).id },
+      timestamp = timestamp,
+      decimalValues = DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> decimalValuesProvider(DecimalDataSeriesIndex(i)) },
+      enumValues = IntArray(historyConfiguration.enumDataSeriesCount) { i -> enumValuesProvider(EnumDataSeriesIndex(i)).bitset },
+      referenceEntryIds = referenceEntryIds,
+      entryDataSet = entryDataSet,
     )
   }
 
@@ -218,12 +235,18 @@ class HistoryChunkBuilder(
     historyValuesBuilder.setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
   }
 
+  @TestOnly
   @Deprecated("use setValues instead")
+  @ForOnePointInTime
   fun setReferenceEntryValues(
     timestampIndex: TimestampIndex,
     timestamp: @ms Double,
-    referenceEntryValues: @ReferenceEntryIdInt IntArray,
+    referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
+    /**
+     * The map is used to resolve the [ReferenceEntryData]s
+     */
+    referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
   ) {
     setTimestamp(timestampIndex, timestamp)
 
@@ -233,11 +256,11 @@ class HistoryChunkBuilder(
       historyValuesBuilder.resizeTimestamps(timestampIndex.value * 2)
     }
 
-    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryValues, referenceEntryIdsCount)
+    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, referenceEntriesDataMap.getAll(referenceEntryIds))
   }
 
   /**
-   * Sets the values
+   * Sets the values for one timestamp index
    */
   fun setValues(
     timestampIndex: TimestampIndex,
@@ -252,6 +275,7 @@ class HistoryChunkBuilder(
 
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
+    entryDataSet: Set<ReferenceEntryData>,
   ) {
     //ensure the size
     if (historyValuesBuilder.timestampsCount <= timestampIndex.value) {
@@ -263,7 +287,7 @@ class HistoryChunkBuilder(
 
     historyValuesBuilder.setDecimalValuesForTimestamp(timestampIndex, decimalValues, minValues, maxValues)
     historyValuesBuilder.setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
-    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount)
+    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, entryDataSet)
   }
 
   /**
@@ -314,7 +338,9 @@ fun historyChunk(
     callsInPlace(config, InvocationKind.EXACTLY_ONCE)
   }
 
-  return HistoryChunkBuilder(historyConfiguration, recordingType).also(config).build()
+  return HistoryChunkBuilder(historyConfiguration, recordingType)
+    .also(config)
+    .build()
 }
 
 /**
@@ -364,6 +390,7 @@ fun HistoryConfiguration.chunk(
  *
  * ATTENTION: Does not support
  */
+@TestOnly
 @Slow
 fun HistoryConfiguration.chunk(
   timeStamps: DoubleArray,

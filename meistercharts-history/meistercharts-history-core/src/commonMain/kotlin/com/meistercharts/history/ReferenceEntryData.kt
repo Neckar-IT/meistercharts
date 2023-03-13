@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.TestOnly
 import it.neckar.open.i18n.TextKey
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -47,6 +48,15 @@ data class ReferenceEntryData(
   val payload: UnparsedJson? = null,
 ) {
 
+  companion object {
+    /**
+     * Creates a minimal data objet
+     */
+    @TestOnly
+    fun create(id: @ReferenceEntryIdInt Int, label: String): ReferenceEntryData {
+      return ReferenceEntryData(ReferenceEntryId(id), TextKey.simple(label))
+    }
+  }
 }
 
 /**

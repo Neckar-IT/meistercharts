@@ -30,7 +30,7 @@ class HistoryReferenceEntryConfiguration(
   /**
    * The ids of the data series.
    */
-  override val dataSeriesIds: @ID IntArray,
+  override val dataSeriesIds: @ReferenceEntryIdInt IntArray,
 
   /**
    * The display names for each data series
@@ -92,18 +92,16 @@ class HistoryReferenceEntryConfiguration(
   class Builder {
     private val dataSeriesIds: @ID IntArrayList = IntArrayList()
     private val displayNames: MutableList<TextKey> = mutableListOf()
-    private val dataBuilder: MutableList<ReferenceEntriesDataMap> = mutableListOf()
 
-    fun referenceEntryDataSeries(id: DataSeriesId, displayName: String, dataMap: ReferenceEntriesDataMap) {
-      referenceEntryDataSeries(id, TextKey.simple(displayName), dataMap)
+    fun referenceEntryDataSeries(id: DataSeriesId, displayName: String) {
+      referenceEntryDataSeries(id, TextKey.simple(displayName))
     }
 
-    fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey, dataMap: ReferenceEntriesDataMap) {
+    fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey) {
       require(dataSeriesIds.contains(id.value).not()) { "id <$id> already added" }
 
       dataSeriesIds.add(id.value)
       displayNames.add(displayName)
-      this.dataBuilder.add(dataMap)
     }
 
     fun build(): HistoryReferenceEntryConfiguration {

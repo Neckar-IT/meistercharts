@@ -71,5 +71,5 @@ value class ReferenceEntryId(val id: Int) {
 /**
  * Annotation that is used for int values that represent an [ReferenceEntryId]
  */
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.LOCAL_VARIABLE)
 annotation class ReferenceEntryIdInt

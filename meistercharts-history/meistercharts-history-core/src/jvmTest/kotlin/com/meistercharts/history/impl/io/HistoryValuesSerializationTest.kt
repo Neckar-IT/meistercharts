@@ -16,6 +16,7 @@
 package com.meistercharts.history.impl.io
 
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryValues
 import com.meistercharts.history.impl.RecordingType
@@ -24,9 +25,7 @@ import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.collections.invokeCols
 import it.neckar.open.serialization.roundTrip
-import com.meistercharts.history.ReferenceEntriesDataMap
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
-import org.junit.Ignore
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -36,9 +35,9 @@ class HistoryValuesSerializationTest {
   @Test
   fun testMeasured() {
     val historyValues = historyValues(2, 1, 1, 3, RecordingType.Measured) {
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(0), decimalValues = doubleArrayOf(1.0, 2.0), minValues = null, maxValues = null, enumValues = intArrayOf(7), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(6))
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(1), decimalValues = doubleArrayOf(1.1, 2.1), minValues = null, maxValues = null, enumValues = intArrayOf(8), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(7))
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(2), decimalValues = doubleArrayOf(1.2, 2.2), minValues = null, maxValues = null, enumValues = intArrayOf(9), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(8))
+      setAllValuesForTimestamp(timestampIndex = TimestampIndex(0), decimalValues = doubleArrayOf(1.0, 2.0), minValues = null, maxValues = null, enumValues = intArrayOf(7), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(6), entryDataSet = emptySet())
+      setAllValuesForTimestamp(timestampIndex = TimestampIndex(1), decimalValues = doubleArrayOf(1.1, 2.1), minValues = null, maxValues = null, enumValues = intArrayOf(8), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(7), entryDataSet = emptySet())
+      setAllValuesForTimestamp(timestampIndex = TimestampIndex(2), decimalValues = doubleArrayOf(1.2, 2.2), minValues = null, maxValues = null, enumValues = intArrayOf(9), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(8), entryDataSet = emptySet())
     }
 
     roundTrip(historyValues) {
@@ -57,9 +56,10 @@ class HistoryValuesSerializationTest {
           "referenceEntryHistoryValues" : {
             "values" : "AAEAAwAAAAYAAAAHAAAACA==",
                 "differentIdsCount" : null,
-                "dataMaps" : [ {
-                  "type" : "Generated"
-                } ]
+                "dataMap" : {
+                  "type" : "Default",
+                  "entries" : { }
+                }
           }
         }
       """.trimIndent()
@@ -77,7 +77,8 @@ class HistoryValuesSerializationTest {
         enumValues = intArrayOf(7),
         enumOrdinalsMostTime = intArrayOf(11),
         referenceEntryIds = intArrayOf(6),
-        referenceEntryDifferentIdsCount = intArrayOf(1)
+        referenceEntryDifferentIdsCount = intArrayOf(1),
+        entryDataSet = emptySet(),
       )
       setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(1),
@@ -87,7 +88,8 @@ class HistoryValuesSerializationTest {
         enumValues = intArrayOf(8),
         enumOrdinalsMostTime = intArrayOf(12),
         referenceEntryIds = intArrayOf(7),
-        referenceEntryDifferentIdsCount = intArrayOf(1)
+        referenceEntryDifferentIdsCount = intArrayOf(1),
+        entryDataSet = emptySet(),
       )
       setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(2),
@@ -97,7 +99,8 @@ class HistoryValuesSerializationTest {
         enumValues = intArrayOf(9),
         enumOrdinalsMostTime = intArrayOf(13),
         referenceEntryIds = intArrayOf(8),
-        referenceEntryDifferentIdsCount = intArrayOf(1)
+        referenceEntryDifferentIdsCount = intArrayOf(1),
+        entryDataSet = emptySet(),
       )
     }
 
@@ -116,10 +119,11 @@ class HistoryValuesSerializationTest {
           },
           "referenceEntryHistoryValues" : {
             "values" : "AAEAAwAAAAYAAAAHAAAACA==",
-                "differentIdsCount" : "AAEAAwAAAAEAAAABAAAAAQ==",
-                "dataMaps" : [ {
-                  "type" : "Generated"
-                } ]
+              "differentIdsCount" : "AAEAAwAAAAEAAAABAAAAAQ==",
+              "dataMap" : {
+                "type" : "Default",
+                "entries" : { }
+              }
           }
         }
       """.trimIndent()
@@ -155,7 +159,7 @@ class HistoryValuesSerializationTest {
           intArrayOf(7000, 8000, 9000)
         )
       ),
-      referenceEntriesDataMaps = List(4) { ReferenceEntriesDataMap.generated },
+      referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
     )
 
     assertThat(absolute.decimalDataSeriesCount).isEqualTo(4)

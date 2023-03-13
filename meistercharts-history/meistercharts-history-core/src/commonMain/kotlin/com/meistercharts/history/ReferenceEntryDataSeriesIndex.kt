@@ -151,10 +151,29 @@ open class DelegatingReferenceEntryDataSeriesIndexProvider(
   }
 }
 
+/**
+ * Retrieves the value at the specified [index] of this [MultiProvider] instance,
+ * where the index is provided as a [ReferenceEntryDataSeriesIndex] instance.
+ *
+ * @param index the [ReferenceEntryDataSeriesIndex] representing the index of the value to retrieve
+ * @return the value at the specified index
+ * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size)
+ */
 inline fun <T> MultiProvider<ReferenceEntryDataSeriesIndex, T>.valueAt(index: ReferenceEntryDataSeriesIndex): T {
   return this.valueAt(index.value)
 }
 
+/**
+ * Retrieves the element at the specified [index] of this list, where the index is
+ * provided as a [ReferenceEntryDataSeriesIndex] instance.
+ *
+ * @param index the [ReferenceEntryDataSeriesIndex] representing the index of the element to retrieve
+ * @return the element at the specified index
+ * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size)
+ */
+inline operator fun <T> List<T>.get(index: ReferenceEntryDataSeriesIndex): T {
+  return this[index.value]
+}
 
 /**
  * Returns a new instance of [ReferenceEntryDataSeriesIndexProvider] that has a size that is not greater than the provided value
@@ -179,3 +198,11 @@ private fun atMost(delegateProvider: () -> ReferenceEntryDataSeriesIndexProvider
     }
   }
 }
+
+
+/**
+ * Can be used to annotate methods that the index in the collection corresponds to the [ReferenceEntryDataSeriesIndex]
+ */
+@Target(AnnotationTarget.TYPE)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ByReferenceEntryDataSeriesIndex

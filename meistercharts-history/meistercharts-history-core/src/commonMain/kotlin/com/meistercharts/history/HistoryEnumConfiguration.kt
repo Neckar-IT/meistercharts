@@ -30,7 +30,7 @@ class HistoryEnumConfiguration(
   /**
    * The ids of the data series.
    */
-  override val dataSeriesIds: @ID IntArray,
+  override val dataSeriesIds: @EnumDataSeriesIndexInt IntArray,
 
   /**
    * The display names for each data series
@@ -43,7 +43,7 @@ class HistoryEnumConfiguration(
    * Has the same size as [dataSeriesIds]
    */
   val enums: List<HistoryEnum>,
-) : com.meistercharts.history.AbstractHistoryConfiguration() {
+) : AbstractHistoryConfiguration() {
   init {
     require(dataSeriesIds.size == enums.size) {
       "size mismatch - enum configs: ${dataSeriesIds.size} vs ${enums.size}"

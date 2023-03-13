@@ -15,23 +15,8 @@
  */
 package com.meistercharts.history.impl
 
-import it.neckar.open.annotations.Slow
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.annotations.Domain
-import it.neckar.open.collections.BSearchResult
-import it.neckar.open.collections.DoubleArrayList
-import it.neckar.open.collections.binarySearch
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.collections.sort
-import it.neckar.open.kotlin.lang.deleteSuffix
-import it.neckar.open.kotlin.lang.fastFor
-import it.neckar.open.formatting.formatUtc
-import it.neckar.open.unit.number.MayBeNaN
-import it.neckar.open.unit.other.Exclusive
-import it.neckar.open.unit.other.Inclusive
-import it.neckar.open.unit.other.Sorted
-import it.neckar.open.unit.si.ms
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
@@ -50,6 +35,23 @@ import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.annotations.ForOnePointInTime
+import it.neckar.open.annotations.Slow
+import it.neckar.open.collections.BSearchResult
+import it.neckar.open.collections.DoubleArrayList
+import it.neckar.open.collections.IntArray2
+import it.neckar.open.collections.binarySearch
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.fastForEachIndexed
+import it.neckar.open.collections.sort
+import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.deleteSuffix
+import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.other.Exclusive
+import it.neckar.open.unit.other.Inclusive
+import it.neckar.open.unit.other.Sorted
+import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 import kotlin.math.min
@@ -57,6 +59,11 @@ import kotlin.math.min
 
 /**
  * Contains a chunk of history data.
+ *
+ * Distinction to the other classes:
+ * * [HistoryValues] does *only* contain the values - no timestamps
+ * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps. Also has a [RecordingType]
+ * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
  */
 @Serializable
 class HistoryChunk(
@@ -321,21 +328,25 @@ class HistoryChunk(
   /**
    * Returns the significands for the given time stamp index.
    */
-  fun getDecimalValues(timeStampIndex: TimestampIndex): DoubleArray {
+  @ForOnePointInTime
+  fun getDecimalValues(timeStampIndex: TimestampIndex): @Domain DoubleArray {
     return values.getDecimalValues(timeStampIndex)
   }
 
-  fun getEnumValues(timeStampIndex: TimestampIndex): IntArray {
+  @ForOnePointInTime
+  fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return values.getEnumValues(timeStampIndex)
   }
 
-  fun getReferenceEntryIds(timeStampIndex: TimestampIndex): IntArray {
+  @ForOnePointInTime
+  fun getReferenceEntryIds(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray {
     return values.getReferenceEntryIds(timeStampIndex)
   }
 
   /**
    * Returns the counts for the different entry IDs
    */
+  @ForOnePointInTime
   fun getReferenceEntryDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray? {
     return values.getReferenceEntryDifferentIdsCounts(timeStampIndex)
   }
@@ -343,9 +354,10 @@ class HistoryChunk(
   /**
    * Returns the reference entry data for the provided index
    */
-  fun getReferenceEntriesDataMap(dataSeriesIndex: ReferenceEntryDataSeriesIndex): ReferenceEntriesDataMap {
-    return values.getReferenceEntriesDataMap(dataSeriesIndex)
-  }
+  val referenceEntriesDataMap: ReferenceEntriesDataMap
+    get() {
+      return values.referenceEntriesDataMap
+    }
 
   /**
    * Returns the [ReferenceEntryData] for the provided [dataSeriesIndex] and [id]
@@ -376,14 +388,30 @@ class HistoryChunk(
     return TimestampIndex(timeStampsCount - 1)
   }
 
+
   /**
-   * Creates a new chunk with the added values
+   * Returns the reference entry data list for the reference entry ids
+   */
+  fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
+    return values.getReferenceEntryDataSet(referenceEntryIds)
+  }
+
+  fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray2): Set<ReferenceEntryData> {
+    return values.getReferenceEntryDataSet(referenceEntryIds.data)
+  }
+
+  /**
+   * Creates a new chunk with the added values for the given timestamp
    */
   fun withAddedValues(
     additionalTimeStamp: @ms Double,
-    additionalDecimalValues: @Domain DoubleArray,
-    additionalEnumValues: @HistoryEnumSetInt IntArray,
-    additionalReferenceEntryIds: @ReferenceEntryIdInt IntArray,
+    additionalDecimalValues: @Domain @ForOnePointInTime DoubleArray,
+    additionalEnumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray,
+    additionalReferenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray,
+    /**
+     * Contains the data for the [additionalReferenceEntryIds]. Each ID must contain one entry (if there is data)
+     */
+    additionalReferenceEntryDataList: @ForOnePointInTime Set<ReferenceEntryData>,
   ): HistoryChunk {
     //Convert to significands array
     require(additionalDecimalValues.size == decimalDataSeriesCount)
@@ -403,29 +431,32 @@ class HistoryChunk(
     //Merge the values
     val newHistoryValuesBuilder = HistoryValuesBuilder(decimalDataSeriesCount, enumDataSeriesCount, referenceEntryDataSeriesCount, mergedTimeStamps.size, recordingType)
 
-    mergedTimeStamps.fastForEachIndexed { index, timestamp ->
+    mergedTimeStamps.fastForEachIndexed { index, timestamp: @ms Double ->
       //Add the values
-      val decimalValues: @Domain DoubleArray
-      val enumValues: @HistoryEnumSetInt IntArray
-      val referenceEntryIds: @ReferenceEntryIdInt IntArray
+      val decimalValues: @Domain @ForOnePointInTime DoubleArray
+      val enumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray
+      val referenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray
+      val referenceEntryDataSet: @ForOnePointInTime Set<ReferenceEntryData>
 
       if (additionalTimeStamp == timestamp) {
         decimalValues = additionalDecimalValues
         enumValues = additionalEnumValues
         referenceEntryIds = additionalReferenceEntryIds
+        referenceEntryDataSet = additionalReferenceEntryDataList
       } else {
         //Use from us
         val timeStampIndex = TimestampIndex(bestTimestampIndexFor(timestamp).index)
         decimalValues = getDecimalValues(timeStampIndex)
         enumValues = getEnumValues(timeStampIndex)
         referenceEntryIds = getReferenceEntryIds(timeStampIndex)
+        referenceEntryDataSet = getReferenceEntryDataSet(referenceEntryIds)
       }
 
       newHistoryValuesBuilder.setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(index),
         decimalValues = decimalValues, minValues = null, maxValues = null,
         enumValues = enumValues, enumOrdinalsMostTime = null,
-        referenceEntryIds = referenceEntryIds, referenceEntryDifferentIdsCount = null
+        referenceEntryIds = referenceEntryIds, referenceEntryDifferentIdsCount = null, entryDataSet = referenceEntryDataSet,
       )
     }
 
@@ -696,6 +727,10 @@ class HistoryChunk(
       }"
     }
 
+    //Add the values from both chunks
+    mergedHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(other.getReferenceEntryDataSet(mergedHistoryValuesBuilder.referenceEntryIds))
+    mergedHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(this.getReferenceEntryDataSet(mergedHistoryValuesBuilder.referenceEntryIds))
+
     return HistoryChunk(other.configuration, mergedTimeStamps, mergedHistoryValuesBuilder.build(), RecordingType.Measured).also {
       //verify the created chunk - must be within start/end
       require(it.firstTimeStamp() >= start) { "Invalid first time stamp <${it.firstTimeStamp()} - must be greater/equal to start $start" }
@@ -783,6 +818,7 @@ class HistoryChunk(
     @Inclusive val thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount, thisStartIndex)
     @Inclusive val thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount, thisEndIndex + 1)
     this.values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, 0, thisStartArrayIndexReferenceEntry, thisEndArrayIndexReferenceEntry)
+    newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(this.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
 
     //Copy the data from the other chunk
     @Inclusive val startArrayIndexDecimal = HistoryValues.calculateStartIndex(other.decimalDataSeriesCount, otherStartIndex)
@@ -796,6 +832,8 @@ class HistoryChunk(
     @Inclusive val startArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherStartIndex)
     @Inclusive val endArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherEndIndex + 1)
     other.values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, thisEndArrayIndexReferenceEntry - thisStartArrayIndexReferenceEntry, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
+    newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(other.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
+
 
     return HistoryChunk(other.configuration, mergedTimeStamps, newHistoryValuesBuilder.build(), RecordingType.Measured).also {
       //verify the created chunk
@@ -885,6 +923,7 @@ class HistoryChunk(
     @Inclusive val endArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, endIndex + 1)
     values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, 0, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
     values.referenceEntryHistoryValues.differentIdsCount?.data?.copyInto(newHistoryValuesBuilder.referenceEntryDifferentIdsCount!!.data, 0, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
+    newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(this.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
 
     return HistoryChunk(configuration, newTimeStamps, newHistoryValuesBuilder.build(), recordingType).also {
       require(it.firstTimeStamp() >= start) { "Invalid first time stamp <${it.firstTimeStamp()} - must be greater/equal to start $start" }

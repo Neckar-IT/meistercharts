@@ -23,7 +23,10 @@ import com.meistercharts.js.MeisterChartJS
  * Timeline chart that visualizes discrete timelines.
  */
 @JsExport
-class DiscreteTimelineChart(
+class DiscreteTimelineChart internal constructor(
+  /**
+   * The gestalt that is configured
+   */
   internal val gestalt: DiscreteTimelineChartGestalt,
 
   /**

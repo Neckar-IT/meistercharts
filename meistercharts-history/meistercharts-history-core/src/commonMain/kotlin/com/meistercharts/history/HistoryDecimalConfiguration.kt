@@ -32,7 +32,7 @@ class HistoryDecimalConfiguration(
   /**
    * The ids of the data series.
    */
-  override val dataSeriesIds: @ID IntArray,
+  override val dataSeriesIds: @DecimalDataSeriesIndexInt IntArray,
 
   /**
    * The display names for each data series
@@ -45,7 +45,7 @@ class HistoryDecimalConfiguration(
    */
   val units: List<HistoryUnit>,
 
-  ) : com.meistercharts.history.AbstractHistoryConfiguration() {
+  ) : AbstractHistoryConfiguration() {
   init {
     require(dataSeriesIds.size == displayNames.size) {
       "size mismatch - display names: ${dataSeriesIds.size} vs ${displayNames.size}"

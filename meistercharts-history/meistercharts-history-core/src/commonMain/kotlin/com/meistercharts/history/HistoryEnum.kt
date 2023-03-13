@@ -15,10 +15,8 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.annotations.Domain
 import it.neckar.open.i18n.TextKey
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 
 /**
  * Represents an enum configuration for a data series
@@ -106,73 +104,5 @@ data class HistoryEnum(
      * Represents active/inactive enumeration
      */
     val Active: HistoryEnum = create("Active", listOf(TextKey("Active"), TextKey("Inactive")))
-  }
-}
-
-/**
- * Represents an index *within* the history enum index
- */
-@Serializable
-@JvmInline
-value class HistoryEnumOrdinal(val value: Int) {
-  fun isPending(): Boolean {
-    return this.value == HistoryEnumSet.PendingAsInt
-  }
-
-  fun isNoValue(): Boolean {
-    return this.value == HistoryEnumSet.NoValueAsInt
-  }
-
-  override fun toString(): String {
-    if (isPending()) {
-      return "?"
-    }
-    if (isNoValue()) {
-      return "-"
-    }
-    return "$value"
-  }
-
-  companion object {
-    /**
-     * Represents a history enum ordinal for a [HistoryEnumSet.Pending]
-     */
-    val Pending: HistoryEnumOrdinal = HistoryEnumOrdinal(HistoryEnumSet.PendingAsInt)
-
-    /**
-     * Represents a history enum ordinal for a [HistoryEnumSet.NoValue]
-     */
-    val NoValue: HistoryEnumOrdinal = HistoryEnumOrdinal(HistoryEnumSet.NoValueAsInt)
-
-    val First: HistoryEnumOrdinal = HistoryEnumOrdinal(0)
-    val Second: HistoryEnumOrdinal = HistoryEnumOrdinal(1)
-
-    /**
-     * The maximum value that is supported.
-     * Look at [HistoryEnumSet] for details why this is the limit
-     */
-    val Max: HistoryEnumOrdinal = HistoryEnumOrdinal(HistoryEnumSet.maxSupportedEnumValuesCount - 1)
-
-
-    /**
-     * Constant that can be used with [com.meistercharts.history.HistoryEnum.Companion.Boolean]
-     */
-    val BooleanTrue: HistoryEnumOrdinal = First
-
-    /**
-     * Constant that can be used with [com.meistercharts.history.HistoryEnum.Companion.Boolean]
-     */
-    val BooleanFalse: HistoryEnumOrdinal = Second
-
-    /**
-     * Creates the ordinal for a boolean.
-     * Must only be used with [com.meistercharts.history.HistoryEnum.Companion.Boolean]
-     */
-    fun forBoolean(state: @Domain Boolean): HistoryEnumOrdinal {
-      return when (state) {
-        true -> BooleanTrue
-        false -> BooleanFalse
-      }
-    }
   }
 }

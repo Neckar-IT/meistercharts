@@ -30,16 +30,17 @@ import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.valueAt
-import it.neckar.open.time.nowMillis
-import it.neckar.open.provider.MultiProvider
+import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 
 /**
  * Generates [HistoryChunk]s with sample data.
  */
-class HistoryChunkGenerator constructor(
+class HistoryChunkGenerator(
   /**
    * The place where to store the chunks
    */
@@ -66,11 +67,17 @@ class HistoryChunkGenerator constructor(
   val referenceEntryGenerators: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryGenerator>,
 
   /**
+   * Provides the reference entry data
+   */
+  val referenceEntriesDataMap: ReferenceEntriesDataMap,
+
+  /**
    * The history configuration that is used as base for the generated chunks.
    * If the history configuration should be created automatically, use the secondary constructor (with lists) instead
    */
   val historyConfiguration: HistoryConfiguration,
 ) {
+  @TestOnly
   constructor(
     historyStorage: WritableHistoryStorage,
     samplingPeriod: SamplingPeriod,
@@ -84,11 +91,15 @@ class HistoryChunkGenerator constructor(
 
     historyConfiguration: HistoryConfiguration = createDefaultHistoryConfiguration(decimalValueGenerators.size, enumValueGenerators.size, referenceEntryGenerators.size),
   ) : this(
-    historyStorage, samplingPeriod,
-    MultiProvider.forListModulo(decimalValueGenerators),
-    MultiProvider.forListModulo(enumValueGenerators),
-    MultiProvider.forListModulo(referenceEntryGenerators),
-    historyConfiguration,
+    historyStorage = historyStorage,
+    samplingPeriod = samplingPeriod,
+    decimalValueGenerators = MultiProvider.forListModulo(decimalValueGenerators),
+    enumValueGenerators = MultiProvider.forListModulo(enumValueGenerators),
+    referenceEntryGenerators = MultiProvider.forListModulo(referenceEntryGenerators),
+
+    referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
+
+    historyConfiguration = historyConfiguration,
   ) {
     require(decimalValueGenerators.size == historyConfiguration.decimalDataSeriesCount) {
       "Invalid decimal value generators size. Was ${decimalValueGenerators.size} but require ${historyConfiguration.decimalDataSeriesCount}"
@@ -191,13 +202,19 @@ class HistoryChunkGenerator constructor(
     val chunk = historyConfiguration.chunk(timestamps.size) { timestampIndex ->
       @ms val timestamp = timestamps[timestampIndex.value]
 
-      addValues(timestamp,
+      addValues(
+        timestamp,
         decimalValuesProvider = { dataSeriesIndex: DecimalDataSeriesIndex -> decimalValueGenerators.valueAt(dataSeriesIndex).generate(timestamp) },
         enumValuesProvider = { dataSeriesIndex ->
           val historyEnum = historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
           enumValueGenerators.valueAt(dataSeriesIndex).generate(timestamp, historyEnum)
         },
-        referenceEntryIdProvider = { dataSeriesIndex -> referenceEntryGenerators.valueAt(dataSeriesIndex).generate(timestamp) })
+        referenceEntryIdProvider = { dataSeriesIndex ->
+          val referenceEntryId = referenceEntryGenerators.valueAt(dataSeriesIndex).generate(timestamp)
+          referenceEntryId
+        },
+        referenceEntriesDataMap = referenceEntriesDataMap,
+      )
     }
 
     lastCreatedTimeStamp = chunk.lastTimeStamp()
@@ -205,6 +222,9 @@ class HistoryChunkGenerator constructor(
   }
 }
 
+/**
+ * Creates a default history configuration with the provided sizes
+ */
 private fun createDefaultHistoryConfiguration(
   decimalValuesCount: Int,
   enumValuesCount: Int,
@@ -222,5 +242,5 @@ private fun createDefaultHistoryConfiguration(
 
   referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
     val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10_000)
-    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), ReferenceEntriesDataMap.generated)
+    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"))
   })

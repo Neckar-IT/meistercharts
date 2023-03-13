@@ -20,9 +20,11 @@ import assertk.assertions.*
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.i18n.TextKey
 import org.junit.jupiter.api.Test
 
 /**
@@ -35,8 +37,8 @@ class HistoryValuesBuilderTest {
 
     builder.let { builder ->
       assertThat(builder.timestampsCount).isEqualTo(2)
-      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.zero, intArrayOf(7, 8, 9), intArrayOf(1, 1, 1))
-      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.one, intArrayOf(17, 18, 19), intArrayOf(2, 2, 2))
+      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.zero, intArrayOf(7, 8, 9), intArrayOf(1, 1, 1), emptySet())
+      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.one, intArrayOf(17, 18, 19), intArrayOf(2, 2, 2), emptySet())
       assertThat(builder.timestampsCount).isEqualTo(2)
 
       //assertThat(it)
@@ -55,8 +57,8 @@ class HistoryValuesBuilderTest {
     assertThat(requireNotNull(builder.referenceEntryIds).height).isEqualTo(4)
     assertThat(requireNotNull(builder.referenceEntryDifferentIdsCount).height).isEqualTo(4)
 
-    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.two, intArrayOf(27, 28, 29), intArrayOf(1, 1, 1))
-    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.three, intArrayOf(37, 38, 39), intArrayOf(1, 1, 1))
+    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.two, intArrayOf(27, 28, 29), intArrayOf(1, 1, 1), emptySet())
+    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.three, intArrayOf(37, 38, 39), intArrayOf(1, 1, 1), emptySet())
 
     builder.build().let { values ->
       assertThat(values.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3))).isEqualTo(ReferenceEntryId(37))
@@ -157,5 +159,36 @@ class HistoryValuesBuilderTest {
     //Different size - new instance
     builder.resizeTimestamps(100)
     assertThat(builder.decimalValues).isNotSameAs(ref)
+  }
+
+  @Test
+  fun testRefValues() {
+    val builder = HistoryValuesBuilder(0, 0, 5, 200, RecordingType.Measured)
+    assertThat(builder.timestampsCount).isEqualTo(200)
+
+    val referenceEntryId = ReferenceEntryId(17)
+    val label = TextKey.simple("DaLabelFor 17")
+
+    builder.setReferenceEntryValue(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1), referenceEntryId, ReferenceEntryData(referenceEntryId, label))
+
+    builder.build().also { historyValues ->
+      assertThat(historyValues).isNotNull()
+      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.timeStampsCount).isEqualTo(200)
+      assertThat(historyValues.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(referenceEntryId)
+      assertThat(historyValues.getReferenceEntryData(ReferenceEntryDataSeriesIndex(0), referenceEntryId)?.label).isEqualTo(label)
+    }
+
+    //change size
+    builder.resizeTimestamps(100)
+    assertThat(builder.timestampsCount).isEqualTo(100)
+
+    builder.build().also { historyValues ->
+      assertThat(historyValues).isNotNull()
+      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.timeStampsCount).isEqualTo(100)
+      assertThat(historyValues.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(referenceEntryId)
+      assertThat(historyValues.getReferenceEntryData(ReferenceEntryDataSeriesIndex(0), referenceEntryId)?.label).isEqualTo(label)
+    }
   }
 }

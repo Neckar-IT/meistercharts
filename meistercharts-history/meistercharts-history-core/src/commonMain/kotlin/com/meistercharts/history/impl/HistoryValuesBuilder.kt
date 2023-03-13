@@ -16,10 +16,8 @@
 package com.meistercharts.history.impl
 
 import com.meistercharts.annotations.Domain
-import it.neckar.open.collections.DoubleArray2
-import it.neckar.open.collections.IntArray2
-import it.neckar.open.collections.fastForEach
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryDebug
 import com.meistercharts.history.HistoryEnumOrdinal
@@ -27,15 +25,20 @@ import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.annotations.ForOnePointInTime
+import it.neckar.open.collections.DoubleArray2
+import it.neckar.open.collections.IntArray2
+import it.neckar.open.collections.fastForEach
 import kotlin.math.min
 
 /**
- * Helper class to build history values
+ * Helper class to build history values.
  */
 class HistoryValuesBuilder(
   /**
@@ -120,9 +123,9 @@ class HistoryValuesBuilder(
     private set
 
   /**
-   * Contains the [ReferenceEntriesDataMap]s
+   * The [DefaultReferenceEntriesDataMap.Builder] that is later used to build the [ReferenceEntriesDataMap] (for all data series)
    */
-  var referenceEntriesDataMaps: List<ReferenceEntriesDataMap> = List(referenceEntryDataSeriesCount) { ReferenceEntriesDataMap.generated }
+  var referenceEntriesDataMapBuilder: DefaultReferenceEntriesDataMap.Builder = DefaultReferenceEntriesDataMap.Builder()
     private set
 
   /**
@@ -180,10 +183,21 @@ class HistoryValuesBuilder(
     enumValues[dataSeriesIndex, timestampIndex] = enumValue
   }
 
-  fun setReferenceEntryValue(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex, referenceEntryId: ReferenceEntryId) {
+  /**
+   * Sets a single reference entry value
+   */
+  fun setReferenceEntryValue(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex, referenceEntryId: ReferenceEntryId, data: ReferenceEntryData) {
     require(recordingType == RecordingType.Measured) { "Only supported for measured" }
 
     referenceEntryIds[dataSeriesIndex, timestampIndex] = referenceEntryId
+    getEntriesDataMapBuilder().store(data)
+  }
+
+  /**
+   * Returns the builder for this data series index
+   */
+  private fun getEntriesDataMapBuilder(): DefaultReferenceEntriesDataMap.Builder {
+    return referenceEntriesDataMapBuilder
   }
 
   /**
@@ -259,18 +273,23 @@ class HistoryValuesBuilder(
     val targetStartIndex = HistoryValues.calculateStartIndex(enumDataSeriesCount, timestampIndex)
     enumValues.copyInto(this.enumValues.data, targetStartIndex, 0, enumDataSeriesCount)
 
-    @Suppress("ReplaceNotNullAssertionWithElvisReturn")
     enumOrdinalsMostTime?.copyInto(requireNotNull(this.enumOrdinalsMostTime).data, targetStartIndex, 0, enumDataSeriesCount)
   }
 
   /**
-   * Sets the reference entry ids for the given timetsamp.
+   * Sets the reference entry ids for the given timestamp.
    * Sets either the measured values or "most of the time"
    */
+  @ForOnePointInTime
   fun setReferenceEntryIdsForTimestamp(
     timestampIndex: TimestampIndex,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray? = null,
+    /**
+     * Each [referenceEntryIds] must contain exactly one entry in this list.
+     * The values are added to [referenceEntriesDataMapBuilder]. Duplicates are automatically removed.
+     */
+    entryDataSet: Set<ReferenceEntryData>,
   ) {
     require(referenceEntryDataSeriesCount == referenceEntryIds.size) {
       "Invalid size of values array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryIds.size}>"
@@ -290,10 +309,15 @@ class HistoryValuesBuilder(
     val targetStartIndex = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, timestampIndex)
     referenceEntryIds.copyInto(this.referenceEntryIds.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
 
-    @Suppress("ReplaceNotNullAssertionWithElvisReturn")
     referenceEntryIdsCount?.copyInto(requireNotNull(this.referenceEntryDifferentIdsCount).data, targetStartIndex, 0, referenceEntryDataSeriesCount)
+
+    //Store all data elements
+    referenceEntriesDataMapBuilder.storeAll(entryDataSet)
   }
 
+  /**
+   * Sets all values for a given timestamp index
+   */
   fun setAllValuesForTimestamp(
     timestampIndex: TimestampIndex,
 
@@ -315,10 +339,12 @@ class HistoryValuesBuilder(
      */
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryDifferentIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray? = null,
+
+    entryDataSet: Set<ReferenceEntryData>,
   ) {
     setDecimalValuesForTimestamp(timestampIndex, decimalValues, minValues, maxValues)
     setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
-    setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryDifferentIdsCount)
+    setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryDifferentIdsCount, entryDataSet)
   }
 
   /**
@@ -334,7 +360,7 @@ class HistoryValuesBuilder(
         maxValues = null,
         mostOfTheTimeValues = null,
         referenceEntryIdsCount = null,
-        referenceEntriesDataMaps = referenceEntriesDataMaps
+        referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
       )
 
       RecordingType.Calculated -> HistoryValues(
@@ -345,7 +371,7 @@ class HistoryValuesBuilder(
         maxValues = maxValues,
         mostOfTheTimeValues = enumOrdinalsMostTime,
         referenceEntryIdsCount = referenceEntryDifferentIdsCount,
-        referenceEntriesDataMaps = referenceEntriesDataMaps
+        referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
       )
     }
   }

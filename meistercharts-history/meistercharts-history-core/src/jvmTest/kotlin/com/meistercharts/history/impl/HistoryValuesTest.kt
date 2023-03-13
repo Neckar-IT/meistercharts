@@ -49,7 +49,10 @@ class HistoryValuesTest {
           "referenceEntryHistoryValues" : {
             "values" : "AAAADA==",
             "differentIdsCount" : null,
-            "dataMaps" : [ ]
+              "dataMap" : {
+              "type" : "Default",
+              "entries" : { }
+            }
           }
         }
       """.trimIndent()

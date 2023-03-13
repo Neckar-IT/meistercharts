@@ -18,7 +18,6 @@ package com.meistercharts.api.line
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
-import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.DataSeriesNumberFormat
 import com.meistercharts.api.PointConnectionStyle
 import com.meistercharts.api.toColor
@@ -29,20 +28,22 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
+import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.IntMap
 import it.neckar.open.collections.fastForEach
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.provider.MultiProvider.Companion.alwaysNull
-import it.neckar.open.provider.MultiProvider.Companion.forListModulo
-import it.neckar.open.provider.MultiProvider.Companion.invoke
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.provider.MultiProvider.Companion.alwaysNull
+import it.neckar.open.provider.MultiProvider.Companion.forListModulo
+import it.neckar.open.provider.MultiProvider.Companion.invoke
 
 object TimeLineChartConverter {
   fun toValueRangeProvider(jsDecimalDataSeriesStyles: Array<DecimalDataSeriesStyle>): MultiProvider<DecimalDataSeriesIndex, ValueRange> {
@@ -117,7 +118,8 @@ object TimeLineChartConverter {
         },
         referenceEntryIdProvider = {
           TODO()
-        }
+        },
+        referenceEntriesDataMap = ReferenceEntriesDataMap.generated, //TODO
       )
     }
   }

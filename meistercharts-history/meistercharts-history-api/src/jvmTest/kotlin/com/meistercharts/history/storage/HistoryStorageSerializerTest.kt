@@ -81,8 +81,11 @@ class HistoryStorageSerializerTest {
           },
           "referenceEntryHistoryValues" : {
             "values" : "AAAB9A==",
-                "differentIdsCount" : null,
-                "dataMaps" : [ ]
+              "differentIdsCount" : null,
+              "dataMap" : {
+                "type" : "Default",
+                "entries" : { }
+              }
           }
         }
         """
@@ -139,8 +142,11 @@ class HistoryStorageSerializerTest {
             },
             "referenceEntryHistoryValues" : {
               "values" : "AAAB9A==",
-                  "differentIdsCount" : null,
-                  "dataMaps" : [ ]
+                "differentIdsCount" : null,
+                "dataMap" : {
+                "type" : "Default",
+                "entries" : { }
+              }
             }
           },
           "recordingType" : "Measured"

@@ -16,11 +16,13 @@
 package com.meistercharts.history
 
 import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.impl.HistoryValues
+import com.meistercharts.history.impl.RecordingType
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
-import com.meistercharts.history.impl.HistoryChunk
 
 /**
  * Represents a container for history data that has clear borders that can be calculated in constant time.
@@ -28,6 +30,11 @@ import com.meistercharts.history.impl.HistoryChunk
  *
  * This is a high level object that should be used when working with the history.
  *
+ *
+ * Distinction to the other classes:
+ * * [HistoryValues] does *only* contain the values - no timestamps
+ * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps. Also has a [RecordingType]
+ * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
  */
 data class HistoryBucket(
   /**

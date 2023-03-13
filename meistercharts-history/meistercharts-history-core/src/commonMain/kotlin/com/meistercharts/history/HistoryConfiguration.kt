@@ -15,8 +15,8 @@
  */
 package com.meistercharts.history
 
-import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.fastFor
 import kotlinx.serialization.Serializable
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -130,18 +130,18 @@ fun historyConfiguration(config: HistoryConfigurationBuilder.() -> Unit): Histor
   return HistoryConfigurationBuilder().also(config).build()
 }
 
-@Deprecated("Does not have ref values")
-fun historyConfiguration(
-  decimalDataSeriesCount: Int,
-  enumDataSeriesCount: Int,
-
-  decimalDataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) -> Unit,
-  enumDataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: EnumDataSeriesIndex) -> Unit,
-): HistoryConfiguration {
-
-  return historyConfiguration(decimalDataSeriesCount, enumDataSeriesCount, 0, decimalDataSeriesInitializer, enumDataSeriesInitializer) { }
-}
-
+/**
+ * Creates a configuration for a history chart with decimal, enum, and reference entry data series.
+ *
+ * @param decimalDataSeriesCount the number of decimal data series in the configuration
+ * @param enumDataSeriesCount the number of enum data series in the configuration
+ * @param referenceEntrySeriesCount the number of reference entry data series in the configuration
+ * @param decimalDataSeriesInitializer a lambda expression used to initialize the configuration for each decimal data series
+ * @param enumDataSeriesInitializer a lambda expression used to initialize the configuration for each enum data series
+ * @param referenceEntryDataSeriesInitializer a lambda expression used to initialize the configuration for each reference entry data series
+ * @return a `HistoryConfiguration` object that contains the configuration for the chart
+ * @throws IllegalArgumentException if the number of created data series entries does not match the given count of data series
+ */
 fun historyConfiguration(
   decimalDataSeriesCount: Int,
   enumDataSeriesCount: Int,
@@ -250,12 +250,12 @@ class HistoryConfigurationBuilder {
     enumConfigurationBuilder.enumDataSeries(id, displayName, enumConfiguration)
   }
 
-  fun referenceEntryDataSeries(id: DataSeriesId, displayName: String, data: ReferenceEntriesDataMap) {
-    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName, data)
+  fun referenceEntryDataSeries(id: DataSeriesId, displayName: String) {
+    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName)
   }
 
-  fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey, dataMap: ReferenceEntriesDataMap) {
-    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName, dataMap)
+  fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey) {
+    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName)
   }
 
   companion object {

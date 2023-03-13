@@ -40,6 +40,10 @@ class TimeLineChartGestaltOnlyEnumDemoDescriptor : ChartingDemoDescriptor<Nothin
         val enumDataSeriesCount = 7
 
         val historyStorage = InMemoryHistoryStorage()
+        historyStorage.scheduleDownSampling()
+        historyStorage.scheduleCleanupService()
+
+        onDispose(historyStorage)
 
         val samplingPeriod = SamplingPeriod.EveryHundredMillis
         val historyChunkGenerator = HistoryChunkGenerator(

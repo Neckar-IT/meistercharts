@@ -60,7 +60,7 @@ abstract class AbstractHistoryConfiguration {
     if (this === other) return true
     if (other == null || this::class != other::class) return false
 
-    other as com.meistercharts.history.AbstractHistoryConfiguration
+    other as AbstractHistoryConfiguration
 
     if (!dataSeriesIds.contentEquals(other.dataSeriesIds)) return false
     if (displayNames != other.displayNames) return false

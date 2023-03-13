@@ -238,7 +238,10 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)
 
-    calculator.addReferenceEntrySample(newReferenceEntries = IntArray(2) { it + 10 }, newDifferentIdsCount = null)
+    calculator.addReferenceEntrySample(
+      newReferenceEntries = IntArray(2) { it + 10 },
+      newDifferentIdsCount = null
+    )
 
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualToReferenceEntryIdsCount(1)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId(10))

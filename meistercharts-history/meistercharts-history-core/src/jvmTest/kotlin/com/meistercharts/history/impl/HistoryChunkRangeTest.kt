@@ -19,7 +19,6 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.downsampling.createDemoEnumConfiguration
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
@@ -82,9 +81,9 @@ class HistoryChunkRangeTest {
   @Test
   fun testReferenceEntries() {
     val historyConfiguration: HistoryConfiguration = historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"), ReferenceEntriesDataMap.generated)
+      referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"))
+      referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"))
+      referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"))
     }
 
     val chunk = historyChunk(historyConfiguration, recordingType = RecordingType.Calculated) {

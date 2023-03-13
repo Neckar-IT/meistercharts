@@ -15,21 +15,27 @@
  */
 package com.meistercharts.history.downsampling
 
-import it.neckar.open.collections.IntArray2
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.kotlin.lang.toIntCeil
-import it.neckar.open.provider.SizedProvider
-import it.neckar.open.provider.fastForEach
-import it.neckar.open.provider.isNotEmpty
-import it.neckar.open.formatting.formatUtc
-import it.neckar.open.unit.other.Sorted
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.history.MayBeNoValueOrPending
+import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.ReferenceEntryId
+import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValuesBuilder
 import com.meistercharts.history.impl.RecordingType
+import it.neckar.open.annotations.Slow
+import it.neckar.open.collections.IntArray2
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.fastForEachIndexed
+import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.toIntCeil
+import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.fastForEach
+import it.neckar.open.provider.isNotEmpty
+import it.neckar.open.unit.other.Sorted
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -113,15 +119,17 @@ fun HistoryBucketDescriptor.calculateDownSampled(
         //We reached the end of the current slot
 
         //Save the calculated values
+        @ReferenceEntryIdInt val downSampledReferenceEntryIds = downSamplingCalculator.referenceEntryIds()
         downSampledValuesBuilder.setAllValuesForTimestamp(
-          timestampsIterator.index,
-          downSamplingCalculator.averageValues(),
-          downSamplingCalculator.minValues(),
-          downSamplingCalculator.maxValues(),
-          downSamplingCalculator.enumUnionValues(),
-          downSamplingCalculator.enumMostTimeOrdinalValues(),
-          downSamplingCalculator.referenceEntryIds(),
-          downSamplingCalculator.referenceEntryDifferentIdsCount(),
+          timestampIndex = timestampsIterator.index,
+          decimalValues = downSamplingCalculator.averageValues(),
+          minValues = downSamplingCalculator.minValues(),
+          maxValues = downSamplingCalculator.maxValues(),
+          enumValues = downSamplingCalculator.enumUnionValues(),
+          enumOrdinalsMostTime = downSamplingCalculator.enumMostTimeOrdinalValues(),
+          referenceEntryIds = downSampledReferenceEntryIds,
+          referenceEntryDifferentIdsCount = downSamplingCalculator.referenceEntryDifferentIdsCount(),
+          entryDataSet = childChunks.collectReferenceEntryData(downSampledReferenceEntryIds),
         )
 
         //Reset the calculator - a new average is calculated
@@ -141,6 +149,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   }
 
   //the final point (if there is one)
+  @ReferenceEntryIdInt val downSampledReferenceEntryIds = downSamplingCalculator.referenceEntryIds()
   downSampledValuesBuilder.setAllValuesForTimestamp(
     timestampIndex = timestampsIterator.index,
     decimalValues = downSamplingCalculator.averageValues(),
@@ -148,8 +157,9 @@ fun HistoryBucketDescriptor.calculateDownSampled(
     maxValues = downSamplingCalculator.maxValues(),
     enumValues = downSamplingCalculator.enumUnionValues(),
     enumOrdinalsMostTime = downSamplingCalculator.enumMostTimeOrdinalValues(),
-    referenceEntryIds = downSamplingCalculator.referenceEntryIds(),
-    referenceEntryDifferentIdsCount = downSamplingCalculator.referenceEntryDifferentIdsCount()
+    referenceEntryIds = downSampledReferenceEntryIds,
+    referenceEntryDifferentIdsCount = downSamplingCalculator.referenceEntryDifferentIdsCount(),
+    entryDataSet = childChunks.collectReferenceEntryData(downSampledReferenceEntryIds),
   )
   downSamplingCalculator.reset()
 
@@ -158,6 +168,30 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   //Instantiate the newly created objects
   val downSampledChunk = HistoryChunk(firstChunk.configuration, timestampsIterator.timeStamps, downSampledValues, RecordingType.Calculated)
   return HistoryBucket(this, downSampledChunk)
+}
+
+/**
+ * Collects all entry data for the provided IDs
+ */
+fun SizedProvider<HistoryChunk>.collectReferenceEntryData(referenceEntryIds: @ReferenceEntryIdInt @MayBeNoValueOrPending IntArray): Set<ReferenceEntryData> {
+  return referenceEntryIds.mapIndexed { referenceEntryDataSeriesIdAsInt, referenceEntryIdAsInt ->
+    val referenceEntryDataSeriesIndex = ReferenceEntryDataSeriesIndex(referenceEntryDataSeriesIdAsInt)
+    val referenceEntryId = ReferenceEntryId(referenceEntryIdAsInt)
+
+    findData(referenceEntryDataSeriesIndex, referenceEntryId)
+  }.filterNotNull()
+    .toSet()
+}
+
+private fun SizedProvider<HistoryChunk>.findData(referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex, referenceEntryId: ReferenceEntryId): ReferenceEntryData? {
+  fastForEach { historyChunk ->
+    val referenceEntryData = historyChunk.getReferenceEntryData(referenceEntryDataSeriesIndex, referenceEntryId)
+    if (referenceEntryData != null) {
+      return referenceEntryData
+    }
+  }
+
+  return null
 }
 
 /**
@@ -277,7 +311,7 @@ fun IntArray.calculateMin(numberToCombine: Int): IntArray {
 
     val baseIndexForSegment = segmentIndex * numberToCombine
     for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
-      min = kotlin.math.min(min, this[i])
+      min = min(min, this[i])
     }
 
     results[segmentIndex] = min

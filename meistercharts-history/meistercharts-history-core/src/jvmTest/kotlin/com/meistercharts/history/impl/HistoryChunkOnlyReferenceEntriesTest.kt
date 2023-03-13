@@ -19,7 +19,6 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
@@ -29,9 +28,9 @@ import com.meistercharts.history.impl.HistoryChunk.Companion.minHistoryAware
 import com.meistercharts.history.isEqualToReferenceEntryId
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.emptyIntArray
-import it.neckar.open.serialization.roundTrip
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.serialization.roundTrip
 import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,10 +46,10 @@ class HistoryChunkOnlyReferenceEntriesTest {
   @BeforeEach
   internal fun setUp() {
     historyConfiguration = historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(10), TextKey("temp", "Temperature"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(11), TextKey("height", "Height"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(12), TextKey("temp2", "Temperature 2"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(13), TextKey("temp3", "Temperature 3"), ReferenceEntriesDataMap.generated)
+      referenceEntryDataSeries(DataSeriesId(10), TextKey("temp", "Temperature"))
+      referenceEntryDataSeries(DataSeriesId(11), TextKey("height", "Height"))
+      referenceEntryDataSeries(DataSeriesId(12), TextKey("temp2", "Temperature 2"))
+      referenceEntryDataSeries(DataSeriesId(13), TextKey("temp3", "Temperature 3"))
     }
 
     assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(4)
@@ -114,15 +113,10 @@ class HistoryChunkOnlyReferenceEntriesTest {
             "referenceEntryHistoryValues" : {
               "values" : "AAQAAwAAAAEAAAAKAAAAZAAAA+gAAAACAAAAFAAAAMgAAAfQAAAAAwAAAB4AAAEsAAALuA==",
               "differentIdsCount" : null,
-              "dataMaps" : [ {
-                  "type" : "Generated"
-                }, {
-                  "type" : "Generated"
-                }, {
-                  "type" : "Generated"
-                }, {
-                  "type" : "Generated"
-                } ]
+                "dataMap" : {
+                "type" : "Default",
+                "entries" : { }
+              }
             }
           },
           "recordingType" : "Measured"
@@ -441,7 +435,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000))
+    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000), emptySet())
 
     assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -472,7 +466,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000))
+    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000), emptySet())
 
     assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -490,7 +484,13 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testPending() {
-    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), IntArray(4) { ReferenceEntryId.PendingAsInt })
+    val newChunk = chunk.withAddedValues(
+      additionalTimeStamp = 1004.0,
+      additionalDecimalValues = emptyDoubleArray(),
+      additionalEnumValues = emptyIntArray(),
+      additionalReferenceEntryIds = IntArray(4) { ReferenceEntryId.PendingAsInt },
+      additionalReferenceEntryDataList = emptySet()
+    )
     assertThat(newChunk.isPending(TimestampIndex(0))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(1))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(2))).isFalse()

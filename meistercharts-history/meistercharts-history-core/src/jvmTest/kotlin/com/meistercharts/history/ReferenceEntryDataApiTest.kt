@@ -30,12 +30,12 @@ class ReferenceEntryDataApiTest {
     val dataSeriesId = DataSeriesId(17)
 
     val historyConfiguration = historyConfiguration {
-      referenceEntryDataSeries(dataSeriesId, "ref1", ReferenceEntriesDataMap.generated)
+      referenceEntryDataSeries(id = dataSeriesId, displayName = "ref1")
     }
 
     val chunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(10.0, 17)
-      addReferenceEntryValues(99.0, 18)
+      addReferenceEntryValues(10.0, 17, referenceEntriesDataMap = ReferenceEntriesDataMap.of(ReferenceEntryData.create(17, "Label 17")))
+      addReferenceEntryValues(99.0, 18, referenceEntriesDataMap = ReferenceEntriesDataMap.of(ReferenceEntryData.create(18, "Label 18")))
     }
 
     assertThat(chunk.timeStampsCount).isEqualTo(2)
@@ -53,5 +53,8 @@ class ReferenceEntryDataApiTest {
 
     val entryData = chunk.getReferenceEntryData(dataSeriesIndex, ReferenceEntryId(17))
     assertThat(entryData?.label?.fallbackText).isEqualTo("Label 17")
+
+    assertThat(chunk.referenceEntriesDataMap).isInstanceOf(DefaultReferenceEntriesDataMap::class)
+    assertThat((chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(2)
   }
 }

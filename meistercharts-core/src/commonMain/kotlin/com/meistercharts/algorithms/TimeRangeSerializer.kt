@@ -33,9 +33,9 @@ object TimeRangeSerializer: KSerializer<TimeRange> {
   }
 
   override fun serialize(encoder: Encoder, value: TimeRange) {
-    encoder.encodeStructure(TimeRangeSerializer.descriptor) {
-      encodeDoubleElement(TimeRangeSerializer.descriptor, 0, value.start)
-      encodeDoubleElement(TimeRangeSerializer.descriptor, 1, value.end)
+    encoder.encodeStructure(descriptor) {
+      encodeDoubleElement(descriptor, 0, value.start)
+      encodeDoubleElement(descriptor, 1, value.end)
     }
   }
 
@@ -43,11 +43,11 @@ object TimeRangeSerializer: KSerializer<TimeRange> {
     var start: Double = Double.NaN
     var end: Double = Double.NaN
 
-    decoder.decodeStructure(TimeRangeSerializer.descriptor) {
+    decoder.decodeStructure(descriptor) {
       while (true) {
-        when (val index = decodeElementIndex(TimeRangeSerializer.descriptor)) {
-          0 -> start = decodeDoubleElement(TimeRangeSerializer.descriptor, 0)
-          1 -> end = decodeDoubleElement(TimeRangeSerializer.descriptor, 1)
+        when (val index = decodeElementIndex(descriptor)) {
+          0 -> start = decodeDoubleElement(descriptor, 0)
+          1 -> end = decodeDoubleElement(descriptor, 1)
           CompositeDecoder.DECODE_DONE -> break
           else -> error("Unexpected index: $index")
         }

@@ -34,13 +34,13 @@ class HistoryConfigurationTest {
 
   @Test
   fun testCreation() {
-    val historyConfiguration = historyConfiguration(3, 2, decimalDataSeriesInitializer = { dataSeriesIndex ->
+    val historyConfiguration = historyConfiguration(3, 2, 0, decimalDataSeriesInitializer = fun HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) {
       val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
       decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
-    }, enumDataSeriesInitializer = { dataSeriesIndex ->
+    }, enumDataSeriesInitializer = fun HistoryConfigurationBuilder.(dataSeriesIndex: EnumDataSeriesIndex) {
       val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 1000)
       enumDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Boolean)
-    })
+    }) { }
 
     assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(3)
     assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(2)
@@ -63,7 +63,7 @@ class HistoryConfigurationTest {
       },
       referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
         val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10)
-        referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), ReferenceEntriesDataMap.generated)
+        referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"))
       }
     )
 

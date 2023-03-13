@@ -16,6 +16,7 @@
 package com.meistercharts.history
 
 import it.neckar.open.collections.cache
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.i18n.TextKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,7 +24,8 @@ import kotlinx.serialization.Serializable
 /**
  * Resolves [com.meistercharts.history.ReferenceEntryId]s to the objects.
  *
- * Contains *all* entries for one data series (and one history bucket?)
+ * Contains *all* entries for *all* data series. Usually within one [HistoryBucket].
+ *
  */
 @Serializable
 sealed interface ReferenceEntriesDataMap {
@@ -32,7 +34,24 @@ sealed interface ReferenceEntriesDataMap {
    */
   fun get(id: ReferenceEntryId): ReferenceEntryData?
 
+  /**
+   * Returns all entries - in a newly instantiated list
+   */
+  fun getAll(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
+    return referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int ->
+      get(ReferenceEntryId(idAsInt))
+    }.filterNotNull()
+      .toSet()
+  }
+
   companion object {
+    /**
+     * Creates a new map containing exactly the provided values
+     */
+    fun of(vararg data: ReferenceEntryData): ReferenceEntriesDataMap {
+      return DefaultReferenceEntriesDataMap(data.associateBy { it.id })
+    }
+
     /**
      * Does not contain any data - only useful for tests or as default
      */
@@ -81,7 +100,7 @@ data class DefaultReferenceEntriesDataMap(
   /**
    * Contains the entries for each object value id
    */
-  private val entries: Map<ReferenceEntryId, ReferenceEntryData>,
+  internal val entries: Map<ReferenceEntryId, ReferenceEntryData>,
 ) : ReferenceEntriesDataMap {
 
   override fun get(id: ReferenceEntryId): ReferenceEntryData? {
@@ -95,11 +114,30 @@ data class DefaultReferenceEntriesDataMap(
     private val entries: MutableMap<ReferenceEntryId, ReferenceEntryData> = mutableMapOf()
 
     /**
-     * Stores the data entry
+     * Stores the data entry.
+     * Overwrites existing entries for the same ID
      */
     fun store(data: ReferenceEntryData) {
       this.entries[data.id] = data
     }
+
+    /**
+     * Stores all elements
+     */
+    fun storeAll(dataList: List<ReferenceEntryData?>) {
+      dataList.fastForEach { data ->
+        if (data != null) {
+          store(data)
+        }
+      }
+    }
+
+    fun storeAll(dataList: Set<ReferenceEntryData>) {
+      dataList.forEach { data ->
+        store(data)
+      }
+    }
+
 
     /**
      * Builds the instance
@@ -107,5 +145,14 @@ data class DefaultReferenceEntriesDataMap(
     fun build(): DefaultReferenceEntriesDataMap {
       return DefaultReferenceEntriesDataMap(entries.toMap())
     }
+  }
+}
+
+/**
+ * Builds a list of map builders
+ */
+fun List<DefaultReferenceEntriesDataMap.Builder>.build(): List<ReferenceEntriesDataMap> {
+  return map {
+    it.build()
   }
 }

@@ -54,7 +54,7 @@ class HistAccessApiLiveSimulationDemo {
         decimalValues = DoubleArray2(2, 1, i * 100.0),
         enumValues = IntArray2(2, 1, i * 100),
         referenceEntryIds = IntArray2(2, 1, i * 100),
-        referenceEntriesDataMaps = emptyList()
+        referenceEntriesDataMap = ReferenceEntriesDataMap.empty
       )
       val newChunk = HistoryChunk(historyConfig, doubleArrayOf(i.toDouble()), values, RecordingType.Measured)
 

@@ -18,18 +18,18 @@ package com.meistercharts.history.generator
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.TimeRange
-import it.neckar.open.formatting.formatUtc
-import it.neckar.open.test.utils.RandomWithSeed
+import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.RecordingType
+import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.RandomWithSeed
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 import kotlin.time.Duration.Companion.seconds
@@ -119,7 +119,10 @@ class HistoryChunkGeneratorTest {
       },
     )
 
-    val chunk = generator.forTimeRange(TimeRange.oneHourUntilNow())
+    val now = 1.678716504263E12
+    assertThat(now.formatUtc()).isEqualTo("2023-03-13T14:08:24.263")
+
+    val chunk = generator.forTimeRange(TimeRange.oneMinuteUntilNow(now))
     requireNotNull(chunk)
 
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(1), TimestampIndex.one)).isEqualTo(ReferenceEntryId(79304))
@@ -127,6 +130,9 @@ class HistoryChunkGeneratorTest {
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(1), TimestampIndex(124))).isEqualTo(ReferenceEntryId(27945))
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(124))).isEqualTo(ReferenceEntryId(69906))
 
-    assertThat(chunk.getReferenceEntriesDataMap(ReferenceEntryDataSeriesIndex.zero)).isInstanceOf(ReferenceEntriesDataMap.Generated::class)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(3)
+    assertThat(chunk.timeStampsCount).isEqualTo(600)
+
+    assertThat((chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries.size).isEqualTo(1_690)
   }
 }

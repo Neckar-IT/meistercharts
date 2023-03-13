@@ -55,12 +55,12 @@ class HistoryValuesEnumTest {
     assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(1)
 
     val chunk = historyChunk(historyConfiguration) {
-      addValues(100.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(0).bitset), emptyIntArray())
-      addValues(101.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray())
-      addValues(102.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(2).bitset), emptyIntArray())
-      addValues(103.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray())
+      addValues(100.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(0).bitset), emptyIntArray(), emptySet())
+      addValues(101.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptySet())
+      addValues(102.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(2).bitset), emptyIntArray(), emptySet())
+      addValues(103.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptySet())
 
-      addValues(107.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.NoValue.bitset), emptyIntArray())
+      addValues(107.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.NoValue.bitset), emptyIntArray(), emptySet())
     }
 
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumSet.forEnumValue(0))

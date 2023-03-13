@@ -207,22 +207,22 @@ class TimeRange(
     /**
      * Returns a new time range that ends now and starts one minute before
      */
-    fun oneMinuteUntilNow(): TimeRange {
-      return fromEndAndDuration(nowMillis(), 60 * 1000.0)
+    fun oneMinuteUntilNow(now: @ms Double = nowMillis()): TimeRange {
+      return fromEndAndDuration(now, 60 * 1000.0)
     }
 
     /**
      * Returns a new time range that ends now and starts one hour before
      */
-    fun oneHourUntilNow(): TimeRange {
-      return fromEndAndDuration(nowMillis(), 60 * 60 * 1000.0)
+    fun oneHourUntilNow(now: @ms Double = nowMillis()): TimeRange {
+      return fromEndAndDuration(now, 60 * 60 * 1000.0)
     }
 
     /**
      * Returns a new time range that ends now and starts one day before
      */
-    fun oneDayUntilNow(): TimeRange {
-      return fromEndAndDuration(nowMillis(), 60 * 60 * 1000.0 * 24)
+    fun oneDayUntilNow(now: @ms Double = nowMillis()): TimeRange {
+      return fromEndAndDuration(now, 60 * 60 * 1000.0 * 24)
     }
 
     /**

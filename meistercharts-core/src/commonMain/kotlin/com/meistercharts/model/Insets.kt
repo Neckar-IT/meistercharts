@@ -302,17 +302,17 @@ data class Insets(
     fun create(direction: Direction, size: @px Double): Insets {
       return when (direction) {
         Direction.Center -> empty
-        Direction.CenterLeft -> Insets.onlyLeft(size)
-        Direction.CenterRight -> Insets.onlyRight(size)
+        Direction.CenterLeft -> onlyLeft(size)
+        Direction.CenterRight -> onlyRight(size)
         Direction.BaseLineCenter -> empty
-        Direction.BaseLineLeft -> Insets.onlyLeft(size)
-        Direction.BaseLineRight -> Insets.onlyRight(size)
-        Direction.TopLeft -> Insets.topLeft(size, size)
-        Direction.TopCenter -> Insets.onlyTop(size)
-        Direction.TopRight -> Insets.topRight(size, size)
-        Direction.BottomLeft -> Insets.bottomLeft(size, size)
-        Direction.BottomCenter -> Insets.onlyBottom(size)
-        Direction.BottomRight -> Insets.bottomRight(size, size)
+        Direction.BaseLineLeft -> onlyLeft(size)
+        Direction.BaseLineRight -> onlyRight(size)
+        Direction.TopLeft -> topLeft(size, size)
+        Direction.TopCenter -> onlyTop(size)
+        Direction.TopRight -> topRight(size, size)
+        Direction.BottomLeft -> bottomLeft(size, size)
+        Direction.BottomCenter -> onlyBottom(size)
+        Direction.BottomRight -> bottomRight(size, size)
       }
     }
   }

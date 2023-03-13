@@ -16,25 +16,6 @@
 package com.meistercharts.algorithms.axis
 
 import com.meistercharts.algorithms.time.PredefinedDuration
-import it.neckar.open.collections.DoubleArrayList
-import it.neckar.open.collections.emptyDoubleArray
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.kotlin.lang.floor
-import it.neckar.open.kotlin.lang.isCloseToOrLessThan
-import it.neckar.open.kotlin.lang.log10
-import it.neckar.open.kotlin.lang.toIntCeil
-import it.neckar.open.formatting.dateFormat
-import it.neckar.open.formatting.dateTimeFormat
-import it.neckar.open.formatting.dateTimeFormatShort
-import it.neckar.open.formatting.dateTimeFormatShortWithMillis
-import it.neckar.open.formatting.formatUtc
-import it.neckar.open.formatting.yearMonthFormat
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.time.TimeZone
-import it.neckar.open.unit.other.Inclusive
-import it.neckar.open.unit.si.ms
-import it.neckar.open.unit.si.s
-import it.neckar.open.unit.time.min
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.DateTimeSpan
 import com.soywiz.klock.DateTimeTz
@@ -44,6 +25,25 @@ import com.soywiz.klock.days
 import com.soywiz.klock.hours
 import com.soywiz.klock.minutes
 import com.soywiz.klock.seconds
+import it.neckar.open.collections.DoubleArrayList
+import it.neckar.open.collections.emptyDoubleArray
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.formatting.dateFormat
+import it.neckar.open.formatting.dateTimeFormat
+import it.neckar.open.formatting.dateTimeFormatShort
+import it.neckar.open.formatting.dateTimeFormatShortWithMillis
+import it.neckar.open.formatting.formatUtc
+import it.neckar.open.formatting.yearMonthFormat
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.floor
+import it.neckar.open.kotlin.lang.isCloseToOrLessThan
+import it.neckar.open.kotlin.lang.log10
+import it.neckar.open.kotlin.lang.toIntCeil
+import it.neckar.open.time.TimeZone
+import it.neckar.open.unit.other.Inclusive
+import it.neckar.open.unit.si.ms
+import it.neckar.open.unit.si.s
+import it.neckar.open.unit.time.min
 import kotlin.math.pow
 
 /**
@@ -558,7 +558,7 @@ class DistanceMillis(val millis: @ms Double) : TimeTickDistance {
   }
 
   override fun smallestPossibleTickDistance(): TimeTickDistance {
-    return DistanceMillis.smallest
+    return smallest
   }
 
   override fun toString(): String {

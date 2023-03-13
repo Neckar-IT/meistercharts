@@ -15,8 +15,6 @@
  */
 package com.meistercharts.history.impl
 
-import it.neckar.open.collections.IntArray2
-import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
@@ -26,6 +24,8 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.collections.IntArray2
+import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -65,18 +65,11 @@ data class ReferenceEntryHistoryValues(
   val differentIdsCount: @ReferenceEntryDifferentIdsCountInt @Serializable(with = IntArray2Serializer::class) IntArray2?,
 
   /**
-   * Contains the data maps for the reference entries.
-   * The index corresponds to the [ReferenceEntryDataSeriesIndex]
+   * Contains the data map for the reference entries.
    */
-  private val dataMaps: List<ReferenceEntriesDataMap>,
+  val dataMap: ReferenceEntriesDataMap,
 
   ) : HistoryValuesAspect {
-
-  init {
-    require(dataMaps.size == dataSeriesCount) {
-      "Expected referenceEntriesDataMaps.size to be $dataSeriesCount but was ${dataMaps.size}"
-    }
-  }
 
   override val recordingType: RecordingType
     get() {
@@ -122,17 +115,17 @@ data class ReferenceEntryHistoryValues(
   }
 
   /**
-   * Returns the entries map for the provided data series index
+   * Returns the data for the given series index and id
    */
-  fun getDataMap(dataSeriesIndex: ReferenceEntryDataSeriesIndex): ReferenceEntriesDataMap {
-    return dataMaps[dataSeriesIndex.value]
+  fun getData(id: ReferenceEntryId): ReferenceEntryData? {
+    return dataMap.get(id)
   }
 
   /**
-   * Returns the data for the given series index and id
+   * Returns a set of entry data for the provided IDs
    */
-  fun getData(dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
-    return getDataMap(dataSeriesIndex).get(id)
+  fun getDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
+    return dataMap.getAll(referenceEntryIds)
   }
 
   /**

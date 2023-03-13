@@ -18,7 +18,6 @@ package com.meistercharts.history.impl.io
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryUnit
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.serialization.roundTrip
 import it.neckar.open.i18n.TextKey
@@ -67,8 +66,8 @@ class HistoryConfigurationSerializerTest {
   @Test
   fun testReferenceEntries() {
     roundTrip(historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(17), TextKey.simple("hello"), ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(18), TextKey.simple("Val2"), ReferenceEntriesDataMap.generated)
+      referenceEntryDataSeries(DataSeriesId(17), TextKey.simple("hello"))
+      referenceEntryDataSeries(DataSeriesId(18), TextKey.simple("Val2"))
     }) {
       //language=JSON
       """

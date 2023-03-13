@@ -16,10 +16,6 @@
 package com.meistercharts.history.impl
 
 import com.meistercharts.annotations.Domain
-import it.neckar.open.collections.DoubleArray2
-import it.neckar.open.collections.IntArray2
-import it.neckar.open.collections.invokeCols
-import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -36,10 +32,22 @@ import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
+import it.neckar.open.annotations.TestOnly
+import it.neckar.open.collections.DoubleArray2
+import it.neckar.open.collections.IntArray2
+import it.neckar.open.collections.invokeCols
+import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
 
 /**
  * Contains the history data values. Should not be used directly.
+ *
+ *
+ * Distinction to the other classes:
+ * * [HistoryValues] does *only* contain the values - no timestamps
+ * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps. Also has a [RecordingType]
+ * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
+ *
  *
  * Contains an int array (decimals are held in [HistoryConfiguration.decimalConfiguration]) for each data series.
  *
@@ -80,24 +88,28 @@ class HistoryValues(
     mostOfTheTimeValues: @MayBeNoValueOrPending @HistoryEnumOrdinalInt IntArray2? = null,
 
     referenceEntryIdsCount: @ReferenceEntryIdInt @Serializable(with = IntArray2Serializer::class) IntArray2? = null,
-    referenceEntriesDataMaps: List<ReferenceEntriesDataMap>,
+    referenceEntriesDataMap: ReferenceEntriesDataMap,
   ) : this(
     decimalHistoryValues = DecimalHistoryValues(decimalValues, minValues, maxValues),
     enumHistoryValues = EnumHistoryValues(enumValues, mostOfTheTimeValues),
-    referenceEntryHistoryValues = ReferenceEntryHistoryValues(referenceEntryIds, referenceEntryIdsCount, referenceEntriesDataMaps)
+    referenceEntryHistoryValues = ReferenceEntryHistoryValues(referenceEntryIds, referenceEntryIdsCount, referenceEntriesDataMap)
   )
 
+  @TestOnly
   @Deprecated("only for tests")
   constructor(
     decimalsDataArray: Array<DoubleArray>,
     enumDataArray: Array<@HistoryEnumSetInt IntArray>,
     referenceEntryDataArray: Array<@ReferenceEntryIdInt IntArray>,
   ) : this(
-    DoubleArray2.invokeCols(decimalsDataArray),
-    IntArray2.invokeCols(enumDataArray),
-    IntArray2.invokeCols(referenceEntryDataArray),
-
-    referenceEntriesDataMaps = List(referenceEntryDataArray.size) { ReferenceEntriesDataMap.generated }
+    decimalValues = DoubleArray2.invokeCols(decimalsDataArray),
+    enumValues = IntArray2.invokeCols(enumDataArray),
+    referenceEntryIds = IntArray2.invokeCols(referenceEntryDataArray),
+    minValues = null,
+    maxValues = null,
+    mostOfTheTimeValues = null,
+    referenceEntryIdsCount = null,
+    referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
   )
 
   init {
@@ -161,6 +173,14 @@ class HistoryValues(
     }
 
   /**
+   * Returns the entries data map for the given series
+   */
+  val referenceEntriesDataMap: ReferenceEntriesDataMap
+    get() {
+      return referenceEntryHistoryValues.dataMap
+    }
+
+  /**
    * Returns the value at the given position.
    * ATTENTION: Might return [HistoryChunk.NoValue] or [HistoryChunk.Pending]
    */
@@ -221,17 +241,14 @@ class HistoryValues(
   }
 
   /**
-   * Returns the entries data map for the given series
-   */
-  fun getReferenceEntriesDataMap(dataSeriesIndex: ReferenceEntryDataSeriesIndex): ReferenceEntriesDataMap {
-    return referenceEntryHistoryValues.getDataMap(dataSeriesIndex)
-  }
-
-  /**
    * Returns the [ReferenceEntryData] for the provided [dataSeriesIndex] and [id]
    */
   fun getReferenceEntryData(dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
-    return referenceEntryHistoryValues.getData(dataSeriesIndex, id)
+    return referenceEntryHistoryValues.getData(id)
+  }
+
+  fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
+    return referenceEntryHistoryValues.getDataSet(referenceEntryIds)
   }
 
   /**
@@ -350,7 +367,7 @@ class HistoryValues(
           decimalValues = DoubleArray2(0, 0) { HistoryChunk.Pending },
           enumValues = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
           referenceEntryIds = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
-          referenceEntriesDataMaps = emptyList(),
+          referenceEntriesDataMap = ReferenceEntriesDataMap.empty,
         )
 
         RecordingType.Calculated -> HistoryValues(
@@ -363,7 +380,7 @@ class HistoryValues(
           mostOfTheTimeValues = IntArray2(0, 0) { HistoryEnumOrdinal.Pending.value },
           referenceEntryIdsCount = IntArray2(0, 0) { HistoryEnumOrdinal.Pending.value },
 
-          referenceEntriesDataMaps = emptyList(),
+          referenceEntriesDataMap = ReferenceEntriesDataMap.empty,
         )
       }
     }

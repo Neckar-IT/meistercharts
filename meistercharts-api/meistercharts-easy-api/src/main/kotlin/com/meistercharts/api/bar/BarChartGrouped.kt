@@ -20,11 +20,11 @@ import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.BarChartGroupedGestalt
 import com.meistercharts.js.MeisterChartJS
-import it.neckar.open.provider.MultiProvider
 import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.ifDebug
+import it.neckar.open.provider.MultiProvider
 
 /**
  * The api towards the browser that supports the creation and manipulation of a bar chart with grouped bars
@@ -71,7 +71,7 @@ class BarChartGrouped internal constructor(
   }
 
   companion object {
-    val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartGrouped")
+    internal val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartGrouped")
   }
 }
 

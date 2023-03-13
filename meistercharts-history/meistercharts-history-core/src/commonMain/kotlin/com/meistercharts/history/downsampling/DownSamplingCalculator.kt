@@ -17,6 +17,7 @@ package com.meistercharts.history.downsampling
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumOrdinalInt
@@ -33,6 +34,7 @@ import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import com.meistercharts.history.impl.HistoryChunk.Companion.maxHistoryAware
 import com.meistercharts.history.impl.HistoryChunk.Companion.minHistoryAware
+import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.mapToIntArray
@@ -51,7 +53,7 @@ import it.neckar.open.collections.mapToIntArray
  */
 class DownSamplingCalculator(
   /**
-   * How many decimal data seriesare supported
+   * How many decimal data series are supported
    */
   val decimalDataSeriesCount: Int,
   /**
@@ -154,6 +156,7 @@ class DownSamplingCalculator(
    * Returns [HistoryChunk.NoValue] if there are no real values and at least *one* [HistoryChunk.NoValue]
    * Returns [HistoryChunk.Pending] if *all* entries are [HistoryChunk.Pending]
    */
+  @TestOnly
   fun averageValue(dataSeriesIndex: DecimalDataSeriesIndex): Double {
     val count = averageCalculationCount(dataSeriesIndex)
     if (count != 0) {
@@ -172,6 +175,7 @@ class DownSamplingCalculator(
     return HistoryChunk.Pending
   }
 
+  @TestOnly
   fun minDecimal(dataSeriesIndex: DecimalDataSeriesIndex): @Domain Double {
     val count = averageCalculationCount(dataSeriesIndex)
     if (count != 0) {
@@ -192,6 +196,7 @@ class DownSamplingCalculator(
   /**
    * Returns the max decimal value
    */
+  @TestOnly
   fun maxDecimal(dataSeriesIndex: DecimalDataSeriesIndex): @Domain Double {
     val count = averageCalculationCount(dataSeriesIndex)
     if (count != 0) {
@@ -217,6 +222,7 @@ class DownSamplingCalculator(
    * * if at least one [HistoryEnumSet.NoValue] has been recorded: Returns [HistoryEnumSet.NoValue]
    * * else: [HistoryEnumSet.Pending]
    */
+  @TestOnly
   fun enumValue(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnumSet {
     val value = HistoryEnumSet(enumUnionValues[dataSeriesIndex.value])
 
@@ -238,6 +244,7 @@ class DownSamplingCalculator(
   /**
    * Returns the count of reference entries for the given data series index
    */
+  @TestOnly
   fun referenceEntryDifferentIdsCount(dataSeriesIndex: ReferenceEntryDataSeriesIndex): @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount {
     val counter = referenceEntryCounters.get(dataSeriesIndex)
     return counter.differentIdsCount()
@@ -246,6 +253,7 @@ class DownSamplingCalculator(
   /**
    * Returns the reference entry id that has been active for most of the time
    */
+  @TestOnly
   fun referenceEntryMostOfTheTime(dataSeriesIndex: ReferenceEntryDataSeriesIndex): @MayBeNoValueOrPending ReferenceEntryId {
     val counter = referenceEntryCounters[dataSeriesIndex.value]
     return counter.winnerMostOfTheTime()
@@ -254,6 +262,7 @@ class DownSamplingCalculator(
   /**
    * Returns the most time enum ordinal
    */
+  @TestOnly
   fun enumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnumOrdinal {
     return enumMostTimeOrdinalCounters[dataSeriesIndex.value].winner()
   }
@@ -292,7 +301,7 @@ class DownSamplingCalculator(
   /**
    * Returns the "winners"
    */
-  internal fun referenceEntryIds(): @HistoryEnumSetInt @MayBeNoValueOrPending IntArray {
+  internal fun referenceEntryIds(): @ReferenceEntryIdInt @MayBeNoValueOrPending IntArray {
     return referenceEntryCounters.mapToIntArray { it.winnerMostOfTheTime().id }
   }
 
@@ -377,12 +386,23 @@ class DownSamplingCalculator(
     }
   }
 
+  /**
+   * Adds a sample of reference entries to the counter
+   *
+   * @param newReferenceEntries an array of reference entry IDs
+   * @param newDifferentIdsCount an optional array of counts of different IDs for each reference entry
+   *
+   * @throws IllegalArgumentException if the size of newReferenceEntries does not match the size of the referenceEntryCounters
+   */
   fun addReferenceEntrySample(
     newReferenceEntries: @ReferenceEntryIdInt IntArray,
     newDifferentIdsCount: @ReferenceEntryIdInt IntArray?,
   ) {
     require(newReferenceEntries.size == referenceEntryCounters.size) {
       "Invalid size. Was ${newReferenceEntries.size} but expected ${referenceEntryCounters.size}"
+    }
+    require(newDifferentIdsCount == null || newDifferentIdsCount.size == referenceEntryCounters.size) {
+      "Invalid size. Was ${newDifferentIdsCount?.size} but expected ${referenceEntryCounters.size}"
     }
 
     newReferenceEntries.fastForEachIndexed { index, referenceEntryIdAsInt: @ReferenceEntryIdInt Int ->

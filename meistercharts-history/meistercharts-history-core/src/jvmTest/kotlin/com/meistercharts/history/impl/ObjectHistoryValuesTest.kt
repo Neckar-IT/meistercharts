@@ -30,7 +30,7 @@ class ObjectHistoryValuesTest {
     val values = ReferenceEntryHistoryValues(
       values = IntArray2(3, 5) { it },
       differentIdsCount = null,
-      dataMaps = List(3) { ReferenceEntriesDataMap.generated },
+      dataMap = ReferenceEntriesDataMap.generated,
     )
 
     assertThat(values.timeStampsCount).isEqualTo(5)

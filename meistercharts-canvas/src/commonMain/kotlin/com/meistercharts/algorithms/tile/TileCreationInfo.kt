@@ -50,6 +50,6 @@ data class TileCreationInfo(
  *
  * @param T represents the type of the object that will be returned under the given key
  */
-@kotlin.Suppress("unused")
+@Suppress("unused")
 data class TileCreationInfoKey<out T>(val id: String) {
 }

@@ -46,8 +46,8 @@ class HistoryConfigurationBuilderTest {
   @Test
   fun testRefs() {
     val configuration = historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(7), "ds7", ReferenceEntriesDataMap.generated)
-      referenceEntryDataSeries(DataSeriesId(8), "ds8", ReferenceEntriesDataMap.generated)
+      referenceEntryDataSeries(DataSeriesId(7), "ds7")
+      referenceEntryDataSeries(DataSeriesId(8), "ds8")
     }
 
     assertThat(configuration.referenceEntryConfiguration.dataSeriesIds).hasSize(2)
@@ -67,7 +67,7 @@ class HistoryConfigurationBuilderTest {
         enumDataSeries(DataSeriesId(dataSeriesIndex.value), "Enum DS $dataSeriesIndex", HistoryEnum.Boolean)
       },
       referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
-        referenceEntryDataSeries(DataSeriesId(dataSeriesIndex.value), "Enum DS $dataSeriesIndex", ReferenceEntriesDataMap.generated)
+        referenceEntryDataSeries(DataSeriesId(dataSeriesIndex.value), "Enum DS $dataSeriesIndex")
       }
     )
 
