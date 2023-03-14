@@ -26,7 +26,6 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValuesBuilder
 import com.meistercharts.history.impl.RecordingType
-import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
@@ -128,6 +127,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
           enumValues = downSamplingCalculator.enumUnionValues(),
           enumOrdinalsMostTime = downSamplingCalculator.enumMostTimeOrdinalValues(),
           referenceEntryIds = downSampledReferenceEntryIds,
+          referenceEntryStatuses = downSamplingCalculator.referenceEntryStatuses(),
           referenceEntryDifferentIdsCount = downSamplingCalculator.referenceEntryDifferentIdsCount(),
           entryDataSet = childChunks.collectReferenceEntryData(downSampledReferenceEntryIds),
         )
@@ -143,8 +143,8 @@ fun HistoryBucketDescriptor.calculateDownSampled(
       downSamplingCalculator.addReferenceEntrySample(
         newReferenceEntries = childChunk.getReferenceEntryIds(index),
         newDifferentIdsCount = childChunk.getReferenceEntryDifferentIdsCounts(index),
+        newStatuses = childChunk.getReferenceEntryStatuses(index)
       )
-
     }
   }
 
@@ -158,6 +158,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
     enumValues = downSamplingCalculator.enumUnionValues(),
     enumOrdinalsMostTime = downSamplingCalculator.enumMostTimeOrdinalValues(),
     referenceEntryIds = downSampledReferenceEntryIds,
+    referenceEntryStatuses = downSamplingCalculator.referenceEntryStatuses(),
     referenceEntryDifferentIdsCount = downSamplingCalculator.referenceEntryDifferentIdsCount(),
     entryDataSet = childChunks.collectReferenceEntryData(downSampledReferenceEntryIds),
   )

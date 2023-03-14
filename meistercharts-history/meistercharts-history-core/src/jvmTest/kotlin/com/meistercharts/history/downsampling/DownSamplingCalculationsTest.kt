@@ -76,7 +76,7 @@ class DownSamplingCalculationsTest {
     val historyChunk = historyConfiguration {
       decimalDataSeries(DataSeriesId(1000), TextKey.simple("A"))
       decimalDataSeries(DataSeriesId(1001), TextKey.simple("B"))
-    }.chunk() {
+    }.chunk {
       addDecimalValues(50_000.0, 0.0, 1.0)
       addDecimalValues(50_099.9, 1.0, 2.0)
       addDecimalValues(50_100.0, 2.0, 3.0)

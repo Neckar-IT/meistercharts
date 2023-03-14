@@ -31,7 +31,7 @@ import com.meistercharts.history.CachedRemoteHistoryStorage
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.impl.MockSinusHistoryStorage
-import com.meistercharts.history.query.AsyncHistoryAccess
+import com.meistercharts.history.AsyncHistoryAccess
 import com.meistercharts.model.Insets
 
 /**

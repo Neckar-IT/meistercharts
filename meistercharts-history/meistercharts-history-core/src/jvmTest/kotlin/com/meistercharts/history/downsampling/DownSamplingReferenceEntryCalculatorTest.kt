@@ -27,7 +27,8 @@ class DownSamplingReferenceEntryCalculatorTest {
 
     calculator.addReferenceEntrySample(
       newReferenceEntries = intArrayOf(7),
-      newDifferentIdsCount = intArrayOf(15)
+      newDifferentIdsCount = intArrayOf(15),
+      newStatuses = intArrayOf(99)
     )
 
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualToReferenceEntryId(7)

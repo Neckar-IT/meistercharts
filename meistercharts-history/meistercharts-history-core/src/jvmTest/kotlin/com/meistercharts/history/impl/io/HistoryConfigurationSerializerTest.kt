@@ -56,7 +56,8 @@ class HistoryConfigurationSerializerTest {
           },
           "referenceEntryConfiguration" : {
             "dataSeriesIds" : [ ],
-            "displayNames" : [ ]
+            "displayNames" : [ ],
+            "statusEnums" : [ ]
           }
         }
         """.trimIndent()
@@ -66,8 +67,8 @@ class HistoryConfigurationSerializerTest {
   @Test
   fun testReferenceEntries() {
     roundTrip(historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(17), TextKey.simple("hello"))
-      referenceEntryDataSeries(DataSeriesId(18), TextKey.simple("Val2"))
+      referenceEntryDataSeries(DataSeriesId(17), TextKey.simple("hello"), HistoryEnum.Active)
+      referenceEntryDataSeries(DataSeriesId(18), TextKey.simple("Val2"), HistoryEnum.Active)
     }) {
       //language=JSON
       """
@@ -90,6 +91,37 @@ class HistoryConfigurationSerializerTest {
             }, {
               "key" : "Val2",
               "fallbackText" : "Val2"
+            } ],
+            "statusEnums" : [ {
+              "enumDescription" : "Active",
+              "values" : [ {
+                "ordinal" : 0,
+                "key" : {
+                  "key" : "Active",
+                  "fallbackText" : "Active"
+                }
+              }, {
+                "ordinal" : 1,
+                "key" : {
+                  "key" : "Inactive",
+                  "fallbackText" : "Inactive"
+                }
+              } ]
+            }, {
+              "enumDescription" : "Active",
+              "values" : [ {
+                "ordinal" : 0,
+                "key" : {
+                  "key" : "Active",
+                  "fallbackText" : "Active"
+                }
+              }, {
+                "ordinal" : 1,
+                "key" : {
+                  "key" : "Inactive",
+                  "fallbackText" : "Inactive"
+                }
+              } ]
             } ]
           }
         }
@@ -154,7 +186,8 @@ class HistoryConfigurationSerializerTest {
           },
           "referenceEntryConfiguration" : {
             "dataSeriesIds" : [ ],
-            "displayNames" : [ ]
+            "displayNames" : [ ],
+            "statusEnums" : [ ]
           }
         }
       """.trimIndent()

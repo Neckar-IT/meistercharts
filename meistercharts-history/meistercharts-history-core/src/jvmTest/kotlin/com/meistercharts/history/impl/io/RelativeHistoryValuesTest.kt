@@ -16,9 +16,8 @@
 package com.meistercharts.history.impl.io
 
 import com.meistercharts.history.impl.HistoryValues
+import it.neckar.open.collections.IntArray2
 import it.neckar.open.serialization.roundTrip
-import kotlinx.serialization.json.Json
-import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
 
 /**
@@ -45,7 +44,8 @@ class RelativeHistoryValuesTest {
         intArrayOf(70, 80, 90),
         intArrayOf(700, 800, 900),
         intArrayOf(7000, 8000, 9000)
-      )
+      ),
+      referenceEntryStatuses = IntArray2(0, 0) { it * 111 },
     ).makeRelative()
 
     roundTrip(values) {

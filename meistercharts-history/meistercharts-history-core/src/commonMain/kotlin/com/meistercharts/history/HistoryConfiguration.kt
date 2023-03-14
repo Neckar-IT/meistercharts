@@ -250,12 +250,12 @@ class HistoryConfigurationBuilder {
     enumConfigurationBuilder.enumDataSeries(id, displayName, enumConfiguration)
   }
 
-  fun referenceEntryDataSeries(id: DataSeriesId, displayName: String) {
-    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName)
+  fun referenceEntryDataSeries(id: DataSeriesId, displayName: String, statusEnum: HistoryEnum?) {
+    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName, statusEnum)
   }
 
-  fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey) {
-    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName)
+  fun referenceEntryDataSeries(id: DataSeriesId, displayName: TextKey, statusEnum: HistoryEnum?) {
+    referenceEntryConfigurationBuilder.referenceEntryDataSeries(id, displayName, statusEnum)
   }
 
   companion object {

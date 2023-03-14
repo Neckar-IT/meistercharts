@@ -29,6 +29,8 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
@@ -116,9 +118,8 @@ object TimeLineChartConverter {
           val jsEnumValue = jsSample.enumValues?.get(dataSeriesIndex.value)
           if (jsEnumValue == null) HistoryEnumSet.NoValue else HistoryEnumSet.forEnumValueFromJsDouble(jsEnumValue.sanitize())
         },
-        referenceEntryIdProvider = {
-          TODO()
-        },
+        referenceEntryStatusProvider = { TODO() },
+        referenceEntryIdProvider = { TODO() },
         referenceEntriesDataMap = ReferenceEntriesDataMap.generated, //TODO
       )
     }

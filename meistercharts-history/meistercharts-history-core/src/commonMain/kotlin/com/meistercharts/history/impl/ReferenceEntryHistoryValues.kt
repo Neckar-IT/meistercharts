@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history.impl
 
+import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
@@ -24,6 +26,7 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.annotations.ForOnePointInTime
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
@@ -55,6 +58,7 @@ data class ReferenceEntryHistoryValues(
    * For down sampled values this contains one entry (most-of-the-time)
    */
   val values: @ReferenceEntryIdInt @Serializable(with = IntArray2Serializer::class) IntArray2,
+
   /**
    * The count of different ids for each timestamp.
    * Only filled for down sampled values.
@@ -65,7 +69,15 @@ data class ReferenceEntryHistoryValues(
   val differentIdsCount: @ReferenceEntryDifferentIdsCountInt @Serializable(with = IntArray2Serializer::class) IntArray2?,
 
   /**
+   * The statuses for each entry.
+   *
+   * Contains the union ste for down-sampled values
+   */
+  val statuses: @HistoryEnumSetInt @Serializable(with = IntArray2Serializer::class) IntArray2,
+
+  /**
    * Contains the data map for the reference entries.
+   * Contains all entries for *all* data series
    */
   val dataMap: ReferenceEntriesDataMap,
 
@@ -154,6 +166,11 @@ data class ReferenceEntryHistoryValues(
     return differentIdsCount.getReferenceEntryDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
+    require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. reference entries count: ${values.width}" }
+    return statuses.getReferenceStatus(dataSeriesIndex, timeStampIndex)
+  }
+
   /**
    * Returns the last object value
    * Returns null if this is empty.
@@ -183,6 +200,16 @@ data class ReferenceEntryHistoryValues(
     return values.data.copyOfRange(startIndex, endIndex)
   }
 
+  @ForOnePointInTime
+  fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
+    require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
+
+    val startIndex = HistoryValues.calculateStartIndex(dataSeriesCount, timeStampIndex)
+    val endIndex = startIndex + dataSeriesCount
+
+    return statuses.data.copyOfRange(startIndex, endIndex)
+  }
+
   /**
    * Returns the different ids counts for the given [timeStampIndex]
    */
@@ -205,6 +232,10 @@ data class ReferenceEntryHistoryValues(
 
   fun countsAsMatrixString(): String? {
     return differentIdsCount?.asMatrixString()
+  }
+
+  fun statusesAsMatrixString(): String? {
+    return statuses.asMatrixString()
   }
 }
 

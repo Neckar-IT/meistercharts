@@ -30,7 +30,7 @@ class ReferenceEntryDataApiTest {
     val dataSeriesId = DataSeriesId(17)
 
     val historyConfiguration = historyConfiguration {
-      referenceEntryDataSeries(id = dataSeriesId, displayName = "ref1")
+      referenceEntryDataSeries(id = dataSeriesId, displayName = "ref1", statusEnum = HistoryEnum.Active)
     }
 
     val chunk = historyChunk(historyConfiguration) {

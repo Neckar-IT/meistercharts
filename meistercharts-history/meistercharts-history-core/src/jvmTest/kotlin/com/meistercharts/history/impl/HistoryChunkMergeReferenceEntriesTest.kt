@@ -20,6 +20,7 @@ import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.historyConfiguration
@@ -28,9 +29,9 @@ import org.junit.jupiter.api.Test
 
 class HistoryChunkMergeReferenceEntriesTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration {
-    referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"))
-    referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"))
-    referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"))
+    referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"), statusEnum = HistoryEnum.Active)
+    referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"), statusEnum = HistoryEnum.Boolean)
+    referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"), statusEnum = HistoryEnum.Active)
   }
 
   @Test

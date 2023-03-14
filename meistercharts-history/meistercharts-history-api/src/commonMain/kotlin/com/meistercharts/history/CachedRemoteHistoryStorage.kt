@@ -15,7 +15,6 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.history.query.AsyncHistoryAccess
 import it.neckar.open.collections.cache
 import it.neckar.open.dispose.DisposeSupport
 

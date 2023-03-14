@@ -27,8 +27,8 @@ import com.meistercharts.history.historyConfiguration
 import it.neckar.open.collections.BitSet
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.emptyIntArray
-import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.fastFor
 import org.junit.jupiter.api.Test
 
 /**
@@ -55,12 +55,12 @@ class HistoryValuesEnumTest {
     assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(1)
 
     val chunk = historyChunk(historyConfiguration) {
-      addValues(100.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(0).bitset), emptyIntArray(), emptySet())
-      addValues(101.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptySet())
-      addValues(102.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(2).bitset), emptyIntArray(), emptySet())
-      addValues(103.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptySet())
+      addValues(100.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(0).bitset), emptyIntArray(), emptyIntArray(), emptySet())
+      addValues(101.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptyIntArray(), emptySet())
+      addValues(102.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(2).bitset), emptyIntArray(), emptyIntArray(), emptySet())
+      addValues(103.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptyIntArray(), emptySet())
 
-      addValues(107.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.NoValue.bitset), emptyIntArray(), emptySet())
+      addValues(107.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.NoValue.bitset), emptyIntArray(), emptyIntArray(), emptySet())
     }
 
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumSet.forEnumValue(0))

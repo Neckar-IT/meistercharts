@@ -19,6 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
+import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
@@ -37,8 +38,20 @@ class HistoryValuesBuilderTest {
 
     builder.let { builder ->
       assertThat(builder.timestampsCount).isEqualTo(2)
-      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.zero, intArrayOf(7, 8, 9), intArrayOf(1, 1, 1), emptySet())
-      builder.setReferenceEntryIdsForTimestamp(TimestampIndex.one, intArrayOf(17, 18, 19), intArrayOf(2, 2, 2), emptySet())
+      builder.setReferenceEntryIdsForTimestamp(
+        timestampIndex = TimestampIndex.zero,
+        referenceEntryIds = intArrayOf(7, 8, 9),
+        referenceEntryIdsCount = intArrayOf(1, 1, 1),
+        referenceEntryStatuses = intArrayOf(1, 2, 3),
+        referenceEntryDataSet = emptySet()
+      )
+      builder.setReferenceEntryIdsForTimestamp(
+        timestampIndex = TimestampIndex.one,
+        referenceEntryIds = intArrayOf(17, 18, 19),
+        referenceEntryIdsCount = intArrayOf(2, 2, 2),
+        referenceEntryStatuses = intArrayOf(4, 5, 6),
+        referenceEntryDataSet = emptySet()
+      )
       assertThat(builder.timestampsCount).isEqualTo(2)
 
       //assertThat(it)
@@ -49,19 +62,37 @@ class HistoryValuesBuilderTest {
     }
 
     //Add a third one! - resize
-    assertThat(requireNotNull(builder.referenceEntryIds).height).isEqualTo(2)
-    assertThat(requireNotNull(builder.referenceEntryDifferentIdsCount).height).isEqualTo(2)
+    assertThat(builder.referenceEntryIds?.height).isEqualTo(2)
+    assertThat(builder.referenceEntryDifferentIdsCount?.height).isEqualTo(2)
 
     builder.resizeTimestamps(4)
     assertThat(builder.timestampsCount).isEqualTo(4)
-    assertThat(requireNotNull(builder.referenceEntryIds).height).isEqualTo(4)
-    assertThat(requireNotNull(builder.referenceEntryDifferentIdsCount).height).isEqualTo(4)
+    assertThat(builder.referenceEntryIds?.height).isEqualTo(4)
+    assertThat(builder.referenceEntryDifferentIdsCount?.height).isEqualTo(4)
 
-    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.two, intArrayOf(27, 28, 29), intArrayOf(1, 1, 1), emptySet())
-    builder.setReferenceEntryIdsForTimestamp(TimestampIndex.three, intArrayOf(37, 38, 39), intArrayOf(1, 1, 1), emptySet())
+    builder.setReferenceEntryIdsForTimestamp(
+      timestampIndex = TimestampIndex.two,
+      referenceEntryIds = intArrayOf(27, 28, 29),
+      referenceEntryIdsCount = intArrayOf(1, 1, 1),
+      referenceEntryStatuses = intArrayOf(7, 8, 9),
+      referenceEntryDataSet = emptySet()
+    )
+    builder.setReferenceEntryIdsForTimestamp(
+      timestampIndex = TimestampIndex.three,
+      referenceEntryIds = intArrayOf(37, 38, 39),
+      referenceEntryIdsCount = intArrayOf(1, 1, 1),
+      referenceEntryStatuses = intArrayOf(10, 11, 12),
+      referenceEntryDataSet = emptySet()
+    )
 
     builder.build().let { values ->
+      assertThat(values.timeStampsCount).isEqualTo(4)
       assertThat(values.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3))).isEqualTo(ReferenceEntryId(37))
+
+      assertThat(values.getReferenceEntryStatuses(TimestampIndex(0))).containsExactly(1, 2, 3)
+      assertThat(values.getReferenceEntryStatuses(TimestampIndex(1))).containsExactly(4, 5, 6)
+      assertThat(values.getReferenceEntryStatuses(TimestampIndex(2))).containsExactly(7, 8, 9)
+      assertThat(values.getReferenceEntryStatuses(TimestampIndex(3))).containsExactly(10, 11, 12)
     }
   }
 
@@ -169,7 +200,13 @@ class HistoryValuesBuilderTest {
     val referenceEntryId = ReferenceEntryId(17)
     val label = TextKey.simple("DaLabelFor 17")
 
-    builder.setReferenceEntryValue(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1), referenceEntryId, ReferenceEntryData(referenceEntryId, label))
+    builder.setReferenceEntryValue(
+      dataSeriesIndex = ReferenceEntryDataSeriesIndex.zero,
+      timestampIndex = TimestampIndex(1),
+      referenceEntryId = referenceEntryId,
+      referenceEntryStatus = HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.BooleanFalse),
+      data = ReferenceEntryData(referenceEntryId, label)
+    )
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()

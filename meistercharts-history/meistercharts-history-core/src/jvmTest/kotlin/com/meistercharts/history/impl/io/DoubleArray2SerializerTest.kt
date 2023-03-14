@@ -19,6 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.impl.HistoryValues
 import it.neckar.open.collections.DoubleArray2
+import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.lang.hex
 import it.neckar.open.kotlin.lang.toBase64
 import org.junit.jupiter.api.Test
@@ -29,24 +30,25 @@ class DoubleArray2SerializerTest {
   @Test
   fun testIt() {
     val values = HistoryValues(
-      arrayOf(
+      decimalsDataArray = arrayOf(
         doubleArrayOf(1.0, 2.0, 3.0),
         doubleArrayOf(10.0, 20.0, 30.0),
         doubleArrayOf(100.0, 200.0, 300.0),
         doubleArrayOf(1000.0, 2000.0, 3000.0)
       ),
-      arrayOf(
+      enumDataArray = arrayOf(
         intArrayOf(1, 2, 3),
         intArrayOf(10, 20, 30),
         intArrayOf(100, 200, 300),
         intArrayOf(1000, 2000, 3000)
       ),
-      arrayOf(
+      referenceEntryDataArray = arrayOf(
         intArrayOf(7, 8, 9),
         intArrayOf(70, 80, 90),
         intArrayOf(700, 800, 900),
         intArrayOf(7000, 8000, 9000)
       ),
+      referenceEntryStatuses = IntArray2(0, 0) { it * 111 }
     ).makeRelative()
 
     val serialized = DoubleArray2SerializerOld.toByteArray(values.decimalValues)

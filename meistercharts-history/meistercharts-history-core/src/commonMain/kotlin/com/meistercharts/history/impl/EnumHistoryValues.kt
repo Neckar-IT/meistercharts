@@ -41,6 +41,8 @@ data class EnumHistoryValues(
    *
    * * `values.width == enumDataSeriesCount`
    * * `values.height == timeStampsCount`
+   *
+   * Contains the union set for down-sampled values.
    */
   val values: @HistoryEnumSetInt @Serializable(with = IntArray2Serializer::class) IntArray2,
 

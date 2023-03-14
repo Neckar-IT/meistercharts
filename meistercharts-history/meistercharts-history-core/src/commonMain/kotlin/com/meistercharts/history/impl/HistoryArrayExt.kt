@@ -23,9 +23,9 @@ import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
-import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
@@ -60,6 +60,13 @@ inline operator fun DoubleArray2.set(dataSeriesIndex: DecimalDataSeriesIndex, ti
  * Sets the value for an enum
  */
 inline operator fun IntArray2.set(dataSeriesIndex: EnumDataSeriesIndex, timestampIndex: TimestampIndex, value: HistoryEnumSet) {
+  set(dataSeriesIndex.value, timestampIndex.value, value.bitset)
+}
+
+/**
+ * Used for the status enums
+ */
+inline operator fun IntArray2.set(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex, value: HistoryEnumSet) {
   set(dataSeriesIndex.value, timestampIndex.value, value.bitset)
 }
 
@@ -107,6 +114,10 @@ inline fun IntArray2.getReferenceEntry(dataSeriesIndex: ReferenceEntryDataSeries
  */
 inline fun IntArray2.getReferenceEntryDifferentIdsCount(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): ReferenceEntryDifferentIdsCount {
   return ReferenceEntryDifferentIdsCount(getRawValue(dataSeriesIndex, timeStampIndex))
+}
+
+inline fun IntArray2.getReferenceStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): HistoryEnumSet {
+  return HistoryEnumSet(getRawValue(dataSeriesIndex, timeStampIndex))
 }
 
 

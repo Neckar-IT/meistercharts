@@ -20,6 +20,8 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
+import com.meistercharts.history.HistoryBucket
+import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
@@ -227,6 +229,10 @@ class HistoryChunk(
     return values.getReferenceEntryDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
+    return values.getReferenceEntryStatus(dataSeriesIndex, timeStampIndex)
+  }
+
   /**
    * Returns the max value
    */
@@ -343,6 +349,11 @@ class HistoryChunk(
     return values.getReferenceEntryIds(timeStampIndex)
   }
 
+  @ForOnePointInTime
+  fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
+    return values.getReferenceEntryStatuses(timeStampIndex)
+  }
+
   /**
    * Returns the counts for the different entry IDs
    */
@@ -405,9 +416,12 @@ class HistoryChunk(
    */
   fun withAddedValues(
     additionalTimeStamp: @ms Double,
+
     additionalDecimalValues: @Domain @ForOnePointInTime DoubleArray,
     additionalEnumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray,
+
     additionalReferenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray,
+    additionalReferenceEntryStatuses: @HistoryEnumSetInt IntArray,
     /**
      * Contains the data for the [additionalReferenceEntryIds]. Each ID must contain one entry (if there is data)
      */
@@ -437,11 +451,13 @@ class HistoryChunk(
       val enumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray
       val referenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray
       val referenceEntryDataSet: @ForOnePointInTime Set<ReferenceEntryData>
+      val referenceEntryStatuses: @HistoryEnumSetInt IntArray
 
       if (additionalTimeStamp == timestamp) {
         decimalValues = additionalDecimalValues
         enumValues = additionalEnumValues
         referenceEntryIds = additionalReferenceEntryIds
+        referenceEntryStatuses = additionalReferenceEntryStatuses
         referenceEntryDataSet = additionalReferenceEntryDataList
       } else {
         //Use from us
@@ -449,6 +465,7 @@ class HistoryChunk(
         decimalValues = getDecimalValues(timeStampIndex)
         enumValues = getEnumValues(timeStampIndex)
         referenceEntryIds = getReferenceEntryIds(timeStampIndex)
+        referenceEntryStatuses = getReferenceEntryStatuses(timeStampIndex)
         referenceEntryDataSet = getReferenceEntryDataSet(referenceEntryIds)
       }
 
@@ -456,7 +473,8 @@ class HistoryChunk(
         timestampIndex = TimestampIndex(index),
         decimalValues = decimalValues, minValues = null, maxValues = null,
         enumValues = enumValues, enumOrdinalsMostTime = null,
-        referenceEntryIds = referenceEntryIds, referenceEntryDifferentIdsCount = null, entryDataSet = referenceEntryDataSet,
+        referenceEntryIds = referenceEntryIds, referenceEntryDifferentIdsCount = null, referenceEntryStatuses = referenceEntryStatuses,
+        entryDataSet = referenceEntryDataSet,
       )
     }
 
@@ -604,13 +622,19 @@ class HistoryChunk(
       this.values.enumHistoryValues.values.data.copyInto(
         mergedHistoryValuesBuilder.enumValues.data,
         HistoryValues.calculateStartIndex(enumDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex + 1)
+        HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex), HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex + 1)
       )
 
       //Add the reference entries
       this.values.referenceEntryHistoryValues.values.data.copyInto(
         mergedHistoryValuesBuilder.referenceEntryIds.data,
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex + 1)
+      )
+
+      this.values.referenceEntryHistoryValues.statuses.data.copyInto(
+        mergedHistoryValuesBuilder.referenceEntryStatuses.data,
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex),
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex + 1)
@@ -643,13 +667,20 @@ class HistoryChunk(
       other.values.enumHistoryValues.values.data.copyInto(
         mergedHistoryValuesBuilder.enumValues.data,
         HistoryValues.calculateStartIndex(enumDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex + 1)
+        HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex), HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex + 1)
       )
 
       //Add the reference entries
       other.values.referenceEntryHistoryValues.values.data.copyInto(
         mergedHistoryValuesBuilder.referenceEntryIds.data,
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex + 1)
+      )
+
+      //Add the statuses
+      other.values.referenceEntryHistoryValues.statuses.data.copyInto(
+        mergedHistoryValuesBuilder.referenceEntryStatuses.data,
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex),
         HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex + 1)
@@ -818,6 +849,7 @@ class HistoryChunk(
     @Inclusive val thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount, thisStartIndex)
     @Inclusive val thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount, thisEndIndex + 1)
     this.values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, 0, thisStartArrayIndexReferenceEntry, thisEndArrayIndexReferenceEntry)
+    this.values.referenceEntryHistoryValues.statuses.data.copyInto(newHistoryValuesBuilder.referenceEntryStatuses.data, 0, thisStartArrayIndexReferenceEntry, thisEndArrayIndexReferenceEntry)
     newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(this.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
 
     //Copy the data from the other chunk
@@ -832,6 +864,7 @@ class HistoryChunk(
     @Inclusive val startArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherStartIndex)
     @Inclusive val endArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherEndIndex + 1)
     other.values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, thisEndArrayIndexReferenceEntry - thisStartArrayIndexReferenceEntry, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
+    other.values.referenceEntryHistoryValues.statuses.data.copyInto(newHistoryValuesBuilder.referenceEntryStatuses.data, thisEndArrayIndexReferenceEntry - thisStartArrayIndexReferenceEntry, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
     newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(other.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
 
 
@@ -922,6 +955,7 @@ class HistoryChunk(
     @Inclusive val startArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, startIndex)
     @Inclusive val endArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, endIndex + 1)
     values.referenceEntryHistoryValues.values.data.copyInto(newHistoryValuesBuilder.referenceEntryIds.data, 0, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
+    values.referenceEntryHistoryValues.statuses.data.copyInto(newHistoryValuesBuilder.referenceEntryStatuses.data, 0, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
     values.referenceEntryHistoryValues.differentIdsCount?.data?.copyInto(newHistoryValuesBuilder.referenceEntryDifferentIdsCount!!.data, 0, startArrayIndexReferenceEntry, endArrayIndexReferenceEntry)
     newHistoryValuesBuilder.referenceEntriesDataMapBuilder.storeAll(this.getReferenceEntryDataSet(newHistoryValuesBuilder.referenceEntryIds))
 
@@ -974,6 +1008,10 @@ class HistoryChunk(
     return this.values.referenceEntryCountsAsMatrixString()
   }
 
+  fun referenceEntryStatusesAsMatrixString(): String? {
+    return this.values.referenceEntryStatusesAsMatrixString()
+  }
+
   /**
    * Creates a verbose ascii art.
    * Useful for debugging
@@ -991,8 +1029,9 @@ class HistoryChunk(
     val enumColumnContentWidth = enumBitSetContentWidth + 1 + enumWinnerContentWidth
 
     val referenceEntryIdWidth = 5
+    val referenceEntryStatusBitSetWidth = 11
     val referenceEntryCountWidth = 5
-    val referenceEntryColumnContentWidth = referenceEntryIdWidth + 1 + referenceEntryCountWidth
+    val referenceEntryColumnContentWidth = referenceEntryIdWidth + 1 + referenceEntryCountWidth + 1 + referenceEntryStatusBitSetWidth
 
     //Separates decimal from enum values
     val separator = " | "
@@ -1099,9 +1138,11 @@ class HistoryChunk(
           append(referenceId.toString().padStart(referenceEntryIdWidth, ' '))
           append(" ")
 
+          append(getReferenceEntryStatus(dataSeriesIndex, timeStampIndex).toString().padStart(referenceEntryStatusBitSetWidth, ' '))
+          append(" ")
+
           //Add the winner
           val idsCount = getReferenceEntryIdsCount(dataSeriesIndex, timeStampIndex)
-
           append("(${idsCount})".padStart(referenceEntryCountWidth, ' '))
           append(" ")
         }
@@ -1110,6 +1151,15 @@ class HistoryChunk(
         appendLine()
       }
     }
+  }
+
+  /**
+   * Wraps this chunk into a bucket.
+   *
+   * Will throw an exception if start/end do not match the descriptor
+   */
+  fun toBucket(descriptor: HistoryBucketDescriptor): HistoryBucket {
+    return HistoryBucket(descriptor, this)
   }
 
   override fun equals(other: Any?): Boolean {

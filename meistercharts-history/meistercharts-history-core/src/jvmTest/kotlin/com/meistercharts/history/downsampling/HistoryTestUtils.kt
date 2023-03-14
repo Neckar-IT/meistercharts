@@ -36,7 +36,7 @@ import it.neckar.open.unit.si.ms
 /**
  * A time stamp that can be used for tests
  */
-val nowForTests: Double = 1.5900732415E12.also {
+val nowForTests: @ms Double = 1.5900732415E12.also {
   assertThat(it.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
 }
 

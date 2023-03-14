@@ -31,12 +31,12 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.annotations.ForOnePointInTime
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.collections.invokeCols
-import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -85,14 +85,15 @@ class HistoryValues(
     minValues: @Domain DoubleArray2? = null,
     maxValues: @Domain DoubleArray2? = null,
 
-    mostOfTheTimeValues: @MayBeNoValueOrPending @HistoryEnumOrdinalInt IntArray2? = null,
+    enumMostOfTheTimeValues: @MayBeNoValueOrPending @HistoryEnumOrdinalInt IntArray2? = null,
 
-    referenceEntryIdsCount: @ReferenceEntryIdInt @Serializable(with = IntArray2Serializer::class) IntArray2? = null,
+    referenceEntryIdsCount: @ReferenceEntryIdInt IntArray2? = null,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray2,
     referenceEntriesDataMap: ReferenceEntriesDataMap,
   ) : this(
     decimalHistoryValues = DecimalHistoryValues(decimalValues, minValues, maxValues),
-    enumHistoryValues = EnumHistoryValues(enumValues, mostOfTheTimeValues),
-    referenceEntryHistoryValues = ReferenceEntryHistoryValues(referenceEntryIds, referenceEntryIdsCount, referenceEntriesDataMap)
+    enumHistoryValues = EnumHistoryValues(enumValues, enumMostOfTheTimeValues),
+    referenceEntryHistoryValues = ReferenceEntryHistoryValues(referenceEntryIds, referenceEntryIdsCount, referenceEntryStatuses, referenceEntriesDataMap)
   )
 
   @TestOnly
@@ -101,14 +102,16 @@ class HistoryValues(
     decimalsDataArray: Array<DoubleArray>,
     enumDataArray: Array<@HistoryEnumSetInt IntArray>,
     referenceEntryDataArray: Array<@ReferenceEntryIdInt IntArray>,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray2,
   ) : this(
     decimalValues = DoubleArray2.invokeCols(decimalsDataArray),
     enumValues = IntArray2.invokeCols(enumDataArray),
     referenceEntryIds = IntArray2.invokeCols(referenceEntryDataArray),
     minValues = null,
     maxValues = null,
-    mostOfTheTimeValues = null,
+    enumMostOfTheTimeValues = null,
     referenceEntryIdsCount = null,
+    referenceEntryStatuses = referenceEntryStatuses,
     referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
   )
 
@@ -207,6 +210,10 @@ class HistoryValues(
     return referenceEntryHistoryValues.getDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
+    return referenceEntryHistoryValues.getReferenceEntryStatus(dataSeriesIndex, timeStampIndex)
+  }
+
   /**
    * Returns the *last* (youngest) value for the given data series index
    */
@@ -231,6 +238,11 @@ class HistoryValues(
 
   fun getReferenceEntryIds(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray {
     return referenceEntryHistoryValues.getReferenceEntryIds(timeStampIndex)
+  }
+
+  @ForOnePointInTime
+  fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
+    return referenceEntryHistoryValues.getReferenceEntryStatuses(timeStampIndex)
   }
 
   /**
@@ -321,6 +333,10 @@ class HistoryValues(
     return referenceEntryHistoryValues.countsAsMatrixString()
   }
 
+  fun referenceEntryStatusesAsMatrixString(): String? {
+    return referenceEntryHistoryValues.statusesAsMatrixString()
+  }
+
   /**
    * Returns true if the values at the given timestamp index are still pending
    */
@@ -367,6 +383,7 @@ class HistoryValues(
           decimalValues = DoubleArray2(0, 0) { HistoryChunk.Pending },
           enumValues = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
           referenceEntryIds = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
+          referenceEntryStatuses = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
           referenceEntriesDataMap = ReferenceEntriesDataMap.empty,
         )
 
@@ -377,8 +394,10 @@ class HistoryValues(
 
           minValues = DoubleArray2(0, 0) { HistoryChunk.Pending },
           maxValues = DoubleArray2(0, 0) { HistoryChunk.Pending },
-          mostOfTheTimeValues = IntArray2(0, 0) { HistoryEnumOrdinal.Pending.value },
+          enumMostOfTheTimeValues = IntArray2(0, 0) { HistoryEnumOrdinal.Pending.value },
           referenceEntryIdsCount = IntArray2(0, 0) { HistoryEnumOrdinal.Pending.value },
+
+          referenceEntryStatuses = IntArray2(0, 0) { HistoryEnumSet.PendingAsInt },
 
           referenceEntriesDataMap = ReferenceEntriesDataMap.empty,
         )

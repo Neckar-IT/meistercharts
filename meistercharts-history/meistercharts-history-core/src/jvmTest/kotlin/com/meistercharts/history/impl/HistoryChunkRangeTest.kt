@@ -19,6 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.downsampling.createDemoEnumConfiguration
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
@@ -81,16 +82,16 @@ class HistoryChunkRangeTest {
   @Test
   fun testReferenceEntries() {
     val historyConfiguration: HistoryConfiguration = historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"))
-      referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"))
-      referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"))
+      referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"), statusEnum = HistoryEnum.Active)
+      referenceEntryDataSeries(DataSeriesId(11), TextKey("state2"), statusEnum = HistoryEnum.Active)
+      referenceEntryDataSeries(DataSeriesId(12), TextKey("state3"), statusEnum = HistoryEnum.Boolean)
     }
 
     val chunk = historyChunk(historyConfiguration, recordingType = RecordingType.Calculated) {
-      addReferenceEntryValues(100.0, intArrayOf(1, 10, 101), intArrayOf(1, 2, 3))
-      addReferenceEntryValues(101.0, intArrayOf(10, 100, 1001), intArrayOf(1, 2, 4))
-      addReferenceEntryValues(102.0, intArrayOf(100, 1000, 10001), intArrayOf(1, 2, 5))
-      addReferenceEntryValues(103.0, intArrayOf(1000, 10000, 100001), intArrayOf(1, 2, 6))
+      addReferenceEntryValues(timestamp = 100.0, referenceEntryValues = intArrayOf(1, 10, 101), referenceEntryIdsCount = intArrayOf(1, 2, 3), referenceEntryStatuses = intArrayOf(11, 12, 13))
+      addReferenceEntryValues(timestamp = 101.0, referenceEntryValues = intArrayOf(10, 100, 1001), referenceEntryIdsCount = intArrayOf(1, 2, 4), referenceEntryStatuses = intArrayOf(11, 12, 14))
+      addReferenceEntryValues(timestamp = 102.0, referenceEntryValues = intArrayOf(100, 1000, 10001), referenceEntryIdsCount = intArrayOf(1, 2, 5), referenceEntryStatuses = intArrayOf(11, 12, 15))
+      addReferenceEntryValues(timestamp = 103.0, referenceEntryValues = intArrayOf(1000, 10000, 100001), referenceEntryIdsCount = intArrayOf(1, 2, 6), referenceEntryStatuses = intArrayOf(11, 12, 16))
     }
 
     //All
@@ -124,6 +125,14 @@ class HistoryChunkRangeTest {
           1, 2, 4
           1, 2, 5
           1, 2, 6
+        """.trimIndent()
+      )
+
+      assertThat(it.referenceEntryStatusesAsMatrixString()?.trim()).isEqualTo(
+        """
+          11, 12, 14
+          11, 12, 15
+          11, 12, 16
         """.trimIndent()
       )
     }

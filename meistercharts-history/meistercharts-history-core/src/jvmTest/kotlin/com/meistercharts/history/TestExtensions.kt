@@ -56,3 +56,12 @@ fun Assert<ReferenceEntryDifferentIdsCount>.isEqualToReferenceEntryIdsCount(expe
 
   assertThat(it.value).isEqualTo(expectedCount)
 }
+
+fun Assert<HistoryEnumSet>.isEqualToHistoryEnumSet(expectedBitSet: Int): Unit = given {
+  if (it.bitset == expectedBitSet) {
+    return
+  }
+
+  assertThat("0b${it.bitset.toString(2)}").isEqualTo("0b${expectedBitSet.toString(2)}")
+
+}

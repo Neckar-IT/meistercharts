@@ -20,7 +20,6 @@ import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
@@ -28,9 +27,9 @@ import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import com.meistercharts.history.impl.HistoryChunk.Companion.maxHistoryAware
 import com.meistercharts.history.impl.HistoryChunk.Companion.minHistoryAware
 import it.neckar.open.collections.emptyIntArray
-import it.neckar.open.serialization.roundTrip
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
@@ -92,7 +91,8 @@ class HistoryChunkOnlyDecimalsTest {
             },
             "referenceEntryConfiguration" : {
               "dataSeriesIds" : [ ],
-              "displayNames" : [ ]
+              "displayNames" : [ ],
+              "statusEnums" : [ ]
             }
           },
           "timeStamps" : [ 1001.0, 1002.0, 1003.0 ],
@@ -109,6 +109,7 @@ class HistoryChunkOnlyDecimalsTest {
             "referenceEntryHistoryValues" : {
               "values" : "AAAAAw==",
               "differentIdsCount" : null,
+              "statuses" : "AAAAAw==",
                "dataMap" : {
                "type" : "Default",
                "entries" : { }
@@ -414,7 +415,7 @@ class HistoryChunkOnlyDecimalsTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
     assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -445,7 +446,7 @@ class HistoryChunkOnlyDecimalsTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
     assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -463,7 +464,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testPending() {
-    val newChunk = chunk.withAddedValues(1004.0, DoubleArray(4) { HistoryChunk.Pending }, emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, DoubleArray(4) { HistoryChunk.Pending }, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
     assertThat(newChunk.isPending(TimestampIndex(0))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(1))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(2))).isFalse()

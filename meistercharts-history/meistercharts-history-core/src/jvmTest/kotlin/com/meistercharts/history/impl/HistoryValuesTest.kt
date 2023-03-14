@@ -48,6 +48,7 @@ class HistoryValuesTest {
           },
           "referenceEntryHistoryValues" : {
             "values" : "AAAADA==",
+            "statuses" : "AAAADA==",
             "differentIdsCount" : null,
               "dataMap" : {
               "type" : "Default",

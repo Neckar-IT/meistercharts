@@ -25,6 +25,8 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.isEqualToHistoryEnumSet
+import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
 import org.junit.jupiter.api.Test
 
@@ -48,6 +50,9 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)
     assertThat(calculator.maxDecimal(DecimalDataSeriesIndex.one)).isEqualTo(HistoryChunk.Pending)
+
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
   }
 
   @Test
@@ -210,7 +215,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testReset() {
-    val calculator = DownSamplingCalculator(7, 2, 0)
+    val calculator = DownSamplingCalculator(7, 2, 3)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
@@ -218,17 +223,25 @@ class DownSamplingCalculatorTest {
 
     calculator.addDecimalsSample(DoubleArray(7) { 7.0 })
     calculator.addEnumSample(IntArray(2) { 0b101 })
+    calculator.addReferenceEntrySample(intArrayOf(1, 3, 5), intArrayOf(7, 8, 9), intArrayOf(0b1, 0b01, 0b001))
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(7.0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(1)
 
     assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEqualTo(HistoryEnumSet(0b101))
 
+    assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.one)).isEqualToReferenceEntryId(3)
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualToHistoryEnumSet(0b1)
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.one)).isEqualToHistoryEnumSet(0b001)
+
     calculator.reset()
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
     assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEqualTo(HistoryEnumSet.Pending)
+
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)
   }
 
   @Test
@@ -240,12 +253,16 @@ class DownSamplingCalculatorTest {
 
     calculator.addReferenceEntrySample(
       newReferenceEntries = IntArray(2) { it + 10 },
-      newDifferentIdsCount = null
+      newDifferentIdsCount = null,
+      newStatuses = IntArray(2) { it + 77 }
     )
 
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualToReferenceEntryIdsCount(1)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId(10))
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualToHistoryEnumSet(0b1001101)
+
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.one)).isEqualToReferenceEntryIdsCount(1)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.one)).isEqualTo(ReferenceEntryId(11))
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.one)).isEqualToHistoryEnumSet(0b1001110)
   }
 }

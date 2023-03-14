@@ -17,11 +17,11 @@ package com.meistercharts.history.impl
 
 import assertk.*
 import assertk.assertions.*
-import it.neckar.open.collections.IntArray2
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.collections.IntArray2
 import org.junit.jupiter.api.Test
 
 class ObjectHistoryValuesTest {
@@ -30,6 +30,7 @@ class ObjectHistoryValuesTest {
     val values = ReferenceEntryHistoryValues(
       values = IntArray2(3, 5) { it },
       differentIdsCount = null,
+      statuses = IntArray2(3, 5) { it * 10 },
       dataMap = ReferenceEntriesDataMap.generated,
     )
 

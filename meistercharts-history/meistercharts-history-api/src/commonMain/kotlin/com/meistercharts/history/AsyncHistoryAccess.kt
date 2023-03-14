@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.history.query
+package com.meistercharts.history
 
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor

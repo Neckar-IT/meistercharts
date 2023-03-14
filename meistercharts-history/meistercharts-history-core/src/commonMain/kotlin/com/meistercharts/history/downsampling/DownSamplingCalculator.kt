@@ -17,7 +17,6 @@ package com.meistercharts.history.downsampling
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndex
-import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumOrdinalInt
@@ -125,6 +124,11 @@ class DownSamplingCalculator(
    */
   private val containsNoValueEnum: BooleanArray = BooleanArray(enumDataSeriesCount)
 
+  /**
+   * The current no-value-state for each reference entry data series.
+   * If at least one entry with [ReferenceEntryId.NoValue] has been added, this array contains true at the corresponding position.
+   */
+  private val containsNoValueReferenceEntry: BooleanArray = BooleanArray(referenceEntryDataSeriesCount)
 
   //
   //Fields for down sampling of reference entries
@@ -134,6 +138,11 @@ class DownSamplingCalculator(
    * Contains the counters for the most of the time entries
    */
   private val referenceEntryCounters: @ReferenceEntryIdInt Array<ReferenceEntryCounter> = Array(referenceEntryDataSeriesCount) { ReferenceEntryCounter() }
+
+  /**
+   * Contains the bit set representing the union of all enum options for the statuses of a reference entry
+   */
+  private val referenceEntryStatusesUnionValues: @HistoryEnumSetInt IntArray = IntArray(referenceEntryDataSeriesCount) { HistoryEnumSet.PendingAsInt }
 
   /**
    * Returns the number of entries for the given data series index that have been used
@@ -149,6 +158,8 @@ class DownSamplingCalculator(
   fun containsNoValue(dataSeriesIndex: DecimalDataSeriesIndex): Boolean = containsNoValueDecimal[dataSeriesIndex.value]
 
   fun containsNoValue(dataSeriesIndex: EnumDataSeriesIndex): Boolean = containsNoValueEnum[dataSeriesIndex.value]
+
+  fun containsNoValue(dataSeriesIndex: ReferenceEntryDataSeriesIndex): Boolean = containsNoValueReferenceEntry[dataSeriesIndex.value]
 
   /**
    * Calculates the average significand for the data series at the given index.
@@ -242,6 +253,14 @@ class DownSamplingCalculator(
   }
 
   /**
+   * Returns the most time enum ordinal
+   */
+  @TestOnly
+  fun enumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnumOrdinal {
+    return enumMostTimeOrdinalCounters[dataSeriesIndex.value].winner()
+  }
+
+  /**
    * Returns the count of reference entries for the given data series index
    */
   @TestOnly
@@ -259,12 +278,23 @@ class DownSamplingCalculator(
     return counter.winnerMostOfTheTime()
   }
 
-  /**
-   * Returns the most time enum ordinal
-   */
   @TestOnly
-  fun enumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnumOrdinal {
-    return enumMostTimeOrdinalCounters[dataSeriesIndex.value].winner()
+  fun referenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex): HistoryEnumSet {
+    val value = HistoryEnumSet(referenceEntryStatusesUnionValues[dataSeriesIndex.value])
+
+    if (value.isPending().not()) {
+      //We found a valid value, return immediately
+      return value
+    }
+
+    //No values calculated so far! Check if no value has been added
+    if (containsNoValue(dataSeriesIndex)) {
+      //We have at least one entry of NoValue. Therefore, return no value
+      return HistoryEnumSet.NoValue
+    }
+
+    //must be pending at this point
+    return HistoryEnumSet.Pending
   }
 
   /**
@@ -310,6 +340,10 @@ class DownSamplingCalculator(
    */
   internal fun referenceEntryDifferentIdsCount(): @ReferenceEntryDifferentIdsCountInt @MayBeNoValueOrPending IntArray {
     return referenceEntryCounters.mapToIntArray { it.differentIdsCount().value }
+  }
+
+  internal fun referenceEntryStatuses(): @HistoryEnumSetInt IntArray {
+    return referenceEntryStatusesUnionValues
   }
 
   /**
@@ -397,19 +431,49 @@ class DownSamplingCalculator(
   fun addReferenceEntrySample(
     newReferenceEntries: @ReferenceEntryIdInt IntArray,
     newDifferentIdsCount: @ReferenceEntryIdInt IntArray?,
+    newStatuses: @HistoryEnumSetInt IntArray,
   ) {
     require(newReferenceEntries.size == referenceEntryCounters.size) {
       "Invalid size. Was ${newReferenceEntries.size} but expected ${referenceEntryCounters.size}"
+    }
+    require(newStatuses.size == referenceEntryCounters.size) {
+      "Invalid size. Was ${newStatuses.size} but expected ${referenceEntryCounters.size}"
     }
     require(newDifferentIdsCount == null || newDifferentIdsCount.size == referenceEntryCounters.size) {
       "Invalid size. Was ${newDifferentIdsCount?.size} but expected ${referenceEntryCounters.size}"
     }
 
-    newReferenceEntries.fastForEachIndexed { index, referenceEntryIdAsInt: @ReferenceEntryIdInt Int ->
+    newReferenceEntries.fastForEachIndexed { dataSeriesIndex, referenceEntryIdAsInt: @ReferenceEntryIdInt Int ->
       val referenceEntryId = ReferenceEntryId(referenceEntryIdAsInt)
-      val differentIdsCount = newDifferentIdsCount?.get(index)?.let { ReferenceEntryDifferentIdsCount(it) }
 
-      referenceEntryCounters[index].add(referenceEntryId, differentIdsCount)
+      if (referenceEntryId == ReferenceEntryId.NoValue) {
+        containsNoValueReferenceEntry[dataSeriesIndex] = true
+      }
+
+      val differentIdsCount = newDifferentIdsCount?.get(dataSeriesIndex)?.let { ReferenceEntryDifferentIdsCount(it) }
+      referenceEntryCounters[dataSeriesIndex].add(referenceEntryId, differentIdsCount)
+
+      @HistoryEnumSetInt val newStatusesAsInt = newStatuses[dataSeriesIndex]
+      when (newStatusesAsInt) {
+        HistoryEnumSet.NoValueAsInt -> {
+        }
+
+        HistoryEnumSet.PendingAsInt -> {
+          //ignore
+        }
+
+        else -> {
+          @HistoryEnumSetInt val currentBitSet = referenceEntryStatusesUnionValues[dataSeriesIndex]
+
+          val newBitSet = if (HistoryEnumSet.isPending(currentBitSet)) {
+            newStatusesAsInt
+          } else {
+            currentBitSet or newStatusesAsInt
+          }
+
+          referenceEntryStatusesUnionValues[dataSeriesIndex] = newBitSet
+        }
+      }
     }
   }
 
@@ -429,13 +493,20 @@ class DownSamplingCalculator(
       containsNoValueEnum[dataSeriesIndex] = false
       enumUnionValues[dataSeriesIndex] = HistoryEnumSet.PendingAsInt
     }
-
     enumMostTimeOrdinalCounters.fastForEach {
       it.reset()
     }
 
     referenceEntryCounters.fastForEach {
       it.reset()
+    }
+
+    containsNoValueReferenceEntry.fastForEachIndexed { dataSeriesIndex, _ ->
+      containsNoValueReferenceEntry[dataSeriesIndex] = false
+    }
+
+    referenceEntryStatusesUnionValues.fastForEachIndexed { dataSeriesIndex, _ ->
+      referenceEntryStatusesUnionValues[dataSeriesIndex] = HistoryEnumSet.PendingAsInt
     }
   }
 }

@@ -19,6 +19,8 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
@@ -46,10 +48,10 @@ class HistoryChunkOnlyReferenceEntriesTest {
   @BeforeEach
   internal fun setUp() {
     historyConfiguration = historyConfiguration {
-      referenceEntryDataSeries(DataSeriesId(10), TextKey("temp", "Temperature"))
-      referenceEntryDataSeries(DataSeriesId(11), TextKey("height", "Height"))
-      referenceEntryDataSeries(DataSeriesId(12), TextKey("temp2", "Temperature 2"))
-      referenceEntryDataSeries(DataSeriesId(13), TextKey("temp3", "Temperature 3"))
+      referenceEntryDataSeries(DataSeriesId(10), TextKey("temp", "Temperature"), statusEnum = HistoryEnum.Active)
+      referenceEntryDataSeries(DataSeriesId(11), TextKey("height", "Height"), statusEnum = HistoryEnum.Boolean)
+      referenceEntryDataSeries(DataSeriesId(12), TextKey("temp2", "Temperature 2"), statusEnum = HistoryEnum.Boolean)
+      referenceEntryDataSeries(DataSeriesId(13), TextKey("temp3", "Temperature 3"), statusEnum = HistoryEnum.Active)
     }
 
     assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(4)
@@ -57,9 +59,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
     assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(0)
 
     chunk = historyConfiguration.chunk() {
-      addReferenceEntryValues(1001.0, 1, 10, 100, 1000)
-      addReferenceEntryValues(1002.0, 2, 20, 200, 2000)
-      addReferenceEntryValues(1003.0, 3, 30, 300, 3000)
+      addReferenceEntryValues(timestamp = 1001.0, 1, 10, 100, 1000, referenceEntryStatuses = intArrayOf(0b1, 0b01, 0b001, 0b0001))
+      addReferenceEntryValues(timestamp = 1002.0, 2, 20, 200, 2000, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001, 0b100001))
+      addReferenceEntryValues(timestamp = 1003.0, 3, 30, 300, 3000, referenceEntryStatuses = intArrayOf(0b10001, 0b10011, 0b10011, 0b10011))
     }
 
     assertThat(chunk).isNotNull()
@@ -96,6 +98,67 @@ class HistoryChunkOnlyReferenceEntriesTest {
               }, {
                 "key" : "temp3",
                 "fallbackText" : "Temperature 3"
+              } ],
+              "statusEnums" : [ {
+                "enumDescription" : "Active",
+                "values" : [ {
+                  "ordinal" : 0,
+                  "key" : {
+                    "key" : "Active",
+                    "fallbackText" : "Active"
+                  }
+                }, {
+                  "ordinal" : 1,
+                  "key" : {
+                    "key" : "Inactive",
+                    "fallbackText" : "Inactive"
+                  }
+                } ]
+              }, {
+                "enumDescription" : "Boolean",
+                "values" : [ {
+                  "ordinal" : 0,
+                  "key" : {
+                    "key" : "True",
+                    "fallbackText" : "True"
+                  }
+                }, {
+                  "ordinal" : 1,
+                  "key" : {
+                    "key" : "False",
+                    "fallbackText" : "False"
+                  }
+                } ]
+              }, {
+                "enumDescription" : "Boolean",
+                "values" : [ {
+                  "ordinal" : 0,
+                  "key" : {
+                    "key" : "True",
+                    "fallbackText" : "True"
+                  }
+                }, {
+                  "ordinal" : 1,
+                  "key" : {
+                    "key" : "False",
+                    "fallbackText" : "False"
+                  }
+                } ]
+              }, {
+                "enumDescription" : "Active",
+                "values" : [ {
+                  "ordinal" : 0,
+                  "key" : {
+                    "key" : "Active",
+                    "fallbackText" : "Active"
+                  }
+                }, {
+                  "ordinal" : 1,
+                  "key" : {
+                    "key" : "Inactive",
+                    "fallbackText" : "Inactive"
+                  }
+                } ]
               } ]
             }
           },
@@ -113,7 +176,8 @@ class HistoryChunkOnlyReferenceEntriesTest {
             "referenceEntryHistoryValues" : {
               "values" : "AAQAAwAAAAEAAAAKAAAAZAAAA+gAAAACAAAAFAAAAMgAAAfQAAAAAwAAAB4AAAEsAAALuA==",
               "differentIdsCount" : null,
-                "dataMap" : {
+              "statuses" : "AAQAAwAAAAEAAAABAAAAAQAAAAEAAAAFAAAACQAAABEAAAAhAAAAEQAAABMAAAATAAAAEw==",
+              "dataMap" : {
                 "type" : "Default",
                 "entries" : { }
               }
@@ -142,12 +206,12 @@ class HistoryChunkOnlyReferenceEntriesTest {
           RefId:    4
         RecordingType:    Measured
         ---------------------------------------
-        Indices:                     |  |           0           1           2           3
-        IDs:                         |  |          10          11          12          13
+        Indices:                     |  |                       0                       1                       2                       3
+        IDs:                         |  |                      10                      11                      12                      13
 
-           0 1970-01-01T00:00:01.001 |  |     1   (1)    10   (1)   100   (1)  1000   (1)
-           1 1970-01-01T00:00:01.002 |  |     2   (1)    20   (1)   200   (1)  2000   (1)
-           2 1970-01-01T00:00:01.003 |  |     3   (1)    30   (1)   300   (1)  3000   (1)
+           0 1970-01-01T00:00:01.001 |  |     1         0b1   (1)    10         0b1   (1)   100         0b1   (1)  1000         0b1   (1)
+           1 1970-01-01T00:00:01.002 |  |     2       0b101   (1)    20      0b1001   (1)   200     0b10001   (1)  2000    0b100001   (1)
+           2 1970-01-01T00:00:01.003 |  |     3     0b10001   (1)    30     0b10011   (1)   300     0b10011   (1)  3000     0b10011   (1)
     """.trimIndent()
     )
   }
@@ -435,7 +499,14 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000), emptySet())
+    val newChunk = chunk.withAddedValues(
+      additionalTimeStamp = 1004.0,
+      additionalDecimalValues = emptyDoubleArray(),
+      additionalEnumValues = emptyIntArray(),
+      additionalReferenceEntryIds = intArrayOf(4, 40, 400, 4000),
+      additionalReferenceEntryStatuses = intArrayOf(1, 2, 3, 4),
+      additionalReferenceEntryDataList = emptySet()
+    )
 
     assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -466,7 +537,14 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, emptyDoubleArray(), emptyIntArray(), intArrayOf(4, 40, 400, 4000), emptySet())
+    val newChunk = chunk.withAddedValues(
+      additionalTimeStamp = 1004.0,
+      additionalDecimalValues = emptyDoubleArray(),
+      additionalEnumValues = emptyIntArray(),
+      additionalReferenceEntryIds = intArrayOf(4, 40, 400, 4000),
+      additionalReferenceEntryStatuses = intArrayOf(1, 2, 3, 4),
+      additionalReferenceEntryDataList = emptySet()
+    )
 
     assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -489,7 +567,8 @@ class HistoryChunkOnlyReferenceEntriesTest {
       additionalDecimalValues = emptyDoubleArray(),
       additionalEnumValues = emptyIntArray(),
       additionalReferenceEntryIds = IntArray(4) { ReferenceEntryId.PendingAsInt },
-      additionalReferenceEntryDataList = emptySet()
+      additionalReferenceEntryStatuses = IntArray(4) { HistoryEnumSet.PendingAsInt },
+      additionalReferenceEntryDataList = emptySet(),
     )
     assertThat(newChunk.isPending(TimestampIndex(0))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(1))).isFalse()

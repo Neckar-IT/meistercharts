@@ -21,9 +21,11 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.WritableHistoryStorage
 import com.meistercharts.history.historyConfiguration
@@ -67,6 +69,11 @@ class HistoryChunkGenerator(
   val referenceEntryGenerators: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryGenerator>,
 
   /**
+   * Returns the statuses for the provided data series
+   */
+  val referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId, millis: @ms Double) -> HistoryEnumSet,
+
+  /**
    * Provides the reference entry data
    */
   val referenceEntriesDataMap: ReferenceEntriesDataMap,
@@ -88,6 +95,7 @@ class HistoryChunkGenerator(
     decimalValueGenerators: List<DecimalValueGenerator>,
     enumValueGenerators: List<EnumValueGenerator>,
     referenceEntryGenerators: List<ReferenceEntryGenerator>,
+    referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId, millis: @ms Double) -> HistoryEnumSet = { _, _ -> HistoryEnumSet.NoValue },
 
     historyConfiguration: HistoryConfiguration = createDefaultHistoryConfiguration(decimalValueGenerators.size, enumValueGenerators.size, referenceEntryGenerators.size),
   ) : this(
@@ -96,6 +104,7 @@ class HistoryChunkGenerator(
     decimalValueGenerators = MultiProvider.forListModulo(decimalValueGenerators),
     enumValueGenerators = MultiProvider.forListModulo(enumValueGenerators),
     referenceEntryGenerators = MultiProvider.forListModulo(referenceEntryGenerators),
+    referenceEntryStatusProvider = referenceEntryStatusProvider,
 
     referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
 
@@ -213,6 +222,9 @@ class HistoryChunkGenerator(
           val referenceEntryId = referenceEntryGenerators.valueAt(dataSeriesIndex).generate(timestamp)
           referenceEntryId
         },
+        referenceEntryStatusProvider = { referenceEntryId: ReferenceEntryId ->
+          referenceEntryStatusProvider(referenceEntryId, timestamp)
+        },
         referenceEntriesDataMap = referenceEntriesDataMap,
       )
     }
@@ -242,5 +254,5 @@ private fun createDefaultHistoryConfiguration(
 
   referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
     val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10_000)
-    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"))
+    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Active)
   })

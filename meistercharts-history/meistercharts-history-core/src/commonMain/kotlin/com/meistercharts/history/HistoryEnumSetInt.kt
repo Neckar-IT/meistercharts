@@ -16,7 +16,7 @@
 package com.meistercharts.history
 
 /**
- * Marks Ints that should be interpreted as enum sets
+ * Marks [Int]s that should be interpreted as enum sets
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(

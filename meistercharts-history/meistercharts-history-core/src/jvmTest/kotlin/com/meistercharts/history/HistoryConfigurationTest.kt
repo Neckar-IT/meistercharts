@@ -63,7 +63,7 @@ class HistoryConfigurationTest {
       },
       referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
         val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10)
-        referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"))
+        referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Active)
       }
     )
 

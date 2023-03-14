@@ -33,6 +33,7 @@ import it.neckar.open.annotations.Slow
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
+import it.neckar.open.collections.mapInt
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.unit.si.ms
 import kotlin.contracts.InvocationKind
@@ -99,9 +100,16 @@ class HistoryChunkBuilder(
   fun addReferenceEntryValues(
     timestamp: @ms Double,
     vararg referenceEntryValues: @ReferenceEntryIdInt Int,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray = IntArray(referenceEntryValues.size) { HistoryEnumSet.NoValueAsInt },
     referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
   ) {
-    addReferenceEntryValues(timestamp, referenceEntryValues, null, referenceEntriesDataMap)
+    addReferenceEntryValues(
+      timestamp = timestamp,
+      referenceEntryValues = referenceEntryValues,
+      referenceEntryIdsCount = null,
+      referenceEntryStatuses = referenceEntryStatuses,
+      referenceEntriesDataMap = referenceEntriesDataMap
+    )
   }
 
   @TestOnly
@@ -111,11 +119,12 @@ class HistoryChunkBuilder(
     timestamp: @ms Double,
     referenceEntryValues: @ReferenceEntryIdInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
   ) {
     require(referenceEntryValues.size == historyConfiguration.referenceEntryDataSeriesCount) { "Invalid referenceEntryValues size. Was <${referenceEntryValues.size}> but expected <${historyConfiguration.referenceEntryDataSeriesCount}>" }
 
-    setReferenceEntryValues(nextTimestampIndex, timestamp, referenceEntryValues, referenceEntryIdsCount, referenceEntriesDataMap)
+    setReferenceEntryValues(nextTimestampIndex, timestamp, referenceEntryValues, referenceEntryStatuses, referenceEntryIdsCount, referenceEntriesDataMap)
     nextTimestampIndex++
   }
 
@@ -138,6 +147,7 @@ class HistoryChunkBuilder(
     decimalValues: @Domain DoubleArray,
     enumValues: @HistoryEnumSetInt IntArray,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     entryDataSet: Set<ReferenceEntryData>,
   ) {
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
@@ -147,6 +157,7 @@ class HistoryChunkBuilder(
       decimalValues = decimalValues,
       enumValues = enumValues,
       referenceEntryIds = referenceEntryIds,
+      referenceEntryStatuses = referenceEntryStatuses,
       entryDataSet = entryDataSet,
     )
     nextTimestampIndex++
@@ -181,16 +192,19 @@ class HistoryChunkBuilder(
     decimalValuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double,
     enumValuesProvider: (dataSeriesIndex: EnumDataSeriesIndex) -> HistoryEnumSet,
     referenceEntryIdProvider: (dataSeriesIndex: ReferenceEntryDataSeriesIndex) -> ReferenceEntryId,
+    referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId) -> HistoryEnumSet,
     referenceEntriesDataMap: ReferenceEntriesDataMap,
   ) {
     val referenceEntryIds: @ReferenceEntryIdInt IntArray = IntArray(historyConfiguration.referenceEntryDataSeriesCount) { i -> referenceEntryIdProvider(ReferenceEntryDataSeriesIndex(i)).id }
     val entryDataSet = referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int -> referenceEntriesDataMap.get(ReferenceEntryId(idAsInt)) }.filterNotNull().toSet()
+    val referenceEntryStatuses = referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int -> referenceEntryStatusProvider(ReferenceEntryId(idAsInt)) }.mapInt { it.bitset }.toIntArray()
 
     addValues(
       timestamp = timestamp,
       decimalValues = DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> decimalValuesProvider(DecimalDataSeriesIndex(i)) },
       enumValues = IntArray(historyConfiguration.enumDataSeriesCount) { i -> enumValuesProvider(EnumDataSeriesIndex(i)).bitset },
       referenceEntryIds = referenceEntryIds,
+      referenceEntryStatuses = referenceEntryStatuses,
       entryDataSet = entryDataSet,
     )
   }
@@ -242,6 +256,7 @@ class HistoryChunkBuilder(
     timestampIndex: TimestampIndex,
     timestamp: @ms Double,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
     /**
      * The map is used to resolve the [ReferenceEntryData]s
@@ -256,7 +271,13 @@ class HistoryChunkBuilder(
       historyValuesBuilder.resizeTimestamps(timestampIndex.value * 2)
     }
 
-    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, referenceEntriesDataMap.getAll(referenceEntryIds))
+    historyValuesBuilder.setReferenceEntryIdsForTimestamp(
+      timestampIndex = timestampIndex,
+      referenceEntryIds = referenceEntryIds,
+      referenceEntryIdsCount = referenceEntryIdsCount,
+      referenceEntryStatuses = referenceEntryStatuses,
+      referenceEntryDataSet = referenceEntriesDataMap.getAll(referenceEntryIds)
+    )
   }
 
   /**
@@ -274,6 +295,7 @@ class HistoryChunkBuilder(
     enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null,
 
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
     entryDataSet: Set<ReferenceEntryData>,
   ) {
@@ -287,7 +309,7 @@ class HistoryChunkBuilder(
 
     historyValuesBuilder.setDecimalValuesForTimestamp(timestampIndex, decimalValues, minValues, maxValues)
     historyValuesBuilder.setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
-    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, entryDataSet)
+    historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, referenceEntryStatuses, entryDataSet)
   }
 
   /**

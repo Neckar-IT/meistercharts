@@ -114,6 +114,12 @@ class HistoryValuesBuilder(
     private set
 
   /**
+   * The status entries for the reference entries
+   */
+  var referenceEntryStatuses: IntArray2 = IntArray2(referenceEntryDataSeriesCount, initialTimestampsCount) { HistoryEnumSet.PendingAsInt }
+    private set
+
+  /**
    * Contains the counts for the reference entries.
    *
    * First index: data series index
@@ -152,6 +158,7 @@ class HistoryValuesBuilder(
     enumValues = enumValues.resizedCopy(enumDataSeriesCount, newTimestampsCount)
     enumOrdinalsMostTime = enumOrdinalsMostTime?.resizedCopy(enumDataSeriesCount, newTimestampsCount)
     referenceEntryIds = referenceEntryIds.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
+    referenceEntryStatuses = referenceEntryStatuses.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
     referenceEntryDifferentIdsCount = referenceEntryDifferentIdsCount?.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
   }
 
@@ -186,10 +193,17 @@ class HistoryValuesBuilder(
   /**
    * Sets a single reference entry value
    */
-  fun setReferenceEntryValue(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex, referenceEntryId: ReferenceEntryId, data: ReferenceEntryData) {
+  fun setReferenceEntryValue(
+    dataSeriesIndex: ReferenceEntryDataSeriesIndex,
+    timestampIndex: TimestampIndex,
+    referenceEntryId: ReferenceEntryId,
+    referenceEntryStatus: HistoryEnumSet,
+    data: ReferenceEntryData,
+  ) {
     require(recordingType == RecordingType.Measured) { "Only supported for measured" }
 
     referenceEntryIds[dataSeriesIndex, timestampIndex] = referenceEntryId
+    referenceEntryStatuses[dataSeriesIndex, timestampIndex] = referenceEntryStatus
     getEntriesDataMapBuilder().store(data)
   }
 
@@ -289,10 +303,14 @@ class HistoryValuesBuilder(
      * Each [referenceEntryIds] must contain exactly one entry in this list.
      * The values are added to [referenceEntriesDataMapBuilder]. Duplicates are automatically removed.
      */
-    entryDataSet: Set<ReferenceEntryData>,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
+    referenceEntryDataSet: Set<ReferenceEntryData>,
   ) {
     require(referenceEntryDataSeriesCount == referenceEntryIds.size) {
       "Invalid size of values array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryIds.size}>"
+    }
+    require(referenceEntryDataSeriesCount == referenceEntryStatuses.size) {
+      "Invalid size of values array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryStatuses.size}>"
     }
 
     when (recordingType) {
@@ -310,9 +328,10 @@ class HistoryValuesBuilder(
     referenceEntryIds.copyInto(this.referenceEntryIds.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
 
     referenceEntryIdsCount?.copyInto(requireNotNull(this.referenceEntryDifferentIdsCount).data, targetStartIndex, 0, referenceEntryDataSeriesCount)
+    referenceEntryStatuses.copyInto(this.referenceEntryStatuses.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
 
     //Store all data elements
-    referenceEntriesDataMapBuilder.storeAll(entryDataSet)
+    referenceEntriesDataMapBuilder.storeAll(referenceEntryDataSet)
   }
 
   /**
@@ -338,13 +357,14 @@ class HistoryValuesBuilder(
      * The reference entry ids - measured or "most of the time"
      */
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntryDifferentIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray? = null,
 
     entryDataSet: Set<ReferenceEntryData>,
   ) {
     setDecimalValuesForTimestamp(timestampIndex, decimalValues, minValues, maxValues)
     setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
-    setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryDifferentIdsCount, entryDataSet)
+    setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryDifferentIdsCount, referenceEntryStatuses, entryDataSet)
   }
 
   /**
@@ -356,10 +376,13 @@ class HistoryValuesBuilder(
         decimalValues = decimalValues,
         enumValues = enumValues,
         referenceEntryIds = referenceEntryIds,
+
         minValues = null,
         maxValues = null,
-        mostOfTheTimeValues = null,
+        enumMostOfTheTimeValues = null,
+
         referenceEntryIdsCount = null,
+        referenceEntryStatuses = referenceEntryStatuses,
         referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
       )
 
@@ -367,10 +390,13 @@ class HistoryValuesBuilder(
         decimalValues = decimalValues,
         enumValues = enumValues,
         referenceEntryIds = referenceEntryIds,
+
         minValues = minValues,
         maxValues = maxValues,
-        mostOfTheTimeValues = enumOrdinalsMostTime,
+        enumMostOfTheTimeValues = enumOrdinalsMostTime,
+
         referenceEntryIdsCount = referenceEntryDifferentIdsCount,
+        referenceEntryStatuses = referenceEntryStatuses,
         referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
       )
     }

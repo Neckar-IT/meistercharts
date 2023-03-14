@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.provider.MultiProvider
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

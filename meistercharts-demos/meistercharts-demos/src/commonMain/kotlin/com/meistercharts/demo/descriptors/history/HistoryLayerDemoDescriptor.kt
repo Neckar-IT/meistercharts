@@ -49,7 +49,7 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.MockSinusHistoryStorage
-import com.meistercharts.history.query.AsyncHistoryAccess
+import com.meistercharts.history.AsyncHistoryAccess
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
@@ -86,12 +86,10 @@ class HistoryLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
         logger.debug("Content area time range: ${contentAreaTimeRange.format()}")
 
         configure {
-          val remoteHistoryStorage = CachedRemoteHistoryStorage(object : AsyncHistoryAccess {
-            override fun query(descriptor: HistoryBucketDescriptor, consumer: (HistoryBucket) -> Unit) {
-              consumer(historyStorage.get(descriptor))
-              markAsDirty()
-            }
-          })
+          val remoteHistoryStorage = CachedRemoteHistoryStorage { descriptor, consumer ->
+            consumer(historyStorage.get(descriptor))
+            markAsDirty()
+          }
 
           layers.addClearBackground()
 

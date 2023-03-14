@@ -35,9 +35,39 @@ class HistoryValuesSerializationTest {
   @Test
   fun testMeasured() {
     val historyValues = historyValues(2, 1, 1, 3, RecordingType.Measured) {
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(0), decimalValues = doubleArrayOf(1.0, 2.0), minValues = null, maxValues = null, enumValues = intArrayOf(7), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(6), entryDataSet = emptySet())
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(1), decimalValues = doubleArrayOf(1.1, 2.1), minValues = null, maxValues = null, enumValues = intArrayOf(8), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(7), entryDataSet = emptySet())
-      setAllValuesForTimestamp(timestampIndex = TimestampIndex(2), decimalValues = doubleArrayOf(1.2, 2.2), minValues = null, maxValues = null, enumValues = intArrayOf(9), enumOrdinalsMostTime = null, referenceEntryIds = intArrayOf(8), entryDataSet = emptySet())
+      setAllValuesForTimestamp(
+        timestampIndex = TimestampIndex(0),
+        decimalValues = doubleArrayOf(1.0, 2.0),
+        minValues = null,
+        maxValues = null,
+        enumValues = intArrayOf(7),
+        enumOrdinalsMostTime = null,
+        referenceEntryIds = intArrayOf(6),
+        referenceEntryStatuses = intArrayOf(3),
+        entryDataSet = emptySet()
+      )
+      setAllValuesForTimestamp(
+        timestampIndex = TimestampIndex(1),
+        decimalValues = doubleArrayOf(1.1, 2.1),
+        minValues = null,
+        maxValues = null,
+        enumValues = intArrayOf(8),
+        enumOrdinalsMostTime = null,
+        referenceEntryIds = intArrayOf(7),
+        referenceEntryStatuses = intArrayOf(3),
+        entryDataSet = emptySet()
+      )
+      setAllValuesForTimestamp(
+        timestampIndex = TimestampIndex(2),
+        decimalValues = doubleArrayOf(1.2, 2.2),
+        minValues = null,
+        maxValues = null,
+        enumValues = intArrayOf(9),
+        enumOrdinalsMostTime = null,
+        referenceEntryIds = intArrayOf(8),
+        referenceEntryStatuses = intArrayOf(3),
+        entryDataSet = emptySet()
+      )
     }
 
     roundTrip(historyValues) {
@@ -55,11 +85,12 @@ class HistoryValuesSerializationTest {
           },
           "referenceEntryHistoryValues" : {
             "values" : "AAEAAwAAAAYAAAAHAAAACA==",
-                "differentIdsCount" : null,
-                "dataMap" : {
-                  "type" : "Default",
-                  "entries" : { }
-                }
+              "differentIdsCount" : null,
+              "statuses" : "AAEAAwAAAAMAAAADAAAAAw==",
+              "dataMap" : {
+                "type" : "Default",
+                "entries" : { }
+              }
           }
         }
       """.trimIndent()
@@ -78,6 +109,7 @@ class HistoryValuesSerializationTest {
         enumOrdinalsMostTime = intArrayOf(11),
         referenceEntryIds = intArrayOf(6),
         referenceEntryDifferentIdsCount = intArrayOf(1),
+        referenceEntryStatuses = intArrayOf(3),
         entryDataSet = emptySet(),
       )
       setAllValuesForTimestamp(
@@ -89,6 +121,7 @@ class HistoryValuesSerializationTest {
         enumOrdinalsMostTime = intArrayOf(12),
         referenceEntryIds = intArrayOf(7),
         referenceEntryDifferentIdsCount = intArrayOf(1),
+        referenceEntryStatuses = intArrayOf(4),
         entryDataSet = emptySet(),
       )
       setAllValuesForTimestamp(
@@ -100,6 +133,7 @@ class HistoryValuesSerializationTest {
         enumOrdinalsMostTime = intArrayOf(13),
         referenceEntryIds = intArrayOf(8),
         referenceEntryDifferentIdsCount = intArrayOf(1),
+        referenceEntryStatuses = intArrayOf(5),
         entryDataSet = emptySet(),
       )
     }
@@ -119,11 +153,12 @@ class HistoryValuesSerializationTest {
           },
           "referenceEntryHistoryValues" : {
             "values" : "AAEAAwAAAAYAAAAHAAAACA==",
-              "differentIdsCount" : "AAEAAwAAAAEAAAABAAAAAQ==",
-              "dataMap" : {
-                "type" : "Default",
-                "entries" : { }
-              }
+            "differentIdsCount" : "AAEAAwAAAAEAAAABAAAAAQ==",
+            "statuses" : "AAEAAwAAAAMAAAAEAAAABQ==",
+            "dataMap" : {
+              "type" : "Default",
+              "entries" : { }
+            }
           }
         }
       """.trimIndent()
@@ -159,6 +194,7 @@ class HistoryValuesSerializationTest {
           intArrayOf(7000, 8000, 9000)
         )
       ),
+      referenceEntryStatuses = IntArray2(0, 0) { it * 111 },
       referenceEntriesDataMap = ReferenceEntriesDataMap.generated,
     )
 
