@@ -36,6 +36,7 @@ import it.neckar.open.unit.other.px
  * @param buttonPainter determines the appearance of this [Button]
  * @param width the width of the bounding box of this [Button]
  * @param height the height of the bounding box of this [Button]
+ * @param priority the priority of the button - required when there is not enough space for all buttons to be visible at the same time
  *
  */
 class Button(
@@ -312,6 +313,8 @@ fun interface ButtonPainter {
   /**
    * Paints a button with the given [state]
    *
+   * @param paintingContext the context
+   * @param state the current state of the button
    * @param width the width of the button regarding its bounding box
    * @param height the height of the button regarding its bounding box
    */

@@ -27,9 +27,14 @@ package com.meistercharts.canvas
 interface MeisterChartsFactory {
   /**
    * Creates a new chart instance
-   * @param description used for debugging purposes
    */
-  fun createChart(chartSupport: ChartSupport, description: String): MeisterChart
+  fun createChart(
+    chartSupport: ChartSupport,
+    /**
+     * Only used for debugging purposes
+     */
+    description: String,
+  ): MeisterChart
 
   /**
    * The platform dependent canvas factory

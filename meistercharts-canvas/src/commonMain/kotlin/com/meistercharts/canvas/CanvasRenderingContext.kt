@@ -432,6 +432,8 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Strokes an oval
    * @param x of the upper left corner
    * @param y of the upper left corner
+   * @param width the width
+   * @param height the height
    */
   fun strokeOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
 
@@ -448,6 +450,8 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Strokes an oval
    * @param x of the center
    * @param y of the center
+   * @param width the width
+   * @param height the height
    */
   fun strokeOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
 
@@ -463,6 +467,8 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Fills an oval
    * @param x of the upper left corner
    * @param y of the upper left corner
+   * @param width the width
+   * @param height the height
    */
   fun fillOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
 
@@ -474,6 +480,8 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Fills an oval
    * @param x of the center
    * @param y of the center
+   * @param width the width
+   * @param height the height
    */
   fun fillOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 

@@ -625,7 +625,6 @@ fun CanvasRenderingContext.paintLocation(x: Double = 0.0, y: Double = 0.0, color
 /**
  * Paints a mark (circle with cross) at the given location
  *
- * @param color the (optional) stroke color that can be set
  */
 fun CanvasRenderingContext.paintMark(location: Coordinates = Coordinates.origin, radius: Double = 5.0, color: Color? = null) {
   paintMark(location.x, location.y, radius, color)
@@ -633,8 +632,6 @@ fun CanvasRenderingContext.paintMark(location: Coordinates = Coordinates.origin,
 
 /**
  * Paints a mark (circle with cross) at the given location
- *
- * @param color the (optional) stroke color that can be set
  */
 fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: Double = 5.0, color: Color? = null, label: String? = null) {
   //Debug function - should not modify GC

@@ -49,6 +49,7 @@ data class TileCreationInfo(
  * Represents a key for a value
  *
  * @param T represents the type of the object that will be returned under the given key
+ * @property id the ID
  */
 @Suppress("unused")
 data class TileCreationInfoKey<out T>(val id: String) {

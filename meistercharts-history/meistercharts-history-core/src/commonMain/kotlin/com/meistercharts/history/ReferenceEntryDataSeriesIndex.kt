@@ -155,9 +155,9 @@ open class DelegatingReferenceEntryDataSeriesIndexProvider(
  * Retrieves the value at the specified [index] of this [MultiProvider] instance,
  * where the index is provided as a [ReferenceEntryDataSeriesIndex] instance.
  *
- * @param index the [ReferenceEntryDataSeriesIndex] representing the index of the value to retrieve
- * @return the value at the specified index
- * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size)
+ * @param T The type of the value to be retrieved from the [MultiProvider].
+ * @param index The [ReferenceEntryDataSeriesIndex] to look up the value at.
+ * @return The value of type [T] at the specified [index] within the [MultiProvider].
  */
 inline fun <T> MultiProvider<ReferenceEntryDataSeriesIndex, T>.valueAt(index: ReferenceEntryDataSeriesIndex): T {
   return this.valueAt(index.value)
@@ -167,6 +167,7 @@ inline fun <T> MultiProvider<ReferenceEntryDataSeriesIndex, T>.valueAt(index: Re
  * Retrieves the element at the specified [index] of this list, where the index is
  * provided as a [ReferenceEntryDataSeriesIndex] instance.
  *
+ * @param T The type of the value to be retrieved from the [MultiProvider].
  * @param index the [ReferenceEntryDataSeriesIndex] representing the index of the element to retrieve
  * @return the element at the specified index
  * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size)

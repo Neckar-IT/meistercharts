@@ -425,6 +425,7 @@ class DownSamplingCalculator(
    *
    * @param newReferenceEntries an array of reference entry IDs
    * @param newDifferentIdsCount an optional array of counts of different IDs for each reference entry
+   * @param newStatuses the new statuses
    *
    * @throws IllegalArgumentException if the size of newReferenceEntries does not match the size of the referenceEntryCounters
    */

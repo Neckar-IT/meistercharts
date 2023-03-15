@@ -15,7 +15,6 @@
  */
 package com.meistercharts.canvas.paintable
 
-import it.neckar.open.annotations.Internal
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.paintable.ObjectFit
 import com.meistercharts.annotations.Zoomed
@@ -26,6 +25,7 @@ import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Rectangle
 import com.meistercharts.model.Size
+import it.neckar.open.annotations.Internal
 import it.neckar.open.unit.other.px
 
 /**
@@ -123,9 +123,6 @@ interface Paintable {
   /**
    * Paints this [Paintable] - using the given anchor in the given bounding box.
    * Attention: The paintable is scaled to fit into the bounding box
-   *
-   * @param paintingContext the canvas rendering context
-   * @param anchoring the anchor to be used
    */
   fun paintInBoundingBox(
     paintingContext: LayerPaintingContext,
@@ -154,9 +151,6 @@ interface Paintable {
 
   /**
    * Paints this [Paintable]
-   * @param paintingContext the canvas rendering context
-   * @param location where to paint the paintable
-   * @param direction the direction in which to find [location]
    *
    * This method does *not* take a gap. If a gap is required call on of the other [paintInBoundingBox] methods.
    */
@@ -206,10 +200,6 @@ interface Paintable {
 
   /**
    * Paints this [Paintable]
-   * @param paintingContext the canvas rendering context
-   * @param x where to paint the paintable
-   * @param y where to paint the paintable
-   * @param direction the direction in which to paint relative to the given x/y coordinates
    */
   fun paintInBoundingBox(
     paintingContext: LayerPaintingContext,
@@ -236,7 +226,11 @@ interface Paintable {
    * @param x the x-coordinate of the location where to paint the paintable
    * @param y the y-coordinate of the location where to paint the paintable
    * @param anchorDirection the direction in which to find [x]/[y]
-   * @param gap the distance between [x]/[y] and the anchor
+   * @param gapHorizontal the distance between [x] and the anchor
+   * @param gapVertical the distance between [y] and the anchor
+   * @param width the width
+   * @param height the height
+   * @param objectFit how the object is fitted into the bounding box
    */
   fun paintInBoundingBox(
     paintingContext: LayerPaintingContext,

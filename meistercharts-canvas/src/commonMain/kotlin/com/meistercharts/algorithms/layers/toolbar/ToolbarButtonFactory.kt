@@ -52,9 +52,6 @@ class ToolbarButtonFactory(
 
   /**
    * Creates a button with a given size and an action that is called for each button click
-   * @param buttonPaintableProvider provides the image depending on the current state
-   * @param size this button uses the given size and *not* the [sizeProvider] set at the factory
-   * @param action the action to be executed when the button is clicked
    */
   fun button(
     /**
@@ -62,7 +59,7 @@ class ToolbarButtonFactory(
      */
     buttonPaintableProvider: ButtonPaintableProvider,
     /**
-     * The size for the button
+     * The size for the button. Overwrites the size provided by [sizeProvider] set at the factory itself
      */
     size: Size,
 

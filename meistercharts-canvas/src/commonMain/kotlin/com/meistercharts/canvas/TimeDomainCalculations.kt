@@ -113,6 +113,7 @@ fun TileChartCalculator.tileRelative2TimeX(tileRelative: @TileRelative Double, c
  * sets the canvas window translation so that the provided [timeStamp] lies at the provided [positionInWindow]
  * @param timeStamp : The timeStamp to scroll to
  * @param positionInWindow : The position in the window (0.0 - 1.0) where the timeStamp is being plotted
+ * @param contentAreaTimeRange The time range that is visualized in the content area (0.0..1.0)
  */
 @Deprecated("untested!")
 fun ChartSupport.scrollToTimestamp(@ms @Domain timeStamp: Double, @pct @WindowRelative positionInWindow: Double, contentAreaTimeRange: TimeRange) {

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.demo.descriptors
 
-import com.meistercharts.charts.sick.beams.lisa.LisaChartGestalt
+import com.meistercharts.charts.sick.lisa.LisaChartGestalt
 import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoCategory
