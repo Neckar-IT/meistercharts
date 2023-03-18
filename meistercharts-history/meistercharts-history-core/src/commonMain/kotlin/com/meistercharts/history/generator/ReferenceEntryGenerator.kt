@@ -44,16 +44,18 @@ fun interface ReferenceEntryGenerator {
      *
      * @param step the time step between generated [ReferenceEntryId] values.
      * @param max the maximum value that can be generated (inclusive). Default value is [ReferenceEntryId] with id 100,000.
+     * @param factor a factor that can be used to generate different values for different data series
      * @return a [ReferenceEntryGenerator] that generates increasing [ReferenceEntryId] values based on the given time step.
      */
     fun increasing(
       step: Duration,
       max: ReferenceEntryId = ReferenceEntryId(100_000),
+      factor: Int = 1,
     ): ReferenceEntryGenerator {
       return ReferenceEntryGenerator { timestamp ->
         val baseValue = (timestamp / step.inWholeMilliseconds)
-        val id = baseValue % max.id
-        return@ReferenceEntryGenerator ReferenceEntryId((id % Int.MAX_VALUE).toInt())
+        val idAsInt = (baseValue % max.id).toInt() * factor % Int.MAX_VALUE
+        return@ReferenceEntryGenerator ReferenceEntryId(idAsInt)
       }
     }
 

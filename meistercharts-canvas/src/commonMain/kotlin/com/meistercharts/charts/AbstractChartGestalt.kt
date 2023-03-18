@@ -19,6 +19,9 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.MeisterChartBuilder
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.dispose.OnDispose
 
 /**
  * Abstract base class for chart gestalts.
@@ -27,7 +30,17 @@ import it.neckar.open.collections.fastForEach
  * *[configureBuilder] - can be used to configure the [MeisterChartBuilder] itself. These actions are applied first
  * *[configure] - can be used to configure that [LayerSupport]. This method is often used in many gestalts.
  */
-abstract class AbstractChartGestalt : ChartGestalt {
+abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
+  private var disposeSupport: DisposeSupport = DisposeSupport()
+
+  override fun dispose() {
+    disposeSupport.dispose()
+  }
+
+  override fun onDispose(action: () -> Unit) {
+    disposeSupport.onDispose(action)
+  }
+
   private var configured: Boolean = false
 
   /**
@@ -73,6 +86,8 @@ abstract class AbstractChartGestalt : ChartGestalt {
 
   final override fun configure(meisterChartBuilder: MeisterChartBuilder) {
     ensureNotConfigured()
+
+    meisterChartBuilder.onDispose(this)
 
     //Apply the builder actions first!
     builderConfigurationActions.fastForEach { it(meisterChartBuilder) }

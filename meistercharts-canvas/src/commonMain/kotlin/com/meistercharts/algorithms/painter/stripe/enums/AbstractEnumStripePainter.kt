@@ -25,7 +25,7 @@ import com.meistercharts.history.MayBeNoValueOrPending
 /**
  * Abstract base class for enum stripe painters
  */
-abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesIndex, @MayBeNoValueOrPending HistoryEnumSet, @MayBeNoValueOrPending HistoryEnumOrdinal, Unit>(), EnumStripePainter {
+abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesIndex, @MayBeNoValueOrPending HistoryEnumSet, @MayBeNoValueOrPending HistoryEnumOrdinal, Unit, Unit>(), EnumStripePainter {
   /**
    * Provides the current aggregation mode
    */
@@ -51,7 +51,7 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
   /**
    * Returns true if the relevant value has changed - depending on the
    */
-  override fun relevantValuesHaveChanged(value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit): Boolean {
+  override fun relevantValuesHaveChanged(value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit, value4: Unit): Boolean {
     @MayBeNoValueOrPending val currentEnumSet = paintingVariables.currentValue1
     @MayBeNoValueOrPending val currentEnumOrdinalMostTime = paintingVariables.currentValue2
 

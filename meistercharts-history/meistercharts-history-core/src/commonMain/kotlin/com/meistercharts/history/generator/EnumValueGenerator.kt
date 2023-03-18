@@ -20,6 +20,7 @@ import com.meistercharts.history.HistoryEnumSet
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
 import kotlin.random.Random
+import kotlin.time.Duration
 
 /**
  * Generates values.
@@ -61,6 +62,21 @@ fun interface EnumValueGenerator {
         }
 
         val index = randomGenerator.nextInt(0, enum.valuesCount)
+        HistoryEnumSet.forEnumValue(index)
+      }
+    }
+
+    fun modulo(
+      step: Duration,
+      factor: Int = 1,
+    ): EnumValueGenerator {
+      return EnumValueGenerator { timestamp: @ms Double, enum ->
+
+        val enumValuesCount = enum.valuesCount
+
+        val baseValue = (timestamp / step.inWholeMilliseconds)
+        val index = (baseValue % enumValuesCount).toInt() * factor % Int.MAX_VALUE
+
         HistoryEnumSet.forEnumValue(index)
       }
     }

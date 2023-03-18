@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
+import com.meistercharts.algorithms.layers.EmptyLayer.disposeSupport
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -156,6 +157,7 @@ import it.neckar.open.observable.ReadOnlyObservableObject
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
 import com.meistercharts.style.withFillIfNull
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
@@ -188,7 +190,7 @@ class TimeLineChartGestalt
    */
   val data: Data = Data(),
   styleConfiguration: Style.() -> Unit = {},
-) : AbstractChartGestalt(), ChartGestalt, OnDispose {
+) : AbstractChartGestalt(), ChartGestalt {
 
   val style: Style = Style().also(styleConfiguration)
 
@@ -1042,8 +1044,6 @@ class TimeLineChartGestalt
       contentViewportGestalt.configure(meisterChartBuilder)
 
       with(meisterChartBuilder) {
-        meisterChartBuilder.onDispose(disposeSupport)
-
         configureAsTimeChart()
         configureAsTiledTimeChart()
 
@@ -1149,13 +1149,7 @@ class TimeLineChartGestalt
     }
   }
 
-  val disposeSupport: DisposeSupport = DisposeSupport()
-
-  override fun onDispose(action: () -> Unit) {
-    disposeSupport.onDispose(action)
-  }
-
-  class Data constructor(
+  class Data(
     /**
      * The history storage this chart is based on
      */

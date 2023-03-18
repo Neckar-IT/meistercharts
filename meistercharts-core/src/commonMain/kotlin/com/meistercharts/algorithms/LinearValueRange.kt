@@ -18,6 +18,7 @@ package com.meistercharts.algorithms
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.other.pct
 
 /**
  * Represents a linear value range that has a start and end.
@@ -65,5 +66,17 @@ open class LinearValueRange(
 
   fun withEnd(newEnd: @Domain Double): LinearValueRange {
     return LinearValueRange(start, newEnd)
+  }
+
+  /**
+   * Returns a new [LinearValueRange] that represents a range that is reduced by the specified [percentage].
+   * The range is reduced by subtracting a fixed percentage of the range from both the start and end values,
+   * so that the center of the range is maintained.
+   */
+  fun reduced(percentage: @pct Double): LinearValueRange {
+    val diff = (delta * percentage) / 2.0
+    val newStart = start + diff
+    val newEnd = end - diff
+    return linear(newStart, newEnd)
   }
 }

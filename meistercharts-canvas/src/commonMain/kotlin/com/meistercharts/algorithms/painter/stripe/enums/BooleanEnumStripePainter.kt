@@ -72,6 +72,7 @@ class BooleanEnumStripePainter(
     value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
     value3ToPaint: Unit,
+    value4ToPaint: Unit,
   ) {
     val gc = paintingContext.gc
 

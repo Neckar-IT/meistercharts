@@ -15,11 +15,12 @@
  */
 package com.meistercharts.demo
 
-import com.meistercharts.history.generator.DecimalValueGenerator
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.animation.Easing
-import it.neckar.open.unit.number.Positive
+import com.meistercharts.history.generator.DecimalValueGenerator
+import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.kotlin.lang.random
+import it.neckar.open.unit.number.Positive
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -30,34 +31,44 @@ import kotlin.time.DurationUnit
 class TimeBasedValueGeneratorBuilder(config: TimeBasedValueGeneratorBuilder.() -> Unit) {
 
   /**
-   * The value to start with
+   * The range in which the generated values must lie
    */
-  var startValue: Double = ValueRange.default.center()
+  var valueRange: ValueRange = ValueRange.default
+
+  /**
+   * The value to start with.
+   * Returns the center of the value range - if no value has been set manually
+   */
+  var startValue: Double = Double.NaN
+    get() {
+      return field.ifNaN { valueRange.center() }
+    }
 
   /**
    * The minimum difference between the last generated value of one [period] and the next [period]
    */
-  var minDeviation: @Positive Double = ValueRange.default.delta * 0.05
+  var minDeviation: @Positive Double = Double.NaN
+    get() {
+      return field.ifNaN { valueRange.delta * 0.05 }
+    }
 
   /**
    * The maximum difference between the last generated value of one [period] and the next [period]
    */
-  var maxDeviation: @Positive Double = ValueRange.default.delta * 0.15
+  var maxDeviation: @Positive Double = Double.NaN
+    get() {
+      return field.ifNaN { valueRange.delta * 0.15 }
+    }
 
   /**
    * The easing to be used to generate all values during a [period]
    */
-  var easing: Easing = Easing.linear
+  var easing: Easing = Easing.inOut
 
   /**
    * The time that should pass between the previously generated value and the next target value
    */
   var period: @ms @Positive Double = 10.seconds.toDouble(DurationUnit.MILLISECONDS)
-
-  /**
-   * The range in which the generated values must lie
-   */
-  var valueRange: ValueRange = ValueRange.default
 
   init {
     this.config()

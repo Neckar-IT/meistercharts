@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -31,6 +32,8 @@ value class HistoryUnit(val name: String?) {
      * Empty unit
      */
     val None: HistoryUnit = HistoryUnit(null)
+
+    val pct: @pct HistoryUnit = HistoryUnit("percent")
 
     /**
      * millimeter

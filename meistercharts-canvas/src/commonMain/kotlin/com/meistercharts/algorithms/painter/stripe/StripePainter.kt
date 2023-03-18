@@ -20,7 +20,6 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.MayBeNoValueOrPending
 
 /**
  * Base interface for stripe painters.
@@ -33,9 +32,9 @@ import com.meistercharts.history.MayBeNoValueOrPending
  * @param DataSeriesIndexType: Type of: the data series index
  * @param ValueType1: Type of: the first relevant value
  * @param ValueType2: Type of: the second relevant value
- * @param ValueType3: Type of: the third relevant value
+ * @param ValueType4: Type of: the third relevant value
  */
-interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, ValueType2, ValueType3> {
+interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, ValueType2, ValueType3, ValueType4> {
   /**
    * Begins a new set of stripe segments
    */
@@ -83,9 +82,14 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
     newValue2: ValueType2,
 
     /**
-     * The third updated value (usually some kind of context information - e.g. a map with additional information required to paint)
+     * The third updated value
      */
     newValue3: ValueType3,
+
+    /**
+     * The fourth updated value (usually some kind of context information - e.g. a map with additional information required to paint)
+     */
+    newValue4: ValueType4,
   )
 
   /**

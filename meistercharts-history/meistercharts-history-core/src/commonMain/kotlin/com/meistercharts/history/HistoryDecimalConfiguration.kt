@@ -18,6 +18,7 @@ package com.meistercharts.history
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.collections.emptyIntArray
+import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.unit.other.ID
 import kotlinx.serialization.Serializable
@@ -85,6 +86,19 @@ class HistoryDecimalConfiguration(
     return DecimalDataSeriesIndex(dataSeriesIds.indexOf(dataSeriesId.value))
   }
 
+  fun dump(): String {
+    return buildString {
+      dataSeriesIds.fastForEachIndexed { index, dataSeriesIndexAsInt ->
+        append(dataSeriesIndexAsInt.toString().padStart(7))
+        append(": ")
+        append(displayNames[index].fallbackText.padEnd(25))
+        append(" | (")
+        append((units[index].name + ")").padEnd(15))
+        appendLine()
+      }
+    }
+  }
+
   override fun toString(): String {
     return "HistoryDecimalConfiguration(dataSeriesIds=${dataSeriesIds.contentToString()},\ndisplayNames=${displayNames})"
   }
@@ -98,14 +112,14 @@ class HistoryDecimalConfiguration(
 
     if (!dataSeriesIds.contentEquals(other.dataSeriesIds)) return false
     if (displayNames != other.displayNames) return false
-
-    return true
+    return units == other.units
   }
 
   override fun hashCode(): Int {
     var result = super.hashCode()
     result = 31 * result + dataSeriesIds.contentHashCode()
     result = 31 * result + displayNames.hashCode()
+    result = 31 * result + units.hashCode()
     return result
   }
 

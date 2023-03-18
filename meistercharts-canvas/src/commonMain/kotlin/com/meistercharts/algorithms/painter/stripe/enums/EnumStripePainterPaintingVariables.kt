@@ -26,7 +26,7 @@ import com.meistercharts.history.HistoryEnumSet
 /**
  * Painting variables for enums
  */
-interface EnumStripePainterPaintingVariables : StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit> {
+interface EnumStripePainterPaintingVariables : StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
   /**
    * The current history enum for [visibleDataSeriesIndex]
    */
@@ -36,11 +36,12 @@ interface EnumStripePainterPaintingVariables : StripePainterPaintingVariables<En
 /**
  * Painting variables for enum stripes
  */
-class DefaultEnumStripePainterPaintingVariables : AbstractStripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit>(
+class DefaultEnumStripePainterPaintingVariables : AbstractStripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(
   dataSeriesIndexDefault = EnumDataSeriesIndex.zero,
   value1Default = HistoryEnumSet.NoValue,
   value2Default = HistoryEnumOrdinal.NoValue,
   value3Default = Unit,
+  value4Default = Unit,
 ), EnumStripePainterPaintingVariables {
   /**
    * The current history enum for [visibleDataSeriesIndex]

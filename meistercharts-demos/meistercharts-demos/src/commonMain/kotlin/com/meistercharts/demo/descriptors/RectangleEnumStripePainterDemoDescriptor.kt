@@ -19,11 +19,11 @@ import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
 import com.meistercharts.algorithms.impl.FittingWithMargin
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.ContentAreaLayer
-import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
+import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.canvas.BindContentAreaSize2ContentViewport
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.translateToContentAreaOrigin
@@ -106,19 +106,18 @@ class RectangleEnumStripePainterDemoDescriptor : ChartingDemoDescriptor<Nothing>
             private fun paintEnumValues(paintingContext: LayerPaintingContext) {
               val enumOrdinalMostTime = HistoryEnumOrdinal(4)
 
-
               enumStripePainter.begin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
-              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 100.0, 180.0, HistoryEnumSet(0b111111), enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 180.0, 250.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 250.0, 320.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 320.0, 350.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 450.0, 460.0, HistoryEnumSet(0b11), enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 460.0, 465.0, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 465.0, 500.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 500.0, 550.0, HistoryEnumSet.Pending, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 550.0, 620.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit)
+              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 100.0, 180.0, HistoryEnumSet(0b111111), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 180.0, 250.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 250.0, 320.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 320.0, 350.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 450.0, 460.0, HistoryEnumSet(0b11), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 460.0, 465.0, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 465.0, 500.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 500.0, 550.0, HistoryEnumSet.Pending, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 550.0, 620.0, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
               enumStripePainter.finish(paintingContext)
             }
 
@@ -126,16 +125,16 @@ class RectangleEnumStripePainterDemoDescriptor : ChartingDemoDescriptor<Nothing>
               val enumOrdinalMostTime = HistoryEnumOrdinal(1)
 
               enumStripePainter.begin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
-              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 100.0, 150.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 150.0, 250.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 250.0, 300.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 300.0, 350.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 450.0, 500.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 500.0, 510.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 510.0, 515.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit)
-              enumStripePainter.valueChange(paintingContext, 515.0, 600.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit)
+              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 100.0, 150.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 150.0, 250.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 250.0, 300.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 300.0, 350.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 450.0, 500.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 500.0, 510.0, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 510.0, 515.0, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(paintingContext, 515.0, 600.0, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
               enumStripePainter.finish(paintingContext)
             }
           }

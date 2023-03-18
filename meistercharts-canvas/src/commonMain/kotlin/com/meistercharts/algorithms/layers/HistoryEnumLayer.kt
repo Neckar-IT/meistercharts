@@ -182,7 +182,7 @@ class HistoryEnumLayer(
 
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
-              enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit)
+              enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit, Unit)
               break
             }
 
@@ -198,7 +198,7 @@ class HistoryEnumLayer(
             //update the last time stuff
             lastTime = startTime
 
-            enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit)
+            enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit, Unit)
           }
         }
         enumStripePainter.finish(paintingContext)

@@ -18,6 +18,7 @@ package com.meistercharts.history
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.collections.emptyIntArray
+import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.unit.other.ID
 import kotlinx.serialization.Serializable
@@ -80,6 +81,22 @@ class HistoryReferenceEntryConfiguration(
    */
   fun getDisplayName(dataSeriesIndex: ReferenceEntryDataSeriesIndex): TextKey {
     return displayNames[dataSeriesIndex.value]
+  }
+
+  fun dump(): String {
+    return buildString {
+      dataSeriesIds.fastForEachIndexed { index, dataSeriesIndexAsInt ->
+        append(dataSeriesIndexAsInt.toString().padStart(7))
+        append(": ")
+        append(displayNames[index].fallbackText.padEnd(25))
+        append(" |")
+        statusEnums[index]?.let { statusEnum ->
+          append(" (")
+          append((statusEnum.enumDescription + ")").padEnd(15))
+        }
+        appendLine()
+      }
+    }
   }
 
   override fun toString(): String {

@@ -45,6 +45,7 @@ class RectangleEnumStripePainter(
     value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
     value3ToPaint: Unit,
+    value4ToPaint: Unit,
   ) {
     val valueToPaint: @MayBeNoValueOrPending HistoryEnumSet = value1ToPaint
     val valueMostTimeToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal = value2ToPaint

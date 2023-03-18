@@ -94,6 +94,24 @@ class HistoryConfiguration(
     return result
   }
 
+  /**
+   * Dumps the history configuration
+   */
+  fun dump(): String {
+    return buildString {
+      appendLine("Decimals:")
+      append(decimalConfiguration.dump())
+
+      appendLine()
+      appendLine("Enums:")
+      append(enumConfiguration.dump())
+
+      appendLine()
+      appendLine("Reference Entries:")
+      append(referenceEntryConfiguration.dump())
+    }
+  }
+
   companion object {
     /**
      * An empty history configuration without any data series

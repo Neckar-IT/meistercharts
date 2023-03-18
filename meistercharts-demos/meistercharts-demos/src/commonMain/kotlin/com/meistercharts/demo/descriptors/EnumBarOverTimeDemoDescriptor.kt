@@ -19,10 +19,10 @@ import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.layers.TimeAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.timeChartCalculator
+import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.annotations.Window
 import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
@@ -34,8 +34,8 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.historyConfiguration
-import it.neckar.open.kotlin.lang.roundDecimalPlaces
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.roundDecimalPlaces
 import it.neckar.open.unit.si.ms
 
 /**
@@ -89,7 +89,7 @@ class EnumBarOverTimeDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
                 @Window val startX = timeChartCalculator.time2windowX(current)
                 @Window val endX = timeChartCalculator.time2windowX(current + interval)
-                enumBarsPainter.valueChange(paintingContext, startX, endX, enumValue, enumOrdinalMostTime, Unit)
+                enumBarsPainter.valueChange(paintingContext, startX, endX, enumValue, enumOrdinalMostTime, Unit, Unit)
 
                 current += interval
               }

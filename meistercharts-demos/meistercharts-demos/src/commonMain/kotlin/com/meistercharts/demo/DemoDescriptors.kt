@@ -256,8 +256,10 @@ import com.meistercharts.demo.descriptors.UrlPaintableDemoDescriptor
 import com.meistercharts.demo.descriptors.MultiValueAxisLayerDemoDescriptor
 import com.meistercharts.demo.descriptors.MultiValueAxisWithHudDemoDescriptor
 import com.meistercharts.demo.descriptors.DiscreteTimelineChartGestaltDemoDescriptor
+import com.meistercharts.demo.descriptors.HistoryReferenceScenariosDemoDescriptor
 import com.meistercharts.demo.descriptors.SnapTextDemoDescriptor
 import com.meistercharts.demo.descriptors.SymbolAndLabelLegendHeadlinePaintableDemoDescriptor
+import com.meistercharts.demo.descriptors.TimeLineChartDemoRandomDescriptor
 import com.meistercharts.demo.descriptors.TimelineChartRestDemoDescriptor
 import com.meistercharts.demo.descriptors.ValueAxisAllSidesDemoDescriptor
 import com.meistercharts.demo.descriptors.ValueAxisAtContentAreaDemoDescriptor
@@ -307,6 +309,7 @@ object DemoDescriptors {
   val descriptors: List<ChartingDemoDescriptor<*>> = listOf(
     HelloWorldDemoDescriptor(),
     ContentViewportDemoDescriptor(),
+    HistoryReferenceScenariosDemoDescriptor(),
     GestaltLifecycleDemoDescriptor(),
     WithContentViewportDemoDescriptor(),
     ValueAxisContentViewportDemoDescriptor(),
@@ -373,6 +376,7 @@ object DemoDescriptors {
     TimeLineChartGestaltWithToolbarDemoDescriptor(),
     TimeLineChartHistoryConfigDemoDescriptor(),
     TimeLineChartDemoDescriptor(),
+    TimeLineChartDemoRandomDescriptor(),
     TimeLineChartWithOnDemandHistoryConfigurationDemoDescriptor(),
     CoronaChartDemoDescriptor(),
     ScatterPlotLogarithmicAxisDemoDescriptor(),

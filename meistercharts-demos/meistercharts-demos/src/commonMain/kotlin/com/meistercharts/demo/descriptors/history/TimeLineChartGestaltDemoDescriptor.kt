@@ -525,7 +525,7 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
 
         data.historyConfiguration.chunk(100) { timestampIndex ->
           this.addDecimalValues(
-            baseMillis + timestampIndex.value * samplingPeriod.distance,
+            timestamp = baseMillis + timestampIndex.value * samplingPeriod.distance,
             decimalValueGenerator.generate(timestampIndex.value.toDouble()),
             decimalValueGenerator.generate(timestampIndex.value.toDouble()),
             decimalValueGenerator.generate(timestampIndex.value.toDouble()),
@@ -604,14 +604,6 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
       }, "Candle"
     )
   }
-
-}
-
-private fun ValueRange.reduce(percentage: @pct Double): LinearValueRange {
-  val diff = delta * percentage
-  val newStart = start + diff
-  val newEnd = end - diff
-  return ValueRange.linear(newStart, newEnd)
 }
 
 internal class MyHistoryChunkBuilder(val historyConfigurationProvider: () -> HistoryConfiguration) {
@@ -690,7 +682,7 @@ fun TimeLineChartGestalt.setUpHistoryChunkGenerator(samplingPeriod: SamplingPeri
       minDeviation = dataSeriesValueRange.delta * (0.025 * (it + 1)).coerceAtMost(0.25)
       maxDeviation = (dataSeriesValueRange.delta * (0.05 * (it + 1)).coerceAtMost(0.25)).coerceAtLeast(minDeviation * 1.001)
       period = 2_000.0 * (it + 1)
-      valueRange = dataSeriesValueRange.reduce(0.25)
+      valueRange = dataSeriesValueRange.reduced(0.25)
       easing = easings.getModulo(it)
     }.build()
   }

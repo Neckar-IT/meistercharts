@@ -29,13 +29,9 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
-import com.meistercharts.provider.TimeRangeProvider
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.unit.other.px
-import it.neckar.open.unit.si.ms
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
@@ -45,6 +41,11 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.fastForEachIndexed
 import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
+import com.meistercharts.provider.TimeRangeProvider
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.unit.other.px
+import it.neckar.open.unit.si.ms
 
 /**
  * Paints the history reference entries
@@ -180,12 +181,14 @@ class HistoryReferenceEntryLayer(
             @Window val startX = chartCalculator.time2windowX(startTime)
             @Window val endX = chartCalculator.time2windowX(endTime)
             @MayBeNoValueOrPending val referenceEntryId = chunk.getReferenceEntryId(visibleDataSeriesIndex, timestampIndex)
-            @MayBeNoValueOrPending val count = chunk.getReferenceEntryIdsCount(visibleDataSeriesIndex, timestampIndex)
+            @MayBeNoValueOrPending val differentIdsCount = chunk.getReferenceEntryIdsCount(visibleDataSeriesIndex, timestampIndex)
+            val referenceEntryStatus: HistoryEnumSet = chunk.getReferenceEntryStatus(visibleDataSeriesIndex, timestampIndex)
+
             val referenceEntryData = chunk.getReferenceEntryData(visibleDataSeriesIndex, referenceEntryId)
 
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
-              stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, count, referenceEntryData)
+              stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, differentIdsCount, referenceEntryStatus, referenceEntryData)
               break
             }
 
@@ -201,7 +204,7 @@ class HistoryReferenceEntryLayer(
             //update the last time stuff
             lastTime = startTime
 
-            stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, count, referenceEntryData)
+            stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, differentIdsCount, referenceEntryStatus, referenceEntryData)
 
             if (gc.debug[DebugFeature.ShowBounds]) {
               gc.stroke(Color.blue)

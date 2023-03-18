@@ -24,13 +24,14 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.snapPhysicalTranslation
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import it.neckar.open.formatting.intFormat
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
+import com.meistercharts.model.Direction
+import it.neckar.open.formatting.intFormat
 
 /**
  * Paints stripes using colored (filled) rectangles
@@ -47,11 +48,13 @@ class RectangleReferenceEntryStripePainter(
     endX: @Window Double, //might be out of the screen
     value1ToPaint: @MayBeNoValueOrPending ReferenceEntryId,
     value2ToPaint: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
-    value3ToPaint: ReferenceEntryData?,
+    value3ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
+    value4ToPaint: ReferenceEntryData?,
   ) {
     @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = value1ToPaint
     @Suppress("UnnecessaryVariable") @MayBeNoValueOrPending val count = value2ToPaint
-    @Suppress("UnnecessaryVariable") val entryData = value3ToPaint
+    //TODO what to do with the HistoryEnumSet?
+    @Suppress("UnnecessaryVariable") val entryData = value4ToPaint
 
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator

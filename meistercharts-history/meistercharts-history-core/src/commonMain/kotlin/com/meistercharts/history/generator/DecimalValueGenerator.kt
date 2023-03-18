@@ -28,6 +28,7 @@ import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
+import kotlin.math.sin
 import kotlin.random.Random
 
 /**
@@ -77,8 +78,9 @@ fun interface DecimalValueGenerator {
        * The sigma - by default 2% of the value range delta
        */
       sigmaAbsolute: Double = valueRange.delta * 0.02,
+      center: Double = valueRange.center(),
     ): RandomNormalDecimalValueGenerator {
-      return RandomNormalDecimalValueGenerator(valueRange, sigmaAbsolute)
+      return RandomNormalDecimalValueGenerator(valueRange, sigmaAbsolute, center)
     }
 
     /**
@@ -150,9 +152,8 @@ class RandomDecimalValueGenerator(
 class RandomNormalDecimalValueGenerator(
   val valueRange: ValueRange,
   val sigma: Double,
+  val center: Double = valueRange.center(),
 ) : DecimalValueGenerator {
-  private val center: Double = valueRange.center()
-
   /**
    * Generates a normally distributed random decimal value within the specified [valueRange] using the provided [sigma].
    *
@@ -161,6 +162,28 @@ class RandomNormalDecimalValueGenerator(
    */
   override fun generate(timestamp: Double): Double {
     return randomNormal(center, sigma).coerceIn(valueRange)
+  }
+}
+
+/**
+ *
+ */
+class SmoothDecimalValueGenerator(
+  private val amplitude: Double = 0.5,
+  private val frequency: Double = 0.0001005,
+
+  private val seed: Int = 42,
+
+  ) : DecimalValueGenerator {
+
+  override fun generate(timestamp: @ms Double): Double {
+    val random = Random(seed + timestamp.toLong())
+
+    val sinValue = sin(frequency * timestamp)
+    val randomValue = random.nextDouble(-amplitude, amplitude)
+    val currentValue = 0.5 + sinValue * randomValue
+
+    return currentValue.coerceIn(0.0, 1.0)
   }
 }
 

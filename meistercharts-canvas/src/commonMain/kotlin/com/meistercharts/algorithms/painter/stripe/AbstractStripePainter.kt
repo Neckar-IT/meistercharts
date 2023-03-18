@@ -28,11 +28,11 @@ import com.meistercharts.history.MayBeNoValueOrPending
  * A stripe painter paints a (horizontal) stripe with several stripe segments.
  * A segment might span multiple "value segments". This allows optimized painting of a single area for multiple recordings of the same value.
  */
-abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type> : StripePainter<DataSeriesIndexType, Value1Type, Value2Type, Value3Type> {
+abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type> : StripePainter<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
   /**
    * Returns the painting variables for this stripe painter
    */
-  abstract fun paintingVariables(): StripePainterPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type>
+  abstract fun paintingVariables(): StripePainterPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
 
   override fun begin(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
     val paintingVariables = paintingVariables()
@@ -40,16 +40,16 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     paintingVariables.calculate(height, dataSeriesIndex, historyConfiguration)
   }
 
-  override fun valueChange(paintingContext: LayerPaintingContext, startX: @Window Double, endX: @Window Double, newValue1: Value1Type, newValue2: Value2Type, newValue3: Value3Type) {
+  override fun valueChange(paintingContext: LayerPaintingContext, startX: @Window Double, endX: @Window Double, newValue1: Value1Type, newValue2: Value2Type, newValue3: Value3Type, newValue4: Value4Type) {
     val paintingVariables = paintingVariables()
 
-    if (relevantValuesHaveChanged(newValue1, newValue2, newValue3).not()) {
+    if (relevantValuesHaveChanged(newValue1, newValue2, newValue3, newValue4).not()) {
       //Values have not changed, just update the end - but do not paint
       paintingVariables.currentEndX = endX
       return
     }
 
-    relevantValuesChanged(paintingVariables, newValue1, newValue2, newValue3, startX, endX)
+    relevantValuesChanged(paintingVariables, newValue1, newValue2, newValue3, newValue4, startX, endX)
 
     paintSegment(paintingContext)
   }
@@ -58,10 +58,11 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
    * Is called if the relevant values have changed
    */
   protected open fun relevantValuesChanged(
-    paintingVariables: StripePainterPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type>,
+    paintingVariables: StripePainterPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>,
     newValue1: Value1Type,
     newValue2: Value2Type,
     newValue3: Value3Type,
+    newValue4: Value4Type,
     startX: @Window Double,
     endX: @Window Double,
   ) {
@@ -85,12 +86,13 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     @MayBeNoValueOrPending val value1ToPaint = paintingVariables.currentValue1
     @MayBeNoValueOrPending val value2ToPaint = paintingVariables.currentValue2
     @MayBeNoValueOrPending val value3ToPaint = paintingVariables.currentValue3
+    @MayBeNoValueOrPending val value4ToPaint = paintingVariables.currentValue4
 
     @Window val startX = paintingVariables.currentStartX
     @Window val endX = paintingVariables.currentEndX
 
     try {
-      paintSegment(paintingContext, startX, endX, value1ToPaint, value2ToPaint, value3ToPaint)
+      paintSegment(paintingContext, startX, endX, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
     } finally {
       //Switch to *next*
       paintingVariables.prepareForNextValue()
@@ -109,6 +111,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     value1ToPaint: Value1Type,
     value2ToPaint: Value2Type,
     value3ToPaint: Value3Type,
+    value4ToPaint: Value4Type,
   )
 
   override fun finish(paintingContext: LayerPaintingContext) {
@@ -123,5 +126,6 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     value1: Value1Type,
     value2: Value2Type,
     value3: Value3Type,
+    value4: Value4Type,
   ): Boolean
 }
