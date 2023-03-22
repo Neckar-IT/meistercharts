@@ -28,6 +28,7 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.WritableHistoryStorage
+import com.meistercharts.history.createDefaultHistoryConfiguration
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
@@ -233,26 +234,3 @@ class HistoryChunkGenerator(
     return chunk
   }
 }
-
-/**
- * Creates a default history configuration with the provided sizes
- */
-private fun createDefaultHistoryConfiguration(
-  decimalValuesCount: Int,
-  enumValuesCount: Int,
-  referenceEntrySeriesCount: Int,
-) = historyConfiguration(decimalValuesCount, enumValuesCount, referenceEntrySeriesCount,
-
-  decimalDataSeriesInitializer = { dataSeriesIndex ->
-    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
-    decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
-  }, enumDataSeriesInitializer = { dataSeriesIndex ->
-    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 1000)
-    //TODO how to configure the enum?
-    enumDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Boolean)
-  },
-
-  referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
-    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10_000)
-    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Active)
-  })

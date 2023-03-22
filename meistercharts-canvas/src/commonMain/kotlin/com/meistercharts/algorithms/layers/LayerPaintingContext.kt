@@ -32,6 +32,7 @@ import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.canvas.debug
+import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.i18nSupport
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.textService
@@ -156,8 +157,15 @@ data class LayerPaintingContext(
 /**
  * Resolves this [TextKey] within the given [paintingContext]
  */
-fun TextKey.resolve(paintingContext: LayerPaintingContext): String {
-  return this.resolve(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
+inline fun TextKey.resolve(paintingContext: LayerPaintingContext): String {
+  return this.resolve(paintingContext.chartSupport)
+}
+
+/**
+ * Resolves this [TextKey] within the given [chartSupport]
+ */
+inline fun TextKey.resolve(chartSupport: ChartSupport): String {
+  return this.resolve(chartSupport.textService, chartSupport.i18nConfiguration)
 }
 
 /**

@@ -15,22 +15,6 @@
  */
 package com.meistercharts.charts.refs
 
-import it.neckar.open.kotlin.lang.isPositive
-import it.neckar.open.kotlin.lang.percent
-import it.neckar.open.time.nowMillis
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.dispose.DisposeSupport
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.TextKey
-import it.neckar.open.i18n.TextService
-import it.neckar.open.i18n.resolve
-import it.neckar.open.observable.ObservableBoolean
-import it.neckar.open.observable.ObservableDouble
-import it.neckar.open.observable.ObservableObject
-import it.neckar.open.observable.ReadOnlyObservableObject
-import it.neckar.open.time.TimeConstants
-import it.neckar.open.unit.number.Positive
-import it.neckar.open.unit.si.ms
 import com.meistercharts.algorithms.KeepOriginOnWindowResize
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.axis.AxisSelection
@@ -48,6 +32,7 @@ import com.meistercharts.algorithms.layers.clippedToContentViewport
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.algorithms.tile.HistoryGapCalculator
 import com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer
@@ -74,6 +59,22 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.TextKey
+import it.neckar.open.i18n.TextService
+import it.neckar.open.i18n.resolve
+import it.neckar.open.kotlin.lang.isPositive
+import it.neckar.open.kotlin.lang.percent
+import it.neckar.open.observable.ObservableBoolean
+import it.neckar.open.observable.ObservableDouble
+import it.neckar.open.observable.ObservableObject
+import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.time.TimeConstants
+import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.number.Positive
+import it.neckar.open.unit.si.ms
 
 /**
  * Visualizes (only) reference entries.
@@ -121,6 +122,17 @@ class DiscreteTimelineChartGestalt(
     visibleIndices = configuration.actualVisibleReferenceEntrySeriesIndices,
     contentAreaTimeRange = { configuration.contentAreaTimeRange }
   ))
+
+  /**
+   * The stripe painters that are used by the [historyReferenceEntryLayer]
+   */
+  var referenceEntryStripePainters: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainter> //Delegate does not work 2023-03-21, results in a compile error
+    get() {
+      return historyReferenceEntryLayer.configuration.stripePainters
+    }
+    set(value) {
+      historyReferenceEntryLayer.configuration.stripePainters = value
+    }
 
   /**
    * The time axis layer

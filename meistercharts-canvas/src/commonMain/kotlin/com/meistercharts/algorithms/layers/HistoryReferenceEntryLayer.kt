@@ -136,7 +136,7 @@ class HistoryReferenceEntryLayer(
 
     //Iterate over all visible reference entry data series
     configuration.visibleIndices.fastForEachIndexed { index, visibleDataSeriesIndex ->
-      val stripePainter = configuration.stripePainter.valueAt(visibleDataSeriesIndex.value)
+      val stripePainter = configuration.stripePainters.valueAt(visibleDataSeriesIndex.value)
 
       val boxIndex = BoxIndex(index)
       @Zoomed val startY = stripesLayout.calculateStart(boxIndex)
@@ -250,7 +250,7 @@ class HistoryReferenceEntryLayer(
     /**
      * The painters that are used to paint the entries.
      */
-    var stripePainter: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainter> = MultiProvider.always(RectangleReferenceEntryStripePainter())
+    var stripePainters: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainter> = MultiProvider.always(RectangleReferenceEntryStripePainter())
 
     /**
      * The distance between two stripes

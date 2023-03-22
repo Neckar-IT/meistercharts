@@ -70,6 +70,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     paintingVariables.nextValue1 = newValue1
     paintingVariables.nextValue2 = newValue2
     paintingVariables.nextValue3 = newValue3
+    paintingVariables.nextValue4 = newValue4
 
     paintingVariables.nextStartX = startX
     paintingVariables.nextEndX = endX

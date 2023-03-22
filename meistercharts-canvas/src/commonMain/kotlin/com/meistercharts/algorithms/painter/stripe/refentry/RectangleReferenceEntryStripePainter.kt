@@ -53,11 +53,12 @@ class RectangleReferenceEntryStripePainter(
   ) {
     @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = value1ToPaint
     @Suppress("UnnecessaryVariable") @MayBeNoValueOrPending val count = value2ToPaint
-    //TODO what to do with the HistoryEnumSet?
+    @Suppress("UnnecessaryVariable") val statusEnumSet: HistoryEnumSet = value3ToPaint
     @Suppress("UnnecessaryVariable") val entryData = value4ToPaint
 
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
+    val chartSupport = paintingContext.chartSupport
 
     if (idToPaint == ReferenceEntryId.NoValue) {
       //the value is NoValue, do *not* paint anything
@@ -74,8 +75,11 @@ class RectangleReferenceEntryStripePainter(
 
     val paintingVariables = paintingVariables()
 
-    val startXinViewport = chartCalculator.coerceInViewportX(startX)
-    val endXinViewport = chartCalculator.coerceInViewportX(endX)
+    val historyConfiguration = paintingVariables.historyConfiguration
+    val dataSeriesIndex = paintingVariables.visibleDataSeriesIndex
+
+    @Window val startXinViewport = chartCalculator.coerceInViewportX(startX)
+    @Window val endXinViewport = chartCalculator.coerceInViewportX(endX)
 
     @Zoomed val rectangleHeight = paintingVariables.height
     @Zoomed val rectangleWidth = endXinViewport - startXinViewport
@@ -101,6 +105,31 @@ class RectangleReferenceEntryStripePainter(
     }
 
     when {
+      count.value == 0 -> {
+        throw UnsupportedOperationException("Count should not be 0")
+      }
+
+      count.value == 1 -> {
+        //Count is <= 1
+        gc.fill(configuration.fillProvider(idToPaint, statusEnumSet, historyConfiguration))
+
+        val snapConfiguration = configuration.snapConfiguration()
+        gc.snapPhysicalTranslation(snapConfiguration)
+        gc.fillRect(startXinViewport, 0.0, snapConfiguration.snapXSize(rectangleWidth), snapConfiguration.snapYSize(rectangleHeight))
+
+        //Paint the label
+        entryData?.label?.resolve(paintingContext)?.let {
+          gc.fill(configuration.labelColor)
+
+          val statusEnum = historyConfiguration.referenceEntryConfiguration.getStatusEnum(dataSeriesIndex)
+          val winnerEnum = statusEnum?.value(statusEnumSet.firstSetOrdinal())
+
+          val translatedEnum = winnerEnum?.key?.resolve(chartSupport)
+
+          gc.fillText("$it $translatedEnum", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
+        }
+      }
+
       count.value > 1 -> {
         //Count is > 1, we show the number of entries
         gc.fill(Color.silver)
@@ -112,21 +141,6 @@ class RectangleReferenceEntryStripePainter(
 
         gc.fill(configuration.countLabelColor)
         gc.fillText(intFormat.format(count.value.toDouble()), startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
-      }
-
-      else -> {
-        //Count is <= 1
-        gc.fill(configuration.fillProvider(idToPaint, paintingVariables.historyConfiguration))
-
-        val snapConfiguration = configuration.snapConfiguration()
-        gc.snapPhysicalTranslation(snapConfiguration)
-        gc.fillRect(startXinViewport, 0.0, snapConfiguration.snapXSize(rectangleWidth), snapConfiguration.snapYSize(rectangleHeight))
-
-        //Paint the label
-        entryData?.label?.resolve(paintingContext)?.let {
-          gc.fill(configuration.labelColor)
-          gc.fillText(it, startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
-        }
       }
     }
   }
@@ -140,8 +154,12 @@ class RectangleReferenceEntryStripePainter(
     /**
      * Provides the fill color for the given value
      */
-    var fillProvider: (value: ReferenceEntryId, historyConfiguration: HistoryConfiguration) -> Color = { value: ReferenceEntryId, historyConfiguration: HistoryConfiguration ->
-      Theme.chartColors().valueAt(value.id)
+    var fillProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { value: ReferenceEntryId, statusEnumSet, _: HistoryConfiguration ->
+      if (statusEnumSet.isNoValue()) {
+        Theme.chartColors().valueAt(value.id)
+      } else {
+        Theme.enumColors().valueAt(statusEnumSet.firstSetOrdinal().value)
+      }
     }
 
     /**

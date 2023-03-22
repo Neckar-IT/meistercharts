@@ -232,7 +232,7 @@ object HistoryReferenceScenarios {
   /**
    * The state for a job
    */
-  val jobStateEnum: HistoryEnum = HistoryEnum.createSimple("Job State", listOf("Running", "Success", "Failure"))
+  val jobStateEnum: HistoryEnum = HistoryEnum.createSimple("Job State", listOf("Failure", "Success", "Running"))
 
   val temperatureValueRange: @degC LinearValueRange = ValueRange.linear(10.0, 120.0)
 }

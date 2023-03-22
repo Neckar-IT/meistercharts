@@ -15,6 +15,8 @@
  */
 package com.meistercharts.demo.descriptors
 
+import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.demo.ChartingDemo
@@ -26,12 +28,17 @@ import com.meistercharts.demo.configurableColorNullable
 import com.meistercharts.demo.configurableIndices
 import com.meistercharts.demo.configurableInsetsSeparate
 import com.meistercharts.demo.toList
+import com.meistercharts.history.HistoryEnumOrdinal
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.history.createDefaultHistoryConfiguration
 import com.meistercharts.history.generator.HistoryChunkGenerator
 import com.meistercharts.history.generator.ReferenceEntryGenerator
+import it.neckar.open.kotlin.lang.getModulo
+import it.neckar.open.provider.MultiProvider
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -61,6 +68,9 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             },
           )
         }
+
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {}
+
       }, "Random - 100ms"
     ),
 
@@ -76,10 +86,11 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             enumValueGenerators = emptyList(),
             referenceEntryGenerators = List(12) {
               ReferenceEntryGenerator.increasing(513.milliseconds)
-
             },
           )
         }
+
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {}
       }, "Increasing (every 513 ms)"
     ),
 
@@ -99,7 +110,56 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             },
           )
         }
+
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {}
       }, "Increasing (every 46.437 s)"
+    ),
+
+    PredefinedConfiguration(
+      object : DemoConfig {
+        override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
+
+        override fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
+          val refEntryDataSeriesCount = 12
+
+          return HistoryChunkGenerator(
+            historyStorage = historyStorage,
+            samplingPeriod = samplingPeriod,
+            decimalValueGenerators = emptyList(),
+            enumValueGenerators = emptyList(),
+            referenceEntryGenerators = List(refEntryDataSeriesCount) {
+              ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = it)
+            },
+            referenceEntryStatusProvider = { referenceEntryId, millis ->
+              val factor = (millis / 5000.0 + referenceEntryId.id / 77.4).toInt()
+              val ordinal: HistoryEnumOrdinal = HistoryReferenceScenarios.jobStateEnum.values.getModulo(factor).ordinal
+              HistoryEnumSet.forEnumOrdinal(ordinal)
+            },
+            historyConfiguration = createDefaultHistoryConfiguration(0, 0, refEntryDataSeriesCount,
+              referenceEntryStatusEnumProvider = { referenceEntryDataSeriesIndex -> HistoryReferenceScenarios.jobStateEnum })
+          )
+        }
+
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {
+          referenceEntryStripePainters = MultiProvider.always(RectangleReferenceEntryStripePainter() {
+            val jobStateEnumColors = listOf(Color.red, Color.green, Color.blue)
+
+            fillProvider = { value, statusEnumSet, historyConfiguration ->
+              if (statusEnumSet.isNoValue()) {
+                Color.silver
+              }
+              if (statusEnumSet.isPending()) {
+                Color.blueviolet
+              }
+
+              //HistoryReferenceScenarios.jobStateEnum
+              val firstSetOrdinal = statusEnumSet.firstSetOrdinal()
+              jobStateEnumColors[firstSetOrdinal.value]
+            }
+          })
+        }
+
+      }, "EnumStatus - Increasing (every 46.437 s)"
     ),
   )
 
@@ -136,6 +196,8 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
         gestalt.configuration.contentAreaDuration = payload.samplingPeriod.distance * 20
         gestalt.configuration.minimumSamplingPeriod = payload.samplingPeriod
 
+        payload.config.invoke(gestalt)
+
         val referenceEntryDataSeriesCount = gestalt.configuration.historyConfiguration().referenceEntryDataSeriesCount
 
         configure {
@@ -165,9 +227,10 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
   }
 
   interface DemoConfig {
+    val config: DiscreteTimelineChartGestalt.() -> Unit
+
     val samplingPeriod: SamplingPeriod
 
     fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator
-
   }
 }

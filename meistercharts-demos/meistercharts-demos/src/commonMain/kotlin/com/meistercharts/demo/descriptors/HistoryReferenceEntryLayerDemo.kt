@@ -169,7 +169,7 @@ class HistoryReferenceEntryLayerDemo : ChartingDemoDescriptor<HistoryReferenceEn
 
           val visibleIndices = ReferenceEntryDataSeriesIndexProvider.forList(listOf(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryDataSeriesIndex.one, ReferenceEntryDataSeriesIndex.two, ReferenceEntryDataSeriesIndex.three))
           val layer = HistoryReferenceEntryLayer(HistoryReferenceEntryLayer.Configuration(historyStorage, { historyConfiguration }, visibleIndices) { contentAreaTimeRange }) {
-            this.stripePainter = MultiProvider.always(enumBarPainter)
+            this.stripePainters = MultiProvider.always(enumBarPainter)
           }
 
           layers.addClearBackground()

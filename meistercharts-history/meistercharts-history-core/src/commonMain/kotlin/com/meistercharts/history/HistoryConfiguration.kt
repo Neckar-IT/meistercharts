@@ -244,6 +244,33 @@ fun historyConfigurationOnlyReferenceEntries(
 }
 
 /**
+ * Creates a default history configuration with the provided sizes.
+ * Adds some default values
+ */
+fun createDefaultHistoryConfiguration(
+  decimalValuesCount: Int,
+  enumValuesCount: Int,
+  referenceEntrySeriesCount: Int,
+
+  enumProvider: (EnumDataSeriesIndex) -> HistoryEnum = { HistoryEnum.Boolean },
+  referenceEntryStatusEnumProvider: (ReferenceEntryDataSeriesIndex) -> HistoryEnum = { HistoryEnum.Active },
+): HistoryConfiguration = historyConfiguration(decimalValuesCount, enumValuesCount, referenceEntrySeriesCount,
+
+  decimalDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
+    decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
+  },
+  enumDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 1000)
+    enumDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), enumProvider(dataSeriesIndex))
+  },
+  referenceEntryDataSeriesInitializer = { dataSeriesIndex ->
+    val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 10_000)
+    referenceEntryDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), referenceEntryStatusEnumProvider(dataSeriesIndex))
+  })
+
+
+/**
  * Builder for a history configuration.
  * Usually this class should not be used directly. Instead, use the method [historyConfigurationOnlyDecimals] with a lambda to configure the builder.
  */

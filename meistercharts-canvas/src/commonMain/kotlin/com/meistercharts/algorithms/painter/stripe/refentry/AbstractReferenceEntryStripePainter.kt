@@ -42,14 +42,12 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
 
 
   override fun relevantValuesHaveChanged(value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
-    //Ignore value4: ReferenceEntriesDataMap - these values must never change for the same [ReferenceEntryId]
-
     val currentId = paintingVariables.currentValue1
     val currentCount = paintingVariables.currentValue2
     val currentEnumSet = paintingVariables.currentValue3
+    val currentReferenceData = paintingVariables.currentValue4 //do not check - these values must never change for the same [ReferenceEntryId]
 
-    //TODO only check one of the two?
-    return currentId != value1 || currentCount != value2 || currentEnumSet != currentEnumSet
+    return currentId != value1 || currentCount != value2 || currentEnumSet != value3
   }
 
   open class Configuration {
