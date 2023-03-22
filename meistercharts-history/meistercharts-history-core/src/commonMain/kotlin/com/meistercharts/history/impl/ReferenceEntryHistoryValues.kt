@@ -71,7 +71,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * The statuses for each entry.
    *
-   * Contains the union ste for down-sampled values
+   * Contains the union state for down-sampled values
    */
   val statuses: @HistoryEnumSetInt @Serializable(with = IntArray2Serializer::class) IntArray2,
 
