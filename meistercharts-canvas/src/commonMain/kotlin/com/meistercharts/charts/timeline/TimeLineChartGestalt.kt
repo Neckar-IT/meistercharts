@@ -27,7 +27,6 @@ import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
-import com.meistercharts.algorithms.layers.EmptyLayer.disposeSupport
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -57,7 +56,9 @@ import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
+import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
@@ -72,6 +73,7 @@ import com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer
 import com.meistercharts.algorithms.tile.HistoryTileInvalidator
 import com.meistercharts.algorithms.tile.HistoryTilesInvalidationResult
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
+import com.meistercharts.algorithms.tile.MinMaxAreaHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.algorithms.tile.canvasTiles
 import com.meistercharts.algorithms.tile.delegate
@@ -133,15 +135,9 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
-import it.neckar.open.kotlin.lang.isPositive
-import it.neckar.open.time.nowMillis
-import it.neckar.open.provider.DoublesProvider1
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.provider.MultiProvider2
-import it.neckar.open.provider.SizedProvider
-import it.neckar.open.provider.delegate
-import it.neckar.open.dispose.DisposeSupport
-import it.neckar.open.dispose.OnDispose
+import com.meistercharts.style.BoxStyle
+import com.meistercharts.style.Shadow
+import com.meistercharts.style.withFillIfNull
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
 import it.neckar.open.formatting.TimeFormatWithMillis
@@ -151,14 +147,17 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
+import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
-import com.meistercharts.style.BoxStyle
-import com.meistercharts.style.Shadow
-import com.meistercharts.style.withFillIfNull
-import it.neckar.open.dispose.Disposable
+import it.neckar.open.provider.DoublesProvider1
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.provider.MultiProvider2
+import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.delegate
 import it.neckar.open.time.TimeConstants
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
@@ -235,6 +234,14 @@ class TimeLineChartGestalt
   )
 
   /**
+   * Configures this gestalt to show candles
+   */
+  fun configureForCandle() {
+    tilePainter = createCandleHistoryCanvasTilePainter()
+    historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
+  }
+
+  /**
    * Creates a new instance of [HistoryCanvasTilePainter]
    */
   private fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
@@ -249,12 +256,26 @@ class TimeLineChartGestalt
   )
 
   /**
-   * Configures this gestalt to show candles
+   * Configures the gestalt to show min/max areas
    */
-  fun configureForCandle() {
-    tilePainter = createCandleHistoryCanvasTilePainter()
-    historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
+  fun configureForMinMaxArea() {
+    tilePainter = createMinMaxAreaHistoryCanvasTilePainter()
+    //TODO: check
+    //historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
   }
+
+  private fun createMinMaxAreaHistoryCanvasTilePainter(): HistoryCanvasTilePainter = MinMaxAreaHistoryCanvasTilePainter(
+    MinMaxAreaHistoryCanvasTilePainter.Configuration(
+      historyStorage = data.historyStorage,
+      contentAreaTimeRange = { style.contentAreaTimeRange },
+      valueRanges = style::lineValueRanges.delegate(),
+      visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
+      lineStyles = style::lineStyles.delegate(),
+      minMaxAreaColors = MultiProvider.always(Color.blue.withAlpha(0.3)), //TODO
+      minMaxAreaPainters = MultiProvider.always(SimpleAreaBetweenLinesPainter(false, false)),
+      averageLinePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
+    )
+  )
 
   /**
    * The tile provider that is used to get the tiles

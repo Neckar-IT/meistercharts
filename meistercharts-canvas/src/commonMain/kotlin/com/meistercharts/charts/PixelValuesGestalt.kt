@@ -43,6 +43,7 @@ import com.meistercharts.algorithms.layers.linechart.toDomainRelativeY
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain

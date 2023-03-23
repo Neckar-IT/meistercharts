@@ -21,6 +21,7 @@ import com.meistercharts.demo.descriptors.AnchorDemoDescriptor
 import com.meistercharts.demo.descriptors.AngleDirectionDemoDescriptor
 import com.meistercharts.demo.descriptors.AntiAliasingLinesDemoDescriptor
 import com.meistercharts.demo.descriptors.AntialiasingRectDemoDescriptor
+import com.meistercharts.demo.descriptors.AreaBetweenLinesPainterDemoDescriptor
 import com.meistercharts.demo.descriptors.ArrowsDemoDescriptor
 import com.meistercharts.demo.descriptors.As30DiagramDemoDescriptor
 import com.meistercharts.demo.descriptors.AutoScaleDemoDescriptor
@@ -259,6 +260,7 @@ import com.meistercharts.demo.descriptors.DiscreteTimelineChartGestaltDemoDescri
 import com.meistercharts.demo.descriptors.HistoryReferenceScenariosDemoDescriptor
 import com.meistercharts.demo.descriptors.SnapTextDemoDescriptor
 import com.meistercharts.demo.descriptors.SymbolAndLabelLegendHeadlinePaintableDemoDescriptor
+import com.meistercharts.demo.descriptors.TilesTransparentAreasDemoDescriptor
 import com.meistercharts.demo.descriptors.TimeLineChartDemoRandomDescriptor
 import com.meistercharts.demo.descriptors.TimelineChartRestDemoDescriptor
 import com.meistercharts.demo.descriptors.ValueAxisAllSidesDemoDescriptor
@@ -557,7 +559,9 @@ object DemoDescriptors {
     TextWithImageDemoDescriptor(),
     FillRectDemoDescriptor(),
     FillRectExtremeDemoDescriptor(),
+    AreaBetweenLinesPainterDemoDescriptor(),
     TilesLayerDemoDescriptor(),
+    TilesTransparentAreasDemoDescriptor(),
     TilesDebugLayerDemoDescriptor(),
     RefreshDemoDescriptor(),
     TilesLayerCachedDemoDescriptor(),

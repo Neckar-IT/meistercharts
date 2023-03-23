@@ -97,8 +97,8 @@ private class MySegmentedLinePaintersLayer : AbstractLayer() {
       @Window val x = chartCalculator.domainRelative2windowX(coordinates.x)
       @Window val y = chartCalculator.domainRelative2windowY(coordinates.y)
 
-      linePainter.addCoordinate(gc, x, y)
+      linePainter.addCoordinates(gc, x, y)
     }
-    linePainter.finish(gc)
+    linePainter.paint(gc)
   }
 }

@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
@@ -131,9 +132,9 @@ class ThresholdsLayer @JvmOverloads constructor(
       gc.saved {
         lineStyle.apply(gc)
         linePainter.begin(gc)
-        linePainter.addCoordinate(gc, thresholdLineXStart, thresholdLineYStart)
-        linePainter.addCoordinate(gc, thresholdLineXEnd, thresholdLineYEnd)
-        linePainter.finish(gc)
+        linePainter.addCoordinates(gc, thresholdLineXStart, thresholdLineYStart)
+        linePainter.addCoordinates(gc, thresholdLineXEnd, thresholdLineYEnd)
+        linePainter.paint(gc)
       }
 
       if (style.showThresholdLabel) {

@@ -29,6 +29,7 @@ import com.meistercharts.algorithms.layers.debug.DirtyRangesDebugLayer
 import com.meistercharts.algorithms.layers.debug.ShowTimeRangeLayer
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.tile.AverageHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CanvasTileProvider

@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
@@ -148,7 +149,7 @@ class SplineLineInterpolationPainterDemo : ChartingDemoDescriptor<Nothing> {
               linePainter.addCoordinate(gc, endPoint)
 
               gc.stroke(Color.blue)
-              linePainter.finish(gc)
+              linePainter.paint(gc)
 
               //Connect start + end
               gc.stroke(Color.gray)

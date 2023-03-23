@@ -24,6 +24,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.painter.SplineLinePainter
 import com.meistercharts.annotations.DomainRelative
@@ -134,13 +135,13 @@ class MyLinePainterLayer(
       @Window val x = chartCalculator.domainRelative2windowX(0.1 + 0.1 * index)
 
       //TODO line segment style!
-      linePainter.addCoordinate(gc, x, y)
+      linePainter.addCoordinates(gc, x, y)
     }
 
     gc.lineWidth = style.lineWidth
     gc.strokeStyle(style.lineColor)
 
-    linePainter.finish(gc)
+    linePainter.paint(gc)
 
     if (style.showPoints) {
       model.forEachIndexed { index, it ->

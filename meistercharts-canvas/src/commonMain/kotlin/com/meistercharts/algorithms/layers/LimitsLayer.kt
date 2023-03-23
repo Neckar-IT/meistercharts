@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.painter.AreaPainter
+import com.meistercharts.algorithms.painter.RectangleAreaPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
@@ -43,7 +43,7 @@ class LimitsLayer @JvmOverloads constructor(
   override val type: LayerType
     get() = LayerType.Content
 
-  private val areaPainter = AreaPainter(snapXValues = false, snapYValues = false)
+  private val areaPainter = RectangleAreaPainter(snapXValues = false, snapYValues = false)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     areaPainter.apply {
@@ -75,7 +75,7 @@ class LimitsLayer @JvmOverloads constructor(
    * XXXXXXX
    *```
    */
-  private fun paintVertical(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: AreaPainter) {
+  private fun paintVertical(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: RectangleAreaPainter) {
     val gc = paintingContext.gc
     @Window val limitWindow = paintingContext.chartCalculator.domainRelative2windowY(limit.limit)
 
@@ -115,7 +115,7 @@ class LimitsLayer @JvmOverloads constructor(
    *  X┃   ┃X
    *```
    */
-  private fun paintHorizontal(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: AreaPainter) {
+  private fun paintHorizontal(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: RectangleAreaPainter) {
     val gc = paintingContext.gc
     @Window val limitWindow = paintingContext.chartCalculator.domainRelative2windowX(limit.limit)
 

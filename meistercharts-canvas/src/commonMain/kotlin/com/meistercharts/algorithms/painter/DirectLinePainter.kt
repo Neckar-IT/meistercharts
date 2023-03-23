@@ -1,93 +1,64 @@
-/**
- * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.painter.AbstractLinePainter
+import com.meistercharts.painter.LinePainter
+import it.neckar.open.collections.DoubleArrayList
+import it.neckar.open.collections.fastForEachIndexed
 
 /**
- * Paints a line using a direct path.
- *
- * * see [com.meistercharts.painter.SegmentedLinePainter] for a painter that support segments
- *
+ * A class for drawing a single line on a canvas.
  */
-open class DirectLinePainter(
+class DirectLinePainter(
   snapXValues: Boolean,
-  snapYValues: Boolean
-) : AbstractLinePainter(snapXValues, snapYValues) {
+  snapYValues: Boolean,
+) : AbstractPainter(snapXValues, snapYValues), LinePainter {
 
-  private fun firstPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
-    gc.beginPath()
-    gc.moveTo(x, y)
-  }
+  private val xLocations = DoubleArrayList(10)
+  private val yLocations = DoubleArrayList(10)
 
   /**
-   * The number of points added
+   * Clears the existing line coordinates.
    */
-  private var pointCount = 0
-
-  private var lastX: @Window Double = 0.0
-  private var lastY: @Window Double = 0.0
-
-  /**
-   * True, if no points have been added yet
-   */
-  private val empty: Boolean
-    get() = pointCount < 1
-
   override fun begin(gc: CanvasRenderingContext) {
-    pointCount = 0
+    xLocations.clear()
+    yLocations.clear()
   }
 
-  override fun addCoordinate(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
-    require(x.isFinite()) {
-      "x must be a real number required but was $x"
-    }
-    require(y.isFinite()) {
-      "y must be a real number required but was $y"
-    }
+  /**
+   * Adds coordinates to the line.
+   *
+   * @param x The x coordinate of the point to be added.
+   * @param y The y coordinate of the point to be added.
+   */
+  override fun addCoordinates(gc: CanvasRenderingContext, x: Double, y: Double) {
+    require(x.isFinite()) { "x must be a finite number but was $x" }
+    require(y.isFinite()) { "y must be a finite number but was $y" }
 
-    if (empty) {
-      firstPoint(gc, x, y)
-    } else {
-      gc.lineTo(x, y)
-    }
-    lastX = x
-    lastY = y
-    ++pointCount
+    xLocations.add(x)
+    yLocations.add(y)
   }
 
-  override fun finish(gc: CanvasRenderingContext) {
-    if (empty) {
-      //No points have been added - just return
-      return
-    }
+  /**
+   * Draws the line on the canvas using the given [CanvasRenderingContext].
+   *
+   * @param gc The canvas rendering context used for drawing.
+   */
+  override fun paint(gc: CanvasRenderingContext) {
+    if (xLocations.size < 2 || yLocations.size < 2) return
 
-    if (pointCount == 1) {
-      //The line consists of a single point.
-      //In order to make that point visible we prolong the line by the current lineWidth.
-      gc.lineTo(lastX + gc.lineWidth, lastY)
+    gc.beginPath()
+    gc.moveTo(xLocations[0], yLocations[0])
+
+    xLocations.fastForEachIndexed { index, x ->
+      if (index > 0) {
+        gc.lineTo(x, yLocations[index])
+      }
     }
 
     gc.stroke()
   }
 
   override fun toString(): String {
-    return "DirectLinePainter"
+    return "SimpleLinePainter"
   }
 }
-

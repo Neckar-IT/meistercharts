@@ -26,11 +26,11 @@ object NoLinePainter : LinePainter {
     // do nothing
   }
 
-  override fun addCoordinate(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
+  override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     // do nothing
   }
 
-  override fun finish(gc: CanvasRenderingContext) {
+  override fun paint(gc: CanvasRenderingContext) {
     // do nothing
   }
 }

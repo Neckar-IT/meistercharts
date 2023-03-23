@@ -54,7 +54,7 @@ class SplineLinePainter(
     pointsY.clear()
   }
 
-  override fun addCoordinate(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
+  override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     pointsX.add(x)
     pointsY.add(y)
   }
@@ -68,7 +68,7 @@ class SplineLinePainter(
   /**
    * Calculates all control points in this method
    */
-  override fun finish(gc: CanvasRenderingContext) {
+  override fun paint(gc: CanvasRenderingContext) {
     if (pointsX.size < 2) {
       //Less than 2 points - do nothing
       return

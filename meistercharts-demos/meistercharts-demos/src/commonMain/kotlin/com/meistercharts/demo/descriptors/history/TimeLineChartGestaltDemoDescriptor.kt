@@ -28,7 +28,9 @@ import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.animation.Easing
 import com.meistercharts.canvas.RoundingStrategy
+import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.TargetRefreshRate
+import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.demo.ChartingDemo
@@ -101,6 +103,7 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
     neckarITHomePage,
     oneSampleEvery16msCached500msAverages,
     candle,
+    minMaxArea,
     withAxisTitle,
     outwardsTicks,
     valueAxisTitleOnTop,
@@ -276,6 +279,13 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
             min = -5.0
           }
           configurableEnum("Split lines mode", (gestalt.enumCategoryAxisLayer.style.axisLabelPainter as DefaultCategoryAxisLabelPainter).style::wrapMode) {
+          }
+
+          configurableEnum("snap", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.values()) {
+            onChange {
+              chartSupport.pixelSnapSupport.snapConfiguration = it
+              markAsDirty()
+            }
           }
         }
       }
@@ -602,6 +612,37 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
 
         configureForCandle()
       }, "Candle"
+    )
+
+    val minMaxArea: PredefinedConfiguration<TimeLineChartGestalt.() -> Unit> = PredefinedConfiguration(
+      {
+        val samplingPeriod = SamplingPeriod.EveryHundredMillis
+        val historyChunkGenerator = this.setUpHistoryChunkGenerator(samplingPeriod)
+        val writableHistoryStorage = this.data.historyStorage as InMemoryHistoryStorage
+
+        //adjust the position of the cross wire
+        style.crossWirePositionX = 0.85
+
+        //add some samples for the last hour and set the max history size accordingly
+        writableHistoryStorage.maxSizeConfiguration = MaxHistorySizeConfiguration.forDuration(70.minutes, samplingPeriod.toHistoryBucketRange())
+        historyChunkGenerator.forTimeRange(TimeRange.oneHourUntilNow())?.let {
+          writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+        }
+
+        it.neckar.open.time.repeat(100.milliseconds) {
+          historyChunkGenerator.next()?.let {
+            writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+          }
+        }.also {
+          onDispose(it)
+        }
+
+        //we want three lines and three value axes to be visible
+        style.requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
+        style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
+
+        configureForMinMaxArea()
+      }, "Min/Max Area"
     )
   }
 }

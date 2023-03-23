@@ -62,11 +62,11 @@ open class DelegatingCategoryLinePainter(
   }
 
   override fun addCoordinate(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: Double) {
-    delegate.addCoordinate(gc, x, y)
+    delegate.addCoordinates(gc, x, y)
   }
 
   override fun finish(gc: CanvasRenderingContext) {
-    delegate.finish(gc)
+    delegate.paint(gc)
   }
 }
 

@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.StyleDsl
@@ -70,10 +71,10 @@ open class LineChartLayer(
     dataPointCount.fastFor { pointIndex ->
       @Window val x = chartCalculator.domainRelative2windowX(data.model.valueX(lineIndex, pointIndex))
       @Window val y = chartCalculator.domainRelative2windowY(data.model.valueY(lineIndex, pointIndex))
-      linePainter.addCoordinate(gc, x, y)
+      linePainter.addCoordinates(gc, x, y)
     }
 
-    linePainter.finish(gc)
+    linePainter.paint(gc)
 
     //Paint the points
     paintPoints(paintingContext, lineIndex, dataPointCount)

@@ -25,10 +25,9 @@ import kotlin.math.min
 
 
 /**
- * Paints an area with a border
- *
+ * A painter class that is responsible for drawing a quadrilateral area with specified fill and border properties.
  */
-open class AreaPainter(
+open class RectangleAreaPainter(
   snapXValues: Boolean,
   snapYValues: Boolean,
 ) : AbstractPainter(snapXValues, snapYValues) {
@@ -53,12 +52,22 @@ open class AreaPainter(
    */
   var borderSides: SidesSelection = SidesSelection.topAndBottom
 
-  fun setFill(fill: Color): AreaPainter {
+  /**
+   * Set the fill color.
+   *
+   * @param fill Color to fill the area with.
+   */
+  fun setFill(fill: Color): RectangleAreaPainter {
     this.fill = fill
     return this
   }
 
-  fun setBorderColor(borderColor: Color?): AreaPainter {
+  /**
+   * Set the border color.
+   *
+   * @param borderColor Color to set as the border color.
+   */
+  fun setBorderColor(borderColor: Color?): RectangleAreaPainter {
     this.borderColor = borderColor
     return this
   }

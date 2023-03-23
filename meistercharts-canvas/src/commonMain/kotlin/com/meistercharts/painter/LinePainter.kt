@@ -33,18 +33,18 @@ interface LinePainter {
   /**
    * Adds the coordinate [x]/[y] to the line.
    *
-   * Call [finish] when the line is complete
+   * Call [paint] when the line is complete
    *
    * Attention: Do *not* call with NaN or Infinity
    */
-  fun addCoordinate(gc: CanvasRenderingContext, x: @Zoomed @IsFinite Double, y: @Zoomed @IsFinite Double)
+  fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed @IsFinite Double, y: @Zoomed @IsFinite Double)
 
   fun addCoordinate(gc: CanvasRenderingContext, location: @Zoomed @IsFinite Coordinates) {
-    addCoordinate(gc, location.x, location.y)
+    addCoordinates(gc, location.x, location.y)
   }
 
   /**
-   * Finishes the line previously defined by [addCoordinate]
+   * Finishes the line previously defined by [addCoordinates]
    */
-  fun finish(gc: CanvasRenderingContext)
+  fun paint(gc: CanvasRenderingContext)
 }

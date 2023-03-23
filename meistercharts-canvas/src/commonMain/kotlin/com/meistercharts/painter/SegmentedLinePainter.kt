@@ -40,7 +40,7 @@ class SegmentedLinePainter(
     empty = true
   }
 
-  override fun addCoordinate(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
+  override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     if (!empty) {
       paintSegment(gc, x, y)
       segmentIndex++
@@ -59,7 +59,7 @@ class SegmentedLinePainter(
     provider(segmentIndex).paintSegment(gc, segmentStartX, segmentStartY, x, y)
   }
 
-  override fun finish(gc: CanvasRenderingContext) {
+  override fun paint(gc: CanvasRenderingContext) {
   }
 }
 

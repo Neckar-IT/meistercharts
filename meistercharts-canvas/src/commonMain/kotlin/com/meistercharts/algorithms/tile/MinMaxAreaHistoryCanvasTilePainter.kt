@@ -33,6 +33,8 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import com.meistercharts.history.impl.RecordingType
+import com.meistercharts.history.valueAt
+import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
@@ -41,9 +43,9 @@ import it.neckar.open.unit.si.ms
 
 /**
  * Paints history related data on a tile.
- * Paints the average(s) as line
+ * Paints the  min, max values as area
  */
-class AverageHistoryCanvasTilePainter(val configuration: Configuration) : HistoryCanvasTilePainter(configuration), CanvasTilePainter {
+class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : HistoryCanvasTilePainter(configuration), CanvasTilePainter {
   override fun paintDataSeries(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DecimalDataSeriesIndex,
@@ -61,8 +63,13 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
 
     val gc = paintingContext.gc
 
-    configuration.lineStyles.valueAt(dataSeriesIndex.value).apply(gc)
-    val linePainter = configuration.linePainters.valueAt(dataSeriesIndex.value)
+    val averageLineStyle = configuration.lineStyles.valueAt(dataSeriesIndex)
+    averageLineStyle.apply(gc)
+    val linePainter: LinePainter = configuration.averageLinePainters.valueAt(dataSeriesIndex)
+    val areaPainter: AreaBetweenLinesPainter = configuration.minMaxAreaPainters.valueAt(dataSeriesIndex)
+    val minMaxAreaColor = configuration.minMaxAreaColors.valueAt(dataSeriesIndex)
+
+    areaPainter.begin(gc)
     linePainter.begin(gc)
 
     //The time of the last data point. Is used to identify gaps
@@ -71,6 +78,7 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
     //Paint all points for all buckets for one data series
     buckets.fastForEach { bucket ->
       val chunk = bucket.chunk
+      val paintMinMaxArea = chunk.recordingType == RecordingType.Calculated
 
       for (timestampIndexAsInt in 0 until chunk.timeStampsCount) {
         val timestampIndex = TimestampIndex(timestampIndexAsInt)
@@ -89,7 +97,13 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
         @ms val distanceToLastDataPoint = time - lastTime
         if (distanceToLastDataPoint > minGapDistance) {
           //We have a gap -> finish the current line and begin a new one
+          if (paintMinMaxArea) {
+            gc.fill(minMaxAreaColor)
+            areaPainter.paint(gc, false)
+          }
           linePainter.paint(gc)
+
+          areaPainter.begin(gc)
           linePainter.begin(gc)
         }
 
@@ -98,6 +112,13 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
 
 
         @Domain val value = chunk.getDecimalValue(dataSeriesIndex, timestampIndex)
+        @Domain val maxValue = chunk.getMax(dataSeriesIndex, timestampIndex)
+        @DomainRelative val maxDomainRelative = valueRange.toDomainRelative(maxValue)
+
+        @Domain val minValue = chunk.getMin(dataSeriesIndex, timestampIndex)
+        @DomainRelative val minDomainRelative = valueRange.toDomainRelative(minValue)
+
+
         @DomainRelative val domainRelative = valueRange.toDomainRelative(value)
 
         val finite = domainRelative.isFinite()
@@ -106,7 +127,14 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
         //The current value is NaN - this is an *explicit* gap
         if (!value.isFinite() || !domainRelative.isFinite()) {
           //We have a gap, paint only the parts that are relevant
+
+          if (paintMinMaxArea) {
+            gc.fill(minMaxAreaColor)
+            areaPainter.paint(gc, false)
+          }
           linePainter.paint(gc)
+
+          areaPainter.begin(gc)
           linePainter.begin(gc)
           continue
         }
@@ -114,21 +142,22 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
 
         @Tile val x = tileCalculator.time2tileX(time, contentAreaTimeRange)
         @Tile val y = tileCalculator.domainRelative2tileY(domainRelative)
-        linePainter.addCoordinates(gc, x, y)
+        @Tile val minValueTile = tileCalculator.domainRelative2tileY(minDomainRelative)
+        @Tile val maxValueTile = tileCalculator.domainRelative2tileY(maxDomainRelative)
 
+        linePainter.addCoordinates(gc, x, y)
+        if (paintMinMaxArea) {
+          areaPainter.addCoordinates(gc, x, minValueTile, maxValueTile)
+        }
 
         //min / max if available
         if (DebugFeature.ShowMinMax.enabled(paintingContext)) {
           if (chunk.recordingType == RecordingType.Calculated) {
-            @Domain val maxValue = chunk.getMax(dataSeriesIndex, timestampIndex)
-            @DomainRelative val domainRelativeMax = valueRange.toDomainRelative(maxValue)
-            val maxY = tileCalculator.domainRelative2tileY(domainRelativeMax)
+            val maxY = tileCalculator.domainRelative2tileY(maxDomainRelative)
             gc.stroke(Color.blue)
             gc.strokeLine(x - 3, maxY, x + 3, maxY)
 
-            @Domain val minValue = chunk.getMin(dataSeriesIndex, timestampIndex)
-            @DomainRelative val domainRelativeMin = valueRange.toDomainRelative(minValue)
-            val minY = tileCalculator.domainRelative2tileY(domainRelativeMin)
+            val minY = tileCalculator.domainRelative2tileY(minDomainRelative)
             gc.stroke(Color.red)
             gc.strokeLine(x - 3, minY, x + 3, minY)
 
@@ -139,6 +168,8 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
       }
     }
 
+    gc.fill(minMaxAreaColor)
+    areaPainter.paint(gc, false)
     linePainter.paint(gc)
   }
 
@@ -154,9 +185,19 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
     val lineStyles: MultiProvider<DecimalDataSeriesIndex, LineStyle>,
 
     /**
+     * Returns the area color for min/max areas
+     */
+    val minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color>,
+
+    /**
      * Provides a painter for each line
      */
-    val linePainters: MultiProvider<DecimalDataSeriesIndex, LinePainter>,
+    val averageLinePainters: MultiProvider<DecimalDataSeriesIndex, LinePainter>,
+
+    /**
+     * Provides the area painters for the min/max area
+     */
+    val minMaxAreaPainters: MultiProvider<DecimalDataSeriesIndex, AreaBetweenLinesPainter>,
 
     ) : HistoryCanvasTilePainter.Configuration(historyStorage, contentAreaTimeRange, valueRanges, visibleDecimalSeriesIndices)
 }

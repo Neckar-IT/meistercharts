@@ -28,7 +28,7 @@ class ContentAreaPainter {
   var stroke: Color? = null
   var sidesToPaint: SidesSelection = SidesSelection.all
 
-  private val areaPainter: AreaPainter = AreaPainter(snapXValues = false, snapYValues = false).apply {
+  private val areaPainter: RectangleAreaPainter = RectangleAreaPainter(snapXValues = false, snapYValues = false).apply {
     fill = null
   }
 

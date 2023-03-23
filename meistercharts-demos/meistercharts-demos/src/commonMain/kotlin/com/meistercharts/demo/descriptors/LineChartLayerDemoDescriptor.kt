@@ -25,6 +25,7 @@ import com.meistercharts.algorithms.layers.linechart.SimpleLineModel
 import com.meistercharts.algorithms.layers.linechart.SimpleLinesChartModel
 import com.meistercharts.algorithms.layers.linechart.addLineChart
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.FixedContentAreaWidth
