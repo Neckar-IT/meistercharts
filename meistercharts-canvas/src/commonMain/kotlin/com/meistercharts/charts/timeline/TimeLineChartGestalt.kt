@@ -56,8 +56,8 @@ import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
+import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageHistoryCanvasTilePainter
@@ -156,6 +156,7 @@ import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.delegate
+import it.neckar.open.provider.mapped
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
@@ -271,7 +272,10 @@ class TimeLineChartGestalt
       valueRanges = style::lineValueRanges.delegate(),
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
-      minMaxAreaColors = MultiProvider.always(Color.blue.withAlpha(0.3)), //TODO
+      //minMaxAreaColors = MultiProvider.always(Color.blue.withAlpha(0.3)), //TODO
+      minMaxAreaColors = Theme.chartColors().mapped {
+        (it as RgbaColor).withAlpha(0.3)
+      },
       minMaxAreaPainters = MultiProvider.always(SimpleAreaBetweenLinesPainter(false, false)),
       averageLinePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
     )
