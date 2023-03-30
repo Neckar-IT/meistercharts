@@ -16,6 +16,7 @@
 package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
+import com.meistercharts.algorithms.painter.stripe.refentry.DiscreteEntryAggregationMode
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.api.BoxStyle
 import com.meistercharts.api.CrossWireStyle
@@ -113,6 +114,38 @@ external interface EnumDataSeries {
    * The enum configuration
    */
   val enumConfiguration: EnumConfiguration
+}
+
+external interface DiscreteDataSeriesConfiguration {
+  /**
+   * The id of the data series
+   */
+  val id: Int
+
+  /**
+   * The name of the data series
+   */
+  val name: String
+
+  /**
+   * The enum configuration
+   */
+  val statusEnumConfiguration: EnumConfiguration
+
+
+  /**
+   * Defines the stripe styles for the ordinals of the discrete data series.
+   * The index within the array corresponds to the ordinal value
+   *
+   * If null is provided within the array, a default fill will be used.
+   */
+  val stripeStyles: Array<StripeStyle?>?
+
+  /**
+   * How values are aggregated when the plotter is zoomed out
+   */
+  val aggregationMode: DiscreteEntryAggregationMode?
+
 }
 
 /**
@@ -342,3 +375,4 @@ external interface EnumDataSeriesStyle {
    */
   val aggregationMode: EnumAggregationMode?
 }
+

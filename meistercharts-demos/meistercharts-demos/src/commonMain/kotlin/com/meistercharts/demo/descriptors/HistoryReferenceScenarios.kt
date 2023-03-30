@@ -28,6 +28,7 @@ import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -42,6 +43,7 @@ import com.meistercharts.history.historyConfiguration
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose
+import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.repeat
@@ -162,7 +164,9 @@ object HistoryReferenceScenarios {
       referenceEntryGenerators = referenceEntryGenerators,
 
       referenceEntryStatusProvider = { referenceEntryId: ReferenceEntryId, millis: @ms Double ->
-        HistoryEnumSet.NoValue //TODO!!!
+        val factor = (millis / 5000.0 + referenceEntryId.id / 77.4).toInt()
+        val ordinal: HistoryEnumOrdinal = jobStateEnum.values.getModulo(factor).ordinal
+        HistoryEnumSet.forEnumOrdinal(ordinal)
       },
       historyConfiguration = historyConfiguration
     ).also { historyChunkGenerator ->
@@ -232,7 +236,7 @@ object HistoryReferenceScenarios {
   /**
    * The state for a job
    */
-  val jobStateEnum: HistoryEnum = HistoryEnum.createSimple("Job State", listOf("Failure", "Success", "Running"))
+  val jobStateEnum: HistoryEnum = HistoryEnum.createSimple("Job State", listOf("Preparing", "In Progress", "Cleanup"))
 
   val temperatureValueRange: @degC LinearValueRange = ValueRange.linear(10.0, 120.0)
 }

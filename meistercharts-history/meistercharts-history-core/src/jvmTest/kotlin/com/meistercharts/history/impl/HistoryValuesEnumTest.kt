@@ -24,6 +24,9 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
+import com.meistercharts.history.isEnumSetNoValue
+import com.meistercharts.history.isOrdinalNoValue
+import com.meistercharts.history.isOrdinalPending
 import it.neckar.open.collections.BitSet
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.emptyIntArray
@@ -67,13 +70,13 @@ class HistoryValuesEnumTest {
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.one)).isEqualTo(HistoryEnumSet.forEnumValue(1))
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.two)).isEqualTo(HistoryEnumSet.forEnumValue(2))
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.three)).isEqualTo(HistoryEnumSet.forEnumValue(1))
-    assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.four)).isEqualTo(HistoryEnumSet.NoValue)
+    assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.four)).isEnumSetNoValue()
 
     assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumOrdinal(0))
     assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.one)).isEqualTo(HistoryEnumOrdinal(1))
     assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.two)).isEqualTo(HistoryEnumOrdinal(2))
     assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.three)).isEqualTo(HistoryEnumOrdinal(1))
-    assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.four)).isEqualTo(HistoryEnumOrdinal.NoValue)
+    assertThat(chunk.getEnumOrdinalMostTime(EnumDataSeriesIndex.zero, TimestampIndex.four)).isOrdinalNoValue()
   }
 
   @Test

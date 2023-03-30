@@ -106,7 +106,7 @@ class RectangleReferenceEntryStripePainter(
 
     when {
       count.value == 0 -> {
-        throw UnsupportedOperationException("Count should not be 0")
+        //Do not paint anything
       }
 
       count.value == 1 -> {
@@ -121,12 +121,31 @@ class RectangleReferenceEntryStripePainter(
         entryData?.label?.resolve(paintingContext)?.let {
           gc.fill(configuration.labelColor)
 
-          val statusEnum = historyConfiguration.referenceEntryConfiguration.getStatusEnum(dataSeriesIndex)
-          val winnerEnum = statusEnum?.value(statusEnumSet.firstSetOrdinal())
+          val statusEnum = historyConfiguration.referenceEntryConfiguration.getStatusEnum(dataSeriesIndex) //is null, if the data series does not support the status enum at all
 
-          val translatedEnum = winnerEnum?.key?.resolve(chartSupport)
+          val label: String = when {
+            statusEnum != null -> {
+              @MayBeNoValueOrPending val firstSetOrdinal = statusEnumSet.firstSetOrdinal()
 
-          gc.fillText("$it $translatedEnum", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
+              val statusEnumValueLabel: String = when {
+                firstSetOrdinal.isNoValue() -> "NoValue"
+                firstSetOrdinal.isPending() -> "?"
+                else -> {
+                  val winnerEnumValue = statusEnum.value(firstSetOrdinal)
+                  winnerEnumValue.key.resolve(chartSupport)
+                }
+              }
+
+              "$it $statusEnumValueLabel"
+            }
+
+            else -> {
+              it
+            }
+          }
+
+
+          gc.fillText(label, startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
         }
       }
 

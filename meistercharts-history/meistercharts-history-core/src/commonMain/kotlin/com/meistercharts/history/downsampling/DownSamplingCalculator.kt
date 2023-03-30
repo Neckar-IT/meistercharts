@@ -454,8 +454,7 @@ class DownSamplingCalculator(
       val differentIdsCount = newDifferentIdsCount?.get(dataSeriesIndex)?.let { ReferenceEntryDifferentIdsCount(it) }
       referenceEntryCounters[dataSeriesIndex].add(referenceEntryId, differentIdsCount)
 
-      @HistoryEnumSetInt val newStatusesAsInt = newStatuses[dataSeriesIndex]
-      when (newStatusesAsInt) {
+      when (@HistoryEnumSetInt val newStatusesAsInt = newStatuses[dataSeriesIndex]) {
         HistoryEnumSet.NoValueAsInt -> {
         }
 

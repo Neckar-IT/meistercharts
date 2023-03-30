@@ -15,16 +15,26 @@
  */
 package com.meistercharts.history
 
-import kotlin.jvm.JvmInline
-
 /**
- * Represents the ID for a data series
- *
- * Attention: This is not the same as a [EnumDataSeriesIndex] / [DecimalDataSeriesIndex] / [ReferenceEntryDataSeriesIndex]
+ * Marks Ints that should be interpreted as [ReferenceEntryDataSeriesIndex]
  */
-@JvmInline
-value class DataSeriesId(val value: Int) {
-  override fun toString(): String {
-    return value.toString()
-  }
-}
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+  AnnotationTarget.CLASS,
+  AnnotationTarget.ANNOTATION_CLASS,
+  AnnotationTarget.TYPE_PARAMETER,
+  AnnotationTarget.PROPERTY,
+  AnnotationTarget.FIELD,
+  AnnotationTarget.LOCAL_VARIABLE,
+  AnnotationTarget.VALUE_PARAMETER,
+  AnnotationTarget.CONSTRUCTOR,
+  AnnotationTarget.FUNCTION,
+  AnnotationTarget.PROPERTY_GETTER,
+  AnnotationTarget.PROPERTY_SETTER,
+  AnnotationTarget.TYPE,
+  AnnotationTarget.EXPRESSION,
+  AnnotationTarget.FILE,
+  AnnotationTarget.TYPEALIAS
+)
+@MustBeDocumented
+annotation class ReferenceEntryDataSeriesIndexInt

@@ -31,6 +31,7 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.impl.chunk
+import com.meistercharts.history.isEnumSetPending
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
@@ -167,8 +168,8 @@ class DownSamplingCalculationsTest {
       """
     )
 
-    assertThat(bucket.chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.one)).isEqualTo(HistoryEnumSet.Pending)
-    assertThat(bucket.chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex(19))).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(bucket.chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.one)).isEnumSetPending()
+    assertThat(bucket.chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex(19))).isEnumSetPending()
 
     //Consists of a single value
     assertThat(bucket.chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(HistoryEnumSet(0b0001))

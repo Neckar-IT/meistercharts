@@ -18,6 +18,8 @@ package com.meistercharts.api.discrete
 import com.meistercharts.api.MeisterChartsApi
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.js.MeisterChartJS
+import it.neckar.open.unit.other.Sorted
+import it.neckar.open.unit.si.ms
 
 /**
  * Timeline chart that visualizes discrete timelines.
@@ -33,14 +35,46 @@ class DiscreteTimelineChart internal constructor(
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
   meisterChart: MeisterChartJS,
-) : MeisterChartsApi<DiscreteTimelinechartConfiguration>(meisterChart) {
+) : MeisterChartsApi<DiscreteTimelineChartConfiguration>(meisterChart) {
 
   init {
     gestalt.applySickDefaults()
   }
 
-  override fun setConfiguration(jsConfiguration: DiscreteTimelinechartConfiguration) {
+  override fun setConfiguration(jsConfiguration: DiscreteTimelineChartConfiguration) {
     gestalt.applyConfiguration(jsConfiguration)
     markAsDirty()
   }
+
+  fun setData(data: DiscreteTimelineChartData) {
+    //clear history
+    //set new history configuration from data
+    //set data
+  }
 }
+
+@JsExport
+class DiscreteTimelineChartData(
+  /**
+   * Index corresponds to the data series index
+   */
+  val series: Array<DiscreteDataEntriesForDataSeries>,
+)
+
+@JsExport
+class DiscreteDataEntriesForDataSeries(
+  /**
+   * Contains all entries for this data series.
+   * Must not overlap!
+   */
+  val entries: Array<@Sorted(by = "from") DiscreteDataEntry>,
+)
+
+@JsExport
+class DiscreteDataEntry(
+  val from: @ms Double,
+  val to: @ms Double,
+  val label: String,
+  val status: Double, //must be double since JS does not support Int
+)
+

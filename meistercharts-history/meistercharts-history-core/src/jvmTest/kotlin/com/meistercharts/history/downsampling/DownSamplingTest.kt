@@ -26,6 +26,7 @@ import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.isEnumSetPending
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.isCloseTo
 import it.neckar.open.test.utils.isNaN
@@ -172,10 +173,10 @@ class DownSamplingTest {
     assertThat(bucket1.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:45.010") //every 10 ms one value
 
 
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isPending()
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1))).isPending()
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(2))).isPending()
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(3))).isPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isEnumSetPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1))).isEnumSetPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(2))).isEnumSetPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(3))).isEnumSetPending()
 
     //only the values *in the middle* are relevant, because the original chunk is in the middle
     bucket0.chunk.timestampCenter(TimestampIndex(0)).let { timestamp ->
@@ -200,11 +201,11 @@ class DownSamplingTest {
       }
     }
 
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isPending()
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1))).isPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isEnumSetPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1))).isEnumSetPending()
 
     //Last entry that has no value (before bucket0)
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(399))).isPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(399))).isEnumSetPending()
     assertThat(downSampled.chunk.timestampCenter(TimestampIndex(399)).formatUtc()).isEqualTo("2020-05-21T15:00:39.950")
 
 
@@ -228,8 +229,8 @@ class DownSamplingTest {
 
 
     //Verify the values for the other data series
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(1), TimestampIndex(0))).isPending()
-    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(1), TimestampIndex(1))).isPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(1), TimestampIndex(0))).isEnumSetPending()
+    assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(1), TimestampIndex(1))).isEnumSetPending()
   }
 
   /**
@@ -448,14 +449,3 @@ class DownSamplingTest {
 }
 
 //(sin(timeStamps[it] / 1_000.000) * 100).toInt()
-
-
-fun Assert<HistoryEnumSet>.isPending(): Unit = given {
-  if (it.isPending()) return
-  expected("to be Pending but was ${show(it)}")
-}
-
-fun Assert<HistoryEnumSet>.isNoValue(): Unit = given {
-  if (it.isNoValue()) return
-  expected("to be NoValue but was ${show(it)}")
-}

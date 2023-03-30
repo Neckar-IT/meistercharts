@@ -57,11 +57,67 @@ fun Assert<ReferenceEntryDifferentIdsCount>.isEqualToReferenceEntryIdsCount(expe
   assertThat(it.value).isEqualTo(expectedCount)
 }
 
+fun Assert<ReferenceEntryDifferentIdsCount>.isNoValue(): Unit = given {
+  if (it.value == ReferenceEntryDifferentIdsCount.NoValueAsInt) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(ReferenceEntryDifferentIdsCount.NoValue.toString())
+}
+
+fun Assert<ReferenceEntryDifferentIdsCount>.isCountPending(): Unit = given {
+  if (it.value == ReferenceEntryDifferentIdsCount.PendingAsInt) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(ReferenceEntryDifferentIdsCount.Pending.toString())
+}
+
 fun Assert<HistoryEnumSet>.isEqualToHistoryEnumSet(expectedBitSet: Int): Unit = given {
   if (it.bitset == expectedBitSet) {
     return
   }
 
-  assertThat("0b${it.bitset.toString(2)}").isEqualTo("0b${expectedBitSet.toString(2)}")
+  assertThat(it.toString()).isEqualTo(HistoryEnumSet(expectedBitSet).toString())
+}
 
+fun Assert<HistoryEnumSet>.isEnumSetPending(): Unit = given {
+  if (it.bitset == HistoryEnumSet.PendingAsInt) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(HistoryEnumSet.Pending.toString())
+}
+
+fun Assert<HistoryEnumSet>.isEnumSetNoValue(): Unit = given {
+  if (it.bitset == HistoryEnumSet.NoValueAsInt) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(HistoryEnumSet.NoValue.toString())
+}
+
+
+fun Assert<HistoryEnumOrdinal>.isEqualToHistoryEnumOrdinal(expectedValue: Int): Unit = given {
+  if (it.value == expectedValue) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(HistoryEnumSet(expectedValue).toString())
+}
+
+fun Assert<HistoryEnumOrdinal>.isOrdinalPending(): Unit = given {
+  if (it.value == HistoryEnumOrdinal.Pending.value) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(HistoryEnumOrdinal.Pending.toString())
+}
+
+fun Assert<HistoryEnumOrdinal>.isOrdinalNoValue(): Unit = given {
+  if (it.value == HistoryEnumOrdinal.NoValue.value) {
+    return
+  }
+
+  assertThat(it.toString()).isEqualTo(HistoryEnumOrdinal.NoValue.toString())
 }

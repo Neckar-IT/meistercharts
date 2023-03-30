@@ -28,7 +28,7 @@ fun DiscreteTimelineChartGestalt.applySickDefaults() {
   //configuration.applyAxisTitleOnTop(40.0)
 }
 
-fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTimelinechartConfiguration) {
+fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTimelineChartConfiguration) {
   logger.ifDebug {
     console.debug("BulletChartGestalt.applyConfiguration", jsConfiguration)
   }

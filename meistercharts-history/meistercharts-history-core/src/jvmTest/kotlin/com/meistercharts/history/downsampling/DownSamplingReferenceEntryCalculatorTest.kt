@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
@@ -28,6 +29,7 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.generator.HistoryChunkGenerator
 import com.meistercharts.history.generator.ReferenceEntryGenerator
+import com.meistercharts.history.isEqualToHistoryEnumSet
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
 import it.neckar.open.formatting.formatUtc
@@ -48,6 +50,7 @@ class DownSamplingReferenceEntryCalculatorTest {
 
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualToReferenceEntryId(7)
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualToReferenceEntryIdsCount(15)
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualToHistoryEnumSet(0b1100011)
   }
 
   @RandomWithSeed(seed = 351)
@@ -57,35 +60,39 @@ class DownSamplingReferenceEntryCalculatorTest {
 
     val samplingPeriod = SamplingPeriod.EveryHundredMillis
 
-    val historyChunkGenerator = HistoryChunkGenerator(
-      historyStorage = historyStorage,
-      samplingPeriod = samplingPeriod,
+    val historyChunkGenerator = HistoryChunkGenerator(historyStorage = historyStorage, samplingPeriod = samplingPeriod,
 
-      decimalValueGenerators = emptyList(),
-      enumValueGenerators = emptyList(),
-      referenceEntryGenerators = listOf(
+      decimalValueGenerators = emptyList(), enumValueGenerators = emptyList(), referenceEntryGenerators = listOf(
         ReferenceEntryGenerator.random()
-      )
-    )
+      ), referenceEntryStatusProvider = { referenceEntryId: ReferenceEntryId, millis: Double ->
+        if ((millis / samplingPeriod.distance) % 2 >= 1.0) {
+          HistoryEnumSet.first
+        } else {
+          HistoryEnumSet.second
+        }
+      })
 
     assertThat(historyChunkGenerator.historyConfiguration.decimalDataSeriesCount).isEqualTo(0)
     assertThat(historyChunkGenerator.historyConfiguration.enumDataSeriesCount).isEqualTo(0)
     assertThat(historyChunkGenerator.historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(1)
 
 
-    val chunk = historyChunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)
-    requireNotNull(chunk)
-    assertThat(chunk).isNotNull()
+    val recordedChunkLarge = historyChunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)
+    requireNotNull(recordedChunkLarge)
+    assertThat(recordedChunkLarge).isNotNull()
 
-    (chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).let {
+    (recordedChunkLarge.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).let {
       assertThat(it.entries).hasSize(572)
+      assertThat(recordedChunkLarge.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b10)
+      assertThat(recordedChunkLarge.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
+      assertThat(recordedChunkLarge.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(77))).isEqualToHistoryEnumSet(0b01)
     }
 
-    val descriptors = HistoryBucketDescriptor.fromChunk(chunk, samplingPeriod)
-    assertThat(descriptors).hasSize(2)
+    val recordedChunkDescriptors = HistoryBucketDescriptor.fromChunk(recordedChunkLarge, samplingPeriod)
+    assertThat(recordedChunkDescriptors).hasSize(2)
 
-    val buckets = descriptors.mapNotNull {
-      val historyChunk = chunk.range(it.start, it.end)
+    val recordedBuckets = recordedChunkDescriptors.mapNotNull {
+      val historyChunk = recordedChunkLarge.range(it.start, it.end)
       if (historyChunk != null) {
         HistoryBucket(it, historyChunk)
       } else {
@@ -93,9 +100,9 @@ class DownSamplingReferenceEntryCalculatorTest {
       }
     }
 
-    assertThat(buckets).hasSize(2)
+    assertThat(recordedBuckets).hasSize(2)
 
-    buckets[0].let { bucket ->
+    recordedBuckets[0].let { bucket ->
       assertThat((bucket.chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(190)
 
       val historyChunk = bucket.chunk
@@ -112,8 +119,11 @@ class DownSamplingReferenceEntryCalculatorTest {
         assertThat(data.id).isEqualToReferenceEntryId(25912)
         assertThat(data.label.key).isEqualTo("Label 25912")
       }
+
+      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b10)
+      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
     }
-    buckets[1].let { bucket ->
+    recordedBuckets[1].let { bucket ->
       assertThat((bucket.chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(384)
       val historyChunk = bucket.chunk
 
@@ -126,10 +136,13 @@ class DownSamplingReferenceEntryCalculatorTest {
 
       assertThat(historyChunk.getReferenceEntryData(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryId(23372))).isNotNull()
       assertThat(historyChunk.getReferenceEntryData(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryId(88193))).isNotNull()
+
+      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b10)
+      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
     }
 
     val descriptorForDownSampling = HistoryBucketDescriptor.forTimestamp(TimeConstants.referenceTimestamp, samplingPeriod.above()!!)
-    val downSampled = descriptorForDownSampling.calculateDownSampled(buckets)
+    val downSampled = descriptorForDownSampling.calculateDownSampled(recordedBuckets)
 
     assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.Pending)
     assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualToReferenceEntryId(25912)
@@ -138,5 +151,9 @@ class DownSamplingReferenceEntryCalculatorTest {
       requireNotNull(it)
       assertThat(it.id).isEqualToReferenceEntryId(25912)
     }
+
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualToHistoryEnumSet(0b11)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(401))).isEqualToHistoryEnumSet(0b11)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(402))).isEqualToHistoryEnumSet(0b11)
   }
 }

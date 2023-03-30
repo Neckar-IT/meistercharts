@@ -19,6 +19,8 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.isOrdinalNoValue
+import com.meistercharts.history.isOrdinalPending
 import org.junit.jupiter.api.Test
 
 /**
@@ -34,10 +36,10 @@ class HistoryEnumSetTest {
 
   @Test
   fun testToEnumSet() {
-    assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.NoValue).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.NoValue)
+    assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.NoValue).firstSetOrdinal()).isOrdinalNoValue()
 
     assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.BooleanTrue).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.BooleanTrue)
-    assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.Pending).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.Pending)
+    assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.Pending).firstSetOrdinal()).isOrdinalPending()
     assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.Max).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.Max)
     assertThat(HistoryEnumSet.forEnumOrdinal(HistoryEnumOrdinal.BooleanFalse).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.BooleanFalse)
   }
@@ -75,8 +77,8 @@ class HistoryEnumSetTest {
   fun testNoValue() {
     assertThat(HistoryEnumSet.forEnumValue(0).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal(0))
     assertThat(HistoryEnumSet.forEnumValue(1).firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal(1))
-    assertThat(HistoryEnumSet.NoValue.firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.NoValue)
-    assertThat(HistoryEnumSet.Pending.firstSetOrdinal()).isEqualTo(HistoryEnumOrdinal.Pending)
+    assertThat(HistoryEnumSet.NoValue.firstSetOrdinal()).isOrdinalNoValue()
+    assertThat(HistoryEnumSet.Pending.firstSetOrdinal()).isOrdinalPending()
   }
 
   @Test

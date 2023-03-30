@@ -130,9 +130,9 @@ class HistoryChunkRangeTest {
 
       assertThat(it.referenceEntryStatusesAsMatrixString()?.trim()).isEqualTo(
         """
-          11, 12, 14
-          11, 12, 15
-          11, 12, 16
+          0b1011, 0b1100, 0b1110
+          0b1011, 0b1100, 0b1111
+          0b1011, 0b1100, 0b10000
         """.trimIndent()
       )
     }

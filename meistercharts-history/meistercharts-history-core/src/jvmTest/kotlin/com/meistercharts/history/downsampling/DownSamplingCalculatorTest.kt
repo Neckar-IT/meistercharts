@@ -25,6 +25,7 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.isEnumSetPending
 import com.meistercharts.history.isEqualToHistoryEnumSet
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
@@ -44,14 +45,14 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.maxDecimal(DecimalDataSeriesIndex.zero)).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.maxDecimal(DecimalDataSeriesIndex.one)).isEqualTo(HistoryChunk.Pending)
 
-    assertThat(calculator.enumValue(EnumDataSeriesIndex.zero)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.enumValue(EnumDataSeriesIndex.zero)).isEnumSetPending()
     assertThat(calculator.enumOrdinalMostTime(EnumDataSeriesIndex.zero)).isEqualTo(HistoryEnumOrdinal.Pending)
 
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)
     assertThat(calculator.maxDecimal(DecimalDataSeriesIndex.one)).isEqualTo(HistoryChunk.Pending)
 
-    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEnumSetPending()
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
   }
 
@@ -76,9 +77,9 @@ class DownSamplingCalculatorTest {
     val dataSeriesIndex2 = EnumDataSeriesIndex(2)
 
     val calculator = DownSamplingCalculator(0, 3, 0)
-    assertThat(calculator.enumValue(dataSeriesIndex0)).isEqualTo(HistoryEnumSet.Pending)
-    assertThat(calculator.enumValue(dataSeriesIndex1)).isEqualTo(HistoryEnumSet.Pending)
-    assertThat(calculator.enumValue(dataSeriesIndex2)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.enumValue(dataSeriesIndex0)).isEnumSetPending()
+    assertThat(calculator.enumValue(dataSeriesIndex1)).isEnumSetPending()
+    assertThat(calculator.enumValue(dataSeriesIndex2)).isEnumSetPending()
 
     calculator.addEnumSample(intArrayOf(0b0001, 0b0101, 0b1001))
 
@@ -219,7 +220,7 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
-    assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEnumSetPending()
 
     calculator.addDecimalsSample(DoubleArray(7) { 7.0 })
     calculator.addEnumSample(IntArray(2) { 0b101 })
@@ -238,9 +239,9 @@ class DownSamplingCalculatorTest {
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
-    assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEnumSetPending()
 
-    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(calculator.referenceEntryStatus(ReferenceEntryDataSeriesIndex.zero)).isEnumSetPending()
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)
   }
 

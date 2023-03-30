@@ -691,6 +691,16 @@ external interface EnumAxisStyle : AxisStyle {
 }
 
 /**
+ * Axis style fron discrete axis
+ */
+external interface DiscreteAxisStyle : AxisStyle {
+  /**
+   * If the labels are/will be wrapped
+   */
+  val labelWrapMode: WrapMode?
+}
+
+/**
  * Defines how a time axis looks like and behaves
  */
 external interface TimeAxisStyle : AxisStyle {

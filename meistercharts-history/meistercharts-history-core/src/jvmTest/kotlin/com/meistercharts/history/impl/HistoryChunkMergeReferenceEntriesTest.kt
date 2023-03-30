@@ -21,9 +21,12 @@ import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
+import com.meistercharts.history.isEqualToHistoryEnumSet
 import it.neckar.open.i18n.TextKey
 import org.junit.jupiter.api.Test
 
@@ -37,11 +40,28 @@ class HistoryChunkMergeReferenceEntriesTest {
   @Test
   fun testWithEmpty() {
     val thisChunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001))
+      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b100, 0b1000, 0b10000))
+      addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt))
+      addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(HistoryEnumSet.PendingAsInt, HistoryEnumSet.PendingAsInt, HistoryEnumSet.PendingAsInt))
     }
+
+    assertThat(thisChunk.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        0b101, 0b1001, 0b10001
+        0b100, 0b1000, 0b10000
+        -, -, -
+        ?, ?, ?
+    """.trimIndent()
+    )
+
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(0), TimestampIndex(0))).isEqualToHistoryEnumSet(0b101)
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(1), TimestampIndex(0))).isEqualToHistoryEnumSet(0b1001)
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(2), TimestampIndex(0))).isEqualToHistoryEnumSet(0b10001)
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(0), TimestampIndex(1))).isEqualToHistoryEnumSet(0b100)
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(1), TimestampIndex(1))).isEqualToHistoryEnumSet(0b1000)
+    assertThat(thisChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex(2), TimestampIndex(1))).isEqualToHistoryEnumSet(0b10000)
+
 
     val merged = thisChunk.merge(historyChunk(historyConfiguration) {}, 0.0, 500.0)
     requireNotNull(merged)
@@ -54,19 +74,31 @@ class HistoryChunkMergeReferenceEntriesTest {
     assertThat(merged).hasValues(ReferenceEntryDataSeriesIndex.two, 101, 1001, 10001, 100001)
 
     assertThat((merged.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(9)
+
+
+    assertThat(merged.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        0b101, 0b1001, 0b10001
+        0b100, 0b1000, 0b10000
+        -, -, -
+        ?, ?, ?
+    """.trimIndent()
+    )
+
+    assertThat(merged.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b101)
   }
 
   @Test
   fun `this before that - all`() {
     val thisChunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001))
+      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b100, 0b1000, 0b10000))
       addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
 
     val thatChunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(105.0, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(105.0, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b1001, 0b10001, 0b100001))
       addReferenceEntryValues(106.0, 111, 1110, 11110, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(107.0, 100, 1101, 11101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(108.0, 101, 1011, 11011, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
@@ -83,6 +115,19 @@ class HistoryChunkMergeReferenceEntriesTest {
     assertThat(merged).hasValues(ReferenceEntryDataSeriesIndex.two, 101, 1001, 10001, 100001, 11111, 11110, 11101, 11011)
 
     assertThat((merged.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(18)
+
+    assertThat(merged.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        0b101, 0b1001, 0b10001
+        0b100, 0b1000, 0b10000
+        -, -, -
+        -, -, -
+        0b1001, 0b10001, 0b100001
+        -, -, -
+        -, -, -
+        -, -, -
+      """.trimIndent()
+    )
   }
 
   @Test
@@ -90,13 +135,13 @@ class HistoryChunkMergeReferenceEntriesTest {
     val thisChunk = historyChunk(historyConfiguration) {
       addReferenceEntryValues(105.0, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(106.0, 111, 1110, 11110, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(107.0, 100, 1101, 11101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(107.0, 100, 1101, 11101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001))
       addReferenceEntryValues(108.0, 101, 1011, 11011, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
 
     val thatChunk = historyChunk(historyConfiguration) {
       addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b100, 0b1000, 0b10000))
       addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
@@ -112,19 +157,32 @@ class HistoryChunkMergeReferenceEntriesTest {
     assertThat(merged).hasValues(ReferenceEntryDataSeriesIndex.two, 101, 1001, 10001, 100001, 11111, 11110, 11101, 11011)
 
     assertThat((merged.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(18)
+
+    assertThat(merged.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        -, -, -
+        0b100, 0b1000, 0b10000
+        -, -, -
+        -, -, -
+        -, -, -
+        -, -, -
+        0b101, 0b1001, 0b10001
+        -, -, -
+      """.trimIndent()
+    )
   }
 
   @Test
   fun `this interwoven with that - this outside`() {
     val thisChunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001))
       addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
 
     val thatChunk = historyChunk(historyConfiguration) {
-      addReferenceEntryValues(100.5, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(100.5, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b100, 0b1000, 0b10000))
       addReferenceEntryValues(101.5, 111, 1110, 11110, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(102.5, 100, 1101, 11101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
@@ -140,19 +198,31 @@ class HistoryChunkMergeReferenceEntriesTest {
     assertThat(merged).hasValues(ReferenceEntryDataSeriesIndex.two, 101, 11111, 1001, 11110, 10001, 11101, 100001)
 
     assertThat((merged.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(16)
+
+    assertThat(merged.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        0b101, 0b1001, 0b10001
+        0b100, 0b1000, 0b10000
+        -, -, -
+        -, -, -
+        -, -, -
+        -, -, -
+        -, -, -
+      """.trimIndent()
+    )
   }
 
   @Test
   fun `this interwoven with that - that outside`() {
     val thisChunk = historyChunk(historyConfiguration) {
       addReferenceEntryValues(100.5, 101, 1111, 11111, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(101.5, 111, 1110, 11110, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(101.5, 111, 1110, 11110, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b101, 0b1001, 0b10001))
       addReferenceEntryValues(102.5, 100, 1101, 11101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
 
     val thatChunk = historyChunk(historyConfiguration) {
       addReferenceEntryValues(100.0, 1, 10, 101, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
-      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
+      addReferenceEntryValues(101.0, 10, 100, 1001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated, referenceEntryStatuses = intArrayOf(0b100, 0b1000, 0b10000))
       addReferenceEntryValues(102.0, 100, 1000, 10001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
       addReferenceEntryValues(103.0, 1000, 10000, 100001, referenceEntriesDataMap = ReferenceEntriesDataMap.generated)
     }
@@ -168,5 +238,17 @@ class HistoryChunkMergeReferenceEntriesTest {
     assertThat(merged).hasValues(ReferenceEntryDataSeriesIndex.two, 101, 11111, 1001, 11110, 10001, 11101, 100001)
 
     assertThat((merged.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(16)
+
+    assertThat(merged.values.referenceEntryHistoryValues.statusesAsMatrixString()).isEqualTo(
+      """
+        -, -, -
+        -, -, -
+        0b100, 0b1000, 0b10000
+        0b101, 0b1001, 0b10001
+        -, -, -
+        -, -, -
+        -, -, -
+      """.trimIndent()
+    )
   }
 }

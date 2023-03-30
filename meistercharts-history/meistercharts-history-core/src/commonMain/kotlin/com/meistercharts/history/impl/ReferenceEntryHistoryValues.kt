@@ -75,6 +75,9 @@ data class ReferenceEntryHistoryValues(
    */
   val statuses: @HistoryEnumSetInt @Serializable(with = IntArray2Serializer::class) IntArray2,
 
+  //TODO think if this is helpful/necessary
+  // val statusMoseOfTheTime: @HistoryEnumOrdinalInt @Serializable(with = IntArray2Serializer::class) IntArray2,
+
   /**
    * Contains the data map for the reference entries.
    * Contains all entries for *all* data series
@@ -234,8 +237,8 @@ data class ReferenceEntryHistoryValues(
     return differentIdsCount?.asMatrixString()
   }
 
-  fun statusesAsMatrixString(): String? {
-    return statuses.asMatrixString()
+  fun statusesAsMatrixString(): String {
+    return statuses.asEnumsMatrixString()
   }
 }
 

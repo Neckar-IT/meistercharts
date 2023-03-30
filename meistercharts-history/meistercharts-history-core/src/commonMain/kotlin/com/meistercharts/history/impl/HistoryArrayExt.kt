@@ -131,15 +131,15 @@ fun IntArray2?.asEnumsMatrixString(): String {
 
   return (0 until height).joinToString("\n") { y ->
     (0 until width).map { x -> this[x, y] }.joinToString(", ") {
-      when {
-        HistoryEnumSet.isNoValue(it) -> "-"
-        HistoryEnumSet.isPending(it) -> "?"
-        else -> "0b${it.toString(2)}"
-      }
+      HistoryEnumSet(it).toString()
     }
   }
 }
 
+/**
+ * Formats the int array as matrix string.
+ * Uses decimals to represent the values
+ */
 fun IntArray2?.asMatrixString(): String {
   if (this == null) {
     return "- no values -"
@@ -147,11 +147,7 @@ fun IntArray2?.asMatrixString(): String {
 
   return (0 until height).joinToString("\n") { y ->
     (0 until width).map { x -> this[x, y] }.joinToString(", ") {
-      when {
-        HistoryEnumSet.isNoValue(it) -> "-"
-        HistoryEnumSet.isPending(it) -> "?"
-        else -> "${it.toString()}"
-      }
+      it.toString()
     }
   }
 }
