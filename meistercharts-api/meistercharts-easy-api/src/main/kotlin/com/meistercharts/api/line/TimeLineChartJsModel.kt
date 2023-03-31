@@ -132,7 +132,6 @@ external interface DiscreteDataSeriesConfiguration {
    */
   val statusEnumConfiguration: EnumConfiguration
 
-
   /**
    * Defines the stripe styles for the ordinals of the discrete data series.
    * The index within the array corresponds to the ordinal value

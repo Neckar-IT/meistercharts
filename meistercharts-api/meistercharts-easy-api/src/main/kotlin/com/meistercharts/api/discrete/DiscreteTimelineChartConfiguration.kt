@@ -19,18 +19,12 @@ import com.meistercharts.api.DiscreteAxisStyle
 import com.meistercharts.api.TimeAxisStyle
 import com.meistercharts.api.TimeRange
 import com.meistercharts.api.line.DiscreteDataSeriesConfiguration
-import com.meistercharts.api.line.HistorySettings
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexInt
 
 /**
  * Configuration for the discrete timeline chart
  */
 external interface DiscreteTimelineChartConfiguration {
-  /**
-   * The settings for the history
-   */
-  val historySettings: HistorySettings?
-
   ///**
   // * Whether the play mode is active
   // */
@@ -69,13 +63,7 @@ external interface DiscreteTimelineChartConfiguration {
   val discreteStripeHeight: Double?
 
   /**
-   * The distance between discrete stripes
+   * The gap between discrete stripes
    */
-  val discretesStripesDistance: Double?
-
-  /**
-   * The background color of the area that contains the discretes
-   */
-  val discretesBackgroundColor: String?
-
+  val discreteStripeGap: Double?
 }
