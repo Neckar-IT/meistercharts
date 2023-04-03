@@ -36,11 +36,9 @@ expect class LocalResourcePaintable @JvmOverloads constructor(
    */
   alignmentPoint: Coordinates = Coordinates.origin
 ) : Paintable {
-
   fun withSize(size: Size): LocalResourcePaintable
 
-  companion object {
-  }
+  companion object
 }
 
 /**
