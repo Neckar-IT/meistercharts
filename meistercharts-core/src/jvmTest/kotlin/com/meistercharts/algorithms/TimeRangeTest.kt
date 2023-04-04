@@ -28,6 +28,79 @@ internal class TimeRangeTest {
   }
 
   @Test
+  fun testConversion() {
+    val timeRange = TimeRange(10_000.0, 50_000.0)
+
+    assertThat(timeRange.time2relative(5_000.0)).isEqualTo(-0.125)
+    assertThat(timeRange.time2relative(10_000.0)).isEqualTo(0.0)
+    assertThat(timeRange.time2relative(20_000.0)).isEqualTo(0.25)
+    assertThat(timeRange.time2relative(30_000.0)).isEqualTo(0.5)
+    assertThat(timeRange.time2relative(50_000.0)).isEqualTo(1.0)
+    assertThat(timeRange.time2relative(60_000.0)).isEqualTo(1.25)
+
+    assertThat(timeRange.toDomainRelative(5_000.0)).isEqualTo(-0.125)
+    assertThat(timeRange.toDomainRelative(10_000.0)).isEqualTo(0.0)
+    assertThat(timeRange.toDomainRelative(20_000.0)).isEqualTo(0.25)
+    assertThat(timeRange.toDomainRelative(30_000.0)).isEqualTo(0.5)
+    assertThat(timeRange.toDomainRelative(50_000.0)).isEqualTo(1.0)
+    assertThat(timeRange.toDomainRelative(60_000.0)).isEqualTo(1.25)
+
+
+    assertThat(timeRange.relative2time(-0.125)).isEqualTo(5_000.0)
+    assertThat(timeRange.relative2time(0.0)).isEqualTo(10_000.0)
+    assertThat(timeRange.relative2time(0.25)).isEqualTo(20_000.0)
+    assertThat(timeRange.relative2time(0.5)).isEqualTo(30_000.0)
+    assertThat(timeRange.relative2time(1.0)).isEqualTo(50_000.0)
+    assertThat(timeRange.relative2time(1.25)).isEqualTo(60_000.0)
+
+    assertThat(timeRange.toDomain(-0.125)).isEqualTo(5_000.0)
+    assertThat(timeRange.toDomain(0.0)).isEqualTo(10_000.0)
+    assertThat(timeRange.toDomain(0.25)).isEqualTo(20_000.0)
+    assertThat(timeRange.toDomain(0.5)).isEqualTo(30_000.0)
+    assertThat(timeRange.toDomain(1.0)).isEqualTo(50_000.0)
+    assertThat(timeRange.toDomain(1.25)).isEqualTo(60_000.0)
+  }
+
+  @Test
+  fun testConversionRelative() {
+    val timeRange = TimeRange(10_000.0, 50_000.0)
+    assertThat(timeRange.delta).isEqualTo(40_000.0)
+
+    assertThat(timeRange.time2relativeDelta(0_000.0)).isEqualTo(0.0)
+    assertThat(timeRange.time2relativeDelta(5_000.0)).isEqualTo(0.125)
+    assertThat(timeRange.time2relativeDelta(10_000.0)).isEqualTo(0.25)
+    assertThat(timeRange.time2relativeDelta(20_000.0)).isEqualTo(0.5)
+    assertThat(timeRange.time2relativeDelta(30_000.0)).isEqualTo(0.75)
+    assertThat(timeRange.time2relativeDelta(50_000.0)).isEqualTo(1.25)
+    assertThat(timeRange.time2relativeDelta(60_000.0)).isEqualTo(1.5)
+
+    assertThat(timeRange.deltaToDomainRelative(0_000.0)).isEqualTo(0.0)
+    assertThat(timeRange.deltaToDomainRelative(5_000.0)).isEqualTo(0.125)
+    assertThat(timeRange.deltaToDomainRelative(10_000.0)).isEqualTo(0.25)
+    assertThat(timeRange.deltaToDomainRelative(20_000.0)).isEqualTo(0.5)
+    assertThat(timeRange.deltaToDomainRelative(30_000.0)).isEqualTo(0.75)
+    assertThat(timeRange.deltaToDomainRelative(50_000.0)).isEqualTo(1.25)
+    assertThat(timeRange.deltaToDomainRelative(60_000.0)).isEqualTo(1.5)
+
+
+    assertThat(timeRange.relative2timeDelta(0.0)).isEqualTo(0_000.0)
+    assertThat(timeRange.relative2timeDelta(0.125)).isEqualTo(5_000.0)
+    assertThat(timeRange.relative2timeDelta(0.25)).isEqualTo(10_000.0)
+    assertThat(timeRange.relative2timeDelta(0.5)).isEqualTo(20_000.0)
+    assertThat(timeRange.relative2timeDelta(0.75)).isEqualTo(30_000.0)
+    assertThat(timeRange.relative2timeDelta(1.25)).isEqualTo(50_000.0)
+    assertThat(timeRange.relative2timeDelta(1.5)).isEqualTo(60_000.0)
+
+    assertThat(timeRange.deltaToDomain(0.0)).isEqualTo(0_000.0)
+    assertThat(timeRange.deltaToDomain(0.125)).isEqualTo(5_000.0)
+    assertThat(timeRange.deltaToDomain(0.25)).isEqualTo(10_000.0)
+    assertThat(timeRange.deltaToDomain(0.5)).isEqualTo(20_000.0)
+    assertThat(timeRange.deltaToDomain(0.75)).isEqualTo(30_000.0)
+    assertThat(timeRange.deltaToDomain(1.25)).isEqualTo(50_000.0)
+    assertThat(timeRange.deltaToDomain(1.5)).isEqualTo(60_000.0)
+  }
+
+  @Test
   internal fun testExtend() {
     val timeRange = TimeRange(10.0, 20.0)
 

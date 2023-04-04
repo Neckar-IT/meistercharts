@@ -37,7 +37,6 @@ import com.meistercharts.algorithms.model.CategoryIndex
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.canvas.CanvasStringShortener
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize
@@ -46,21 +45,22 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.ThresholdsSupport
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.style.Palette
+import it.neckar.commons.kotlin.js.debug
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.ifDebug
+import it.neckar.open.charting.api.sanitizing.sanitize
+import it.neckar.open.formatting.CachedNumberFormat
+import it.neckar.open.formatting.NumberFormat
+import it.neckar.open.formatting.cached
+import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
-import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.formatting.NumberFormat
-import it.neckar.open.formatting.cached
-import it.neckar.open.i18n.I18nConfiguration
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
-import it.neckar.commons.kotlin.js.debug
-import it.neckar.logging.Logger
-import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import parseCssFontFamily
 import parseCssFontStyle
 
@@ -594,6 +594,20 @@ fun CrossWireLayer.Style.applyCrossWireStyle(jsStyle: CrossWireStyle?) {
  * Applies the axis style
  */
 fun CategoryAxisLayer.Style.applyEnumAxisStyle(jsStyle: EnumAxisStyle?) {
+  applyAxisStyle(jsStyle)
+
+  if (jsStyle == null) {
+    return
+  }
+
+  jsStyle.labelWrapMode?.let { jsWrapMode ->
+    this.axisLabelPainter = DefaultCategoryAxisLabelPainter {
+      this.wrapMode = jsWrapMode.toModel()
+    }
+  }
+}
+
+fun CategoryAxisLayer.Style.applyDiscreteAxisStyle(jsStyle: DiscreteAxisStyle?) {
   applyAxisStyle(jsStyle)
 
   if (jsStyle == null) {

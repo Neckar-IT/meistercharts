@@ -33,6 +33,13 @@ import org.junit.jupiter.api.Test
  */
 class HistoryValuesBuilderTest {
   @Test
+  fun testSizeBuild() {
+    val builder = HistoryValuesBuilder(0, 0, 3, 2, RecordingType.Calculated)
+    assertThat(builder.timestampsCount).isEqualTo(2)
+    assertThat(builder.build().timeStampsCount).isEqualTo(2)
+  }
+
+  @Test
   fun testRefTypesResizeTest() {
     val builder = HistoryValuesBuilder(0, 0, 3, 2, RecordingType.Calculated)
 

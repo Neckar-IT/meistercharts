@@ -29,6 +29,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
+import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
@@ -38,11 +39,13 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
+import com.meistercharts.history.atMost
 import com.meistercharts.history.fastForEachIndexed
 import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
@@ -236,6 +239,34 @@ class HistoryReferenceEntryLayer(
      */
     val contentAreaTimeRange: @ContentArea TimeRangeProvider,
   ) {
+
+    /**
+     * The indices of the stripes that should be visible.
+     * The default is that all lines are visible.
+     *
+     * ATTENTION: in init{} [showAllReferenceEntrySeries] is called
+     *
+     * ATTENTION: Might contain *more* elements than there exist in the history!
+     */
+    val requestedVisibleReferenceEntryDataSeriesIndicesProperty: ObservableObject<ReferenceEntryDataSeriesIndexProvider> = ObservableObject(ReferenceEntryDataSeriesIndexProvider.empty())
+
+    var requestedVisibleReferenceEntryDataSeriesIndices: ReferenceEntryDataSeriesIndexProvider by requestedVisibleReferenceEntryDataSeriesIndicesProperty
+      @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
+      get
+
+    /**
+     * The actual visible series indices - respects the current history configuration
+     */
+    val actualVisibleReferenceEntryDataSeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestedVisibleReferenceEntryDataSeriesIndices.atMost {
+      historyConfiguration().referenceEntryDataSeriesCount
+    }
+
+    /**
+     * Shows all lines even if the history configuration changes later on.
+     */
+    fun showAllReferenceEntryDataSeries() {
+      requestedVisibleReferenceEntryDataSeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
+    }
 
     /**
      * The height of a stripe

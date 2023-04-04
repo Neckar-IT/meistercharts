@@ -46,6 +46,7 @@ import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -59,6 +60,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
+import com.meistercharts.provider.delegate
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
@@ -74,6 +76,7 @@ import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.Positive
+import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
 /**
@@ -106,7 +109,7 @@ class DiscreteTimelineChartGestalt(
    * Is used to calculate the history render properties
    */
   val historyRenderPropertiesCalculatorLayer: HistoryRenderPropertiesCalculatorLayer = HistoryRenderPropertiesCalculatorLayer(
-    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(30.0).withMinimum { configuration.minimumSamplingPeriod },
+    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(MinDistanceBetweenDataPoints).withMinimum { configuration.minimumSamplingPeriod },
     historyGapCalculator = { renderedSamplingPeriod ->
       configuration.historyGapCalculator.calculateMinGapDistance(renderedSamplingPeriod)
     },
@@ -118,7 +121,7 @@ class DiscreteTimelineChartGestalt(
    */
   val historyReferenceEntryLayer: HistoryReferenceEntryLayer = HistoryReferenceEntryLayer(HistoryReferenceEntryLayer.Configuration(
     historyStorage = historyStorage,
-    historyConfiguration = configuration.historyConfiguration,
+    historyConfiguration = configuration::historyConfiguration.delegate(),
     visibleIndices = configuration.actualVisibleReferenceEntrySeriesIndices,
     contentAreaTimeRange = { configuration.contentAreaTimeRange }
   ))
@@ -287,7 +290,7 @@ class DiscreteTimelineChartGestalt(
     /**
      * The history configuration
      */
-    val historyConfiguration: () -> HistoryConfiguration,
+    var historyConfiguration: () -> HistoryConfiguration,
   ) {
 
 
@@ -341,6 +344,10 @@ class DiscreteTimelineChartGestalt(
       @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
       get
 
+    fun showAllReferenceEntrySeries() {
+      requestVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
+    }
+
     val actualVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestVisibleReferenceEntrySeriesIndices.atMost {
       historyConfiguration().referenceEntryDataSeriesCount
     }
@@ -354,6 +361,14 @@ class DiscreteTimelineChartGestalt(
       //The default implementation returns the display name from the history configuration
       historyConfiguration().referenceEntryConfiguration.getDisplayName(dataSeriesIndex)
     }
+  }
+
+  companion object {
+    /**
+     * The minimum distance between two data points for this chart.
+     * If there is less space available, the next sampling level will be chosen
+     */
+    const val MinDistanceBetweenDataPoints: @px Double = 30.0
   }
 }
 

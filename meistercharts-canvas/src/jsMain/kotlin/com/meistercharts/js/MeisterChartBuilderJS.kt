@@ -44,7 +44,6 @@ class MeisterChartBuilderJS(
      * Creates a new chart builder - calls <MeisterChartsPlatform.init()>
      */
     fun create(description: String): MeisterChartBuilderJS {
-      MeisterChartsPlatform.init()
       return MeisterChartBuilderJS(description)
     }
   }

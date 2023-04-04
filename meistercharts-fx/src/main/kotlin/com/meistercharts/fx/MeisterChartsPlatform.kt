@@ -15,9 +15,6 @@
  */
 package com.meistercharts.fx
 
-import it.neckar.open.annotations.AnyThread
-import it.neckar.open.annotations.Blocking
-import it.neckar.open.annotations.UiThread
 import com.meistercharts.algorithms.mainScreenDevicePixelRatio
 import com.meistercharts.algorithms.painter.ArcPathWorkaroundEpsilon
 import com.meistercharts.canvas.FontMetricsCacheAccess
@@ -25,10 +22,14 @@ import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.MeisterChartsFactoryAccess
 import com.meistercharts.canvas.jvmImageLoader
 import com.meistercharts.design.CorporateDesign
-import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.fx.font.FontMetricsCacheFX
-import it.neckar.open.javafx.JavaFxTimer
+import com.meistercharts.platform.MeisterChartsAbstractPlatform
 import com.meistercharts.resources.jvmLocalResourcePaintableFactory
+import it.neckar.open.annotations.AnyThread
+import it.neckar.open.annotations.Blocking
+import it.neckar.open.annotations.UiThread
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.javafx.JavaFxTimer
 import it.neckar.open.time.jvmTimerSupport
 import javafx.application.Platform
 
@@ -37,7 +38,7 @@ import javafx.application.Platform
  *
  * Is referenced from [MeisterChartBuilder] and ensures that initial code is executed once
  */
-object MeisterChartsPlatform {
+object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   /**
    * Initializes the [MeisterChartsPlatform] in the UI thread.
    *
@@ -55,15 +56,18 @@ object MeisterChartsPlatform {
    */
   @UiThread
   @JvmStatic
-  fun init(corporateDesign: CorporateDesign? = null) {
+  fun init(
+    corporateDesign: CorporateDesign? = null,
+    defaultI18nConfiguration: I18nConfiguration? = null,
+  ) {
     require(Platform.isFxApplicationThread()) {
       "Init must only be called in the JavaFX thread"
     }
 
-    if (initialized) {
-      return
-    }
+    initBasics(corporateDesign, defaultI18nConfiguration)
+  }
 
+  override fun initializeOnce() {
     //Register the local resource paintable factor
     jvmLocalResourcePaintableFactory = LocalResourcePaintableProviderFX()
 
@@ -72,10 +76,6 @@ object MeisterChartsPlatform {
 
     //Register the timer support
     jvmTimerSupport = TimerSupportFX()
-
-    corporateDesign?.let {
-      initCorporateDesign(it)
-    }
 
     //Apply the epsilon for JavaFX platform
     ArcPathWorkaroundEpsilon = 0.0001
@@ -87,13 +87,6 @@ object MeisterChartsPlatform {
     }
 
     FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheFX
-
     MeisterChartsFactoryAccess.factory = MeisterChartsFactoryFX()
-    initialized = true
   }
-
-  /**
-   * Is set to true if already initialized
-   */
-  private var initialized = false
 }

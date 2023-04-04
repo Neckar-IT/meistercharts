@@ -15,8 +15,11 @@
  */
 package com.meistercharts.api.discrete
 
+import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.api.MeisterChartsApi
@@ -31,8 +34,17 @@ import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.history.HistoryStorageCache
 import com.meistercharts.history.InMemoryHistoryStorage
+import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.js.MeisterChartJS
 import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Distance
+import it.neckar.commons.kotlin.js.debug
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
+import it.neckar.logging.ifDebug
+import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration.Companion.milliseconds
@@ -98,10 +110,70 @@ class DiscreteTimelineChart internal constructor(
   /**
    * Clears the current history and sets the history of this chart.
    */
+  @Suppress("unused") //called from JS
   fun setHistory(data: DiscreteTimelineChartData) {
-    //clear history
-    //set new history configuration from data
-    //set data
+    logger.ifDebug {
+      console.debug("setHistory", data)
+    }
+
+    val inMemoryHistoryStorage = gestalt.inMemoryHistoryStorage
+    inMemoryHistoryStorage.clear() //clear history
+
+    val historyConfiguration = gestalt.configuration.historyConfiguration()
+
+    if (historyConfiguration.referenceEntryDataSeriesCount == 0) {
+      //TODO optimize!!!!
+      println("Skip because history config is empty")
+      return
+    }
+
+    val pair: Pair<HistoryChunk, SamplingPeriod> = data.toChunk(historyConfiguration) ?: return
+    val chunk = pair.first
+    val samplingPeriod = pair.second
+
+    gestalt.configuration.minimumSamplingPeriod = samplingPeriod
+    historyStorageCache.scheduleForStore(chunk, samplingPeriod)
+
+    logger.debug { "Sampling period: $samplingPeriod" }
+    logger.ifDebug { console.debug("Chunk", chunk.dump()) }
+
+    //Set the visible time range
+    gestalt.chartSupport().let { chartSupport ->
+      val chartCalculator = chartSupport.chartCalculator
+      val contentAreaTimeRangeX: com.meistercharts.algorithms.TimeRange = gestalt.configuration.contentAreaTimeRange
+
+      @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.start)
+      @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.end)
+
+      logger.debug("start/end: ${chunk.start.formatUtc()} - ${chunk.end.formatUtc()}")
+      logger.debug("relative start/end: $startRelative - $endRelative")
+
+      //Set the values immediately + set the defaults (for resize operations)
+      chartSupport.zoomAndTranslationSupport.fitX(startRelative, endRelative)
+      chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = object : ZoomAndTranslationDefaults {
+        override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
+          val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
+          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples
+          @ms val startToShow = chunk.end - durationToShow
+          @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
+
+          val zoomX = chartSupport.zoomAndTranslationSupport.calculateFitZoomX(startToShowRelative, endRelative)
+          return com.meistercharts.model.Zoom(zoomX, 1.0)
+        }
+
+        override fun defaultTranslation(chartCalculator: ChartCalculator): Distance {
+          val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
+          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples
+          @ms val startToShow = chunk.end - durationToShow
+          @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
+
+          val translationX = chartSupport.zoomAndTranslationSupport.calculateFitWindowTranslationX(startToShowRelative)
+          return Distance(translationX, 0.0)
+        }
+      }
+
+      logger.debug("zoom state: ${chartSupport.rootChartState.zoom}, ${chartSupport.rootChartState.windowTranslation}")
+    }
   }
 
   /**
@@ -184,31 +256,44 @@ class DiscreteTimelineChart internal constructor(
     }
   }
 
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.DiscreteTimelineChart")
+  }
 }
 
+private val DiscreteTimelineChartGestalt.inMemoryHistoryStorage: InMemoryHistoryStorage
+  get() = this.historyStorage as InMemoryHistoryStorage
+
+/**
+ * Contains the data for the discrete timeline chart
+ */
 @JsExport
-external interface DiscreteTimelineChartData {
+actual external interface DiscreteTimelineChartData {
   /**
-   * Index corresponds to the data series index
+   * Index corresponds to the data series index.
+   * Contains one entry for each data series.
    */
-  val series: Array<DiscreteDataEntriesForDataSeries>
+  actual val series: Array<DiscreteDataEntriesForDataSeries>
 }
 
+/**
+ * Contains the entries for a single discrete data series
+ */
 @JsExport
-external interface DiscreteDataEntriesForDataSeries {
+actual external interface DiscreteDataEntriesForDataSeries {
   /**
    * Contains all entries for this data series.
    * Must not overlap!
    */
-  val entries: Array<@Sorted(by = "from") DiscreteDataEntry>
+  actual val entries: Array<@Sorted(by = "from") DiscreteDataEntry>
 }
 
 @JsExport
-external interface DiscreteDataEntry {
-  val start: @ms Double
-  val end: @ms Double
-  val label: String
-  val status: Double //must be double since JS does not support Int
+actual external interface DiscreteDataEntry {
+  actual val start: @ms Double
+  actual val end: @ms Double
+  actual val label: String
+  actual val status: Double //must be double since JS does not support Int
 }
 
 private val DiscreteTimelineChartGestalt.inMemoryStorage: InMemoryHistoryStorage

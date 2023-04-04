@@ -130,6 +130,9 @@ inline fun ReferenceEntryDataSeriesIndexProvider.fastForEach(callback: (index: R
   }
 }
 
+inline operator fun <T> Array<T>.get(index: ReferenceEntryDataSeriesIndex): T {
+  return this[index.value]
+}
 
 /**
  * Returns a delegate that uses the current value of this property to delegate all calls.

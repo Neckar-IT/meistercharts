@@ -126,7 +126,7 @@ data class ReferenceEntryHistoryValues(
   fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryId {
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. reference entries count: ${values.width}" }
 
-    return values.getReferenceEntry(dataSeriesIndex, timeStampIndex)
+    return values.getReferenceEntryId(dataSeriesIndex, timeStampIndex)
   }
 
   /**
@@ -184,7 +184,7 @@ data class ReferenceEntryHistoryValues(
     }
 
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. referenceEntryIds size: ${values.width}" }
-    return values.getReferenceEntry(dataSeriesIndex, TimestampIndex(timeStampsCount - 1))
+    return values.getReferenceEntryId(dataSeriesIndex, TimestampIndex(timeStampsCount - 1))
   }
 
   fun referenceEntryIdsAsMatrixString(): String {

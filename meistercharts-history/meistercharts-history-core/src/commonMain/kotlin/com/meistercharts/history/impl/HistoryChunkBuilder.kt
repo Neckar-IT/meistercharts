@@ -95,7 +95,6 @@ class HistoryChunkBuilder(
   }
 
   @TestOnly
-  @Deprecated("Use addValues")
   @ForOnePointInTime
   fun addReferenceEntryValues(
     timestamp: @ms Double,
@@ -113,7 +112,6 @@ class HistoryChunkBuilder(
   }
 
   @TestOnly
-  @Deprecated("Use addValues")
   @ForOnePointInTime
   fun addReferenceEntryValues(
     timestamp: @ms Double,
@@ -334,6 +332,21 @@ class HistoryChunkBuilder(
     historyValuesBuilder.resizeTimestamps(nextTimestampIndex.value)
 
     return HistoryChunk(historyConfiguration, timestamps.toDoubleArray(), historyValuesBuilder.build(), recordingType)
+  }
+
+  /**
+   * Returns the last reference entry value for the provided ID
+   */
+  fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): ReferenceEntryId {
+    return historyValuesBuilder.getReferenceEntryId(dataSeriesIndex, timestampIndex)
+  }
+
+  fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): HistoryEnumSet {
+    return historyValuesBuilder.getReferenceEntryStatus(dataSeriesIndex, timestampIndex)
+  }
+
+  fun getReferenceEntryData(id: ReferenceEntryId): ReferenceEntryData? {
+    return historyValuesBuilder.getReferenceEntryData(id)
   }
 }
 

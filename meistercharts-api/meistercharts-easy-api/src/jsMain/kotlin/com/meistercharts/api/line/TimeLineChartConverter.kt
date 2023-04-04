@@ -20,17 +20,15 @@ import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.api.DataSeriesNumberFormat
 import com.meistercharts.api.PointConnectionStyle
+import com.meistercharts.api.forEnumValueFromJsDouble
 import com.meistercharts.api.toColor
+import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.HistoryEnum
-import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntriesDataMap
-import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
@@ -160,27 +158,4 @@ object TimeLineChartConverter {
     }
 
   }
-}
-
-private fun EnumConfiguration.toHistoryEnum(): HistoryEnum {
-  return HistoryEnum(this.description.sanitize(), this.values.map {
-    HistoryEnum.HistoryEnumValue(HistoryEnumOrdinal(it.ordinal.sanitize()), TextKey(it.label.sanitize()))
-  }).also { historyEnum ->
-    //Verify that there are 16 entries
-    require(historyEnum.valuesCount >= 16) {
-      "Need a fully filled enum configuration with at least 16 entries. But got only <${historyEnum.valuesCount}>"
-    }
-  }
-}
-
-/**
- * Converts a *Double* that is provided by JS to a history enum set
- */
-fun HistoryEnumSet.Companion.forEnumValueFromJsDouble(jsValue: Double): HistoryEnumSet {
-  if (jsValue.isNaN()) {
-    return NoValue
-  }
-
-  val jsValueAsInt = jsValue.toInt()
-  return forEnumValue(jsValueAsInt)
 }

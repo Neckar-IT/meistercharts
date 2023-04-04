@@ -54,6 +54,13 @@ value class TimestampIndex(val value: Int) : Comparable<TimestampIndex> {
     return value.toString()
   }
 
+  /**
+   * Returns the previous timestamp index.
+   */
+  inline fun previous(): TimestampIndex {
+    return TimestampIndex(value - 1)
+  }
+
 
   companion object {
     val zero: TimestampIndex = TimestampIndex(0)

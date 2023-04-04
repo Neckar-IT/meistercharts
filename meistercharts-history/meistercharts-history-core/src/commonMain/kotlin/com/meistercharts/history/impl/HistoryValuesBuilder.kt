@@ -298,6 +298,10 @@ class HistoryValuesBuilder(
   fun setReferenceEntryIdsForTimestamp(
     timestampIndex: TimestampIndex,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    /**
+     * * Must be set for [RecordingType.Calculated]
+     * * Must not be set for [RecordingType.Measured]
+     */
     referenceEntryIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray? = null,
     /**
      * Each [referenceEntryIds] must contain exactly one entry in this list.
@@ -400,6 +404,24 @@ class HistoryValuesBuilder(
         referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
       )
     }
+  }
+
+  /**
+   * Returns the currently set reference id
+   */
+  fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): ReferenceEntryId {
+    return this.referenceEntryIds.getReferenceEntryId(dataSeriesIndex, timestampIndex)
+  }
+
+  /**
+   * Returns the reference entry status
+   */
+  fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): HistoryEnumSet {
+    return this.referenceEntryStatuses.getReferenceStatus(dataSeriesIndex, timestampIndex)
+  }
+
+  fun getReferenceEntryData(id: ReferenceEntryId): ReferenceEntryData? {
+    return this.referenceEntriesDataMapBuilder.get(id)
   }
 }
 

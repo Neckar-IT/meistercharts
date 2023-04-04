@@ -84,6 +84,9 @@ class MeisterChartJS(
   }
 
   init {
+    //Ensure the configuration is loaded/configured
+    MeisterChartsPlatform.init()
+
     ImageLoadedEventBroker.onLoaded {
       //repaint when an image becomes available
       chartSupport.markAsDirty()

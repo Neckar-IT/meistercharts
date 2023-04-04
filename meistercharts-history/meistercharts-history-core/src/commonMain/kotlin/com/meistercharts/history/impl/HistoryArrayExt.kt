@@ -104,7 +104,7 @@ inline fun IntArray2.getRawValue(dataSeriesIndex: ReferenceEntryDataSeriesIndex,
   return this[dataSeriesIndex.value, timeStampIndex.value]
 }
 
-inline fun IntArray2.getReferenceEntry(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): ReferenceEntryId {
+inline fun IntArray2.getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): ReferenceEntryId {
   //TODO introduce sealed class for downsampling(?)
   return ReferenceEntryId(getRawValue(dataSeriesIndex, timeStampIndex))
 }

@@ -21,16 +21,12 @@ import com.meistercharts.canvas.MeisterChartsFactoryAccess
 import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
 import com.meistercharts.design.CorporateDesign
-import com.meistercharts.design.initCorporateDesign
+import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.js.external.FontFaceSet
 import com.meistercharts.js.external.listenForLoadingDone
-import com.meistercharts.events.FontLoadedEventBroker
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.updateDefaultI18nConfiguration
-import com.meistercharts.version.MeisterChartsVersion
+import com.meistercharts.platform.MeisterChartsAbstractPlatform
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.debug
-import it.neckar.logging.info
+import it.neckar.open.i18n.I18nConfiguration
 import kotlinx.browser.document
 import org.w3c.dom.get
 
@@ -39,7 +35,7 @@ import org.w3c.dom.get
  *
  * Is referenced from [MeisterChartBuilder] and ensures that initial code is executed once
  */
-object MeisterChartsPlatform {
+object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
 
   init {
     (document["fonts"]?.unsafeCast<FontFaceSet>())?.listenForLoadingDone {
@@ -56,26 +52,20 @@ object MeisterChartsPlatform {
     /**
      * The (optional) url converter
      */
-    urlConverter: UrlConverter = UrlConverter.Noop,
+    urlConverter: UrlConverter? = null,
   ) {
-    logger.info { "Initializing MeisterChartsPlatform ${MeisterChartsVersion.versionAsStringVerbose}" }
 
-    UrlConversion.activate(urlConverter)
+    initBasics(corporateDesign, defaultI18nConfiguration)
 
-    corporateDesign?.let {
-      initCorporateDesign(it)
+    urlConverter?.let {
+      UrlConversion.activate(it)
     }
+  }
 
-    defaultI18nConfiguration?.let {
-      updateDefaultI18nConfiguration(it)
-    }
-
+  override fun initializeOnce() {
     FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
 
-    //KotlinLoggingConfiguration.LOG_LEVEL = KotlinLoggingLevel.INFO
     MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()
-
-    logger.debug { "MeisterChartsPlatform initialized successfully.\ncorporateDesign: $corporateDesign\ndefaultI18nConfiguration: $defaultI18nConfiguration" }
   }
 }
 

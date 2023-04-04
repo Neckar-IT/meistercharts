@@ -22,6 +22,9 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.paintingProperties
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.unit.si.ms
 
 /**
@@ -50,7 +53,7 @@ class HistoryRenderPropertiesCalculatorLayer(
     val chartSupport = paintingContext.chartSupport
     val chartCalculator = paintingContext.chartCalculator
 
-    //Calculate the ideal
+    //Calculate the ideal values for history
     val windowSize = chartSupport.currentChartState.windowSize
 
     val visibleTimeRange = chartCalculator.visibleTimeRangeXinWindow(contentAreaTimeRange())
@@ -61,9 +64,18 @@ class HistoryRenderPropertiesCalculatorLayer(
 
     @ms val calculateMinGapDistance = historyGapCalculator.calculateMinGapDistance(samplingPeriod)
     paintingContext.chartSupport.paintingProperties.store(PaintingPropertyKey.MinGapDistance, calculateMinGapDistance)
+
+    if (false) {
+      logger.debug { "Calculated samplingPeriod: $samplingPeriod" }
+      logger.debug { "Calculated min gap distance: $calculateMinGapDistance" }
+    }
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
     //do nothing
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("HistoryRenderPropertiesCalculatorLayer")
   }
 }

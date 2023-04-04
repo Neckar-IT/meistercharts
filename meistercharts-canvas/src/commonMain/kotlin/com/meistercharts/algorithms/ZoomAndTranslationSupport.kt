@@ -20,7 +20,6 @@ import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.DomainRelative
-import it.neckar.open.unit.number.Positive
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Coordinates
@@ -28,6 +27,8 @@ import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.kotlin.lang.or1ifNaN
+import it.neckar.open.unit.number.Positive
+import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
 
@@ -45,11 +46,11 @@ class ZoomAndTranslationSupport(
   /**
    * Provides the defaults for zoom and pan
    */
-  val zoomAndTranslationDefaults: ZoomAndTranslationDefaults,
+  var zoomAndTranslationDefaults: ZoomAndTranslationDefaults,
   /**
    * The change factor is used to calculate the new zoom level
    */
-  val zoomChangeFactor: @Positive Double = ZoomLevelCalculator.SQRT_2
+  val zoomChangeFactor: @Positive Double = ZoomLevelCalculator.SQRT_2,
 ) {
 
   @Deprecated("Tests only!")
@@ -286,12 +287,12 @@ class ZoomAndTranslationSupport(
   }
 
   /**
-   * Modifies the zoom and pan to show exactly the given range.
+   * Calculates the zoom factor that should be set to fit the provided start/end
    */
-  fun fitX(start: @DomainRelative Double, end: @DomainRelative Double) {
+  fun calculateFitZoomX(start: @DomainRelative Double, end: @DomainRelative Double): @pct Double {
     if (chartState.hasZeroSize) {
       // nothing useful to be done here
-      return
+      return 1.0
     }
     @ContentArea val startContentArea = chartCalculator.domainRelative2contentAreaX(start)
     @ContentArea val endContentArea = chartCalculator.domainRelative2contentAreaX(end)
@@ -300,10 +301,28 @@ class ZoomAndTranslationSupport(
 
     @ContentArea val targetVisibleContentAreaWidth = endContentArea - startContentArea
 
-    val newZoomFactorX = (chartState.windowWidth / targetVisibleContentAreaWidth).or1ifNaN()
-    setZoom(newZoomFactorX = newZoomFactorX)
+    return (chartState.windowWidth / targetVisibleContentAreaWidth).or1ifNaN()
+  }
 
-    setWindowTranslationX(-chartCalculator.domainRelative2zoomedX(start))
+  /**
+   * Calculates the window translation x to fit the provided start
+   */
+  fun calculateFitWindowTranslationX(start: @DomainRelative Double): @Window Double {
+    return -chartCalculator.domainRelative2zoomedX(start)
+  }
+
+
+  /**
+   * Modifies the zoom and pan to show exactly the given range.
+   */
+  fun fitX(start: @DomainRelative Double, end: @DomainRelative Double) {
+    if (chartState.hasZeroSize) {
+      // nothing useful to be done here
+      return
+    }
+
+    setZoom(newZoomFactorX = calculateFitZoomX(start, end))
+    setWindowTranslationX(calculateFitWindowTranslationX(start))
   }
 
   /**

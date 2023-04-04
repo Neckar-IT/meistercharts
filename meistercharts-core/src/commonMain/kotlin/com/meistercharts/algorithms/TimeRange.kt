@@ -45,8 +45,10 @@ class TimeRange(
   /**
    * Returns the span between start and end
    */
-  val span: @ms Double
-    get() = end - start
+  inline val span: @ms Double
+    get() {
+      return delta
+    }
 
   /**
    * Returns true if both timestamps fit within the time range
@@ -73,7 +75,7 @@ class TimeRange(
    * Determines whether this time-range overlaps with [other]
    */
   fun isOverlapping(other: TimeRange): Boolean {
-    return !isNotOverlapping(other)
+    return isNotOverlapping(other).not()
   }
 
   /**
@@ -104,23 +106,22 @@ class TimeRange(
   /**
    * Converts a domain value to domain relative
    */
-  fun time2relative(@Time @ms timeValue: Double): @TimeRelative @pct Double {
-    val delta = timeValue - start
-    return delta / span
+  inline fun time2relative(@Time @ms timeValue: Double): @TimeRelative @pct Double {
+    return toDomainRelative(timeValue)
   }
 
   /**
    * Calculates a delta for a time duration
    */
-  fun time2relativeDelta(@Time @ms duration: Double): @TimeRelative @pct Double {
-    return duration / span
+  inline fun time2relativeDelta(@Time @ms duration: Double): @TimeRelative @pct Double {
+    return deltaToDomainRelative(duration)
   }
 
   /**
    * Converts a domain relative value back to a domain value
    */
-  fun relative2time(@TimeRelative @pct timeRelative: Double): @Time Double {
-    return timeRelative * span + start
+  inline fun relative2time(@TimeRelative @pct timeRelative: Double): @Time Double {
+    return toDomain(timeRelative)
   }
 
   /**
@@ -128,8 +129,8 @@ class TimeRange(
    */
   @ms
   @Time
-  fun relative2timeDelta(@TimeRelative @pct durationRelative: Double): Double {
-    return durationRelative * span
+  inline fun relative2timeDelta(@TimeRelative @pct durationRelative: Double): Double {
+    return deltaToDomain(durationRelative)
   }
 
   /**

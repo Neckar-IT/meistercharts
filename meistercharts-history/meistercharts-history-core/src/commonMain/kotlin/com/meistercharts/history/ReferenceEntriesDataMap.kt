@@ -121,6 +121,10 @@ data class DefaultReferenceEntriesDataMap(
       this.entries[data.id] = data
     }
 
+    fun get(id: ReferenceEntryId): ReferenceEntryData? {
+      return this.entries[id]
+    }
+
     /**
      * Stores all elements
      */
