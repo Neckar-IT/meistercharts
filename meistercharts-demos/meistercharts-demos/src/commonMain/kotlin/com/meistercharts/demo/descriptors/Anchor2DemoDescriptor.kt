@@ -32,6 +32,7 @@ import com.meistercharts.model.Direction
 import com.meistercharts.model.Rectangle
 import com.meistercharts.model.Vicinity
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -69,10 +70,10 @@ class Anchor2DemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 400.0
           }
 
-          configurableEnum("Direction in Shape", layer::directionInShape, enumValues()) {
+          configurableEnum("Direction in Shape", layer::directionInShape, enumEntries()) {
           }
 
-          configurableEnum("Label side", layer::vicinity, enumValues()) {
+          configurableEnum("Label side", layer::vicinity, enumEntries()) {
           }
 
           configurableDouble("Anchor Gap Horizontal", layer::anchorGapHorizontal) {

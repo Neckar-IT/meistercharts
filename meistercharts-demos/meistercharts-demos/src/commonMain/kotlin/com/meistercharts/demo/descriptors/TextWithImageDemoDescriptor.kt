@@ -59,7 +59,7 @@ class TextWithImageDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Image Location", layer.paintableLocation, PaintableLocation.values()) {
+          configurableEnum("Image Location", layer.paintableLocation, PaintableLocation.entries) {
             onChange {
               layer.paintableLocation = it
               markAsDirty()

@@ -51,7 +51,7 @@ class DemoConfigurationFX : DemoConfiguration {
     section.configure()
   }
 
-  override fun <T : Enum<T>> comboBox(name: String, property: ObservableObject<T>, possibleValues: Array<T>) {
+  override fun <T : Enum<T>> comboBox(name: String, property: ObservableObject<T>, possibleValues: List<T>) {
     val fxProperty = property.toJavaFx()
     val comboBox = Components.comboBox<T>(fxProperty, possibleValues)
 

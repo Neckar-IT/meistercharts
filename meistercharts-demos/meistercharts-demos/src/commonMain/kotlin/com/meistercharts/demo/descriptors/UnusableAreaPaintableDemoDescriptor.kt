@@ -28,6 +28,7 @@ import com.meistercharts.demo.configurableEnum
 import com.meistercharts.model.Size
 import com.meistercharts.charts.lizergy.planning.UnusableArea
 import com.meistercharts.charts.lizergy.planning.UnusableAreaPainter
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -72,7 +73,7 @@ class UnusableAreaPaintableDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 1000.0
           }
 
-          configurableEnum("Mode", layer::mode, enumValues())
+          configurableEnum("Mode", layer::mode, enumEntries())
         }
       }
     }

@@ -88,7 +88,7 @@ class TextWithinBoxDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.entries) {
             onChange {
               layer.anchorDirection = it
               markAsDirty()

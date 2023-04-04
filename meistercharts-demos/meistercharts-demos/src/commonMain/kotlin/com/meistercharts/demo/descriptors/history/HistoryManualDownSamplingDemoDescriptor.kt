@@ -61,6 +61,7 @@ import it.neckar.open.kotlin.lang.random
 import it.neckar.open.time.nowMillis
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.observable.ObservableBoolean
 import kotlin.time.Duration.Companion.milliseconds
 import it.neckar.open.time.repeat
@@ -162,7 +163,7 @@ class HistoryManualDownSamplingDemoDescriptor : ChartingDemoDescriptor<Nothing> 
           }
 
           section("Visualization")
-          configurableEnum("Sampling Period to render", samplingPeriodCalculator::samplingPeriod, enumValues()) {
+          configurableEnum("Sampling Period to render", samplingPeriodCalculator::samplingPeriod, enumEntries()) {
             onChange {
               cachedTileProvider.clear()
             }
@@ -210,7 +211,7 @@ class HistoryManualDownSamplingDemoDescriptor : ChartingDemoDescriptor<Nothing> 
           section("Down sampling")
 
           declare {
-            SamplingPeriod.values().forEach {
+            SamplingPeriod.entries.forEach {
               button("Recalculate Downsampling ${it.label}") {
                 val dirtyRanges = downSamplingDirtyRangesCollector.remove(it) ?: return@button
                 downSamplingService.recalculateDownSampling(dirtyRanges, it.toHistoryBucketRange())

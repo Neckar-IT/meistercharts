@@ -85,7 +85,7 @@ class TextMaxLengthDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 500.0
           }
 
-          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.entries) {
             onChange {
               layer.anchorDirection = it
               markAsDirty()

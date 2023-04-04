@@ -42,6 +42,7 @@ import com.meistercharts.model.Direction
 import it.neckar.open.provider.DefaultDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import com.meistercharts.style.Palette
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -320,7 +321,7 @@ class StackedBarPaintableDemoDescriptor : ChartingDemoDescriptor<Orientation> {
             max = 10.0
           }
           configurableBoolean("Visible", paintable.style::showValueLabels)
-          configurableEnum("Anchor Direction", paintable.style::valueLabelAnchorDirection, enumValues())
+          configurableEnum("Anchor Direction", paintable.style::valueLabelAnchorDirection, enumEntries())
           configurableFont("Font", paintable.style::valueLabelFont)
 
 

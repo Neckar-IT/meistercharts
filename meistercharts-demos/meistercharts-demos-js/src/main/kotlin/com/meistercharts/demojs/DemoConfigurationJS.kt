@@ -40,7 +40,7 @@ class DemoConfigurationJS(private val table: HTMLTableElement) : DemoConfigurati
     SectionJS().configure()
   }
 
-  override fun <T : Enum<T>> comboBox(name: String, property: ObservableObject<T>, possibleValues: Array<T>) {
+  override fun <T : Enum<T>> comboBox(name: String, property: ObservableObject<T>, possibleValues: List<T>) {
     table.twoColumnsRow(
       document.label(name),
       document.comboBox(property, possibleValues)

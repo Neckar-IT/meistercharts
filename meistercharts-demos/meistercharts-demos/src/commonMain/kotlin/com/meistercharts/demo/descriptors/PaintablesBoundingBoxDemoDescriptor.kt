@@ -34,6 +34,7 @@ import com.meistercharts.demo.section
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -87,7 +88,7 @@ class PaintablesBoundingBoxDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           }
           layers.addLayer(layer)
 
-          configurableEnum("Object Fit", layer::objectFit, enumValues())
+          configurableEnum("Object Fit", layer::objectFit, enumEntries())
 
           section("Paintable")
           configurableDouble("Width", layer.paintable::width) {

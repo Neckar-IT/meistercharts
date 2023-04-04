@@ -70,6 +70,7 @@ import it.neckar.open.javafx.inScrollPane
 import it.neckar.open.javafx.map
 import it.neckar.open.javafx.toRGBHex
 import it.neckar.open.kotlin.lang.ceil
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.observable.DependentObjects
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble
@@ -423,7 +424,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty.toJavaFx(), AxisOrientationX.values())), "span")
 
     pane.add(Components.label("Snap Configuration"))
-    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty.toJavaFx(), enumValues())), "span")
+    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty.toJavaFx(), enumEntries())), "span")
 
     pane.add(Components.label("Global Tiles Cache"))
     pane.add(Components.label(

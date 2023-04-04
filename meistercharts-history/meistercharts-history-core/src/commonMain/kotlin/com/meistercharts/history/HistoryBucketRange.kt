@@ -162,8 +162,8 @@ enum class HistoryBucketRange(
       return null
     }
 
-    val index = values().indexOf(this)
-    return values()[index - 1]
+    val index = entries.indexOf(this)
+    return entries[index - 1]
   }
 
   /**
@@ -174,8 +174,8 @@ enum class HistoryBucketRange(
       return null
     }
 
-    val index = values().indexOf(this)
-    return values()[index + 1]
+    val index = entries.indexOf(this)
+    return entries[index + 1]
   }
 
   /**

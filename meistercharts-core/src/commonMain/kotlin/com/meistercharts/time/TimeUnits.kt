@@ -29,9 +29,9 @@ enum class TimeUnits(@ms val span: Double, val unit: String) {
   Year(365 * Day.span, "y");
 
   companion object {
-    fun getTimeUnitsAscending(): Array<TimeUnits> = values()
+    fun getTimeUnitsAscending(): List<TimeUnits> = entries
 
-    fun getTimeUnitsDescending(): Array<TimeUnits> = getTimeUnitsAscending().reversedArray()
+    fun getTimeUnitsDescending(): List<TimeUnits> = entries.reversed()
 
     /**
      * Get the largest [TimeUnits] whose span is the same ore less than [span].

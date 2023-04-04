@@ -97,7 +97,7 @@ class TimeLineChartGestaltEnumStylesDemoDescriptor : ChartingDemoDescriptor<Time
           val colors = colorSchemes.getModulo(index)
 
           RectangleEnumStripePainter {
-            aggregationMode = EnumAggregationMode.values().getModulo(index)
+            aggregationMode = EnumAggregationMode.entries.getModulo(index)
             fillProvider = { value: HistoryEnumOrdinal, _: HistoryEnum ->
               colors.getModulo(value.value)
             }
@@ -146,7 +146,7 @@ class TimeLineChartGestaltEnumStylesDemoDescriptor : ChartingDemoDescriptor<Time
               }
             }
 
-            configurableEnum("Aggregation Mode", EnumAggregationMode.values().getModulo(index)) {
+            configurableEnum("Aggregation Mode", EnumAggregationMode.entries.getModulo(index)) {
               onChange {
                 enumBarPainters[index].configuration.aggregationMode = it
                 markAsDirty()

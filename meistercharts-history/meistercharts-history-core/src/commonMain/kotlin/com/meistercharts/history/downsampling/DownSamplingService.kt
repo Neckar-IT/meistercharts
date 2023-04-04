@@ -49,7 +49,7 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
    * Recalculates the down sampling for a sampling periods
    */
   fun recalculateDownSampling(dirtyRangesCollector: DownSamplingDirtyRangesCollector) {
-    SamplingPeriod.values().fastForEach {
+    SamplingPeriod.entries.fastForEach {
       val dirtyTimeRanges = dirtyRangesCollector.remove(it) ?: return@fastForEach
       recalculateDownSampling(dirtyTimeRanges, it.toHistoryBucketRange())
     }
@@ -191,7 +191,7 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
   fun calculateDownSamplingIfRequired(
     downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector = dirtyRangesCollector,
   ) {
-    SamplingPeriod.values().fastForEach { samplingPeriod ->
+    SamplingPeriod.entries.fastForEach { samplingPeriod ->
       val dirtyTimeRanges = downSamplingDirtyRangesCollector[samplingPeriod] ?: return@fastForEach
 
       if (isDownSamplingRequired(dirtyTimeRanges, samplingPeriod)) {

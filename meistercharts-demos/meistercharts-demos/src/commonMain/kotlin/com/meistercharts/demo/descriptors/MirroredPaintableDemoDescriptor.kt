@@ -31,6 +31,7 @@ import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.section
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -70,7 +71,7 @@ class MirroredPaintableDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
           section("Mirror Axis")
 
-          configurableEnum("Mirror Axis", mirrorAxis, enumValues()) {
+          configurableEnum("Mirror Axis", mirrorAxis, enumEntries()) {
             onChange {
               mirrorAxis = it
               markAsDirty()

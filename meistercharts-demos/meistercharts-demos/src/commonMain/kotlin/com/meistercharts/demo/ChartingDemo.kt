@@ -47,6 +47,7 @@ import it.neckar.open.observable.ObservableObject
 import com.meistercharts.style.BoxStyle
 import it.neckar.financial.currency.Money
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.kotlin.lang.enumEntries
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.math.PI
@@ -1048,7 +1049,7 @@ fun ChartingDemo.configurableBoolean(
 inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
   propertyName: String,
   property: ObservableObject<T>,
-  possibleValues: Array<T> = enumValues(),
+  possibleValues: List<T> = enumEntries(),
   crossinline config: ConfigurableEnum<T>.() -> Unit = {},
 ) {
   contract {
@@ -1075,7 +1076,7 @@ inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
 inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
   propertyName: String,
   property: KMutableProperty0<T>,
-  possibleValues: Array<T> = enumValues(),
+  possibleValues: List<T> = enumEntries(),
   crossinline config: ConfigurableEnum<T>.() -> Unit = {},
 ) {
   contract {
@@ -1096,7 +1097,7 @@ inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
 inline fun <reified T : Enum<T>> ChartingDemo.configurableEnumProvider(
   propertyName: String,
   property: KMutableProperty0<() -> T>,
-  possibleValues: Array<T> = enumValues(),
+  possibleValues: List<T> = enumEntries(),
   crossinline config: ConfigurableEnum<T>.() -> Unit = {},
 ) {
   contract {
@@ -1112,33 +1113,6 @@ inline fun <reified T : Enum<T>> ChartingDemo.configurableEnumProvider(
   }
 }
 
-@DemoDeclaration
-inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
-  propertyName: String,
-  property: KMutableProperty0<T>,
-  possibleValues: List<T>,
-  crossinline config: ConfigurableEnum<T>.() -> Unit = {},
-) {
-  contract {
-    callsInPlace(config, InvocationKind.EXACTLY_ONCE)
-  }
-
-  configurableEnum(propertyName, property, possibleValues.toTypedArray(), config)
-}
-
-/**
- * Helper methods that creates the combo box using a list (usually a sub list
- */
-@DemoDeclaration
-inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
-  propertyName: String,
-  initial: T,
-  possibleValues: List<T>,
-  config: ConfigurableEnum<T>.() -> Unit = {},
-) {
-  configurableEnum(propertyName, initial, possibleValues.toTypedArray(), config)
-}
-
 /**
  * Adds a configurable enum value
  */
@@ -1146,7 +1120,7 @@ inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
 inline fun <reified T : Enum<T>> ChartingDemo.configurableEnum(
   propertyName: String,
   initial: T,
-  possibleValues: Array<T> = enumValues(),
+  possibleValues: List<T> = enumEntries(),
   config: ConfigurableEnum<T>.() -> Unit = {},
 ) {
   contract {
@@ -1772,13 +1746,13 @@ fun ChartingDemo.configurableFont(
     }
   }
 
-  configurableEnum("Style", configurableFont.fontStyleProperty.value, FontStyle.values()) {
+  configurableEnum("Style", configurableFont.fontStyleProperty.value, FontStyle.entries) {
     onChange {
       configurableFont.fontStyleProperty.value = it
     }
   }
 
-  configurableEnum("Variant", configurableFont.fontVariantProperty.value, FontVariant.values()) {
+  configurableEnum("Variant", configurableFont.fontVariantProperty.value, FontVariant.entries) {
     onChange {
       configurableFont.fontVariantProperty.value = it
     }

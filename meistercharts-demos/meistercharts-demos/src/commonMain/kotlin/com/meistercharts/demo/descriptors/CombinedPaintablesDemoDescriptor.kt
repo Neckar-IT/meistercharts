@@ -32,6 +32,7 @@ import com.meistercharts.model.Direction
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Size
 import com.meistercharts.resources.svg.SvgPaintableProviders
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -128,7 +129,7 @@ class CombinedPaintablesDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Anchor Direction", anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", anchorDirection, enumEntries()) {
             onChange {
               anchorDirection = it
               markAsDirty()

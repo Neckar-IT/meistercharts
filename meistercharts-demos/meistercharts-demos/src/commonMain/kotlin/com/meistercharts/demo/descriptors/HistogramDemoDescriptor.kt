@@ -260,14 +260,14 @@ class HistogramDemoDescriptor : ChartingDemoDescriptor<HistogramDemoDescriptor.H
             max = 250.0
           }
 
-          configurableEnum("Value axis side", gestalt.valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Value axis side", gestalt.valueAxisLayer.style.side, Side.entries) {
             onChange {
               gestalt.valueAxisLayer.style.side = it
               markAsDirty()
             }
           }
 
-          configurableEnum("Category axis side", gestalt.categoryAxisLayer.style.side, Side.values()) {
+          configurableEnum("Category axis side", gestalt.categoryAxisLayer.style.side, Side.entries) {
             onChange {
               gestalt.categoryAxisLayer.style.side = it
               markAsDirty()

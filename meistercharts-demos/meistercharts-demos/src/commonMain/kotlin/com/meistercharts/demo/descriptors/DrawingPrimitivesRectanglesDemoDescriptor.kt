@@ -32,6 +32,7 @@ import com.meistercharts.demo.configurableBoolean
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.model.Direction
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -105,7 +106,7 @@ class DrawingPrimitivesRectanglesDemoDescriptor : ChartingDemoDescriptor<Nothing
             max = 800.0
           }
 
-          configurableEnum("Anchor Direction", layer::anchorDirection, enumValues())
+          configurableEnum("Anchor Direction", layer::anchorDirection, enumEntries())
 
           configurableDouble("anchorGap Horizontal", layer::anchorGapHorizontal) {
             max = 800.0
@@ -114,7 +115,7 @@ class DrawingPrimitivesRectanglesDemoDescriptor : ChartingDemoDescriptor<Nothing
             max = 800.0
           }
 
-          configurableEnum("stroke location", layer::strokeLocation, enumValues())
+          configurableEnum("stroke location", layer::strokeLocation, enumEntries())
 
           configurableDouble("line width", layer::lineWidth) {
             max = 20.0

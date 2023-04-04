@@ -123,7 +123,7 @@ class ChartingDemosWithNavigationJS : AbstractChartingDemosJS() {
     val byCategory = getDemoDescriptors().groupBy {
       it.category
     }
-    DemoCategory.values().forEach { category ->
+    DemoCategory.entries.forEach { category ->
       val descriptors = byCategory[category] ?: return@forEach
       val categoryLabel = document.createElement("H5") as HTMLElement
       categoryLabel.classList.add("categoryLabel")

@@ -109,7 +109,7 @@ class LineChartLayerDemoDescriptor : ChartingDemoDescriptor<Int> {
           configurableLine(lineStyles, 2)
 
 
-          //configurableEnum("Point style", configurableTrace.pointStyle, PointStyle.values()) {
+          //configurableEnum("Point style", configurableTrace.pointStyle, enumEntries()) {
           //  onChange {
           //    configurableTrace.pointStyle = it
           //    markAsDirty()

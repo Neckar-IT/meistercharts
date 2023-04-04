@@ -38,6 +38,7 @@ import com.meistercharts.model.Distance
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Demos that visualizes the functionality of a multi line text
@@ -80,7 +81,7 @@ class MultiLineText3DemoDescriptor : ChartingDemoDescriptor<Nothing> {
           var anchorPointProviderDistanceX = 0.0
           var anchorPointProviderDistanceY = 0.0
 
-          configurableEnum("Anchor Point Provider Direction", anchorPointProviderDirection, enumValues()) {
+          configurableEnum("Anchor Point Provider Direction", anchorPointProviderDirection, enumEntries()) {
             onChange {
               anchorPointProviderDirection = it
 
@@ -110,7 +111,7 @@ class MultiLineText3DemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Anchor Direction", layer.style.anchorDirection, enumValues()) {
+          configurableEnum("Anchor Direction", layer.style.anchorDirection, enumEntries()) {
             onChange {
               layer.style.anchorDirection = it
               markAsDirty()
@@ -149,7 +150,7 @@ class MultiLineText3DemoDescriptor : ChartingDemoDescriptor<Nothing> {
           configurableEnum(
             "Text alignment",
             initial = layer.style.horizontalAlignment,
-            possibleValues = HorizontalAlignment.values()
+            possibleValues = HorizontalAlignment.entries
           ) {
             onChange { newValue ->
               layer.style.horizontalAlignment = newValue

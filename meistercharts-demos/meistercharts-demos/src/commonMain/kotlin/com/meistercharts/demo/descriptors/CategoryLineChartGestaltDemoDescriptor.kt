@@ -49,6 +49,7 @@ import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.i18n.TextKey
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 class CategoryLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<(gestalt: CategoryLineChartGestalt) -> Unit> {
   override val name: String = "Category Line Chart"
@@ -218,7 +219,7 @@ class CategoryLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<(gestalt: 
             max = 200.0
           }
 
-          configurableEnum("Axis scale", if (defaultValueRange is LinearValueRange) ValueAxisScale.Linear else ValueAxisScale.Logarithmic, enumValues()) {
+          configurableEnum("Axis scale", if (defaultValueRange is LinearValueRange) ValueAxisScale.Linear else ValueAxisScale.Logarithmic, enumEntries()) {
             onChange {
               when (it) {
                 ValueAxisScale.Linear -> gestalt.configuration.valueRange = ValueRange.linear(defaultValueRange.start, defaultValueRange.end)

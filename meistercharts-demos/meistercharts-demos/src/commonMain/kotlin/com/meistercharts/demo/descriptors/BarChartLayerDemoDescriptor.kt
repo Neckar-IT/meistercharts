@@ -50,6 +50,7 @@ import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.observable.ObservableBoolean
 import com.meistercharts.resources.Icons
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -148,7 +149,7 @@ class BarChartLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 200.0
           }
 
-          configurableEnum("Orientation", categoryLayer.style::orientation, CategoryChartOrientation.values()) {
+          configurableEnum("Orientation", categoryLayer.style::orientation, enumEntries()) {
             onChange {
               categoryAxisLayer.style.side = when (it.categoryOrientation) {
                 Orientation.Vertical -> Side.Bottom

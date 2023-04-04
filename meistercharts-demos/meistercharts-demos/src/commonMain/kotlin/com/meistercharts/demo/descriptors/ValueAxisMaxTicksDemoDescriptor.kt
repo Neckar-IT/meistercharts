@@ -84,7 +84,7 @@ class ValueAxisMaxTicksDemoDescriptor() : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Side", valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Side", valueAxisLayer.style.side, Side.entries) {
             onChange {
               valueAxisLayer.style.side = it
               markAsDirty()
@@ -118,19 +118,19 @@ class ValueAxisMaxTicksDemoDescriptor() : ChartingDemoDescriptor<Nothing> {
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", valueAxisLayer.style.paintRange, AxisStyle.PaintRange.values()) {
+          configurableEnum("Paint Range", valueAxisLayer.style.paintRange, AxisStyle.PaintRange.entries) {
             onChange {
               valueAxisLayer.style.paintRange = it
               markAsDirty()
             }
           }
-          configurableEnum("Tick Orientation", valueAxisLayer.style.tickOrientation, Vicinity.values()) {
+          configurableEnum("Tick Orientation", valueAxisLayer.style.tickOrientation, Vicinity.entries) {
             onChange {
               valueAxisLayer.style.tickOrientation = it
               markAsDirty()
             }
           }
-          configurableEnum("Axis End", valueAxisLayer.style.axisEndConfiguration, AxisEndConfiguration.values()) {
+          configurableEnum("Axis End", valueAxisLayer.style.axisEndConfiguration, AxisEndConfiguration.entries) {
             onChange {
               valueAxisLayer.style.axisEndConfiguration = it
               markAsDirty()

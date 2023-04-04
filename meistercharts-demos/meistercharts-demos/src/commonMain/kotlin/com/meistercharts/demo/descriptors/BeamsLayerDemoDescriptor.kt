@@ -35,6 +35,8 @@ import com.meistercharts.demo.configurableInt
 import com.meistercharts.model.Size
 import it.neckar.open.collections.getModulo
 import com.meistercharts.events.ModifierCombination
+import it.neckar.open.kotlin.lang.enumEntries
+import it.neckar.open.kotlin.lang.getModulo
 
 /**
  *
@@ -81,7 +83,7 @@ class BeamsLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           configurableInt("Beam count", myBeamProvider::count) {
             max = 30
           }
-          configurableEnum("Cross Beams", myBeamProvider::crossBeamsConfig, enumValues()) {
+          configurableEnum("Cross Beams", myBeamProvider::crossBeamsConfig, enumEntries()) {
           }
 
           configurableDouble("beams distance", beamsLayer.style::beamsDistance) {
@@ -124,7 +126,7 @@ class MyBeamProvider : BeamProvider {
   override var crossBeamsConfig: CrossBeamsConfig = CrossBeamsConfig.None
 
   override fun beamState(index: Int): BeamState {
-    return BeamState.values().getModulo(index)
+    return BeamState.entries.getModulo(index)
   }
 
   override fun label(index: Int): String? {

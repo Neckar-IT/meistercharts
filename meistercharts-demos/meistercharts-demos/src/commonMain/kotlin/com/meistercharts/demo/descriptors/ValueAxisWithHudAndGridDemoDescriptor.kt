@@ -32,6 +32,7 @@ import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableInsets
 import com.meistercharts.demo.configurableInt
 import com.meistercharts.model.Side
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 
@@ -129,7 +130,7 @@ class ValueAxisWithHudAndGridDemoDescriptor : ChartingDemoDescriptor<ValueAxisDe
             section("Layout")
           }
 
-          configurableEnum("Side", valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Side", valueAxisLayer.style.side, Side.entries) {
             onChange {
               valueAxisLayer.style.side = it
               markAsDirty()
@@ -168,11 +169,11 @@ class ValueAxisWithHudAndGridDemoDescriptor : ChartingDemoDescriptor<ValueAxisDe
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumValues()) {
+          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumEntries()) {
           }
-          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumEntries()) {
           }
-          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumValues()) {
+          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumEntries()) {
           }
 
           declare {

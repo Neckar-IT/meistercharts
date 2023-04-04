@@ -42,6 +42,7 @@ import com.meistercharts.demo.configurableList
 import com.meistercharts.model.RotationDirection
 import com.meistercharts.model.Size
 import com.meistercharts.provider.ValueRangeProvider
+import it.neckar.open.kotlin.lang.enumEntries
 
 class GaugePaintableDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Compass"
@@ -191,7 +192,7 @@ class GaugePaintableDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 7.0
           }
 
-          configurableEnum("direction", style::rotationDirection, enumValues()) {
+          configurableEnum("direction", style::rotationDirection, enumEntries()) {
           }
 
           configurableDouble("width/height", paintable.size.height) {

@@ -37,6 +37,7 @@ import com.meistercharts.demo.configurableInsets
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.provider.BooleanProvider
 
 /**
@@ -128,19 +129,19 @@ class ValueAxisAtContentAreaDemoDescriptor(
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", leftValueAxisLayer.style::paintRange, enumValues()) {
+          configurableEnum("Paint Range", leftValueAxisLayer.style::paintRange, enumEntries()) {
             onChange {
               bottomValueAxisLayer.style.paintRange = it
               markAsDirty()
             }
           }
-          configurableEnum("Tick Orientation", leftValueAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick Orientation", leftValueAxisLayer.style::tickOrientation, enumEntries()) {
             onChange {
               bottomValueAxisLayer.style.tickOrientation = it
               markAsDirty()
             }
           }
-          configurableEnum("Axis End", leftValueAxisLayer.style::axisEndConfiguration, enumValues()) {
+          configurableEnum("Axis End", leftValueAxisLayer.style::axisEndConfiguration, enumEntries()) {
             onChange {
               bottomValueAxisLayer.style.axisEndConfiguration = it
               markAsDirty()

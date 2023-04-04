@@ -49,6 +49,7 @@ import it.neckar.open.formatting.decimalFormat2digits
 import it.neckar.open.i18n.TextKey
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
+import it.neckar.open.kotlin.lang.enumEntries
 
 class BarChartSingleDemoDescriptor : ChartingDemoDescriptor<(gestalt: BarChartGroupedGestalt) -> Unit> {
 
@@ -206,14 +207,14 @@ class BarChartSingleDemoDescriptor : ChartingDemoDescriptor<(gestalt: BarChartGr
             max = 1000.0
           }
 
-          configurableEnum("Value axis side", gestalt.valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Value axis side", gestalt.valueAxisLayer.style.side, enumEntries()) {
             onChange {
               gestalt.valueAxisLayer.style.side = it
               markAsDirty()
             }
           }
 
-          configurableEnum("Category axis side", gestalt.categoryAxisLayer.style.side, Side.values()) {
+          configurableEnum("Category axis side", gestalt.categoryAxisLayer.style.side, enumEntries()) {
             onChange {
               gestalt.categoryAxisLayer.style.side = it
               markAsDirty()

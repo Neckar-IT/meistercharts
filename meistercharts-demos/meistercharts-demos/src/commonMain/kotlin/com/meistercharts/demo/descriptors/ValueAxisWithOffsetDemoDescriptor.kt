@@ -42,6 +42,7 @@ import com.meistercharts.model.Direction
 import com.meistercharts.model.Vicinity
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.format
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Very simple demo that shows how to work with a value axis layer
@@ -111,10 +112,10 @@ class ValueAxisWithOffsetDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             section("Axis Config")
           }
 
-          configurableEnum("Tick Orientation", valueAxisWithOffsetLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick Orientation", valueAxisWithOffsetLayer.style::tickOrientation, enumEntries()) {
             value = Vicinity.Outside
           }
-          configurableEnum("Axis End", valueAxisWithOffsetLayer.style::axisEndConfiguration, enumValues()) {
+          configurableEnum("Axis End", valueAxisWithOffsetLayer.style::axisEndConfiguration, enumEntries()) {
           }
 
           declare {

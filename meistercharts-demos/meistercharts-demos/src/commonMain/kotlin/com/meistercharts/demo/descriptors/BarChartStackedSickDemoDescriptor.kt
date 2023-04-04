@@ -47,6 +47,7 @@ import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
 import com.meistercharts.style.Palette
+import it.neckar.open.kotlin.lang.enumEntries
 
 class BarChartStackedSickDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Bar Chart Stacked - SICK"
@@ -122,7 +123,7 @@ class BarChartStackedSickDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           }
           layers.addLayer(categoryAxisLayer)
 
-          configurableEnum("Orientation", categoryLayer.style::orientation, CategoryChartOrientation.values()) {
+          configurableEnum("Orientation", categoryLayer.style::orientation, enumEntries()) {
             onChange {
               categoryAxisLayer.style.side = when (it.categoryOrientation) {
                 Orientation.Vertical -> Side.Bottom
@@ -175,7 +176,7 @@ class BarChartStackedSickDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 100.0
           }
 
-          configurableEnum("Value labels anchor direction", stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumValues()) {
+          configurableEnum("Value labels anchor direction", stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumEntries()) {
           }
 
           declare {

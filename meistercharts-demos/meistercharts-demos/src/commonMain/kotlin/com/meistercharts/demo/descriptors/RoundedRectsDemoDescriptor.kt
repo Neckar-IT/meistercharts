@@ -29,6 +29,7 @@ import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.unit.other.px
 
 /**
@@ -57,7 +58,7 @@ class RoundedRectsDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 20.0
           }
 
-          configurableEnum("Stroke Location", gradientLayer.style::strokeLocation, enumValues())
+          configurableEnum("Stroke Location", gradientLayer.style::strokeLocation, enumEntries())
 
           configurableDouble("width", gradientLayer::width) {
             min = -100.0

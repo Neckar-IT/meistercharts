@@ -36,6 +36,7 @@ import com.meistercharts.charts.lizergy.planning.PvRoofPlanningGestalt
 import com.meistercharts.charts.lizergy.planning.PvRoofPlanningModel
 import com.meistercharts.charts.lizergy.planning.UnusableArea
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 import kotlin.math.roundToInt
 
 /**
@@ -75,7 +76,7 @@ class PvRoofPlanningDemoDescriptor : ChartingDemoDescriptor<() -> PvRoofPlanning
           }
         }
 
-        configurableEnum("Mode", gestalt.pvRoofPlanningLayer.style::mode, enumValues())
+        configurableEnum("Mode", gestalt.pvRoofPlanningLayer.style::mode, enumEntries())
 
         section("Roof")
 

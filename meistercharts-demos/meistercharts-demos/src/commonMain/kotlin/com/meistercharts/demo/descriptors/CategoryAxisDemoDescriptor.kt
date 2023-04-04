@@ -54,6 +54,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 import it.neckar.open.observable.ObservableObject
 import com.meistercharts.resources.Icons
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Demonstrates the usage of the [CategoryAxisLayer]
@@ -138,7 +139,7 @@ class CategoryAxisDemoDescriptor : ChartingDemoDescriptor<CategoryAxisDemoConfig
             }
           }
 
-          configurableEnum("Paint Range", categoryAxisLayer.style::paintRange, enumValues()) {
+          configurableEnum("Paint Range", categoryAxisLayer.style::paintRange, enumEntries()) {
           }
 
           section("Content Viewport Margin")
@@ -177,7 +178,7 @@ class CategoryAxisDemoDescriptor : ChartingDemoDescriptor<CategoryAxisDemoConfig
             }
           }
 
-          configurableEnum("Axis side", axisSideProperty, enumValues())
+          configurableEnum("Axis side", axisSideProperty, enumEntries())
 
           configurableDouble("Axis size", categoryAxisLayer.style::size) {
             max = 300.0
@@ -226,7 +227,7 @@ class CategoryAxisDemoDescriptor : ChartingDemoDescriptor<CategoryAxisDemoConfig
 
           configurableColorPickerProvider("Tick label color", categoryAxisLayer.style::tickLabelColor)
 
-          configurableEnum("Tick orientation", categoryAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick orientation", categoryAxisLayer.style::tickOrientation, enumEntries()) {
           }
 
           configurableDouble("Tick line width", categoryAxisLayer.style::tickLineWidth) {
@@ -276,8 +277,8 @@ data class CategoryAxisDemoConfig(
   companion object {
     fun createConfigs(): List<PredefinedConfiguration<CategoryAxisDemoConfig>> {
       return buildList {
-        Side.values().fastForEach { side ->
-          Vicinity.values().fastForEach { axisTickOrientation ->
+        Side.entries.fastForEach { side ->
+          Vicinity.entries.fastForEach { axisTickOrientation ->
             add(PredefinedConfiguration(CategoryAxisDemoConfig(side, axisTickOrientation)))
           }
         }

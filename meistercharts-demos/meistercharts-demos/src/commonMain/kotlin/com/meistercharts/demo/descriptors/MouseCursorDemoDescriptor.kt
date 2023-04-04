@@ -49,8 +49,7 @@ class MouseCursorDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           layers.addClearBackground()
 
           //All available mouse cursors
-          val mouseCursors = MouseCursor.values()
-
+          val mouseCursors = MouseCursor.entries
 
           val myLayer = object : AbstractLayer() {
             override val type: LayerType = LayerType.Content
@@ -92,7 +91,7 @@ class MouseCursorDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           layers.addLayer(myLayer)
         }
 
-        //layerSupport.chartSupport.canvas.mouseCursor.toJavaFx(), MouseCursor.values()
+        //layerSupport.chartSupport.canvas.mouseCursor.toJavaFx(), enumEntries()
       }
     }
   }

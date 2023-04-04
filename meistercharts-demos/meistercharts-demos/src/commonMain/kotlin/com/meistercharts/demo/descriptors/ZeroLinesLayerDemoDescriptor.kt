@@ -26,6 +26,7 @@ import com.meistercharts.demo.configurableColor
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.model.Insets
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -48,7 +49,7 @@ class ZeroLinesLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           val zeroLinesLayer = ZeroLinesLayer()
           layers.addLayer(zeroLinesLayer)
 
-          configurableEnum("Axis to paint", zeroLinesLayer.style::axisToPaint, enumValues())
+          configurableEnum("Axis to paint", zeroLinesLayer.style::axisToPaint, enumEntries())
           configurableDouble("Line width", zeroLinesLayer.style::lineWidth) {
             max = 10.0
           }

@@ -34,7 +34,7 @@ interface DemoConfiguration {
   fun <T : Enum<T>> comboBox(
     name: String,
     property: ObservableObject<T>,
-    possibleValues: Array<T>
+    possibleValues: List<T>,
   )
 
   fun <T> comboBox(
@@ -76,7 +76,7 @@ interface DemoConfiguration {
   )
 
   /**
-   * Creates a check box
+   * Creates a checkbox
    */
   fun checkBox(
     name: String,

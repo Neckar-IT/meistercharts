@@ -28,6 +28,7 @@ import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableFont
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.enumEntries
 
 class BarChartStackedLabelDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
@@ -75,7 +76,7 @@ class BarChartStackedLabelDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 100.0
           }
 
-          configurableEnum("Label anchor direction", gestalt.stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumValues())
+          configurableEnum("Label anchor direction", gestalt.stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumEntries())
 
           configurableDouble("Label gap Horizontal", gestalt.stackedBarsPainter.stackedBarPaintable.style::valueLabelGapHorizontal) {
             min = 0.0

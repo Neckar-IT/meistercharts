@@ -165,13 +165,13 @@ class ThresholdsLayerDemoDescriptor : ChartingDemoDescriptor<Orientation> {
           configurableBoolean("Show", layer.style::showThresholdLabel)
           configurableColorPicker("Color", layer.style::textColor)
           configurableFont("Font", layer.style::font)
-          configurableList("Anchor location", (layer.style.anchorPointProvider as DirectionBasedBasePointProvider).direction, Direction.values().toList()) {
+          configurableList("Anchor location", (layer.style.anchorPointProvider as DirectionBasedBasePointProvider).direction, Direction.entries) {
             onChange {
               layer.style.anchorPointProvider = DirectionBasedBasePointProvider(it)
               markAsDirty()
             }
           }
-          configurableListWithProperty("Anchor direction", layer.style::anchorDirection, Direction.values().toList())
+          configurableListWithProperty("Anchor direction", layer.style::anchorDirection, Direction.entries)
           configurableDouble("Anchor gap", layer.style::anchorGapHorizontal) {
             min = 0.0
             max = 100.0
@@ -180,7 +180,7 @@ class ThresholdsLayerDemoDescriptor : ChartingDemoDescriptor<Orientation> {
             min = 0.0
             max = 100.0
           }
-          configurableListWithProperty("H-Alignment", layer.style::horizontalAlignment, HorizontalAlignment.values().toList())
+          configurableListWithProperty("H-Alignment", layer.style::horizontalAlignment, HorizontalAlignment.entries)
           configurableDouble("Line spacing", layer.style.lineSpacing.percentage) {
             min = 0.0
             max = 10.0
@@ -215,7 +215,7 @@ class ThresholdsLayerDemoDescriptor : ChartingDemoDescriptor<Orientation> {
             }
           }
 
-          configurableList("Line join", lineStyle.lineJoin, LineJoin.values().toList()) {
+          configurableList("Line join", lineStyle.lineJoin, LineJoin.entries) {
             onChange {
               lineStyle = lineStyle.copy(lineJoin = it)
               markAsDirty()

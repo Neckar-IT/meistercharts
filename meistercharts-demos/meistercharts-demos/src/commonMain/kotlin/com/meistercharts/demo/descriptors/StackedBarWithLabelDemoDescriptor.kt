@@ -34,6 +34,7 @@ import com.meistercharts.demo.configurableFont
 import com.meistercharts.demo.section
 import it.neckar.open.provider.DefaultDoublesProvider
 import com.meistercharts.style.Palette.chartColors
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -104,7 +105,7 @@ class StackedBarWithLabelDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           max = 10.0
         }
         configurableBoolean("Visible", paintable.stackedBarPaintable.style::showValueLabels)
-        configurableEnum("Anchor Direction", paintable.stackedBarPaintable.style::valueLabelAnchorDirection, enumValues())
+        configurableEnum("Anchor Direction", paintable.stackedBarPaintable.style::valueLabelAnchorDirection, enumEntries())
         configurableFont("Font", paintable.stackedBarPaintable.style::valueLabelFont)
 
 

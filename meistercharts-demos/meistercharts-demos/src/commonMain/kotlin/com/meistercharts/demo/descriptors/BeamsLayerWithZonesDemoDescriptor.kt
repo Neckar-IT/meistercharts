@@ -37,6 +37,7 @@ import com.meistercharts.demo.configurableInt
 import com.meistercharts.demo.section
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Size
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -104,7 +105,7 @@ class BeamsLayerWithZonesDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           configurableInt("Beam count", myBeamProvider::count) {
             max = 30
           }
-          configurableEnum("Cross Beams", myBeamProvider::crossBeamsConfig, enumValues()) {
+          configurableEnum("Cross Beams", myBeamProvider::crossBeamsConfig, enumEntries()) {
           }
 
           configurableDouble("beams distance", beamsLayer.style::beamsDistance) {

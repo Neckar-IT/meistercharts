@@ -111,19 +111,19 @@ class ThresholdsSupportDemoDescriptor : ChartingDemoDescriptor<Nothing> {
         configure {
           layers.addClearBackground()
 
-          val result = valueAxisSupport.addMultipleLayers(layers, MyKeyEnum.values().toList())
+          val result = valueAxisSupport.addMultipleLayers(layers, MyKeyEnum.entries)
           result.multiValueAxisLayer.configuration.background = Color.lightgray.withAlpha(0.5).asProvider()
 
           val linesDelegateLayer = MultipleLayersDelegatingLayer(
             SizedProvider.forList(
-              MyKeyEnum.values().map {
+              MyKeyEnum.entries.map {
                 support.getThresholdLinesLayer(it)
               }
             )
           )
           val hudDelegateLayer = MultipleLayersDelegatingLayer(
             SizedProvider.forList(
-              MyKeyEnum.values().map {
+              MyKeyEnum.entries.map {
                 support.getHudLayer(it)
               }
             )

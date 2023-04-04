@@ -29,6 +29,7 @@ import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.model.RotationDirection
+import it.neckar.open.kotlin.lang.enumEntries
 import kotlin.math.PI
 
 /**
@@ -74,7 +75,7 @@ class DrawingPrimitivesArcsDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           })
 
 
-          configurableEnum("Rotation direction", rotationDirection, enumValues()) {
+          configurableEnum("Rotation direction", rotationDirection, enumEntries()) {
             onChange {
               rotationDirection = it
               markAsDirty()
@@ -108,7 +109,7 @@ class DrawingPrimitivesArcsDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("arcType", arcType, ArcType.values()) {
+          configurableEnum("arcType", arcType, ArcType.entries) {
             onChange {
               arcType = it
               markAsDirty()

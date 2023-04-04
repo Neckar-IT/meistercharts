@@ -44,6 +44,7 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Very simple demo that shows how to work with a value axis layer
@@ -88,7 +89,7 @@ class ValueAxisDemoDescriptor : ChartingDemoDescriptor<ValueAxisDemoConfig> {
             section("Layout")
           }
 
-          configurableEnum("Side", valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Side", valueAxisLayer.style.side, Side.entries) {
             onChange {
               valueAxisLayer.style.side = it
               markAsDirty()
@@ -129,11 +130,11 @@ class ValueAxisDemoDescriptor : ChartingDemoDescriptor<ValueAxisDemoConfig> {
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumValues()) {
+          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumEntries()) {
           }
-          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumEntries()) {
           }
-          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumValues()) {
+          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumEntries()) {
           }
 
           declare {
@@ -226,8 +227,8 @@ data class ValueAxisDemoConfig(
           ValueRange.logarithmic(0.01, 10000.0)
         )
         valueRanges.fastForEach { valueRange ->
-          Side.values().fastForEach { side ->
-            Vicinity.values().fastForEach { axisTickOrientation ->
+          Side.entries.fastForEach { side ->
+            Vicinity.entries.fastForEach { axisTickOrientation ->
               add(PredefinedConfiguration(ValueAxisDemoConfig(side, axisTickOrientation, valueRange)))
             }
           }

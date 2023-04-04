@@ -31,6 +31,7 @@ import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.section
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -71,7 +72,7 @@ class WithAxisOrientationPaintableDemoDescriptor : ChartingDemoDescriptor<Nothin
 
           section("Flip Axis Orientation")
 
-          configurableEnum("Flipped Orientations for", changedAxis, enumValues()) {
+          configurableEnum("Flipped Orientations for", changedAxis, enumEntries()) {
             onChange {
               changedAxis = it
               markAsDirty()

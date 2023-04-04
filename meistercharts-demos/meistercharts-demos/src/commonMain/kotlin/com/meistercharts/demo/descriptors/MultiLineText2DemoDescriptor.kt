@@ -50,7 +50,7 @@ class MultiLineText2DemoDescriptor : ChartingDemoDescriptor<Nothing> {
         configure {
           layers.addClearBackground()
 
-          val layers = Direction.values().map { anchorDirection ->
+          val layers = Direction.entries.map { anchorDirection ->
             layers.addTextUnresolved(texts) {
               anchorPointProvider = DirectionBasedBasePointProvider(anchorDirection)
               this.anchorDirection = anchorDirection //ensure the hole text is visible
@@ -95,7 +95,7 @@ class MultiLineText2DemoDescriptor : ChartingDemoDescriptor<Nothing> {
           configurableEnum(
             "Text alignment",
             initial = layers[0].style.horizontalAlignment,
-            possibleValues = HorizontalAlignment.values()
+            possibleValues = HorizontalAlignment.entries
           ) {
             onChange { newValue ->
               layers.forEach {

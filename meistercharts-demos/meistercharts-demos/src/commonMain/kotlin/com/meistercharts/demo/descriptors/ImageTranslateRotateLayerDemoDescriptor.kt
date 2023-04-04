@@ -103,7 +103,7 @@ class ImageTranslateRotateLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> 
             }
           }
 
-          configurableEnum("Direction", layer.style.direction, Direction.values()) {
+          configurableEnum("Direction", layer.style.direction, Direction.entries) {
             onChange {
               layer.style.direction = it
               markAsDirty()

@@ -281,7 +281,7 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
           configurableEnum("Split lines mode", (gestalt.enumCategoryAxisLayer.style.axisLabelPainter as DefaultCategoryAxisLabelPainter).style::wrapMode) {
           }
 
-          configurableEnum("snap", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.values()) {
+          configurableEnum("snap", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.entries) {
             onChange {
               chartSupport.pixelSnapSupport.snapConfiguration = it
               markAsDirty()

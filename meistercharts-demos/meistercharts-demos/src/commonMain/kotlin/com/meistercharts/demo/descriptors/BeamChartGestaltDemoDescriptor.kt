@@ -64,7 +64,7 @@ class BeamChartGestaltDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           max = 240
         }
 
-        configurableEnum("Connector Location", gestalt.beamsLayer.style::connectorLocation, arrayOf(VerticalAlignment.Bottom, VerticalAlignment.Top))
+        configurableEnum("Connector Location", gestalt.beamsLayer.style::connectorLocation, listOf(VerticalAlignment.Bottom, VerticalAlignment.Top))
       }
     }
   }

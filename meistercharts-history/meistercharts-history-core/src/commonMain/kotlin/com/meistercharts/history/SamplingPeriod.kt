@@ -152,7 +152,7 @@ enum class SamplingPeriod(
      * Returns the first sampling period that has a distance same or smaller than the given one
      */
     fun withMaxDistance(maxDistance: @ms Double): SamplingPeriod {
-      values().fastForEachReversed {
+      entries.fastForEachReversed {
         if (it.distance <= maxDistance) {
           return it
         }
@@ -165,7 +165,7 @@ enum class SamplingPeriod(
      * Returns the first sampling period that has a distance same or greater than the given one
      */
     fun withMinDistance(minDistance: @ms Double): SamplingPeriod {
-      values().fastForEach {
+      entries.fastForEach {
         if (it.distance >= minDistance) {
           return it
         }
@@ -179,7 +179,7 @@ enum class SamplingPeriod(
      * Throws an exception if no perfect hit could be found
      */
     fun getForDistance(@ms distance: Double): SamplingPeriod {
-      values().fastForEach {
+      entries.fastForEach {
         if (it.distance == distance) {
           return it
         }

@@ -27,6 +27,7 @@ import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
+import it.neckar.open.kotlin.lang.enumEntries
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
@@ -58,7 +59,7 @@ class DelayedWindowSizeStrategyDemoDescriptor : ChartingDemoDescriptor<Nothing> 
             }
           }
 
-          configurableEnum("Delayed Axis", delayedWindowSizeBindingStrategy.axisSelection, enumValues()) {
+          configurableEnum("Delayed Axis", delayedWindowSizeBindingStrategy.axisSelection, enumEntries()) {
             onChange {
               delayedWindowSizeBindingStrategy.axisSelection = it
             }

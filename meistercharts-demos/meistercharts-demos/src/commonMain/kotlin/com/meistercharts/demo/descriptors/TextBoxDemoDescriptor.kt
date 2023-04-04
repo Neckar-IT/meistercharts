@@ -91,7 +91,7 @@ class TextBoxDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = +1000.0
           }
 
-          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.entries) {
             onChange {
               layer.anchorDirection = it
               markAsDirty()

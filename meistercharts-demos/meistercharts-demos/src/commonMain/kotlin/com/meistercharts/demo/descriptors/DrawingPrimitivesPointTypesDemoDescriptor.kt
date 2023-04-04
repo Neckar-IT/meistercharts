@@ -99,7 +99,7 @@ class DrawingPrimitivesPointTypesDemoDescriptor : ChartingDemoDescriptor<Nothing
             }
           }
 
-          configurableEnum("dotType", dotType, DotType.values()) {
+          configurableEnum("dotType", dotType, DotType.entries) {
             onChange {
               dotType = it
               markAsDirty()

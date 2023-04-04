@@ -30,6 +30,7 @@ import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableFont
 import com.meistercharts.demo.configurableList
+import it.neckar.open.kotlin.lang.enumEntries
 
 class NeckarITSloganWithFlowGestaltDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
@@ -89,7 +90,7 @@ class NeckarITSloganWithFlowGestaltDemoDescriptor : ChartingDemoDescriptor<Nothi
             max = 200.0
           }
 
-          configurableEnum("Slogan Anchor", gestalt.sloganLayer.style::anchorDirection, enumValues())
+          configurableEnum("Slogan Anchor", gestalt.sloganLayer.style::anchorDirection, enumEntries())
         }
       }
     }

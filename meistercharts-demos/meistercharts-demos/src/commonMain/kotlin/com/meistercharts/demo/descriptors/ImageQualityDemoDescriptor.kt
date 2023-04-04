@@ -69,7 +69,7 @@ class ImageQualityDemoDescriptor(
             max = 500.0
           }
 
-          configurableEnum("rounding mode", layer.style.roundingMode, RoundingMode.values()) {
+          configurableEnum("rounding mode", layer.style.roundingMode, RoundingMode.entries) {
             onChange {
               layer.style.roundingMode = it
               markAsDirty()

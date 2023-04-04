@@ -41,6 +41,7 @@ import com.meistercharts.provider.SizedLabelsProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.observable.ObservableObject
 import kotlin.math.roundToInt
 
@@ -180,7 +181,7 @@ class GreedyCategoryAxisLabelPainterDemo : ChartingDemoDescriptor<CategoryAxisDe
             max = 50.0
           }
 
-          configurableEnum("Axis side", axisSideProperty, enumValues())
+          configurableEnum("Axis side", axisSideProperty, enumEntries())
 
           configurableDouble("Axis size", categoryAxisLayer.style::size) {
             max = 300.0
@@ -190,7 +191,7 @@ class GreedyCategoryAxisLabelPainterDemo : ChartingDemoDescriptor<CategoryAxisDe
             }
           }
 
-          configurableEnum("Tick orientation", categoryAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick orientation", categoryAxisLayer.style::tickOrientation, enumEntries()) {
           }
 
           configurableDouble("Tick line width", categoryAxisLayer.style::tickLineWidth) {

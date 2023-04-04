@@ -76,7 +76,7 @@ class TilesTransparentAreasDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
           configurableInsetsSeparate("Content Viewport", contentViewportGestalt::contentViewportMargin)
 
-          configurableEnum("SnapConfiguration", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.values()) {
+          configurableEnum("SnapConfiguration", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.entries) {
             onChange {
               chartSupport.pixelSnapSupport.snapConfiguration = it
               markAsDirty()

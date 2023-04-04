@@ -55,13 +55,13 @@ class ValueAxisAllSidesDemoDescriptor(
         configure {
           layers.addClearBackground()
 
-          val passpartoutLayers = Side.values().map {
+          val passpartoutLayers = Side.entries.map {
             layers.addPasspartout(Insets.empty, Color("rgba(69, 204, 112, 0.25)")) // use something different from white so the size of the axis can be better grasped
           }
 
           val valueRange = ValueRange.linear(0.0, 100.0)
 
-          val valueAxisLayers = Side.values().map { axisSide ->
+          val valueAxisLayers = Side.entries.map { axisSide ->
             ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { valueRange })) {
               titleProvider = { _, _ -> "Left [m²/h]" }
               side = axisSide
@@ -127,7 +127,7 @@ class ValueAxisAllSidesDemoDescriptor(
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", valueAxisLayers[0].style.paintRange, AxisStyle.PaintRange.values()) {
+          configurableEnum("Paint Range", valueAxisLayers[0].style.paintRange, AxisStyle.PaintRange.entries) {
             onChange {
               valueAxisLayers.forEach { valueAxisLayer ->
                 valueAxisLayer.style.paintRange = it
@@ -135,7 +135,7 @@ class ValueAxisAllSidesDemoDescriptor(
               markAsDirty()
             }
           }
-          configurableEnum("Tick Orientation", valueAxisLayers[0].style.tickOrientation, Vicinity.values()) {
+          configurableEnum("Tick Orientation", valueAxisLayers[0].style.tickOrientation, Vicinity.entries) {
             onChange {
               valueAxisLayers.forEach { valueAxisLayer ->
                 valueAxisLayer.style.tickOrientation = it
@@ -143,7 +143,7 @@ class ValueAxisAllSidesDemoDescriptor(
               markAsDirty()
             }
           }
-          configurableEnum("Axis End", valueAxisLayers[0].style.axisEndConfiguration, AxisEndConfiguration.values()) {
+          configurableEnum("Axis End", valueAxisLayers[0].style.axisEndConfiguration, AxisEndConfiguration.entries) {
             onChange {
               valueAxisLayers.forEach { valueAxisLayer ->
                 valueAxisLayer.style.axisEndConfiguration = it

@@ -28,6 +28,7 @@ import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableList
 import com.meistercharts.demo.section
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -55,7 +56,7 @@ class As30DiagramDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           }
         }
 
-        configurableEnum("held?", gestalt.model::mode, enumValues())
+        configurableEnum("held?", gestalt.model::mode, enumEntries())
         configurableBoolean("Limits visible", gestalt.model::limitsVisible)
 
         configurableDouble("lower limit", gestalt.model.lowerLimit.limit) {

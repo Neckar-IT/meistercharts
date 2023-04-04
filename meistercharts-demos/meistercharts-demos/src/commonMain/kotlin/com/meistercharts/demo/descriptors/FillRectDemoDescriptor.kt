@@ -31,6 +31,7 @@ import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
 import com.meistercharts.model.Direction
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * A demo for [fillRect]
@@ -80,7 +81,7 @@ class FillRectDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 2000.0
           }
 
-          configurableEnum("Anchor direction", layer::anchorDirection, enumValues())
+          configurableEnum("Anchor direction", layer::anchorDirection, enumEntries())
 
           configurableDouble("Anchor gap horizontal", layer::anchorGapHorizontal) {
             min = -50.0

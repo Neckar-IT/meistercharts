@@ -112,7 +112,7 @@ class SvgPaintablesDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableEnum("Anchor Direction", anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", anchorDirection, Direction.entries) {
             onChange {
               anchorDirection = it
               markAsDirty()

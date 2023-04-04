@@ -55,6 +55,7 @@ import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
 import com.meistercharts.style.Palette
+import it.neckar.open.kotlin.lang.enumEntries
 
 class CategoryChartLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Category Chart"
@@ -114,7 +115,7 @@ class CategoryChartLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           }
           layers.addLayer(categoryAxisLayer)
 
-          configurableEnum("Orientation", layer.style::orientation, CategoryChartOrientation.values()) {
+          configurableEnum("Orientation", layer.style::orientation, enumEntries()) {
             onChange {
               categoryAxisLayer.style.side = when (it.categoryOrientation) {
                 Orientation.Vertical -> Side.Bottom

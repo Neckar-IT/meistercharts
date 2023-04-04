@@ -36,6 +36,7 @@ import it.neckar.open.provider.MultiDoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.formatting.decimalFormat
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 class ValueAxisHudLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Value axis HUD"
@@ -87,7 +88,7 @@ class ValueAxisHudLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = 1000.0
           }
 
-          configurableEnum("Anchor Direction", config::anchorDirection, Direction.sides.toTypedArray())
+          configurableEnum("Anchor Direction", config::anchorDirection, enumEntries())
 
           configurableList("Box Style", hudLayer.configuration.boxStyles.valueAt(0), listOf(BoxStyle.black, BoxStyle.modernGray, BoxStyle.gray, BoxStyle.none)) {
             onChange {

@@ -49,8 +49,8 @@ enum class PredefinedDuration(val millis: @ms Double, val label: String) {
     /**
      * Contains all values
      */
-    private val values: Array<PredefinedDuration> = values()
-    private val valuesReversed: Array<PredefinedDuration> = values().reversedArray()
+    private val values: List<PredefinedDuration> = values().toList() //entries does not work yet
+    private val valuesReversed: List<PredefinedDuration> = values().toList().reversed() //entries does not work yet
 
     /**
      * Returns the largest predefined configuration that has the same or smaller duration than

@@ -44,6 +44,7 @@ import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Orientation
 import it.neckar.open.formatting.decimalFormat
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  */
@@ -61,7 +62,7 @@ class CategoryLayoutCalculationDemoDescriptor : ChartingDemoDescriptor<Nothing> 
           val categoryLayoutLayer = MyCategoryLayoutLayer()
           layers.addLayer(categoryLayoutLayer)
 
-          configurableEnum("Orientation", categoryLayoutLayer.style::orientation, CategoryChartOrientation.values())
+          configurableEnum("Orientation", categoryLayoutLayer.style::orientation, enumEntries())
           configurableInt("Number of segments", categoryLayoutLayer.data::numberOfSegments) {
             max = 17
           }

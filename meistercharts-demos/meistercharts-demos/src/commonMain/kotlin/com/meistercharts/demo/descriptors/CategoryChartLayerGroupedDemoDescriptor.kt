@@ -44,6 +44,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.enumEntries
 
 class CategoryChartLayerGroupedDemoDescriptor : ChartingDemoDescriptor<DefaultCategorySeriesModel> {
   override val name: String = "Category Chart : Grouped"
@@ -135,7 +136,7 @@ class CategoryChartLayerGroupedDemoDescriptor : ChartingDemoDescriptor<DefaultCa
           }
           layers.addLayer(categoryAxisLayer)
 
-          configurableEnum("Orientation", layer.style::orientation, CategoryChartOrientation.values()) {
+          configurableEnum("Orientation", layer.style::orientation, enumEntries()) {
             onChange {
               categoryAxisLayer.style.side = when (it.categoryOrientation) {
                 Orientation.Vertical -> Side.Bottom

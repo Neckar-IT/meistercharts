@@ -48,6 +48,7 @@ import it.neckar.open.provider.SizedProvider
 import it.neckar.open.kotlin.lang.asProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Palette
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Very simple demo that shows how to work with a value axis layer
@@ -132,14 +133,14 @@ class MultiValueAxisWithHudDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             max = valueAxisLayers.size
           }
 
-          configurableEnum("Axis tick orientation", valueAxisLayers.first().style.tickOrientation, enumValues()) {
+          configurableEnum("Axis tick orientation", valueAxisLayers.first().style.tickOrientation, enumEntries()) {
             onChange { vicinity ->
               valueAxisLayers.fastForEach { it.style.tickOrientation = vicinity }
               markAsDirty()
             }
           }
 
-          configurableEnum("Hud anchor direction", hudLayers.first().configuration.anchorDirections.valueAt(0), enumValues()) {
+          configurableEnum("Hud anchor direction", hudLayers.first().configuration.anchorDirections.valueAt(0), enumEntries()) {
             onChange { direction ->
               hudLayers.fastForEach { hudLayer ->
                 hudLayer.configuration.anchorDirections = MultiProvider.always(direction)

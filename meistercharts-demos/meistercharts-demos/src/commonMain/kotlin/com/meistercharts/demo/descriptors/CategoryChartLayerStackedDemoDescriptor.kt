@@ -45,6 +45,7 @@ import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.enumEntries
 
 class CategoryChartLayerStackedDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Category Chart : Stacked"
@@ -97,10 +98,10 @@ class CategoryChartLayerStackedDemoDescriptor : ChartingDemoDescriptor<Nothing> 
           }
           layers.addLayer(categoryAxisLayer)
 
-          configurableEnum("Orientation", categoryLayer.style::orientation, CategoryChartOrientation.values()) {
+          configurableEnum("Orientation", categoryLayer.style::orientation, enumEntries()) {
             onChange {
               categoryAxisLayer.style.side = when (it.categoryOrientation) {
-                Orientation.Vertical   -> Side.Bottom
+                Orientation.Vertical -> Side.Bottom
                 Orientation.Horizontal -> Side.Left
               }
             }
@@ -171,7 +172,7 @@ class CategoryChartLayerStackedDemoDescriptor : ChartingDemoDescriptor<Nothing> 
             max = 100.0
           }
 
-          configurableEnum("Value labels anchor direction", stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumValues())
+          configurableEnum("Value labels anchor direction", stackedBarsPainter.stackedBarPaintable.style::valueLabelAnchorDirection, enumEntries())
 
           declare {
             section("Category Axis")

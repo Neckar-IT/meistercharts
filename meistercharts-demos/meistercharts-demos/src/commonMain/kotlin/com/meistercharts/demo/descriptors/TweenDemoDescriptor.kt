@@ -33,6 +33,7 @@ import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableList
 import com.meistercharts.demo.section
 import com.meistercharts.model.Rectangle
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.math.max
@@ -115,7 +116,7 @@ class TweenDemoDescriptor : ChartingDemoDescriptor<Nothing> {
       }
     }
 
-    configurableEnum("Repeat Type", tweenProperty.get().repeatType, enumValues()) {
+    configurableEnum("Repeat Type", tweenProperty.get().repeatType, enumEntries()) {
       onChange {
         tweenProperty.set(tweenProperty.get().withRepeatType(repeatType = it))
       }

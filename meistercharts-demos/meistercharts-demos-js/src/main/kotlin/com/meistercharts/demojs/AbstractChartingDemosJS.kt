@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.debug.WindowDebugLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nSupport
 import com.meistercharts.canvas.pixelSnapSupport
@@ -221,17 +222,17 @@ abstract class AbstractChartingDemosJS {
 
     table.twoColumnsRow(
       document.label("Y-Axis orientation"),
-      document.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationYProperty, AxisOrientationY.values())
+      document.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationYProperty, AxisOrientationY.entries)
     )
 
     table.twoColumnsRow(
       document.label("X-Axis orientation"),
-      document.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty, AxisOrientationX.values())
+      document.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty, AxisOrientationX.entries)
     )
 
     table.twoColumnsRow(
       document.label("Snap configuration"),
-      document.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty, enumValues())
+      document.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty, SnapConfiguration.entries)
     )
 
     table.twoColumnsRow(
@@ -268,7 +269,7 @@ abstract class AbstractChartingDemosJS {
 
     table.singleColumnRow(document.headline1("Debug options"))
 
-    DebugFeature.values().map { debugFeature ->
+    DebugFeature.entries.map { debugFeature ->
       val debugModeEnabled = ObservableBoolean().apply {
         consume {
           currentMeisterChart.layerSupport.apply {

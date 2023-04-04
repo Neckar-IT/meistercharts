@@ -36,6 +36,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
 import com.meistercharts.resources.Icons
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  *
@@ -56,7 +57,7 @@ class AnchorDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           layers.addLayer(anchorLayer)
 
 
-          configurableEnum("Anchor Direction", anchorLayer::anchorDirection, enumValues()) {
+          configurableEnum("Anchor Direction", anchorLayer::anchorDirection, enumEntries()) {
           }
 
           configurableDouble("Anchor Gap Horizontal", anchorLayer::anchorGapHorizontal) {

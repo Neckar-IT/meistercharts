@@ -33,6 +33,7 @@ import com.meistercharts.demo.configurableEnum
 import com.meistercharts.demo.configurableFont
 import com.meistercharts.demo.configurableInt
 import com.meistercharts.model.Side
+import it.neckar.open.kotlin.lang.enumEntries
 
 /**
  * Very simple demo that shows how to work with a value axis layer
@@ -68,7 +69,7 @@ class ExtremeValueAxisDemoDescriptor(
             section("Layout")
           }
 
-          configurableEnum("Side", valueAxisLayer.style.side, Side.values()) {
+          configurableEnum("Side", valueAxisLayer.style.side, Side.entries) {
             onChange {
               valueAxisLayer.style.side = it
               markAsDirty()
@@ -109,11 +110,11 @@ class ExtremeValueAxisDemoDescriptor(
             section("Axis Config")
           }
 
-          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumValues()) {
+          configurableEnum("Paint Range", valueAxisLayer.style::paintRange, enumEntries()) {
           }
-          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumValues()) {
+          configurableEnum("Tick Orientation", valueAxisLayer.style::tickOrientation, enumEntries()) {
           }
-          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumValues()) {
+          configurableEnum("Axis End", valueAxisLayer.style::axisEndConfiguration, enumEntries()) {
           }
 
           declare {

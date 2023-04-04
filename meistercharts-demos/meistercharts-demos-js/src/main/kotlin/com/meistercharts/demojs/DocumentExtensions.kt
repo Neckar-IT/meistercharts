@@ -111,7 +111,7 @@ fun Document.checkBox(checked: ObservableObject<Boolean>, checkBoxLabel: String 
  *
  * The selection of the combo-box is bidirectional bound to [selected].
  */
-fun <E : Enum<E>> Document.comboBox(selected: ObservableObject<E>, values: Array<E>): HTMLElement {
+fun <E : Enum<E>> Document.comboBox(selected: ObservableObject<E>, values: List<E>): HTMLElement {
   val comboBox = createElement("SELECT") as HTMLSelectElement
   val options = values.map {
     createElement("OPTION").apply {

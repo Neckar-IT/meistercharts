@@ -45,7 +45,7 @@ class SnapDemoDescriptor : ChartingDemoDescriptor<Nothing> {
         configure {
           layers.addClearBackground()
 
-          configurableEnum("snap", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.values()) {
+          configurableEnum("snap", chartSupport.pixelSnapSupport.snapConfiguration, SnapConfiguration.entries) {
             onChange {
               chartSupport.pixelSnapSupport.snapConfiguration = it
               markAsDirty()

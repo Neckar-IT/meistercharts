@@ -115,7 +115,7 @@ class ExpectedSamplingPeriodDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             }
           }
 
-          configurableList("Expected sampling period", SamplingPeriod.EveryHundredMillis, SamplingPeriod.values().toList()) {
+          configurableList("Expected sampling period", SamplingPeriod.EveryHundredMillis, SamplingPeriod.entries) {
             onChange {
               historyStorageCache.clear()
               historyStorage.clear()

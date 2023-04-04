@@ -43,7 +43,7 @@ class TextGapDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           val layer = MyTextLayer()
           layers.addLayer(layer)
 
-          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.values()) {
+          configurableEnum("Anchor Direction", layer.anchorDirection, Direction.entries) {
             onChange {
               layer.anchorDirection = it
               markAsDirty()

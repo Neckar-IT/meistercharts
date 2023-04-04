@@ -29,6 +29,7 @@ import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableColorPicker
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
+import it.neckar.open.kotlin.lang.enumEntries
 import it.neckar.open.provider.SizedProvider
 
 
@@ -71,7 +72,7 @@ class LimitsLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           layers.addLayer(layerLowerLimit)
           layers.addLayer(layerUpperLimit)
 
-          configurableEnum("Orientation", layerLowerLimit.style.orientation, enumValues()) {
+          configurableEnum("Orientation", layerLowerLimit.style.orientation, enumEntries()) {
             onChange {
               layerLowerLimit.style.orientation = it
               layerUpperLimit.style.orientation = it
