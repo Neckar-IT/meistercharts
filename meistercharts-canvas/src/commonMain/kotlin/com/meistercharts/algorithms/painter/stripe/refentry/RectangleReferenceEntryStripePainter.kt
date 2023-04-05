@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.snapPhysicalTranslation
 import com.meistercharts.design.Theme
@@ -110,7 +111,6 @@ class RectangleReferenceEntryStripePainter(
       }
 
       count.value == 1 -> {
-        //Count is <= 1
         gc.fill(configuration.fillProvider(idToPaint, statusEnumSet, historyConfiguration))
 
         val snapConfiguration = configuration.snapConfiguration()
@@ -119,7 +119,8 @@ class RectangleReferenceEntryStripePainter(
 
         //Paint the label
         entryData?.label?.resolve(paintingContext)?.let {
-          gc.fill(configuration.labelColor)
+          gc.fill(configuration.labelColorProvider(idToPaint, statusEnumSet, historyConfiguration))
+          gc.font(configuration.labelFont)
 
           val statusEnum = historyConfiguration.referenceEntryConfiguration.getStatusEnum(dataSeriesIndex) //is null, if the data series does not support the status enum at all
 
@@ -159,6 +160,7 @@ class RectangleReferenceEntryStripePainter(
         //gc.strokeOvalCenter(startX + rectangleWidth / 2.0, rectangleHeight / 2.0, 20.0, 20.0)
 
         gc.fill(configuration.countLabelColor)
+        gc.font(configuration.labelFont)
         gc.fillText(intFormat.format(count.value.toDouble()), startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
     }
@@ -173,18 +175,29 @@ class RectangleReferenceEntryStripePainter(
     /**
      * Provides the fill color for the given value
      */
-    var fillProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { value: ReferenceEntryId, statusEnumSet, _: HistoryConfiguration ->
-      if (statusEnumSet.isNoValue()) {
-        Theme.chartColors().valueAt(value.id)
-      } else {
-        Theme.enumColors().valueAt(statusEnumSet.firstSetOrdinal().value)
+    var fillProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { _, statusEnumSet, _ ->
+      when {
+        statusEnumSet.isNoValue() -> {
+          Color.silver
+        }
+        statusEnumSet.isPending() -> {
+          Color.lightgray
+        }
+        else -> {
+          Theme.enumColors().valueAt(statusEnumSet.firstSetOrdinal().value)
+        }
       }
     }
 
     /**
-     * The color of the label
+     * Provides the color of the label for the given value
      */
-    var labelColor: Color = Color.white
+    var labelColorProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { _, _, _ -> Color.white }
+
+    /**
+     * The font of the label
+     */
+    var labelFont: FontDescriptorFragment = FontDescriptorFragment.DefaultSize
 
     /**
      * The color when the count is shown

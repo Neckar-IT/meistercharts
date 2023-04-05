@@ -124,9 +124,6 @@ class HistoryReferenceEntryLayer(
       gc.fillRectCoordinates(x0, y0, x1, y1)
     }
 
-    //Translate to viewport start
-    gc.translate(0.0, chartCalculator.contentViewportMinY()) //Translate to top of viewport
-
     val visibleTimeRange = paintingVariables.visibleTimeRange
     @ms val minGapDistance = paintingVariables.minGapDistance
 
@@ -239,34 +236,6 @@ class HistoryReferenceEntryLayer(
      */
     val contentAreaTimeRange: @ContentArea TimeRangeProvider,
   ) {
-
-    /**
-     * The indices of the stripes that should be visible.
-     * The default is that all lines are visible.
-     *
-     * ATTENTION: in init{} [showAllReferenceEntrySeries] is called
-     *
-     * ATTENTION: Might contain *more* elements than there exist in the history!
-     */
-    val requestedVisibleReferenceEntryDataSeriesIndicesProperty: ObservableObject<ReferenceEntryDataSeriesIndexProvider> = ObservableObject(ReferenceEntryDataSeriesIndexProvider.empty())
-
-    var requestedVisibleReferenceEntryDataSeriesIndices: ReferenceEntryDataSeriesIndexProvider by requestedVisibleReferenceEntryDataSeriesIndicesProperty
-      @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
-      get
-
-    /**
-     * The actual visible series indices - respects the current history configuration
-     */
-    val actualVisibleReferenceEntryDataSeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestedVisibleReferenceEntryDataSeriesIndices.atMost {
-      historyConfiguration().referenceEntryDataSeriesCount
-    }
-
-    /**
-     * Shows all lines even if the history configuration changes later on.
-     */
-    fun showAllReferenceEntryDataSeries() {
-      requestedVisibleReferenceEntryDataSeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
-    }
 
     /**
      * The height of a stripe

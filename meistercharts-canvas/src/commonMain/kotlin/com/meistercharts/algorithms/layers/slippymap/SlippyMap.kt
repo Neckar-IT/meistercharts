@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PhysicalPixel
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Latitude
 import com.meistercharts.model.Longitude
@@ -255,7 +256,7 @@ fun ZoomAndTranslationModifiersBuilder.withSlippyMapZoom(): ZoomAndTranslationMo
 
   val delegate: ZoomAndTranslationModifier = current
   current = object : ZoomAndTranslationModifier {
-    override fun modifyTranslation(translation: Distance, calculator: ChartCalculator): Distance {
+    override fun modifyTranslation(translation: @Zoomed Distance, calculator: ChartCalculator): @Zoomed Distance {
       return delegate.modifyTranslation(translation, calculator)
     }
 

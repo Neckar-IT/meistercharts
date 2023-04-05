@@ -19,6 +19,8 @@ import com.meistercharts.algorithms.impl.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.model.Insets
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.observable.ObservableObject
 
 /**
@@ -28,7 +30,11 @@ open class ContentViewportGestalt(contentViewportMargin: @Zoomed Insets) : Chart
   /**
    * The current content viewport margin
    */
-  val contentViewportMarginProperty: ObservableObject<@Zoomed Insets> = ObservableObject(contentViewportMargin)
+  val contentViewportMarginProperty: ObservableObject<@Zoomed Insets> = ObservableObject(contentViewportMargin).also {
+    it.consumeImmediately { margin ->
+      logger.debug("contentViewportMargin changed to $margin")
+    }
+  }
 
   var contentViewportMargin: @Zoomed Insets by contentViewportMarginProperty
 
@@ -60,5 +66,9 @@ open class ContentViewportGestalt(contentViewportMargin: @Zoomed Insets) : Chart
 
   inline fun setMarginRight(newRight: @Zoomed Double) {
     contentViewportMargin = contentViewportMargin.withRight(newRight)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.charts.ContentViewportGestalt")
   }
 }

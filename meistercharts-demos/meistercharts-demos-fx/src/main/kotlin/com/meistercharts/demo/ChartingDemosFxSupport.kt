@@ -605,22 +605,6 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     }
     pane.add(Components.checkBox("Always Repaint", forceRepaint.toJavaFx()), "span")
 
-    val contentAreaDebugLayerVisible = ObservableBoolean().also {
-      it.consume {
-        layerSupport.markAsDirty()
-      }
-    }
-    meisterChart.layerSupport.layers.addLayer(ContentAreaDebugLayer().visibleIf(contentAreaDebugLayerVisible))
-    pane.add(Components.checkBox("Content Area Debug", contentAreaDebugLayerVisible.toJavaFx()), "span")
-
-    val contentViewportDebugLayerVisible = ObservableBoolean().also {
-      it.consume {
-        layerSupport.markAsDirty()
-      }
-    }
-    meisterChart.layerSupport.layers.addLayer(ContentViewportDebugLayer().visibleIf(contentViewportDebugLayerVisible))
-    pane.add(Components.checkBox("Content Viewport Debug", contentViewportDebugLayerVisible.toJavaFx()), "span")
-
     val whatsAtDebugLayerVisible = ObservableBoolean().also {
       it.consume {
         layerSupport.markAsDirty()

@@ -22,7 +22,6 @@ import com.meistercharts.algorithms.layers.TimeAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
-import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
@@ -34,18 +33,18 @@ import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableEnum
+import com.meistercharts.demo.configurableFont
 import com.meistercharts.demo.section
 import com.meistercharts.history.HistoryStorageCache
 import com.meistercharts.history.InMemoryHistoryStorage
-import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.generator.HistoryChunkGenerator
 import com.meistercharts.history.generator.ReferenceEntryGenerator
 import com.meistercharts.model.Zoom
-import it.neckar.open.time.nowMillis
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.time.nowMillis
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -136,7 +135,7 @@ class HistoryReferenceEntryLayerDemo : ChartingDemoDescriptor<HistoryReferenceEn
     val demoConfig = configuration.payload
 
     return ChartingDemo {
-      val enumBarPainter: ReferenceEntryStripePainter = RectangleReferenceEntryStripePainter()
+      val enumBarPainter = RectangleReferenceEntryStripePainter()
 
       meistercharts {
         val contentAreaTimeRange = TimeRange.oneMinuteSinceReference
@@ -167,8 +166,15 @@ class HistoryReferenceEntryLayerDemo : ChartingDemoDescriptor<HistoryReferenceEn
           chartSupport.onDispose(historyStorage)
           chartSupport.translateOverTime.contentAreaTimeRangeX = contentAreaTimeRange
 
-          val visibleIndices = ReferenceEntryDataSeriesIndexProvider.forList(listOf(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryDataSeriesIndex.one, ReferenceEntryDataSeriesIndex.two, ReferenceEntryDataSeriesIndex.three))
-          val layer = HistoryReferenceEntryLayer(HistoryReferenceEntryLayer.Configuration(historyStorage, { historyConfiguration }, visibleIndices) { contentAreaTimeRange }) {
+          val visibleIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration.referenceEntryDataSeriesCount }
+
+          val layer = HistoryReferenceEntryLayer(
+            configuration = HistoryReferenceEntryLayer.Configuration(
+              historyStorage = historyStorage,
+              historyConfiguration = { historyConfiguration },
+              visibleIndices = visibleIndices
+            ) { contentAreaTimeRange }
+          ) {
             this.stripePainters = MultiProvider.always(enumBarPainter)
           }
 
@@ -187,6 +193,8 @@ class HistoryReferenceEntryLayerDemo : ChartingDemoDescriptor<HistoryReferenceEn
           configurableDouble("Enum Height", layer.configuration::stripeHeight) {
             max = 50.0
           }
+
+          configurableFont("Label font", enumBarPainter.configuration::labelFont)
 
           configurableEnum("Layout Direction", layer.configuration::layoutDirection)
 

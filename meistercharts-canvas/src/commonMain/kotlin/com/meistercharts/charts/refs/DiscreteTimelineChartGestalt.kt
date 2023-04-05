@@ -46,7 +46,6 @@ import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
-import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -153,12 +152,12 @@ class DiscreteTimelineChartGestalt(
     CategoryAxisLayer.Data(
       labelsProvider = object : SizedLabelsProvider {
         override fun size(param1: TextService, param2: I18nConfiguration): Int {
-          return historyReferenceEntryLayer.configuration.visibleIndices.size()
+          return configuration.actualVisibleReferenceEntrySeriesIndices.size()
         }
 
         override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String {
-          val dataSeriesIndex: ReferenceEntryDataSeriesIndex = this@DiscreteTimelineChartGestalt.configuration.actualVisibleReferenceEntrySeriesIndices.valueAt(index)
-          val labelTextKey = this@DiscreteTimelineChartGestalt.configuration.referenceEntryCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
+          val dataSeriesIndex: ReferenceEntryDataSeriesIndex = configuration.actualVisibleReferenceEntrySeriesIndices.valueAt(index)
+          val labelTextKey = configuration.referenceEntryCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
           return labelTextKey.resolve(param1, param2)
         }
       },
@@ -169,14 +168,11 @@ class DiscreteTimelineChartGestalt(
   ) {
     side = Side.Left
 
+    size = 130.0
+
     tickOrientation = Vicinity.Outside
     paintRange = AxisStyle.PaintRange.Continuous
-    background = {
-      configuration.valueAxesBackground
-    }
-    axisLabelPainter = DefaultCategoryAxisLabelPainter {
-      wrapMode = LabelWrapMode.IfNecessary
-    }
+    background = { Color.web("rgba(255,255,255,0.5)") }
     axisLabelPainter = DefaultCategoryAxisLabelPainter {
       wrapMode = LabelWrapMode.IfNecessary
     }
@@ -204,9 +200,9 @@ class DiscreteTimelineChartGestalt(
    * - space at top (e.g. for title)
    * - space at bottom for time axis
    */
-  private val contentViewportGestalt = ContentViewportGestalt(Insets.of(0.0, 0.0, viewportMarginBottom(), 0.0)).also { contentViewportGestalt ->
+  private val contentViewportGestalt = ContentViewportGestalt(Insets.of(10.0, 0.0, viewportMarginBottom(), 0.0)).also { contentViewportGestalt ->
     configuration.showTimeAxisProperty.consumeImmediately { _ ->
-      contentViewportGestalt.contentViewportMargin = Insets.of(0.0, 0.0, viewportMarginBottom(), 0.0)
+      contentViewportGestalt.setMarginBottom(viewportMarginBottom())
     }
   }
 
@@ -236,7 +232,7 @@ class DiscreteTimelineChartGestalt(
 
       meisterChartBuilder.zoomAndTranslationModifier {
         disableZoomY()
-        disableTranslationY()
+        //disableTranslationY()
       }
 
       meisterChartBuilder.zoomAndTranslationDefaults {
@@ -327,11 +323,6 @@ class DiscreteTimelineChartGestalt(
     val showTimeAxisProperty: ObservableBoolean = ObservableBoolean(true)
     var showTimeAxis: Boolean by showTimeAxisProperty
 
-    /**
-     * The background color of the value axes
-     */
-    var valueAxesBackground: Color = Color.web("rgba(255,255,255,0.5)")
-
 
     /**
      * The indices of the referenceEntryIds that are visible (one stripe is shown for each visible referenceEntryId series).
@@ -340,15 +331,21 @@ class DiscreteTimelineChartGestalt(
      */
     val requestedVisibleReferenceEntrySeriesIndicesProperty: ObservableObject<ReferenceEntryDataSeriesIndexProvider> = ObservableObject(ReferenceEntryDataSeriesIndexProvider.indices { 10 })
 
-    var requestVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider by requestedVisibleReferenceEntrySeriesIndicesProperty
+    var requestedVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider by requestedVisibleReferenceEntrySeriesIndicesProperty
       @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
       get
 
-    fun showAllReferenceEntrySeries() {
-      requestVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
+    /**
+     * Shows all available data series
+     */
+    fun showAllReferenceEntryDataSeries() {
+      requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
     }
 
-    val actualVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestVisibleReferenceEntrySeriesIndices.atMost {
+    /**
+     * Contains the actual visible reference entry series
+     */
+    val actualVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestedVisibleReferenceEntrySeriesIndices.atMost {
       historyConfiguration().referenceEntryDataSeriesCount
     }
 

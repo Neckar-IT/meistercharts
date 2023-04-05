@@ -104,10 +104,38 @@ internal class DistanceTest {
 
   @Test
   internal fun testNaN() {
-    val base = Distance.zero
-
-    val added = base.plus(Double.NaN, Double.NaN)
+    val added = Distance.zero.plus(Double.NaN, Double.NaN)
     assertThat(added.x).isNaN()
     assertThat(added.y).isNaN()
+  }
+
+  @Test
+  fun `coerceXWithin should return a new Distance with x value within given range`() {
+    val result = Distance(5.0, 2.0).coerceXWithin(3.0, 7.0)
+    assertThat(result).isEqualTo(Distance(5.0, 2.0))
+  }
+
+  @Test
+  fun `coerceXWithin should return a new Distance with x value equal to min when x is less than min`() {
+    val result = Distance(1.0, 2.0).coerceXWithin(3.0, 7.0)
+    assertThat(result).isEqualTo(Distance(3.0, 2.0))
+  }
+
+  @Test
+  fun `coerceXWithin should return a new Distance with x value equal to max when x is greater than max`() {
+    val result = Distance(9.0, 2.0).coerceXWithin(3.0, 7.0)
+    assertThat(result).isEqualTo(Distance(7.0, 2.0))
+  }
+
+  @Test
+  fun `coerceYWithin should return a new Distance with y value within given range`() {
+    val result = Distance(5.0, 4.0).coerceYWithin(3.0, 7.0)
+    assertThat(result).isEqualTo(Distance(5.0, 4.0))
+  }
+
+  @Test
+  fun `coerceYWithin should return a new Distance with y value equal to min when y is less than min`() {
+    val result = Distance(5.0, 1.0).coerceYWithin(3.0, 7.0)
+    assertThat(result).isEqualTo(Distance(5.0, 3.0))
   }
 }

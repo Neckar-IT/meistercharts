@@ -16,12 +16,14 @@
 package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.api.MeisterChartsApi
 import com.meistercharts.api.TimeRange
 import com.meistercharts.api.Zoom
@@ -153,7 +155,7 @@ class DiscreteTimelineChart internal constructor(
       chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = object : ZoomAndTranslationDefaults {
         override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
-          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples
+          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
           @ms val startToShow = chunk.end - durationToShow
           @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
 
@@ -163,16 +165,33 @@ class DiscreteTimelineChart internal constructor(
 
         override fun defaultTranslation(chartCalculator: ChartCalculator): Distance {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
-          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples
+          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
           @ms val startToShow = chunk.end - durationToShow
           @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
 
           val translationX = chartSupport.zoomAndTranslationSupport.calculateFitWindowTranslationX(startToShowRelative)
-          return Distance(translationX, 0.0)
+          return Distance(translationX, gestalt.contentViewportMargin.top)
         }
       }
 
       logger.debug("zoom state: ${chartSupport.rootChartState.zoom}, ${chartSupport.rootChartState.windowTranslation}")
+
+      chartSupport.zoomAndTranslationSupport.zoomAndTranslationModifier = object : ZoomAndTranslationModifier {
+        override fun modifyTranslation(translation: @Zoomed Distance, calculator: ChartCalculator): @Zoomed Distance {
+          @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.start)
+          @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.end)
+
+          @Zoomed val startZoomed = calculator.domainRelative2zoomedX(startRelative)
+          @Zoomed val windowWidth = calculator.chartState.windowWidth
+          @Zoomed val endZoomed = calculator.domainRelative2zoomedX(endRelative)
+
+          return translation.coerceXWithin(-endZoomed + windowWidth - 20.0, -startZoomed + 20.0 + gestalt.categoryAxisLayer.style.size)
+        }
+
+        override fun modifyZoom(zoom: com.meistercharts.model.Zoom, calculator: ChartCalculator): com.meistercharts.model.Zoom {
+          return zoom
+        }
+      }
     }
   }
 

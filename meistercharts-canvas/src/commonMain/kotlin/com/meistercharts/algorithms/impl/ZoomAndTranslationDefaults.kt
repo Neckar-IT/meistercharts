@@ -130,7 +130,7 @@ object FittingInContentViewport : FittingWithMargin(
  *
  * ATTENTION: Use [FittingInContentViewport] instead in most cases!
  */
-open class FittingWithMargin constructor(
+open class FittingWithMargin(
   /**
    * The margin
    */

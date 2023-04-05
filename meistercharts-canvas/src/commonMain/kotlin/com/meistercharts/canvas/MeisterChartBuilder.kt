@@ -15,19 +15,22 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.ZoomLevelCalculator
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
+import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.ToggleDebuggingModeLayer
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationConfiguration
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationLayer
 import com.meistercharts.algorithms.layers.gesture.addZoomAndTranslation
-import it.neckar.open.annotations.JavaFriendly
+import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.charts.ChartGestaltConfiguration
 import com.meistercharts.charts.ChartId
+import com.meistercharts.model.Orientation
+import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.OnDispose
@@ -177,6 +180,8 @@ abstract class MeisterChartBuilder(
 
     if (addToggleDebuggingModeLayer) {
       layerSupport.layers.addLayer(ToggleDebuggingModeLayer())
+      layerSupport.layers.addLayer(ContentAreaDebugLayer().visibleIf { chartSupport.debug[DebugFeature.ShowContentAreaDebug] })
+      layerSupport.layers.addLayer(ContentViewportDebugLayer().visibleIf { chartSupport.debug[DebugFeature.ShowContentViewportDebug] })
     }
 
     //Register the zoom and translation layer first

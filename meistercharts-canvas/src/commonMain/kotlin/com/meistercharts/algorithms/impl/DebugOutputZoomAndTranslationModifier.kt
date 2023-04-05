@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.impl
 
 import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.logging.LoggerFactory
@@ -29,7 +30,7 @@ class DebugOutputZoomAndTranslationModifier(
   private val delegate: ZoomAndTranslationModifier
 ) : ZoomAndTranslationModifier by delegate {
   override
-  fun modifyTranslation(translation: Distance, calculator: ChartCalculator): Distance {
+  fun modifyTranslation(translation: @Zoomed Distance, calculator: ChartCalculator): Distance {
     return delegate.modifyTranslation(translation, calculator).also {
       logger.debug {
         if (translation == it) {

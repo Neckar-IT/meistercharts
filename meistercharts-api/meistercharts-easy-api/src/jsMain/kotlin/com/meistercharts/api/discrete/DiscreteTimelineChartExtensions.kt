@@ -16,6 +16,8 @@
 package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
+import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.api.DiscreteAxisStyle
@@ -24,8 +26,10 @@ import com.meistercharts.api.applyDiscreteAxisStyle
 import com.meistercharts.api.applyTimeAxisStyle
 import com.meistercharts.api.line.DiscreteDataSeriesConfiguration
 import com.meistercharts.api.toColor
+import com.meistercharts.api.toFontDescriptorFragment
 import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
+import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.design.Theme
 import com.meistercharts.history.DataSeriesId
@@ -39,11 +43,22 @@ import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
 
 
 private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.DiscreteTimelineChartExtensions")
 
+/**
+ * Overwrites defaults set by the gestalt
+ */
+fun MeisterChartBuilder.applyDiscreteTimelineChartSickDefaults() {
+  zoomAndTranslationConfiguration {
+    //ATTENTION: Copied from DiscreteTimelineChartGestalt#init
+    translateAxisSelection = AxisSelection.X
+    mouseWheelZoom = false //Disable zoom for SICK
+  }
+}
 
 fun DiscreteTimelineChartGestalt.applySickDefaults() {
   //configuration.applyAxisTitleOnTop(40.0)
@@ -60,10 +75,10 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
 
   jsConfiguration.visibleDiscreteStripes?.let { jsVisibleStripes ->
     if (jsVisibleStripes.size == 1 && jsVisibleStripes[0] == -1) { //check for magic "-1" value
-      historyReferenceEntryLayer.configuration.showAllReferenceEntryDataSeries()
+      configuration.showAllReferenceEntryDataSeries()
     } else {
-      val map = jsVisibleStripes.map { ReferenceEntryDataSeriesIndex(it) }
-      historyReferenceEntryLayer.configuration.requestedVisibleReferenceEntryDataSeriesIndices = ReferenceEntryDataSeriesIndexProvider.forList(map.toList())
+      val visibleStripeIndices = jsVisibleStripes.map { ReferenceEntryDataSeriesIndex(it) }
+      configuration.requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.forList(visibleStripeIndices)
     }
   }
 
@@ -92,10 +107,23 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
             jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
           }
 
-          fillProvider = { value, statusEnumSet, historyConfiguration ->
-            //TOOD use index instead?
-            fillColors.getOrNull(value.id) ?: Theme.enumColors().valueAt(value.id)
+          fillProvider = { _, statusEnumSet, _ ->
+            val firstOrdinal = statusEnumSet.firstSetOrdinal()
+            fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
           }
+
+          val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
+            jsStripeStyle?.labelColor?.toColor() ?: Color.white
+          }
+
+          labelColorProvider = { _, statusEnumSet, _ ->
+            val firstOrdinal = statusEnumSet.firstSetOrdinal()
+            labelColors.getModuloOrNull(firstOrdinal.value) ?: Color.white
+          }
+        }
+
+        jsConfiguration.stripeLabelFont?.toFontDescriptorFragment()?.let {
+          labelFont = it
         }
 
         jsConfiguration.aggregationMode?.let {
@@ -130,15 +158,6 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
     @DomainRelative val startDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.start)
     @DomainRelative val endDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.end)
     chartSupport().zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative)
-  }
-
-  jsConfiguration.visibleDiscreteStripes?.let { jsVisibleStripes ->
-    if (jsVisibleStripes.size == 1 && jsVisibleStripes[0] == -1) { //check for magic "-1" value
-      this.configuration.showAllReferenceEntrySeries()
-    } else {
-      val map = jsVisibleStripes.map { ReferenceEntryDataSeriesIndex(it) }
-      this.configuration.requestVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.forList(map.toList())
-    }
   }
 
 

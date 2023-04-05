@@ -16,13 +16,13 @@
 package com.meistercharts.model
 
 import com.meistercharts.algorithms.axis.AxisSelection
+import it.neckar.open.formatting.CachedNumberFormat
+import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.kotlin.lang.or0ifNaN
+import it.neckar.open.kotlin.lang.sqrt
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.PositiveOrZero
-import it.neckar.open.kotlin.lang.or0ifNaN
-import it.neckar.open.kotlin.lang.sqrt
-import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.formatting.decimalFormat
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -150,6 +150,25 @@ data class Distance(
    */
   fun direct(): @PositiveOrZero Double {
     return (x * x + y * y).sqrt()
+  }
+
+  /**
+   * Returns a new distance that has an x values within the provide min/max values
+   */
+  fun coerceXWithin(min: Double, max: Double): Distance {
+    if (x in min..max) {
+      return this
+    }
+
+    return this.copy(x = x.coerceIn(min, max))
+  }
+
+  fun coerceYWithin(min: Double, max: Double): Distance {
+    if (y in min..max) {
+      return this
+    }
+
+    return this.copy(y = y.coerceIn(min, max))
   }
 
   companion object {

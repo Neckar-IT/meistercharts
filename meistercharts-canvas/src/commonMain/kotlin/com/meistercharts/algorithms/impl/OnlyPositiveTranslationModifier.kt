@@ -19,10 +19,9 @@ import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.annotations.ContentArea
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
-import it.neckar.open.unit.other.px
 
 /**
  * Limiter that ensures only positive values are visible
@@ -34,9 +33,7 @@ class OnlyPositiveTranslationModifier(val delegate: ZoomAndTranslationModifier) 
    * Modifies the min/max panning.
    * A visualization that describes the limits can be found in "DefaultPanLimiter.svg"
    */
-  @ContentArea
-  @px
-  override fun modifyTranslation(@ContentArea @px translation: Distance, calculator: ChartCalculator): Distance {
+  override fun modifyTranslation(@Zoomed translation: Distance, calculator: ChartCalculator): @Zoomed Distance {
     val minY = when (calculator.chartState.axisOrientationY) {
       AxisOrientationY.OriginAtTop -> calculator.contentAreaRelative2zoomedY(-1.0)
       AxisOrientationY.OriginAtBottom -> calculator.chartState.contentAreaHeight - calculator.contentAreaRelative2zoomedY(1.0)

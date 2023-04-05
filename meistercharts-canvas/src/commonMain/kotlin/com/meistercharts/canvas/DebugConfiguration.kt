@@ -15,7 +15,6 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import it.neckar.open.observable.ObservableObject
 
@@ -136,6 +135,16 @@ enum class DebugFeature {
    * Paint descriptions of incoming events on the canvas
    */
   LogEvents,
+
+  /**
+   * If enabled the content area is visualized
+   */
+  ShowContentAreaDebug,
+
+  /**
+   * If enabled the content viewport is visualized
+   */
+  ShowContentViewportDebug,
 
   ;
 

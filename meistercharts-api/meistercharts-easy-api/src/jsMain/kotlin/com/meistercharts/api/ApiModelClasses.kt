@@ -698,6 +698,11 @@ external interface DiscreteAxisStyle : AxisStyle {
    * If the labels are/will be wrapped
    */
   val labelWrapMode: WrapMode?
+
+  /**
+   * The background-color of this axis
+   */
+  val backgroundColor: String?
 }
 
 /**
@@ -881,6 +886,11 @@ external interface StripeStyle {
    * The main background color
    */
   val backgroundColor: String?
+
+  /**
+   * The color to be used for a stripe-label
+   */
+  val labelColor: String?
 
   /**
    * An alternate color; how it is used depends on the {@link pattern}

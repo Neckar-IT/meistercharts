@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms
 
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.unit.other.px
@@ -33,7 +34,7 @@ interface ZoomAndTranslationModifier {
   /**
    * Returns the updated translation
    */
-  fun modifyTranslation(@ContentArea @px translation: Distance, calculator: ChartCalculator): @ContentArea Distance
+  fun modifyTranslation(@Zoomed @px translation: Distance, calculator: ChartCalculator): @Zoomed Distance
 
   /**
    * Modifies the zoom.
@@ -45,12 +46,16 @@ interface ZoomAndTranslationModifier {
      * Default implementation that doesn't modify anything
      */
     val none: ZoomAndTranslationModifier = object : ZoomAndTranslationModifier {
-      override fun modifyTranslation(@ContentArea @px translation: Distance, calculator: ChartCalculator): @ContentArea Distance {
+      override fun modifyTranslation(@Zoomed @px translation: Distance, calculator: ChartCalculator): @Zoomed Distance {
         return translation
       }
 
       override fun modifyZoom(zoom: Zoom, calculator: ChartCalculator): Zoom {
         return zoom
+      }
+
+      override fun toString(): String {
+        return "None"
       }
     }
   }

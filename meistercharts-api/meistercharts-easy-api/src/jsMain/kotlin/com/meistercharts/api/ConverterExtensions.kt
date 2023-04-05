@@ -619,6 +619,10 @@ fun CategoryAxisLayer.Style.applyDiscreteAxisStyle(jsStyle: DiscreteAxisStyle?) 
       this.wrapMode = jsWrapMode.toModel()
     }
   }
+
+  jsStyle.backgroundColor?.toColor()?.let { backgroundColor ->
+    this.background = { backgroundColor }
+  }
 }
 
 /**

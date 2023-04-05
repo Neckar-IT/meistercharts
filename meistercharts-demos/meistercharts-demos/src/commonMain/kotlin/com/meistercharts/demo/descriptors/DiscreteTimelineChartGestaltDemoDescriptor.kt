@@ -25,6 +25,7 @@ import com.meistercharts.demo.DemoCategory
 import com.meistercharts.demo.PredefinedConfiguration
 import com.meistercharts.demo.configurableBoolean
 import com.meistercharts.demo.configurableColorNullable
+import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableIndices
 import com.meistercharts.demo.configurableInsetsSeparate
 import com.meistercharts.demo.toList
@@ -212,15 +213,22 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             this@ChartingDemo,
             "Visible Data Series",
             "data series visible",
-            initial = gestalt.configuration.requestVisibleReferenceEntrySeriesIndices.toList().map { it.value },
+            initial = gestalt.configuration.requestedVisibleReferenceEntrySeriesIndices.toList().map { it.value },
             maxSize = referenceEntryDataSeriesCount,
           ) {
-            gestalt.configuration.requestVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.forList(it.map { ReferenceEntryDataSeriesIndex(it) })
+            gestalt.configuration.requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.forList(it.map { ReferenceEntryDataSeriesIndex(it) })
           }
 
           configurableColorNullable("Background", gestalt.historyReferenceEntryLayer.configuration::background)
 
           configurableInsetsSeparate("Viewport", gestalt::contentViewportMargin)
+
+          configurableDouble("Stripe height", gestalt.historyReferenceEntryLayer.configuration::stripeHeight) {
+            max = 50.0
+          }
+          configurableDouble("Stripe distance", gestalt.historyReferenceEntryLayer.configuration::stripesDistance) {
+            max = 50.0
+          }
         }
       }
     }

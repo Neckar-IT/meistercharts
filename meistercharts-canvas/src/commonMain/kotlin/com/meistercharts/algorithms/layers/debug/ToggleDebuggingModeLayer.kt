@@ -42,22 +42,29 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
   override fun paint(paintingContext: LayerPaintingContext) {
   }
 
+  /**
+   * Listen to the "magic" debug keystroke
+   */
   override val keyEventHandler: CanvasKeyEventHandler = object : CanvasKeyEventHandler {
     override fun onDown(event: KeyDownEvent, chartSupport: ChartSupport): EventConsumption {
-      if (event.keyStroke == data.toggleDebugKeyStroke) {
-        chartSupport.debug.toggle()
-        chartSupport.layerSupport.markAsDirty()
+      when (event.keyStroke) {
+        data.toggleDebugKeyStroke -> {
+          chartSupport.debug.toggle()
+          chartSupport.layerSupport.markAsDirty()
 
-        return EventConsumption.Consumed
+          return EventConsumption.Consumed
+        }
+
+        data.toggleRecordPaintStatisticsKeyStroke -> {
+          chartSupport.layerSupport::recordPaintStatistics.toggle()
+          chartSupport.layerSupport.markAsDirty()
+
+          return EventConsumption.Consumed
+        }
+
+        else -> return EventConsumption.Ignored
       }
-      if (event.keyStroke == data.toggleRecordPaintStatisticsKeyStroke) {
-        chartSupport.layerSupport::recordPaintStatistics.toggle()
-        chartSupport.layerSupport.markAsDirty()
 
-        return EventConsumption.Consumed
-      }
-
-      return EventConsumption.Ignored
     }
   }
 

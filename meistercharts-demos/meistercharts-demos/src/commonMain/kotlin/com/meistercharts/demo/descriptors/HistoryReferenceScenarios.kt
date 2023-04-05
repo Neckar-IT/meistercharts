@@ -185,7 +185,7 @@ object HistoryReferenceScenarios {
     fun createDiscreteTimelineChartGestalt(): DiscreteTimelineChartGestalt {
       return DiscreteTimelineChartGestalt(historyStorage, { historyConfiguration }) {
         this.minimumSamplingPeriod = samplingPeriod
-        this.requestVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { 10 }
+        this.requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { 10 }
       }
     }
 

@@ -142,6 +142,11 @@ external interface DiscreteDataSeriesConfiguration {
   val stripeStyles: Array<StripeStyle?>?
 
   /**
+   * The font to be used for a stripe-label
+   */
+  val stripeLabelFont: FontStyle?
+
+  /**
    * How values are aggregated when the plotter is zoomed out
    */
   val aggregationMode: DiscreteEntryAggregationMode?

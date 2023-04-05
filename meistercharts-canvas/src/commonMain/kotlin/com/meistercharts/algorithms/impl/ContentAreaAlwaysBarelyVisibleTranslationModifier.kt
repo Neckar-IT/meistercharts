@@ -37,12 +37,12 @@ class ContentAreaAlwaysBarelyVisibleTranslationModifier(
    * Modifies the min/max panning.
    * A visualization that describes the limits can be found in "DefaultPanLimiter.svg"
    */
-  @ContentArea
   @px
-  override fun modifyTranslation(@ContentArea @px translation: Distance, calculator: ChartCalculator): Distance {
+  override fun modifyTranslation(@Zoomed @px translation: Distance, calculator: ChartCalculator): @Zoomed Distance {
     @Zoomed val minX = calculator.contentAreaRelative2zoomedX(-1.0)
     @Zoomed val minY = calculator.contentAreaRelative2zoomedY(-1.0)
 
+    //TODO is this correct? What happens when the zoom is not 1.0?
     @ContentArea val maxX = calculator.chartState.contentAreaWidth
     @ContentArea val maxY = calculator.chartState.contentAreaHeight
 

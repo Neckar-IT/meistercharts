@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.api.bar.BarChartGrouped
 import com.meistercharts.api.bar.BarChartStacked
 import com.meistercharts.api.bullet.BulletChart
 import com.meistercharts.api.circular.CircularChart
 import com.meistercharts.api.compass.Compass
 import com.meistercharts.api.discrete.DiscreteTimelineChart
+import com.meistercharts.api.discrete.applyDiscreteTimelineChartSickDefaults
 import com.meistercharts.api.histogram.Histogram
 import com.meistercharts.api.line.LineChartSimple
 import com.meistercharts.api.line.TimeLineChart
@@ -471,6 +473,8 @@ fun createDiscreteTimelineChart(): DiscreteTimelineChart {
   val meisterChartBuilder = MeisterChartBuilderJS.create("DiscreteTimelineChart")
   val gestalt = DiscreteTimelineChartGestalt(historyStorage).apply {
     configure(meisterChartBuilder)
+
+    meisterChartBuilder.applyDiscreteTimelineChartSickDefaults()
   }
 
   val meisterChart = meisterChartBuilder.build()

@@ -37,7 +37,7 @@ import it.neckar.open.unit.other.px
  * -
  *
  */
-class ContentAreaAlwaysCompletelyVisibleTranslationModifier constructor(
+class ContentAreaAlwaysCompletelyVisibleTranslationModifier(
   val axisSelection: AxisSelection = AxisSelection.Both,
   /**
    * Provides the margin that will also be kept visible
@@ -56,7 +56,7 @@ class ContentAreaAlwaysCompletelyVisibleTranslationModifier constructor(
    */
   @ContentArea
   @px
-  override fun modifyTranslation(@ContentArea @px translation: Distance, calculator: ChartCalculator): Distance {
+  override fun modifyTranslation(@Zoomed @px translation: Distance, calculator: ChartCalculator): Distance {
     //The margin that is kept visible, too
     @Zoomed val margin = marginProvider(calculator)
 
