@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit
 class HistoryBucketRangeTest {
   @Test
   fun testFind() {
-    SamplingPeriod.values().forEach {
+    SamplingPeriod.entries.forEach {
       val found = HistoryBucketRange.find(it)
       assertThat(found).isNotNull()
       assertThat(found.samplingPeriod).isEqualTo(it)
@@ -58,8 +58,7 @@ class HistoryBucketRangeTest {
 
   @Test
   fun testDownSamplingSizes() {
-    HistoryBucketRange.values()
-      .asList()
+    HistoryBucketRange.entries
       .drop(1)
       .forEach {
         val lower = it.lower()!!
@@ -105,7 +104,7 @@ class HistoryBucketRangeTest {
   @Disabled
   @Test
   fun printDurations() {
-    HistoryBucketRange.values()
+    HistoryBucketRange.entries
       .forEachIndexed { index, level ->
         val duration = level.samplingPeriod.distance * level.entriesCount
         println("Level: $level -- $duration ms")
@@ -114,7 +113,7 @@ class HistoryBucketRangeTest {
 
   @Test
   internal fun testPlausibility() {
-    HistoryBucketRange.values()
+    HistoryBucketRange.entries
       .forEachIndexed { index, level ->
         val duration = level.samplingPeriod.distance * level.entriesCount
         assertThat(level.duration).isEqualTo(duration)
@@ -123,7 +122,7 @@ class HistoryBucketRangeTest {
 
   @Test
   internal fun testIt() {
-    SamplingPeriod.values().forEach {
+    SamplingPeriod.entries.forEach {
       HistoryBucketRange.find(it)
     }
   }
@@ -153,14 +152,14 @@ class HistoryBucketRangeTest {
 
   @Test
   fun testGreatest() {
-    HistoryBucketRange.values().fastForEach {
+    HistoryBucketRange.entries.fastForEach {
       assertThat(HistoryBucketRange.greatestRange.duration).isGreaterThanOrEqualTo(it.duration)
     }
   }
 
   @Test
   fun testSmallest() {
-    HistoryBucketRange.values().fastForEach {
+    HistoryBucketRange.entries.fastForEach {
       assertThat(HistoryBucketRange.smallestRange.duration).isLessThanOrEqualTo(it.duration)
     }
   }
@@ -168,7 +167,7 @@ class HistoryBucketRangeTest {
   @Test
   fun testUpper() {
     assertThat(HistoryBucketRange.greatestRange.upper()).isNull()
-    HistoryBucketRange.values().fastForEach {
+    HistoryBucketRange.entries.fastForEach {
       if (it != HistoryBucketRange.greatestRange) {
         val upper = it.upper()
         assertThat(upper).isNotNull()
@@ -180,7 +179,7 @@ class HistoryBucketRangeTest {
   @Test
   fun testLower() {
     assertThat(HistoryBucketRange.smallestRange.lower()).isNull()
-    HistoryBucketRange.values().fastForEach {
+    HistoryBucketRange.entries.fastForEach {
       if (it != HistoryBucketRange.smallestRange) {
         val lower = it.lower()
         assertThat(lower).isNotNull()
@@ -191,7 +190,7 @@ class HistoryBucketRangeTest {
 
   @Test
   fun testContains() {
-    HistoryBucketRange.values().fastForEach {
+    HistoryBucketRange.entries.fastForEach {
       if (it == HistoryBucketRange.smallestRange) {
         return@fastForEach
       }

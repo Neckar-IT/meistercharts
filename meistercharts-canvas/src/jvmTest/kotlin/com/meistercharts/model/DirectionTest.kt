@@ -42,7 +42,7 @@ internal class DirectionTest {
 
   @Test
   internal fun testGetStability() {
-    Direction.values().forEach { anchorDirection ->
+    Direction.entries.forEach { anchorDirection ->
       assertThat(Direction.get(anchorDirection.verticalAlignment, anchorDirection.horizontalAlignment)).isSameAs(anchorDirection)
     }
   }

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 internal class CornerTest {
   @Test
   internal fun testGetStability() {
-    Corner.values().forEachIndexed { index, corner ->
+    Corner.entries.forEachIndexed { index, corner ->
       assertThat(Corner.get(index)).isSameAs(corner)
     }
   }

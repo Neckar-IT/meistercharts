@@ -43,7 +43,7 @@ class DebugConfiguration {
    */
   fun setAll(enabled: Boolean) {
     if (enabled) {
-      this.enabledFeaturesProperty.value = DebugFeature.values().toSet()
+      this.enabledFeaturesProperty.value = DebugFeature.entries.toSet()
     } else {
       this.enabledFeaturesProperty.value = emptySet()
     }

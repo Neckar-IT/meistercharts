@@ -143,7 +143,7 @@ class HistoryBucketDescriptorTest {
     val millis = 1312003123123.1234864
     assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123")
 
-    HistoryBucketRange.values().forEach {
+    HistoryBucketRange.entries.forEach {
       val descriptor = HistoryBucketDescriptor.forTimestamp(millis, it)
 
       assertThat(descriptor.start).isEqualTo(descriptor.index * it.duration)
@@ -306,7 +306,7 @@ class HistoryBucketDescriptorTest {
   fun testChildrenAllLevels() {
     val now = 1.5900732415E12
 
-    HistoryBucketRange.values().forEach { bucketRange ->
+    HistoryBucketRange.entries.forEach { bucketRange ->
       if (bucketRange == HistoryBucketRange.smallestRange) {
         return@forEach
       }

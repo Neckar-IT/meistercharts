@@ -33,24 +33,24 @@ fun main() {
 
 class Creator {
   fun createDeclarations() {
-    Application.values().forEach {
+    Application.entries.forEach {
       createDeclarations(it)
     }
   }
 
   fun createCalculatorMethods() {
     //direct
-    val count = Application.values().size
+    val count = Application.entries.size
 
     for (i in 0..count - 2) {
-      val source = Application.values()[i]
-      val target = Application.values()[i + 1]
+      val source = Application.entries[i]
+      val target = Application.entries[i + 1]
 
       if (source == Application.Domain || target == Application.Domain) {
         continue
       }
 
-      Usage.values().forEach {
+      Usage.entries.forEach {
         //Forward
         println(createDirectCalculatorMethods(source, target, it))
 
@@ -62,15 +62,15 @@ class Creator {
     //indirect - via 1 value
 
     for (i in 0..count - 3) {
-      val source = Application.values()[i]
-      val via = Application.values()[i + 1]
-      val target = Application.values()[i + 2]
+      val source = Application.entries[i]
+      val via = Application.entries[i + 1]
+      val target = Application.entries[i + 2]
 
       if (source == Application.Domain || target == Application.Domain) {
         continue
       }
 
-      Usage.values().forEach {
+      Usage.entries.forEach {
         //Forward
         println(createIndirectCalculatorMethods(source, via, target, it))
 
@@ -82,16 +82,16 @@ class Creator {
 
     //indirect - via 2 values
     for (i in 0..count - 4) {
-      val source = Application.values()[i]
-      val via1 = Application.values()[i + 1]
-      val via2 = Application.values()[i + 2]
-      val target = Application.values()[i + 3]
+      val source = Application.entries[i]
+      val via1 = Application.entries[i + 1]
+      val via2 = Application.entries[i + 2]
+      val target = Application.entries[i + 3]
 
       if (source == Application.Domain || target == Application.Domain) {
         continue
       }
 
-      Usage.values().forEach {
+      Usage.entries.forEach {
         //Forward
         println(createIndirectCalculatorMethods(source, via1, via2, target, it))
 
@@ -102,17 +102,17 @@ class Creator {
 
     //indirect - via 3 values
     for (i in 0..count - 5) {
-      val source = Application.values()[i]
-      val via1 = Application.values()[i + 1]
-      val via2 = Application.values()[i + 2]
-      val via3 = Application.values()[i + 3]
-      val target = Application.values()[i + 4]
+      val source = Application.entries[i]
+      val via1 = Application.entries[i + 1]
+      val via2 = Application.entries[i + 2]
+      val via3 = Application.entries[i + 3]
+      val target = Application.entries[i + 4]
 
       if (source == Application.Domain || target == Application.Domain) {
         continue
       }
 
-      Usage.values().forEach {
+      Usage.entries.forEach {
         //Forward
         println(createIndirectCalculatorMethods(source, via1, via2, via3, target, it))
 

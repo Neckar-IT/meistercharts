@@ -418,10 +418,10 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     pane.add(Components.label(layerSupport.chartSupport.rootChartState.contentAreaSizeProperty.toJavaFx().map { it.format() }), "span")
 
     pane.add(Components.label("Y Axis Orientation"))
-    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationYProperty.toJavaFx(), AxisOrientationY.values()).also { it.cellFactory }), "span")
+    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationYProperty.toJavaFx(), AxisOrientationY.entries).also { it.cellFactory }), "span")
 
     pane.add(Components.label("X Axis Orientation"))
-    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty.toJavaFx(), AxisOrientationX.values())), "span")
+    pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty.toJavaFx(), AxisOrientationX.entries)), "span")
 
     pane.add(Components.label("Snap Configuration"))
     pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty.toJavaFx(), enumEntries())), "span")
@@ -527,7 +527,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     pane.add(Components.headline1("Debug Features"), "span, gaptop 15px")
 
-    DebugFeature.values().map { debugFeature ->
+    DebugFeature.entries.map { debugFeature ->
       val debugModeEnabled = ObservableBoolean().apply {
         consume {
           layerSupport.apply {

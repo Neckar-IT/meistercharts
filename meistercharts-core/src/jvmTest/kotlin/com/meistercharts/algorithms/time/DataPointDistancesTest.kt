@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 class DataPointDistancesTest {
   @Test
   fun testOrder() {
-    val values = DataPointDistances.values()
+    val values = DataPointDistances.entries
     for (i in 1 until values.size) {
       assertThat(values[i - 1].distance).isLessThan(values[i].distance)
     }
@@ -31,7 +31,7 @@ class DataPointDistancesTest {
 
   @Test
   fun testNextGreaterDistance() {
-    val values = DataPointDistances.values()
+    val values = DataPointDistances.entries
     assertThat(values.last().getNextGreaterDistance()).isNull()
     for (i in 0 until values.size - 1) {
       assertThat(values[i].getNextGreaterDistance()).isEqualTo(values[i + 1])
@@ -40,7 +40,7 @@ class DataPointDistancesTest {
 
   @Test
   fun testPreviousSmallerDistance() {
-    val values = DataPointDistances.values()
+    val values = DataPointDistances.entries
     assertThat(values.first().getPreviousSmallerDistance()).isNull()
     for (i in 1 until values.size) {
       assertThat(values[i].getPreviousSmallerDistance()).isEqualTo(values[i - 1])

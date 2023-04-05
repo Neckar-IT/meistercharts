@@ -49,7 +49,7 @@ class DirtyRangesDebugLayer(
     val visibleTimeRange = chartCalculator.visibleTimeRangeXinWindow(contentAreaTimeRange)
 
 
-    SamplingPeriod.values()
+    SamplingPeriod.entries
       .fastForEachIndexed { index, period ->
         val dirtyTimeRanges = downSamplingDirtyRangesCollector[period]
 

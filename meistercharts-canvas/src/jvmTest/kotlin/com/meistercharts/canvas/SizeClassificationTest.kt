@@ -25,7 +25,7 @@ class SizeClassificationTest {
 
   @Test
   fun testMinMax() {
-    SizeClassification.values().fastForEach {
+    SizeClassification.entries.fastForEach {
       assertThat(it.min < it.max)
     }
   }
@@ -33,7 +33,7 @@ class SizeClassificationTest {
   @Test
   fun testBreakpoints() {
     var previousSizeClassification: SizeClassification? = null
-    SizeClassification.values().fastForEach { sizeClassification ->
+    SizeClassification.entries.fastForEach { sizeClassification ->
       previousSizeClassification?.let {
         assertThat(sizeClassification.min).isEqualTo(it.max)
       }

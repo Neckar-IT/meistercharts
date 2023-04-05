@@ -45,7 +45,7 @@ class DownSamplingTest {
   @Test
   @Disabled
   fun printDownSamplingSizes() {
-    HistoryBucketRange.values().forEach {
+    HistoryBucketRange.entries.forEach {
       println("${it.name}\t-\t${it.samplingPeriod.name}")
 
       if (it != HistoryBucketRange.HundredMillis) {

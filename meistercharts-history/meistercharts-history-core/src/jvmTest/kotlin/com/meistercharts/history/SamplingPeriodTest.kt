@@ -43,22 +43,22 @@ class SamplingPeriodTest {
   fun testAbove() {
     assertThat(SamplingPeriod.EverySecond.above()).isSameAs(SamplingPeriod.EveryTenSeconds)
 
-    SamplingPeriod.values().forEach {
-      if (it.ordinal == SamplingPeriod.values().size - 1) {
+    SamplingPeriod.entries.forEach {
+      if (it.ordinal == SamplingPeriod.entries.size - 1) {
         return@forEach
       }
 
-      assertThat(it.above()).isSameAs(SamplingPeriod.values()[it.ordinal + 1])
+      assertThat(it.above()).isSameAs(SamplingPeriod.entries[it.ordinal + 1])
     }
   }
 
   @Test
   internal fun testMaxFactor() {
-    SamplingPeriod.values().forEachIndexed { index, samplingPeriod ->
+    SamplingPeriod.entries.forEachIndexed { index, samplingPeriod ->
       if (index == 0) {
         return@forEachIndexed
       }
-      val previous = SamplingPeriod.values()[index - 1]
+      val previous = SamplingPeriod.entries[index - 1]
       val factor = samplingPeriod.distance / previous.distance
 
       assertThat(factor).all("Factor: $factor -- from $previous to $samplingPeriod") {
@@ -69,7 +69,7 @@ class SamplingPeriodTest {
 
   @Test
   internal fun testGetByDistance() {
-    SamplingPeriod.values().forEach {
+    SamplingPeriod.entries.forEach {
       assertThat(SamplingPeriod.getForDistance(it.distance)).isSameAs(it)
     }
   }

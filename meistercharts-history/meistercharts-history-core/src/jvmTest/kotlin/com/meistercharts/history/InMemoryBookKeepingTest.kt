@@ -99,7 +99,7 @@ internal class InMemoryBookKeepingTest {
   }
 
   private fun assertBookKeepingIsEmpty(bookKeeping: InMemoryBookKeeping) {
-    SamplingPeriod.values().fastForEach { samplingPeriod ->
+    SamplingPeriod.entries.fastForEach { samplingPeriod ->
       samplingPeriod.toHistoryBucketRange().let { historyBucketRange ->
         assertThat(bookKeeping.earliestBound(historyBucketRange)).isNull()
         assertThat(bookKeeping.latestBound(historyBucketRange)).isNull()

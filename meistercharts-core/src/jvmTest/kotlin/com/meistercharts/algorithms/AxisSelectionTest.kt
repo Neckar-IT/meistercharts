@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 class AxisSelectionTest {
   @Test
   fun testNegate() {
-    AxisSelection.values().forEach {
+    AxisSelection.entries.forEach {
       val negated = it.negate()
 
       assertThat(negated.containsX).isNotEqualTo(it.containsX)
