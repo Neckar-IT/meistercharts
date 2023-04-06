@@ -124,8 +124,6 @@ class DiscreteTimelineChart internal constructor(
     val historyConfiguration = gestalt.configuration.historyConfiguration()
 
     if (historyConfiguration.referenceEntryDataSeriesCount == 0) {
-      //TODO optimize!!!!
-      println("Skip because history config is empty")
       return
     }
 
@@ -185,7 +183,10 @@ class DiscreteTimelineChart internal constructor(
           @Zoomed val windowWidth = calculator.chartState.windowWidth
           @Zoomed val endZoomed = calculator.domainRelative2zoomedX(endRelative)
 
-          return translation.coerceXWithin(-endZoomed + windowWidth - 20.0, -startZoomed + 20.0 + gestalt.categoryAxisLayer.style.size)
+          val min = -endZoomed + windowWidth - 20.0
+          val max = (-startZoomed + 20.0 + gestalt.categoryAxisLayer.style.size).coerceAtLeast(min)
+
+          return translation.coerceXWithin(min, max)
         }
 
         override fun modifyZoom(zoom: com.meistercharts.model.Zoom, calculator: ChartCalculator): com.meistercharts.model.Zoom {
@@ -293,6 +294,8 @@ actual external interface DiscreteTimelineChartData {
    * Contains one entry for each data series.
    */
   actual val series: Array<DiscreteDataEntriesForDataSeries>
+
+  actual val defaultEntryDuration: @ms Double
 }
 
 /**

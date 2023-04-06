@@ -43,7 +43,7 @@ class DiscreteCalculationsSampleTest {
   )
 
   val data: DiscreteTimelineChartDataImpl = DiscreteTimelineChartData(
-    seriesData
+    seriesData, 10.0
   )
 
   @Test

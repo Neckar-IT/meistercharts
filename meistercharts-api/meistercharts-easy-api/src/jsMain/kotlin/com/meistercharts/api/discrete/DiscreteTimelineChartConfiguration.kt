@@ -25,11 +25,6 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndexInt
  * Configuration for the discrete timeline chart
  */
 external interface DiscreteTimelineChartConfiguration {
-  ///**
-  // * Whether the play mode is active
-  // */
-  //val play: Boolean?
-
   /**
    * The time range that is currently visible (in UTC)
    */

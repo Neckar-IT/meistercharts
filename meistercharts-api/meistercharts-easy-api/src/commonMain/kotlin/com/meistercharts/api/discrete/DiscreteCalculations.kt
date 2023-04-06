@@ -58,13 +58,22 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
 
   require(end > start) { "Invalid start ($start), end ($end)" }
 
-  @ms val duration = end - start
-  val samplingPeriod = SamplingPeriod.withMinDistance(duration / 600.0)
+  //find shortest entry duration
+  //@ms val shortestEntryDuration = findShortestEntry().duration
+  //println("shortestEntryDuration: $shortestEntryDuration ms")
+  //@ms val longestEntryDuration = findLongestEntry().duration
+  //println("longestEntryDuration: $longestEntryDuration ms")
+  //@ms val targetDuration = findAverageEntryDuration()
+
+  @ms val defaultEntryDuration = this.defaultEntryDuration
+  println("defaultEntryDuration $defaultEntryDuration ms")
+
+  //We want the shorted entry to span at least three samples
+  val samplingPeriod = SamplingPeriod.withMaxDistance(defaultEntryDuration * 4)
 
   //
   //Generate the timestamps
   //
-
 
   @ms val timeStamps = series.allTimestampsForChunk(start, end, samplingPeriod)
 
@@ -149,7 +158,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
 /**
  * Returns the first start of the first entry - over all series
  */
-fun DiscreteTimelineChartData.findFirstStart(): Double {
+fun DiscreteTimelineChartData.findFirstStart(): @ms Double {
   @ms val start = this.series
     .filter { it.isNotEmpty() }
     .minOf {
@@ -159,9 +168,38 @@ fun DiscreteTimelineChartData.findFirstStart(): Double {
 }
 
 /**
+ * Returns the entry with the shorted duration
+ */
+fun DiscreteTimelineChartData.findShortestEntry(): @Sorted(by = "start") DiscreteDataEntry {
+  return this.series
+    .asSequence()
+    .flatMap { it.entries.asSequence() }
+    .minBy {
+      it.duration
+    }
+}
+
+fun DiscreteTimelineChartData.findLongestEntry(): @Sorted(by = "start") DiscreteDataEntry {
+  return this.series
+    .asSequence()
+    .flatMap { it.entries.asSequence() }
+    .maxBy {
+      it.duration
+    }
+}
+
+fun DiscreteTimelineChartData.findAverageEntryDuration(): @ms Double {
+  return this.series
+    .asSequence()
+    .flatMap { it.entries.asSequence() }
+    .map { it.duration }
+    .average()
+}
+
+/**
  * Returns the last end value - over all series and entries
  */
-fun DiscreteTimelineChartData.findLastEnd(): Double {
+fun DiscreteTimelineChartData.findLastEnd(): @ms Double {
   @ms val end = this.series
     .filter { it.isNotEmpty() }
     .maxOf {
@@ -233,6 +271,12 @@ fun Array<DiscreteDataEntriesForDataSeries>.timestampsFromEntryBounds(): Sequenc
 inline fun DiscreteDataEntriesForDataSeries.isNotEmpty(): Boolean {
   return entries.isNotEmpty()
 }
+
+inline val DiscreteDataEntry.duration: @ms Double
+  get() {
+    return end - start
+  }
+
 
 /**
  * Returns the best index for the timestamp

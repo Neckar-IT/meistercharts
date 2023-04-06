@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test
 class DiscreteCalculationsTest {
   @Test
   fun testEmpty() {
-    assertThat(DiscreteTimelineChartData(emptyArray()).toChunk(HistoryConfiguration.empty)).isNull()
+    assertThat(DiscreteTimelineChartData(emptyArray(), 10_000.0).toChunk(HistoryConfiguration.empty)).isNull()
   }
 
   @Test
@@ -184,15 +184,14 @@ class DiscreteCalculationsTest {
             DiscreteDataEntry(2002.0, 4003.0, "the label2", 2.0),
           )
         )
-      )
+      ),
+      10.0
     )
 
     val pair = data.toChunk(historyConfiguration)
     requireNotNull(pair)
     val samplingPeriod = pair.second
     val chunk = pair.first
-
-    assertThat((4000.0 - 1000.0) / samplingPeriod.distance).isBetween(100.0, 600.0)
 
     assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryTenMillis)
 

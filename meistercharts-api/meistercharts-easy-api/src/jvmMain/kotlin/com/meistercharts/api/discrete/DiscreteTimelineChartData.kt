@@ -27,9 +27,11 @@ actual interface DiscreteTimelineChartData {
    */
   actual val series: Array<DiscreteDataEntriesForDataSeries>
 
+  actual val defaultEntryDuration: @ms Double
+
   companion object {
-    operator fun invoke(seriesData: Array<DiscreteDataEntriesForDataSeries>): DiscreteTimelineChartDataImpl {
-      return DiscreteTimelineChartDataImpl(seriesData)
+    operator fun invoke(seriesData: Array<DiscreteDataEntriesForDataSeries>, defaultEntryDuration: @ms Double): DiscreteTimelineChartDataImpl {
+      return DiscreteTimelineChartDataImpl(seriesData, defaultEntryDuration)
     }
   }
 }
@@ -71,6 +73,7 @@ actual interface DiscreteDataEntry {
 
 class DiscreteTimelineChartDataImpl(
   override val series: Array<DiscreteDataEntriesForDataSeries>,
+  override val defaultEntryDuration: @ms Double,
 ) : DiscreteTimelineChartData {
 }
 
