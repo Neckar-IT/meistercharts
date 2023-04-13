@@ -15,7 +15,6 @@
  */
 package com.meistercharts.demo.descriptors.history
 
-import com.meistercharts.algorithms.LinearValueRange
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
@@ -33,6 +32,7 @@ import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoCategory
@@ -72,16 +72,15 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
+import it.neckar.open.formatting.format
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.fastMap
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.kotlin.lang.random
-import it.neckar.open.time.nowMillis
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
-import it.neckar.open.formatting.format
-import it.neckar.open.i18n.TextKey
-import it.neckar.open.unit.other.pct
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
@@ -95,6 +94,7 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
     oneSampleEvery100ms,
     oneSampleEvery100msSick,
     PredefinedConfiguration({}, "empty"),
+    PredefinedConfiguration({ this.setUpDemo() }, "demo setup"),
     oneSampleEvery100msLogarithmic,
     oneSampleEvery16msCached500ms,
     oneSampleEvery16msCached50ms,

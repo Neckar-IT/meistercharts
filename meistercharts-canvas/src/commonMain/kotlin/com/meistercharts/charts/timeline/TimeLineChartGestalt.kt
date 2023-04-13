@@ -16,6 +16,7 @@
 package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.ChartState
+import com.meistercharts.algorithms.LinearValueRange
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.axis.AxisEndConfiguration
@@ -82,6 +83,7 @@ import com.meistercharts.algorithms.withContentAreaSize
 import com.meistercharts.algorithms.withContentViewportMargin
 import com.meistercharts.algorithms.withTranslation
 import com.meistercharts.algorithms.withZoom
+import com.meistercharts.animation.Easing
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PhysicalPixel
@@ -109,8 +111,10 @@ import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.support.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.thresholdsSupport
+import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
 import com.meistercharts.history.AndBefore
+import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.EnumDataSeriesIndex
@@ -121,13 +125,19 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.HistoryStorage
+import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ObservableHistoryStorage
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.history.WritableHistoryStorage
 import com.meistercharts.history.atMost
 import com.meistercharts.history.delegate
 import com.meistercharts.history.fastForEachIndexed
+import com.meistercharts.history.generator.EnumValueGenerator
+import com.meistercharts.history.generator.HistoryChunkGenerator
+import com.meistercharts.history.generator.ReferenceEntryGenerator
+import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
@@ -138,16 +148,23 @@ import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
 import com.meistercharts.style.withFillIfNull
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
 import it.neckar.open.formatting.TimeFormatWithMillis
 import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
+import it.neckar.open.formatting.format
+import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
+import it.neckar.open.kotlin.lang.fastMap
+import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.kotlin.lang.isPositive
+import it.neckar.open.kotlin.lang.random
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
@@ -166,6 +183,8 @@ import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms
 import kotlin.jvm.JvmOverloads
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Callback for value axis styles
@@ -1463,4 +1482,143 @@ class TimeLineChartGestalt
   companion object {
     val defaultMinimumSamplingPeriod: SamplingPeriod = SamplingPeriod.EveryHundredMillis
   }
+}
+
+/**
+ * Set up with nice data for a demo.
+ */
+fun TimeLineChartGestalt.setUpDemo(): Disposable {
+  val samplingPeriod = SamplingPeriod.EveryHundredMillis
+
+  style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
+    style.size = 120.0
+    style.ticksFormat = when (dataSeriesIndex.value) {
+      3 -> decimalFormat2digits
+      7 -> decimalFormat1digit
+      else -> intFormat
+    }
+  }
+  style.requestedVisibleValueAxesIndices = object : DecimalDataSeriesIndexProvider {
+    override fun valueAt(index: Int): DecimalDataSeriesIndex {
+      return when (index) {
+        0 -> DecimalDataSeriesIndex(1)
+        1 -> DecimalDataSeriesIndex(2)
+        2 -> DecimalDataSeriesIndex(3)
+        else -> throw IllegalArgumentException("invalid index $index")
+      }
+    }
+
+    override fun size(): Int {
+      return 3
+    }
+  }
+
+  //Avoid gaps for the cross wire - when adding only
+  data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
+
+  val writableHistoryStorage = data.historyStorage as WritableHistoryStorage
+
+  data.historyConfiguration = historyConfiguration {
+    decimalDataSeries(DataSeriesId(17), TextKey.simple("Mass Flow Rate [kg/h]"), HistoryUnit("kg/h"))
+    decimalDataSeries(DataSeriesId(23), TextKey.simple("Flow Velocity [m/s]"), HistoryUnit("m/s"))
+    decimalDataSeries(DataSeriesId(56), TextKey.simple("Volume [m³]"), HistoryUnit("m³"))
+    decimalDataSeries(DataSeriesId(89), TextKey.simple("Volumetric Flow Rate [m³/h]"), HistoryUnit("m³/h"))
+    decimalDataSeries(DataSeriesId(117), TextKey.simple("Mass [kg]"), HistoryUnit("kg"))
+    decimalDataSeries(DataSeriesId(118), TextKey.simple("Energy [kWh]"), HistoryUnit("kWh"))
+    decimalDataSeries(DataSeriesId(123), TextKey.simple("Temperature [°C]"), HistoryUnit("°C"))
+    decimalDataSeries(DataSeriesId(143), TextKey.simple("Pressure [bar]"), HistoryUnit("bar"))
+
+    enumDataSeries(DataSeriesId(1001), TextKey.simple("Global State"), HistoryEnum.createSimple("Warning State", listOf("Ok", "Warning", "Error")))
+    enumDataSeries(DataSeriesId(1002), TextKey.simple("Valve"), HistoryEnum.createSimple("Valve State", listOf("Open", "Closed")))
+    enumDataSeries(DataSeriesId(1003), TextKey.simple("Compliance"), HistoryEnum.createSimple("Compliance State", listOf("Compliant", "Not Compliant", "Unknown")))
+  }
+
+  style.lineValueRanges = MultiProvider.forListModulo(
+    listOf(
+      ValueRange.linear(0.0, 1000.0),
+      ValueRange.linear(-120.0, 300.0),
+      ValueRange.linear(0.0, 999999.0),
+      ValueRange.linear(-0.5, 17.0),
+      ValueRange.linear(0.0, 1000.0),
+      ValueRange.linear(0.0, 999999.0),
+      ValueRange.linear(0.0, 999999.0),
+      ValueRange.linear(-50.0, 100.0)
+    )
+  )
+
+  val easings = listOf(
+    Easing.inOut,
+    Easing.smooth,
+    Easing.inOutBack,
+  )
+
+  val decimalValueGenerators = data.historyConfiguration.decimalDataSeriesCount.fastMap { decimalDataSeriesIndex ->
+    TimeBasedValueGeneratorBuilder {
+      val dataSeriesValueRange = style.lineValueRanges.valueAt(decimalDataSeriesIndex) as LinearValueRange
+      startValue = dataSeriesValueRange.center() + (random.nextDouble() - 0.5).coerceAtMost(0.2).coerceAtLeast(-0.2) * dataSeriesValueRange.delta
+      minDeviation = dataSeriesValueRange.delta * (0.025 * (decimalDataSeriesIndex + 1)).coerceAtMost(0.25)
+      maxDeviation = (dataSeriesValueRange.delta * (0.05 * (decimalDataSeriesIndex + 1)).coerceAtMost(0.25)).coerceAtLeast(minDeviation * 1.001)
+      period = 2_000.0 * (decimalDataSeriesIndex + 1)
+      valueRange = dataSeriesValueRange.reduced(0.25)
+      easing = easings.getModulo(decimalDataSeriesIndex)
+    }.build()
+  }
+
+  val enumValueGenerators: List<EnumValueGenerator> = listOf<EnumValueGenerator>(
+    EnumValueGenerator.modulo(5.seconds),
+    EnumValueGenerator.modulo(2.seconds),
+    EnumValueGenerator.modulo(3.seconds),
+  )
+
+  val referenceEntryGenerators: List<ReferenceEntryGenerator> = data.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
+    ReferenceEntryGenerator.random()
+  }
+
+  val historyChunkGenerator = HistoryChunkGenerator(
+    historyStorage = writableHistoryStorage, samplingPeriod = samplingPeriod,
+    decimalValueGenerators = decimalValueGenerators,
+    enumValueGenerators = enumValueGenerators,
+    referenceEntryGenerators = referenceEntryGenerators,
+    historyConfiguration = data.historyConfiguration
+  )
+
+  val addSamplesDisposable = it.neckar.open.time.repeat(100.milliseconds) {
+    historyChunkGenerator.next()?.let {
+      writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+    }
+  }.also {
+    onDispose(it)
+  }
+
+  this.data.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
+    override fun size(param1: DecimalDataSeriesIndex): Int {
+      return when (param1.value) {
+        1 -> 2
+        2 -> 1
+        else -> 0
+      }
+    }
+
+    override fun valueAt(index: Int, param1: DecimalDataSeriesIndex): Double {
+      val valueRange = style.lineValueRanges.valueAt(param1.value)
+      val valueRangeCenter = valueRange.center()
+      return when (param1.value) {
+        1 -> if (index == 0) valueRangeCenter - valueRange.deltaPositive * 0.4 else valueRangeCenter + valueRange.deltaPositive * 0.33333
+        2 -> valueRangeCenter * 0.7
+        else -> 0.0
+      }
+    }
+  }
+
+  this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
+    override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
+      return when (param1.value) {
+        1 -> listOf(if (index == 0) "Minimum" else "Maximum", data.thresholdValueProvider.valueAt(index, param1).format(0))
+        2 -> listOf("Average", data.thresholdValueProvider.valueAt(index, param1).format(0))
+        else -> emptyList()
+      }
+    }
+  }
+
+  return addSamplesDisposable
 }

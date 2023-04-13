@@ -18,15 +18,14 @@ package com.meistercharts.api.line
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
-import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.StripeStyle
 import com.meistercharts.api.TimeRange
@@ -49,6 +48,7 @@ import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.design.Theme
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexInt
@@ -65,6 +65,11 @@ import com.meistercharts.js.MeisterChartJS
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
+import it.neckar.commons.kotlin.js.debug
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.ifDebug
+import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEachIndexed
@@ -72,10 +77,6 @@ import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.unit.si.s
-import it.neckar.commons.kotlin.js.debug
-import it.neckar.logging.Logger
-import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -317,6 +318,14 @@ class TimeLineChart internal constructor(
         zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY))
       }
     }
+  }
+
+  /**
+   * Set up with nice data for a demo.
+   */
+  @Suppress("unused")
+  fun setUpDemo() {
+    gestalt.setUpDemo()
   }
 
   companion object {

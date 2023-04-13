@@ -20,6 +20,7 @@ import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
+import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoCategory
@@ -43,6 +44,7 @@ class TimeLineChartGestaltWithToolbarDemoDescriptor : ChartingDemoDescriptor<Tim
 
   override val predefinedConfigurations: List<PredefinedConfiguration<TimeLineChartGestalt.() -> Unit>> = listOf(
     PredefinedConfiguration({}, "empty"),
+    PredefinedConfiguration({ this.setUpDemo() }, "demo setup"),
     TimeLineChartGestaltDemoDescriptor.oneSampleEvery100ms,
     TimeLineChartGestaltDemoDescriptor.oneSampleEvery16msCached500ms,
     TimeLineChartGestaltDemoDescriptor.neckarITHomePage,
