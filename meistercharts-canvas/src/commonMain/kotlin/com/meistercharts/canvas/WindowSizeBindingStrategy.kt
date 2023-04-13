@@ -49,16 +49,13 @@ fun interface WindowSizeBindingStrategy {
 /**
  * Updates the window size immediately to the value of the canvas size
  */
-object ImmediateWindowSizeBindingStrategy : WindowSizeBindingStrategy {
+data object ImmediateWindowSizeBindingStrategy : WindowSizeBindingStrategy {
   override fun bind(chartState: MutableChartState, canvas: Canvas, onDispose: OnDispose) {
     canvas.sizeProperty.consumeImmediately {
       chartState.windowSize = it
     }
   }
 
-  override fun toString(): String {
-    return "ImmediateWindowSizeBindingStrategy"
-  }
 }
 
 /**

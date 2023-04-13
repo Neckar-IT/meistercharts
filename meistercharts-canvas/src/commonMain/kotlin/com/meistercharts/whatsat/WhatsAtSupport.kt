@@ -78,27 +78,21 @@ class WhatsAtSupport {
   /**
    * Returns only exact results for the location
    */
-  object Exact : Precision {
+  data object Exact : Precision {
     override fun matches(distance: @Zoomed Double): Boolean {
       return distance == 0.0
     }
 
-    override fun toString(): String {
-      return "Exact"
-    }
   }
 
   /**
    * Returns the nearest result (which might be far away!)
    */
-  object Nearest : Precision {
+  data object Nearest : Precision {
     override fun matches(distance: @Zoomed Double): Boolean {
       return true
     }
 
-    override fun toString(): String {
-      return "Nearest"
-    }
   }
 
   /**

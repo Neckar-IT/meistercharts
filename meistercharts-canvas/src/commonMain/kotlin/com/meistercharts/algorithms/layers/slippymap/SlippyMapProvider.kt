@@ -57,7 +57,7 @@ fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
  *
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
-object OpenStreetMap : SlippyMapProvider {
+data object OpenStreetMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
       0 -> "a"
@@ -71,9 +71,6 @@ object OpenStreetMap : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String = "© OpenStreetMap contributors"
 
-  override fun toString(): String {
-    return "OpenStreetMap"
-  }
 }
 
 /**
@@ -81,7 +78,7 @@ object OpenStreetMap : SlippyMapProvider {
  *
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
-object OpenStreetMapDe : SlippyMapProvider {
+data object OpenStreetMapDe : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
       0 -> "a"
@@ -95,9 +92,6 @@ object OpenStreetMapDe : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String? = "© OpenStreetMap contributors"
 
-  override fun toString(): String {
-    return "OpenStreetMapDe"
-  }
 }
 
 /**
@@ -106,7 +100,7 @@ object OpenStreetMapDe : SlippyMapProvider {
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  * [HumanitarianMap](https://wiki.openstreetmap.org/wiki/Humanitarian_map_style)
  */
-object OpenStreetMapHumanitarian : SlippyMapProvider {
+data object OpenStreetMapHumanitarian : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 2) {
       0 -> "a"
@@ -119,9 +113,6 @@ object OpenStreetMapHumanitarian : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String? = "© OpenStreetMap contributors"
 
-  override fun toString(): String {
-    return "OpenStreetMapHumanitarian"
-  }
 }
 
 /**
@@ -131,7 +122,7 @@ object OpenStreetMapHumanitarian : SlippyMapProvider {
  *
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
-object OpenStreetMapGrayscale : SlippyMapProvider {
+data object OpenStreetMapGrayscale : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     return "https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
   }
@@ -139,9 +130,6 @@ object OpenStreetMapGrayscale : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String? = "© OpenStreetMap contributors"
 
-  override fun toString(): String {
-    return "OpenStreetMapGrayscale"
-  }
 }
 
 /**
@@ -149,7 +137,7 @@ object OpenStreetMapGrayscale : SlippyMapProvider {
  *
  * [Stamen](http://maps.stamen.com/#toner/12/37.7706/-122.3782)
  */
-object OpenStreetMapBlackAndWhite : SlippyMapProvider {
+data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
       0 -> "a"
@@ -164,9 +152,6 @@ object OpenStreetMapBlackAndWhite : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String? = "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL"
 
-  override fun toString(): String {
-    return "OpenStreetMapBlackAndWhite"
-  }
 }
 
 /**
@@ -176,7 +161,7 @@ object OpenStreetMapBlackAndWhite : SlippyMapProvider {
  *
  * Does only support zoom levels up to 16!
  */
-object OpenStreetMapTerrain : SlippyMapProvider {
+data object OpenStreetMapTerrain : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
       0 -> "a"
@@ -191,9 +176,6 @@ object OpenStreetMapTerrain : SlippyMapProvider {
   // see also https://www.openstreetmap.org/copyright/en
   override val legalNotice: String? = "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL"
 
-  override fun toString(): String {
-    return "OpenStreetMapTerrain"
-  }
 }
 
 /**
@@ -201,7 +183,7 @@ object OpenStreetMapTerrain : SlippyMapProvider {
  *
  * [TermsOfUse](https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use)
  */
-object WikimediaMaps : SlippyMapProvider {
+data object WikimediaMaps : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     return "https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.x}/${tileIndex.y}.png"
   }
@@ -209,7 +191,4 @@ object WikimediaMaps : SlippyMapProvider {
   // https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use
   override val legalNotice: String? = "© OpenStreetMap contributors / Wikimedia"
 
-  override fun toString(): String {
-    return "WikimediaMaps"
-  }
 }

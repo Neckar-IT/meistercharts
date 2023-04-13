@@ -46,7 +46,7 @@ sealed interface ResizeByHandlesLayerState {
 /**
  * Default state
  */
-object DefaultState : ResizeByHandlesLayerState {
+data object DefaultState : ResizeByHandlesLayerState {
   override fun hoveringAboveHandle(handleDirection: Direction?): ResizeByHandlesLayerState {
     if (handleDirection == null) {
       return this
@@ -59,9 +59,6 @@ object DefaultState : ResizeByHandlesLayerState {
     return DraggingHandle(handleDirection)
   }
 
-  override fun toString(): String {
-    return "DefaultState"
-  }
 }
 
 /**

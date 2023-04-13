@@ -123,7 +123,7 @@ sealed class SearchConstraint {
 /**
  * Describes an exact hit
  */
-object Exact : SearchConstraint()
+data object Exact : SearchConstraint()
 
 /**
  * Constraints the search to the given time stamp and the closest value before

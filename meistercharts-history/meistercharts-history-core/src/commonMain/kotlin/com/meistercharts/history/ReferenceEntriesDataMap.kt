@@ -68,7 +68,7 @@ sealed interface ReferenceEntriesDataMap {
    */
   @Serializable
   @SerialName("Empty")
-  object Empty : ReferenceEntriesDataMap {
+  data object Empty : ReferenceEntriesDataMap {
     override fun get(id: ReferenceEntryId): ReferenceEntryData? {
       return null
     }
@@ -79,7 +79,7 @@ sealed interface ReferenceEntriesDataMap {
    */
   @Serializable
   @SerialName("Generated")
-  object Generated : ReferenceEntriesDataMap {
+  data object Generated : ReferenceEntriesDataMap {
     private val cache = cache<ReferenceEntryId, ReferenceEntryData>("ReferenceEntriesDataMap.generated", 100)
 
     override fun get(id: ReferenceEntryId): ReferenceEntryData {

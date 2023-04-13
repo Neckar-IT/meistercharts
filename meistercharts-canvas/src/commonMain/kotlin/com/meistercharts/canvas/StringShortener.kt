@@ -59,14 +59,11 @@ interface StringShortener {
     }
   }
 
-  object NoOp : StringShortener {
+  data object NoOp : StringShortener {
     override fun shorten(text: String, maxCharacters: Int, truncationSymbol: String): String {
       return text
     }
 
-    override fun toString(): String {
-      return "NoOp"
-    }
   }
 }
 

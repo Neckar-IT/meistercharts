@@ -273,11 +273,7 @@ sealed class RefreshRange
 /**
  * The complete descriptor has to be recalculated.
  */
-object RefreshCompletely : RefreshRange() {
-  override fun toString(): String {
-    return "RefreshCompletely"
-  }
-}
+data object RefreshCompletely : RefreshRange()
 
 /**
  * Only parts of the descriptor need to be refreshed
