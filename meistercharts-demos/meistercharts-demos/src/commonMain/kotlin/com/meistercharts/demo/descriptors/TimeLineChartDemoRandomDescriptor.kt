@@ -28,10 +28,12 @@ import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.history.generator.DecimalValueGenerator
 import com.meistercharts.history.generator.HistoryChunkGenerator
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.random.Perlin
 import it.neckar.open.time.repeat
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -62,6 +64,8 @@ class TimeLineChartDemoRandomDescriptor : ChartingDemoDescriptor<Nothing> {
           decimalDataSeries(DataSeriesId(2), "Default - inOutElastic")
           decimalDataSeries(DataSeriesId(3), "Default - sin")
           decimalDataSeries(DataSeriesId(4), "Default - linear")
+          decimalDataSeries(DataSeriesId(5), "Default - Perlin")
+          decimalDataSeries(DataSeriesId(6), "Default - Perlin Octave")
         }
 
         val timeLineChartGestalt = TimeLineChartGestalt(chartId, TimeLineChartGestalt.Data(historyStorage, historyConfiguration))
@@ -94,6 +98,14 @@ class TimeLineChartDemoRandomDescriptor : ChartingDemoDescriptor<Nothing> {
             valueRange = ValueRange.percentage
             easing = Easing.linear
           }.build(),
+
+          DecimalValueGenerator {// Perlin Normal
+            Perlin(123894454.0, 0.001, 1.0).noise(it)
+          }
+,
+          DecimalValueGenerator {// Perlin with octaves
+            Perlin(123894454.0, 0.001, 1.0).noiseOctave(it,7,0.9)
+          }
         )
 
         val samplingPeriod = SamplingPeriod.EveryHundredMillis

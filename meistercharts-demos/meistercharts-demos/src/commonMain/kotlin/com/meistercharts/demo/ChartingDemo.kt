@@ -165,13 +165,14 @@ fun ChartingDemo.button(
 @DemoDeclaration
 fun ChartingDemo.configurableInt(
   propertyName: String,
+  initialValue: Int = 0,
   config: ConfigurableInt.() -> Unit = {},
 ) {
   contract {
     callsInPlace(config, InvocationKind.EXACTLY_ONCE)
   }
 
-  val configurable = ConfigurableInt(propertyName)
+  val configurable = ConfigurableInt(propertyName, initialValue)
     .also(config)
     .also {
       it.keep()
@@ -1917,7 +1918,7 @@ class ConfigurableInsets(propertyName: String, initialValue: Insets) : AbstractC
     }
 }
 
-class ConfigurableInt(propertyName: String) : AbstractConfigurableWithValue<Int>(propertyName, 0) {
+class ConfigurableInt(propertyName: String, initialValue: Int = 0) : AbstractConfigurableWithValue<Int>(propertyName, initialValue) {
   var min: Int = 0
   var max: Int = 10
 

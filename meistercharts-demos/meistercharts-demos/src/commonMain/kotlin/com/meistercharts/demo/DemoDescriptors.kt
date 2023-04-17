@@ -258,6 +258,8 @@ import com.meistercharts.demo.descriptors.MultiValueAxisLayerDemoDescriptor
 import com.meistercharts.demo.descriptors.MultiValueAxisWithHudDemoDescriptor
 import com.meistercharts.demo.descriptors.DiscreteTimelineChartGestaltDemoDescriptor
 import com.meistercharts.demo.descriptors.HistoryReferenceScenariosDemoDescriptor
+import com.meistercharts.demo.descriptors.PerlinDemoDescriptor
+import com.meistercharts.demo.descriptors.PerlinOctaveDemoDescriptor
 import com.meistercharts.demo.descriptors.SnapTextDemoDescriptor
 import com.meistercharts.demo.descriptors.SymbolAndLabelLegendHeadlinePaintableDemoDescriptor
 import com.meistercharts.demo.descriptors.TilesTransparentAreasDemoDescriptor
@@ -450,6 +452,8 @@ object DemoDescriptors {
     CircularChartDemoDescriptor(),
     CircularChartLayerDemoDescriptor(),
     CircularChartLegendDemoDescriptor(),
+    PerlinDemoDescriptor(),
+    PerlinOctaveDemoDescriptor(),
     ValueAxisTopTopTitleLayerDemoDescriptor(),
     CategoryAxisTopTopTitleWithAxisLayerDemoDescriptor(),
     ValueAxisTopTopTitleWithAxisLayerDemoDescriptor(),
