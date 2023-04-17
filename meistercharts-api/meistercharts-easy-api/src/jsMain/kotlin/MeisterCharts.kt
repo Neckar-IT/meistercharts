@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.api.bar.BarChartGrouped
 import com.meistercharts.api.bar.BarChartStacked
 import com.meistercharts.api.bullet.BulletChart
@@ -35,7 +34,7 @@ import com.meistercharts.charts.PuristicCompassGestalt
 import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
-import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.js.MeisterChartBuilderJS
 import it.neckar.logging.LoggerFactory
@@ -320,7 +319,7 @@ fun createTimeLineChart(): TimeLineChart {
    */
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterChartBuilderJS.create("TimeLineChart")
-  val gestalt = TimeLineChartGestalt(meisterChartBuilder.chartId, TimeLineChartGestalt.Data(historyStorage)).apply {
+  val gestalt = TimeLineChartWithToolbarGestalt(meisterChartBuilder.chartId, historyStorage).apply {
     configure(meisterChartBuilder)
   }
 

@@ -181,6 +181,12 @@ external interface Sample {
 
 external interface TimeLineChartStyle {
   /**
+   * Whether to show the toolbar (true, default) or not (false)
+   *
+   */
+  val showToolbar: Boolean?
+
+  /**
    * The time range that is currently visible (in UTC)
    */
   val visibleTimeRange: TimeRange?

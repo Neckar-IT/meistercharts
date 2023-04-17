@@ -48,6 +48,7 @@ import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.design.Theme
 import com.meistercharts.history.DecimalDataSeriesIndex
@@ -85,12 +86,12 @@ import kotlin.time.Duration.Companion.milliseconds
  */
 @JsExport
 class TimeLineChart internal constructor(
-  internal val gestalt: TimeLineChartGestalt,
+  internal val gestalt: TimeLineChartWithToolbarGestalt,
   meisterCharts: MeisterChartJS,
 ) : MeisterChartsApiLegacy<TimeLineChartData, TimeLineChartStyle>(meisterCharts) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.timeLineChartGestalt.applySickDefaults()
   }
 
   /**
@@ -108,7 +109,7 @@ class TimeLineChart internal constructor(
    * Notifies the observers about a time range change
    */
   private fun notifyVisibleTimeRangeChanged() {
-    val currentVisibleTimeRange = meisterCharts.chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.style.contentAreaTimeRange)
+    val currentVisibleTimeRange = meisterCharts.chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.style.contentAreaTimeRange)
     if (currentVisibleTimeRange == previousVisibleTimeRange) {
       return
     }
@@ -120,7 +121,7 @@ class TimeLineChart internal constructor(
   /**
    * The history store cache that is used to add the values
    */
-  private val historyStorageCache = HistoryStorageCache(gestalt.inMemoryStorage)
+  private val historyStorageCache = HistoryStorageCache(gestalt.timeLineChartGestalt.inMemoryStorage)
 
   init {
     //decrease number of repaints
@@ -141,13 +142,13 @@ class TimeLineChart internal constructor(
     meisterCharts.chartSupport.rootChartState.zoomProperty.consume {
       scheduleTimeRangeChangedNotification()
     }
-    gestalt.style.contentAreaTimeRangeProperty.consume {
+    gestalt.timeLineChartGestalt.style.contentAreaTimeRangeProperty.consume {
       scheduleTimeRangeChangedNotification()
     }
 
     //If the history configuration changes we need to clear the history because
     //managing different configurations in a single history is not supported yet.
-    gestalt.data.historyConfigurationProperty.consume {
+    gestalt.timeLineChartGestalt.data.historyConfigurationProperty.consume {
       clearHistory()
     }
 
@@ -157,7 +158,7 @@ class TimeLineChart internal constructor(
     })
 
     //Apply the defaults for all axis styles
-    gestalt.style.valueAxisStyleConfiguration = { style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex ->
+    gestalt.timeLineChartGestalt.style.valueAxisStyleConfiguration = { style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex ->
       style.applyTimeLineChartStyle()
     }
   }
@@ -174,10 +175,10 @@ class TimeLineChart internal constructor(
   override fun setData(jsData: TimeLineChartData) {
     jsData.historySettings?.let {
       val expectedSamplingPeriod = it.expectedSamplingPeriod.toModel()
-      gestalt.data.minimumSamplingPeriod = expectedSamplingPeriod
+      gestalt.timeLineChartGestalt.data.minimumSamplingPeriod = expectedSamplingPeriod
 
       @s val guaranteedHistoryLength = it.guaranteedHistoryLength
-      gestalt.inMemoryStorage.let { storage ->
+      gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
         val naturalHistoryBucketRange = expectedSamplingPeriod.toHistoryBucketRange()
         storage.naturalSamplingPeriod = naturalHistoryBucketRange.samplingPeriod
         storage.maxSizeConfiguration = MaxHistorySizeConfiguration.forDuration(guaranteedHistoryLength * 1000.0, naturalHistoryBucketRange)
@@ -185,7 +186,7 @@ class TimeLineChart internal constructor(
 
       //configure the gap calculator
       it.minGapSizeFactor?.let { factor ->
-        gestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(factor)
+        gestalt.timeLineChartGestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(factor)
       }
     }
 
@@ -197,20 +198,24 @@ class TimeLineChart internal constructor(
   }
 
   override fun setStyle(jsStyle: TimeLineChartStyle) {
-    gestalt.applyStyle(jsStyle)
+    gestalt.timeLineChartGestalt.applyStyle(jsStyle)
+
+    jsStyle.showToolbar?.let {
+      gestalt.style.showToolbar = it
+    }
 
     jsStyle.visibleTimeRange?.toModel()?.let {
-      @DomainRelative val startDateRelative = gestalt.style.contentAreaTimeRange.time2relative(it.start)
-      @DomainRelative val endDateRelative = gestalt.style.contentAreaTimeRange.time2relative(it.end)
+      @DomainRelative val startDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.start)
+      @DomainRelative val endDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.end)
       meisterCharts.chartSupport.zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative)
     }
 
     jsStyle.crossWirePosition?.let {
-      gestalt.style.crossWirePositionX = it
+      gestalt.timeLineChartGestalt.style.crossWirePositionX = it
     }
 
-    gestalt.crossWireLayerDecimalValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
-    gestalt.crossWireLayerEnumValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerEnumValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
 
     markAsDirty()
   }
@@ -222,7 +227,7 @@ class TimeLineChart internal constructor(
   @JsName("getVisibleTimeRange")
   fun getVisibleTimeRange(): TimeRange {
     return with(meisterCharts.chartSupport) {
-      chartCalculator.visibleTimeRangeXinWindow(gestalt.style.contentAreaTimeRange).toJs()
+      chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.style.contentAreaTimeRange).toJs()
     }
   }
 
@@ -235,7 +240,7 @@ class TimeLineChart internal constructor(
     jsDecimalDataSeries: Array<DecimalDataSeries>,
     jsEnumDataSeries: Array<EnumDataSeries>,
   ) {
-    gestalt.data.historyConfiguration = TimeLineChartConverter.toHistoryConfiguration(jsDecimalDataSeries, jsEnumDataSeries)
+    gestalt.timeLineChartGestalt.data.historyConfiguration = TimeLineChartConverter.toHistoryConfiguration(jsDecimalDataSeries, jsEnumDataSeries)
   }
 
   /**
@@ -244,9 +249,9 @@ class TimeLineChart internal constructor(
   @Suppress("unused")
   @JsName("addSample")
   fun addSample(jsSample: Sample) {
-    val historyConfiguration = gestalt.data.historyConfiguration
+    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSample, historyConfiguration)?.let {
-      gestalt.inMemoryStorage.let { storage ->
+      gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
         historyStorageCache.scheduleForStore(it, storage.naturalSamplingPeriod)
       }
     }
@@ -261,9 +266,9 @@ class TimeLineChart internal constructor(
     if (jsSamples.isEmpty()) {
       return
     }
-    val historyConfiguration = gestalt.data.historyConfiguration
+    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
-      gestalt.inMemoryStorage.let { storage ->
+      gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
         historyStorageCache.scheduleForStore(it, storage.naturalSamplingPeriod)
       }
     }
@@ -275,7 +280,7 @@ class TimeLineChart internal constructor(
   @Suppress("unused")
   fun clearHistory() {
     historyStorageCache.clear()
-    gestalt.inMemoryStorage.clear()
+    gestalt.timeLineChartGestalt.inMemoryStorage.clear()
   }
 
   /**
@@ -325,7 +330,7 @@ class TimeLineChart internal constructor(
    */
   @Suppress("unused")
   fun setUpDemo() {
-    gestalt.setUpDemo()
+    gestalt.timeLineChartGestalt.setUpDemo()
   }
 
   companion object {
