@@ -18,14 +18,14 @@ package com.meistercharts.history.impl.io
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.UnparsedJson
-import it.neckar.open.serialization.roundTrip
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.Test
 
 class ReferenceEntryDataTest {
   @Test
-  fun testSerialization() {
-    roundTrip(ReferenceEntryData(ReferenceEntryId(351583), TextKey.simple("The label"), UnparsedJson("{the unparsed json}"))) {
+  fun testAllSerialization() {
+    roundTrip(ReferenceEntryData(ReferenceEntryId(351583), TextKey.simple("The label"), start = 11111.0, end = 22222.0, payload = UnparsedJson("{the unparsed json}"))) {
       //language=JSON
       """
         {
@@ -34,12 +34,17 @@ class ReferenceEntryDataTest {
             "key" : "The label",
             "fallbackText" : "The label"
           },
+          "start" : 11111.0,
+          "end" : 22222.0,
           "payload" : "{the unparsed json}"
         }
       """.trimIndent()
     }
+  }
 
-    roundTrip(ReferenceEntryData(ReferenceEntryId(351583), TextKey.simple("The label"), null)) {
+  @Test
+  fun testSerializationOnlyMandatory() {
+    roundTrip(ReferenceEntryData(ReferenceEntryId(351583), TextKey.simple("The label"))) {
       //language=JSON
       """
         {
@@ -48,6 +53,8 @@ class ReferenceEntryDataTest {
             "key" : "The label",
             "fallbackText" : "The label"
           },
+          "start" : null,
+          "end" : null,
           "payload" : null
         }
       """.trimIndent()

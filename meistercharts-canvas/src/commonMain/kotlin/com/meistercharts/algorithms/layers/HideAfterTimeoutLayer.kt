@@ -24,11 +24,11 @@ import kotlin.time.Duration
  * A layer that is only shown for a given time
  *
  */
-class HideAfterTimeoutLayer constructor(
-  delegate: LayerVisibilityAdapterWithState,
+class HideAfterTimeoutLayer<T : Layer>(
+  delegate: LayerVisibilityAdapterWithState<T>,
   @ms val duration: Duration,
-  private val timerSupport: TimerSupport
-) : DelegatingLayer<LayerVisibilityAdapterWithState>(delegate) {
+  private val timerSupport: TimerSupport,
+) : DelegatingLayer<LayerVisibilityAdapterWithState<T>>(delegate) {
 
   private var lastShowTime: Double? = null
 
@@ -52,6 +52,6 @@ class HideAfterTimeoutLayer constructor(
 /**
  * Wraps this into an [HideAfterTimeoutLayer]
  */
-fun LayerVisibilityAdapterWithState.autoHideAfter(@ms duration: Duration, timerSupport: TimerSupport): HideAfterTimeoutLayer {
-  return HideAfterTimeoutLayer(this, duration, timerSupport)
+fun <T : Layer> LayerVisibilityAdapterWithState<T>.autoHideAfter(@ms duration: Duration, timerSupport: TimerSupport): HideAfterTimeoutLayer<T> {
+  return HideAfterTimeoutLayer<T>(this, duration, timerSupport)
 }

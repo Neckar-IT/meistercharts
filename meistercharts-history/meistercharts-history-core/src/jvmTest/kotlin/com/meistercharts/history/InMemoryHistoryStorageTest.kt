@@ -54,10 +54,10 @@ class InMemoryHistoryStorageTest {
 
     val chunk = createHistoryChunk(start, samplingPeriod)
 
-    assertThat(chunk.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.000")
+    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.000")
     storage.storeWithoutCache(chunk, samplingPeriod)
 
-    storage.query(chunk.start, chunk.start, samplingPeriod).let { queryResult ->
+    storage.query(chunk.firstTimestamp, chunk.firstTimestamp, samplingPeriod).let { queryResult ->
       assertThat(queryResult).hasSize(1)
       val bucket = queryResult[0]
       assertThat(bucket.start).isEqualTo(1000.0)
@@ -69,7 +69,7 @@ class InMemoryHistoryStorageTest {
       requireNotNull(it)
 
       assertThat(it.bucketRange).isSameAs(HistoryBucketRange.HundredMillis)
-      assertThat(it.start).isEqualTo(chunk.start)
+      assertThat(it.start).isEqualTo(chunk.firstTimestamp)
     }
 
     storage.bookKeeping.latestBound(HistoryBucketRange.HundredMillis).let {

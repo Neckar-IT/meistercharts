@@ -33,6 +33,8 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.model.Direction
 import it.neckar.open.formatting.intFormat
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Paints stripes using colored (filled) rectangles
@@ -47,11 +49,12 @@ class RectangleReferenceEntryStripePainter(
     paintingContext: LayerPaintingContext,
     startX: @Window Double, //might be out of the screen
     endX: @Window Double, //might be out of the screen
+    activeTimeStamp: @ms @MayBeNaN Double,
     value1ToPaint: @MayBeNoValueOrPending ReferenceEntryId,
     value2ToPaint: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
     value3ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value4ToPaint: ReferenceEntryData?,
-  ) {
+  ): @Window @MayBeNaN Double {
     @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = value1ToPaint
     @Suppress("UnnecessaryVariable") @MayBeNoValueOrPending val count = value2ToPaint
     @Suppress("UnnecessaryVariable") val statusEnumSet: HistoryEnumSet = value3ToPaint
@@ -63,7 +66,7 @@ class RectangleReferenceEntryStripePainter(
 
     if (idToPaint == ReferenceEntryId.NoValue) {
       //the value is NoValue, do *not* paint anything
-      return
+      return Double.NaN
     }
 
     //value has changed, paint the rect
@@ -92,7 +95,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.white)
         gc.fillText("-", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return
+      return Double.NaN
     }
 
     if (idToPaint.isPending()) {
@@ -102,7 +105,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.white)
         gc.fillText("?", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return
+      return Double.NaN
     }
 
     when {
@@ -164,6 +167,8 @@ class RectangleReferenceEntryStripePainter(
         gc.fillText(intFormat.format(count.value.toDouble()), startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
     }
+
+    return (startX + endX) / 2.0
   }
 
   class Configuration : AbstractReferenceEntryStripePainter.Configuration() {

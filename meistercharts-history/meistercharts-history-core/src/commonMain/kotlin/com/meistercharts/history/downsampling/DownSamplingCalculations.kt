@@ -60,8 +60,8 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   childBuckets.fastForEach {
     require(it.descriptor.parent() == this)
 
-    require(it.chunk.start >= this.start)
-    require(it.chunk.end < this.end)
+    require(it.chunk.firstTimestamp >= this.start)
+    require(it.chunk.lastTimestamp < this.end)
   }
 
   return calculateDownSampled(SizedProvider.mapped(childBuckets) {
@@ -83,11 +83,11 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   require(childChunks.isNotEmpty()) { "At least one bucket required for down sampling" }
 
 
-  require(childChunks.first().start >= this.start) {
-    "Invalid child bucket start <${childChunks.first().start.formatUtc()}> while descriptor start is <${this.start.formatUtc()}> for bucket range <${this.bucketRange}>"
+  require(childChunks.first().firstTimestamp >= this.start) {
+    "Invalid child bucket start <${childChunks.first().firstTimestamp.formatUtc()}> while descriptor start is <${this.start.formatUtc()}> for bucket range <${this.bucketRange}>"
   }
-  require(childChunks.last().end <= this.end) {
-    "Invalid child bucket end <${childChunks.last().end.formatUtc()}> while descriptor end is <${this.end.formatUtc()}> for bucket range <${this.bucketRange}>"
+  require(childChunks.last().lastTimestamp <= this.end) {
+    "Invalid child bucket end <${childChunks.last().lastTimestamp.formatUtc()}> while descriptor end is <${this.end.formatUtc()}> for bucket range <${this.bucketRange}>"
   }
 
   val firstChunk = childChunks.first()

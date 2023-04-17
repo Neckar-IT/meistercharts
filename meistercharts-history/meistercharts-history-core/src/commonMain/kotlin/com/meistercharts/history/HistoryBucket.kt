@@ -19,10 +19,14 @@ import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValues
 import com.meistercharts.history.impl.RecordingType
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
+import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
+import kotlin.contracts.contract
 
 /**
  * Represents a container for history data that has clear borders that can be calculated in constant time.
@@ -80,11 +84,11 @@ data class HistoryBucket(
 
   init {
     if (!chunk.isEmpty()) {
-      require(chunk.start >= descriptor.start) {
-        "Invalid chunk start. Was <${chunk.start.formatUtc()}> but expected at least <${descriptor.start.formatUtc()}>"
+      require(chunk.firstTimestamp >= descriptor.start) {
+        "Invalid chunk start. Was <${chunk.firstTimestamp.formatUtc()}> but expected at least <${descriptor.start.formatUtc()}>"
       }
-      require(chunk.end < descriptor.end) {
-        "Invalid chunk end. Was <${chunk.end.formatUtc()}> but expected less than <${descriptor.end.formatUtc()}>"
+      require(chunk.lastTimestamp < descriptor.end) {
+        "Invalid chunk end. Was <${chunk.lastTimestamp.formatUtc()}> but expected less than <${descriptor.end.formatUtc()}>"
       }
     }
   }
@@ -108,3 +112,106 @@ data class HistoryBucket(
   }
 }
 
+/**
+ * Find a value for the provided timestamp.
+ * Will return the value:
+ * * at the timestamp
+ * * directly after the timestamp
+ *
+ * Will return [Double.NaN] if no good value could be found
+ */
+fun @Sorted List<HistoryBucket>.findDecimalValueAt(dataSeriesIndex: DecimalDataSeriesIndex, timestamp: @ms Double): @MayBeNaN Double {
+  var foundValue: @MayBeNaN Double = Double.NaN
+
+  find(timestamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
+    foundValue = bucket.chunk.getDecimalValue(dataSeriesIndex, timestampIndex)
+  }
+
+  return foundValue
+}
+
+fun @Sorted List<HistoryBucket>.findEnumValueAt(dataSeriesIndex: EnumDataSeriesIndex, timestamp: @ms Double): @MayBeNoValueOrPending HistoryEnumSet {
+  var foundValue: @MayBeNoValueOrPending HistoryEnumSet = HistoryEnumSet.NoValue
+
+  find(timestamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
+    foundValue = bucket.chunk.getEnumValue(dataSeriesIndex, timestampIndex)
+  }
+
+  return foundValue
+}
+
+fun @Sorted List<HistoryBucket>.findReferenceEntryIdValueAt(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timestamp: @ms Double): @MayBeNoValueOrPending ReferenceEntryId {
+  var found: @MayBeNoValueOrPending ReferenceEntryId = ReferenceEntryId.NoValue
+
+  find(timestamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
+    found = bucket.chunk.getReferenceEntryId(dataSeriesIndex, timestampIndex)
+  }
+
+  return found
+}
+
+/**
+ * Finds the provided timestamp in a list of history buckets.
+ * Calls the provided [callback] for the found timestamp index and bucket.
+ *
+ * If the [timestamp] is a direct hit, returns the timestamp itself
+ * Else:
+ * The callback will be called with the timestamp index *before* the provided [timestamp] - if within the span defined by the [SamplingPeriod] of the [HistoryBucket].
+ */
+fun @Sorted List<HistoryBucket>.find(timestamp: @ms Double, callback: (bucket: HistoryBucket, timestampIndex: TimestampIndex) -> Unit) {
+  contract {
+    callsInPlace(callback, kotlin.contracts.InvocationKind.AT_MOST_ONCE)
+  }
+
+  fastForEach { bucket ->
+    val chunk = bucket.chunk
+
+    val bestTimestampIndexFor = chunk.bestTimestampIndexFor(timestamp)
+    if (bestTimestampIndexFor.found) {
+      //Direct hit, just return the value
+      return callback(bucket, TimestampIndex(bestTimestampIndexFor.index))
+    }
+
+    val nearIndex = bestTimestampIndexFor.nearIndex
+
+    if (nearIndex <= 0) {
+      //Too early, not relevant
+      return@fastForEach
+    }
+
+    val timestampIndex = TimestampIndex(nearIndex - 1) //use the value before
+    if (timestampIndex.value >= chunk.timeStampsCount) {
+      //Too late, not relevant, no value will be found
+      return@fastForEach
+    }
+
+    //The timestamp that has been found
+    @ms val relevantTimestamp = chunk.timestampCenter(timestampIndex)
+
+    //The distance between the relevant timestamp and the queried timestamp
+    @ms val distance = timestamp - relevantTimestamp
+
+    require(distance > 0.0) {
+      "?????? $distance ${relevantTimestamp.formatUtc()} ${timestamp.formatUtc()}"
+    }
+
+    @ms val maxDistance = bucket.descriptor.bucketRange.distance
+    when {
+      relevantTimestamp >= timestamp + maxDistance -> {
+        //Too large, no more value will be found (even in later buckets)
+        return
+      }
+
+      distance < maxDistance -> {
+        //Found relevantTimestamp within the max distance
+        return callback(bucket, timestampIndex)
+      }
+
+      else -> {
+        return@fastForEach
+      }
+    }
+  }
+
+  return
+}

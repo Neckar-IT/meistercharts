@@ -16,10 +16,10 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
+import com.meistercharts.algorithms.layout.EquisizedBoxLayout
+import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.enums.EnumStripePainter
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
@@ -44,6 +44,7 @@ import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
@@ -182,7 +183,18 @@ class HistoryEnumLayer(
 
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
-              enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.valueChange(
+                paintingContext = paintingContext,
+                startX = startX,
+                endX = endX,
+                startTime = startTime,
+                endTime = endTime,
+                activeTimeStamp = Double.NaN,
+                newValue1 = historyEnumSet,
+                newValue2 = enumOrdinalMostTime,
+                newValue3 = Unit,
+                newValue4 = Unit
+              )
               break
             }
 
@@ -198,7 +210,18 @@ class HistoryEnumLayer(
             //update the last time stuff
             lastTime = startTime
 
-            enumStripePainter.valueChange(paintingContext, startX, endX, historyEnumSet, enumOrdinalMostTime, Unit, Unit)
+            enumStripePainter.valueChange(
+              paintingContext = paintingContext,
+              startX = startX,
+              endX = endX,
+              startTime = startTime,
+              endTime = endTime,
+              activeTimeStamp = Double.NaN,
+              newValue1 = historyEnumSet,
+              newValue2 = enumOrdinalMostTime,
+              newValue3 = Unit,
+              newValue4 = Unit
+            )
           }
         }
         enumStripePainter.finish(paintingContext)

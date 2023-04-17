@@ -21,8 +21,8 @@ import it.neckar.open.observable.ObservableBoolean
  * Holds an [Layer] delegate and paints it depending on value of visible property
  */
 @Deprecated("Use the LayerVisibilityAdapter without state")
-class LayerVisibilityAdapterWithState(
-  delegate: Layer,
+class LayerVisibilityAdapterWithState<out T : Layer>(
+  delegate: T,
   /**
    * The visibility property. If set to true, the wrapper layer is painted and events are processed
    */
@@ -30,8 +30,8 @@ class LayerVisibilityAdapterWithState(
   /**
    * If set to true the events will be delegated, even if the layer is invisible
    */
-  delegateEventsIfInvisible: Boolean = false
-) : LayerVisibilityAdapter(delegate, {
+  delegateEventsIfInvisible: Boolean = false,
+) : LayerVisibilityAdapter<T>(delegate, {
   visibleProperty.get()
 }, delegateEventsIfInvisible) {
   /**
@@ -57,7 +57,7 @@ class LayerVisibilityAdapterWithState(
 /**
  * Wraps the layer into an [LayerVisibilityAdapter]
  */
-fun Layer.visibleIf(visibleProperty: ObservableBoolean = ObservableBoolean(true), delegateEventsIfInvisible: Boolean = false): LayerVisibilityAdapterWithState {
+fun <T : Layer> T.visibleIf(visibleProperty: ObservableBoolean = ObservableBoolean(true), delegateEventsIfInvisible: Boolean = false): LayerVisibilityAdapterWithState<T> {
   return LayerVisibilityAdapterWithState(this, visibleProperty, delegateEventsIfInvisible)
 }
 
@@ -65,7 +65,7 @@ fun Layer.visibleIf(visibleProperty: ObservableBoolean = ObservableBoolean(true)
 /**
  * Wraps the layer into an [LayerVisibilityAdapter]
  */
-fun Layer.visible(initialVisibility: Boolean): LayerVisibilityAdapterWithState {
+fun <T : Layer> T.visible(initialVisibility: Boolean): LayerVisibilityAdapterWithState<T> {
   return LayerVisibilityAdapterWithState(this).also {
     it.visible = initialVisibility
   }

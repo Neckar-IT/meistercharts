@@ -110,8 +110,8 @@ class DownSamplingDirtyRangesCollectorTest {
 
     downSamplingService[SamplingPeriod.EverySecond]!!.let {
       assertThat(it.isEmpty()).isFalse()
-      assertThat(it[0].start.formatUtc()).isEqualTo(chunk.start.formatUtc())
-      assertThat(it[0].end.formatUtc()).isEqualTo(chunk.end.formatUtc())
+      assertThat(it[0].start.formatUtc()).isEqualTo(chunk.firstTimestamp.formatUtc())
+      assertThat(it[0].end.formatUtc()).isEqualTo(chunk.lastTimestamp.formatUtc())
     }
   }
 }

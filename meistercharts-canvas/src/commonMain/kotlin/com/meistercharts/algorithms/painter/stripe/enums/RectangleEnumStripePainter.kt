@@ -28,6 +28,8 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.model.Direction
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Paints stripes using colored (filled) rectangles
@@ -42,11 +44,12 @@ class RectangleEnumStripePainter(
     paintingContext: LayerPaintingContext,
     startX: @Window Double,
     endX: @Window Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
     value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
     value3ToPaint: Unit,
     value4ToPaint: Unit,
-  ) {
+  ): @Window @MayBeNaN Double {
     val valueToPaint: @MayBeNoValueOrPending HistoryEnumSet = value1ToPaint
     val valueMostTimeToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal = value2ToPaint
 
@@ -54,7 +57,7 @@ class RectangleEnumStripePainter(
 
     if (valueToPaint == HistoryEnumSet.NoValue) {
       //the value is NoValue, do *not* paint anything
-      return
+      return Double.NaN
     }
 
     //value has changed, paint the rect
@@ -76,7 +79,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.white)
         gc.fillText("-", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return
+      return Double.NaN
     }
 
     if (valueToPaint.isPending()) {
@@ -86,7 +89,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.white)
         gc.fillText("?", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return
+      return Double.NaN
     }
 
     //Which ordinal should be painted?
@@ -105,6 +108,8 @@ class RectangleEnumStripePainter(
       gc.fill(Color.white)
       gc.fillText(valueToPaint.toString(), startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
     }
+
+    return (startX + endX) / 2.0
   }
 
 

@@ -53,7 +53,7 @@ data class HistoryUpdateInfo(
      * Creates an update info that uses start and end of the given chunk
      */
     fun fromChunk(chunk: HistoryChunk, samplingPeriod: SamplingPeriod): HistoryUpdateInfo {
-      return HistoryUpdateInfo(samplingPeriod, TimeRanges.of(TimeRange(chunk.start, chunk.end)))
+      return HistoryUpdateInfo(samplingPeriod, TimeRanges.of(TimeRange(chunk.firstTimestamp, chunk.lastTimestamp)))
     }
 
     fun from(descriptor: HistoryBucketDescriptor): HistoryUpdateInfo {

@@ -29,17 +29,29 @@ import com.meistercharts.demo.configurableDouble
 import com.meistercharts.demo.configurableIndices
 import com.meistercharts.demo.configurableInsetsSeparate
 import com.meistercharts.demo.toList
+import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
+import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
+import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.createDefaultHistoryConfiguration
 import com.meistercharts.history.generator.HistoryChunkGenerator
+import com.meistercharts.history.generator.HistoryChunkProvider
 import com.meistercharts.history.generator.ReferenceEntryGenerator
+import com.meistercharts.history.historyConfiguration
+import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.impl.chunk
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.si.ms
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -58,7 +70,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
       object : DemoConfig {
         override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
 
-        override fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
+        override fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
           return HistoryChunkGenerator(
             historyStorage = historyStorage,
             samplingPeriod = samplingPeriod,
@@ -79,7 +91,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
       object : DemoConfig {
         override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
 
-        override fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
+        override fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
           return HistoryChunkGenerator(
             historyStorage = historyStorage,
             samplingPeriod = samplingPeriod,
@@ -99,7 +111,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
       object : DemoConfig {
         override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
 
-        override fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
+        override fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
           return HistoryChunkGenerator(
             historyStorage = historyStorage,
             samplingPeriod = samplingPeriod,
@@ -120,24 +132,16 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
       object : DemoConfig {
         override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
 
-        override fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
+        override fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator {
           val refEntryDataSeriesCount = 12
 
-          return HistoryChunkGenerator(
-            historyStorage = historyStorage,
-            samplingPeriod = samplingPeriod,
-            decimalValueGenerators = emptyList(),
-            enumValueGenerators = emptyList(),
-            referenceEntryGenerators = List(refEntryDataSeriesCount) {
-              ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = it)
-            },
-            referenceEntryStatusProvider = { referenceEntryId, millis ->
-              val factor = (millis / 5000.0 + referenceEntryId.id / 77.4).toInt()
-              val ordinal: HistoryEnumOrdinal = HistoryReferenceScenarios.jobStateEnum.values.getModulo(factor).ordinal
-              HistoryEnumSet.forEnumOrdinal(ordinal)
-            },
-            historyConfiguration = createDefaultHistoryConfiguration(0, 0, refEntryDataSeriesCount,
-              referenceEntryStatusEnumProvider = { referenceEntryDataSeriesIndex -> HistoryReferenceScenarios.jobStateEnum })
+          return HistoryChunkGenerator(historyStorage = historyStorage, samplingPeriod = samplingPeriod, decimalValueGenerators = emptyList(), enumValueGenerators = emptyList(), referenceEntryGenerators = List(refEntryDataSeriesCount) {
+            ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = it)
+          }, referenceEntryStatusProvider = { referenceEntryId, millis ->
+            val factor = (millis / 5000.0 + referenceEntryId.id / 77.4).toInt()
+            val ordinal: HistoryEnumOrdinal = HistoryReferenceScenarios.jobStateEnum.values.getModulo(factor).ordinal
+            HistoryEnumSet.forEnumOrdinal(ordinal)
+          }, historyConfiguration = createDefaultHistoryConfiguration(0, 0, refEntryDataSeriesCount, referenceEntryStatusEnumProvider = { referenceEntryDataSeriesIndex -> HistoryReferenceScenarios.jobStateEnum })
           )
         }
 
@@ -162,7 +166,68 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
 
       }, "EnumStatus - Increasing (every 46.437 s)"
     ),
-  )
+
+    PredefinedConfiguration(
+      object : DemoConfig {
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {}
+
+        override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
+
+        override val playModeEnabled: Boolean
+          get() = false
+
+        override fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkProvider {
+          return object : HistoryChunkProvider {
+            override val historyConfiguration: HistoryConfiguration = historyConfiguration {
+              referenceEntryDataSeries(DataSeriesId(10), "Discrete 10", null)
+              referenceEntryDataSeries(DataSeriesId(11), "Discrete 11", null)
+            }
+
+            val chunk = historyConfiguration.chunk {
+              val now = nowMillis()
+
+              @ms val distance = samplingPeriod.distance
+              @ms val start = now - distance * 2
+              @ms val end = now
+
+              val referenceEntriesDataMap = ReferenceEntriesDataMap.of(
+                ReferenceEntryData(ReferenceEntryId(6), TextKey.simple("label 6"), start = start, end = end),
+                ReferenceEntryData(ReferenceEntryId(7), TextKey.simple("label 7")),
+                ReferenceEntryData(ReferenceEntryId(8), TextKey.simple("label 8")),
+              )
+
+              addReferenceEntryValues(
+                timestamp = start,
+                referenceEntryValues = intArrayOf(6, 7),
+                referenceEntryIdsCount = null,
+                referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
+                referenceEntriesDataMap = referenceEntriesDataMap,
+              )
+              addReferenceEntryValues(
+                timestamp = start + distance,
+                referenceEntryValues = intArrayOf(6, 8),
+                referenceEntryIdsCount = null,
+                referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
+                referenceEntriesDataMap = referenceEntriesDataMap,
+              )
+              addReferenceEntryValues(
+                timestamp = now,
+                referenceEntryValues = intArrayOf(6, 8),
+                referenceEntryIdsCount = null,
+                referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
+                referenceEntriesDataMap = referenceEntriesDataMap,
+              )
+            }
+
+            override fun next(until: Double): HistoryChunk {
+              return chunk
+            }
+          }
+        }
+      }, "Fixed with start/end"
+    ),
+
+    )
 
   override fun createDemo(configuration: PredefinedConfiguration<DemoConfig>?): ChartingDemo {
     val payload = requireNotNull(configuration?.payload)
@@ -177,7 +242,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
         historyStorage.scheduleCleanupService()
 
 
-        val historyChunkGenerator = payload.historyChunkGenerator(historyStorage)
+        val historyChunkGenerator = payload.historyChunkProvider(historyStorage)
         val historyConfiguration = historyChunkGenerator.historyConfiguration
 
         it.neckar.open.time.repeat(payload.samplingPeriod.distance.milliseconds) {
@@ -203,7 +268,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
 
         configure {
           configurableBoolean("Play Mode", chartSupport.translateOverTime::animated) {
-            value = true
+            value = payload.playModeEnabled
           }
 
           configurableBoolean("ShowTimeAxis", gestalt.configuration::showTimeAxis) {
@@ -235,10 +300,18 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
   }
 
   interface DemoConfig {
+    val playModeEnabled: Boolean
+      get() {
+        return true
+      }
+
     val config: DiscreteTimelineChartGestalt.() -> Unit
 
     val samplingPeriod: SamplingPeriod
 
-    fun historyChunkGenerator(historyStorage: InMemoryHistoryStorage): HistoryChunkGenerator
+    /**
+     * Returns the history chunk provider
+     */
+    fun historyChunkProvider(historyStorage: InMemoryHistoryStorage): HistoryChunkProvider
   }
 }

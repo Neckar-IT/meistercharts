@@ -89,7 +89,7 @@ class EnumBarOverTimeDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
                 @Window val startX = timeChartCalculator.time2windowX(current)
                 @Window val endX = timeChartCalculator.time2windowX(current + interval)
-                enumBarsPainter.valueChange(paintingContext, startX, endX, enumValue, enumOrdinalMostTime, Unit, Unit)
+                enumBarsPainter.valueChange(paintingContext, startX, endX, start, end, Double.NaN, enumValue, enumOrdinalMostTime, Unit, Unit)
 
                 current += interval
               }

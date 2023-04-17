@@ -58,7 +58,7 @@ class HistoryStorageCache constructor(
    */
   fun scheduleForStore(chunk: HistoryChunk, samplingPeriod: SamplingPeriod) {
     scheduledChunk = scheduledChunk?.let {
-      it.merge(chunk, it.start, chunk.end + 1)
+      it.merge(chunk, it.firstTimestamp, chunk.lastTimestamp + 1)
     } ?: chunk
 
     @ms val windowMillis = window.toDouble(DurationUnit.MILLISECONDS)

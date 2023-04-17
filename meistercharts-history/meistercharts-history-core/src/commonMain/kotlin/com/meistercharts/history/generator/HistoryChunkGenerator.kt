@@ -16,26 +16,21 @@
 package com.meistercharts.history.generator
 
 import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumSet
-import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.WritableHistoryStorage
 import com.meistercharts.history.createDefaultHistoryConfiguration
-import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.valueAt
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.i18n.TextKey
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
@@ -83,8 +78,8 @@ class HistoryChunkGenerator(
    * The history configuration that is used as base for the generated chunks.
    * If the history configuration should be created automatically, use the secondary constructor (with lists) instead
    */
-  val historyConfiguration: HistoryConfiguration,
-) {
+  override val historyConfiguration: HistoryConfiguration,
+) : HistoryChunkProvider {
   @TestOnly
   constructor(
     historyStorage: WritableHistoryStorage,
@@ -146,7 +141,7 @@ class HistoryChunkGenerator(
    *
    * @return null if [historyStorage] already contains samples for the computed timestamps or if no value generator are defined
    */
-  fun next(until: @ms Double = nowMillis()): HistoryChunk? {
+  override fun next(until: @ms Double): HistoryChunk? {
     if (totalDataSeriesCount < 1) {
       return null
     }

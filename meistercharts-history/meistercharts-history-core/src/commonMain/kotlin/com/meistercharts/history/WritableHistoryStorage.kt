@@ -56,11 +56,11 @@ interface WritableHistoryStorage : HistoryStorage {
 
       //Merge the original bucket with the new chunk
       originalBucket.chunk.merge(chunkToStore, descriptor.start, descriptor.end)?.let { merged ->
-        require(merged.start >= descriptor.start) {
-          "Invalid start: ${merged.start.formatUtc()} for descriptor $descriptor"
+        require(merged.firstTimestamp >= descriptor.start) {
+          "Invalid start: ${merged.firstTimestamp.formatUtc()} for descriptor $descriptor"
         }
-        require(merged.end < descriptor.end) {
-          "Invalid end: ${merged.end.formatUtc()} most not end after end for descriptor $descriptor"
+        require(merged.lastTimestamp < descriptor.end) {
+          "Invalid end: ${merged.lastTimestamp.formatUtc()} most not end after end for descriptor $descriptor"
         }
 
         //Save the merged history bucket

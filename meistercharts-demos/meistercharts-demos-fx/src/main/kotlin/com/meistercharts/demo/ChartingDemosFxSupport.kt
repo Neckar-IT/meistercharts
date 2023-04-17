@@ -22,8 +22,6 @@ import com.meistercharts.algorithms.environment
 import com.meistercharts.algorithms.layers.HideAfterTimeoutLayer
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
-import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
-import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.EventsDebugLayer
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.MarkAsDirtyLayer
@@ -403,7 +401,10 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     val chartSupport = layerSupport.chartSupport
 
     val pane = MigPane("fillx", "[][grow,left, fill]", "")
-    pane.add(Components.headline1("Configuration"), "span")
+    pane.add(Components.headline1("Configuration/State"), "span")
+
+    pane.add(Components.label("Mouse Location"))
+    pane.add(Components.label(layerSupport.mouseEvents.mousePositionProperty.toJavaFx().map { it?.format() ?: "-" }), "span")
 
     pane.add(Components.label("Zoom"))
     pane.add(Components.label(layerSupport.chartSupport.rootChartState.zoomProperty.toJavaFx().map { it.format() }), "span")
@@ -735,11 +736,11 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 }
 
 private fun Layer.extendedToString(): String {
-  if (this is LayerVisibilityAdapter) {
+  if (this is LayerVisibilityAdapter<*>) {
     return "VisibilityAdapter: ${this.delegate.extendedToString()}"
   }
 
-  if (this is HideAfterTimeoutLayer) {
+  if (this is HideAfterTimeoutLayer<*>) {
     return "HideAfterTimeout: ${this.delegate.extendedToString()}"
   }
 

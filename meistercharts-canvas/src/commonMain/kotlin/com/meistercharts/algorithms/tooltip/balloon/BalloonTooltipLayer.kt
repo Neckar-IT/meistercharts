@@ -26,6 +26,7 @@ import com.meistercharts.canvas.saved
 import it.neckar.open.provider.CoordinatesProvider1
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.fastForEachIndexed
+import it.neckar.open.unit.number.MayBeNaN
 
 /**
  * Layer that shows a balloon tooltip (if configured)
@@ -55,6 +56,7 @@ class BalloonTooltipLayer(
      * Contains the coordinates where the balloon tooltip is placed
      */
     @Window
+    @MayBeNaN
     val coordinates = CoordinatesCache()
 
     override fun calculate(paintingContext: LayerPaintingContext) {
@@ -75,6 +77,11 @@ class BalloonTooltipLayer(
     val gc = paintingContext.gc
 
     paintingVariables.coordinates.fastForEachIndexed { _, x, y ->
+      if (x.isFinite().not() || y.isFinite().not()) {
+        //Skip
+        return@fastForEachIndexed
+      }
+
       gc.saved {
         gc.translate(x, y)
         tooltipPainter.paint(paintingContext)
@@ -92,7 +99,7 @@ class BalloonTooltipLayer(
     /**
      * Provides the coordinates for the balloon tooltip
      */
-    var coordinates: @TooltipIndex @Window CoordinatesProvider1<LayerPaintingContext> = CoordinatesProvider1.Empty,
+    var coordinates: @TooltipIndex @MayBeNaN @Window CoordinatesProvider1<LayerPaintingContext> = CoordinatesProvider1.Empty,
 
     /**
      * Provides the tooltip painter

@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.getDateInMillis
+import it.neckar.open.time.toMillis
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
@@ -133,19 +133,19 @@ class HistoryBucketRangeTest {
     val instant = millis2Instant(millis)
     assertThat(instant.toDoubleMillis()).isEqualTo(millis)
 
-    assertThat(millis).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 43, 123_123535, ZoneOffset.UTC).getDateInMillis)
+    assertThat(millis).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 43, 123_123535, ZoneOffset.UTC).toMillis())
 
-    assertThat(HistoryBucketRange.HundredMillis.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 43, TimeUnit.MILLISECONDS.toNanos(100).toInt(), ZoneOffset.UTC).getDateInMillis)
+    assertThat(HistoryBucketRange.HundredMillis.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 43, TimeUnit.MILLISECONDS.toNanos(100).toInt(), ZoneOffset.UTC).toMillis())
 
-    assertThat(HistoryBucketRange.FiveSeconds.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 40, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(HistoryBucketRange.OneMinute.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 0, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(HistoryBucketRange.TenMinutes.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 10, 0, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(HistoryBucketRange.OneHour.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(HistoryBucketRange.SixHours.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(HistoryBucketRange.OneDay.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
+    assertThat(HistoryBucketRange.FiveSeconds.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 40, 0, ZoneOffset.UTC).toMillis())
+    assertThat(HistoryBucketRange.OneMinute.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 18, 0, 0, ZoneOffset.UTC).toMillis())
+    assertThat(HistoryBucketRange.TenMinutes.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 10, 0, 0, ZoneOffset.UTC).toMillis())
+    assertThat(HistoryBucketRange.OneHour.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 5, 0, 0, 0, ZoneOffset.UTC).toMillis())
+    assertThat(HistoryBucketRange.SixHours.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).toMillis())
+    assertThat(HistoryBucketRange.OneDay.calculateStart(millis)).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).toMillis())
 
     HistoryBucketRange.ThirtyDays.calculateStart(millis).let {
-      assertThat(it, it.formatUtc()).isEqualTo(OffsetDateTime.of(2011, 7, 25, 0, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
+      assertThat(it, it.formatUtc()).isEqualTo(OffsetDateTime.of(2011, 7, 25, 0, 0, 0, 0, ZoneOffset.UTC).toMillis())
     }
 
   }

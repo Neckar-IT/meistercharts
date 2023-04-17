@@ -25,6 +25,7 @@ import com.meistercharts.algorithms.model.SeriesIndex
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.model.Size
+import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.kotlin.lang.DoublesComparator
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.FilteredDoublesProvider
@@ -35,18 +36,20 @@ import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.SortedDoublesProvider
 import it.neckar.open.provider.filteredOnlyFinite
 import it.neckar.open.provider.sorted
-import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.number.MayBeNaN
 
 /**
- * Ballon tooltip support for category series
+ * Ballon tooltip support for category series.
+ *
+ * This is a custom implementation that is useful for exactly its category series.
  */
 class CategorySeriesModelBalloonTooltipSupport(
   val tooltipPlacement: CategoryBalloonTooltipPlacementSupport,
 
   /**
-   * Provides the category model
+   * Provides the category model.
+   * The provided model is queried for the values.
    */
   categoryModel: () -> CategorySeriesModel,
   /**
@@ -65,7 +68,7 @@ class CategorySeriesModelBalloonTooltipSupport(
 ) {
 
   /**
-   * The values
+   * The values - is used to generate the labels
    */
   val values: @Domain @MayBeNaN DoublesProvider = object : DoublesProvider {
     override fun size(): Int {
@@ -81,7 +84,7 @@ class CategorySeriesModelBalloonTooltipSupport(
   }
 
   /**
-   * The values - only filtered values
+   * Contains only finite values
    */
   val valuesFiltered: @Domain @IsFinite @OnlyFiniteIndex FilteredDoublesProvider = values.filteredOnlyFinite()
 

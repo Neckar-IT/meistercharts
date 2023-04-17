@@ -25,6 +25,8 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Fills rectangles
@@ -69,15 +71,16 @@ class BooleanEnumStripePainter(
     paintingContext: LayerPaintingContext,
     startX: @Window Double,
     endX: @Window Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
     value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
     value3ToPaint: Unit,
     value4ToPaint: Unit,
-  ) {
+  ): @Window Double {
     val gc = paintingContext.gc
 
     if (value1ToPaint.isNoValue()) {
-      return
+      return Double.NaN
     }
 
     //value has changed, paint the rect
@@ -103,12 +106,8 @@ class BooleanEnumStripePainter(
     }
 
     binaryPainter.addCoordinate(gc, endX, if (current) 0.0 else height)
-  }
 
-  override fun finish(paintingContext: LayerPaintingContext) {
-    super.finish(paintingContext)
-
-    requireNotNull(binaryPainter) { "invalid state - no binary painter found" }.finish(paintingContext.gc)
+    return (startX + endX) / 2.0
   }
 
   class Configuration : AbstractEnumStripePainter.Configuration() {

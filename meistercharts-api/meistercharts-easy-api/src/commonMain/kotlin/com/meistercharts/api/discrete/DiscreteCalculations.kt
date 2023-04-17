@@ -105,14 +105,14 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
         val previousTimestampIndex = timestampIndex.previous()
 
 
-        if (entry != null) {
+        if (entry == null) {
+          referenceEntryValues[dataSeriesIndexAsInt] = ReferenceEntryId.NoValueAsInt
+          referenceEntryStatuses[dataSeriesIndexAsInt] = HistoryEnumSet.NoValueAsInt
+        } else {
           //Entry has been found - create valid entries
-
           val statusEnumSet = HistoryEnumSet.forEnumValueFromJsDouble(entry.status.sanitize())
 
-
           //Check if the previous entry has the same values - then reuse the ID
-
           val referenceEntryId: ReferenceEntryId = when {
             previousTimestampIndex.isNegative() -> {
               nextReferenceId()
@@ -124,9 +124,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
               val previousData = this@historyChunk.getReferenceEntryData(previousReferenceEntryId)
 
               //necessary to create a new one?
-              val newIdRequired =
-                previousStatus != statusEnumSet ||
-                  previousData?.label?.fallbackText != entry.label
+              val newIdRequired = previousStatus != statusEnumSet || previousData?.label?.fallbackText != entry.label
               if (newIdRequired) {
                 nextReferenceId()
               } else {
@@ -140,11 +138,10 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
           referenceEntryDataMap[referenceEntryId] = ReferenceEntryData(
             referenceEntryId,
             label = TextKey.simple(entry.label),
+            start = entry.start,
+            end = entry.end,
             payload = null,
           )
-        } else {
-          referenceEntryValues[dataSeriesIndexAsInt] = ReferenceEntryId.NoValueAsInt
-          referenceEntryStatuses[dataSeriesIndexAsInt] = HistoryEnumSet.NoValueAsInt
         }
       }
 

@@ -73,8 +73,8 @@ class HistoryChunkGeneratorTest {
       assertNotNull(chunk)
       assertThat(chunk.recordingType).isEqualTo(RecordingType.Measured)
       assertThat(chunk.timeStampsCount).isEqualTo(20)
-      assertThat(chunk.start.formatUtc()).isEqualTo("2020-05-21T15:00:39.500")
-      assertThat(chunk.end.formatUtc()).isEqualTo("2020-05-21T15:00:41.400")
+      assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:39.500")
+      assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:41.400")
 
       assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumSet.first)
 

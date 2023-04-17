@@ -17,8 +17,8 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import it.neckar.open.serialization.roundTrip
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.Test
 
 class ReferenceEntriesDataMapTest {
@@ -60,7 +60,7 @@ class ReferenceEntriesDataMapTest {
   @Test
   fun testSerializationDefaultSimple() {
     val entriesDataMapBuilder = DefaultReferenceEntriesDataMap.Builder()
-    entriesDataMapBuilder.store(ReferenceEntryData(ReferenceEntryId(17), TextKey.simple("daLabel"), UnparsedJson("{}")))
+    entriesDataMapBuilder.store(ReferenceEntryData(id = ReferenceEntryId(17), label = TextKey.simple("daLabel"), start = 1000.0, end = 2000.0, payload = UnparsedJson("{}")))
 
     roundTrip(entriesDataMapBuilder.build(), ReferenceEntriesDataMap.serializer()) {
       //language=JSON
@@ -74,6 +74,8 @@ class ReferenceEntriesDataMapTest {
                 "key" : "daLabel",
                 "fallbackText" : "daLabel"
               },
+              "start" : 1000.0,
+              "end" : 2000.0,
               "payload" : "{}"
             }
           }

@@ -18,7 +18,7 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.getDateInMillis
+import it.neckar.open.time.toMillis
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -26,7 +26,7 @@ import java.time.ZoneOffset
 
 /**
  */
-class HistoryBucketTest {
+class HistoryBucketDescriptor2Test {
   val millis = 1312003123123.0
   val instant = Instant.ofEpochMilli(millis.toLong())
   val dateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
@@ -58,7 +58,7 @@ class HistoryBucketTest {
 
     assertThat(descriptor.bucketRange).isSameAs(HistoryBucketRange.OneDay)
 
-    assertThat(descriptor.start).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
-    assertThat(descriptor.end).isEqualTo(OffsetDateTime.of(2011, 7, 31, 0, 0, 0, 0, ZoneOffset.UTC).getDateInMillis)
+    assertThat(descriptor.start).isEqualTo(OffsetDateTime.of(2011, 7, 30, 0, 0, 0, 0, ZoneOffset.UTC).toMillis())
+    assertThat(descriptor.end).isEqualTo(OffsetDateTime.of(2011, 7, 31, 0, 0, 0, 0, ZoneOffset.UTC).toMillis())
   }
 }

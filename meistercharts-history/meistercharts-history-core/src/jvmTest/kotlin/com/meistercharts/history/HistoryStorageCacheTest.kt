@@ -160,8 +160,8 @@ class HistoryStorageCacheTest {
     val chunk0: HistoryChunk = createChunk(700.0)
     val chunk1: HistoryChunk = createChunk(800.0)
 
-    assertThat(chunk0.start).isEqualTo(700.0)
-    assertThat(chunk1.start).isEqualTo(800.0)
+    assertThat(chunk0.firstTimestamp).isEqualTo(700.0)
+    assertThat(chunk1.firstTimestamp).isEqualTo(800.0)
 
     val descriptorAt700 = HistoryBucketDescriptor.forTimestamp(700.0, samplingPeriod)
     val descriptorAt800 = HistoryBucketDescriptor.forTimestamp(800.0, samplingPeriod)

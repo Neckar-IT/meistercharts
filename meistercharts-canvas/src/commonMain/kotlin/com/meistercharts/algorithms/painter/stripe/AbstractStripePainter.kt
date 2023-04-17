@@ -21,6 +21,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Abstract base class for stripe painters.
@@ -40,18 +42,30 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     paintingVariables.calculate(height, dataSeriesIndex, historyConfiguration)
   }
 
-  override fun valueChange(paintingContext: LayerPaintingContext, startX: @Window Double, endX: @Window Double, newValue1: Value1Type, newValue2: Value2Type, newValue3: Value3Type, newValue4: Value4Type) {
+  override fun valueChange(
+    paintingContext: LayerPaintingContext,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    newValue1: Value1Type,
+    newValue2: Value2Type,
+    newValue3: Value3Type,
+    newValue4: Value4Type,
+  ): @Window @MayBeNaN Double {
     val paintingVariables = paintingVariables()
 
     if (relevantValuesHaveChanged(newValue1, newValue2, newValue3, newValue4).not()) {
       //Values have not changed, just update the end - but do not paint
       paintingVariables.currentEndX = endX
-      return
+      paintingVariables.currentEndTime = endTime
+      return Double.NaN
     }
 
-    relevantValuesChanged(paintingVariables, newValue1, newValue2, newValue3, newValue4, startX, endX)
+    relevantValuesChanged(paintingVariables, newValue1, newValue2, newValue3, newValue4, startX, endX, startTime, endTime, activeTimeStamp)
 
-    paintSegment(paintingContext)
+    return paintSegment(paintingContext)
   }
 
   /**
@@ -65,6 +79,9 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     newValue4: Value4Type,
     startX: @Window Double,
     endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
   ) {
     //Remember the updated properties - for the next paint
     paintingVariables.nextValue1 = newValue1
@@ -74,14 +91,23 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
     paintingVariables.nextStartX = startX
     paintingVariables.nextEndX = endX
+    paintingVariables.nextStartTime = startTime
+    paintingVariables.nextEndTime = endTime
+
     //Paint the *current* value until the next start
     paintingVariables.currentEndX = startX
+    paintingVariables.currentEndTime = endTime
+
+    paintingVariables.activeTimeStamp = activeTimeStamp
   }
 
   /**
-   * Paints the current segment
+   * Paints the current segment.
+   *
+   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
+   * Must return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
    */
-  fun paintSegment(paintingContext: LayerPaintingContext) {
+  fun paintSegment(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
     val paintingVariables = paintingVariables()
 
     @MayBeNoValueOrPending val value1ToPaint = paintingVariables.currentValue1
@@ -92,8 +118,18 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     @Window val startX = paintingVariables.currentStartX
     @Window val endX = paintingVariables.currentEndX
 
+    @Window val startTime = paintingVariables.currentStartTime
+    @Window val endTime = paintingVariables.currentEndTime
+
+    @ms @MayBeNaN val activeTimeStamp = paintingVariables.activeTimeStamp
+
     try {
-      paintSegment(paintingContext, startX, endX, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      @MayBeNaN @Window val opticalCenter = paintSegment(paintingContext, startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      if (paintingVariables.activeTimeStamp in startTime..endTime) {
+        return opticalCenter //Only return if this is relevant for the active time stamp
+      }
+
+      return Double.NaN
     } finally {
       //Switch to *next*
       paintingVariables.prepareForNextValue()
@@ -104,20 +140,24 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
    * This method is only called if it is necessary to paint (usually because the value has changed).
    *
    * The [paintingVariables] can be used to fetch additional values (if necessary).
+   *
+   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
+   * Might return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
    */
   abstract fun paintSegment(
     paintingContext: LayerPaintingContext,
     startX: @Window Double,
     endX: @Window Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
     value1ToPaint: Value1Type,
     value2ToPaint: Value2Type,
     value3ToPaint: Value3Type,
     value4ToPaint: Value4Type,
-  )
+  ): @Window @MayBeNaN Double
 
-  override fun finish(paintingContext: LayerPaintingContext) {
+  override fun finish(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
     //Paint the last value
-    paintSegment(paintingContext)
+    return paintSegment(paintingContext)
   }
 
   /**

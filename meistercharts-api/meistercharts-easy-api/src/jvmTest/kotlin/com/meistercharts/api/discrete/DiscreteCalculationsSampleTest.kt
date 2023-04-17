@@ -95,7 +95,7 @@ class DiscreteCalculationsSampleTest {
 
     assertThat(chunk.recordingType).isEqualTo(RecordingType.Measured)
 
-    assertThat(chunk.start.formatUtc()).isEqualTo("2023-04-04T08:56:05.461")
-    assertThat(chunk.end.formatUtc()).isEqualTo("2023-04-04T08:56:07.961")
+    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:05.461")
+    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:07.961")
   }
 }

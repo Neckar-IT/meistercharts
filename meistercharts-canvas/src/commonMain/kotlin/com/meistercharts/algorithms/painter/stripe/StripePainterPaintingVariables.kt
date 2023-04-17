@@ -20,6 +20,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Paining variables for stripe painters
@@ -102,6 +104,13 @@ interface StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, 
    */
   var currentEndX: @Window Double
 
+  val currentStartTime: @ms Double
+  var currentEndTime: @ms Double
+
+  /**
+   * The active timestamp - if there is one
+   */
+  var activeTimeStamp: @ms @MayBeNaN Double
 
   var nextValue1: @MayBeNoValueOrPending Value1Type
   var nextValue2: @MayBeNoValueOrPending Value2Type
@@ -110,6 +119,8 @@ interface StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, 
 
   var nextStartX: @Window Double
   var nextEndX: @Window Double
+  var nextStartTime: @ms Double
+  var nextEndTime: @ms Double
 }
 
 
@@ -172,6 +183,10 @@ abstract class AbstractStripePainterPaintingVariables<DataSeriesIndexType : Data
   override var currentStartX: @Window Double = Double.NaN
     protected set
   override var currentEndX: @Window Double = Double.NaN
+  override var currentStartTime: @Window Double = Double.NaN
+    protected set
+  override var currentEndTime: @Window Double = Double.NaN
+  override var activeTimeStamp: @ms @MayBeNaN Double = Double.NaN
 
   override var nextValue1: @MayBeNoValueOrPending Value1Type = value1Default
   override var nextValue2: @MayBeNoValueOrPending Value2Type = value2Default
@@ -180,6 +195,8 @@ abstract class AbstractStripePainterPaintingVariables<DataSeriesIndexType : Data
 
   override var nextStartX: @Window Double = Double.NaN
   override var nextEndX: @Window Double = Double.NaN
+  override var nextStartTime: @Window Double = Double.NaN
+  override var nextEndTime: @Window Double = Double.NaN
 
   override fun calculate(height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
     reset()
@@ -207,6 +224,8 @@ abstract class AbstractStripePainterPaintingVariables<DataSeriesIndexType : Data
 
     currentStartX = nextStartX
     currentEndX = nextEndX
+    currentStartTime = nextStartTime
+    currentEndTime = nextEndTime
 
     //Reset next
     resetNext()
@@ -224,6 +243,8 @@ abstract class AbstractStripePainterPaintingVariables<DataSeriesIndexType : Data
 
     nextStartX = Double.NaN
     nextEndX = Double.NaN
+    nextStartTime = Double.NaN
+    nextEndTime = Double.NaN
   }
 
 
@@ -240,11 +261,15 @@ abstract class AbstractStripePainterPaintingVariables<DataSeriesIndexType : Data
 
     currentStartX = Double.NaN
     currentEndX = Double.NaN
+    currentStartTime = Double.NaN
+    currentEndTime = Double.NaN
 
     previousValue1 = value1Default
     previousValue2 = value2Default
     previousValue3 = value3Default
     previousValue4 = value4Default
+
+    activeTimeStamp = Double.NaN
 
     resetNext()
   }

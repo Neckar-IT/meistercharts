@@ -183,7 +183,7 @@ class HistorySearchKtTest {
 
   @Test
   fun testSearchExact() {
-    assertThat(chunk.start).isEqualTo(100.0)
+    assertThat(chunk.firstTimestamp).isEqualTo(100.0)
 
     listOf(bucket).search(100.0, Exact).let {
       require(it != null)

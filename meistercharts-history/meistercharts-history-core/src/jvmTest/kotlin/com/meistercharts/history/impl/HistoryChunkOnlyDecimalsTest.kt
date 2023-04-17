@@ -181,34 +181,34 @@ class HistoryChunkOnlyDecimalsTest {
 
 
     assertThat(chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-    assertThat(chunk.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
 
     assertThat(chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
     assertThat(chunk.timestampCenter(TimestampIndex(2)).formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
-    assertThat(chunk.end.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
 
     chunk.range(0.0, chunk.timestampCenter(TimestampIndex(2)))!!.let {
       //contains everything
-      assertThat(it.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.end.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
     }
 
     chunk.range(chunk.timestampCenter(TimestampIndex(0)), 999999999999.0)!!.let {
       //contains everything
-      assertThat(it.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.end.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
     }
 
     chunk.range(0.0, chunk.timestampCenter(TimestampIndex(1)))!!.let {
       //contains *not*
-      assertThat(it.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.end.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
     }
 
     chunk.range(chunk.timestampCenter(TimestampIndex(1)), 999999999999999.0)!!.let {
       //contains *not*
-      assertThat(it.start.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
-      assertThat(it.end.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
     }
   }
 

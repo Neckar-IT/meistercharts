@@ -29,24 +29,28 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
-import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.MayBeNoValueOrPending
+import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
+import com.meistercharts.history.ReferenceEntryDifferentIdsCount
+import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
-import com.meistercharts.history.atMost
 import com.meistercharts.history.fastForEachIndexed
+import com.meistercharts.history.find
+import com.meistercharts.history.impl.requireIsFinite
 import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
-import it.neckar.open.observable.ObservableObject
+import it.neckar.open.formatting.formatUtc
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
@@ -105,6 +109,73 @@ class HistoryReferenceEntryLayer(
         maxBoxSize = configuration.stripeHeight,
         gapSize = configuration.stripesDistance,
       )
+
+      //Calculate the "active" value
+      activeInformation.reset()
+
+      configuration.activeDataSeriesIndex?.let { activeDataSeriesIndex ->
+        @ms val activeTimeStamp = configuration.activeTimeStamp.requireIsFinite { "activeTimeStamp" }
+
+        println("Looking @ ${activeTimeStamp.formatUtc()}")
+
+        historyBuckets.find(activeTimeStamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
+          val referenceEntryId = bucket.chunk.getReferenceEntryId(activeDataSeriesIndex, timestampIndex)
+          activeInformation.referenceEntryId = referenceEntryId
+          activeInformation.referenceEntryData = bucket.chunk.getReferenceEntryData(activeDataSeriesIndex, referenceEntryId)
+
+          activeInformation.status = bucket.chunk.getReferenceEntryStatus(activeDataSeriesIndex, timestampIndex)
+          activeInformation.idsCount = bucket.chunk.getReferenceEntryIdsCount(activeDataSeriesIndex, timestampIndex)
+        }
+      }
+    }
+
+    /**
+     * Contains the information about the active (usually related mouse over / tooltip) data
+     */
+    override val activeInformation = object : HistoryReferenceEntryPaintingVariables.ActiveInformation {
+      override var referenceEntryId: ReferenceEntryId = ReferenceEntryId.NoValue
+      override var status: HistoryEnumSet = HistoryEnumSet.NoValue
+      override var idsCount: ReferenceEntryDifferentIdsCount = ReferenceEntryDifferentIdsCount.NoValue
+      override var referenceEntryData: ReferenceEntryData? = null
+
+      fun reset() {
+        referenceEntryId = ReferenceEntryId.NoValue
+        status = HistoryEnumSet.NoValue
+        idsCount = ReferenceEntryDifferentIdsCount.NoValue
+        referenceEntryData = null
+
+        // geometricalCenter = Double.NaN //Do *not* reset - this is an ugly workaround, since the value is calculated in the paint method
+      }
+
+      /**
+       * The geometrical center for the [Configuration.activeDataSeriesIndex] and [Configuration.activeTimeStamp].
+       *
+       * ATTENTION: The geometrical center is not implemented correctly.
+       *
+       * It *should*:
+       * - be calculated in calculate in the painting variables
+       * - reset before each calculate is called!
+       *
+       * Instead, it is:
+       * - calculated in the paint method
+       * - *NOT* reset
+       */
+      override var geometricalCenter: @Window @MayBeNaN Double = Double.NaN
+        private set
+
+      /**
+       * Can be used to assign [geometricalCenter]
+       */
+      var geometricalCenterIfFinite: @Window @MayBeNaN Double
+        @Deprecated("Not supported", level = DeprecationLevel.HIDDEN)
+        get() {
+          throw UnsupportedOperationException("Only set supported")
+        }
+        set(value) {
+          if (value.isFinite()) {
+            geometricalCenter = value
+          }
+        }
     }
   }
 
@@ -134,11 +205,18 @@ class HistoryReferenceEntryLayer(
 
     val historyConfiguration = configuration.historyConfiguration()
 
+    val activeDataSeriesIndex = configuration.activeDataSeriesIndex
+
     //Iterate over all visible reference entry data series
-    configuration.visibleIndices.fastForEachIndexed { index, visibleDataSeriesIndex ->
+    configuration.visibleIndices.fastForEachIndexed { visibleIndexAsInt, visibleDataSeriesIndex ->
       val stripePainter = configuration.stripePainters.valueAt(visibleDataSeriesIndex.value)
 
-      val boxIndex = BoxIndex(index)
+      val dataSeriesIndex = ReferenceEntryDataSeriesIndex(visibleIndexAsInt)
+      val isActiveDataSeries = activeDataSeriesIndex == dataSeriesIndex
+      //Is only set if the current series is the active series
+      @MayBeNaN @ms val relevantActiveTimeStamp = if (isActiveDataSeries) configuration.activeTimeStamp else Double.NaN
+
+      val boxIndex = BoxIndex(visibleIndexAsInt)
       @Zoomed val startY = stripesLayout.calculateStart(boxIndex)
       @Zoomed val endY = stripesLayout.calculateEnd(boxIndex)
 
@@ -188,7 +266,18 @@ class HistoryReferenceEntryLayer(
 
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
-              stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, differentIdsCount, referenceEntryStatus, referenceEntryData)
+              paintingVariables.activeInformation.geometricalCenterIfFinite = stripePainter.valueChange(
+                paintingContext = paintingContext,
+                startX = startX,
+                endX = endX,
+                startTime = startTime,
+                endTime = endTime,
+                activeTimeStamp = relevantActiveTimeStamp,
+                newValue1 = referenceEntryId,
+                newValue2 = differentIdsCount,
+                newValue3 = referenceEntryStatus,
+                newValue4 = referenceEntryData
+              )
               break
             }
 
@@ -196,7 +285,7 @@ class HistoryReferenceEntryLayer(
             @ms val distanceToLastDataPoint = startTime - lastTime
             if (distanceToLastDataPoint > minGapDistance) {
               //We have a gap -> finish the current line and begin a new one
-              stripePainter.finish(paintingContext)
+              paintingVariables.activeInformation.geometricalCenterIfFinite = stripePainter.finish(paintingContext)
               stripePainter.begin(paintingContext, stripesLayout.boxSize, visibleDataSeriesIndex, historyConfiguration)
             }
 
@@ -204,7 +293,9 @@ class HistoryReferenceEntryLayer(
             //update the last time stuff
             lastTime = startTime
 
-            stripePainter.valueChange(paintingContext, startX, endX, referenceEntryId, differentIdsCount, referenceEntryStatus, referenceEntryData)
+            paintingVariables.activeInformation.geometricalCenterIfFinite = stripePainter.valueChange(
+              paintingContext = paintingContext, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = referenceEntryId, newValue2 = differentIdsCount, newValue3 = referenceEntryStatus, newValue4 = referenceEntryData
+            )
 
             if (gc.debug[DebugFeature.ShowBounds]) {
               gc.stroke(Color.blue)
@@ -212,7 +303,7 @@ class HistoryReferenceEntryLayer(
             }
           }
         }
-        stripePainter.finish(paintingContext)
+        paintingVariables.activeInformation.geometricalCenterIfFinite = stripePainter.finish(paintingContext)
       }
     }
   }
@@ -272,6 +363,25 @@ class HistoryReferenceEntryLayer(
 
       return stripeHeight * stripesCount + stripesDistance * (stripesCount - 1)
     }
+
+    /**
+     * The index of the data series that is highlighted (mouse over)
+     */
+    var activeDataSeriesIndex: ReferenceEntryDataSeriesIndex? = null
+
+    /**
+     * The active time stamp (usually where the mouse is located).
+     * Is set to [Double.NaN] if no values is set
+     */
+    var activeTimeStamp: @ms @MayBeNaN Double = Double.NaN
+
+    /**
+     * Provides the size for the background of the active data series.
+     *
+     * The result is used to paint the background for the active series.
+     * If the returned size is small(er) than the data series size, the background is also smaller
+     */
+    var activeDataSeriesBackgroundSize: (dataSeriesHeight: @Zoomed Double) -> Double = { dataSeriesHeight -> dataSeriesHeight }
   }
 
   interface HistoryReferenceEntryPaintingVariables : PaintingVariables {
@@ -290,6 +400,21 @@ class HistoryReferenceEntryLayer(
      */
     var stripesLayout: EquisizedBoxLayout
 
+    /**
+     * Contains the information about the active (usually related mouse over / tooltip) data
+     */
+    val activeInformation: ActiveInformation
+
+    /**
+     * Used for tooltips
+     */
+    interface ActiveInformation {
+      val referenceEntryId: @MayBeNoValueOrPending ReferenceEntryId
+      val status: @MayBeNoValueOrPending HistoryEnumSet
+      val idsCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount
+      val referenceEntryData: ReferenceEntryData?
+      val geometricalCenter: @Window @MayBeNaN Double
+    }
   }
 
 }

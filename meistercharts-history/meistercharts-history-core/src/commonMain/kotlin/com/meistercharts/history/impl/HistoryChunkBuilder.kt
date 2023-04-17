@@ -18,6 +18,8 @@ package com.meistercharts.history.impl
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
+import com.meistercharts.history.HistoryBucket
+import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
@@ -35,6 +37,8 @@ import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.mapInt
 import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.unit.number.IsFinite
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -351,6 +355,30 @@ class HistoryChunkBuilder(
 }
 
 /**
+ * Creates a bucket
+ */
+fun HistoryConfiguration.bucket(descriptor: HistoryBucketDescriptor, valueProvider: (dataSeriesIndex: DecimalDataSeriesIndex, timestamp: @ms Double) -> Double): HistoryBucket {
+  @ms val distanceBetweenTimestamps = descriptor.bucketRange.distance
+
+  val decimalDataSeriesCount = this.decimalDataSeriesCount
+
+  val chunk = chunk {
+    @ms var currentTimestamp = descriptor.start
+    while (currentTimestamp < descriptor.end) {
+
+      val values = DoubleArray(decimalDataSeriesCount) {
+        valueProvider(DecimalDataSeriesIndex(it), currentTimestamp)
+      }
+
+      this.addDecimalValues(currentTimestamp, *values)
+      currentTimestamp += distanceBetweenTimestamps
+    }
+  }
+
+  return HistoryBucket(descriptor, chunk)
+}
+
+/**
  * Creates a history chunk
  */
 fun historyChunk(
@@ -464,8 +492,15 @@ fun HistoryConfiguration.chunk(
 /**
  * Throws an exception if the given value is not a valid number
  */
-fun Double.requireIsFinite(descriptionProvider: () -> String) {
+fun @MayBeNaN Double.requireIsFinite(descriptionProvider: () -> String? = { null }): @IsFinite Double {
   require(isFinite()) {
-    "<${descriptionProvider()}> is not finite but $this"
+    val description = descriptionProvider()
+    if (description != null) {
+      "<$description> is not finite but $this"
+    } else {
+      "is not finite but $this"
+    }
   }
+
+  return this
 }

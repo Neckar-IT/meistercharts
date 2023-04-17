@@ -17,6 +17,9 @@ package com.meistercharts.history
 
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.other.Inclusive
+import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -40,6 +43,16 @@ data class ReferenceEntryData(
   //val state: HistoryEnum.HistoryEnumValue,
   //
   //TODO add additional well know
+
+  /**
+   * The start timestamp of this entry - is null if unknown
+   */
+  val start: @ms @Inclusive Double? = null,
+
+  /**
+   * The end timestamp of this entry - is null if unknown
+   */
+  val end: @ms @Inclusive Double? = null,
 
   /**
    * The (optional) payload that can be parsed later.

@@ -142,10 +142,10 @@ class DiscreteTimelineChart internal constructor(
       val chartCalculator = chartSupport.chartCalculator
       val contentAreaTimeRangeX: com.meistercharts.algorithms.TimeRange = gestalt.configuration.contentAreaTimeRange
 
-      @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.start)
-      @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.end)
+      @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.firstTimestamp)
+      @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.lastTimestamp)
 
-      logger.debug("start/end: ${chunk.start.formatUtc()} - ${chunk.end.formatUtc()}")
+      logger.debug("start/end: ${chunk.firstTimestamp.formatUtc()} - ${chunk.lastTimestamp.formatUtc()}")
       logger.debug("relative start/end: $startRelative - $endRelative")
 
       //Set the values immediately + set the defaults (for resize operations)
@@ -154,7 +154,7 @@ class DiscreteTimelineChart internal constructor(
         override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
           @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
-          @ms val startToShow = chunk.end - durationToShow
+          @ms val startToShow = chunk.lastTimestamp - durationToShow
           @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
 
           val zoomX = chartSupport.zoomAndTranslationSupport.calculateFitZoomX(startToShowRelative, endRelative)
@@ -164,7 +164,7 @@ class DiscreteTimelineChart internal constructor(
         override fun defaultTranslation(chartCalculator: ChartCalculator): Distance {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
           @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
-          @ms val startToShow = chunk.end - durationToShow
+          @ms val startToShow = chunk.lastTimestamp - durationToShow
           @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
 
           val translationX = chartSupport.zoomAndTranslationSupport.calculateFitWindowTranslationX(startToShowRelative)
@@ -176,8 +176,8 @@ class DiscreteTimelineChart internal constructor(
 
       chartSupport.zoomAndTranslationSupport.zoomAndTranslationModifier = object : ZoomAndTranslationModifier {
         override fun modifyTranslation(translation: @Zoomed Distance, calculator: ChartCalculator): @Zoomed Distance {
-          @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.start)
-          @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.end)
+          @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.firstTimestamp)
+          @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.lastTimestamp)
 
           @Zoomed val startZoomed = calculator.domainRelative2zoomedX(startRelative)
           @Zoomed val windowWidth = calculator.chartState.windowWidth

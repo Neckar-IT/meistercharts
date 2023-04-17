@@ -23,7 +23,9 @@ import com.meistercharts.algorithms.impl.FittingWithMargin
 import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
+import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
 import com.meistercharts.algorithms.layers.TimeAxisLayer
+import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
@@ -38,6 +40,10 @@ import com.meistercharts.algorithms.tile.HistoryGapCalculator
 import com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
 import com.meistercharts.algorithms.tile.withMinimum
+import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
+import com.meistercharts.algorithms.tooltip.balloon.DiscreteSeriesBalloonTooltipPlacementSupport
+import com.meistercharts.algorithms.tooltip.balloon.DiscreteSeriesModelBalloonTooltipSupport
+import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
@@ -74,6 +80,7 @@ import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.Positive
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
@@ -184,6 +191,88 @@ class DiscreteTimelineChartGestalt(
 
 
   /**
+   * Balloon tooltip support
+   */
+  val balloonTooltipSupport: DiscreteSeriesModelBalloonTooltipSupport = DiscreteSeriesModelBalloonTooltipSupport(
+    tooltipPlacement = DiscreteSeriesBalloonTooltipPlacementSupport(
+      activeDataSeriesIndexProvider = ::activeDataSeriesIndexOrNull,
+      tooltipLocationXProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.geometricalCenter },
+      referenceEntryDataProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryData },
+      boxLayout = { historyReferenceEntryLayer.paintingVariables().stripesLayout }, dataSeriesHeight = {
+        val layout = historyReferenceEntryLayer.paintingVariables().stripesLayout
+        historyReferenceEntryLayer.configuration.activeDataSeriesBackgroundSize(layout.boxSize)
+      }, contentAreaTimeRange = configuration::contentAreaTimeRange
+    ),
+    headline = { textService, i18nConfiguration ->
+      configuration.historyConfiguration().referenceEntryConfiguration.getDisplayName(activeDataSeriesIndex).resolve(textService, i18nConfiguration)
+    },
+    referenceEntryIdProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryId },
+    referenceEntryDataProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryData },
+    statusProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.status },
+    statusEnumProvider = { historyConfiguration().referenceEntryConfiguration.getStatusEnum(activeDataSeriesIndex) },
+
+    colors = { index ->
+      //TODO how to extract the colors???
+      // groupedBarsPainter.configuration.colorsProvider.color(activeCategoryIndex, SeriesIndex(index))
+      Color.red
+    },
+  )
+
+  /**
+   * Shows the tooltips as balloon.
+   * This layer uses the [balloonTooltipSupport] to paint the content of the tooltip
+   */
+  val balloonTooltipLayer: LayerVisibilityAdapter<BalloonTooltipLayer> = balloonTooltipSupport.createTooltipLayer()
+
+  /**
+   * Returns the active category index - or null if no category is active
+   */
+  var activeDataSeriesIndexOrNull: ReferenceEntryDataSeriesIndex?
+    get() = historyReferenceEntryLayer.configuration.activeDataSeriesIndex
+    private set(value) {
+      historyReferenceEntryLayer.configuration.activeDataSeriesIndex = value
+    }
+
+  /**
+   * A variable representing the active time stamp in milliseconds.
+   *
+   * It can be NaN, which indicates that the time stamp is
+   * not yet assigned or is not applicable in certain cases.
+   *
+   */
+  var activeTimeStamp: @ms @MayBeNaN Double
+    get() = historyReferenceEntryLayer.configuration.activeTimeStamp
+    private set(value) {
+      historyReferenceEntryLayer.configuration.activeTimeStamp = value
+    }
+
+  /**
+   * Returns the active category index.
+   * Throws an exception if no category is active!
+   */
+  val activeDataSeriesIndex: ReferenceEntryDataSeriesIndex
+    get() = activeDataSeriesIndexOrNull ?: throw IllegalStateException("No active category index found")
+
+  /**
+   * Handles the mouse over - does *not* paint anything itself
+   */
+  val toolbarInteractionLayer: TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> = TooltipInteractionLayer.forDiscreteDataSeries(layoutProvider = { historyReferenceEntryLayer.paintingVariables().stripesLayout },
+    selectionSink = { relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport ->
+      if (activeDataSeriesIndexOrNull != referenceEntryDataSeriesIndex) {
+        activeDataSeriesIndexOrNull = referenceEntryDataSeriesIndex
+        chartSupport.markAsDirty()
+      }
+
+      activeTimeStamp = if (relativeTime == null) {
+        chartSupport.markAsDirty()
+        Double.NaN
+      } else {
+        chartSupport.markAsDirty()
+        configuration.contentAreaTimeRange.relative2time(relativeTime)
+      }
+    })
+
+  /**
    * Calculates the view port bottom margin
    */
   private fun viewportMarginBottom(): @Zoomed Double {
@@ -264,14 +353,16 @@ class DiscreteTimelineChartGestalt(
         updateTranslateOverTime(chartSupport)
       }
 
-      contentViewportGestalt
-
       layers.addClearBackground()
+      layers.addLayer(toolbarInteractionLayer)
+
       layers.addLayer(historyRenderPropertiesCalculatorLayer)
       layers.addLayer(historyReferenceEntryLayer.clippedToContentViewport())
       layers.addLayer(categoryAxisLayer)
 
       layers.addLayer(timeAxisLayer.visibleIf { configuration.showTimeAxis })
+
+      layers.addLayer(balloonTooltipLayer)
 
       layers.addVersionNumberHidden()
     }

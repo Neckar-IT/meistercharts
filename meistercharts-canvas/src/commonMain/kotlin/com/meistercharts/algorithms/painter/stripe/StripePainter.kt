@@ -20,6 +20,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Base interface for stripe painters.
@@ -58,6 +60,9 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
    * Adds a value change event at the given x location
    *
    * Call [finish] when done.
+   *
+   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
+   * Will return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
    */
   fun valueChange(
     paintingContext: LayerPaintingContext,
@@ -70,6 +75,14 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
      * The end location of the stripe segment
      */
     endX: @Window Double,
+
+    startTime: @ms Double,
+    endTime: @ms Double,
+
+    /**
+     * The active timestamp - is [Double.NaN] if there is no active timestamp
+     */
+    activeTimeStamp: @ms @MayBeNaN Double,
 
     /**
      * The updated value
@@ -90,10 +103,12 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
      * The fourth updated value (usually some kind of context information - e.g. a map with additional information required to paint)
      */
     newValue4: ValueType4,
-  )
+  ): @Window @MayBeNaN Double
 
   /**
    * Finished the enum bar - up until the given x value
+   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
+   * Will return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
    */
-  fun finish(paintingContext: LayerPaintingContext)
+  fun finish(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double
 }

@@ -52,8 +52,8 @@ class HistoryAutoScaleTest {
       addDecimalValues(start + 20, 33.0, 12.0)
     }
 
-    assertThat(historyChunk.start).isEqualTo(1000000.0)
-    assertThat(historyChunk.end).isEqualTo(1000020.0)
+    assertThat(historyChunk.firstTimestamp).isEqualTo(1000000.0)
+    assertThat(historyChunk.lastTimestamp).isEqualTo(1000020.0)
 
     storage.storeWithoutCache(historyChunk, SamplingPeriod.EveryHundredMillis)
 
@@ -80,8 +80,8 @@ class HistoryAutoScaleTest {
       addDecimalValues(start + 20, 33.0, 12.0)
     }
 
-    assertThat(measuredChunk.start).isEqualTo(1000000.0)
-    assertThat(measuredChunk.end).isEqualTo(1000020.0)
+    assertThat(measuredChunk.firstTimestamp).isEqualTo(1000000.0)
+    assertThat(measuredChunk.lastTimestamp).isEqualTo(1000020.0)
 
     val samplingPeriod = SamplingPeriod.EveryHundredMillis
     val samplingPeriodAbove = samplingPeriod.above()!!
@@ -114,8 +114,8 @@ class HistoryAutoScaleTest {
 
     assertThat(downSampledBucket.chunk.timeStampsCount).isEqualTo(600)
     assertThat(downSampledBucket.chunk.timestampCenter(TimestampIndex(0))).isEqualTo(600500.0)
-    assertThat(downSampledBucket.chunk.start).isEqualTo(600_500.0)
-    assertThat(downSampledBucket.chunk.end).isEqualTo(1199_500.0)
+    assertThat(downSampledBucket.chunk.firstTimestamp).isEqualTo(600_500.0)
+    assertThat(downSampledBucket.chunk.lastTimestamp).isEqualTo(1199_500.0)
 
     val timestampIndex = downSampledBucket.chunk.bestTimestampIndexFor(start)
     assertThat(timestampIndex.nearIndex).isEqualTo(400)

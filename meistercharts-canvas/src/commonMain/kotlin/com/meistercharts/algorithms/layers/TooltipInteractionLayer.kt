@@ -15,23 +15,26 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.model.CategoryIndex
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.annotations.ContentAreaRelative
+import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
-import com.meistercharts.model.Coordinates
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.KeyCode
 import com.meistercharts.events.KeyDownEvent
 import com.meistercharts.events.KeyStroke
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.TouchStartEvent
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
+import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Orientation
 
 /**
  * Handles the events for the tooltip interactions
@@ -158,6 +161,45 @@ class TooltipInteractionLayer<T>(
             selectionSink(null, chartSupport)
           } else {
             selectionSink(CategoryIndex(boxIndex.value), chartSupport)
+          }
+        }
+      )
+    }
+
+    fun forDiscreteDataSeries(
+      /**
+       * Provides the current [EquisizedBoxLayout] (usually from painting properties)
+       */
+      layoutProvider: () -> EquisizedBoxLayout,
+
+      /**
+       * This method is called *often* (potentially on every mouse / touch event).
+       * Therefore, it must be very, very fast
+       */
+      selectionSink: (relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport) -> Unit,
+
+      ): TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> {
+      return TooltipInteractionLayer(
+        Configuration { coordinates: @Window Coordinates?, chartSupport ->
+          if (coordinates == null) {
+            selectionSink(null, null, chartSupport)
+            return@Configuration
+          }
+
+          val chartCalculator = chartSupport.chartCalculator
+
+          @ContentAreaRelative @TimeRelative val timeRelative = chartCalculator.window2contentAreaRelativeX(coordinates.x)
+
+          //Convert to content area (relative to the content area
+          val layout: EquisizedBoxLayout = layoutProvider()
+
+          @ContentArea val yContentArea = chartCalculator.window2contentAreaY(coordinates.y)
+          val boxIndex: BoxIndex? = layout.boxIndexFor(yContentArea)
+
+          if (boxIndex == null) {
+            selectionSink(timeRelative, null, chartSupport)
+          } else {
+            selectionSink(timeRelative, ReferenceEntryDataSeriesIndex(boxIndex.value), chartSupport)
           }
         }
       )

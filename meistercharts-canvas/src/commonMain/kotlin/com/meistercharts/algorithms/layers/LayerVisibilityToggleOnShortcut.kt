@@ -28,9 +28,9 @@ import com.meistercharts.events.matches
  * layer that toggles the visibility on shortcut (Ctrl-Alt-V)
  *
  */
-class LayerVisibilityToggleOnShortcut(
-  val delegate: LayerVisibilityAdapterWithState,
-  val keyStroke: KeyStroke
+class LayerVisibilityToggleOnShortcut<T : Layer>(
+  val delegate: LayerVisibilityAdapterWithState<T>,
+  val keyStroke: KeyStroke,
 ) : Layer by delegate {
 
   override fun layout(paintingContext: LayerPaintingContext) {
@@ -54,6 +54,6 @@ class LayerVisibilityToggleOnShortcut(
 /**
  * Wraps the layer into an [LayerVisibilityAdapter]
  */
-fun LayerVisibilityAdapterWithState.toggleShortcut(keyStroke: KeyStroke): LayerVisibilityToggleOnShortcut {
+fun <T : Layer> LayerVisibilityAdapterWithState<T>.toggleShortcut(keyStroke: KeyStroke): LayerVisibilityToggleOnShortcut<T> {
   return LayerVisibilityToggleOnShortcut(this, keyStroke)
 }

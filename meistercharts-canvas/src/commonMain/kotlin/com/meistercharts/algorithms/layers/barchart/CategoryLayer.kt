@@ -249,7 +249,7 @@ class CategoryLayer<T : CategoryModel>(
      * The result is used to paint the background for the active category.
      * If the returned size is small(er) than the category size, the background is also smaller
      */
-    var activeCategoryBackgroundSize: (categorySize: @Zoomed Double) -> Double = { categoryWidth -> categoryWidth }
+    var activeCategoryBackgroundSize: (categorySize: @Zoomed Double) -> Double = { categorySize -> categorySize }
   }
 
 }

@@ -153,19 +153,28 @@ class HistoryChunk(
   }
 
   /**
-   * The start time.
    * Returns the value of the *first* timestamp
    */
   @Inclusive
-  val start: Double
+  val firstTimestamp: Double
     get() = timeStamps.first()
 
+  @Deprecated("use firstTimestamp instead", ReplaceWith("firstTimestamp"))
+  @Inclusive
+  val start: Double
+    get() = firstTimestamp
+
   /**
-   * The end time
+   * The time of the last timestamp
    */
   @Inclusive
-  val end: Double
+  val lastTimestamp: Double
     get() = timeStamps.last()
+
+  @Deprecated("use lastTimestamp instead", ReplaceWith("lastTimestamp"))
+  @Inclusive
+  val end: Double
+    get() = lastTimestamp
 
   /**
    * Returns the time stamp for the given index.
@@ -175,6 +184,9 @@ class HistoryChunk(
    * * the center of average / bit set
    */
   fun timestampCenter(timeStampIndex: TimestampIndex): @ms Double {
+    if (timeStampIndex.value >= timeStamps.size) {
+      throw IndexOutOfBoundsException("timeStampIndex: $timeStampIndex too large. Size is ${timeStamps.size}")
+    }
     return timeStamps[timeStampIndex.value]
   }
 
@@ -967,7 +979,7 @@ class HistoryChunk(
 
 
   override fun toString(): String {
-    return "HistoryChunk(${start.formatUtc()} - ${end.formatUtc()}, time stamps: $timeStampsCount, total data series: $totalDataSeriesCount)"
+    return "HistoryChunk(${firstTimestamp.formatUtc()} - ${lastTimestamp.formatUtc()}, time stamps: $timeStampsCount, total data series: $totalDataSeriesCount)"
   }
 
   /**
@@ -1037,8 +1049,8 @@ class HistoryChunk(
     val separator = " | "
 
     return buildString {
-      appendLine("Start: ${start.formatUtc()}")
-      appendLine("End:   ${end.formatUtc()}")
+      appendLine("Start: ${firstTimestamp.formatUtc()}")
+      appendLine("End:   ${lastTimestamp.formatUtc()}")
       appendLine("Series counts:")
       appendLine("  Decimals: $decimalDataSeriesCount")
       appendLine("  Enums:    $enumDataSeriesCount")
@@ -1272,7 +1284,7 @@ fun HistoryConfiguration.chunk(
  * Returns the time range for this history chunk
  */
 fun HistoryChunk.timeRange(): TimeRange {
-  return TimeRange(start, end)
+  return TimeRange(firstTimestamp, lastTimestamp)
 }
 
 
