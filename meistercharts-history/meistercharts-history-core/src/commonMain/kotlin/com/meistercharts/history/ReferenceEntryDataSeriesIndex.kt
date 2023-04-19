@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty0
  * If an index has to be used as [Int] (e.g. in a provider), [ReferenceEntryDataSeriesIndex] should be used to annotate the [Int]s
  */
 @JvmInline
-value class ReferenceEntryDataSeriesIndex(val value: @ReferenceEntryDataSeriesIndexInt Int) : DataSeriesIndex {
+value class ReferenceEntryDataSeriesIndex(override val value: @ReferenceEntryDataSeriesIndexInt Int) : DataSeriesIndex {
   companion object {
     val zero: ReferenceEntryDataSeriesIndex = ReferenceEntryDataSeriesIndex(0)
     val one: ReferenceEntryDataSeriesIndex = ReferenceEntryDataSeriesIndex(1)
@@ -40,13 +40,13 @@ value class ReferenceEntryDataSeriesIndex(val value: @ReferenceEntryDataSeriesIn
 /**
  * This is a copy of [IndexProvider] - to avoid unnecessary boxing
  */
-interface ReferenceEntryDataSeriesIndexProvider : HasSize {
+interface ReferenceEntryDataSeriesIndexProvider : DataSeriesIndexProvider<ReferenceEntryDataSeriesIndex>, HasSize {
   /**
    * Retrieves the index at the given [index].
    *
    * @param index a value between 0 (inclusive) and [size] (exclusive)
    */
-  fun valueAt(index: @ReferenceEntryDataSeriesIndexInt Int): ReferenceEntryDataSeriesIndex
+  override fun valueAt(index: @ReferenceEntryDataSeriesIndexInt Int): ReferenceEntryDataSeriesIndex
 
   companion object {
     /**

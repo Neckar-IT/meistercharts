@@ -26,9 +26,9 @@ class LayoutVariableObjectCache<T : LayoutVariable>(
    * The factory that is used to create new elements.
    *
    * ATTENTION: The factory is only called once for each index.
-   * The created objects are reused for each layout pass afterwards.
+   * The created objects are reused for each layout pass afterward.
    */
-  factory: () -> T
+  factory: () -> T,
 ) : AbstractLayoutVariableObjectCache<T>(factory) {
 
   override fun reset() {
@@ -38,5 +38,4 @@ class LayoutVariableObjectCache<T : LayoutVariable>(
       values[index].reset()
     }
   }
-
 }

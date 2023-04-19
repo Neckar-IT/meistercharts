@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty0
  * If an index has to be used as [Int] (e.g. in a provider), [EnumDataSeriesIndexInt] should be used to annotate the [Int]s
  */
 @JvmInline
-value class EnumDataSeriesIndex(val value: Int) : DataSeriesIndex {
+value class EnumDataSeriesIndex(override val value: Int) : DataSeriesIndex {
   companion object {
     val zero: EnumDataSeriesIndex = EnumDataSeriesIndex(0)
     val one: EnumDataSeriesIndex = EnumDataSeriesIndex(1)
@@ -40,13 +40,13 @@ value class EnumDataSeriesIndex(val value: Int) : DataSeriesIndex {
 /**
  * This is a copy of [IndexProvider] - to avoid unnecessary boxing
  */
-interface EnumDataSeriesIndexProvider : HasSize {
+interface EnumDataSeriesIndexProvider : DataSeriesIndexProvider<EnumDataSeriesIndex>, HasSize {
   /**
    * Retrieves the index at the given [index].
    *
    * @param index a value between 0 (inclusive) and [size] (exclusive)
    */
-  fun valueAt(index: Int): EnumDataSeriesIndex
+  override fun valueAt(index: Int): EnumDataSeriesIndex
 
   companion object {
     /**

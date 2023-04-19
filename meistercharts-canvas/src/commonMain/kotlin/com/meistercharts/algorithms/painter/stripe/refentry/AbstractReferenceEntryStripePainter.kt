@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryData

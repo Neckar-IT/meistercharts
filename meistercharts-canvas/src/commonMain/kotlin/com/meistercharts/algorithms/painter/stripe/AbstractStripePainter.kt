@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter.stripe
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.PaintLoopIndexCondition
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -36,13 +37,21 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
    */
   abstract fun paintingVariables(): StripePainterPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
 
-  override fun begin(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
-    val paintingVariables = paintingVariables()
+  /**
+   * The last data series index
+   */
+  private val sameDataSeriesIndexCondition = PaintLoopIndexCondition.isEqualInt()
 
-    paintingVariables.calculate(height, dataSeriesIndex, historyConfiguration)
+  override fun layoutBegin(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
+    sameDataSeriesIndexCondition.verifySame(paintingContext.loopIndex, dataSeriesIndex.value) {
+      "Stripe painters must be instantiated for each data series. Do not reuse them"
+    }
+
+    val paintingVariables = paintingVariables()
+    paintingVariables.prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
   }
 
-  override fun valueChange(
+  override fun layoutValueChange(
     paintingContext: LayerPaintingContext,
     startX: @Window Double,
     endX: @Window Double,
@@ -53,7 +62,8 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     newValue2: Value2Type,
     newValue3: Value3Type,
     newValue4: Value4Type,
-  ): @Window @MayBeNaN Double {
+  ): Double {
+
     val paintingVariables = paintingVariables()
 
     if (relevantValuesHaveChanged(newValue1, newValue2, newValue3, newValue4).not()) {
@@ -65,7 +75,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
     relevantValuesChanged(paintingVariables, newValue1, newValue2, newValue3, newValue4, startX, endX, startTime, endTime, activeTimeStamp)
 
-    return paintSegment(paintingContext)
+    return layoutSegment(paintingContext)
   }
 
   /**
@@ -102,12 +112,21 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
   }
 
   /**
-   * Paints the current segment.
-   *
-   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
-   * Must return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
+   * Returns true if the *relevant* values have changed.
+   * If this method returns true, a new segment will be started.
+   * If this method returns false, the current segment will continue
    */
-  fun paintSegment(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
+  abstract fun relevantValuesHaveChanged(
+    value1: Value1Type,
+    value2: Value2Type,
+    value3: Value3Type,
+    value4: Value4Type,
+  ): Boolean
+
+  /**
+   * Is called for each "new" segment
+   */
+  fun layoutSegment(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
     val paintingVariables = paintingVariables()
 
     @MayBeNoValueOrPending val value1ToPaint = paintingVariables.currentValue1
@@ -124,7 +143,9 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     @ms @MayBeNaN val activeTimeStamp = paintingVariables.activeTimeStamp
 
     try {
-      @MayBeNaN @Window val opticalCenter = paintSegment(paintingContext, startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      paintingVariables.storeSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+
+      @MayBeNaN @Window val opticalCenter = layoutSegment(paintingContext, startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
       if (paintingVariables.activeTimeStamp in startTime..endTime) {
         return opticalCenter //Only return if this is relevant for the active time stamp
       }
@@ -137,14 +158,10 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
   }
 
   /**
-   * This method is only called if it is necessary to paint (usually because the value has changed).
-   *
-   * The [paintingVariables] can be used to fetch additional values (if necessary).
-   *
-   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
-   * Might return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
+   * Layouts the segment
+   * @return the geometrical center
    */
-  abstract fun paintSegment(
+  fun layoutSegment(
     paintingContext: LayerPaintingContext,
     startX: @Window Double,
     endX: @Window Double,
@@ -153,20 +170,55 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     value2ToPaint: Value2Type,
     value3ToPaint: Value3Type,
     value4ToPaint: Value4Type,
-  ): @Window @MayBeNaN Double
+  ): @Window @MayBeNaN Double {
+    paintingVariables().storeSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+    return (startX + endX) / 2.0
+  }
 
-  override fun finish(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
+  override fun layoutFinish(paintingContext: LayerPaintingContext): @Window @MayBeNaN Double {
     //Paint the last value
-    return paintSegment(paintingContext)
+    return layoutSegment(paintingContext)
+  }
+
+  override fun paint(paintingContext: LayerPaintingContext) {
+    val paintingVariables = paintingVariables()
+    paintingVariables.verifyLoopIndex(paintingContext)
+
+    beginPainting(paintingContext)
+
+    paintingVariables.segments.fastForEachWithIndex { index, segmentLayoutVariables ->
+      paintSegment(
+        paintingContext,
+        segmentLayoutVariables.startX,
+        segmentLayoutVariables.endX,
+        segmentLayoutVariables.activeTimeStamp,
+        segmentLayoutVariables.value1ToPaint,
+        segmentLayoutVariables.value2ToPaint,
+        segmentLayoutVariables.value3ToPaint,
+        segmentLayoutVariables.value4ToPaint,
+      )
+    }
+
+    finishPainting(paintingContext)
+  }
+
+  open fun beginPainting(paintingContext: LayerPaintingContext) {
   }
 
   /**
-   * Returns true if the *relevant* values have changed.
+   * Paints a single segment.
+   * This method might be called multiple times.
+   *
+   * * [beginPainting] is called once before
+   * * [finishPainting] is called once after
    */
-  abstract fun relevantValuesHaveChanged(
-    value1: Value1Type,
-    value2: Value2Type,
-    value3: Value3Type,
-    value4: Value4Type,
-  ): Boolean
+  abstract fun paintSegment(
+    paintingContext: LayerPaintingContext,
+    startX: @Window Double, endX: @Window Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    value1ToPaint: Value1Type, value2ToPaint: Value2Type, value3ToPaint: Value3Type, value4ToPaint: Value4Type,
+  )
+
+  open fun finishPainting(paintingContext: LayerPaintingContext) {
+  }
 }

@@ -49,15 +49,13 @@ class RectangleEnumStripePainter(
     value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
     value3ToPaint: Unit,
     value4ToPaint: Unit,
-  ): @Window @MayBeNaN Double {
+  ) {
     val valueToPaint: @MayBeNoValueOrPending HistoryEnumSet = value1ToPaint
     val valueMostTimeToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal = value2ToPaint
 
-    val gc = paintingContext.gc
-
     if (valueToPaint == HistoryEnumSet.NoValue) {
       //the value is NoValue, do *not* paint anything
-      return Double.NaN
+      return
     }
 
     //value has changed, paint the rect
@@ -68,8 +66,9 @@ class RectangleEnumStripePainter(
       "End value is missing $endX"
     }
 
-    @Zoomed val rectangleHeight = paintingVariables().height
+    val gc = paintingContext.gc
 
+    @Zoomed val rectangleHeight = paintingVariables().height
     @Zoomed val rectangleWidth = endX - startX
 
     if (valueToPaint.isNoValue()) {
@@ -79,7 +78,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.white)
         gc.fillText("-", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return Double.NaN
+      return
     }
 
     if (valueToPaint.isPending()) {
@@ -89,7 +88,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.white)
         gc.fillText("?", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return Double.NaN
+      return
     }
 
     //Which ordinal should be painted?
@@ -108,8 +107,6 @@ class RectangleEnumStripePainter(
       gc.fill(Color.white)
       gc.fillText(valueToPaint.toString(), startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
     }
-
-    return (startX + endX) / 2.0
   }
 
 

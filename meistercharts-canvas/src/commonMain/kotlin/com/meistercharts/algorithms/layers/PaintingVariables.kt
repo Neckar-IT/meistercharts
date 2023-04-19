@@ -43,12 +43,9 @@ object None : PaintingVariables {
 }
 
 /**
- * Painting variables that store the current [PaintingLoopIndex].
- * Offer some verify methods that ensure the calculate methods have been called.
- *
- * Use [AbstractPaintingVariables] instead!
+ * Interface for classes that have a loop index
  */
-interface LoopIndexAwarePaintingVariables : PaintingVariables {
+interface LoopIndexAware {
   /**
    * The current loop index
    */
@@ -66,6 +63,15 @@ interface LoopIndexAwarePaintingVariables : PaintingVariables {
       "Invalid loop index ($loopIndex) but expected $expectedLoopIndex. Call [calculate] in every paint loop"
     }
   }
+}
+
+/**
+ * Painting variables that store the current [PaintingLoopIndex].
+ * Offer some verify methods that ensure the calculate methods have been called.
+ *
+ * Use [AbstractPaintingVariables] instead!
+ */
+interface LoopIndexAwarePaintingVariables : LoopIndexAware, PaintingVariables {
 }
 
 /**

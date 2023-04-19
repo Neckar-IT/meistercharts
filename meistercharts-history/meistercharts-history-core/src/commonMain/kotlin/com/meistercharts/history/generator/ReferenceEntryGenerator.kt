@@ -52,6 +52,8 @@ fun interface ReferenceEntryGenerator {
       max: ReferenceEntryId = ReferenceEntryId(100_000),
       factor: Int = 1,
     ): ReferenceEntryGenerator {
+      require(factor != 0) { "Factor must not be 0" }
+
       return ReferenceEntryGenerator { timestamp ->
         val baseValue = (timestamp / step.inWholeMilliseconds)
         val idAsInt = (baseValue % max.id).toInt() * factor % Int.MAX_VALUE

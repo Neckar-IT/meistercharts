@@ -510,7 +510,7 @@ private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
       }
     }
 
-    historyEnumLayer.configuration.enumStripePainter = MultiProvider.forListOr(enumBarPainters, RectangleEnumStripePainter())
+    historyEnumLayer.configuration.stripePainters = MultiProvider.forListOr(enumBarPainters, RectangleEnumStripePainter())
   }
 
   jsStyle.enumStripeHeight?.let {

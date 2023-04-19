@@ -61,6 +61,11 @@ class BinaryPainter(
    */
   var areaFill: Color? = null
 
+  fun reset() {
+    firstX = 0.0
+    path.beginPath()
+  }
+
   override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
     val currentPoint = path.currentPointOrNull
 

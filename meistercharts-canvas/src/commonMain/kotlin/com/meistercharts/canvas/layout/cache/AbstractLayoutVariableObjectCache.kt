@@ -31,9 +31,9 @@ abstract class AbstractLayoutVariableObjectCache<T>(
    * The factory that is used to create new elements.
    *
    * ATTENTION: The factory is only called once for each index.
-   * The created objects are reused for each layout pass afterwards.
+   * The created objects are reused for each layout pass afterward.
    */
-  val factory: () -> T
+  val factory: () -> T,
 ) : LayoutVariablesCache, LayoutVariableWithSize {
 
   /**
@@ -58,6 +58,24 @@ abstract class AbstractLayoutVariableObjectCache<T>(
 
   fun isEmpty(): Boolean {
     return values.isEmpty()
+  }
+
+  /**
+   * Resets the size to 0.
+   * Should only be used if the size is not known initially.
+   * Use [prepare] if the size is already known
+   */
+  fun clear() {
+    prepare(0)
+  }
+
+  /**
+   * Increases the size by 1, adds a new element
+   */
+  fun addNewElement(): T {
+    val newSize = size + 1
+    ensureSize(newSize)
+    return objectsStock[newSize - 1]
   }
 
   /**

@@ -76,6 +76,8 @@ class RectangleEnumStripePainterDemoDescriptor : ChartingDemoDescriptor<Nothing>
           val enumStripePainter = RectangleEnumStripePainter().also {
             it.configuration.aggregationMode = EnumAggregationMode.ByOrdinal
           }
+          val booleanStripePainter = RectangleEnumStripePainter().also {
+          }
 
           val heightProperty = ObservableDouble(20.0)
 
@@ -88,6 +90,48 @@ class RectangleEnumStripePainterDemoDescriptor : ChartingDemoDescriptor<Nothing>
           val painterLayer = object : AbstractLayer() {
             override val type: LayerType = LayerType.Content
 
+            override fun layout(paintingContext: LayerPaintingContext) {
+              super.layout(paintingContext)
+              layoutEnumValues(paintingContext)
+              layoutBooleanValues(paintingContext)
+            }
+
+            private fun layoutEnumValues(paintingContext: LayerPaintingContext) {
+              val enumOrdinalMostTime = HistoryEnumOrdinal(4)
+
+              enumStripePainter.layoutBegin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
+              enumStripePainter.layoutValueChange(paintingContext, 0.0, 100.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 100.0, 180.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b111111), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 180.0, 250.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 250.0, 320.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 320.0, 350.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 350.0, 450.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 450.0, 460.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b11), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 460.0, 465.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 465.0, 500.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 500.0, 550.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.Pending, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutValueChange(paintingContext, 550.0, 620.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
+              enumStripePainter.layoutFinish(paintingContext)
+            }
+
+            private fun layoutBooleanValues(paintingContext: LayerPaintingContext) {
+              val enumOrdinalMostTime = HistoryEnumOrdinal(1)
+
+              booleanStripePainter.layoutBegin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
+              booleanStripePainter.layoutValueChange(paintingContext, 0.0, 100.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 100.0, 150.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 150.0, 250.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 250.0, 300.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 300.0, 350.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 350.0, 450.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 450.0, 500.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 500.0, 510.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 510.0, 515.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutValueChange(paintingContext, 515.0, 600.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
+              booleanStripePainter.layoutFinish(paintingContext)
+            }
+
+
             override fun paint(paintingContext: LayerPaintingContext) {
               val gc = paintingContext.gc
               val chartCalculator = paintingContext.chartCalculator
@@ -96,47 +140,13 @@ class RectangleEnumStripePainterDemoDescriptor : ChartingDemoDescriptor<Nothing>
               gc.translateToContentAreaOrigin(chartCalculator)
 
               gc.paintMark()
-              paintEnumValues(paintingContext)
+              enumStripePainter.paint(paintingContext)
 
               gc.translate(0.0, heightProperty.value + 10.0)
-
-              paintBooleanValues(paintingContext)
+              booleanStripePainter.paint(paintingContext)
             }
 
-            private fun paintEnumValues(paintingContext: LayerPaintingContext) {
-              val enumOrdinalMostTime = HistoryEnumOrdinal(4)
 
-              enumStripePainter.begin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
-              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 100.0, 180.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b111111), enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 180.0, 250.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 250.0, 320.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 320.0, 350.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 450.0, 460.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b11), enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 460.0, 465.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet(0b101), enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 465.0, 500.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 500.0, 550.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.Pending, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 550.0, 620.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.third, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.finish(paintingContext)
-            }
-
-            private fun paintBooleanValues(paintingContext: LayerPaintingContext) {
-              val enumOrdinalMostTime = HistoryEnumOrdinal(1)
-
-              enumStripePainter.begin(paintingContext, heightProperty.value, EnumDataSeriesIndex.zero, historyConfiguration)
-              enumStripePainter.valueChange(paintingContext, 0.0, 100.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 100.0, 150.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 150.0, 250.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 250.0, 300.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 300.0, 350.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 350.0, 450.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 450.0, 500.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 500.0, 510.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.NoValue, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 510.0, 515.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.first, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.valueChange(paintingContext, 515.0, 600.0, 5000.0, 6000.0, Double.NaN, HistoryEnumSet.second, enumOrdinalMostTime, Unit, Unit)
-              enumStripePainter.finish(paintingContext)
-            }
           }
           layers.addLayer(painterLayer)
         }

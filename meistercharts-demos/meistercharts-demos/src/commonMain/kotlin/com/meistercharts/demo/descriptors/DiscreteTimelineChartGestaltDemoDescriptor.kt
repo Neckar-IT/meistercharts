@@ -15,8 +15,14 @@
  */
 package com.meistercharts.demo.descriptors
 
+import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
+import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.algorithms.impl.FittingWithMargin
+import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
+import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
+import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.demo.ChartingDemo
@@ -47,10 +53,10 @@ import com.meistercharts.history.generator.ReferenceEntryGenerator
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
+import com.soywiz.klock.DateTime
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.provider.MultiProvider
-import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -98,7 +104,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             decimalValueGenerators = emptyList(),
             enumValueGenerators = emptyList(),
             referenceEntryGenerators = List(12) {
-              ReferenceEntryGenerator.increasing(513.milliseconds)
+              ReferenceEntryGenerator.increasing(513.milliseconds, factor = (it + 1))
             },
           )
         }
@@ -118,8 +124,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             decimalValueGenerators = emptyList(),
             enumValueGenerators = emptyList(),
             referenceEntryGenerators = List(12) {
-              ReferenceEntryGenerator.increasing(46_437.milliseconds)
-
+              ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = (it + 1))
             },
           )
         }
@@ -136,7 +141,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
           val refEntryDataSeriesCount = 12
 
           return HistoryChunkGenerator(historyStorage = historyStorage, samplingPeriod = samplingPeriod, decimalValueGenerators = emptyList(), enumValueGenerators = emptyList(), referenceEntryGenerators = List(refEntryDataSeriesCount) {
-            ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = it)
+            ReferenceEntryGenerator.increasing(46_437.milliseconds, factor = (it + 1))
           }, referenceEntryStatusProvider = { referenceEntryId, millis ->
             val factor = (millis / 5000.0 + referenceEntryId.id / 77.4).toInt()
             val ordinal: HistoryEnumOrdinal = HistoryReferenceScenarios.jobStateEnum.values.getModulo(factor).ordinal
@@ -146,22 +151,28 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
         }
 
         override val config: DiscreteTimelineChartGestalt.() -> Unit = {
-          referenceEntryStripePainters = MultiProvider.always(RectangleReferenceEntryStripePainter() {
-            val jobStateEnumColors = listOf(Color.red, Color.green, Color.blue)
+          val jobStateEnumColors = listOf(Color.red, Color.green, Color.blue)
 
-            fillProvider = { value, statusEnumSet, historyConfiguration ->
-              if (statusEnumSet.isNoValue()) {
-                Color.silver
-              }
-              if (statusEnumSet.isPending()) {
-                Color.blueviolet
-              }
-
-              //HistoryReferenceScenarios.jobStateEnum
-              val firstSetOrdinal = statusEnumSet.firstSetOrdinal()
-              jobStateEnumColors[firstSetOrdinal.value]
+          val statusFillProvider = ReferenceEntryStatusColorProvider { _, statusEnumSet, _ ->
+            if (statusEnumSet.isNoValue()) {
+              Color.silver
             }
-          })
+            if (statusEnumSet.isPending()) {
+              Color.blueviolet
+            }
+
+            //HistoryReferenceScenarios.jobStateEnum
+            val firstSetOrdinal = statusEnumSet.firstSetOrdinal()
+            jobStateEnumColors[firstSetOrdinal.value]
+          }
+
+          referenceEntryStripePainters = MultiProvider.cached {
+            RectangleReferenceEntryStripePainter {
+              fillProvider = statusFillProvider
+            }
+          }
+
+          configuration.tooltipStatusColorProvider = statusFillProvider
         }
 
       }, "EnumStatus - Increasing (every 46.437 s)"
@@ -169,9 +180,32 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
 
     PredefinedConfiguration(
       object : DemoConfig {
-        override val config: DiscreteTimelineChartGestalt.() -> Unit = {}
-
         override val samplingPeriod: SamplingPeriod = SamplingPeriod.EverySecond
+
+        @ms
+        var chunkEnd = DateTime.createAdjusted(2023, 7, 15, 18, 20, 15, 555).unixMillisDouble
+        @ms
+        var chunkStart = chunkEnd - samplingPeriod.distance * 2
+
+
+        override val config: DiscreteTimelineChartGestalt.() -> Unit = {
+          configure {
+            chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = DelegatingZoomAndTranslationDefaults(
+              xAxisDelegate = MoveDomainValueToLocation(
+                domainRelativeValueProvider = { _ ->
+                  configuration.contentAreaTimeRange.time2relative(chunkEnd + samplingPeriod.distance)
+                },
+                targetLocationProvider = { chartCalculator -> chartCalculator.chartState.windowWidth - 80.0 }),
+              yAxisDelegate = FittingWithMargin { contentViewportMargin }
+            )
+
+            chartSupport().windowResizeBehavior = ResetToDefaultsOnWindowResize
+          }
+
+          historyStorage.observe { historyBucketDescriptor, updateInfo ->
+            chartSupport().resetZoomAndTranslationToDefaults()
+          }
+        }
 
         override val playModeEnabled: Boolean
           get() = false
@@ -184,34 +218,28 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             }
 
             val chunk = historyConfiguration.chunk {
-              val now = nowMillis()
-
-              @ms val distance = samplingPeriod.distance
-              @ms val start = now - distance * 2
-              @ms val end = now
-
               val referenceEntriesDataMap = ReferenceEntriesDataMap.of(
-                ReferenceEntryData(ReferenceEntryId(6), TextKey.simple("label 6"), start = start, end = end),
+                ReferenceEntryData(ReferenceEntryId(6), TextKey.simple("label 6"), start = chunkStart, end = chunkEnd),
                 ReferenceEntryData(ReferenceEntryId(7), TextKey.simple("label 7")),
                 ReferenceEntryData(ReferenceEntryId(8), TextKey.simple("label 8")),
               )
 
               addReferenceEntryValues(
-                timestamp = start,
+                timestamp = chunkStart,
                 referenceEntryValues = intArrayOf(6, 7),
                 referenceEntryIdsCount = null,
                 referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
                 referenceEntriesDataMap = referenceEntriesDataMap,
               )
               addReferenceEntryValues(
-                timestamp = start + distance,
+                timestamp = chunkStart + samplingPeriod.distance,
                 referenceEntryValues = intArrayOf(6, 8),
                 referenceEntryIdsCount = null,
                 referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
                 referenceEntriesDataMap = referenceEntriesDataMap,
               )
               addReferenceEntryValues(
-                timestamp = now,
+                timestamp = chunkEnd,
                 referenceEntryValues = intArrayOf(6, 8),
                 referenceEntryIdsCount = null,
                 referenceEntryStatuses = intArrayOf(HistoryEnumSet.NoValueAsInt, HistoryEnumSet.NoValueAsInt),
@@ -219,7 +247,17 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
               )
             }
 
-            override fun next(until: Double): HistoryChunk {
+            /**
+             * Only return the chunk once
+             */
+            private var returned = false
+
+            override fun next(until: Double): HistoryChunk? {
+              if (returned) {
+                return null
+              }
+
+              returned = true
               return chunk
             }
           }
@@ -256,13 +294,14 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
         val gestalt = DiscreteTimelineChartGestalt(historyStorage, {
           historyConfiguration
         })
+
+        payload.config.invoke(gestalt)
         gestalt.configure(this@meistercharts)
 
         //Set the zoom level to show the recording duration
         gestalt.configuration.contentAreaDuration = payload.samplingPeriod.distance * 20
         gestalt.configuration.minimumSamplingPeriod = payload.samplingPeriod
 
-        payload.config.invoke(gestalt)
 
         val referenceEntryDataSeriesCount = gestalt.configuration.historyConfiguration().referenceEntryDataSeriesCount
 

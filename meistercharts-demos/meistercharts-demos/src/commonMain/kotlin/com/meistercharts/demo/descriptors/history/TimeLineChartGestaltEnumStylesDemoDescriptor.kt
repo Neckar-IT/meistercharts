@@ -105,7 +105,7 @@ class TimeLineChartGestaltEnumStylesDemoDescriptor : ChartingDemoDescriptor<Time
           }
         }
 
-        gestalt.historyEnumLayer.configuration.enumStripePainter = MultiProvider.forListModulo(enumBarPainters)
+        gestalt.historyEnumLayer.configuration.stripePainters = MultiProvider.forListModulo(enumBarPainters)
 
         configure {
           configurableBoolean("Play Mode", chartSupport.translateOverTime::animated) {

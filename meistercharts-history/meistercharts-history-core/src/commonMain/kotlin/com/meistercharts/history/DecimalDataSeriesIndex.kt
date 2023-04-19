@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty0
  * If an index has to be used as [Int] (e.g. in a provider), [DecimalDataSeriesIndexInt] should be used to annotate the [Int]s
  */
 @JvmInline
-value class DecimalDataSeriesIndex(val value: Int) : DataSeriesIndex {
+value class DecimalDataSeriesIndex(override val value: Int) : DataSeriesIndex {
   override fun toString(): String {
     return value.toString()
   }
@@ -45,13 +45,13 @@ value class DecimalDataSeriesIndex(val value: Int) : DataSeriesIndex {
 /**
  * This is a copy of [IndexProvider] - to avoid unnecessary boxing
  */
-interface DecimalDataSeriesIndexProvider : HasSize {
+interface DecimalDataSeriesIndexProvider : DataSeriesIndexProvider<DecimalDataSeriesIndex>, HasSize {
   /**
    * Retrieves the index at the given [index].
    *
    * @param index a value between 0 (inclusive) and [size] (exclusive)
    */
-  fun valueAt(index: Int): DecimalDataSeriesIndex
+  override fun valueAt(index: Int): DecimalDataSeriesIndex
 
   companion object {
     /**

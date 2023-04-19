@@ -17,16 +17,12 @@ package com.meistercharts.algorithms.painter.stripe.enums
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.BinaryPainter
-import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
-import com.meistercharts.history.MayBeNoValueOrPending
-import it.neckar.open.unit.number.MayBeNaN
-import it.neckar.open.unit.si.ms
 
 /**
  * Fills rectangles
@@ -42,9 +38,8 @@ class BooleanEnumStripePainter(
    */
   private var binaryPainter: BinaryPainter = BinaryPainter(false, false, 0.0, 0.0, 0.0)
 
-  override fun begin(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
-    super.begin(paintingContext, height, dataSeriesIndex, historyConfiguration)
-
+  override fun layoutBegin(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
+    super.layoutBegin(paintingContext, height, dataSeriesIndex, historyConfiguration)
     //Additional verifications
     val historyEnum = getHistoryEnum(dataSeriesIndex)
 
@@ -67,20 +62,14 @@ class BooleanEnumStripePainter(
     binaryPainter = BinaryPainter(false, false, height, paintingContext.width, height)
   }
 
-  override fun paintSegment(
-    paintingContext: LayerPaintingContext,
-    startX: @Window Double,
-    endX: @Window Double,
-    activeTimeStamp: @ms @MayBeNaN Double,
-    value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
-    value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
-    value3ToPaint: Unit,
-    value4ToPaint: Unit,
-  ): @Window Double {
-    val gc = paintingContext.gc
+  override fun beginPainting(paintingContext: LayerPaintingContext) {
+    super.beginPainting(paintingContext)
+    binaryPainter.reset()
+  }
 
+  override fun paintSegment(paintingContext: LayerPaintingContext, startX: Double, endX: Double, activeTimeStamp: Double, value1ToPaint: HistoryEnumSet, value2ToPaint: HistoryEnumOrdinal, value3ToPaint: Unit, value4ToPaint: Unit) {
     if (value1ToPaint.isNoValue()) {
-      return Double.NaN
+      return
     }
 
     //value has changed, paint the rect
@@ -90,6 +79,8 @@ class BooleanEnumStripePainter(
     require(endX.isFinite()) {
       "End value is missing $endX"
     }
+
+    val gc = paintingContext.gc
 
     @Zoomed val height = paintingVariables().height
 
@@ -106,8 +97,12 @@ class BooleanEnumStripePainter(
     }
 
     binaryPainter.addCoordinate(gc, endX, if (current) 0.0 else height)
+  }
 
-    return (startX + endX) / 2.0
+  override fun finishPainting(paintingContext: LayerPaintingContext) {
+    super.finishPainting(paintingContext)
+
+    binaryPainter.finish(paintingContext.gc)
   }
 
   class Configuration : AbstractEnumStripePainter.Configuration() {

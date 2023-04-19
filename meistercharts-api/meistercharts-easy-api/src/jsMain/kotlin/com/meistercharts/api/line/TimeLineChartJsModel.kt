@@ -147,6 +147,16 @@ external interface DiscreteDataSeriesConfiguration {
   val stripeLabelFont: FontStyle?
 
   /**
+   * The color that is used to separate the segments from each other
+   */
+  val stripeSegmentSeparatorColor: String?
+
+  /**
+   * The width of the separator between two segments
+   */
+  val stripeSegmentSeparatorWidth: Double?
+
+  /**
    * How values are aggregated when the plotter is zoomed out
    */
   val aggregationMode: DiscreteEntryAggregationMode?

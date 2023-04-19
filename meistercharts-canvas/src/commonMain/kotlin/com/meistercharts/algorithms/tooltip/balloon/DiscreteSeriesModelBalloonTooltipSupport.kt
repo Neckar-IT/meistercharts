@@ -17,13 +17,15 @@ package com.meistercharts.algorithms.tooltip.balloon
 
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
 import com.meistercharts.algorithms.layers.legend.HeadlineAbovePaintable
+import com.meistercharts.algorithms.layers.legend.LegendEntryIndex
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
+import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable.Companion.defaultSymbols
 import com.meistercharts.algorithms.layers.legend.withHeadline
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.model.SeriesIndex
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.i18nConfiguration
+import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.textService
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumSet
@@ -59,15 +61,15 @@ class DiscreteSeriesModelBalloonTooltipSupport(
   statusEnumProvider: () -> HistoryEnum?,
 
   /**
-   * Provides the colors for a series index
+   * Provides the colors for a series index - for the status
    */
-  val colors: MultiProvider<SeriesIndex, Color>,
+  val statusColor: (ReferenceEntryId) -> Color,
 ) {
 
   /**
    * Paints the symbols and the labels
    */
-  val symbolAndLegendPaintable: SymbolAndLabelLegendPaintable = SymbolAndLabelLegendPaintable.rectangles(
+  val symbolAndLegendPaintable: SymbolAndLabelLegendPaintable = SymbolAndLabelLegendPaintable(
     labels = object : SizedProvider1<String, ChartSupport> {
       override fun size(param1: ChartSupport): Int {
         return when (statusEnumProvider()) {
@@ -100,29 +102,36 @@ class DiscreteSeriesModelBalloonTooltipSupport(
         }
       }
     },
-    symbolColors = { index ->
-      when (index) {
-        0 -> Color.transparent
-        1 -> Color.blue //TODO
-        else -> throw IllegalArgumentException("Invalid index $index")
+    symbols = createSymbolsProvider(),
+  )
+
+  /**
+   * Creates the symbols provider that is used by the [symbolAndLegendPaintable]
+   * This method can be called later to recreate the provider with a different symbol size
+   */
+  private fun createSymbolsProvider(symbolSize: Size = Size.PX_16): MultiProvider<LegendEntryIndex, Paintable> = defaultSymbols(symbolSize = symbolSize, symbolColors = { index: Int ->
+    when (index) {
+      0 -> Color.transparent
+      1 -> {
+        statusColor(referenceEntryIdProvider())
       }
+
+      else -> throw IllegalArgumentException("Invalid index $index")
     }
-  ) {
-  }
+  })
 
   /**
    * The tooltip content paintable
    */
-  val tooltipContentPaintable: HeadlineAbovePaintable<SymbolAndLabelLegendPaintable> = symbolAndLegendPaintable
-    .withHeadline { textService, i18nConfiguration ->
-      headline(textService, i18nConfiguration)
-    }
+  val tooltipContentPaintable: HeadlineAbovePaintable<SymbolAndLabelLegendPaintable> = symbolAndLegendPaintable.withHeadline { textService, i18nConfiguration ->
+    headline(textService, i18nConfiguration)
+  }
 
   /**
    * Applies the symbol size for the legend
    */
   fun applyLegendSymbolSize(symbolSize: Size) {
-    tooltipContentPaintable.delegate.configuration.symbols = SymbolAndLabelLegendPaintable.defaultSymbols(symbolSize, MultiProvider.always(Color.blue))
+    symbolAndLegendPaintable.configuration.symbols = createSymbolsProvider(symbolSize)
   }
 
   /**

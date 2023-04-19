@@ -112,6 +112,10 @@ class HistoryConfiguration(
     }
   }
 
+  override fun toString(): String {
+    return "HistoryConfiguration(totalDataSeriesCount=$totalDataSeriesCount, decimalDataSeriesCount=$decimalDataSeriesCount, enumDataSeriesCount=$enumDataSeriesCount, referenceEntryDataSeriesCount=$referenceEntryDataSeriesCount)"
+  }
+
   companion object {
     /**
      * An empty history configuration without any data series

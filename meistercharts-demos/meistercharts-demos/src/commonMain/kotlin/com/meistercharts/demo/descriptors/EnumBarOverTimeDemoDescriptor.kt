@@ -67,20 +67,16 @@ class EnumBarOverTimeDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
             val enumBarsPainter: RectangleEnumStripePainter = RectangleEnumStripePainter()
 
-            override fun paint(paintingContext: LayerPaintingContext) {
-              val gc = paintingContext.gc
-              val chartSupport = paintingContext.chartSupport
-              val chartCalculator = paintingContext.chartCalculator
+            override fun layout(paintingContext: LayerPaintingContext) {
+              super.layout(paintingContext)
 
               val timeChartCalculator = chartSupport.timeChartCalculator(contentAreaTimeRange)
-
               val visibleTimeRange = timeChartCalculator.visibleTimeRangeXinWindow()
 
-              enumBarsPainter.begin(paintingContext, 20.0, EnumDataSeriesIndex.zero, historyConfiguration)
+              enumBarsPainter.layoutBegin(paintingContext, 20.0, EnumDataSeriesIndex.zero, historyConfiguration)
 
               @ms val start = (visibleTimeRange.start).roundDecimalPlaces(-3) - interval
               @ms val end = visibleTimeRange.end + interval
-
 
               var current = start
               while (current <= end) {
@@ -89,12 +85,20 @@ class EnumBarOverTimeDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
                 @Window val startX = timeChartCalculator.time2windowX(current)
                 @Window val endX = timeChartCalculator.time2windowX(current + interval)
-                enumBarsPainter.valueChange(paintingContext, startX, endX, start, end, Double.NaN, enumValue, enumOrdinalMostTime, Unit, Unit)
+                enumBarsPainter.layoutValueChange(paintingContext, startX, endX, start, end, Double.NaN, enumValue, enumOrdinalMostTime, Unit, Unit)
 
                 current += interval
               }
 
-              enumBarsPainter.finish(paintingContext)
+              enumBarsPainter.layoutFinish(paintingContext)
+            }
+
+            override fun paint(paintingContext: LayerPaintingContext) {
+              val gc = paintingContext.gc
+              val chartSupport = paintingContext.chartSupport
+              val chartCalculator = paintingContext.chartCalculator
+
+              enumBarsPainter.paint(paintingContext)
             }
 
             private fun getValueForTime(time: @ms Double): HistoryEnumSet {

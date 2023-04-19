@@ -19,4 +19,9 @@ package com.meistercharts.history
 /**
  * Interface that is implemented by concrete series index value classes
  */
-interface DataSeriesIndex
+interface DataSeriesIndex {
+  /**
+   * The int value representation of the data series index
+   */
+  val value: Int
+}

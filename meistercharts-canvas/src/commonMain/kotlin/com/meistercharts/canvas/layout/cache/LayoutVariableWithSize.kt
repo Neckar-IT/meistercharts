@@ -25,15 +25,18 @@ interface LayoutVariableWithSize : LayoutVariable {
    * Resets this cache and ensures the given size
    */
   fun prepare(size: Int) {
+    @Suppress("DEPRECATION")
     ensureSize(size)
     //It is important to reset *after* the resize
     //because the reset implementation might use the size
+    @Suppress("DEPRECATION")
     reset()
   }
 
   /**
    * ATTENTION: Please call prepare instead
    */
+  @Deprecated("Use reset instead")
   override fun reset()
 
   /**
@@ -44,6 +47,7 @@ interface LayoutVariableWithSize : LayoutVariable {
    * - recreation of all objects
    * - ....
    */
+  @Deprecated("Use reset instead")
   fun ensureSize(size: Int)
 
   /**

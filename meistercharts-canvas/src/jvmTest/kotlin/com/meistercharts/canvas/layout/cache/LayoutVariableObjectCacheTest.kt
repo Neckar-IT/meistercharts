@@ -17,6 +17,11 @@ package com.meistercharts.canvas.layout.cache
 
 import assertk.*
 import assertk.assertions.*
+import io.mockk.clearMocks
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import it.neckar.open.collections.fastForEachIndexed
 import org.junit.jupiter.api.Test
 
@@ -24,6 +29,115 @@ import org.junit.jupiter.api.Test
  *
  */
 class LayoutVariableObjectCacheTest {
+  @Test
+  fun testIncreaseIfNecessary() {
+    val layoutObject: LayoutVariable = mockk() {
+      every { reset() }.returns(Unit)
+    }
+
+    var factoryCalled = false
+
+    val cache = LayoutVariableObjectCache {
+      factoryCalled = true
+      layoutObject
+    }
+
+
+    assertThat(factoryCalled).isFalse()
+    assertThat(cache.size).isEqualTo(0)
+
+    cache.addNewElement()
+    assertThat(cache.size).isEqualTo(1)
+    assertThat(factoryCalled).isTrue()
+    factoryCalled = false
+
+    cache.clear()
+    assertThat(cache.size).isEqualTo(0)
+    assertThat(factoryCalled).isFalse()
+
+    cache.addNewElement()
+    assertThat(cache.size).isEqualTo(1)
+    assertThat(factoryCalled).isFalse()
+
+    cache.addNewElement()
+    assertThat(cache.size).isEqualTo(2)
+    assertThat(factoryCalled).isTrue()
+  }
+
+  @Test
+  fun testClearRecycle() {
+    val layoutObject: LayoutVariable = mockk() {
+      every { reset() }.returns(Unit)
+    }
+
+    var factoryCalled = false
+
+    val cache = LayoutVariableObjectCache {
+      factoryCalled = true
+      layoutObject
+    }
+
+    assertThat(factoryCalled).isFalse()
+    cache.clear()
+    assertThat(factoryCalled).isFalse()
+    cache.prepare(5)
+    assertThat(factoryCalled).isTrue()
+
+    factoryCalled = false
+    cache.clear()
+    assertThat(factoryCalled).isFalse()
+
+    cache.prepare(1) //does *not* create a new object
+    assertThat(factoryCalled).isFalse()
+
+    cache.prepare(5) //does *not* create a new object
+    assertThat(factoryCalled).isFalse()
+
+    cache.prepare(6) //creates a *single* new object
+    assertThat(factoryCalled).isTrue()
+  }
+
+  @Test
+  fun testClear() {
+    val layoutObject: LayoutVariable = mockk()
+    every { layoutObject.reset() }.returns(Unit)
+
+    val cache = LayoutVariableObjectCache { layoutObject }
+
+    //Initial
+    confirmVerified(layoutObject)
+    clearMocks(layoutObject, answers = false)
+    assertThat(cache.size).isEqualTo(0)
+
+    //Prepare 10
+    cache.prepare(10)
+
+    assertThat(cache.size).isEqualTo(10)
+    assertThat(cache[0]).isSameAs(layoutObject)
+    verify(exactly = 10) {
+      layoutObject.reset()
+    }
+    confirmVerified(layoutObject)
+    clearMocks(layoutObject, answers = false)
+
+    //Clear
+    cache.clear() //resets the size to 0
+
+    assertThat(cache.size).isEqualTo(0)
+    confirmVerified(layoutObject)
+    clearMocks(layoutObject, answers = false)
+
+    //Prepare 8
+    cache.prepare(8)
+    assertThat(cache.size).isEqualTo(8)
+    assertThat(cache[0]).isSameAs(layoutObject)
+    verify(exactly = 8) {
+      layoutObject.reset()
+    }
+    confirmVerified(layoutObject)
+    clearMocks(layoutObject, answers = false)
+  }
+
   @Test
   fun testSortResize() {
     val cache = LayoutVariableObjectCache {

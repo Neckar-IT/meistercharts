@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.painter.stripe.enums
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainterPaintingVariables
 import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariables
 import com.meistercharts.history.EnumDataSeriesIndex
@@ -49,8 +50,8 @@ class DefaultEnumStripePainterPaintingVariables : AbstractStripePainterPaintingV
   override var historyEnum: HistoryEnum = HistoryEnum.Boolean
     private set
 
-  override fun calculate(height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
-    super.calculate(height, dataSeriesIndex, historyConfiguration)
+  override fun prepareLayout(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
+    super.prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
     historyEnum = getHistoryEnum(dataSeriesIndex)
   }
 

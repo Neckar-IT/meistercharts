@@ -464,7 +464,7 @@ class TimeLineChartGestalt
     HistoryEnumLayer.Configuration(
       historyStorage = data.historyStorage,
       historyConfiguration = { data.historyConfiguration },
-      visibleIndices = style::actualVisibleEnumSeriesIndices.delegate(),
+      requestedVisibleIndices = style::actualVisibleEnumSeriesIndices.delegate(),
       contentAreaTimeRange = {
         style.contentAreaTimeRange
       },
@@ -489,8 +489,7 @@ class TimeLineChartGestalt
     CategoryAxisLayer.Data(
       labelsProvider = object : SizedLabelsProvider {
         override fun size(param1: TextService, param2: I18nConfiguration): Int {
-          return historyEnumLayer.configuration.visibleIndices.size()
-            .coerceAtMost(data.historyConfiguration.enumDataSeriesCount)
+          return historyEnumLayer.visibleIndices.size()
         }
 
         override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
@@ -947,7 +946,7 @@ class TimeLineChartGestalt
       historyEnum: HistoryEnum,
     ): Color {
       //Get the painter and "guess" the type
-      val painter = historyEnumLayer.configuration.enumStripePainter.valueAt(dataSeriesIndex)
+      val painter = historyEnumLayer.configuration.stripePainters.valueAt(dataSeriesIndex)
 
       return if (painter is RectangleEnumStripePainter) {
         painter.configuration.fillProvider(firstSetOrdinal, historyEnum)

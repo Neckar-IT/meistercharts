@@ -24,7 +24,6 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.snapPhysicalTranslation
-import com.meistercharts.design.Theme
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -54,7 +53,7 @@ class RectangleReferenceEntryStripePainter(
     value2ToPaint: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
     value3ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
     value4ToPaint: ReferenceEntryData?,
-  ): @Window @MayBeNaN Double {
+  ) {
     @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = value1ToPaint
     @Suppress("UnnecessaryVariable") @MayBeNoValueOrPending val count = value2ToPaint
     @Suppress("UnnecessaryVariable") val statusEnumSet: HistoryEnumSet = value3ToPaint
@@ -66,7 +65,7 @@ class RectangleReferenceEntryStripePainter(
 
     if (idToPaint == ReferenceEntryId.NoValue) {
       //the value is NoValue, do *not* paint anything
-      return Double.NaN
+      return
     }
 
     //value has changed, paint the rect
@@ -95,7 +94,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.white)
         gc.fillText("-", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return Double.NaN
+      return
     }
 
     if (idToPaint.isPending()) {
@@ -105,7 +104,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.white)
         gc.fillText("?", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
-      return Double.NaN
+      return
     }
 
     when {
@@ -114,48 +113,34 @@ class RectangleReferenceEntryStripePainter(
       }
 
       count.value == 1 -> {
-        gc.fill(configuration.fillProvider(idToPaint, statusEnumSet, historyConfiguration))
+        gc.fill(configuration.fillProvider.color(idToPaint, statusEnumSet, historyConfiguration))
 
         val snapConfiguration = configuration.snapConfiguration()
         gc.snapPhysicalTranslation(snapConfiguration)
-        gc.fillRect(startXinViewport, 0.0, snapConfiguration.snapXSize(rectangleWidth), snapConfiguration.snapYSize(rectangleHeight))
+        @Zoomed val rectangleWidth = snapConfiguration.snapXSize(rectangleWidth)
+        gc.fillRect(startXinViewport, 0.0, rectangleWidth, snapConfiguration.snapYSize(rectangleHeight))
+
+        //Stroke the left + right separators
+        configuration.separatorStroke?.let {
+          if (configuration.separatorSize > 0) {
+            gc.lineWidth = configuration.separatorSize
+            gc.stroke(it)
+            gc.strokeLine(startXinViewport, 0.0, startXinViewport, rectangleHeight)
+            gc.strokeLine(startXinViewport + rectangleWidth, 0.0, startXinViewport + rectangleWidth, rectangleHeight)
+          }
+        }
 
         //Paint the label
-        entryData?.label?.resolve(paintingContext)?.let {
+        entryData?.label?.resolve(paintingContext)?.let { label ->
           gc.fill(configuration.labelColorProvider(idToPaint, statusEnumSet, historyConfiguration))
           gc.font(configuration.labelFont)
-
-          val statusEnum = historyConfiguration.referenceEntryConfiguration.getStatusEnum(dataSeriesIndex) //is null, if the data series does not support the status enum at all
-
-          val label: String = when {
-            statusEnum != null -> {
-              @MayBeNoValueOrPending val firstSetOrdinal = statusEnumSet.firstSetOrdinal()
-
-              val statusEnumValueLabel: String = when {
-                firstSetOrdinal.isNoValue() -> "NoValue"
-                firstSetOrdinal.isPending() -> "?"
-                else -> {
-                  val winnerEnumValue = statusEnum.value(firstSetOrdinal)
-                  winnerEnumValue.key.resolve(chartSupport)
-                }
-              }
-
-              "$it $statusEnumValueLabel"
-            }
-
-            else -> {
-              it
-            }
-          }
-
-
           gc.fillText(label, startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
         }
       }
 
       count.value > 1 -> {
         //Count is > 1, we show the number of entries
-        gc.fill(Color.silver)
+        gc.fill(configuration.countFill)
 
         val snapConfiguration = configuration.snapConfiguration()
         gc.snapPhysicalTranslation(snapConfiguration)
@@ -167,8 +152,6 @@ class RectangleReferenceEntryStripePainter(
         gc.fillText(intFormat.format(count.value.toDouble()), startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
     }
-
-    return (startX + endX) / 2.0
   }
 
   class Configuration : AbstractReferenceEntryStripePainter.Configuration() {
@@ -180,19 +163,7 @@ class RectangleReferenceEntryStripePainter(
     /**
      * Provides the fill color for the given value
      */
-    var fillProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { _, statusEnumSet, _ ->
-      when {
-        statusEnumSet.isNoValue() -> {
-          Color.silver
-        }
-        statusEnumSet.isPending() -> {
-          Color.lightgray
-        }
-        else -> {
-          Theme.enumColors().valueAt(statusEnumSet.firstSetOrdinal().value)
-        }
-      }
-    }
+    var fillProvider: ReferenceEntryStatusColorProvider = ReferenceEntryStatusColorProvider.default()
 
     /**
      * Provides the color of the label for the given value
@@ -208,5 +179,22 @@ class RectangleReferenceEntryStripePainter(
      * The color when the count is shown
      */
     var countLabelColor: Color = Color.gray
+
+    /**
+     * The fill that is used when the count is displayed
+     */
+    var countFill: Color = Color.silver
+
+    /**
+     * The size of the separator.
+     * If set to 0.0 the separators are not visible
+     */
+    var separatorSize: Double = 1.0
+
+    /**
+     * The color of the separator between two lines.
+     * The separator is not displayed if set to null
+     */
+    var separatorStroke: Color? = Color.white
   }
 }

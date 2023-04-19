@@ -15,6 +15,7 @@
  */
 package com.meistercharts.api.discrete
 
+import com.meistercharts.api.BalloonTooltipStyle
 import com.meistercharts.api.DiscreteAxisStyle
 import com.meistercharts.api.TimeAxisStyle
 import com.meistercharts.api.TimeRange
@@ -61,4 +62,9 @@ external interface DiscreteTimelineChartConfiguration {
    * The gap between discrete stripes
    */
   val discreteStripeGap: Double?
+
+  /**
+   * Style for the tool tips
+   */
+  val tooltipStyle: BalloonTooltipStyle?
 }

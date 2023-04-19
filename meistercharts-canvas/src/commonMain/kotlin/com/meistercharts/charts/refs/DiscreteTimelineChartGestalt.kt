@@ -32,8 +32,12 @@ import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPain
 import com.meistercharts.algorithms.layers.barchart.LabelWrapMode
 import com.meistercharts.algorithms.layers.clippedToContentViewport
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
+import com.meistercharts.algorithms.layers.referenceEntryData
+import com.meistercharts.algorithms.layers.referenceEntryId
+import com.meistercharts.algorithms.layers.status
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.algorithms.tile.HistoryGapCalculator
@@ -94,14 +98,14 @@ class DiscreteTimelineChartGestalt(
    */
   val historyStorage: ObservableHistoryStorage = InMemoryHistoryStorage(),
   /**
-   * The history configuration
+   * The initial history configuration. Use `configuration.historyConfiguration()` instead
    */
-  historyConfiguration: () -> HistoryConfiguration = { HistoryConfiguration.empty },
+  initialHistoryConfiguration: () -> HistoryConfiguration = { HistoryConfiguration.empty },
 
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
 
-  val configuration: Configuration = Configuration(historyStorage, historyConfiguration).also(additionalConfiguration)
+  val configuration: Configuration = Configuration(historyStorage, initialHistoryConfiguration).also(additionalConfiguration)
 
   val disposeSupport: DisposeSupport = DisposeSupport()
 
@@ -128,12 +132,15 @@ class DiscreteTimelineChartGestalt(
   val historyReferenceEntryLayer: HistoryReferenceEntryLayer = HistoryReferenceEntryLayer(HistoryReferenceEntryLayer.Configuration(
     historyStorage = historyStorage,
     historyConfiguration = configuration::historyConfiguration.delegate(),
-    visibleIndices = configuration.actualVisibleReferenceEntrySeriesIndices,
+    requestedVisibleIndices = configuration.actualVisibleReferenceEntrySeriesIndices,
     contentAreaTimeRange = { configuration.contentAreaTimeRange }
-  ))
+  )) {
+  }
 
   /**
-   * The stripe painters that are used by the [historyReferenceEntryLayer]
+   * The stripe painters that are used by the [historyReferenceEntryLayer].
+   *
+   * ATTENTION: Most implementations of [ReferenceEntryStripePainter] require
    */
   var referenceEntryStripePainters: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainter> //Delegate does not work 2023-03-21, results in a compile error
     get() {
@@ -209,12 +216,14 @@ class DiscreteTimelineChartGestalt(
     referenceEntryIdProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryId },
     referenceEntryDataProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryData },
     statusProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.status },
-    statusEnumProvider = { historyConfiguration().referenceEntryConfiguration.getStatusEnum(activeDataSeriesIndex) },
+    statusEnumProvider = {
+      configuration.historyConfiguration().referenceEntryConfiguration.getStatusEnum(activeDataSeriesIndex)
+    },
 
-    colors = { index ->
-      //TODO how to extract the colors???
-      // groupedBarsPainter.configuration.colorsProvider.color(activeCategoryIndex, SeriesIndex(index))
-      Color.red
+    statusColor = { referenceEntryId ->
+      val status = historyReferenceEntryLayer.paintingVariables().activeInformation.status
+      val historyConfiguration = configuration.historyConfiguration()
+      configuration.tooltipStatusColorProvider.color(referenceEntryId, status, historyConfiguration)
     },
   )
 
@@ -234,6 +243,13 @@ class DiscreteTimelineChartGestalt(
     }
 
   /**
+   * Returns the active category index.
+   * Throws an exception if no category is active!
+   */
+  val activeDataSeriesIndex: ReferenceEntryDataSeriesIndex
+    get() = activeDataSeriesIndexOrNull ?: throw IllegalStateException("No active category index found")
+
+  /**
    * A variable representing the active time stamp in milliseconds.
    *
    * It can be NaN, which indicates that the time stamp is
@@ -247,13 +263,6 @@ class DiscreteTimelineChartGestalt(
     }
 
   /**
-   * Returns the active category index.
-   * Throws an exception if no category is active!
-   */
-  val activeDataSeriesIndex: ReferenceEntryDataSeriesIndex
-    get() = activeDataSeriesIndexOrNull ?: throw IllegalStateException("No active category index found")
-
-  /**
    * Handles the mouse over - does *not* paint anything itself
    */
   val toolbarInteractionLayer: TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> = TooltipInteractionLayer.forDiscreteDataSeries(layoutProvider = { historyReferenceEntryLayer.paintingVariables().stripesLayout },
@@ -263,12 +272,19 @@ class DiscreteTimelineChartGestalt(
         chartSupport.markAsDirty()
       }
 
-      activeTimeStamp = if (relativeTime == null) {
-        chartSupport.markAsDirty()
+      val newValue = if (relativeTime == null) {
         Double.NaN
       } else {
-        chartSupport.markAsDirty()
         configuration.contentAreaTimeRange.relative2time(relativeTime)
+      }
+
+      if (activeTimeStamp != newValue) {
+        activeTimeStamp = newValue
+
+        if (activeDataSeriesIndexOrNull != null) {
+          //repaint is only necessary when a data series is active
+          chartSupport.markAsDirty()
+        }
       }
     })
 
@@ -297,6 +313,13 @@ class DiscreteTimelineChartGestalt(
 
   var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
 
+  /**
+   * Recalculates the content viewport margin.
+   * This method must be called whenever the timeline axis has been updated
+   */
+  fun recalculateContentViewportMargin() {
+    contentViewportMargin = contentViewportMargin.withBottom(viewportMarginBottom())
+  }
 
   /**
    * Sets the insets of the TranslateOverTimeService in accordance with the position of the cross wire along the x-axis
@@ -326,11 +349,11 @@ class DiscreteTimelineChartGestalt(
 
       meisterChartBuilder.zoomAndTranslationDefaults {
         DelegatingZoomAndTranslationDefaults(
-          MoveDomainValueToLocation(
+          xAxisDelegate = MoveDomainValueToLocation(
             domainRelativeValueProvider = { configuration.contentAreaTimeRange.time2relative(nowMillis()) },
             targetLocationProvider = { chartCalculator -> chartCalculator.windowRelative2WindowX(configuration.nowPositionX) }
           ),
-          FittingWithMargin { contentViewportGestalt.contentViewportMargin }
+          yAxisDelegate = FittingWithMargin { contentViewportGestalt.contentViewportMargin }
         )
       }
     }
@@ -345,6 +368,7 @@ class DiscreteTimelineChartGestalt(
 
       configuration.contentAreaTimeRangeProperty.consumeImmediately {
         chartSupport.translateOverTime.contentAreaTimeRangeX = it
+        timeAxisLayer.data.contentAreaTimeRange = it
       }
       chartSupport.rootChartState.windowSizeProperty.consumeImmediately {
         updateTranslateOverTime(chartSupport)
@@ -449,6 +473,12 @@ class DiscreteTimelineChartGestalt(
       //The default implementation returns the display name from the history configuration
       historyConfiguration().referenceEntryConfiguration.getDisplayName(dataSeriesIndex)
     }
+
+    /**
+     * Is used by the tooltip to resolve the status color.
+     * Usually should be the same as the [historyReferenceEntryLayer] uses (see [HistoryReferenceEntryLayer.Configuration.stripePainters]).
+     */
+    var tooltipStatusColorProvider: ReferenceEntryStatusColorProvider = ReferenceEntryStatusColorProvider.default()
   }
 
   companion object {

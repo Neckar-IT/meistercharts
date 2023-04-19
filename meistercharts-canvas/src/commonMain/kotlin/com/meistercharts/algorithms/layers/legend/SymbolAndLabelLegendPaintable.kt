@@ -284,9 +284,9 @@ class SymbolAndLabelLegendPaintable(
       additionalConfiguration: Configuration.() -> Unit = {},
     ): SymbolAndLabelLegendPaintable {
       return SymbolAndLabelLegendPaintable(
-        labels,
-        defaultSymbols(symbolSize, symbolColors),
-        additionalConfiguration,
+        labels = labels,
+        symbols = defaultSymbols(symbolSize, symbolColors),
+        additionalConfiguration = additionalConfiguration,
       )
     }
   }

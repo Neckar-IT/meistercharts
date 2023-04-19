@@ -62,8 +62,8 @@ value class ReferenceEntryDifferentIdsCount(val value: Int) {
     return value.toString()
   }
 
-  operator fun minus(toSubstract: Int): ReferenceEntryDifferentIdsCount {
-    return ReferenceEntryDifferentIdsCount(this.value - toSubstract)
+  operator fun minus(toSubtract: Int): ReferenceEntryDifferentIdsCount {
+    return ReferenceEntryDifferentIdsCount(this.value - toSubtract)
   }
 
   fun atLeastZero(): ReferenceEntryDifferentIdsCount {

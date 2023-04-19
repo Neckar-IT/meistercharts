@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
+import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.api.DiscreteAxisStyle
 import com.meistercharts.api.StripeStyle
@@ -29,6 +30,8 @@ import com.meistercharts.api.toColor
 import com.meistercharts.api.toFontDescriptorFragment
 import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
+import com.meistercharts.api.toModelSizes
+import com.meistercharts.api.toNumberFormat
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.design.Theme
@@ -39,12 +42,14 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.historyConfiguration
 import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.provider.cached
 
 
 private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.DiscreteTimelineChartExtensions")
@@ -87,13 +92,9 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
   }
 
   jsConfiguration.timeAxisStyle?.let { jsTimeAxisStyle ->
-    this.timeAxisLayer.style.applyTimeAxisStyle(jsTimeAxisStyle)
-
-    //Apply the size of the axis at the gestalt, too.
-    //This is necessary to update clipping etc.
-    jsTimeAxisStyle.axisSize?.let {
-      //this.configuration.timeAxisSize = it //TODO
-    }
+    timeAxisLayer.style.applyTimeAxisStyle(jsTimeAxisStyle)
+    //Recalculate the viewport margin - the time axis size might have changed
+    recalculateContentViewportMargin()
   }
 
   jsConfiguration.discreteDataSeriesConfigurations?.let { jsConfigurations ->
@@ -107,9 +108,12 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
             jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
           }
 
-          fillProvider = { _, statusEnumSet, _ ->
+          ReferenceEntryStatusColorProvider { _, statusEnumSet, _ ->
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
             fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
+          }.also { statusColorProvider ->
+            fillProvider = statusColorProvider
+            configuration.tooltipStatusColorProvider = statusColorProvider
           }
 
           val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
@@ -126,13 +130,21 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
           labelFont = it
         }
 
+        jsConfiguration.stripeSegmentSeparatorColor?.toColor()?.let {
+          separatorStroke = it
+        }
+        jsConfiguration.stripeSegmentSeparatorWidth?.sanitize()?.let {
+          separatorSize = it
+        }
+
         jsConfiguration.aggregationMode?.let {
+          //TODO support aggregation mode somehow
           //aggregationMode = it.sanitize()
         }
       }
     }
 
-    historyReferenceEntryLayer.configuration.stripePainters = MultiProvider.forListOr(stripePainters, RectangleReferenceEntryStripePainter())
+    historyReferenceEntryLayer.configuration.stripePainters = MultiProvider.forListOr<ReferenceEntryDataSeriesIndex, RectangleReferenceEntryStripePainter>(values = stripePainters) { RectangleReferenceEntryStripePainter() }.cached()
   }
 
   jsConfiguration.discreteStripeHeight?.let {
@@ -143,17 +155,6 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
     historyReferenceEntryLayer.configuration.stripesDistance = it
   }
 
-  //jsConfiguration.discreteDataSeriesConfigurations?.let {
-  //  it.first().name
-  //  val aggregationMode = it.first().aggregationMode
-  //  it.first().statusEnumConfiguration
-  //  it.first().stripeStyles
-  //}
-  //
-  //(this.categoryAxisLayer.style.axisLabelPainter as DefaultCategoryAxisLabelPainter).let { painter ->
-  //  painter.style.wrapMode =
-  //}
-
   jsConfiguration.visibleTimeRange?.toModel()?.let { timeRange ->
     @DomainRelative val startDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.start)
     @DomainRelative val endDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.end)
@@ -163,7 +164,54 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
 
   //Apply the history configuration
   jsConfiguration.discreteDataSeriesConfigurations?.toHistoryConfiguration()?.let { historyConfiguration ->
-    this.configuration.historyConfiguration = historyConfiguration.asProvider()
+    configuration.historyConfiguration = historyConfiguration.asProvider()
+    logger.debug {
+      "Setting history configuration:\n${historyConfiguration.dump()}"
+    }
+  }
+
+
+  jsConfiguration.tooltipStyle?.let { jsTooltipStyle ->
+    jsTooltipStyle.tooltipFormat?.toNumberFormat()?.let {
+      // this.configuration.balloonTooltipValueLabelFormat = it
+    }
+
+    jsTooltipStyle.tooltipBoxStyle?.toModel()?.let {
+      this.balloonTooltipLayer.delegate.tooltipPainter.configuration.boxStyle = it
+    }
+
+    jsTooltipStyle.tooltipBoxStyle?.color?.toColor()?.let {
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.labelColors = MultiProvider.always(it)
+      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.configuration.labelColor = it.asProvider()
+    }
+
+    jsTooltipStyle.labelWidth?.let {
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.maxLabelWidth = it
+    }
+
+    jsTooltipStyle.entriesGap?.let {
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.entriesGap = it
+    }
+
+    jsTooltipStyle.symbolSizes?.toModelSizes()?.firstOrNull()?.let {
+      balloonTooltipSupport.applyLegendSymbolSize(it)
+    }
+
+    jsTooltipStyle.symbolLabelGap?.let {
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.symbolLabelGap = it
+    }
+
+    jsTooltipStyle.tooltipFont?.toFontDescriptorFragment()?.let { it ->
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.textFont = it.asProvider()
+    }
+
+    jsTooltipStyle.headlineFont?.toFontDescriptorFragment()?.let { it ->
+      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.configuration.font = it
+    }
+
+    jsTooltipStyle.headlineMarginBottom?.let { it ->
+      this.balloonTooltipSupport.tooltipContentPaintable.stackedPaintablesPaintable.configuration.entriesGap = it
+    }
   }
 }
 

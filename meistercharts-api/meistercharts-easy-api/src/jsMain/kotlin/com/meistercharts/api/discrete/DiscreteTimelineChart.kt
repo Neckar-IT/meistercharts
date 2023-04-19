@@ -124,6 +124,7 @@ class DiscreteTimelineChart internal constructor(
     val historyConfiguration = gestalt.configuration.historyConfiguration()
 
     if (historyConfiguration.referenceEntryDataSeriesCount == 0) {
+      logger.debug("Skip setting history since the history configuration is empty")
       return
     }
 
@@ -193,6 +194,9 @@ class DiscreteTimelineChart internal constructor(
           return zoom
         }
       }
+
+      //Reset to defaults to force application of the new zoom/translation
+      chartSupport.zoomAndTranslationSupport.resetToDefaults()
     }
   }
 

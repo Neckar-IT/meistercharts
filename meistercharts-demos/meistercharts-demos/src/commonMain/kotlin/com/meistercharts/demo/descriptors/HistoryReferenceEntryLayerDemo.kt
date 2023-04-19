@@ -172,7 +172,7 @@ class HistoryReferenceEntryLayerDemo : ChartingDemoDescriptor<HistoryReferenceEn
             configuration = HistoryReferenceEntryLayer.Configuration(
               historyStorage = historyStorage,
               historyConfiguration = { historyConfiguration },
-              visibleIndices = visibleIndices
+              requestedVisibleIndices = visibleIndices
             ) { contentAreaTimeRange }
           ) {
             this.stripePainters = MultiProvider.always(enumBarPainter)

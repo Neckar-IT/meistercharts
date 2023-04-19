@@ -132,7 +132,7 @@ class HistoryEnumLayerDemo : ChartingDemoDescriptor<HistoryEnumLayerDemo.History
 
           val visibleIndices = EnumDataSeriesIndexProvider.forList(listOf(EnumDataSeriesIndex.zero, EnumDataSeriesIndex.one, EnumDataSeriesIndex.two, EnumDataSeriesIndex.three))
           val historyEnumLayer = HistoryEnumLayer(HistoryEnumLayer.Configuration(historyStorage, { historyConfiguration }, visibleIndices) { contentAreaTimeRange }) {
-            this.enumStripePainter = MultiProvider.always(enumBarPainter)
+            this.stripePainters = MultiProvider.always(enumBarPainter)
           }
 
           layers.addClearBackground()
