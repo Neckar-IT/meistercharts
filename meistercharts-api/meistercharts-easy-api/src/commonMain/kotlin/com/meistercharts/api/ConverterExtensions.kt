@@ -26,7 +26,7 @@ import it.neckar.open.i18n.TextKey
  * Converts the (JS) enum configuration to a history enum
  */
 fun EnumConfiguration.toHistoryEnum(): HistoryEnum {
-  return HistoryEnum(this.description.sanitize(), this.values.map {
+  return HistoryEnum(this.description.sanitize(), this.values.sanitize().map {
     HistoryEnum.HistoryEnumValue(HistoryEnumOrdinal(it.ordinal.sanitize()), TextKey(it.label.sanitize()))
   }).also { historyEnum ->
     //Verify that there are 16 entries
@@ -39,8 +39,8 @@ fun EnumConfiguration.toHistoryEnum(): HistoryEnum {
 /**
  * Converts a *Double* that is provided by JS to a history enum set
  */
-fun HistoryEnumSet.Companion.forEnumValueFromJsDouble(jsValue: Double): HistoryEnumSet {
-  if (jsValue.isNaN()) {
+fun HistoryEnumSet.Companion.forEnumValueFromJsDouble(jsValue: Double?): HistoryEnumSet {
+  if (jsValue == null || jsValue.isNaN()) {
     return NoValue
   }
 

@@ -73,10 +73,10 @@ expect interface DiscreteDataEntry {
   /**
    * A string representing the label of the data entry
    */
-  val label: String
+  val label: String?
 
   /**
    * Representing the status of the data entry.
    */
-  val status: Double //must be double since JS does not support Int
+  val status: Double? //must be double since JS does not support Int
 }

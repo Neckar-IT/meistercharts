@@ -66,7 +66,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
     val paintingVariables = paintingVariables()
 
-    if (relevantValuesHaveChanged(newValue1, newValue2, newValue3, newValue4).not()) {
+    if (haveRelevantValuesChanged(newValue1, newValue2, newValue3, newValue4).not()) {
       //Values have not changed, just update the end - but do not paint
       paintingVariables.currentEndX = endX
       paintingVariables.currentEndTime = endTime
@@ -116,7 +116,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
    * If this method returns true, a new segment will be started.
    * If this method returns false, the current segment will continue
    */
-  abstract fun relevantValuesHaveChanged(
+  abstract fun haveRelevantValuesChanged(
     value1: Value1Type,
     value2: Value2Type,
     value3: Value3Type,

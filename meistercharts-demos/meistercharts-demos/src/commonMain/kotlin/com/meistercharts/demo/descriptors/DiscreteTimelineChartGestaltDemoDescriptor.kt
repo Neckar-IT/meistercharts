@@ -220,7 +220,7 @@ class DiscreteTimelineChartGestaltDemoDescriptor : ChartingDemoDescriptor<Discre
             val chunk = historyConfiguration.chunk {
               val referenceEntriesDataMap = ReferenceEntriesDataMap.of(
                 ReferenceEntryData(ReferenceEntryId(6), TextKey.simple("label 6"), start = chunkStart, end = chunkEnd),
-                ReferenceEntryData(ReferenceEntryId(7), TextKey.simple("label 7")),
+                ReferenceEntryData(ReferenceEntryId(7), TextKey.empty),
                 ReferenceEntryData(ReferenceEntryId(8), TextKey.simple("label 8")),
               )
 

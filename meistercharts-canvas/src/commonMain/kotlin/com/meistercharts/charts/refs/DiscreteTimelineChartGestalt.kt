@@ -486,7 +486,7 @@ class DiscreteTimelineChartGestalt(
      * The minimum distance between two data points for this chart.
      * If there is less space available, the next sampling level will be chosen
      */
-    const val MinDistanceBetweenDataPoints: @px Double = 30.0
+    const val MinDistanceBetweenDataPoints: @px Double = 7.0
   }
 }
 

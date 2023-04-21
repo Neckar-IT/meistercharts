@@ -129,9 +129,9 @@ external interface DiscreteDataSeriesConfiguration {
   val name: String
 
   /**
-   * The enum configuration
+   * The status enum configuration - if there is one.
    */
-  val statusEnumConfiguration: EnumConfiguration
+  val statusEnumConfiguration: EnumConfiguration?
 
   /**
    * Defines the stripe styles for the ordinals of the discrete data series.

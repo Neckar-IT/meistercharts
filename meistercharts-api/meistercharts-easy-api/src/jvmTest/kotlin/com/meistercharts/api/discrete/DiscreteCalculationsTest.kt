@@ -193,28 +193,29 @@ class DiscreteCalculationsTest {
     val samplingPeriod = pair.second
     val chunk = pair.first
 
-    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryTenMillis)
+    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryMillisecond)
 
     assertThat(chunk.firstTimeStamp()).isEqualTo(1001.0)
     assertThat(chunk.lastTimeStamp()).isEqualTo(4003.0)
 
-    assertThat(chunk.timeStampsCount).isEqualTo(303)
+    assertThat(chunk.timeStampsCount).isEqualTo(3003)
 
+    if (false) {
+      println(chunk.dump())
+    }
 
-    println(chunk.dump())
-
-    assertThat(chunk.timestampCenter(TimestampIndex(99))).isEqualTo(1991.0)
-    assertThat(chunk.timestampCenter(TimestampIndex(100))).isEqualTo(2001.0)
-    assertThat(chunk.timestampCenter(TimestampIndex(101))).isEqualTo(2002.0) //from entry
+    assertThat(chunk.timestampCenter(TimestampIndex(199))).isEqualTo(1200.0)
+    assertThat(chunk.timestampCenter(TimestampIndex(1100))).isEqualTo(2101.0)
+    assertThat(chunk.timestampCenter(TimestampIndex(1101))).isEqualTo(2102.0) //from entry
 
 
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0)).id).isEqualTo(1001)
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1)).id).isEqualTo(1001)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(199)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(200)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(201)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(300)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(301)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(302))).isEqualTo(ReferenceEntryId.NoValue)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1990)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(2000)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(2010)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3000)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3001)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3002))).isEqualTo(ReferenceEntryId.NoValue)
   }
 }

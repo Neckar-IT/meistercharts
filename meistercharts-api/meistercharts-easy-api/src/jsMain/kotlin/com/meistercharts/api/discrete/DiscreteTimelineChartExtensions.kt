@@ -223,7 +223,7 @@ private fun Array<DiscreteDataSeriesConfiguration>.toHistoryConfiguration(): His
     fastForEach { jsDataSeriesConfiguration ->
       val id = jsDataSeriesConfiguration.id.sanitize()
       val name = jsDataSeriesConfiguration.name.sanitize()
-      val statusEnum = jsDataSeriesConfiguration.statusEnumConfiguration.toHistoryEnum()
+      val statusEnum = jsDataSeriesConfiguration.statusEnumConfiguration?.toHistoryEnum()
 
       referenceEntryDataSeries(DataSeriesId(id), name, statusEnum)
     }

@@ -29,9 +29,12 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.get
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.historyChunk
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.binarySearchBy
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.i18n.isEmpty
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.Sorted
@@ -52,6 +55,14 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
     "The number of reference entry data series in the history configuration (${historyConfiguration.referenceEntryDataSeriesCount}) does not match the number of data series in the data (${seriesDataCount})"
   }
 
+  if (this.series.isEmpty()) {
+    return null
+  }
+
+  if (this.series[0].entries.isEmpty()) {
+    return null
+  }
+
   //Guess the SamplingPeriod
   @ms val start = findFirstStart()
   @ms val end = findLastEnd()
@@ -66,10 +77,9 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
   //@ms val targetDuration = findAverageEntryDuration()
 
   @ms val defaultEntryDuration = this.defaultEntryDuration
-  println("defaultEntryDuration $defaultEntryDuration ms")
 
-  //We want the shorted entry to span at least three samples
-  val samplingPeriod = SamplingPeriod.withMaxDistance(defaultEntryDuration * 4)
+  //Sampling period must be shorter than the defaultEntryDuration to get more precise timestamps.
+  val samplingPeriod = SamplingPeriod.withMaxDistance(defaultEntryDuration / 4)
 
   //
   //Generate the timestamps
@@ -77,6 +87,9 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
 
   @ms val timeStamps = series.allTimestampsForChunk(start, end, samplingPeriod)
 
+  logger.debug {
+    "Timestamps count: ${timeStamps.toList().size}"
+  }
 
   var referenceIdAsInt = 1000
   fun nextReferenceId(): ReferenceEntryId {
@@ -110,7 +123,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
           referenceEntryStatuses[dataSeriesIndexAsInt] = HistoryEnumSet.NoValueAsInt
         } else {
           //Entry has been found - create valid entries
-          val statusEnumSet = HistoryEnumSet.forEnumValueFromJsDouble(entry.status.sanitize())
+          val statusEnumSet = HistoryEnumSet.forEnumValueFromJsDouble(entry.status?.sanitize())
 
           //Check if the previous entry has the same values - then reuse the ID
           val referenceEntryId: ReferenceEntryId = when {
@@ -124,7 +137,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
               val previousData = this@historyChunk.getReferenceEntryData(previousReferenceEntryId)
 
               //necessary to create a new one?
-              val newIdRequired = previousStatus != statusEnumSet || previousData?.label?.fallbackText != entry.label
+              val newIdRequired = previousStatus != statusEnumSet || isSameLabel(previousData?.label, entry.label).not()
               if (newIdRequired) {
                 nextReferenceId()
               } else {
@@ -137,7 +150,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
           referenceEntryStatuses[dataSeriesIndexAsInt] = statusEnumSet.bitset
           referenceEntryDataMap[referenceEntryId] = ReferenceEntryData(
             referenceEntryId,
-            label = TextKey.simple(entry.label),
+            label = entry.label?.sanitize()?.let { TextKey.simple(it) } ?: TextKey.empty,
             start = entry.start,
             end = entry.end,
             payload = null,
@@ -150,6 +163,21 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
   }
 
   return Pair(chunk, samplingPeriod)
+}
+
+/**
+ * Returns true if the previous label is the same as the current label
+ */
+private fun isSameLabel(previousLabel: TextKey?, currentLabel: String?): Boolean {
+  if (previousLabel.isEmpty() && currentLabel == null) {
+    return true
+  }
+
+  if (previousLabel?.fallbackText == currentLabel) {
+    return true
+  }
+
+  return (previousLabel?.fallbackText == currentLabel)
 }
 
 /**
@@ -328,3 +356,5 @@ value class EntryIndexSearchResult(
 fun DiscreteDataEntry.contains(timestamp: @ms Double): Boolean {
   return this.start <= timestamp && this.end > timestamp
 }
+
+private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.DiscreteCalculations")

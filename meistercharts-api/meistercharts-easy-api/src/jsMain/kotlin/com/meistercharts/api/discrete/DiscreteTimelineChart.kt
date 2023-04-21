@@ -154,19 +154,19 @@ class DiscreteTimelineChart internal constructor(
       chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = object : ZoomAndTranslationDefaults {
         override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
-          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
-          @ms val startToShow = chunk.lastTimestamp - durationToShow
-          @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
+          @ms val visibleDuration = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
+          @ms val visibleTimeRangeStart = chunk.lastTimestamp - visibleDuration
+          @TimeRelative val visibleTimeRangeStartRelative = contentAreaTimeRangeX.time2relative(visibleTimeRangeStart)
 
-          val zoomX = chartSupport.zoomAndTranslationSupport.calculateFitZoomX(startToShowRelative, endRelative)
+          val zoomX = chartSupport.zoomAndTranslationSupport.calculateFitZoomX(visibleTimeRangeStartRelative, endRelative)
           return com.meistercharts.model.Zoom(zoomX, 1.0)
         }
 
         override fun defaultTranslation(chartCalculator: ChartCalculator): Distance {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
-          @ms val durationToShow = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
-          @ms val startToShow = chunk.lastTimestamp - durationToShow
-          @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(startToShow)
+          @ms val visibleDuration = samplingPeriod.distance * targetNumberOfSamples * 0.9 //ensure we are below
+          @ms val visibleTimeRangeStart = chunk.lastTimestamp - visibleDuration
+          @TimeRelative val startToShowRelative = contentAreaTimeRangeX.time2relative(visibleTimeRangeStart)
 
           val translationX = chartSupport.zoomAndTranslationSupport.calculateFitWindowTranslationX(startToShowRelative)
           return Distance(translationX, gestalt.contentViewportMargin.top)
@@ -299,6 +299,9 @@ actual external interface DiscreteTimelineChartData {
    */
   actual val series: Array<DiscreteDataEntriesForDataSeries>
 
+  /**
+   * The default duration (end - start) of a discrete data entry.
+   */
   actual val defaultEntryDuration: @ms Double
 }
 
@@ -318,8 +321,16 @@ actual external interface DiscreteDataEntriesForDataSeries {
 actual external interface DiscreteDataEntry {
   actual val start: @ms Double
   actual val end: @ms Double
-  actual val label: String
-  actual val status: Double //must be double since JS does not support Int
+
+  /**
+   * The (optional) label
+   */
+  actual val label: String?
+
+  /**
+   * The status for this entry.
+   */
+  actual val status: Double? //must be double since JS does not support Int
 }
 
 private val DiscreteTimelineChartGestalt.inMemoryStorage: InMemoryHistoryStorage

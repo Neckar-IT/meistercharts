@@ -33,8 +33,11 @@ import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.model.Size
+import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
+import it.neckar.open.i18n.isEmpty
 import it.neckar.open.i18n.resolve
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
@@ -56,7 +59,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * Returns the reference entry ID
    */
   val referenceEntryIdProvider: () -> @MayBeNoValueOrPending ReferenceEntryId,
-  referenceEntryDataProvider: () -> ReferenceEntryData?,
+  val referenceEntryDataProvider: () -> ReferenceEntryData?,
   statusProvider: () -> @MayBeNoValueOrPending HistoryEnumSet,
   statusEnumProvider: () -> HistoryEnum?,
 
@@ -71,10 +74,20 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    */
   val symbolAndLegendPaintable: SymbolAndLabelLegendPaintable = SymbolAndLabelLegendPaintable(
     labels = object : SizedProvider1<String, ChartSupport> {
+      private var statusEnum: HistoryEnum? = null
+      private var textKey: TextKey? = null
+
       override fun size(param1: ChartSupport): Int {
-        return when (statusEnumProvider()) {
-          null -> 1
-          else -> 2
+        statusEnum = statusEnumProvider()
+        val hasStatusEnum = statusEnum != null
+
+        textKey = referenceEntryDataProvider()?.label
+        val hasTextKey = textKey.isEmpty().not()
+
+        return when {
+          hasStatusEnum && hasTextKey -> 2
+          hasStatusEnum || hasTextKey -> 1
+          else -> 0
         }
       }
 
@@ -85,20 +98,31 @@ class DiscreteSeriesModelBalloonTooltipSupport(
         val referenceEntryId = referenceEntryIdProvider()
 
         return when (index) {
-          0 -> referenceEntryDataProvider()?.label?.resolve(textService, i18nConfiguration) ?: "Unknown label"
-          1 -> {
-            val statusEnum = statusEnumProvider()
-            @MayBeNoValueOrPending val status = statusProvider()
-
-            when {
-              statusEnum == null -> throw IllegalStateException("no status enum found")
-              status.isPending() -> status.toString()
-              status.isNoValue() -> status.toString()
-              else -> statusEnum.value(status.firstSetOrdinal()).key.resolve(textService, i18nConfiguration)
+          0 -> {
+            //Text key or status?
+            if (textKey.isEmpty()) {
+              formatStatusEnum(statusEnum, textService, i18nConfiguration) //No text key, return the status enum
+            } else {
+              textKey!!.resolve(textService, i18nConfiguration)
             }
           }
 
+          1 -> {
+            formatStatusEnum(statusEnum, textService, i18nConfiguration)
+          }
+
           else -> throw IllegalArgumentException("Invalid index $index")
+        }
+      }
+
+      private fun formatStatusEnum(statusEnum: HistoryEnum?, textService: DefaultTextService, i18nConfiguration: I18nConfiguration): String {
+        @MayBeNoValueOrPending val status = statusProvider()
+
+        return when {
+          statusEnum == null -> throw IllegalStateException("no status enum found")
+          status.isPending() -> status.toString()
+          status.isNoValue() -> status.toString()
+          else -> statusEnum.value(status.firstSetOrdinal()).key.resolve(textService, i18nConfiguration)
         }
       }
     },
@@ -110,13 +134,10 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * This method can be called later to recreate the provider with a different symbol size
    */
   private fun createSymbolsProvider(symbolSize: Size = Size.PX_16): MultiProvider<LegendEntryIndex, Paintable> = defaultSymbols(symbolSize = symbolSize, symbolColors = { index: Int ->
-    when (index) {
-      0 -> Color.transparent
-      1 -> {
-        statusColor(referenceEntryIdProvider())
-      }
-
-      else -> throw IllegalArgumentException("Invalid index $index")
+    if (index == 0 && referenceEntryDataProvider()?.label.isEmpty().not()) {
+      Color.transparent
+    } else {
+      statusColor(referenceEntryIdProvider())
     }
   })
 

@@ -75,7 +75,7 @@ class DiscreteCalculationsSampleTest {
     val chunk = pair.first
     val samplingPeriod = pair.second
 
-    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryTenMillis)
+    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryMillisecond)
 
     //Verify distance is not too large
     chunk.timeStamps.fastForEachIndexed { index, timestamp ->

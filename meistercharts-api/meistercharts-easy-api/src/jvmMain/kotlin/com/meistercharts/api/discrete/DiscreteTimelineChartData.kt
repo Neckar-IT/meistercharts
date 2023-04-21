@@ -56,8 +56,8 @@ actual interface DiscreteDataEntriesForDataSeries {
 actual interface DiscreteDataEntry {
   actual val start: Double
   actual val end: Double
-  actual val label: String
-  actual val status: Double
+  actual val label: String?
+  actual val status: Double?
 
   companion object {
     operator fun invoke(
