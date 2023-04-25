@@ -1,0 +1,17 @@
+body {
+  display: grid;
+  place-items: center;
+}
+* {
+  font-family: "Oswald", serif;
+  text-align: center;
+}
+
+h1 {
+  margin: 20px;
+}
+
+#timeLineChart {
+  margin: 20px;
+  background-color: #efefef;
+}

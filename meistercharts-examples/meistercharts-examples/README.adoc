@@ -1,0 +1,3 @@
+= MeisterCharts Examples
+
+This project contains examples how to use MeisterCharts JavaScript library.
