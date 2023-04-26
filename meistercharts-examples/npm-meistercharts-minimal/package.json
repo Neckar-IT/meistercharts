@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@meistercharts/meistercharts": "1.31.0"
+    "@meistercharts/meistercharts": "1.32.0"
   },
   "devDependencies": {
     "webpack": "5.80.0",
