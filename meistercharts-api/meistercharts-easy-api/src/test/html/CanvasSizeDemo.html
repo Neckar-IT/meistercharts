@@ -1,0 +1,57 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+  .c1 {
+    border: 1px solid black;
+  }
+</style>
+<body>
+<h1>Canvas Sizes</h1>
+
+<p>
+  Attributes only: attributes=400x400<br>
+  <canvas class="c1" id="canvas1" width="400" height="400"></canvas>
+</p>
+<p>
+  attributes=400x400 style=400x400<br>
+  <canvas class="c1" id="canvas2" width="400" height="400" style="width:400px;height:400px;"></canvas>
+</p>
+<p>
+  attributes=400x400 style=200x200<br>
+  <canvas class="c1" id="canvas3" width="400" height="400" style="width:200px;height:200px;"></canvas>
+</p>
+<p>
+  attributes=400x400 style=600x600<br>
+  <canvas class="c1" id="canvas4" width="400" height="400" style="width:600px;height:600px;"></canvas>
+</p>
+<p>
+  attributes=100%x100%, style=400x400<br>
+  <canvas class="c1" id="canvas5" width="100%" height="100%" style="width:400px;height:400px;"></canvas>
+</p>
+<p>
+  attributes=none, style=400x400<br>
+  <canvas class="c1" id="canvas6" width="auto" height="auto" style="width:400px;height:400px;"></canvas>
+</p>
+
+<script type="text/javascript">
+  function drawRect(canvasEle) {
+    var ctx = canvasEle.getContext("2d");
+    ctx.beginPath();
+    ctx.lineWidth = "6";
+    ctx.strokeStyle = "red";
+    ctx.rect(5, 5, 390, 390);
+    ctx.stroke();
+  }
+
+  drawRect(document.getElementById("canvas1"));
+  drawRect(document.getElementById("canvas2"));
+  drawRect(document.getElementById("canvas3"));
+  drawRect(document.getElementById("canvas4"));
+  drawRect(document.getElementById("canvas5"));
+  drawRect(document.getElementById("canvas6"));
+</script>
+
+</body>
+</html>

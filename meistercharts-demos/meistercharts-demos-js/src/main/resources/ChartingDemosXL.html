@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neckar IT GmbH, Mössingen, Java Developement">
+  <meta name="author" content="Neckar IT GmbH">
+  <title>Demonstration of MeisterCharts with Scrolling</title>
+  <style>
+    .unselectable {
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+
+  <link href="https://neckar.it/css/nit-fonts.css" type="text/css" rel="stylesheet">
+  <link href="https://neckar.it/css/nit-styleguide-2020.css" type="text/css" rel="stylesheet">
+  <link href="ChartingDemos.css" type="text/css" rel="stylesheet">
+</head>
+<body style="background-color: #333; margin: 0">
+
+<div id="container" class="unselectable" style="width:100%;height:100vh; margin: 0;box-sizing: border-box; border: 1px solid #aaaaaa;">
+  <div id="main" class="main">
+    <div id="navigation" class="navigation">
+      <div id="navigationTop" class="navigationTop"></div>
+      <div id="navigationTree" class="navigationTree"></div>
+    </div>
+
+    <div id="demoContentHolder" class="demoContentHolder">
+    </div>
+
+  </div>
+
+</div>
+
+<!-- induce scroll bar -->
+<div style="width:50vw;height:2000px;"></div>
+
+
+<!--<span class="footer">MeisterCharts by Neckar IT GmbH</span>-->
+
+<script src="meistercharts-demos-js.js"></script>
+
+
+<script type="text/javascript">
+  window.onerror = function (msg, url, line, col, error) {
+    // Note that col & error are new to the HTML 5 spec and may not be
+    // supported in every browser.  It worked for me in Chrome.
+    let extra = !col ? '' : '\ncolumn: ' + col;
+    extra += !error ? '' : '\nerror: ' + error;
+
+    const errorMessage = "Error: " + msg + "\nurl: " + url + "\nline: " + line + extra;
+    console.error(errorMessage);
+    window.setTimeout(function () {
+      alert(errorMessage);
+    }, 0);
+
+    // return false to the browser also can do his thing
+    return false;
+  };
+
+  //Do not wait for web-fonts to be loaded but start the demo directly.
+  //This way we can test that our handling of font-loading works.
+  window["meistercharts-demos-js"].com.meistercharts.demojs.startChartingDemos(document.getElementById("container"))
+</script>
+
+</body>
+</html>

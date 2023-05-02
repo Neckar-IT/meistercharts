@@ -1,0 +1,57 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Saving the canvas state</h1>
+
+<p>
+  <textarea id="environment" style="width:80%;height:100px;padding:5px;" value=""></textarea>
+</p>
+
+<p>
+  <canvas id="canvas1" width="400" height="400" style="width:400px;height:400px;"></canvas>
+</p>
+
+<script type="text/javascript">
+  const eleEnv = document.getElementById("environment");
+  const eleCanvas = document.getElementById("canvas1")
+  const ctx1 = eleCanvas.getContext("2d");
+
+  function paint(ctx, dpr) {
+    ctx.save()
+    ctx.scale(dpr, dpr)
+
+    ctx.fillStyle = "orange";
+    ctx.fillRect(0, 0, 400, 400);
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(10, 10, 50, 50);
+
+    ctx.save() // does scale propagate?
+    ctx.fillStyle = "blue";
+    ctx.fillRect(340, 340, 50, 50);
+    ctx.restore()
+
+    ctx.restore()
+  }
+
+  function update() {
+    const dpr = window.devicePixelRatio;
+    const canvasBounds = eleCanvas.getBoundingClientRect()
+    eleCanvas.width = Math.round(canvasBounds.right * dpr) - Math.round(canvasBounds.left * dpr)
+    eleCanvas.height = Math.round(canvasBounds.bottom * dpr) - Math.round(canvasBounds.top * dpr)
+    eleEnv.value = new Date() + ": devicePixelRatio = " + dpr + ", canvas.width = " + eleCanvas.width + ", canvas.height = " + eleCanvas.height + ", canvas.bounds = " + canvasBounds.left + ", " + canvasBounds.top + ", " + canvasBounds.width + " x " + canvasBounds.height;
+    paint(ctx1, dpr);
+  }
+
+  update()
+  window.setInterval(function () {
+    update()
+  }, 1000.0)
+</script>
+
+</body>
+</html>

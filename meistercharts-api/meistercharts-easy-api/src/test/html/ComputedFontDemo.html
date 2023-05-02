@@ -1,0 +1,64 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+  .c1 {
+    border: 1px solid black;
+  }
+</style>
+<body>
+<h1>Computed Font</h1>
+
+<p>
+  This demo uses getComputedStyle("font-size") and getComputedStyle("font-family") to retrieve the font-size and font-family for various paragraphs.
+</p>
+
+<p>
+  <textarea id="result" style="width:85vw;height:200px;"></textarea>
+</p>
+
+<p id="text1">
+  Sind alle Einhörner ausgestorben?
+</p>
+
+<p id="text2" style="font-size: 2em">
+  Sind alle Einhörner ausgestorben?
+</p>
+
+<p id="text3" style="font-family: 'Verdana', 'Courier New';font-size: larger">
+  Sind alle Einhörner ausgestorben?
+</p>
+
+<p id="text4" style="font-family: 'Arial', sans-serif;font-size: 17pt">
+  Sind alle Einhörner ausgestorben?
+</p>
+
+<p id="text5" style="font-family: 'Comic Sans MS', monospace;font-size: 22px">
+  Sind alle Einhörner ausgestorben?
+</p>
+
+
+<script type="text/javascript">
+
+  function getFontDescription(id) {
+    const ele = document.getElementById(id)
+    const fontSize = window.getComputedStyle(ele).getPropertyValue("font-size")
+    const fontFamily = window.getComputedStyle(ele).getPropertyValue("font-family")
+    return id + ": <" + fontFamily + " " + fontSize + ">"
+  }
+
+  function computeFonts() {
+    const result = document.getElementById("result")
+    result.value += getFontDescription("text1") + "\n"
+    result.value += getFontDescription("text2") + "\n"
+    result.value += getFontDescription("text3") + "\n"
+    result.value += getFontDescription("text4") + "\n"
+    result.value += getFontDescription("text5") + "\n"
+  }
+
+  computeFonts()
+</script>
+
+</body>
+</html>

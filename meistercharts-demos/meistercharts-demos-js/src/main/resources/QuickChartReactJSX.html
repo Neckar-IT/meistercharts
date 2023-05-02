@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A MeisterCharts example with React using JSX</title>
+  <style>
+    .meisterChartContainer {
+      width: 85vw;
+      height: 85vh;
+      margin: 0;
+      box-sizing: border-box;
+      border: 1px solid #aaaaaa;
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- This will hold the MeisterCharts React component -->
+<div id="MeisterChartContainer" class="meisterChartContainer"></div>
+
+<!--Load MeisterCharts related JavaScript files (minimized build) -->
+<script src="meistercharts-demos-js.js"></script>
+
+
+<!-- Load React. -->
+<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<!-- Enable JSX syntax; don't use this in production: -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- Load our MeisterCharts React component. -->
+<script type="text/babel" src="MeisterChartReactJSX.js"></script>
+
+<script type="text/babel">
+  const domContainer = document.getElementById("MeisterChartContainer");
+  ReactDOM.render(<MeisterChartReact chart="CircularChart"/>, domContainer);
+</script>
+<!--
+  Note: this page is a great way to try React but it's not suitable for production.
+  It slowly compiles JSX with Babel in the browser and uses a large development build of React.
+
+  Read this section for a production-ready setup with JSX:
+  https://reactjs.org/docs/add-react-to-a-website.html#add-jsx-to-a-project
+
+  In a larger project, you can use an integrated toolchain that includes JSX instead:
+  https://reactjs.org/docs/create-a-new-react-app.html
+
+  You can also use React without JSX, in which case you can remove Babel:
+  https://reactjs.org/docs/react-without-jsx.html
+-->
+
+</body>
+</html>
