@@ -58,7 +58,14 @@ import com.meistercharts.painter.CategoryPointPainter
 import com.meistercharts.painter.CirclePointPainter
 import com.meistercharts.painter.XyCategoryLinePainter
 import com.meistercharts.provider.forTextKeys
+import com.meistercharts.style.Palette
 import it.neckar.open.collections.fastMapDouble
+import it.neckar.open.formatting.NumberFormat
+import it.neckar.open.formatting.cached
+import it.neckar.open.formatting.intFormat
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.provider.DefaultDoublesProvider
@@ -67,12 +74,6 @@ import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.SizedProvider2
-import it.neckar.open.formatting.NumberFormat
-import it.neckar.open.formatting.cached
-import it.neckar.open.formatting.intFormat
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.TextKey
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 
 /**
@@ -277,7 +278,7 @@ class BarLineShowCaseSickDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
               //Special format that adds a "%" at one value
               ticksFormat = object : NumberFormat {
-                override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+                override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
                   if (value == 100.0) {
                     return "${intFormat.format(value, i18nConfiguration)}%"
                   }

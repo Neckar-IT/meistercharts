@@ -31,6 +31,7 @@ import it.neckar.open.formatting.timeFormatWithMillis
 import it.neckar.open.formatting.yearMonthFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
+import it.neckar.open.kotlin.lang.SpecialChars
 import it.neckar.open.time.TimeZone
 import org.junit.jupiter.api.Test
 
@@ -118,9 +119,9 @@ class DateFormatJvmTest {
 
   @Test
   fun yearMonthFormat() {
-    assertThat(yearMonthFormat.format(now, I18nConfiguration.Germany)).isEqualTo("März 2021")
-    assertThat(yearMonthFormat.format(now, englishBerlin)).isEqualTo("March 2021")
-    assertThat(yearMonthFormat.format(now, englishTokyo)).isEqualTo("March 2021")
+    assertThat(yearMonthFormat.format(now, I18nConfiguration.Germany)).isEqualTo("März${SpecialChars.nbsp}2021")
+    assertThat(yearMonthFormat.format(now, englishBerlin)).isEqualTo("March${SpecialChars.nbsp}2021")
+    assertThat(yearMonthFormat.format(now, englishTokyo)).isEqualTo("March${SpecialChars.nbsp}2021")
   }
 
   @Test

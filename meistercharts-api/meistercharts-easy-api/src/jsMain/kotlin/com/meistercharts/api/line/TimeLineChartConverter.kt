@@ -40,6 +40,7 @@ import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider.Companion.alwaysNull
 import it.neckar.open.provider.MultiProvider.Companion.forListModulo
@@ -150,7 +151,7 @@ object TimeLineChartConverter {
     return invoke { dataSeriesIndex ->
       map.getOrPut(dataSeriesIndex) {
         object : NumberFormat {
-          override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+          override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
             return dataSeriesNumberFormat.format(dataSeriesIndex, value, i18nConfiguration.formatLocale.locale)
           }
         }.cached()

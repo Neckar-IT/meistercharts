@@ -72,6 +72,7 @@ import it.neckar.open.formatting.cached
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.unit.other.px
 
 /**
@@ -284,7 +285,7 @@ class BarLineShowcaseDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
               //Special format that adds a "%" at one value
               ticksFormat = object : NumberFormat {
-                override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+                override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
                   if (value == 100.0) {
                     return "${intFormat.format(value, i18nConfiguration)}%"
                   }

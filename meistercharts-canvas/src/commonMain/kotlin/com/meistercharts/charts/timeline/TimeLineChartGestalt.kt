@@ -1497,20 +1497,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
       else -> intFormat
     }
   }
-  style.requestedVisibleValueAxesIndices = object : DecimalDataSeriesIndexProvider {
-    override fun valueAt(index: Int): DecimalDataSeriesIndex {
-      return when (index) {
-        0 -> DecimalDataSeriesIndex(1)
-        1 -> DecimalDataSeriesIndex(2)
-        2 -> DecimalDataSeriesIndex(3)
-        else -> throw IllegalArgumentException("invalid index $index")
-      }
-    }
-
-    override fun size(): Int {
-      return 3
-    }
-  }
+  style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
 
   //Avoid gaps for the cross wire - when adding only
   data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)

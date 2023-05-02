@@ -34,6 +34,7 @@ import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.formatting.format
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 
 class ValueAxisContentViewportCalculationsDemoDescriptor : ChartingDemoDescriptor<Nothing> {
   override val name: String = "Value Axis - Content Viewport Calculations"
@@ -53,7 +54,7 @@ class ValueAxisContentViewportCalculationsDemoDescriptor : ChartingDemoDescripto
         val valueAxis = ValueAxisLayer("Title", ValueRange.default) {
           size = 300.0 //space for larger fonts
           this.ticksFormat = object : NumberFormat {
-            override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+            override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
               return "Äq: " + value.format()
             }
           }.cached()
