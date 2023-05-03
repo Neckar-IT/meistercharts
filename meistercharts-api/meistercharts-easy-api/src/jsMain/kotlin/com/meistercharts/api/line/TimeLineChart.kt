@@ -330,7 +330,9 @@ class TimeLineChart internal constructor(
    */
   @Suppress("unused")
   fun setUpDemo() {
-    gestalt.timeLineChartGestalt.setUpDemo()
+    gestalt.timeLineChartGestalt.setUpDemo().also {
+      gestalt.timeLineChartGestalt.onDispose(it)
+    }
   }
 
   companion object {
@@ -357,11 +359,11 @@ private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
     crossWireLayerEnumValues.style.applyCrossWireFont(it)
   }
 
-  TimeLineChartConverter.toCrossWireFormat(jsStyle.crossWireDecimalsFormat).let {
-    this.style.crossWireDecimalFormat = it
+  jsStyle.crossWireDecimalsFormat?.let {
+    this.style.crossWireDecimalFormat = TimeLineChartConverter.toCrossWireFormat(it)
   }
 
-  jsStyle.crossWireDecimalsLabelTextColor?.let { it.toColor() }?.let {
+  jsStyle.crossWireDecimalsLabelTextColor?.toColor()?.let {
     this.style.crossWireDecimalsLabelTextColors = MultiProvider.always(it)
   }
 

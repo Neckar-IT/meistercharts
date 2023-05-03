@@ -21,6 +21,7 @@ import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
 import kotlin.random.Random
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Generates values.
@@ -78,6 +79,32 @@ fun interface EnumValueGenerator {
         val index = (baseValue % enumValuesCount).toInt() * factor % Int.MAX_VALUE
 
         HistoryEnumSet.forEnumValue(index)
+      }
+    }
+
+    fun weighted(
+      weights: List<Double>,
+      keep: Duration,
+    ): EnumValueGenerator {
+      val totalWeight = weights.sum()
+      val randomGenerator: Random = it.neckar.open.kotlin.lang.random
+      var lastIndex = -1
+      var lastTimestamp: @ms Double = 0.0
+      return EnumValueGenerator { timestamp: @ms Double, _ ->
+        if (keep > (timestamp - lastTimestamp).milliseconds) {
+          HistoryEnumSet.forEnumValue(lastIndex)
+        } else {
+          val target = randomGenerator.nextDouble() * totalWeight
+          var index = 0
+          var sum = weights[index]
+          while (target > sum) {
+            index++
+            sum += weights[index]
+          }
+          lastIndex = index
+          lastTimestamp = timestamp
+          HistoryEnumSet.forEnumValue(index)
+        }
       }
     }
 

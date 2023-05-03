@@ -152,6 +152,8 @@ import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
 import it.neckar.open.formatting.TimeFormatWithMillis
+import it.neckar.open.formatting.appendUnit
+import it.neckar.open.formatting.cached
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
@@ -168,10 +170,12 @@ import it.neckar.open.kotlin.lang.random
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.provider.CachedMultiProvider
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
 import it.neckar.open.provider.mapped
 import it.neckar.open.time.TimeConstants
@@ -742,8 +746,7 @@ class TimeLineChartGestalt
         @DomainRelative val relativeValueAtCrossWire = style.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
         locationsYCache[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
 
-        val formatForLabel = style.crossWireDecimalFormat.valueAt(dataSeriesIndex) ?: decimalFormat()
-        labelsCache[index] = formatForLabel.format(valueAtCrossWire)
+        labelsCache[index] = style.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
 
         //Update the formats
         boxStylesCache[index] = style.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
@@ -1440,7 +1443,18 @@ class TimeLineChartGestalt
      *
      * If null a format suitable for the given data series will be used
      */
-    var crossWireDecimalFormat: MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat?> = MultiProvider.alwaysNull()
+    var crossWireDecimalFormat: MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> = defaultCrossWireDecimalFormat()
+
+    /**
+     * Creates a new instance of the default crosswire decimal format. Uses the unit from the history configuration
+     */
+    fun defaultCrossWireDecimalFormat(): CachedMultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> = MultiProvider.cached { index ->
+      val dataSeriesIndex = DecimalDataSeriesIndex(index)
+
+      decimalFormat().appendUnit {
+        data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+      }
+    }
 
     /**
      * The text colors for the cross wire label
@@ -1492,8 +1506,8 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
     style.size = 120.0
     style.ticksFormat = when (dataSeriesIndex.value) {
+      2 -> decimalFormat1digit
       3 -> decimalFormat2digits
-      7 -> decimalFormat1digit
       else -> intFormat
     }
   }
@@ -1509,28 +1523,50 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
     decimalDataSeries(DataSeriesId(23), TextKey.simple("Flow Velocity [m/s]"), HistoryUnit("m/s"))
     decimalDataSeries(DataSeriesId(56), TextKey.simple("Volume [m³]"), HistoryUnit("m³"))
     decimalDataSeries(DataSeriesId(89), TextKey.simple("Volumetric Flow Rate [m³/h]"), HistoryUnit("m³/h"))
-    decimalDataSeries(DataSeriesId(117), TextKey.simple("Mass [kg]"), HistoryUnit("kg"))
-    decimalDataSeries(DataSeriesId(118), TextKey.simple("Energy [kWh]"), HistoryUnit("kWh"))
-    decimalDataSeries(DataSeriesId(123), TextKey.simple("Temperature [°C]"), HistoryUnit("°C"))
-    decimalDataSeries(DataSeriesId(143), TextKey.simple("Pressure [bar]"), HistoryUnit("bar"))
 
-    enumDataSeries(DataSeriesId(1001), TextKey.simple("Global State"), HistoryEnum.createSimple("Warning State", listOf("Ok", "Warning", "Error")))
+    enumDataSeries(DataSeriesId(1001), TextKey.simple("Global State"), HistoryEnum.createSimple("Warning State", listOf("Ok", "Warning", "Error", "Unknown")))
     enumDataSeries(DataSeriesId(1002), TextKey.simple("Valve"), HistoryEnum.createSimple("Valve State", listOf("Open", "Closed")))
-    enumDataSeries(DataSeriesId(1003), TextKey.simple("Compliance"), HistoryEnum.createSimple("Compliance State", listOf("Compliant", "Not Compliant", "Unknown")))
+    enumDataSeries(DataSeriesId(1003), TextKey.simple("Heating"), HistoryEnum.createSimple("Compliance State", listOf("On", "Off", "Unknown")))
+  }
+
+  style.crossWireDecimalFormat = SizedProvider.of(4) { dataSeriesIndex ->
+    val unit = data.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name ?: ""
+    when (dataSeriesIndex) {
+      2 -> decimalFormat1digit.appendUnit(unit).cached()
+      3 -> decimalFormat2digits.appendUnit(unit).cached()
+      else -> intFormat.appendUnit(unit).cached()
+    }
+  }
+
+  style.crossWireDecimalFormat = MultiProvider.cached { index ->
+    val dataSeriesIndex = DecimalDataSeriesIndex(index)
+    val unitProvider = {
+      data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+    }
+
+    when (index) {
+      2 -> decimalFormat1digit.appendUnit(unitProvider)
+      3 -> decimalFormat2digits.appendUnit(unitProvider)
+      else -> intFormat.appendUnit(unitProvider)
+    }
   }
 
   style.lineValueRanges = MultiProvider.forListModulo(
     listOf(
       ValueRange.linear(0.0, 1000.0),
       ValueRange.linear(-120.0, 300.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(-0.5, 17.0),
-      ValueRange.linear(0.0, 1000.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(-50.0, 100.0)
+      ValueRange.linear(-10.0, 10.0),
+      ValueRange.linear(-0.5, 0.5),
     )
   )
+
+  historyEnumLayer.configuration.stripePainters = MultiProvider.forListOr<EnumDataSeriesIndex, RectangleEnumStripePainter>(listOf(RectangleEnumStripePainter {
+    fillProvider = RectangleEnumStripePainter.enumStateFillProvider()
+  }), fallbackProvider = {
+    RectangleEnumStripePainter {
+      fillProvider = { value, _ -> Theme.chartColors().valueAt(value.value) }
+    }
+  }).cached()
 
   val easings = listOf(
     Easing.inOut,
@@ -1551,9 +1587,9 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   }
 
   val enumValueGenerators: List<EnumValueGenerator> = listOf<EnumValueGenerator>(
-    EnumValueGenerator.modulo(5.seconds),
-    EnumValueGenerator.modulo(2.seconds),
-    EnumValueGenerator.modulo(3.seconds),
+    EnumValueGenerator.weighted(listOf(0.8, 0.1, 0.075, 0.025), 5.seconds),
+    EnumValueGenerator.weighted(listOf(0.1, 0.9), 3.seconds),
+    EnumValueGenerator.weighted(listOf(0.49, 0.5, 0.01), 7.seconds),
   )
 
   val referenceEntryGenerators: List<ReferenceEntryGenerator> = data.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
@@ -1579,18 +1615,16 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   this.data.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
     override fun size(param1: DecimalDataSeriesIndex): Int {
       return when (param1.value) {
-        1 -> 2
-        2 -> 1
+        0 -> 2
+        1 -> 1
         else -> 0
       }
     }
 
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex): Double {
-      val valueRange = style.lineValueRanges.valueAt(param1.value)
-      val valueRangeCenter = valueRange.center()
       return when (param1.value) {
-        1 -> if (index == 0) valueRangeCenter - valueRange.deltaPositive * 0.4 else valueRangeCenter + valueRange.deltaPositive * 0.33333
-        2 -> valueRangeCenter * 0.7
+        0 -> if (index == 0) 300.0 else 700.0
+        1 -> 63.0
         else -> 0.0
       }
     }
@@ -1599,8 +1633,8 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
       return when (param1.value) {
-        1 -> listOf(if (index == 0) "Minimum" else "Maximum", data.thresholdValueProvider.valueAt(index, param1).format(0))
-        2 -> listOf("Average", data.thresholdValueProvider.valueAt(index, param1).format(0))
+        0 -> listOf("${if (index == 0) "Min" else "Max"}${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
+        1 -> listOf("Target ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
         else -> emptyList()
       }
     }

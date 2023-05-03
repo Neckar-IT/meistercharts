@@ -141,11 +141,7 @@ object TimeLineChartConverter {
     }
   }
 
-  fun toCrossWireFormat(dataSeriesNumberFormat: DataSeriesNumberFormat?): MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat?> {
-    if (dataSeriesNumberFormat == null) {
-      return alwaysNull()
-    }
-
+  fun toCrossWireFormat(dataSeriesNumberFormat: DataSeriesNumberFormat): MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> {
     val map = IntMap<CachedNumberFormat>()
 
     return invoke { dataSeriesIndex ->
