@@ -41,7 +41,7 @@ import kotlin.time.Duration
  */
 @JavaFxTest
 @VirtualTime(0.0)
-class HistoryStorageCacheTest {
+class HistoryStorageCacheFxTest {
   private lateinit var disposeSupport: DisposeSupport
 
   @BeforeEach
@@ -73,7 +73,7 @@ class HistoryStorageCacheTest {
     decimalDataSeries(DataSeriesId(19), TextKey.simple("asdf3"))
   }
 
-  fun createChunk(baseTimeStamp: Double = this@HistoryStorageCacheTest.baseTimeStamp): HistoryChunk {
+  fun createChunk(baseTimeStamp: Double = this@HistoryStorageCacheFxTest.baseTimeStamp): HistoryChunk {
     val chunk = historyConfiguration.chunk(5) { timestampIndex ->
       val timestamp = baseTimeStamp + timestampIndex.value
       addDecimalValues(timestamp) { dataSeriesIndex: DecimalDataSeriesIndex ->
