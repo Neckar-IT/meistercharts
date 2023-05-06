@@ -26,7 +26,11 @@ import com.meistercharts.model.Insets
  * Builder for a zoom and pan modifiers
  *
  */
-class ZoomAndTranslationModifiersBuilder {
+class ZoomAndTranslationModifiersBuilder(config: ZoomAndTranslationModifiersBuilder.() -> Unit = {}) {
+  init {
+    config()
+  }
+
   /**
    * The current modifier that can be wrapped
    */

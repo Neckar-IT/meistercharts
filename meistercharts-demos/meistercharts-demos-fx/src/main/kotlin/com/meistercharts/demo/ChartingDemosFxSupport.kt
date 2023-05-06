@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.environment
 import com.meistercharts.algorithms.layers.HideAfterTimeoutLayer
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
+import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.debug.EventsDebugLayer
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.MarkAsDirtyLayer
@@ -35,6 +36,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtySupport
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nSupport
+import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
@@ -424,15 +426,24 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     pane.add(Components.label("X Axis Orientation"))
     pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.rootChartState.axisOrientationXProperty.toJavaFx(), AxisOrientationX.entries)), "span")
 
+    pane.add(Components.label("Sampling Period"))
+    pane.add(Components.label("?").also { label ->
+      layerSupport.chartSupport.onPaint { _, _, _ ->
+        val samplingPeriod = layerSupport.chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
+        label.text = samplingPeriod?.name ?: "?"
+      }
+    }, "span")
+
     pane.add(Components.label("Snap Configuration"))
     pane.add(Components.hbox5(Components.comboBox(layerSupport.chartSupport.pixelSnapSupport.snapConfigurationProperty.toJavaFx(), enumEntries())), "span")
 
     pane.add(Components.label("Global Tiles Cache"))
-    pane.add(Components.label(
-      SimpleStringProperty("-").also { property ->
-        JavaFxTimer.repeat(1.seconds) {
-          property.value = "Size: ${GlobalTilesCache.size}"
-        }
+    pane.add(
+      Components.label(
+        SimpleStringProperty("-").also { property ->
+          JavaFxTimer.repeat(1.seconds) {
+            property.value = "Size: ${GlobalTilesCache.size}"
+          }
       }
     ), "span")
 

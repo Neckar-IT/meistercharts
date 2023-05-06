@@ -17,6 +17,7 @@ package com.meistercharts.demojs
 
 import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
@@ -30,6 +31,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nSupport
+import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.demo.ChartingDemo
@@ -218,6 +220,16 @@ abstract class AbstractChartingDemosJS {
     table.twoColumnsRow(
       document.label("Content area size"),
       document.label(layerSupport.chartSupport.rootChartState.contentAreaSizeProperty.map { it.format() })
+    )
+
+    table.twoColumnsRow(
+      document.label("Sampling Period"),
+      document.label("?").also { label ->
+        layerSupport.chartSupport.onPaint { _, _, _ ->
+          val samplingPeriod = layerSupport.chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
+          label.textContent = samplingPeriod?.name
+        }
+      }
     )
 
     table.twoColumnsRow(

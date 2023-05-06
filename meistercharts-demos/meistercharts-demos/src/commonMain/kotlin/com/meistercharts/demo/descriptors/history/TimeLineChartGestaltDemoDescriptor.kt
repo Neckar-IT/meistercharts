@@ -17,6 +17,7 @@ package com.meistercharts.demo.descriptors.history
 
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -80,6 +81,8 @@ import it.neckar.open.kotlin.lang.random
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
+import it.neckar.open.time.TimeConstants.millisPerCentury
+import it.neckar.open.time.TimeConstants.millisPerDecade
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.math.roundToInt
@@ -91,22 +94,23 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
   override val category: DemoCategory = DemoCategory.Gestalt
 
   override val predefinedConfigurations: List<PredefinedConfiguration<TimeLineChartGestalt.() -> Unit>> = listOf(
+    neckarITHomePage,
+    PredefinedConfiguration({ this.setUpDemo() }, "demo setup"),
     oneSampleEvery100ms,
     oneSampleEvery100msSick,
-    PredefinedConfiguration({}, "empty"),
-    PredefinedConfiguration({ this.setUpDemo() }, "demo setup"),
     oneSampleEvery100msLogarithmic,
     oneSampleEvery16msCached500ms,
     oneSampleEvery16msCached50ms,
     oneSampleEvery100msCached100ms,
     oneSampleEvery24h,
-    neckarITHomePage,
     oneSampleEvery16msCached500msAverages,
     candle,
     minMaxArea,
     withAxisTitle,
     outwardsTicks,
     valueAxisTitleOnTop,
+    PredefinedConfiguration({}, "empty"),
+    _100years,
   )
 
   override fun createDemo(configuration: PredefinedConfiguration<TimeLineChartGestalt.() -> Unit>?): ChartingDemo {
@@ -131,9 +135,8 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
           gestalt.data.historyConfiguration
         }
 
-        gestalt.configure(this)
         gestalt.gestaltConfig()
-
+        gestalt.configure(this)
 
         configure {
           configurableBoolean("Play Mode", chartSupport.translateOverTime::animated) {
@@ -643,6 +646,39 @@ class TimeLineChartGestaltDemoDescriptor : ChartingDemoDescriptor<TimeLineChartG
 
         configureForMinMaxArea()
       }, "Min/Max Area"
+    )
+
+    val _100years: PredefinedConfiguration<TimeLineChartGestalt.() -> Unit> = PredefinedConfiguration(
+      {
+        val samplingPeriod = SamplingPeriod.Every24Hours
+        val historyChunkGenerator = this.setUpHistoryChunkGenerator(samplingPeriod)
+        val writableHistoryStorage = this.data.historyStorage as InMemoryHistoryStorage
+
+        //adjust the position of the cross wire
+        style.crossWirePositionX = 0.85
+
+        //add some samples for the last hour and set the max history size accordingly
+        writableHistoryStorage.maxSizeConfiguration = MaxHistorySizeConfiguration.forDuration(70.minutes, samplingPeriod.toHistoryBucketRange())
+
+        historyChunkGenerator.forTimeRange(TimeRange.fromEndAndDuration(nowMillis(), millisPerCentury))?.let {
+          writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+        }
+
+        configureBuilder { builder ->
+          builder.zoomAndTranslationModifier {
+            minZoom(0.02, 0.000001)
+            maxZoom(12.0, 500.0)
+          }
+        }
+
+        style.contentAreaDuration = millisPerDecade
+
+        //we want three lines and three value axes to be visible
+        style.requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
+        style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
+
+        configureForMinMaxArea()
+      }, "100 years"
     )
   }
 }

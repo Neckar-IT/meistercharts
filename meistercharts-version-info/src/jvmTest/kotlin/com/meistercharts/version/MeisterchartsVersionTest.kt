@@ -17,12 +17,11 @@ package com.meistercharts.version
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.version.MeisterChartsVersion
 import org.junit.jupiter.api.Test
 
 /**
  */
-class meisterchartsVersionTest {
+class MeisterchartsVersionTest {
   @Test
   fun testIt() {
     assertThat(MeisterChartsVersion.version).startsWith("1.")
