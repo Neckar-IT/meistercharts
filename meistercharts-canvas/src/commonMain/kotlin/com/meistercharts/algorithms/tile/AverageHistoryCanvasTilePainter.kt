@@ -119,7 +119,7 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
 
         //min / max if available
         if (DebugFeature.ShowMinMax.enabled(paintingContext)) {
-          if (chunk.recordingType == RecordingType.Calculated) {
+          if (chunk.hasDecimalMinMaxValues()) {
             @Domain val maxValue = chunk.getMax(dataSeriesIndex, timestampIndex)
             @DomainRelative val domainRelativeMax = valueRange.toDomainRelative(maxValue)
             val maxY = tileCalculator.domainRelative2tileY(domainRelativeMax)

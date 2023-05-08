@@ -37,7 +37,7 @@ import kotlin.contracts.contract
  *
  * Distinction to the other classes:
  * * [HistoryValues] does *only* contain the values - no timestamps
- * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps. Also has a [RecordingType]
+ * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps.
  * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
  */
 data class HistoryBucket(

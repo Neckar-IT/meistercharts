@@ -78,7 +78,7 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
     //Paint all points for all buckets for one data series
     buckets.fastForEach { bucket ->
       val chunk = bucket.chunk
-      val paintMinMaxArea = chunk.recordingType == RecordingType.Calculated
+      val paintMinMaxArea = chunk.hasDecimalMinMaxValues()
 
       for (timestampIndexAsInt in 0 until chunk.timeStampsCount) {
         val timestampIndex = TimestampIndex(timestampIndexAsInt)
@@ -152,7 +152,7 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
 
         //min / max if available
         if (DebugFeature.ShowMinMax.enabled(paintingContext)) {
-          if (chunk.recordingType == RecordingType.Calculated) {
+          if (chunk.hasDecimalMinMaxValues()) {
             val maxY = tileCalculator.domainRelative2tileY(maxDomainRelative)
             gc.stroke(Color.blue)
             gc.strokeLine(x - 3, maxY, x + 3, maxY)

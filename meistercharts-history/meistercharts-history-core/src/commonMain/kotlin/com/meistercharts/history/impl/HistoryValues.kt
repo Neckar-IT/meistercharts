@@ -281,6 +281,10 @@ class HistoryValues(
     return calculateStartIndex(enumDataSeriesCount, timeStampIndex)
   }
 
+  fun hasDecimalMinMaxValues(): Boolean {
+    return decimalHistoryValues.hasMinMax
+  }
+
   /**
    * Returns the min value - falls back to the value if no max value exists
    */

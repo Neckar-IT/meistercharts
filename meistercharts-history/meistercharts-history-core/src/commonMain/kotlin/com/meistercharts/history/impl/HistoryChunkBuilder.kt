@@ -64,7 +64,7 @@ class HistoryChunkBuilder(
   /**
    * Contains the time stamps
    */
-  private var timestamps: @ms DoubleArrayList = DoubleArrayList(expectedTimestampsCount)
+  internal var timestamps: @ms DoubleArrayList = DoubleArrayList(expectedTimestampsCount)
 
   /**
    * Contains the history values
@@ -80,7 +80,8 @@ class HistoryChunkBuilder(
   /**
    * The index where to add the next data point
    */
-  private var nextTimestampIndex = TimestampIndex(0)
+  internal var nextTimestampIndex = TimestampIndex(0)
+    private set
 
   @Deprecated("Use addValues")
   fun addEnumValues(
@@ -90,8 +91,9 @@ class HistoryChunkBuilder(
   ) {
     require(enumValues.size == historyConfiguration.enumDataSeriesCount) { "Invalid enumValues size. Was <${enumValues.size}> but expected <${historyConfiguration.enumDataSeriesCount}>" }
 
-    setEnumValues(nextTimestampIndex, timestamp, enumValues, enumOrdinalsMostTime)
+    val currentTimestampIndex = nextTimestampIndex
     nextTimestampIndex++
+    setEnumValues(currentTimestampIndex, timestamp, enumValues, enumOrdinalsMostTime)
   }
 
   fun addEnumValues(timestamp: @ms Double, vararg enumValues: @HistoryEnumSetInt Int) {
@@ -126,8 +128,9 @@ class HistoryChunkBuilder(
   ) {
     require(referenceEntryValues.size == historyConfiguration.referenceEntryDataSeriesCount) { "Invalid referenceEntryValues size. Was <${referenceEntryValues.size}> but expected <${historyConfiguration.referenceEntryDataSeriesCount}>" }
 
-    setReferenceEntryValues(nextTimestampIndex, timestamp, referenceEntryValues, referenceEntryStatuses, referenceEntryIdsCount, referenceEntriesDataMap)
+    val currentTimestampIndex = nextTimestampIndex
     nextTimestampIndex++
+    setReferenceEntryValues(currentTimestampIndex, timestamp, referenceEntryValues, referenceEntryStatuses, referenceEntryIdsCount, referenceEntriesDataMap)
   }
 
   /**
@@ -139,8 +142,9 @@ class HistoryChunkBuilder(
   fun addDecimalValues(timestamp: @ms Double, vararg values: @Domain Double) {
     require(values.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${values.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
-    setDecimalValues(nextTimestampIndex, timestamp, values)
+    val currentTimestampIndex = nextTimestampIndex
     nextTimestampIndex++
+    setDecimalValues(currentTimestampIndex, timestamp, values)
   }
 
   @Slow
@@ -154,15 +158,57 @@ class HistoryChunkBuilder(
   ) {
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
+    val currentTimestampindex = nextTimestampIndex
+    nextTimestampIndex++
+
     setValues(
-      timestampIndex = nextTimestampIndex, timestamp = timestamp,
+      timestampIndex = currentTimestampindex,
+      timestamp = timestamp,
       decimalValues = decimalValues,
       enumValues = enumValues,
       referenceEntryIds = referenceEntryIds,
       referenceEntryStatuses = referenceEntryStatuses,
       entryDataSet = entryDataSet,
     )
+  }
+
+  /**
+   * Adds the values for one timestamp index
+   */
+  @Slow
+  fun addValues(
+    timestamp: @ms Double,
+    decimalValues: @Domain DoubleArray,
+
+    minValues: @Domain DoubleArray? = null,
+    maxValues: @Domain DoubleArray? = null,
+
+    enumValues: @HistoryEnumSetInt IntArray,
+    enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null,
+
+    referenceEntryIds: @ReferenceEntryIdInt IntArray,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray,
+    referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
+    entryDataSet: Set<ReferenceEntryData>,
+  ) {
+    require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
+
+    val currentTimestampindex = nextTimestampIndex
     nextTimestampIndex++
+
+    setValues(
+      timestampIndex = currentTimestampindex,
+      timestamp = timestamp,
+      decimalValues = decimalValues,
+      minValues = minValues,
+      maxValues = maxValues,
+      enumValues = enumValues,
+      enumOrdinalsMostTime = enumOrdinalsMostTime,
+      referenceEntryIds = referenceEntryIds,
+      referenceEntryStatuses = referenceEntryStatuses,
+      referenceEntryIdsCount = referenceEntryIdsCount,
+      entryDataSet = entryDataSet
+    )
   }
 
   /**
@@ -315,10 +361,15 @@ class HistoryChunkBuilder(
   }
 
   /**
-   * Sets the timestamp
+   * Sets the timestamp.
+   * Does *not* update the [timestampIndex]
    */
-  private fun setTimestamp(timestampIndex: TimestampIndex, timestamp: @ms Double) {
+  fun setTimestamp(timestampIndex: TimestampIndex, timestamp: @ms Double) {
     timestamp.requireIsFinite { "timestamp for <$timestampIndex>" }
+
+    require(nextTimestampIndex > timestampIndex) {
+      "Invalid timestamp index $timestampIndex. Expected to be smaller than $nextTimestampIndex. Resize first!"
+    }
 
     timestamps.setTimestamp(timestampIndex, timestamp)
   }
@@ -410,6 +461,7 @@ fun historyChunk(
  * Creates a new history chunk for this configuration
  */
 fun HistoryConfiguration.chunk(
+  recordingType: RecordingType = RecordingType.Measured,
   /**
    * The lambda to configure the chunk
    */
@@ -419,7 +471,7 @@ fun HistoryConfiguration.chunk(
     callsInPlace(config, InvocationKind.EXACTLY_ONCE)
   }
 
-  return historyChunk(this, config = config)
+  return historyChunk(this, recordingType, config = config)
 }
 
 /**
