@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FixedContentAreaSize
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.paintable.Button
@@ -116,10 +117,10 @@ class ElevatorGestalt(
         chartSupport.onRefresh(elevatorAnimationManager)
 
         model.requestedFloorsProperty.consume {
-          markAsDirty()
+          markAsDirty(DirtyReason.DataUpdated)
         }
         model.elevatorTargetProperty.consume {
-          markAsDirty()
+          markAsDirty(DirtyReason.DataUpdated)
         }
       }
 

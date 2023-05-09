@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.fillRect
 import com.meistercharts.model.Coordinates
@@ -77,7 +78,7 @@ class InteractiveMouseClicksDemoLayer : AbstractLayer() {
       clickedPoints.add(event.coordinates)
 
       //notify that a repaint is necessary
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Ignored
     }
   }

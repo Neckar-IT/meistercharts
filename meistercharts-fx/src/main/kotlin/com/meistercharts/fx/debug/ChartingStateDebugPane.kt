@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.painter.ChartingStateDebugPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.fx.CanvasFX
 import com.meistercharts.fx.MeisterChartBuilderFX
 import com.meistercharts.fx.time.BaseTimeDomainChartCanvas
@@ -54,11 +55,11 @@ class ChartingStateDebugPane(val state: ObservableChartState) : BorderPane() {
       val layerSupport = meisterChart.layerSupport
 
       Disposable.all(
-        state.zoomProperty.consume { _ -> layerSupport.markAsDirty() },
-        state.axisOrientationXProperty.consume { _ -> layerSupport.markAsDirty() },
-        state.axisOrientationYProperty.consume { _ -> layerSupport.markAsDirty() },
-        state.contentAreaSizeProperty.consume { _ -> layerSupport.markAsDirty() },
-        state.windowTranslationProperty.consume { _ -> layerSupport.markAsDirty() },
+        state.zoomProperty.consume { _ -> layerSupport.markAsDirty(DirtyReason.ChartStateChanged) },
+        state.axisOrientationXProperty.consume { _ -> layerSupport.markAsDirty(DirtyReason.ChartStateChanged) },
+        state.axisOrientationYProperty.consume { _ -> layerSupport.markAsDirty(DirtyReason.ChartStateChanged) },
+        state.contentAreaSizeProperty.consume { _ -> layerSupport.markAsDirty(DirtyReason.ChartStateChanged) },
+        state.windowTranslationProperty.consume { _ -> layerSupport.markAsDirty(DirtyReason.ChartStateChanged) },
       ).let {
         meisterChart.onDispose(it)
       }

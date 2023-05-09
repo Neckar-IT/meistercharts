@@ -26,6 +26,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.text.addText
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.canvas.DirtyReasonBitSet
 import com.meistercharts.canvas.mock.MockCanvasRenderingContext
 import com.meistercharts.canvas.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
@@ -57,7 +58,7 @@ class ClippingLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             layers.addLayer(it)
           }
 
-          val mockContext = LayerPaintingContext(MockCanvasRenderingContext(), this, 0.0, 0.0, PaintingLoopIndex(17))
+          val mockContext = LayerPaintingContext(MockCanvasRenderingContext(), this, 0.0, 0.0, PaintingLoopIndex(17), DirtyReasonBitSet.Unknown)
 
           layers.addText({ _, _ -> listOf("insets: ${clippingLayer.style.insets(mockContext).toStringWithInts()}") }, { textColor = Color.gray })
 

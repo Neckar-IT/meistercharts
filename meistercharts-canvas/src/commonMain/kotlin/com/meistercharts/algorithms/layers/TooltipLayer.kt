@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintTextBox
@@ -58,7 +59,7 @@ class TooltipLayer(
     layerSupport.mouseEvents.mousePositionProperty.consumeImmediately {
       //Repaint if the mouse has been moved and a tooltip is shown
       if (lastVisibleTooltipInfo != null) {
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
     }
   }

@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.interpolate
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.animation.Easing
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.animation.AnimationRepeatType
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.demo.ChartingDemo
@@ -91,7 +92,7 @@ class TweenDemoDescriptor : ChartingDemoDescriptor<Nothing> {
               gc.fill(Color.orangered)
               gc.fillOvalCenter(x, y, 10.0, 10.0)
 
-              chartSupport.markAsDirty()
+              chartSupport.markAsDirty(DirtyReason.Animation)
             }
           }
           layers.addLayer(layer)

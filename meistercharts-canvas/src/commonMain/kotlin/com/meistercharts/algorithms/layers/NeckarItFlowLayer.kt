@@ -17,6 +17,8 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.animation.ChartAnimation
 import com.meistercharts.design.neckarit.NeckarItFlowPaintable
 import com.meistercharts.model.Coordinates
 import it.neckar.open.unit.other.pct
@@ -44,8 +46,7 @@ class NeckarItFlowLayer(
     gc.globalAlpha = style.opacity
 
     paintable.paint(paintingContext, Coordinates.none)
-    paintingContext.chartSupport.markAsDirty()
-
+    paintingContext.chartSupport.markAsDirty(DirtyReason.Animation)
 
     paintingContext.ifDebug(DebugFeature.ShowBounds) {
       gc.stroke(Color.red)

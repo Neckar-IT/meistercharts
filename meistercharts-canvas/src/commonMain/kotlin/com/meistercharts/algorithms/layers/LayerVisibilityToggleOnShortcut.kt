@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
@@ -45,7 +46,7 @@ class LayerVisibilityToggleOnShortcut<T : Layer>(
       }
 
       delegate.toggleVisibility()
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return Consumed
     }
   }

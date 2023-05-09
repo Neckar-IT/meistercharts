@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.RefreshListener
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.demo.ChartingDemo
@@ -77,6 +78,6 @@ class MyRefreshDebugLayer : AbstractLayer(), RefreshListener {
   override fun refresh(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
     lastRefreshTime = frameTimestamp
     lastRefreshDelta = refreshDelta
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(DirtyReason.DataUpdated)
   }
 }

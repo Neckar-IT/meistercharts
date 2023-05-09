@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.events.EventConsumption
@@ -50,14 +51,14 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
       when (event.keyStroke) {
         data.toggleDebugKeyStroke -> {
           chartSupport.debug.toggle()
-          chartSupport.layerSupport.markAsDirty()
+          chartSupport.layerSupport.markAsDirty(DirtyReason.UserInteraction)
 
           return EventConsumption.Consumed
         }
 
         data.toggleRecordPaintStatisticsKeyStroke -> {
           chartSupport.layerSupport::recordPaintStatistics.toggle()
-          chartSupport.layerSupport.markAsDirty()
+          chartSupport.layerSupport.markAsDirty(DirtyReason.UserInteraction)
 
           return EventConsumption.Consumed
         }

@@ -17,6 +17,7 @@ package com.meistercharts.demo.descriptors
 
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumber
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.demo.ChartingDemo
@@ -38,7 +39,7 @@ class VersionNumberDemoDescriptor : ChartingDemoDescriptor<Nothing> {
         val versionNumberVisible = ObservableBoolean(true)
 
         configure {
-          versionNumberVisible.registerDirtyListener(this)
+          versionNumberVisible.registerDirtyListener(this, DirtyReason.UiStateChanged)
 
           layers.addClearBackground()
           layers.addVersionNumber()

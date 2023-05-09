@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
@@ -77,28 +78,28 @@ class TouchEventsLayer : AbstractLayer() {
     override fun onStart(event: TouchStartEvent, chartSupport: ChartSupport): EventConsumption {
       color = touchStartColor
       coordinates = event.changedTouches.firstOrNull()?.coordinates ?: Coordinates.none
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Consumed
     }
 
     override fun onEnd(event: TouchEndEvent, chartSupport: ChartSupport): EventConsumption {
       color = touchEndColor
       coordinates = event.changedTouches.firstOrNull()?.coordinates ?: Coordinates.none
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Consumed
     }
 
     override fun onMove(event: TouchMoveEvent, chartSupport: ChartSupport): EventConsumption {
       color = touchMoveColor
       coordinates = event.changedTouches.firstOrNull()?.coordinates ?: Coordinates.none
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Consumed
     }
 
     override fun onCancel(event: TouchCancelEvent, chartSupport: ChartSupport): EventConsumption {
       color = touchCancelColor
       coordinates = event.changedTouches.firstOrNull()?.coordinates ?: Coordinates.none
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Consumed
     }
   }

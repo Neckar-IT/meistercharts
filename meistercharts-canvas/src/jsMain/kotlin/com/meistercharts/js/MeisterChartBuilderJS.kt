@@ -15,6 +15,7 @@
  */
 package com.meistercharts.js
 
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.charts.ChartId
 
@@ -30,7 +31,7 @@ class MeisterChartBuilderJS(
     //The HTML5 canvas is cleared on resize - therefore a repaint is necessary to avoid flickering to white
     configure {
       chartSupport.canvas.sizeProperty.consume {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ChartStateChanged)
       }
     }
   }

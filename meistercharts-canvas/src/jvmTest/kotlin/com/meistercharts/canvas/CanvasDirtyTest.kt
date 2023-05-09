@@ -31,6 +31,6 @@ class CanvasDirtyTest {
     assertThat(layerSupport.disabled).isFalse()
     assertThat(layerSupport.disabled).isFalse()
 
-    layerSupport.markAsDirty()
+    layerSupport.markAsDirty(DirtyReason.Unknown)
   }
 }

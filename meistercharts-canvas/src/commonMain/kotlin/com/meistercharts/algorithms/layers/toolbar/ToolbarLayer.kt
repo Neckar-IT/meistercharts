@@ -26,6 +26,7 @@ import com.meistercharts.algorithms.layout.PaintablesLayouter
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -88,7 +89,7 @@ class ToolbarLayer(
     //force repaint if the state has changed
     configuration.buttons.fastForEach { button ->
       button.stateProperty.consume {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
 

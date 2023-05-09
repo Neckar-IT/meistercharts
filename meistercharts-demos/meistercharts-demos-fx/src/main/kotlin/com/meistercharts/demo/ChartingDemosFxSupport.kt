@@ -33,12 +33,14 @@ import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.mainScreenDevicePixelRatio
 import com.meistercharts.algorithms.tile.GlobalTilesCache
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.DirtySupport
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nSupport
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.registerDirtyListener
+import com.meistercharts.demo.layer.DumpDirtyReasonsLayer
 import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import com.meistercharts.design.DebugDesign
 import com.meistercharts.design.NeckarITDesign
@@ -428,7 +430,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     pane.add(Components.label("Sampling Period"))
     pane.add(Components.label("?").also { label ->
-      layerSupport.chartSupport.onPaint { _, _, _ ->
+      layerSupport.chartSupport.onPaint { _, _, _, _ ->
         val samplingPeriod = layerSupport.chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
         label.text = samplingPeriod?.name ?: "?"
       }
@@ -470,24 +472,24 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     textLocale.consume {
       chartSupport.i18nSupport.textLocale = it
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
     formatLocale.consume {
       chartSupport.i18nSupport.formatLocale = it
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
     timeZone.consume {
       chartSupport.i18nSupport.timeZone = it
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
     pane.add(Components.label("Corporate Design"))
     val corporateDesignConfig = ObservableObject(corporateDesign).also {
       it.consumeImmediately { corporateDesign ->
         initCorporateDesign(corporateDesign)
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
     //Avoid premature garbage collection
@@ -501,7 +503,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     val devicePixelRatioProperty = ObservableDouble(environment.devicePixelRatio).also {
       it.consume { value ->
         mainScreenDevicePixelRatio = value
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
     val slider = Components.slider(devicePixelRatioProperty.toJavaFx(), 0.25, 2.0, 0.1).also {
@@ -513,13 +515,13 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     pane.add(Components.button("Set to 1.0") {
       devicePixelRatioProperty.value = 1.0
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }, "skip 1, split 2, span")
 
     val initialMainScreenDevicePixelRatio = mainScreenDevicePixelRatio
     pane.add(Components.button("Set to Device Pixel Ratio") {
       devicePixelRatioProperty.value = initialMainScreenDevicePixelRatio
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }, "span")
 
     pane.add(Components.label("Text Locale"))
@@ -544,7 +546,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
         consume {
           layerSupport.apply {
             this.debug.set(debugFeature, it)
-            this.markAsDirty()
+            this.markAsDirty(DirtyReason.ConfigurationChanged)
           }
         }
       }
@@ -576,7 +578,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     }, "span")
 
     pane.add(Components.button("Repaint") {
-      layerSupport.markAsDirty()
+      layerSupport.markAsDirty(DirtyReason.UserInteraction)
     }, "span")
 
     pane.add(Components.button("Dump Layers") { _ ->
@@ -605,7 +607,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
       meisterChart.layerSupport.recordPaintStatistics = it
     }
 
-    repaintPerformanceLayerVisible.registerDirtyListener(layerSupport)
+    repaintPerformanceLayerVisible.registerDirtyListener(layerSupport, DirtyReason.ConfigurationChanged)
     meisterChart.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf(repaintPerformanceLayerVisible))
     meisterChart.layerSupport.layers.addLayer(FramesPerSecondLayer().visibleIf(repaintPerformanceLayerVisible))
     pane.add(Components.checkBox("Performance Layer", repaintPerformanceLayerVisible.toJavaFx()), "span")
@@ -613,13 +615,13 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
     val forceRepaint = ObservableBoolean()
     meisterChart.layerSupport.layers.addLayer(MarkAsDirtyLayer().visibleIf(forceRepaint))
     forceRepaint.consume {
-      meisterChart.layerSupport.markAsDirty()
+      meisterChart.layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
     pane.add(Components.checkBox("Always Repaint", forceRepaint.toJavaFx()), "span")
 
     val whatsAtDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
     meisterChart.layerSupport.layers.addLayer(WhatsAtDebugLayer().visibleIf(whatsAtDebugLayerVisible))
@@ -627,7 +629,7 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     val windowDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
     meisterChart.layerSupport.layers.addLayer(WindowDebugLayer().visibleIf(windowDebugLayerVisible))
@@ -635,11 +637,19 @@ class ChartingDemosFxSupport(val demoDescriptors: List<ChartingDemoDescriptor<*>
 
     val paintingVariablesDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
     meisterChart.layerSupport.layers.addLayer(DumpPaintingVariablesLayer().visibleIf(paintingVariablesDebugLayerVisible))
     pane.add(Components.checkBox("PaintingVariables Debug", paintingVariablesDebugLayerVisible.toJavaFx()), "span")
+
+    val dirtyReasonsDebugLayerVisible = ObservableBoolean().also {
+      it.consume {
+        layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
+      }
+    }
+    meisterChart.layerSupport.layers.addLayer(DumpDirtyReasonsLayer().visibleIf(dirtyReasonsDebugLayerVisible))
+    pane.add(Components.checkBox("DirtyReasons Debug", dirtyReasonsDebugLayerVisible.toJavaFx()), "span")
 
     meisterChart.layerSupport.layers.addLayer(EventsDebugLayer().visibleIf {
       layerSupport.debug[DebugFeature.LogEvents]

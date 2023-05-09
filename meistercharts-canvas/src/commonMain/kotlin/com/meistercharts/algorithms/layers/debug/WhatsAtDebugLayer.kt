@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
@@ -66,7 +67,7 @@ class WhatsAtDebugLayer : AbstractLayer() {
 
       updateResultStrings()
 
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.DataUpdated)
       return EventConsumption.Consumed
     }
   }

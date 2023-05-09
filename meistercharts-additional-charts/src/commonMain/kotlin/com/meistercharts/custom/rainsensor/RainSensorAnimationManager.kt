@@ -17,6 +17,7 @@ package com.meistercharts.custom.rainsensor
 
 import com.meistercharts.animation.Easing
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.RefreshListener
 import com.meistercharts.canvas.animation.ChartAnimation
 import com.meistercharts.canvas.animation.PropertyTween
@@ -62,7 +63,7 @@ class RainSensorAnimationManager(val model: RainSensorModel) : RefreshListener {
         chartSupport.onRefresh(it)
       }
 
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
     }
   }
 

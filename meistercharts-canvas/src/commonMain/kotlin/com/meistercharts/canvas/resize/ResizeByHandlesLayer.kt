@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
@@ -141,7 +142,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
 
     //Update the mouse cursor depending on the ui state
     uiStateProperty.consumeImmediately {
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UiStateChanged)
 
       chartSupport.cursor = when (it) {
         is DefaultState -> null

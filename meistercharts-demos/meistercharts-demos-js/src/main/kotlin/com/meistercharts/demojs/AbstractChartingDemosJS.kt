@@ -18,7 +18,6 @@ package com.meistercharts.demojs
 import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
-import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.EventsDebugLayer
@@ -28,6 +27,7 @@ import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.debug.WindowDebugLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nSupport
@@ -38,6 +38,7 @@ import com.meistercharts.demo.ChartingDemo
 import com.meistercharts.demo.ChartingDemoDescriptor
 import com.meistercharts.demo.DemoDescriptors
 import com.meistercharts.demo.PredefinedConfiguration
+import com.meistercharts.demo.layer.DumpPaintingVariablesLayer
 import com.meistercharts.design.CorporateDesign
 import com.meistercharts.design.DebugDesign
 import com.meistercharts.design.NeckarITDesign
@@ -47,13 +48,13 @@ import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.js.MeisterChartBuilderJS
 import com.meistercharts.js.MeisterChartJS
 import com.meistercharts.js.MeisterChartsPlatform
+import com.meistercharts.version.MeisterChartsVersion
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.i18n.Locale
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.time.TimeZone
-import com.meistercharts.version.MeisterChartsVersion
-import it.neckar.logging.LoggerFactory
-import it.neckar.logging.debug
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTableElement
@@ -177,24 +178,24 @@ abstract class AbstractChartingDemosJS {
 
     textLocale.consume {
       currentMeisterChart.chartSupport.i18nSupport.textLocale = it
-      currentMeisterChart.layerSupport.markAsDirty()
+      currentMeisterChart.layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
     formatLocale.consume {
       currentMeisterChart.chartSupport.i18nSupport.formatLocale = it
-      currentMeisterChart.layerSupport.markAsDirty()
+      currentMeisterChart.layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
     timeZone.consume {
       currentMeisterChart.chartSupport.i18nSupport.timeZone = it
-      currentMeisterChart.layerSupport.markAsDirty()
+      currentMeisterChart.layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
     }
 
 
     val corporateDesignConfig: ObservableObject<CorporateDesign> = ObservableObject(corporateDesign).also {
       it.consumeImmediately { newDesign ->
         initCorporateDesign(newDesign)
-        currentMeisterChart.layerSupport.markAsDirty()
+        currentMeisterChart.layerSupport.markAsDirty(DirtyReason.ConfigurationChanged)
       }
     }
 
@@ -225,7 +226,7 @@ abstract class AbstractChartingDemosJS {
     table.twoColumnsRow(
       document.label("Sampling Period"),
       document.label("?").also { label ->
-        layerSupport.chartSupport.onPaint { _, _, _ ->
+        layerSupport.chartSupport.onPaint { _, _, _, _ ->
           val samplingPeriod = layerSupport.chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
           label.textContent = samplingPeriod?.name
         }
@@ -286,7 +287,7 @@ abstract class AbstractChartingDemosJS {
         consume {
           currentMeisterChart.layerSupport.apply {
             this.debug.set(debugFeature, it)
-            this.markAsDirty()
+            this.markAsDirty(DirtyReason.UiStateChanged)
           }
         }
       }
@@ -316,14 +317,14 @@ abstract class AbstractChartingDemosJS {
     table.singleColumnRow(document.headline1("Debug tools"))
 
     // TODO button to open debug pane (see com.meistercharts.fx.debug.ChartingStateDebugPane)
-    table.singleColumnRow((document.button("Repaint") { currentMeisterChart.layerSupport.markAsDirty() }))
+    table.singleColumnRow((document.button("Repaint") { currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UserInteraction) }))
 
     val paintPerformanceLayerVisible = ObservableBoolean()
     paintPerformanceLayerVisible.consumeImmediately {
       layerSupport.recordPaintStatistics = it
     }
 
-    paintPerformanceLayerVisible.registerDirtyListener(layerSupport)
+    paintPerformanceLayerVisible.registerDirtyListener(layerSupport, DirtyReason.UiStateChanged)
     layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf(paintPerformanceLayerVisible))
     layerSupport.layers.addLayer(FramesPerSecondLayer().visibleIf(paintPerformanceLayerVisible))
 
@@ -332,20 +333,13 @@ abstract class AbstractChartingDemosJS {
     val forceRepaint = ObservableBoolean()
     layerSupport.layers.addLayer(MarkAsDirtyLayer().visibleIf(forceRepaint))
     forceRepaint.consume {
-      currentMeisterChart.layerSupport.markAsDirty()
+      currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UiStateChanged)
     }
     table.singleColumnRow(document.checkBox(forceRepaint, "Always Repaint"))
 
-    val debugModeEnabled = ObservableBoolean().apply {
-      consume {
-        currentMeisterChart.layerSupport.debug.setAll(it)
-        currentMeisterChart.layerSupport.markAsDirty()
-      }
-    }
-
     val contentAreaDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        currentMeisterChart.layerSupport.markAsDirty()
+        currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
     layerSupport.layers.addLayer(ContentAreaDebugLayer().visibleIf(contentAreaDebugLayerVisible))
@@ -353,7 +347,7 @@ abstract class AbstractChartingDemosJS {
 
     val contentViewportDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        currentMeisterChart.layerSupport.markAsDirty()
+        currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
     layerSupport.layers.addLayer(ContentViewportDebugLayer().visibleIf(contentViewportDebugLayerVisible))
@@ -361,7 +355,7 @@ abstract class AbstractChartingDemosJS {
 
     val windowDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        currentMeisterChart.layerSupport.markAsDirty()
+        currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
     layerSupport.layers.addLayer(WindowDebugLayer().visibleIf(windowDebugLayerVisible))
@@ -369,7 +363,7 @@ abstract class AbstractChartingDemosJS {
 
     val paintingVariablesDebugLayerVisible = ObservableBoolean().also {
       it.consume {
-        currentMeisterChart.layerSupport.markAsDirty()
+        currentMeisterChart.layerSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
     layerSupport.layers.addLayer(DumpPaintingVariablesLayer().visibleIf(paintingVariablesDebugLayerVisible))

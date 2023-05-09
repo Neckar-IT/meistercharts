@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.LineSpacing
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.model.Direction
@@ -66,19 +67,19 @@ class InteractiveKeyDemoLayer : AbstractLayer() {
       lastKeyCode = event.keyStroke.keyCode
       lastText = event.text
 
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Ignored
     }
 
     override fun onUp(event: KeyUpEvent, chartSupport: ChartSupport): EventConsumption {
       logger.debug("Key released: $event")
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Ignored
     }
 
     override fun onType(event: KeyTypeEvent, chartSupport: ChartSupport): EventConsumption {
       logger.debug("Key typed: $event")
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UserInteraction)
       return EventConsumption.Ignored
     }
   }

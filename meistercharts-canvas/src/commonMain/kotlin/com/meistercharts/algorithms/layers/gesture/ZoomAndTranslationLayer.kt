@@ -24,6 +24,7 @@ import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
 import com.meistercharts.canvas.events.CanvasTouchEventHandlerBroker
@@ -339,7 +340,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
 
     override fun onDrag(source: CanvasDragSupport, location: @Window Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
       rubberBandCurrentLocation = location
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       return Consumed
     }
 
@@ -366,7 +367,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
       rubberBandStartLocation = null
       rubberBandCurrentLocation = null
 
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       return Consumed
     }
   })

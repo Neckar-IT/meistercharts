@@ -57,6 +57,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.StyleDsl
@@ -148,7 +149,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     selectionSink = { newCategoryIndex, chartSupport: ChartSupport ->
       if (categoryLinesLayer.style.activeCategoryIndex != newCategoryIndex) {
         categoryLinesLayer.style.activeCategoryIndex = newCategoryIndex
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
     })
 

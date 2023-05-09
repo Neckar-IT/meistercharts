@@ -92,6 +92,7 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
@@ -1147,7 +1148,7 @@ class TimeLineChartGestalt
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {
-              markAsDirty()
+              markAsDirty(DirtyReason.DataUpdated)
             }
           }
 
@@ -1633,7 +1634,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
       return when (param1.value) {
-        0 -> listOf("${if (index == 0) "Min" else "Max"}${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
+        0 -> listOf("${if (index == 0) "Min" else "Max"} ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
         1 -> listOf("Target ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
         else -> emptyList()
       }

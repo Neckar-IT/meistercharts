@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.BindContentAreaSize2ContentViewport
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.LineSpacing
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -142,39 +143,39 @@ class ButtonDemoDescriptor : ChartingDemoDescriptor<Nothing> {
       buttonCoordinates[primaryButton] = Coordinates.none
       primaryButton.action {
         lastClicked = "primary"
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
-      primaryButton.stateProperty.consume { layerSupport.markAsDirty() }
+      primaryButton.stateProperty.consume { layerSupport.markAsDirty(DirtyReason.UserInteraction) }
 
       buttonCoordinates[secondaryButton] = Coordinates.none
       secondaryButton.action {
         lastClicked = "secondary"
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
-      secondaryButton.stateProperty.consume { layerSupport.markAsDirty() }
+      secondaryButton.stateProperty.consume { layerSupport.markAsDirty(DirtyReason.UserInteraction) }
 
       buttonCoordinates[buttonImage1] = Coordinates.none
       buttonImage1.action {
         lastClicked = "buttonImage1"
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
       buttonImage1.state = buttonImage1.state.copy(enabled = false)
-      buttonImage1.stateProperty.consume { layerSupport.markAsDirty() }
+      buttonImage1.stateProperty.consume { layerSupport.markAsDirty(DirtyReason.UserInteraction) }
 
       buttonCoordinates[buttonImageToggle] = Coordinates.none
       buttonImageToggle.action {
         lastClicked = "buttonImageToggle"
         buttonImageToggle.selected = !buttonImageToggle.selected
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
-      buttonImageToggle.stateProperty.consume { layerSupport.markAsDirty() }
+      buttonImageToggle.stateProperty.consume { layerSupport.markAsDirty(DirtyReason.UserInteraction) }
 
       buttonCoordinates[buttonZoomIn] = Coordinates.none
       buttonZoomIn.action {
         lastClicked = "buttonZoomIn"
-        layerSupport.markAsDirty()
+        layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
-      buttonZoomIn.stateProperty.consume { layerSupport.markAsDirty() }
+      buttonZoomIn.stateProperty.consume { layerSupport.markAsDirty(DirtyReason.UserInteraction) }
     }
 
     override val mouseEventHandler: CanvasMouseEventHandler = object : CanvasMouseEventHandler {

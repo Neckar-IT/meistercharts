@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.autoHideAfter
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.canvas.timerSupport
@@ -55,7 +56,7 @@ class HideAfterTimeoutLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
             logger.debug("Visibility changed to $it")
           }
 
-          visibleProperty.registerDirtyListener(this)
+          visibleProperty.registerDirtyListener(this, DirtyReason.ConfigurationChanged)
 
 
           layers.addLayer(object : AbstractLayer() {

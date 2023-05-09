@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.text.addTextUnresolved
 import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.strokeCross
@@ -174,7 +175,7 @@ private class VisualizeMouseMoveCoordsLayer : AbstractLayer() {
     }
 
     eventCoordsList.deleteFromStartUntilMaxSize(100)
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(DirtyReason.UserInteraction)
   }
 
   private val upArrow = Arrows.to(Direction.TopCenter, 7.0)

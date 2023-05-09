@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.text.LinesProvider
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
 import com.meistercharts.canvas.StyleDsl
@@ -77,7 +78,7 @@ class ScrollWithoutModifierMessageLayer(
     override fun onWheel(event: MouseWheelEvent, chartSupport: ChartSupport): EventConsumption {
       if (event.modifierCombination == ModifierCombination.None) {
         data.messageVisible.value = true
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UserInteraction)
         return EventConsumption.Consumed
       }
 
@@ -154,7 +155,7 @@ fun Layers.addScrollWithoutModifierHint(
   styleConfiguration: ScrollWithoutModifierMessageLayer.Style.() -> Unit = {}
 ) {
   val visible = ObservableBoolean() //TODO bind dirty state
-  visible.registerDirtyListener(chartSupport)
+  visible.registerDirtyListener(chartSupport, DirtyReason.Visibility)
   addLayer(
     ScrollWithoutModifierMessageLayer(ScrollWithoutModifierMessageLayer.Data(visible) { textService, i18nConfiguration ->
       lines.map {

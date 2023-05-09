@@ -46,6 +46,7 @@ import com.meistercharts.algorithms.withContentAreaSize
 import com.meistercharts.algorithms.withZoom
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FixedContentAreaSize
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.fillRoundedRectCoordinates
@@ -158,17 +159,17 @@ class RainSensorGestalt(
         add(toolbarButtonFactory.button(getButtonPaintableProvider(RainSensorResources.iconSun) { data.isSunny }, style.toolbarButtonSize) {
           data.model.weather = Weather.Sunny
           data.model.nextAction = WindowAction.Open
-          it.chartSupport.markAsDirty()
+          it.chartSupport.markAsDirty(DirtyReason.UserInteraction)
         })
         add(toolbarButtonFactory.button(getButtonPaintableProvider(RainSensorResources.iconRain) { data.isRaining }, style.toolbarButtonSize) {
           data.model.weather = Weather.Rain
           data.model.nextAction = WindowAction.Close
-          it.chartSupport.markAsDirty()
+          it.chartSupport.markAsDirty(DirtyReason.UserInteraction)
         })
         add(toolbarButtonFactory.button(getButtonPaintableProvider(RainSensorResources.iconSnow) { data.isSnowing }, style.toolbarButtonSize) {
           data.model.weather = Weather.Snow
           data.model.nextAction = WindowAction.Close
-          it.chartSupport.markAsDirty()
+          it.chartSupport.markAsDirty(DirtyReason.UserInteraction)
         })
       }
 
@@ -258,7 +259,7 @@ class RainSensorGestalt(
         //Collect the data
         chartSupport.timerSupport.repeat(500.milliseconds) {
           data.storeCurrentWindowAnglePercentage()
-          chartSupport.markAsDirty()
+          chartSupport.markAsDirty(DirtyReason.DataUpdated)
         }
 
         layers.addLayer(TransformingChartStateLayer(innerLayers) { chartState ->

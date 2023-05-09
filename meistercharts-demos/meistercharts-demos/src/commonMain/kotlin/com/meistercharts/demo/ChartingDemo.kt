@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptor
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontFamily
@@ -46,6 +47,7 @@ import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import com.meistercharts.style.BoxStyle
 import it.neckar.financial.currency.Money
+import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.enumEntries
 import kotlin.contracts.InvocationKind
@@ -127,12 +129,12 @@ class ChartingDemo(demoConfig: ChartingDemo.() -> Unit) {
    *
    * This is a helper method that allows to mark the chart as dirty - even if no [LayerSupport] is available in the current scope of the demo.
    */
-  fun markAsDirty() {
-    layerSupport?.markAsDirty()
+  fun markAsDirty(reason: DirtyReason = DirtyReason.Unknown) {
+    layerSupport?.markAsDirty(reason)
   }
 
   companion object {
-    val logger = LoggerFactory.getLogger("com.meistercharts.demo.ChartingDemo")
+    val logger: Logger = LoggerFactory.getLogger("com.meistercharts.demo.ChartingDemo")
   }
 }
 

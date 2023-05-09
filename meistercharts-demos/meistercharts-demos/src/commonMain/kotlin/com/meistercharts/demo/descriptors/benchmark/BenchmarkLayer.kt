@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
@@ -56,7 +57,7 @@ class BenchmarkLayer(
     }
 
     // trigger next paint
-    layerSupport.markAsDirty()
+    layerSupport.markAsDirty(DirtyReason.Animation)
 
     // Skip the first paint because it does not provide a frameTimestampDelta that reflects the time the painting took
     if (isFirstPaint) {

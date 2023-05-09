@@ -15,7 +15,6 @@
  */
 package com.meistercharts.canvas
 
-import it.neckar.open.async.TimerSupport
 import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ChartState
 import com.meistercharts.algorithms.GlobalCacheSupport
@@ -36,23 +35,24 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.components.NativeComponentsSupport
 import com.meistercharts.canvas.resize.ResizeHandlesSupport
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.service.ServiceRegistry
-import com.meistercharts.whatsat.WhatsAtSupport
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.kotlin.lang.isNanOrInfinite
-import it.neckar.open.dispose.Disposable
-import it.neckar.open.dispose.DisposeSupport
-import it.neckar.open.dispose.OnDispose
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
+import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Direction
+import com.meistercharts.service.ServiceRegistry
+import com.meistercharts.whatsat.WhatsAtSupport
+import it.neckar.open.async.TimerSupport
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.dispose.OnDispose
 import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.I18nSupport
 import it.neckar.open.i18n.addFallbackTextResolver
+import it.neckar.open.kotlin.lang.isNanOrInfinite
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
@@ -281,16 +281,16 @@ class ChartSupport constructor(
 
     rootChartState.onChange {
       //Mark as dirty whenever the chart state changes
-      markAsDirty()
+      markAsDirty(DirtyReason.ChartStateChanged)
     }
 
     //Repaint is necessary if one of the snap options has been changed
     @Suppress("LeakingThis")
-    pixelSnapSupport.snapConfigurationProperty.registerDirtyListener(this)
+    pixelSnapSupport.snapConfigurationProperty.registerDirtyListener(this, DirtyReason.ConfigurationChanged)
 
     //On tooltip changes, repaint
     @Suppress("LeakingThis")
-    tooltipSupport.tooltip.registerDirtyListener(this)
+    tooltipSupport.tooltip.registerDirtyListener(this, DirtyReason.Tooltip)
 
     //Repaint if the paint disabled property is changed
     disabledProperty.consume(false) { newValue ->
@@ -299,12 +299,12 @@ class ChartSupport constructor(
         paintPaintDisabledText(canvas.gc)
       } else {
         //repaint is necessary after a change
-        markAsDirty()
+        markAsDirty(DirtyReason.Initial)
       }
     }
 
     //Mark as dirty initially to ensure at least one repaint
-    markAsDirty()
+    markAsDirty(DirtyReason.Initial)
   }
 
 
@@ -319,8 +319,8 @@ class ChartSupport constructor(
    *
    * This method can be called often
    */
-  fun markAsDirty() {
-    dirtySupport.markAsDirty()
+  fun markAsDirty(reason: DirtyReason) {
+    dirtySupport.markAsDirty(reason)
   }
 
   /**
@@ -405,7 +405,7 @@ class ChartSupport constructor(
       }
 
       //If somebody has marked the canvas as dirty it is repainted
-      dirtySupport.ifDirty {
+      dirtySupport.ifDirty { dirtyReasons: DirtyReasonBitSet ->
         if (canvas.width <= 0.0 || canvas.height <= 0.0) {
           // do not paint if there is nothing to see
           return@ifDirty
@@ -431,7 +431,7 @@ class ChartSupport constructor(
           }
 
           for (i in 0 until paintListeners.size) {
-            paintListeners[i].paint(frameTimestamp, repaintDelta, paintingIndex)
+            paintListeners[i].paint(frameTimestamp, repaintDelta, paintingIndex, dirtyReasons)
           }
         }
       }
@@ -523,7 +523,7 @@ fun interface PaintListener {
    * @param delta the delta to the last paint (0 on the first paint)
    * @param paintingLoopIndex the index of the paint call
    */
-  fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex)
+  fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet)
 }
 
 
@@ -540,9 +540,12 @@ fun paintPaintDisabledText(gc: CanvasRenderingContext) {
   gc.fillText("Painting is disabled", 0.0, 0.0, Direction.TopLeft)
 }
 
-fun ReadOnlyObservableObject<out Any?>.registerDirtyListener(chartSupport: ChartSupport) {
+/**
+ * Registers a dirty listener that marks the chart support as dirty, every time the property changes
+ */
+fun ReadOnlyObservableObject<out Any?>.registerDirtyListener(chartSupport: ChartSupport, reason: DirtyReason) {
   consume {
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(reason)
   }
 }
 
@@ -564,7 +567,7 @@ val ChartSupport.devicePixelRatioSupport: DevicePixelRatioSupport
     return serviceRegistry.get(DevicePixelRatioSupport::class) {
       DevicePixelRatioSupport().apply {
         //if the device pixel ratio has changed repaint is necessary
-        devicePixelRatioProperty.registerDirtyListener(this@devicePixelRatioSupport)
+        devicePixelRatioProperty.registerDirtyListener(this@devicePixelRatioSupport, DirtyReason.ConfigurationChanged)
       }
     }
   }

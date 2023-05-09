@@ -17,6 +17,7 @@ package com.meistercharts.fx
 
 import it.neckar.open.annotations.UiThread
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MeisterChart
 import com.meistercharts.canvas.MeisterChartsPlatformState
 import com.meistercharts.canvas.devicePixelRatioSupport
@@ -59,7 +60,7 @@ class MeisterChartFX(
 
     ImageLoadedEventBroker.onLoaded {
       // repaint when an image becomes available
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.ResourcesLoaded)
     }.also {
       //Dispose onLoaded
       chartSupport.onDispose(it)

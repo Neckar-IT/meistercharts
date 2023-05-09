@@ -17,6 +17,7 @@ package com.meistercharts.demo
 
 import com.meistercharts.algorithms.layers.CategoryLayouter
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.charts.ThresholdsGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
@@ -78,7 +79,7 @@ fun LayerSupport.configurableIndices(
           indices.remove(index)
         }
         onChange(indices.toList())
-        markAsDirty()
+        markAsDirty(DirtyReason.UiStateChanged)
       }
     }
   }

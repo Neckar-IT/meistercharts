@@ -18,6 +18,7 @@ package com.meistercharts.demo.elevator.gestalt
 import com.meistercharts.animation.Easing
 import it.neckar.open.unit.number.Abs
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.RefreshListener
 import com.meistercharts.canvas.animation.ChartAnimation
 import com.meistercharts.canvas.animation.PropertyTween
@@ -160,6 +161,6 @@ class ElevatorAnimationManager(
       }
     }
 
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(DirtyReason.Animation)
   }
 }

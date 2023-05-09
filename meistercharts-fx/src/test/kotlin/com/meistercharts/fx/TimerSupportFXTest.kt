@@ -24,6 +24,8 @@ import it.neckar.open.javafx.JavaFxTimerDebug
 import it.neckar.open.javafx.test.JavaFxTest
 import it.neckar.open.test.utils.VirtualTime
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -32,6 +34,7 @@ class TimerSupportFXTest {
 
   @VirtualTime(5000.0)
   @Test
+  @Timeout(value = 10, unit = TimeUnit.SECONDS)
   fun testIt(nowProvider: VirtualNowProvider) {
     val beforeCount = JavaFxTimerDebug.findRegisteredAnimationTimers().size
     assertThat(beforeCount).isEqualTo(0)

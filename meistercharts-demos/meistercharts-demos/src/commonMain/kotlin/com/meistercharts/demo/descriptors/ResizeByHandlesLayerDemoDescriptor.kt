@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.text.addText
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.resize.ResizeByHandlesLayer
 import com.meistercharts.canvas.resize.ResizeHandler
@@ -108,7 +109,7 @@ class ResizeByHandlesLayerDemoDescriptor : ChartingDemoDescriptor<Nothing> {
 
                   contentLocation = contentLocation.plus(deltaLocationX, deltaLocationY)
                   contentSize = contentSize.plus(resizeX, resizeY)
-                  paintingContext.chartSupport.markAsDirty()
+                  paintingContext.chartSupport.markAsDirty(DirtyReason.DataUpdated)
                 }
 
                 override fun resizingFinished() {

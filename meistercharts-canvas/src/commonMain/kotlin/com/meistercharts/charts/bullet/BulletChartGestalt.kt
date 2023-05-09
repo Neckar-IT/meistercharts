@@ -45,6 +45,7 @@ import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacem
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
@@ -255,7 +256,7 @@ class BulletChartGestalt constructor(
     selectionSink = { newSelection, chartSupport ->
       if (configuration.activeCategoryIndexOrNull != newSelection) {
         configuration.activeCategoryIndexOrNull = newSelection
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
     }
   )

@@ -51,6 +51,7 @@ import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartRefreshGestalt
@@ -269,7 +270,7 @@ class DiscreteTimelineChartGestalt(
     selectionSink = { relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport ->
       if (activeDataSeriesIndexOrNull != referenceEntryDataSeriesIndex) {
         activeDataSeriesIndexOrNull = referenceEntryDataSeriesIndex
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
 
       val newValue = if (relativeTime == null) {
@@ -283,7 +284,7 @@ class DiscreteTimelineChartGestalt(
 
         if (activeDataSeriesIndexOrNull != null) {
           //repaint is only necessary when a data series is active
-          chartSupport.markAsDirty()
+          chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
         }
       }
     })
@@ -361,9 +362,11 @@ class DiscreteTimelineChartGestalt(
     configure {
       chartSupport.windowResizeBehavior = KeepOriginOnWindowResize //keep the top left corner
 
-      historyStorage.observe { historyBucketDescriptor, updateInfo ->
-        //TODO optimize! Only repaint if necessary
-        this.markAsDirty()
+      if (false) {
+        historyStorage.observe { historyBucketDescriptor, updateInfo ->
+          //TODO optimize! Only repaint if necessary
+          this.markAsDirty(DirtyReason.DataUpdated)
+        }
       }
 
       configuration.contentAreaTimeRangeProperty.consumeImmediately {

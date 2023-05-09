@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.canvas.DirtyReason
 
 /**
  * A special layer that marks the canvas support as dirty on every paint,
@@ -29,6 +30,6 @@ class MarkAsDirtyLayer : AbstractLayer() {
     get() = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    paintingContext.layerSupport.markAsDirty()
+    paintingContext.layerSupport.markAsDirty(DirtyReason.Animation)
   }
 }

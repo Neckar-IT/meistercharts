@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonState
 import com.meistercharts.canvas.registerDirtyListener
@@ -152,9 +153,9 @@ class ToolbarDemoDescriptor : ChartingDemoDescriptor<Nothing> {
           }
 
           //Connect the dirty state
-          isAnimated.registerDirtyListener(this)
-          isAnimationEnabled.registerDirtyListener(this)
-          autoScale.registerDirtyListener(this)
+          isAnimated.registerDirtyListener(this, DirtyReason.UiStateChanged)
+          isAnimationEnabled.registerDirtyListener(this, DirtyReason.UiStateChanged)
+          autoScale.registerDirtyListener(this, DirtyReason.ConfigurationChanged)
 
           configurableDouble("Gap", toolbarTop.configuration.gap) {
             max = 100.0

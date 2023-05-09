@@ -169,7 +169,7 @@ enum class SnapshotClearResult {
  * Creates a copy of this [LayerPaintingContext] and replaces its graphics context
  */
 fun LayerPaintingContext.withGraphicsContext(gc: CanvasRenderingContext): LayerPaintingContext {
-  return LayerPaintingContext(gc, layerSupport, frameTimestamp, frameTimestampDelta, loopIndex)
+  return LayerPaintingContext(gc, layerSupport, frameTimestamp, frameTimestampDelta, loopIndex, dirtyReasons)
 }
 
 /**
