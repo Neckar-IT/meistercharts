@@ -1,0 +1,44 @@
+org.apache.poi:poi(-*)
+    ^^^^^^.^^^
+
+org.junit.jupiter:junit(-*)
+^^^.^^^^^.^^^^^^^
+
+org.neo4j:neo4j(-*)
+^^^.^^^^^.^^^^^
+
+io.kvision:*
+^^.^^^^^^^
+
+com.fasterxml.jackson.*:*
+              ^^^^^^^
+
+com.atlassian.commonmark:*
+^^^.^^^^^^^^^.^^^^^^^^^^
+
+com.github.cretz.kastree:*
+                 ^^^^^^^
+
+com.miglayout:*
+^^^.^^^^^^^^^
+
+com.willowtreeapps.assertk:*
+^^^.^^^^^^^^^^^^^^.^^^^^^^
+
+org.apache.xmlgraphics:batik(-*)
+^^^.^^^^^^.^^^^^^^^^^^
+
+io.gitlab.arturbosch.detekt:detekt(-*)
+^^.^^^^^^.^^^^^^^^^^.^^^^^^
+
+no.tornado:tornadofx
+^^.^^^^^^^.^^^^^^^^^
+
+org.jetbrains.dokka:gfm-plugin
+^^^.^^^^^^^^^.^^^^^
+
+org.slf4j:slf4j(-*)
+^^^.^^^^^
+
+org.jetbrains.kotlin-wrappers:*
+^^^.^^^^^^^^^.^^^^^^^^^^^^^^^
