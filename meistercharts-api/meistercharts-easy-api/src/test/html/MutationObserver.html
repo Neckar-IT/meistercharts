@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test with MutationObserver</title>
+
+  <link href="https://neckar.it/css/nit-fonts.css" type="text/css" rel="stylesheet">
+  <link href="https://neckar.it/css/nit-styleguide-2020.css" type="text/css" rel="stylesheet">
+
+  <link id="dark_theme" href="css/dark_theme.css" type="text/css" rel="stylesheet"/>
+  <link id="light_theme" href="css/light_theme.css" type="text/css" rel="stylesheet"/>
+
+  <style>
+    .myClass {
+      color: white;
+    }
+
+    div[myAttribute] {
+      border: 2px solid red;
+    }
+  </style>
+</head>
+<body onload="initObserver()" style="margin: 0 10px;">
+
+<h1 style="margin: 0">Test with MutationObserver</h1>
+
+<p>
+<div id="divWithTheme" style="width: 80%; height: 50px; background-color: #2a87a2; box-sizing: border-box;">
+  DIV with theme
+</div>
+</p>
+
+<p>
+  <button type="button" onclick="changeStyleAttributeOfDiv()">changeStyleAttributeOfDiv</button>
+  <button type="button" onclick="addCssClassToDiv()">addCssClassToDiv</button>
+  <button type="button" onclick="removeCssClassFromDiv()">removeCssClassFromDiv</button>
+  <button type="button" onclick="addCustomAttributeToDiv()">addCustomAttributeToDiv</button>
+  <button type="button" onclick="removeCustomAttributeToDiv()">removeCustomAttributeToDiv</button>
+  <button type="button" onclick="toggleTheme()">toggleTheme</button>
+</p>
+
+<p>
+  <button type="button" onclick="clearLog()">clear log</button>
+</p>
+
+<p>
+  <textarea id="log" style="width:80%; height:400px; border: 2px solid gray; box-sizing: border-box;"></textarea>
+</p>
+
+<script>
+  const div = document.getElementById("divWithTheme");
+  const log = document.getElementById("log");
+
+  function logMsg(msg) {
+    log.value = new Date().toISOString() + ": " + msg + "\n" + log.value;
+  }
+
+  function clearLog() {
+    log.value = "";
+  }
+
+  function initObserver() {
+    logMsg("initObserver");
+
+    const observer = new MutationObserver((mutations, observer) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList') {
+          logMsg('A child node has been added or removed.');
+          if (mutation.addedNodes && mutation.addedNodes.length) {
+            //possible improvement: check whether a link-element has been added
+            mutation.addedNodes.forEach(node => { if (node.nodeName === "LINK") logMsg('A link-element has been added') });
+          }
+          if (mutation.removedNodes && mutation.removedNodes.length) {
+            //possible improvement: check whether a link-element has been removed
+            mutation.removedNodes.forEach(node => { if (node.nodeName === "LINK") logMsg('A link-element has been removed') });
+          }
+        } else if (mutation.type === 'attributes') {
+          logMsg(`The <${mutation.attributeName}> attribute was modified. Old value: <${mutation.oldValue}>`);
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true, //necessary
+      attributeOldValue: true, // only for debugging purposes
+      childList: true, //necessary because we observe the document root element
+      subtree: true, //necessary because we observe the document root element
+      //attributeFilter //do NOT(!) use an attribute filter because unknown attributes may be used as part of CSS selectors
+    });
+  }
+
+  function changeStyleAttributeOfDiv() {
+    const red = Math.random() * 255;
+    const green = Math.random() * 255;
+    const blue = Math.random() * 255;
+    div.style.backgroundColor = `rgb(${red},${green},${blue})`;
+  }
+
+  function addCssClassToDiv() {
+    div.classList.add('myClass');
+  }
+
+  function removeCssClassFromDiv() {
+    div.classList.remove('myClass');
+  }
+
+  function addCustomAttributeToDiv() {
+    div.setAttribute("myAttribute", "someValue");
+  }
+
+  function removeCustomAttributeToDiv() {
+    div.removeAttribute("myAttribute");
+  }
+
+  const darkTheme = document.getElementById('dark_theme');
+  const lightTheme = document.getElementById('light_theme');
+  let lightIsActive = true;
+
+  function toggleTheme() {
+    lightIsActive = !lightIsActive;
+    if (lightIsActive) {
+      darkTheme.remove();
+      document.querySelector('head').appendChild(lightTheme);
+    } else {
+      lightTheme.remove();
+      document.querySelector('head').appendChild(darkTheme);
+    }
+  }
+</script>
+
+</body>
+</html>

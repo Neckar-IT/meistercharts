@@ -1,0 +1,66 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Canvas scaling</h1>
+
+<p>
+  <textarea id="environment" style="width:80%;height:100px;padding:5px;" value=""></textarea>
+</p>
+
+<p>
+  <canvas id="canvas1" width="200" height="200" style="width:200px;height:200px;border:1px solid red;"></canvas>
+  <canvas id="canvas2" width="200" height="200" style="width:200px;height:200px;border: 1px solid red;"></canvas>
+</p>
+
+
+<script type="text/javascript">
+  const eleEnv = document.getElementById("environment");
+  const eleCanvas1 = document.getElementById("canvas1");
+  const eleCanvas2 = document.getElementById("canvas2");
+  const ctx1 = eleCanvas1.getContext("2d");
+  const ctx2 = eleCanvas2.getContext("2d");
+
+  function paint(ctx, dpr) {
+    ctx.save()
+    ctx.scale(dpr, dpr)
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, 200, 200);
+
+    ctx.fillStyle = "gray";
+    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillRect(140, 140, 50, 50);
+
+    ctx.restore()
+  }
+
+  function update() {
+    const dpr = window.devicePixelRatio;
+
+    const canvasBounds1 = eleCanvas1.getBoundingClientRect();
+    eleCanvas1.width = Math.round(canvasBounds1.right * dpr) - Math.round(canvasBounds1.left * dpr);
+    eleCanvas1.height = Math.round(canvasBounds1.bottom * dpr) - Math.round(canvasBounds1.top * dpr);
+    paint(ctx1, dpr);
+
+    const canvasBounds2 = eleCanvas2.getBoundingClientRect();
+    eleCanvas2.width = Math.round(canvasBounds2.width * dpr);
+    eleCanvas2.height = Math.round(canvasBounds2.height * dpr);
+    paint(ctx2, dpr);
+
+
+    eleEnv.value = new Date() + ": devicePixelRatio = " + dpr + ", canvas1 = " + eleCanvas1.width + " x " + eleCanvas1.height + ", canvas2 = " + eleCanvas2.width + " x " + eleCanvas2.height
+    + ", width1 = " + canvasBounds1.width + ", right - left = " + (canvasBounds1.right - canvasBounds1.left);
+  }
+
+  update()
+  window.setInterval(function () {
+    update()
+  }, 1000.0)
+</script>
+
+</body>
+</html>

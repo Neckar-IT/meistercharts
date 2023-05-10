@@ -1,1 +1,17 @@
-../../../meistercharts-api/meistercharts-easy-api/package_template.json
+{
+  "name": "$MODULE",
+  "version": "$VERSION",
+  "description": "meistercharts.com",
+  "main": "meistercharts-easy-api.js",
+  "types": "meistercharts-easy-api.d.ts",
+  "author": {
+    "name": "Neckar IT GmbH",
+    "email": "meistercharts@neckar.IT"
+  },
+  "homepage": "https://meistercharts.com",
+  "repository": "https://github.com/Neckar-IT/meistercharts",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "dependencies": {
+  }
+}

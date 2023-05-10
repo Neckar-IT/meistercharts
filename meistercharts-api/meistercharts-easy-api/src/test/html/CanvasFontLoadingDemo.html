@@ -1,0 +1,153 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neckar IT GmbH, Mössingen, Java Developement">
+  <meta name="author" content="Neckar IT GmbH">
+
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+  <title>Loading fonts</title>
+</head>
+<style>
+  .font1 {
+    font-family: "Open Sans",serif;
+  }
+
+  .font2 {
+    font-family: "Oswald",serif;
+  }
+</style>
+<body>
+<h1>Demonstrating loading and painting of web fonts</h1>
+
+<!-- using the font via css will actually trigger them being loaded -->
+<!-- <p class="font1 font2"> -->
+<p>
+  This is a demo for drawing text with different fonts on a canvas
+</p>
+<p>
+  <canvas id="canvas" width="800" height="800" style="width:800px;height:800px;border:1px solid black;"></canvas>
+</p>
+
+<popup-info>Hello World!</popup-info>
+<!-- uncomment the following lines to trigger the loading of fonts via CSS -->
+<!--
+<popup-info class="font1">Hello World!</popup-info>
+<popup-info class="font2">Hello World!</popup-info>
+-->
+
+<script type="text/javascript">
+  const ctx = document.getElementById("canvas").getContext("2d");
+
+  function paint() {
+    console.log("paint");
+    ctx.fillStyle = "orange";
+    ctx.fillRect(0, 0, 800, 800);
+
+    ctx.fillStyle = "black";
+
+    ctx.font = "Arial";
+    ctx.fillText("Arial", 5.0, 25.0);
+
+    ctx.font = "18px Arial";
+    ctx.fillText("18px Arial", 5.0, 50.0);
+
+    ctx.font = "bold 18px Arial";
+    ctx.fillText("bold 18px Arial", 5.0, 75.0)
+
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText("bold 18px sans-serif", 5.0, 100.0)
+
+    ctx.font = "bold oblique 18px 'Times New Roman', 'Courier New'";
+    ctx.fillText("bold oblique 18px 'Times New Roman', 'Courier New'", 5.0, 125.0)
+
+    ctx.font = "bold italic 18px 'Courier New', 'Times New Roman'";
+    ctx.fillText("bold italic 18px 'Courier New', 'Times New Roman'", 5.0, 150.0)
+
+    ctx.font = "bold italic small-caps 18px 'Courier New', 'Times New Roman'";
+    ctx.fillText("bold italic small-caps 18px 'Courier New', 'Times New Roman'", 5.0, 175.0)
+
+    ctx.font = "18px 'Oswald'";
+    ctx.fillText("18px 'Oswald'", 5.0, 200.0)
+
+    ctx.font = "18px 'Open Sans'";
+    ctx.fillText("18px 'Open Sans'", 5.0, 225.0)
+  }
+
+  function fontFacesToString(fontfaces) {
+    let toString = '';
+    for (let i = 0; i < fontfaces.length; i++) {
+      if (toString.length) {
+        toString += ', ';
+      }
+      toString += '<' + fontfaces[i].family + ' ' + fontfaces[i].weight + ' ' + fontfaces[i].variant + '>';
+    }
+    return toString;
+  }
+
+  //onload is fired after fonts.onloading but before fonts.onloadingdone are being loaded
+  window.onload = function() {
+    console.log("window.onload");
+  };
+
+  //this event is not interesting
+  document.fonts.onloading = function(evt) {
+    console.log("fonts.onloading: status = " + document.fonts.status + ", font-faces: " + fontFacesToString(evt.fontfaces));
+  }
+
+  //when this is fired the font is actually available for painting
+  document.fonts.onloadingdone = function(evt) {
+    console.log("fonts.onloadingdone: status = " + document.fonts.status + ", font-faces: " + fontFacesToString(evt.fontfaces));
+    //paint after the font has been loaded
+    //paint(); //<- this would paint the right fonts
+  }
+
+  //this event should not be fired
+  document.fonts.onloadingerror = function(evt) {
+    console.log("fonts.onloadingerror: status = " + document.fonts.status + ", font-faces: " + fontFacesToString(evt.fontfaces));
+  }
+
+  //I'm not sure what this event is good for. It is fired before all fonts have been loaded.
+  document.fonts.ready.then(function() {
+    console.log("fonts.ready");
+  });
+
+  //setting the font on the canvas-rendering context also triggers loading a font
+  //paint(); //<- this would still paint the wrong fonts
+
+  document.fonts.load("18px 'Oswald'")
+  .then(() => document.fonts.load("18px 'Open Sans'"))
+  .then(() => {
+    console.log("all fonts are loaded");
+    paint(); //<- this will paint the right fonts
+  });
+
+  class PopUpInfo extends HTMLElement {
+    constructor() {
+      // Always call super first in constructor
+      super();
+
+      // Create a shadow root
+      this.attachShadow({mode: 'open'}); // sets and returns 'this.shadowRoot'
+
+      // Create (nested) span elements
+      const span = document.createElement('span');
+      span.classList.add("font1");
+      span.textContent = "My Popup";
+
+      // attach the created elements to the shadow DOM
+      this.shadowRoot.append(span);
+    }
+  }
+
+  customElements.whenDefined('popup-info').then(() => console.log('custom element defined'));
+
+  console.log('define custom element');
+  customElements.define('popup-info', PopUpInfo);
+</script>
+
+</body>
+</html>
