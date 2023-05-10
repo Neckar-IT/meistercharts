@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profiling and testing of format methods</title>
+</head>
+<body>
+
+<script type="text/javascript">
+  /*
+  DecimalFormat.prototype.format_3p81yu$ = function (value) {
+    var tmp$;
+    return typeof (tmp$ = value.toLocaleString(this.locale, this.formatOptions_0)) === 'string' ? tmp$ : throwCCE();
+  };
+  DecimalFormat.prototype.toExponential_3p81yu$ = function (value) {
+    var tmp$;
+    return typeof (tmp$ = value.toExponential(this.minimumFractionDigits)) === 'string' ? tmp$ : throwCCE();
+  };
+   */
+
+  console.log("Hello world!");
+  let languages = navigator.languages;
+  console.log("Langs: " + languages)
+
+  const numbers = [];
+  for (let i = 0; i < 10000; i++) {
+    numbers.push(Math.random())
+  }
+
+  const formatOptions = {
+    maximumFractionDigits: 3,
+    minimumFractionDigits: 3,
+    minimumIntegerDigits: 1,
+    isGroupingUsed: true
+  };
+
+  function throwCCE() {
+    throw Error("error");
+  }
+
+  function myToLocaleString() {
+    let formatted = [];
+    for (let i = 0; i < numbers.length; i++) {
+      formatted.push(numbers[i].toLocaleString("en", formatOptions))
+    }
+    return formatted;
+  }
+
+  function meisterchartsToLocaleString() {
+    let formatted = [];
+    for (let i = 0; i < numbers.length; i++) {
+      var tmp$;
+      formatted.push(typeof (tmp$ = numbers[i].toLocaleString("en", formatOptions)) === 'string' ? tmp$ : throwCCE());
+    }
+    return formatted;
+  }
+
+  console.time("myToLocaleString");
+  let res1 = myToLocaleString();
+  console.timeEnd("myToLocaleString");
+
+  console.time("meisterchartsToLocaleString");
+  let res2 = meisterchartsToLocaleString();
+  console.timeEnd("meisterchartsToLocaleString");
+
+  console.log("res1 = " + res1)
+  console.log("res2 = " + res2)
+
+</script>
+
+</body>
+</html>

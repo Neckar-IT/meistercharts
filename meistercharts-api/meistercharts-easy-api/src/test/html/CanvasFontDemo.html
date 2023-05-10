@@ -1,0 +1,59 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Canvas with different fonts</h1>
+
+<p>
+  This is a demo for drawing text with different fonts on a canvas
+</p>
+<p>
+  <canvas id="canvas" width="800" height="800" style="width:800px;height:800px;border:1px solid black;"></canvas>
+</p>
+
+
+<script type="text/javascript">
+  const ctx = document.getElementById("canvas").getContext("2d");
+
+  function paint() {
+    ctx.fillStyle = "beige";
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+    ctx.fillStyle = "black";
+
+    ctx.font = "Arial";
+    ctx.fillText("Arial", 5.0, 25.0);
+
+    ctx.font = "18px Arial";
+    ctx.fillText("18px Arial", 5.0, 50.0);
+
+    ctx.font = "bold 18px Arial";
+    ctx.fillText("bold 18px Arial", 5.0, 75.0)
+
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText("bold 18px sans-serif", 5.0, 100.0)
+
+    ctx.font = "bold oblique 18px 'Times New Roman', 'Courier New'";
+    ctx.fillText("bold oblique 18px 'Times New Roman', 'Courier New'", 5.0, 125.0)
+
+    ctx.font = "bold italic 18px 'Courier New', 'Times New Roman'";
+    ctx.fillText("bold italic 18px 'Courier New', 'Times New Roman'", 5.0, 150.0)
+
+    ctx.font = "bold italic small-caps 18px 'Courier New', 'Times New Roman'";
+    ctx.fillText("bold italic small-caps 18px 'Courier New', 'Times New Roman'", 5.0, 175.0)
+
+    let textMetrics = ctx.measureText("HelloWorld");
+    console.log(textMetrics);
+    for (var key in textMetrics) {
+      console.log("Key: " + key + "  --> " + textMetrics[key])
+    }
+  }
+
+  paint()
+</script>
+
+</body>
+</html>

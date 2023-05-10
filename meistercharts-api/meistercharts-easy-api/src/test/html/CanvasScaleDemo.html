@@ -1,0 +1,57 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Canvas scaling</h1>
+
+<p>
+  actual device pixel ratio is = <span id="dpr"></span>
+</p>
+
+<p>
+  Canvas with scale 1
+</p>
+<p>
+  <canvas id="canvas1" width="400" height="400" style="width:400px;height:400px;border:1px solid black;"></canvas>
+</p>
+
+<p>
+  Canvas with scale 2
+</p>
+<p>
+  <canvas id="canvas2" width="800" height="800" style="width:400px;height:400px;border:1px solid black;"></canvas>
+</p>
+
+
+<script type="text/javascript">
+  const eleDpr = document.getElementById("dpr");
+  const ctx1 = document.getElementById("canvas1").getContext("2d");
+  const ctx2 = document.getElementById("canvas2").getContext("2d");
+  ctx2.scale(2.0, 2.0);
+
+  function paint(ctx) {
+    ctx.fillStyle = "beige";
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillRect(340, 340, 50, 50);
+  }
+
+  function update() {
+    const dpr = window.devicePixelRatio;
+    eleDpr.innerHTML = "" + dpr;
+    paint(ctx1)
+    paint(ctx2)
+  }
+
+  window.setInterval(function () {
+    update()
+  }, 100.0)
+</script>
+
+</body>
+</html>

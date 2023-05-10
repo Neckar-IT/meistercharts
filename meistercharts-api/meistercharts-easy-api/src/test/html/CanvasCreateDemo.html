@@ -1,0 +1,77 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Canvas with different fonts</h1>
+
+<p>
+  This is a demo for drawing text with different fonts on a canvas
+</p>
+<p id="CanvasHolder" style="border-style: dashed">
+</p>
+
+
+<script type="text/javascript">
+  let canvasHolder = document.getElementById("CanvasHolder");
+  let canvasElement = document.createElement("CANVAS");
+
+  canvasElement.style.setProperty("width", "100%")
+  canvasElement.style.setProperty("height", "100%")
+  canvasElement.style.setProperty("background-color", "white")
+
+
+  const ctx = canvasElement.getContext("2d");
+
+  console.log("Context: " + ctx)
+  console.log("1 Context.font: " + ctx.font)
+
+  ctx.font = "20px serif"
+
+  console.log("2 Context.font: " + ctx.font)
+
+
+  console.log("Adding to parent")
+
+  canvasHolder.appendChild(canvasElement)
+
+  console.log("3 Context.font: " + ctx.font)
+
+
+  let computedStyle = window.getComputedStyle(canvasElement)
+  let cssFontSize = computedStyle.getPropertyValue("font-size")
+  let cssFontFamily = computedStyle.getPropertyValue("font-family")
+  let cssFontWeight = computedStyle.getPropertyValue("font-weight")
+  let cssFontStyle = computedStyle.getPropertyValue("font-style")
+  let cssFontVariant = computedStyle.getPropertyValue("font-variant")
+
+  console.log("4 Context.font: " + ctx.font)
+
+
+  canvasElement.style.setProperty("user-select", "none")
+  canvasElement.style.setProperty("-moz-user-select", "-moz-none")
+  canvasElement.style.setProperty("-khtml-user-select", "none")
+  canvasElement.style.setProperty("-webkit-user-select", "none")
+  canvasElement.style.setProperty("-ms -user-select", "none")
+
+
+  console.log("5 Context.font: " + ctx.font)
+
+  ctx.save()
+  console.log("Saved")
+  console.log("6 Context.font: " + ctx.font)
+
+  ctx.restore()
+  console.log("Restored")
+  console.log("7 Context.font: " + ctx.font)
+
+  ctx.restore()
+  console.log("Restored2")
+  console.log("8 Context.font: " + ctx.font)
+
+</script>
+
+</body>
+</html>
