@@ -356,6 +356,12 @@ inline fun Double.betweenInclusive(start: Double, end: Double): Boolean {
     (this >= end) && (this <= start) //if start < end, this check is relevant
 }
 
+inline fun Double.between(start: Double, end: Double): Boolean {
+  return (this > start) && (this < end)
+    ||
+    (this > end) && (this < start) //if start < end, this check is relevant
+}
+
 /** Clamps the integer value in the 0..255 range */
 fun Int.clampUByte(): Int {
   val n = this and -(if (this >= 0) 1 else 0)

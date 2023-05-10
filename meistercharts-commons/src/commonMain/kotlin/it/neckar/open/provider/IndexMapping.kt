@@ -14,8 +14,8 @@ fun interface IndexMapping {
 
 /**
  * Helper method that unifies the sized provider and index mapper.
- * This interface is used for simplified extension methods
+ * This interface is used for simplified extension methods.
+ *
+ * Maps an index of this provider ("mappedIndex") to exactly one index of the original provider ("originalIndex").
  */
-interface SizedProviderWithIndexMapping<T> : SizedProvider<T>, IndexMapping {
-
-}
+interface SizedProviderWithIndexMapping<T> : SizedProvider<T>, IndexMapping

@@ -78,8 +78,18 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
      * Wraps the given list into a [ListSizedProvider]
      */
     @JvmStatic
-    fun <T> forList(values: List<T>): ListSizedProvider<T> {
-      return ListSizedProvider(values)
+    fun <T> forList(elements: List<T>): SizedProvider<T> {
+      when {
+        elements.isEmpty() -> {
+          return empty()
+        }
+
+        elements.size == 1 -> {
+          return SingleElementSizedProvider(elements.first())
+        }
+
+        else -> return ListSizedProvider(elements)
+      }
     }
 
     /**
@@ -101,8 +111,23 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
      * Wraps the given elements into a [ListSizedProvider]
      */
     @JvmStatic
-    fun <T> forValues(vararg elements: T): ListSizedProvider<T> {
-      return forList(elements.toList())
+    fun <T> forValues(vararg elements: T): SizedProvider<T> {
+      when {
+        elements.isEmpty() -> {
+          return empty()
+        }
+
+        elements.size == 1 -> {
+          return single(elements.first())
+        }
+
+        else -> return forList(elements.toList())
+      }
+    }
+
+    @JvmStatic
+    fun <T> single(element: T): SingleElementSizedProvider<T> {
+      return SingleElementSizedProvider(element)
     }
 
     @JvmStatic
@@ -149,6 +174,29 @@ open class ListSizedProvider<out T>(
   }
 }
 
+/**
+ * Provides a single element
+ */
+class SingleElementSizedProvider<out T>(
+  private val element: T,
+) : SizedProvider<T> {
+  override fun size(): Int = 1
+
+  override fun valueAt(index: Int): T {
+    return element
+  }
+}
+
+/**
+ * Returns a new instance of a sized provider that shifts the indices by the given amount.
+ *
+ * Example:
+ * shiftedBy(1): mappedIndex 1 == originalIndex 0
+ *
+ */
+fun <T> SizedProvider<T>.shiftedBy(shift: Int): ShiftedSizedProvider<T> {
+  return ShiftedSizedProvider(this, shift)
+}
 
 /**
  * Skips values if the given predicate returns false. Returns null for skipped values
