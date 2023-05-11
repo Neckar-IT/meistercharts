@@ -102,25 +102,28 @@ public object Libs {
 
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
-    public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
+  public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
 
-    public const val assertk_js: String = "com.willowtreeapps.assertk:assertk-js:_"
+  public const val assertk_js: String = "com.willowtreeapps.assertk:assertk-js:_"
 
-    public const val assertk_jvm: String = "com.willowtreeapps.assertk:assertk-jvm:_"
+  public const val assertk_jvm: String = "com.willowtreeapps.assertk:assertk-jvm:_"
 
-    public const val commons_codec: String = "commons-codec:commons-codec:_"
 
-    public const val commons_io: String = "commons-io:commons-io:_"
+  public const val commons_cli: String = "commons-cli:commons-cli:_"
 
-    public const val de_fayard_buildsrclibs_gradle_plugin: String =
-            "de.fayard.buildSrcLibs:de.fayard.buildSrcLibs.gradle.plugin:_"
+  public const val commons_codec: String = "commons-codec:commons-codec:_"
 
-    public const val fontawesomefx: String = "de.jensd:fontawesomefx:_"
+  public const val commons_io: String = "commons-io:commons-io:_"
 
-    public const val de_undercouch_download_gradle_plugin: String =
-            "de.undercouch.download:de.undercouch.download.gradle.plugin:_"
+  public const val de_fayard_buildsrclibs_gradle_plugin: String =
+    "de.fayard.buildSrcLibs:de.fayard.buildSrcLibs.gradle.plugin:_"
 
-    public const val edu_sc_seis_launch4j_gradle_plugin: String =
+  public const val fontawesomefx: String = "de.jensd:fontawesomefx:_"
+
+  public const val de_undercouch_download_gradle_plugin: String =
+    "de.undercouch.download:de.undercouch.download.gradle.plugin:_"
+
+  public const val edu_sc_seis_launch4j_gradle_plugin: String =
             "edu.sc.seis.launch4j:edu.sc.seis.launch4j.gradle.plugin:_"
 
     public const val tilesfx: String = "eu.hansolo:tilesfx:_"
@@ -254,24 +257,26 @@ public object Libs {
 
     public const val awaitility: String = "org.awaitility:awaitility:_"
 
-    public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
+  public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
 
-    public const val staxmate: String = "org.codehaus.staxmate:staxmate:_"
+  public const val staxmate: String = "org.codehaus.staxmate:staxmate:_"
 
-    public const val woodstox_core_asl: String = "org.codehaus.woodstox:woodstox-core-asl:_"
+  public const val woodstox_core_asl: String = "org.codehaus.woodstox:woodstox-core-asl:_"
 
-    public const val controlsfx: String = "org.controlsfx:controlsfx:_"
+  public const val controlsfx: String = "org.controlsfx:controlsfx:_"
 
-    public const val fest_reflect: String = "org.easytesting:fest-reflect:_"
+  public const val fest_reflect: String = "org.easytesting:fest-reflect:_"
 
-    public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
+  public const val freemarker: String = "org.freemarker:freemarker:_"
 
-    public const val chrome_devtools_kotlin: String = "org.hildan.chrome:chrome-devtools-kotlin:_"
+  public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
 
-    public const val im4java: String = "org.im4java:im4java:_"
+  public const val chrome_devtools_kotlin: String = "org.hildan.chrome:chrome-devtools-kotlin:_"
 
-    public const val all_modules_page_plugin: String =
-            "org.jetbrains.dokka:all-modules-page-plugin:_"
+  public const val im4java: String = "org.im4java:im4java:_"
+
+  public const val all_modules_page_plugin: String =
+    "org.jetbrains.dokka:all-modules-page-plugin:_"
 
     public const val dokka_analysis: String = "org.jetbrains.dokka:dokka-analysis:_"
 
@@ -368,24 +373,33 @@ public object Libs {
 
     public const val jfxtras_all: String = "org.jfxtras:jfxtras-all:_"
 
-    public const val jsoup: String = "org.jsoup:jsoup:_"
+  public const val jsoup: String = "org.jsoup:jsoup:_"
 
-    public const val junit_jupiter_api: String = "org.junit.jupiter:junit-jupiter-api:_"
+  public const val junit_jupiter_api: String = "org.junit.jupiter:junit-jupiter-api:_"
 
-    public const val junit_jupiter_engine: String = "org.junit.jupiter:junit-jupiter-engine:_"
+  public const val junit_jupiter_engine: String = "org.junit.jupiter:junit-jupiter-engine:_"
 
-    public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params:_"
+  public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params:_"
 
-    public const val junit_vintage_engine: String = "org.junit.vintage:junit-vintage-engine:_"
+  public const val junit_vintage_engine: String = "org.junit.vintage:junit-vintage-engine:_"
 
-    public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
+  public const val org_openjfx_javafxplugin_gradle_plugin: String =
+    "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"
 
-    public const val org_springframework_boot_gradle_plugin: String =
-            "org.springframework.boot:org.springframework.boot.gradle.plugin:_"
+  public const val javafx_base: String = "org.openjfx:javafx-base:_"
 
-    public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
+  public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
 
-    public const val threeten_extra: String = "org.threeten:threeten-extra:_"
+  public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
+
+  public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
+
+  public const val org_springframework_boot_gradle_plugin: String =
+    "org.springframework.boot:org.springframework.boot.gradle.plugin:_"
+
+  public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
+
+  public const val threeten_extra: String = "org.threeten:threeten-extra:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
 }

@@ -73,6 +73,9 @@ inline fun DoubleArray.fastForEach(callback: (value: Double) -> Unit) {
   }
 }
 
+/**
+ * Returns true if [predicate] returns true for at least one element
+ */
 inline fun DoubleArray.fastAny(predicate: DoublePredicate): Boolean {
   var n = 0
   val currentSize = size
@@ -115,6 +118,11 @@ inline fun DoubleArray.fastForEachIndexed(callback: (index: Int, value: Double) 
   }
 }
 
+/**
+ * Iterates over the entries of a double array from the end to the beginning
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
 inline fun DoubleArray.fastForEachIndexedReverse(callback: (index: Int, value: Double, isFirst: Boolean) -> Unit) {
   val currentSize = size
 
@@ -123,6 +131,11 @@ inline fun DoubleArray.fastForEachIndexedReverse(callback: (index: Int, value: D
   }
 }
 
+/**
+ * Iterates over the entries of a double array from the end to the beginning
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
 fun DoubleArray.fastContains(value: Double): Boolean {
   this.fastForEach {
     if (it == value) {
@@ -166,6 +179,11 @@ inline fun <T, V> List<T>.fastMapNotNull(mapper: (value: T) -> V?): List<V> {
   return targetList
 }
 
+/**
+ * Iterates over the entries of a list
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
 inline fun <T, V> List<T>.fastMap(mapper: (value: T) -> V): List<V> {
   val targetList = mutableListOf<V>()
 
@@ -178,6 +196,11 @@ inline fun <T, V> List<T>.fastMap(mapper: (value: T) -> V): List<V> {
   return targetList
 }
 
+/**
+ * Iterates over the entries of a list
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
 inline fun <V> DoubleArray.fastMap(mapper: (value: Double) -> V): List<V> {
   val targetList = mutableListOf<V>()
 
@@ -190,6 +213,11 @@ inline fun <V> DoubleArray.fastMap(mapper: (value: Double) -> V): List<V> {
   return targetList
 }
 
+/**
+ * Iterates over the entries of a list
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
 inline fun DoubleArray.fastMapDouble(mapper: (value: Double) -> Double): DoubleArray {
   return DoubleArray(size) {
     mapper(this[it])
@@ -198,7 +226,7 @@ inline fun DoubleArray.fastMapDouble(mapper: (value: Double) -> Double): DoubleA
 
 
 /**
- *
+ * Iterates over the entries of a list
  */
 inline fun <S, T : S> List<T>.fastReduce(operation: (acc: S, T) -> S): S {
   require(this.isNotEmpty()) { "not supported for empty lists" }
