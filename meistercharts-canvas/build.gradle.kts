@@ -101,10 +101,11 @@ kotlin{
     named("jsTest") {
       dependencies {
         implementation(Libs.kotlin_test)
+        implementation(Libs.assertk_js)
       }
     }
   }
 }
 
 configureKotlin()
-configureToolchainJava8WithFx()
+configureToolchainJava17LTS()

@@ -105,4 +105,4 @@ kotlin{
 }
 
 configureKotlin()
-configureToolchainJava8WithFx()
+configureToolchainJava17LTS()
