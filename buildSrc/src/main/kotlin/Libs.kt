@@ -14,6 +14,9 @@ import kotlin.String
 public object Libs {
     public const val aopalliance: String = "aopalliance:aopalliance:_"
 
+    public const val ca_cutterslade_analyze_gradle_plugin: String =
+            "ca.cutterslade.analyze:ca.cutterslade.analyze.gradle.plugin:_"
+
     public const val logback_classic: String = "ch.qos.logback:logback-classic:_"
 
     public const val commonmark: String = "com.atlassian.commonmark:commonmark:_"
@@ -158,9 +161,6 @@ public object Libs {
 
     public const val ktor_http: String = "io.ktor:ktor-http:_"
 
-    public const val ktor_serialization_jackson_jvm: String =
-            "io.ktor:ktor-serialization-jackson-jvm:_"
-
     public const val ktor_serialization_kotlinx: String = "io.ktor:ktor-serialization-kotlinx:_"
 
     public const val ktor_serialization_kotlinx_json: String =
@@ -172,12 +172,7 @@ public object Libs {
 
     public const val ktor_server_auth_jwt: String = "io.ktor:ktor-server-auth-jwt:_"
 
-    public const val ktor_server_content_negotiation_jvm: String =
-            "io.ktor:ktor-server-content-negotiation-jvm:_"
-
     public const val ktor_server_core: String = "io.ktor:ktor-server-core:_"
-
-    public const val ktor_server_core_jvm: String = "io.ktor:ktor-server-core-jvm:_"
 
     public const val ktor_server_locations: String = "io.ktor:ktor-server-locations:_"
 
