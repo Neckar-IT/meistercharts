@@ -3,7 +3,6 @@ package it.neckar.open.test.utils
 import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte1.other
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
