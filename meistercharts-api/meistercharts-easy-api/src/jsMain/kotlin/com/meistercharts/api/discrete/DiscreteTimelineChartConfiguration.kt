@@ -21,6 +21,7 @@ import com.meistercharts.api.TimeAxisStyle
 import com.meistercharts.api.TimeRange
 import com.meistercharts.api.line.DiscreteDataSeriesConfiguration
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexInt
+import it.neckar.open.unit.si.ms
 
 /**
  * Configuration for the discrete timeline chart

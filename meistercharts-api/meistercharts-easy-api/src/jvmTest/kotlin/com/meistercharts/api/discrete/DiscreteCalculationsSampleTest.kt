@@ -43,7 +43,7 @@ class DiscreteCalculationsSampleTest {
   )
 
   val data: DiscreteTimelineChartDataImpl = DiscreteTimelineChartData(
-    seriesData, 10.0
+    seriesData
   )
 
   @Test
@@ -75,7 +75,7 @@ class DiscreteCalculationsSampleTest {
     val chunk = pair.first
     val samplingPeriod = pair.second
 
-    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryMillisecond)
+    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
 
     //Verify distance is not too large
     chunk.timeStamps.fastForEachIndexed { index, timestamp ->
@@ -86,7 +86,7 @@ class DiscreteCalculationsSampleTest {
       val previous = chunk.timeStamps[index - 1]
       val delta = timestamp - previous
 
-      assertThat(delta).isLessThanOrEqualTo(SamplingPeriod.EveryTenMillis.distance)
+      assertThat(delta).isLessThanOrEqualTo(SamplingPeriod.EveryHundredMillis.distance)
     }
 
     if (false) {

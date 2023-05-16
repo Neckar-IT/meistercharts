@@ -223,7 +223,7 @@ external interface TimeLineChartStyle {
 
   /**
    * How the lines should be painted.
-   * This information is used in a module-fashion.
+   * This information is used in a modulo-fashion.
    */
   val lineStyles: Array<LineStyle>?
 

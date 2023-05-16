@@ -157,8 +157,8 @@ class ValueAxisHudLayer(
         val boxStyle: BoxStyle
 
         if (active) {
-          textColor = configuration.activeTextColor() ?: configuration.textColors.valueAt(index)
-          boxStyle = configuration.activeBoxStyle() ?: configuration.boxStyles.valueAt(index)
+          textColor = configuration.textColorsActive.valueAt(index)
+          boxStyle = configuration.boxStylesActive.valueAt(index)
         } else {
           boxStyle = configuration.boxStyles.valueAt(index)
           textColor = configuration.textColors.valueAt(index)
@@ -178,12 +178,11 @@ class ValueAxisHudLayer(
 
         gc.beginPath()
         ArrowHead.forOrientation(gc, anchorDirection, arrowHeadLength, arrowHeadWidth)
-        gc.fill(configuration.arrowFills.valueAt(index))
 
         if (active) {
-          configuration.activeArrowFill()?.let {
-            gc.fill(it)
-          }
+          gc.fill(configuration.arrowFillsActive.valueAt(index))
+        } else {
+          gc.fill(configuration.arrowFills.valueAt(index))
         }
 
         gc.fill()
@@ -232,14 +231,14 @@ class ValueAxisHudLayer(
     /**
      * The box style for the active HUD element
      */
-    var activeBoxStyle: () -> BoxStyle? = {
+    var boxStylesActive: MultiProvider<HudElementIndex, BoxStyle> = MultiProvider.always(
       BoxStyle(
         fill = Color.white,
         borderColor = Color.blue3,
         radii = BorderRadius.all2,
         shadow = Shadow.Drop,
       )
-    }
+    )
 
     /**
      * Returns the fill color for the arrow.
@@ -253,9 +252,9 @@ class ValueAxisHudLayer(
     /**
      * The fill for the active arrow
      */
-    var activeArrowFill: () -> Color? = {
-      val boxStyle = activeBoxStyle()
-      boxStyle?.borderColor ?: boxStyle?.fill ?: activeTextColor()
+    var arrowFillsActive: MultiProvider<HudElementIndex, Color> = MultiProvider { index: @HudElementIndex Int ->
+      val boxStyle = boxStylesActive.valueAt(index)
+      boxStyle.borderColor ?: boxStyle.fill ?: textColors.valueAt(index)
     }
 
     /**
@@ -263,9 +262,7 @@ class ValueAxisHudLayer(
      */
     var textColors: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black)
 
-    var activeTextColor: () -> Color? = {
-      Color.black
-    }
+    var textColorsActive: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.darkgray)
 
     /**
      * The text font fragments

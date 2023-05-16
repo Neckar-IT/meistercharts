@@ -298,11 +298,6 @@ actual external interface DiscreteTimelineChartData {
    * Contains one entry for each data series.
    */
   actual val series: Array<DiscreteDataEntriesForDataSeries>
-
-  /**
-   * The default duration (end - start) of a discrete data entry.
-   */
-  actual val defaultEntryDuration: @ms Double
 }
 
 /**

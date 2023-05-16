@@ -192,11 +192,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
   @Test
   fun testDumpNoTrailingSpaces() {
     val dump = chunk.dump()
-    dump.lines().forEach { line ->
-      assertThat(line.endsWith(" "), line).isFalse()
-    }
-
-    assertThat(chunk.dump()).isEqualComparingLinesTrim(
+    assertThat(dump).isEqualComparingLinesTrim(
       """
         Start: 1970-01-01T00:00:01.001
         End:   1970-01-01T00:00:01.003

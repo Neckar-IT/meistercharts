@@ -40,6 +40,12 @@ import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
 import kotlin.jvm.JvmInline
+import kotlin.math.min
+
+/**
+ * The maximum number of supported samples
+ */
+private const val MaxSampleCount = 60_000
 
 /**
  * Converts the data to a history chunk that can be added to the history storage
@@ -69,17 +75,22 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
 
   require(end > start) { "Invalid start ($start), end ($end)" }
 
-  //find shortest entry duration
-  //@ms val shortestEntryDuration = findShortestEntry().duration
-  //println("shortestEntryDuration: $shortestEntryDuration ms")
-  //@ms val longestEntryDuration = findLongestEntry().duration
-  //println("longestEntryDuration: $longestEntryDuration ms")
-  //@ms val targetDuration = findAverageEntryDuration()
+  @ms val shortestEntryDuration = findShortestEntry().duration
+  logger.debug("shortestEntryDuration: $shortestEntryDuration ms")
 
-  @ms val defaultEntryDuration = this.defaultEntryDuration
+  logger.debug {
+    @ms val longestEntryDuration = findLongestEntry().duration
+    "longestEntryDuration: $longestEntryDuration ms"
+  }
 
-  //Sampling period must be shorter than the defaultEntryDuration to get more precise timestamps.
-  val samplingPeriod = SamplingPeriod.withMaxDistance(defaultEntryDuration / 4)
+  @ms val averageEntryDuration = findAverageEntryDuration()
+  logger.debug("averageEntryDuration: $averageEntryDuration ms")
+
+  //Sampling period must be shorter than the shortestEntryDuration to get more precise timestamps.
+  val samplingPeriodMaxDistance = SamplingPeriod.withMaxDistance(min(averageEntryDuration / 4, shortestEntryDuration))
+  //Sampling period must be large enough to ensure that we do not have more than MaxSampleCount samples in total.
+  val samplingPeriodMinDistance = SamplingPeriod.withMinDistance((end - start) / MaxSampleCount)
+  val samplingPeriod = samplingPeriodMaxDistance.coerceAtLeast(samplingPeriodMinDistance)
 
   //
   //Generate the timestamps

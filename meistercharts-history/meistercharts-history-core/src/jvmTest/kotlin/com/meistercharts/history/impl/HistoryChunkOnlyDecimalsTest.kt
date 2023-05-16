@@ -31,6 +31,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
 
@@ -122,14 +123,6 @@ class HistoryChunkOnlyDecimalsTest {
     }
   }
 
-
-  @Test
-  fun testDumpNoTrailingSpaces() {
-    val dump = chunk.dump()
-    dump.lines().forEach { line ->
-      assertThat(line.endsWith(" "), line).isFalse()
-    }
-  }
 
   @Test
   fun testDoubleSpecialValues() {

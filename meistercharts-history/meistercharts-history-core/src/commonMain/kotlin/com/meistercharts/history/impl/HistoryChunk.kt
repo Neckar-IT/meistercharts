@@ -47,7 +47,6 @@ import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.sort
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.kotlin.lang.deleteSuffix
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.Exclusive
@@ -1079,7 +1078,6 @@ class HistoryChunk(
         append(" ")
       }
 
-      deleteSuffix(" ")
       appendLine()
 
       append("IDs:".padEnd(indexAndDateColumnsWidth, ' '))
@@ -1097,7 +1095,6 @@ class HistoryChunk(
         append(getReferenceEntryDataSeriesId(ReferenceEntryDataSeriesIndex(it)).toString().padStart(referenceEntryColumnContentWidth, ' '))
         append(" ")
       }
-      deleteSuffix(" ")
       appendLine()
       appendLine()
 
@@ -1163,7 +1160,6 @@ class HistoryChunk(
           append(" ")
         }
 
-        deleteSuffix(" ")
         appendLine()
       }
     }

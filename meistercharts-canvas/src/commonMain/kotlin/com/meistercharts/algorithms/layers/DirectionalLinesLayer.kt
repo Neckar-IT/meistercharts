@@ -141,10 +141,10 @@ class DirectionalLinesLayer(
     val gc = paintingContext.gc
 
     paintingVariables.fastForEach { index: @LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double ->
-      configuration.lineStyles.valueAt(index).apply(gc)
-
       if (configuration.activeLineIndex == index) {
-        configuration.activeLineStyle.apply(gc)
+        configuration.activeLineStyles.valueAt(index).apply(gc)
+      } else {
+        configuration.lineStyles.valueAt(index).apply(gc)
       }
 
       gc.strokeLine(startX, startY, endX, endY)
@@ -184,9 +184,15 @@ class DirectionalLinesLayer(
     var anchorGapVertical: @Zoomed MultiDoublesProvider<LineIndex> = MultiDoublesProvider.always(0.0)
 
     /**
-     * The line style for each line
+     * The line style for each line.
+     * See [activeLineStyles] for the style if the line is active (usually mouse over)
      */
     var lineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.lightgray, lineWidth = 1.0))
+
+    /**
+     * The style for the active line
+     */
+    var activeLineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.darkgray, lineWidth = 2.0))
 
     /**
      * Describes where the lines end
@@ -211,11 +217,6 @@ class DirectionalLinesLayer(
       activeLineIndex = index
       callbackOnChange()
     }
-
-    /**
-     * The style for the active line that applied (additionally to the [lineStyles]).
-     */
-    var activeLineStyle: LineStyle = LineStyle(color = Color.darkgray, lineWidth = 2.0)
   }
 
   companion object {

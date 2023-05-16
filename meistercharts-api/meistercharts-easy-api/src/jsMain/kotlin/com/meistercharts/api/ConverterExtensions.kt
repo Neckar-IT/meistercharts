@@ -660,10 +660,13 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   }
 
   val hudLayer = getHudLayer(key)
-  val thresholdLinesLayer = getThresholdLinesLayer(key)
 
   hudLayer.configuration.boxStyles = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyle.toModel() }
+  )
+  hudLayer.configuration.boxStylesActive = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
   )
 
   hudLayer.configuration.arrowHeadLength = MultiDoublesProvider.forArrayModulo(
@@ -677,13 +680,25 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   hudLayer.configuration.textColors = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelColor.toColor() }
   )
+  hudLayer.configuration.textColorsActive = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+    jsThresholds.map { jsThreshold -> jsThreshold.labelColorActive.toColor() ?: jsThreshold.labelColor.toColor() }
+  )
 
   hudLayer.configuration.textFonts = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelFont.toFontDescriptorFragment() }
   )
 
+  //Threshold lines layer
+  val thresholdLinesLayer = getThresholdLinesLayer(key)
+
   thresholdLinesLayer.configuration.lineStyles = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.lineStyle.toModel() }
+  )
+
+  thresholdLinesLayer.configuration.activeLineStyles = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+    jsThresholds.map { jsThreshold -> jsThreshold.lineStyleActive?.toModel() ?: jsThreshold.lineStyle.toModel() }
   )
 }
 

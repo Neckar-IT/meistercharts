@@ -5,8 +5,9 @@ import it.neckar.open.unit.other.Inclusive
 /**
  * Deletes the suffix - if there is one
  */
+@Deprecated("slow with large strings")
 fun StringBuilder.deleteSuffix(toDelete: String) {
-  if (endsWith(toDelete)) {
+  if (endsWith(toDelete)) { // this is very slow with large strings
     val lengthToDelete = toDelete.length
     deleteRange(length - lengthToDelete, length)
   }

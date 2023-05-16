@@ -64,6 +64,7 @@ object Plugins {
   const val schemaGen: String = "com.javagen.schema-gen"
   const val node: String = "com.github.node-gradle.node"
   const val kover: String = "org.jetbrains.kotlinx.kover"
+  const val analyze: String = "ca.cutterslade.analyze"
 
   /**
    * Only for JavaFX 17+
@@ -178,3 +179,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.dependenciesReport: Plug
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.javafx: PluginDependencySpec
   get() = id(Plugins.javafx)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependencySpec
+  get() = id(Plugins.analyze)

@@ -33,15 +33,6 @@ expect interface DiscreteTimelineChartData {
    * The entries for the data series are *not* aligned.
    */
   val series: Array<DiscreteDataEntriesForDataSeries>
-
-  /**
-   * The default duration of an entry.
-   *
-   * This value is used to
-   * * optimize the way history-data is stored
-   * * compute the initial visible time-range
-   */
-  val defaultEntryDuration: @ms Double
 }
 
 /**
