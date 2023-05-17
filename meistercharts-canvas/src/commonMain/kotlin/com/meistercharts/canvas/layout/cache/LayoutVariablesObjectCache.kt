@@ -21,7 +21,7 @@ package com.meistercharts.canvas.layout.cache
  *
  * ATTENTION: This cache might contain more objects than requested!
  */
-open class LayoutVariableObjectCache<T : LayoutVariable>(
+open class LayoutVariablesObjectCache<T : LayoutVariable>(
   /**
    * The factory that is used to create new elements.
    *
@@ -29,13 +29,23 @@ open class LayoutVariableObjectCache<T : LayoutVariable>(
    * The created objects are reused for each layout pass afterward.
    */
   factory: () -> T,
-) : AbstractLayoutVariableObjectCache<T>(factory) {
+) : AbstractObjectsCache<T>(factory) {
 
   override fun reset() {
     //only reset the values - that list has the correct size
     //objectsStock might have additional objects - these are not used, therefore can be ignored safely
     values.forEachIndexed { index, _ ->
       values[index].reset()
+    }
+  }
+
+  /**
+   * Increases the size by 1, adds a new element
+   */
+  override fun addNewElement(): T {
+    return super.addNewElement().also {
+      //reset the newly added object
+      it.reset()
     }
   }
 }

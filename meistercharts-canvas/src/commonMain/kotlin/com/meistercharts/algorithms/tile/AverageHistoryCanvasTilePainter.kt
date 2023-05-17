@@ -26,14 +26,15 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
-import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.painter.LinePainter
+import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.provider.MultiProvider
@@ -44,6 +45,8 @@ import it.neckar.open.unit.si.ms
  * Paints the average(s) as line
  */
 class AverageHistoryCanvasTilePainter(val configuration: Configuration) : HistoryCanvasTilePainter(configuration), CanvasTilePainter {
+  private val pointsCache = CoordinatesCache()
+
   override fun paintDataSeries(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DecimalDataSeriesIndex,
@@ -60,6 +63,9 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
     }
 
     val gc = paintingContext.gc
+
+    val pointPainter = configuration.pointPainters.valueAt(dataSeriesIndex.value)
+    pointsCache.prepare(0) //prepare with empty values
 
     configuration.lineStyles.valueAt(dataSeriesIndex.value).apply(gc)
     val linePainter = configuration.linePainters.valueAt(dataSeriesIndex.value)
@@ -115,7 +121,7 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
         @Tile val x = tileCalculator.time2tileX(time, contentAreaTimeRange)
         @Tile val y = tileCalculator.domainRelative2tileY(domainRelative)
         linePainter.addCoordinates(gc, x, y)
-
+        pointsCache.add(x, y)
 
         //min / max if available
         if (DebugFeature.ShowMinMax.enabled(paintingContext)) {
@@ -140,6 +146,13 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
     }
 
     linePainter.paint(gc)
+
+    //Paint the points
+    if (pointPainter != null) {
+      pointsCache.fastForEachIndexed { _, x, y ->
+        pointPainter.paintPoint(gc, x, y)
+      }
+    }
   }
 
   class Configuration(
@@ -157,6 +170,11 @@ class AverageHistoryCanvasTilePainter(val configuration: Configuration) : Histor
      * Provides a painter for each line
      */
     val linePainters: MultiProvider<DecimalDataSeriesIndex, LinePainter>,
+
+    /**
+     * The (optional) point painters
+     */
+    var pointPainters: MultiProvider<DecimalDataSeriesIndex, PointPainter?> = MultiProvider.always(null),
 
     ) : HistoryCanvasTilePainter.Configuration(historyStorage, contentAreaTimeRange, valueRanges, visibleDecimalSeriesIndices)
 }

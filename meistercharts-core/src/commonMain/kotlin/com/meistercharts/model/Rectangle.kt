@@ -15,6 +15,7 @@
  */
 package com.meistercharts.model
 
+import com.meistercharts.annotations.Zoomed
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.Positive
@@ -97,6 +98,13 @@ data class Rectangle(
 
   fun isFinite(): Boolean {
     return location.isFinite() && size.isFinite()
+  }
+
+  /**
+   * Returns a new object with the added values
+   */
+  fun plus(x: Double, y: Double): @Zoomed Rectangle {
+    return Rectangle(this.location.plus(x, y), size)
   }
 
   companion object {

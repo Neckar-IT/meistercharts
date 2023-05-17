@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.canvas.layout.cache.StringCache
+import com.meistercharts.canvas.layout.cache.StringsCache
 import com.meistercharts.model.Side
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.unit.other.px
@@ -84,7 +84,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   /**
    * Contains the formatted tick labels
    */
-  val ticksFormatted: StringCache = StringCache()
+  val ticksFormatted: StringsCache = StringsCache()
 
   /**
    * Resets all variables to their default values

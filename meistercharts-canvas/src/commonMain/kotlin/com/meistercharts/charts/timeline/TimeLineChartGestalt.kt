@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
+import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
 import com.meistercharts.algorithms.layers.HudElementIndex
@@ -39,6 +40,7 @@ import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.TilesLayer
 import com.meistercharts.algorithms.layers.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TransformingChartStateLayer
+import com.meistercharts.algorithms.layers.ValueAxisHudInteractionLayer
 import com.meistercharts.algorithms.layers.ValueAxisHudLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
@@ -52,6 +54,7 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.LabelIndex
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
+import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
@@ -99,8 +102,8 @@ import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.layout.cache.IntCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
-import com.meistercharts.canvas.layout.cache.StringCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.canvas.layout.cache.StringsCache
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
@@ -109,9 +112,9 @@ import com.meistercharts.charts.ChartGestalt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
-import com.meistercharts.charts.support.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
-import com.meistercharts.charts.support.thresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.thresholdsSupport
 import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
 import com.meistercharts.history.AndBefore
@@ -145,6 +148,8 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
+import com.meistercharts.painter.PointPainter
+import com.meistercharts.painter.PointStylePainter
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
@@ -254,7 +259,8 @@ class TimeLineChartGestalt
       valueRanges = style::lineValueRanges.delegate(),
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
-      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false))
+      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
+      pointPainters = style::pointPainters.delegate(),
     )
   )
 
@@ -276,7 +282,7 @@ class TimeLineChartGestalt
       valueRanges = style::lineValueRanges.delegate(),
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
-      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false))
+      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
     )
   )
 
@@ -371,6 +377,7 @@ class TimeLineChartGestalt
     hudLayerConfiguration = { decimalDataSeriesIndex: DecimalDataSeriesIndex, axis: ValueAxisHudLayer ->
       val color = style.lineStyles.valueAt(decimalDataSeriesIndex).color
       axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5))
+      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop))
       axis.configuration.textColors = MultiProvider.always(color)
     }
   }
@@ -399,7 +406,7 @@ class TimeLineChartGestalt
     }
   })
 
- /**
+  /**
    * Returns the threshold layer for the given data series index
    */
   fun getThresholdLinesLayer(dataSeriesIndex: DecimalDataSeriesIndex): DirectionalLinesLayer {
@@ -423,7 +430,7 @@ class TimeLineChartGestalt
     }
   })
 
-  val thresholdInteractionLayer = ThresholdsSupport.createInteractionLayer( thresholdLinesLayersDelegate, hudLayersDelegate)
+  val thresholdInteractionLayers: Pair<DirectionalLinesInteractionLayer, ValueAxisHudInteractionLayer> = ThresholdsSupport.createInteractionLayers(thresholdLinesLayersDelegate.delegates, hudLayersDelegate.delegates).interactionLayers
 
   private fun visibleValueAxisCount(): Int {
     return style.actualVisibleValueAxesIndices.size()
@@ -684,17 +691,17 @@ class TimeLineChartGestalt
     /**
      * The label texts
      */
-    val labelsCache = StringCache()
+    val labelsCache = StringsCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = style.actualVisibleDecimalSeriesIndices.size()
@@ -832,7 +839,7 @@ class TimeLineChartGestalt
     /**
      * Contains the history enums at the given location
      */
-    val historyEnumsCache = ObjectCache(HistoryEnum.Boolean)
+    val historyEnumsCache = ObjectsCache(HistoryEnum.Boolean)
 
     /**
      * The enum set at the cross wire
@@ -842,17 +849,17 @@ class TimeLineChartGestalt
     /**
      * The translated labels
      */
-    val labelsCache = StringCache()
+    val labelsCache = StringsCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
 
     /**
      * Clears all labels
@@ -1039,6 +1046,10 @@ class TimeLineChartGestalt
       tileProvider.clear()
     }
 
+    style.pointPaintersProperty.consumeImmediately {
+      tileProvider.clear()
+    }
+
     style.requestedVisibleValueAxesIndicesProperty.consumeImmediately {
       //updateValueAxisLayers()
     }
@@ -1170,7 +1181,9 @@ class TimeLineChartGestalt
           @PaintingOrder val hudLayersDelegateIndex = layers.addLayer(hudLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() })
           layers.addLayerAt(thresholdLinesLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() }, valueAxesLayerIndex, hudLayersDelegateIndex + 1)
 
-          layers.addLayer(thresholdInteractionLayer)
+          //Interaction layers for thresholds
+          layers.addLayer(thresholdInteractionLayers.first)
+          layers.addLayer(thresholdInteractionLayers.second)
 
           //Must be painted above the value axis - because of the background
           layers.addLayer(enumCategoryAxisLayerTransformed)
@@ -1307,6 +1320,15 @@ class TimeLineChartGestalt
       }
     )
     var lineStyles: MultiProvider<DecimalDataSeriesIndex, LineStyle> by lineStylesProperty
+
+    /**
+     * The (optional) point painters
+     */
+    val pointPaintersProperty: ObservableObject<MultiProvider<DecimalDataSeriesIndex, PointPainter?>> = ObservableObject(
+      MultiProvider.always(null)
+    )
+
+    var pointPainters: MultiProvider<DecimalDataSeriesIndex, PointPainter?> by pointPaintersProperty
 
     /**
      * The indices of the lines whose value axis should be visible.

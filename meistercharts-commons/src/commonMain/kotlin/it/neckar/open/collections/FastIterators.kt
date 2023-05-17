@@ -83,3 +83,16 @@ inline fun DoubleArrayList.fastForEachIndexedReversed(callback: (index: Int, val
     n--
   }
 }
+
+inline fun DoubleArrayList.fastAny(predicate: DoublePredicate): Boolean {
+  var n = 0
+  val currentSize = size
+  while (n < currentSize) {
+    if (predicate(this.getAt(n))) {
+      return true
+    }
+    n++
+  }
+
+  return false
+}

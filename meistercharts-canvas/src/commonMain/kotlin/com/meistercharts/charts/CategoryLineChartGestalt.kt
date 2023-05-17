@@ -63,12 +63,13 @@ import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.getTopTitleLayer
 import com.meistercharts.charts.support.getValueAxisLayer
-import com.meistercharts.charts.support.thresholdsSupportSingle
+import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
@@ -77,7 +78,6 @@ import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoublesProvider
-import it.neckar.open.provider.ListSizedProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProvider

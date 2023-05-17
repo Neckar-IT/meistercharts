@@ -43,7 +43,7 @@ import com.meistercharts.canvas.FontSize
 import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.style.Palette
 import it.neckar.commons.kotlin.js.debug

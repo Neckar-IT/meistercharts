@@ -26,6 +26,7 @@ import java.io.File
 import java.io.FileFilter
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.zip.ZipEntry
@@ -62,10 +63,11 @@ inline val Project.isOpenSource: Boolean
   get() = path.startsWith(":open:")
 
 
+@Suppress("DEPRECATION")
 fun PublishingExtension.configureMavenReposForPublish(project: Project) {
   repositories {
     maven {
-      name = if (project.isProjectVersionSnapshot) "SonatypeOsssnapshots" else "SonatypeOssSstaging"
+      name = if (project.isProjectVersionSnapshot) "SonatypeOssSnapshots" else "SonatypeOssStaging"
       url = if (project.isProjectVersionSnapshot) {
         project.uri("https://oss.sonatype.org/content/repositories/snapshots/")
       } else {
@@ -102,7 +104,7 @@ fun String.toCamelCase(): String {
 
     //The char before is a "_" --> use camel case
     if (charBefore == '_') {
-      chars[index] = char.toUpperCase()
+      chars[index] = char.uppercaseChar()
     }
   }
 
@@ -134,7 +136,7 @@ private fun File.listSvgFilesInDirectory(): List<File> {
  * Lists all files with the given suffix within this directory
  */
 fun File.listFiles(suffix: String): List<File> {
-  return listFiles { _, name -> name.toLowerCase().endsWith(suffix) }
+  return listFiles { _, name -> name.lowercase(Locale.getDefault()).endsWith(suffix) }
     ?.sortedBy { it.name }
     ?: throw FileNotFoundException("Could not find source folder <$absolutePath>")
 }

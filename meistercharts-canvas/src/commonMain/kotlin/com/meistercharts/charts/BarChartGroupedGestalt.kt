@@ -68,13 +68,14 @@ import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.support.CategoryAxisSupport
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
-import com.meistercharts.charts.support.thresholdsSupportSingle
+import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation

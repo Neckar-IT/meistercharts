@@ -15,11 +15,14 @@
  */
 package com.meistercharts.canvas.layout.cache
 
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.DoublePredicate
 import it.neckar.open.collections.fastAny
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.collections.fastForEachIndexedReverse
+import it.neckar.open.collections.fastForEachIndexedReversed
+import it.neckar.open.collections.last
+import it.neckar.open.collections.lastIndex
 import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.unit.other.Index
 
@@ -32,8 +35,12 @@ class DoubleCache : LayoutVariableWithSize {
    * Contains the values
    */
   @PublishedApi
-  internal var values: DoubleArray = doubleArrayOf()
+  internal var values: DoubleArrayList = DoubleArrayList()
 
+  override val size: Int
+    get() = values.size
+
+  @Deprecated("Use prepare instead")
   override fun reset() {
     values.fastForEachIndexed { index, _ ->
       values[index] = 0.0
@@ -43,21 +50,21 @@ class DoubleCache : LayoutVariableWithSize {
   /**
    * Ensures the array has the given size
    */
+  @Deprecated("Use prepare instead")
   override fun ensureSize(size: Int) {
-    if (values.size != size) {
-      values = DoubleArray(size)
-    }
+    values.size = size
   }
 
-  override val size: Int
-    get() = values.size
+  fun resize(newSize: Int) {
+    values.size = newSize
+  }
 
   /**
    * Sets the given value to all (depending on [size])
    */
   fun setAll(newValue: Double) {
     var n = 0
-    val currentSize = values.size
+    val currentSize = size
     while (n < currentSize) {
       values[n] = newValue
       n++
@@ -92,8 +99,8 @@ class DoubleCache : LayoutVariableWithSize {
     this.values.fastForEachIndexed(callback)
   }
 
-  inline fun fastForEachIndexedReverse(callback: (index: Int, value: Double, isFirst: Boolean) -> Unit) {
-    this.values.fastForEachIndexedReverse(callback)
+  inline fun fastForEachIndexedReversed(callback: (index: Int, value: Double) -> Unit) {
+    this.values.fastForEachIndexedReversed(callback)
   }
 
   inline fun fastForEach(callback: (value: Double) -> Unit) {
@@ -101,7 +108,7 @@ class DoubleCache : LayoutVariableWithSize {
   }
 
   override fun toString(): String {
-    return values.contentToString()
+    return values.data.contentToString()
   }
 
   inline fun fastAny(predicate: DoublePredicate): Boolean {

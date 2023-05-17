@@ -45,7 +45,7 @@ import it.neckar.open.unit.si.ms
  */
 interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, ValueType2, ValueType3, ValueType4> {
   /**
-   * Is called when beginning layouting a data series
+   * Is called when beginning to lay out a data series
    */
   fun layoutBegin(
     paintingContext: LayerPaintingContext,
@@ -69,11 +69,15 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
    *
    * Call [layoutFinish] when done.
    *
-   * @return the optical *center* of the segment - if the [StripePainterPaintingVariables.activeTimeStamp] is within the segment. The center can be used for tooltips or other purposes.
-   * Will return [Double.NaN] if [StripePainterPaintingVariables.activeTimeStamp] is [Double.NaN] or outside the current segment.
+   * @return the optical *center* of the segment - if the activeTimeStamp is within the segment. The center can be used for tooltips or other purposes.
+   * Will return [Double.NaN] if `activeTimeStamp` is [Double.NaN] or outside the current segment.
    */
   fun layoutValueChange(
     paintingContext: LayerPaintingContext,
+    /**
+     * The data series index that is currently layouted
+     */
+    dataSeriesIndex: DataSeriesIndexType,
 
     /**
      * The start location of the stripe segment
@@ -120,14 +124,16 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
    */
   fun layoutFinish(
     paintingContext: LayerPaintingContext,
+    dataSeriesIndex: DataSeriesIndexType,
   ): @Window @MayBeNaN Double
 
 
   /**
-   * Paints the data series index.
+   * Paints the data series.
    * Is called exactly once for each data series
    */
   fun paint(
     paintingContext: LayerPaintingContext,
+    dataSeriesIndex: DataSeriesIndexType,
   )
 }

@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.axis.TimeTickDistance
 import com.meistercharts.annotations.Domain
 import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.canvas.layout.cache.StringCache
+import com.meistercharts.canvas.layout.cache.StringsCache
 import com.meistercharts.model.Side
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
@@ -61,7 +61,7 @@ interface TimeAxisPaintingVariables : AxisPaintingVariables {
   /**
    * The formatted values for the offset ticks
    */
-  val offsetTicksFormatted: @Domain @ms StringCache
+  val offsetTicksFormatted: @Domain @ms StringsCache
 
   /**
    * The domain values for the ticks.
@@ -72,7 +72,7 @@ interface TimeAxisPaintingVariables : AxisPaintingVariables {
   /**
    * The formatted ticks (same size as [tickDomainValues])
    */
-  val ticksFormatted: StringCache
+  val ticksFormatted: StringsCache
 
 }
 
@@ -98,7 +98,7 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
    */
   override var offsetTickDomainValues: @Domain @ms DoubleCache = DoubleCache()
 
-  override var offsetTicksFormatted: @Domain @ms StringCache = StringCache()
+  override var offsetTicksFormatted: @Domain @ms StringsCache = StringsCache()
 
   /**
    * The distance between the offset ticks
@@ -108,7 +108,7 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
 
   override var tickDomainValues: @MayBeNaN @ms @Domain DoubleCache = DoubleCache()
 
-  override val ticksFormatted: StringCache = StringCache()
+  override val ticksFormatted: StringsCache = StringsCache()
 
   override fun reset() {
     super.reset()

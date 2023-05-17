@@ -327,6 +327,10 @@ fun Coordinates.within(startX: Double, startY: Double, endX: Double, endY: Doubl
   return x.betweenInclusive(startX, endX) && y.betweenInclusive(startY, endY)
 }
 
+fun Coordinates.withinSized(startX: Double, startY: Double, width: Double, height: Double): Boolean {
+  return x.betweenInclusive(startX, startX + width) && y.betweenInclusive(startY, startY + height)
+}
+
 /**
  * Returns true of the [Coordinates] are perpendicular either above or below the line segment defined by the given two points
  */

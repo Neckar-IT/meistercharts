@@ -362,11 +362,8 @@ class DiscreteTimelineChartGestalt(
     configure {
       chartSupport.windowResizeBehavior = KeepOriginOnWindowResize //keep the top left corner
 
-      if (false) {
-        historyStorage.observe { historyBucketDescriptor, updateInfo ->
-          //TODO optimize! Only repaint if necessary
-          this.markAsDirty(DirtyReason.DataUpdated)
-        }
+      historyStorage.observe { _, _ ->
+        this.markAsDirty(DirtyReason.DataUpdated)
       }
 
       configuration.contentAreaTimeRangeProperty.consumeImmediately {

@@ -23,7 +23,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -75,7 +75,7 @@ class PaintablesLayouter(
      * Contains the bounding boxes for each paintable.
      * The bounding boxes do *not* contain any translation from the layout process.
      */
-    val boundingBoxes = ObjectCache(Rectangle.zero)
+    val boundingBoxes = ObjectsCache(Rectangle.zero)
 
     /**
      * The total size over *all* paintables

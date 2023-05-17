@@ -39,6 +39,7 @@ class CoordinatesCache : LayoutVariableWithSize {
   @PublishedApi
   internal var yValues: @Window DoubleCache = DoubleCache()
 
+  @Deprecated("Use prepare instead")
   override fun reset() {
     xValues.reset()
     yValues.reset()
@@ -46,8 +47,11 @@ class CoordinatesCache : LayoutVariableWithSize {
 
   /**
    * Ensures all elements have the given size
-   * Recreates the arrays if necessary
+   * Recreates the arrays if necessary.
+   *
+   * ATTENTION: Might lose the content!
    */
+  @Deprecated("Use prepare instead")
   override fun ensureSize(size: Int) {
     xValues.ensureSize(size)
     yValues.ensureSize(size)
@@ -56,10 +60,23 @@ class CoordinatesCache : LayoutVariableWithSize {
   override val size: Int
     get() = xValues.size
 
-
-  fun set(index: Int, x: @Window Double, y: @Window Double) {
+  /**
+   * Sets the x and y values for the given index
+   */
+  fun set(index: Int, x: Double, y: Double) {
     this.xValues[index] = x
     this.yValues[index] = y
+  }
+
+  /**
+   * Increases the size by one and adds the new point
+   */
+  fun add(x: Double, y: Double) {
+    val newSize = size + 1
+    @Suppress("DEPRECATION")
+    ensureSize(newSize)
+
+    set(newSize - 1, x, y)
   }
 
   /**

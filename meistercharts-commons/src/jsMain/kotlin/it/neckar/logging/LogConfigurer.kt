@@ -54,7 +54,12 @@ object LogConfigurer {
    */
   fun getRootLevelFromLocalStorage(): Level? {
     val item = window.localStorage.getItem(LocalStorageKey) ?: return null
-    return Level.valueOf(item.trim())
+    return try {
+      Level.valueOf(item.trim())
+    } catch (e: Exception) {
+      console.warn("Invalid value for $LocalStorageKey: $item. Expected one of ${Level.entries.joinToString(", ")}")
+      null //Fallback to null
+    }
   }
 
   /**

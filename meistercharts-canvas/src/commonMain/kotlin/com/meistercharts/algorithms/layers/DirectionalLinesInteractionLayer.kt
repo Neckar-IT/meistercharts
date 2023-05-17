@@ -16,8 +16,11 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
+import com.meistercharts.events.MouseMoveEvent
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.number.MayBeNegative
@@ -42,24 +45,20 @@ class DirectionalLinesInteractionLayer(
 
   override val type: LayerType = LayerType.Content
 
-  override fun initialize(paintingContext: LayerPaintingContext) {
-    super.initialize(paintingContext)
-
-    val layerSupport = paintingContext.layerSupport
-
-    layerSupport.mouseEvents.onMove { mouseMoveEvent ->
-      val mousePosition = mouseMoveEvent.coordinates
+  override val mouseEventHandler: CanvasMouseEventHandler = object : CanvasMouseEventHandler {
+    override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
+      val mouseLocation = event.coordinates
 
       var activeLayerIndex = -1
-      var activeLineIndex = -1
+      var activeLineIndex: @DirectionalLinesLayer.LineIndex Int = -1
       var bestDistance: @Zoomed Double = 10.0 //min distance
 
       //First find the active line - one for all layers
-      if (mousePosition != null) {
+      if (mouseLocation != null) {
         //Iterate over all lines layers
         configuration.directionalLinesLayers.fastForEachIndexed { layerIndex, layer ->
           layer.paintingVariables().fastForEach { lineIndex: @DirectionalLinesLayer.LineIndex Int, startX, startY, endX, endY ->
-            @Zoomed val distance = mousePosition.distanceToLine(startX, startY, endX, endY)
+            @Zoomed val distance = mouseLocation.distanceToLine(startX, startY, endX, endY)
             if (distance < bestDistance) {
               activeLayerIndex = layerIndex
               activeLineIndex = lineIndex
@@ -70,9 +69,9 @@ class DirectionalLinesInteractionLayer(
       }
 
       //Apply the active line to *all* layers
-      configuration.applyActiveLineAction(activeLayerIndex, activeLineIndex, paintingContext)
+      configuration.applyActiveLineAction(activeLayerIndex, activeLineIndex, chartSupport)
 
-      EventConsumption.Ignored
+      return EventConsumption.Ignored
     }
   }
 
@@ -85,7 +84,11 @@ class DirectionalLinesInteractionLayer(
      * Is called whenever the active line might have updated.
      * ATTENTION: This method is called for *every* mouse event.
      */
-    var applyActiveLineAction: (activeLayerIndex: @MayBeNegative Int, activeLineIndex: @DirectionalLinesLayer.LineIndex @MayBeNegative Int, paintingContext: LayerPaintingContext) -> Unit = { activeLayerIndex: Int, activeLineIndex: Int, paintingContext: LayerPaintingContext ->
+    var applyActiveLineAction: (
+      activeLayerIndex: @MayBeNegative Int,
+      activeLineIndex: @DirectionalLinesLayer.LineIndex @MayBeNegative Int,
+      chartSupport: ChartSupport,
+    ) -> Unit = { activeLayerIndex: Int, activeLineIndex: Int, chartSupport: ChartSupport ->
       /**
        * Default implementation that updates all directional layers
        */
@@ -97,7 +100,7 @@ class DirectionalLinesInteractionLayer(
         }
 
         layer.configuration.setActiveLineIndex(activeLineIndexForLayer) {
-          paintingContext.chartSupport.markAsDirty(DirtyReason.UiStateChanged)
+          chartSupport.markAsDirty(DirtyReason.UiStateChanged)
         }
       }
     }
@@ -112,8 +115,15 @@ fun DirectionalLinesLayer.mouseOverInteractions(): DirectionalLinesInteractionLa
 }
 
 /**
- * Creates a new interactions handler for the provided [DirectionalLinesLayer]
+ * Creates a new interactions handler for the provided [DirectionalLinesLayer]s
  */
 fun MultipleLayersDelegatingLayer<DirectionalLinesLayer>.mouseOverInteractions(): DirectionalLinesInteractionLayer {
-  return DirectionalLinesInteractionLayer(delegates)
+  return delegates.mouseOverInteractions()
+}
+
+/**
+ * Creates a new interactions handler for the provided [DirectionalLinesLayer]s
+ */
+fun SizedProvider<DirectionalLinesLayer>.mouseOverInteractions(): DirectionalLinesInteractionLayer {
+  return DirectionalLinesInteractionLayer(this)
 }

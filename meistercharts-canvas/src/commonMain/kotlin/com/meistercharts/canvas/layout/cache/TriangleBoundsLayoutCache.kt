@@ -15,12 +15,12 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.RightTriangleType
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.pointIsLeftOfLine
+import it.neckar.open.unit.number.MayBeNegative
 
 class TriangleBoundsLayoutCache : BoundsLayoutCache() {
   /**
@@ -85,7 +85,7 @@ class TriangleBoundsLayoutCache : BoundsLayoutCache() {
     ) -> Unit
   ) {
 
-    xValues.fastForEachIndexedReverse { index, x, _ ->
+    xValues.fastForEachIndexedReversed { index, x ->
       val y = yValues[index]
       val width = widthValues[index]
       val height = heightValues[index]

@@ -16,7 +16,6 @@
 package com.meistercharts.algorithms.painter.stripe.enums
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.stripe.AbstractStripePainterPaintingVariables
 import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariables
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -27,25 +26,29 @@ import com.meistercharts.history.HistoryEnumSet
 /**
  * Painting variables for enums
  */
-interface EnumStripePainterPaintingVariables : StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
-  /**
-   * The current history enum for [visibleDataSeriesIndex]
-   */
-  val historyEnum: HistoryEnum
+abstract class EnumStripePainterPaintingVariables(
+  dataSeriesIndexDefault: EnumDataSeriesIndex,
+  value1Default: HistoryEnumSet,
+  value2Default: HistoryEnumOrdinal,
+  value3Default: Unit,
+  value4Default: Unit,
+) :
+  StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(dataSeriesIndexDefault, value1Default, value2Default, value3Default, value4Default) {
+  abstract val historyEnum: HistoryEnum
 }
 
 /**
  * Painting variables for enum stripes
  */
-class DefaultEnumStripePainterPaintingVariables : AbstractStripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(
+class DefaultEnumStripePainterPaintingVariables : EnumStripePainterPaintingVariables(
   dataSeriesIndexDefault = EnumDataSeriesIndex.zero,
   value1Default = HistoryEnumSet.NoValue,
   value2Default = HistoryEnumOrdinal.NoValue,
   value3Default = Unit,
   value4Default = Unit,
-), EnumStripePainterPaintingVariables {
+) {
   /**
-   * The current history enum for [visibleDataSeriesIndex]
+   * The current history enum for [currentDataSeriesIndex]
    */
   override var historyEnum: HistoryEnum = HistoryEnum.Boolean
     private set
@@ -59,6 +62,6 @@ class DefaultEnumStripePainterPaintingVariables : AbstractStripePainterPaintingV
    * Returns the history enum value for the given index
    */
   fun getHistoryEnum(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnum {
-    return this.historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
+    return historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
   }
 }

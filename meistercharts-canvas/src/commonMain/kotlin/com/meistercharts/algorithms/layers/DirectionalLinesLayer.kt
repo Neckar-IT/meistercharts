@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Side
@@ -66,7 +66,7 @@ class DirectionalLinesLayer(
      */
     override val endCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
 
-    override val directionsCache = ObjectCache(Direction.TopLeft)
+    override val directionsCache = ObjectsCache(Direction.TopLeft)
 
 
     override fun calculate(paintingContext: LayerPaintingContext) {
@@ -158,7 +158,11 @@ class DirectionalLinesLayer(
   @MustBeDocumented
   @Retention(AnnotationRetention.SOURCE)
   @MultiProviderIndexContextAnnotation
-  annotation class LineIndex
+  annotation class LineIndex {
+    companion object {
+      const val None: @LineIndex Int = -1
+    }
+  }
 
 
   class Configuration(
@@ -305,7 +309,7 @@ class DirectionalLinesLayer(
     /**
      * The directions for the lines
      */
-    val directionsCache: ObjectCache<Direction>
+    val directionsCache: ObjectsCache<Direction>
   }
 }
 

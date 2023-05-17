@@ -50,6 +50,10 @@ class HistoryReferenceEntryLayer(
     override fun calculate(paintingContext: LayerPaintingContext) {
       super.calculate(paintingContext)
     }
+
+    override fun dataSeriesIndexFromInt(indexAsInt: Int): ReferenceEntryDataSeriesIndex {
+      return ReferenceEntryDataSeriesIndex(indexAsInt)
+    }
   }
 
   override fun dataSeriesCount(): Int {
@@ -112,7 +116,8 @@ class HistoryReferenceEntryLayer(
     historyConfiguration = historyConfiguration,
     requestedVisibleIndices = requestedVisibleIndices,
     contentAreaTimeRange = contentAreaTimeRange,
-    stripePainters = MultiProvider.cached { RectangleReferenceEntryStripePainter() })
+    stripePainters = MultiProvider.always(RectangleReferenceEntryStripePainter())
+  )
 
   interface HistoryReferenceEntryPaintingVariables : HistoryStripeLayerPaintingVariables<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>
 }

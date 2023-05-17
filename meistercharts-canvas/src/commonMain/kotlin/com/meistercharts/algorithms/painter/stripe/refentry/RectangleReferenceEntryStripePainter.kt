@@ -28,6 +28,7 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.model.Direction
@@ -46,6 +47,7 @@ class RectangleReferenceEntryStripePainter(
 
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
+    dataSeriesIndex: ReferenceEntryDataSeriesIndex,
     startX: @Window Double, //might be out of the screen
     endX: @Window Double, //might be out of the screen
     activeTimeStamp: @ms @MayBeNaN Double,
@@ -79,12 +81,11 @@ class RectangleReferenceEntryStripePainter(
     val paintingVariables = paintingVariables()
 
     val historyConfiguration = paintingVariables.historyConfiguration
-    val dataSeriesIndex = paintingVariables.visibleDataSeriesIndex
 
     @Window val startXinViewport = chartCalculator.coerceInViewportX(startX)
     @Window val endXinViewport = chartCalculator.coerceInViewportX(endX)
 
-    @Zoomed val rectangleHeight = paintingVariables.height
+    @Zoomed val rectangleHeight = paintingVariables(dataSeriesIndex).height
     @Zoomed val rectangleWidth = endXinViewport - startXinViewport
 
     if (idToPaint.isNoValue()) {

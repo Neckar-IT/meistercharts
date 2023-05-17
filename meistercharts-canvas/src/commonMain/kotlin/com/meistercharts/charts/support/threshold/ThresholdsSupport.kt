@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.charts.support
+package com.meistercharts.charts.support.threshold
 
-import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.HudLabelsProvider
@@ -28,17 +27,17 @@ import com.meistercharts.algorithms.layers.mouseOverInteractions
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.charts.support.ValueAxisForKeyProvider
+import com.meistercharts.charts.support.ValueAxisSupport
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.DoublesProvider1
-import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.asDoublesProvider
 import it.neckar.open.provider.asDoublesProvider1
 import it.neckar.open.provider.asMultiProvider2withParam2
-import it.neckar.open.provider.fastForEachIndexed
 
 /**
  * Visualizes thresholds using
@@ -206,48 +205,26 @@ class ThresholdsSupport<Key>(
     }
 
     /**
-     * Creates interaction layers
+     * Creates the interaction layers for multiple [DirectionalLinesLayer]s and [ValueAxisHudLayer]
      */
-    fun createInteractionLayer(
+    fun createInteractionLayers(
       linesDelegateLayer: MultipleLayersDelegatingLayer<DirectionalLinesLayer>,
       hudLayersDelegate: MultipleLayersDelegatingLayer<ValueAxisHudLayer>,
-    ): DirectionalLinesInteractionLayer {
-      return createInteractionLayer(linesDelegateLayer.delegates, hudLayersDelegate.delegates)
+    ): HudAndDirectionLayerActiveConnector {
+      return createInteractionLayers(linesDelegateLayer.delegates, hudLayersDelegate.delegates)
     }
 
-    fun createInteractionLayer(
+    /**
+     * Creates the interaction layers for multiple [DirectionalLinesLayer]s and [ValueAxisHudLayer]
+     */
+    fun createInteractionLayers(
       directionalLayers: SizedProvider<DirectionalLinesLayer>,
       hudLayers: SizedProvider<ValueAxisHudLayer>,
-    ): DirectionalLinesInteractionLayer {
-      val mouseOverInteractions = DirectionalLinesInteractionLayer(directionalLayers)
+    ): HudAndDirectionLayerActiveConnector {
+      val directionalLinesInteractionLayer = directionalLayers.mouseOverInteractions()
+      val hudLayersInteractionLayer = hudLayers.mouseOverInteractions()
 
-      return mouseOverInteractions.also {
-        val originalAction = it.configuration.applyActiveLineAction
-
-        it.configuration.applyActiveLineAction = { activeLayerIndex: Int, activeLineIndex: Int, paintingContext: LayerPaintingContext ->
-          originalAction(activeLayerIndex, activeLineIndex, paintingContext) //call the original action
-
-          //Set the active elements of the hud layers
-          hudLayers.fastForEachIndexed { index, hudLayer ->
-            if (index == activeLayerIndex) {
-              hudLayer.configuration.setActiveHudElementIndex(activeLineIndex)
-
-              if (activeLineIndex >= 0) {
-                //Update the thresholds z-indices
-                hudLayer.configuration.zOrder = MultiDoublesProvider { index ->
-                  if (index == activeLineIndex) {
-                    1000.0
-                  } else {
-                    0.0
-                  }
-                }
-              }
-            } else {
-              hudLayer.configuration.setActiveHudElementIndex(-1)
-            }
-          }
-        }
-      }
+      return HudAndDirectionLayerActiveConnector(directionalLinesInteractionLayer, hudLayersInteractionLayer).connectTo(directionalLayers, hudLayers)
     }
   }
 }
@@ -332,37 +309,16 @@ inline fun ThresholdsSupport<Unit>.getThresholdLinesLayer(): DirectionalLinesLay
  */
 inline fun ThresholdsSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: (() -> Boolean)? = null) {
   val result = this.addLayers(layerSupport, Unit, visibleCondition)
-  layerSupport.layers.addLayer(createInteractionLayer(result.thresholdLinesLayer, result.hudLayer))
+
+  //Create the interaction layers
+  val directionalLinesInteractionLayer = result.thresholdLinesLayer.mouseOverInteractions()
+  val hudLayerInteractionLayer = result.hudLayer.mouseOverInteractions()
+
+  //Connect both interaction layers
+  HudAndDirectionLayerActiveConnector(directionalLinesInteractionLayer, hudLayerInteractionLayer).connectTo(result.thresholdLinesLayer, result.hudLayer)
+
+  //Add the layers
+  layerSupport.layers.addLayer(directionalLinesInteractionLayer)
+  layerSupport.layers.addLayer(hudLayerInteractionLayer)
 }
 
-/**
- * Creates the interaction layer for a single value axis layer
- */
-fun createInteractionLayer(directionalLinesLayer: DirectionalLinesLayer, hudLayer: ValueAxisHudLayer): DirectionalLinesInteractionLayer {
-  val interactionLayer = directionalLinesLayer.mouseOverInteractions().also {
-    val originalAction = it.configuration.applyActiveLineAction
-
-    it.configuration.applyActiveLineAction = { activeLayerIndex: Int, activeLineIndex: Int, paintingContext: LayerPaintingContext ->
-      originalAction(activeLayerIndex, activeLineIndex, paintingContext) //call the original action
-
-      //Set the active elements of the hud layers
-      if (activeLayerIndex == 0) {
-        hudLayer.configuration.setActiveHudElementIndex(activeLineIndex)
-
-        if (activeLineIndex >= 0) {
-          //Update the thresholds z-indices
-          hudLayer.configuration.zOrder = MultiDoublesProvider { index ->
-            if (index == activeLineIndex) {
-              1000.0
-            } else {
-              0.0
-            }
-          }
-        }
-      } else {
-        hudLayer.configuration.setActiveHudElementIndex(-1)
-      }
-    }
-  }
-  return interactionLayer
-}

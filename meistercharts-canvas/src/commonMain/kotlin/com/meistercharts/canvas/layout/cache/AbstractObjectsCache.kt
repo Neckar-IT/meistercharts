@@ -24,9 +24,9 @@ import it.neckar.open.collections.fastForEachWithIndex
  * Abstract base class for objects cache.
  * This class accepts all kind of objects (e.g. Strings).
  *
- * It is simpler to use [LayoutVariableObjectCache] if the object extend [LayoutVariable]
+ * It is simpler to use [LayoutVariablesObjectCache] if the object extend [LayoutVariable]
  */
-abstract class AbstractLayoutVariableObjectCache<T>(
+abstract class AbstractObjectsCache<T>(
   /**
    * The factory that is used to create new elements.
    *
@@ -72,14 +72,16 @@ abstract class AbstractLayoutVariableObjectCache<T>(
   /**
    * Increases the size by 1, adds a new element
    */
-  fun addNewElement(): T {
+  open fun addNewElement(): T {
     val newSize = size + 1
     ensureSize(newSize)
     return objectsStock[newSize - 1]
   }
 
   /**
-   * Ensures the array has the given size
+   * Ensures the array has the given size.
+   *
+   * Does *NOT* reset the values
    */
   @Deprecated("Use reset instead")
   override fun ensureSize(size: Int) {

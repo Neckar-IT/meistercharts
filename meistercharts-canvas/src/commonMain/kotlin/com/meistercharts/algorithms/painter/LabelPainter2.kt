@@ -26,8 +26,8 @@ import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable
-import com.meistercharts.canvas.layout.cache.LayoutVariableObjectCache
-import com.meistercharts.canvas.layout.cache.StringCache.Companion.Uninitialized
+import com.meistercharts.canvas.layout.cache.LayoutVariablesObjectCache
+import com.meistercharts.canvas.layout.cache.StringsCache.Companion.Uninitialized
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
@@ -65,7 +65,7 @@ class LabelPainter2(
     /**
      * Contains the layouted labels
      */
-    val layoutedLabelsCache: LayoutVariableObjectCache<LayoutedLabel2> = LayoutVariableObjectCache { LayoutedLabel2() }
+    val layoutedLabelsCache: LayoutVariablesObjectCache<LayoutedLabel2> = LayoutVariablesObjectCache { LayoutedLabel2() }
 
     override fun isNotEmpty(): Boolean {
       return layoutedLabelsCache.isEmpty().not()

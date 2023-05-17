@@ -22,13 +22,13 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.ZIndex
-import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
+import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
 import com.meistercharts.canvas.layout.cache.ZIndexSortingCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
@@ -48,6 +48,7 @@ import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.other.px
 
 /**
@@ -87,14 +88,20 @@ class ValueAxisHudLayer(
      */
     override val coordinatesCache = @Window @MayBeNaN CoordinatesCache()
 
-    override val anchorDirectionsCache = ObjectCache(Direction.TopLeft)
+    override val anchorDirectionsCache = ObjectsCache(Direction.TopLeft)
 
     /**
      * Contains the labels
      */
-    override val labelsCache = ObjectCache<List<String>>(emptyList())
+    override val labelsCache = ObjectsCache<List<String>>(emptyList())
 
-    val zOrder = ZIndexSortingCache()
+    /**
+     * ATTENTION: Filled in the *paint* method!
+     * Must only be used after paint has been called (e.g. for mouse events)
+     */
+    override val boundingBoxes: BoundsLayoutCache = BoundsLayoutCache()
+
+    override val zOrder = ZIndexSortingCache()
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       val chartSupport = paintingContext.chartSupport
@@ -106,6 +113,7 @@ class ValueAxisHudLayer(
       anchorDirectionsCache.prepare(size)
       labelsCache.prepare(size)
       zOrder.prepare(size)
+      boundingBoxes.prepare(size)
 
       configuration.locations.fastForEachIndexed(paintingContext) { index: @HudElementIndex Int, x: @MayBeNaN @Window Double, y: @MayBeNaN @Window Double ->
         coordinatesCache.x(index, x)
@@ -164,7 +172,7 @@ class ValueAxisHudLayer(
           textColor = configuration.textColors.valueAt(index)
         }
 
-        gc.paintTextBox(
+        val boundingBox = gc.paintTextBox(
           lines = paintingVariables.labelsCache[index],
           lineSpacing = LineSpacing.Single,
           horizontalAlignment = configuration.textAlignments.valueAt(index),
@@ -175,6 +183,9 @@ class ValueAxisHudLayer(
           textColor = textColor,
           maxStringWidth = configuration.maxWidth.valueAt(index)
         )
+
+        //Store the bounding box
+        paintingVariables.boundingBoxes[index] = boundingBox.plus(x, y)
 
         gc.beginPath()
         ArrowHead.forOrientation(gc, anchorDirection, arrowHeadLength, arrowHeadWidth)
@@ -208,8 +219,30 @@ class ValueAxisHudLayer(
      */
     var zOrder: @ZIndex @MayBeNaN MultiDoublesProvider<HudElementIndex> = MultiDoublesProvider.always(com.meistercharts.algorithms.ZIndex.auto.value)
 
+    fun resetZOrder() {
+      this.zOrder = MultiDoublesProvider.always(com.meistercharts.algorithms.ZIndex.auto.value)
+    }
+
     /**
-     * The direction of the anchor.
+     * Updates the z order to show the provided element index on top
+     */
+    fun zOrderShowIndexOnTop(hudElementIndexTop: @MayBeNegative @HudElementIndex Int) {
+      if (hudElementIndexTop < 0) {
+        resetZOrder()
+        return
+      }
+
+      zOrder = MultiDoublesProvider {
+        if (it == hudElementIndexTop) {
+          1.0
+        } else {
+          com.meistercharts.algorithms.ZIndex.auto.value
+        }
+      }
+    }
+
+    /**
+     * The direction of the anchor (in which direction the anchor can be found)
      */
     var anchorDirections: MultiProvider<HudElementIndex, Direction> = MultiProvider.always(Direction.CenterLeft)
 
@@ -232,10 +265,8 @@ class ValueAxisHudLayer(
      * The box style for the active HUD element
      */
     var boxStylesActive: MultiProvider<HudElementIndex, BoxStyle> = MultiProvider.always(
-      BoxStyle(
-        fill = Color.white,
+      BoxStyle.modernBlue.copy(
         borderColor = Color.blue3,
-        radii = BorderRadius.all2,
         shadow = Shadow.Drop,
       )
     )
@@ -262,7 +293,7 @@ class ValueAxisHudLayer(
      */
     var textColors: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black)
 
-    var textColorsActive: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.darkgray)
+    var textColorsActive: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black)
 
     /**
      * The text font fragments
@@ -282,7 +313,7 @@ class ValueAxisHudLayer(
     /**
      * THe index of the active hud element
      */
-    var activeHudElementIndex: @HudElementIndex Int = -1
+    var activeHudElementIndex: @HudElementIndex Int = HudElementIndex.None
 
     /**
      * Sets the active hud element index if necessary. calls [callbackOnChange] only if the value has changed
@@ -417,10 +448,20 @@ fun ValueAxisLayer.hudLayer(
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
 @MultiProviderIndexContextAnnotation
-annotation class HudElementIndex
+annotation class HudElementIndex {
+
+  companion object {
+    const val None: @HudElementIndex Int = -1
+  }
+}
 
 
 interface ValueAxisHudLayerPaintingVariables : PaintingVariables {
+  /**
+   * Contains the indices by z index
+   */
+  val zOrder: ZIndexSortingCache
+
   /**
    * Contains the coordinates for the HUD element
    */
@@ -429,11 +470,16 @@ interface ValueAxisHudLayerPaintingVariables : PaintingVariables {
   /**
    * Cache for anchor directions
    */
-  val anchorDirectionsCache: ObjectCache<Direction>
+  val anchorDirectionsCache: ObjectsCache<Direction>
 
   /**
    * Contains the labels
    */
-  val labelsCache: ObjectCache<List<String>>
+  val labelsCache: ObjectsCache<List<String>>
 
+  /**
+   * ATTENTION: Filled in the *paint* method!
+   * Must only be used after paint has been called (e.g. for mouse events)
+   */
+  val boundingBoxes: BoundsLayoutCache
 }

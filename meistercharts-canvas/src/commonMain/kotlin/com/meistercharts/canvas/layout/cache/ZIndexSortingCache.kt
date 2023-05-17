@@ -17,6 +17,8 @@ package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.algorithms.ZIndex
 import com.meistercharts.canvas.layout.cache.ZIndexSortingCache.Entry
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.fastForEachReverse
 import it.neckar.open.collections.genericSort
 
 /**
@@ -25,7 +27,7 @@ import it.neckar.open.collections.genericSort
  * Do *NOT* use with [fastForEachWithIndex] - since the provided index does not make any sense.
  * Instead, use [fastForEach] and use [Entry.index] instead.
  */
-class ZIndexSortingCache : LayoutVariableObjectCache<Entry>(
+class ZIndexSortingCache : LayoutVariablesObjectCache<Entry>(
   { Entry() }
 ) {
   /**
@@ -39,6 +41,26 @@ class ZIndexSortingCache : LayoutVariableObjectCache<Entry>(
     get(index).also {
       it.index = index
       it.zIndex = zIndex
+    }
+  }
+
+  /**
+   * Iterates over all indices - in order of the z indices (lowest to highest).
+   * This method should be used for paintings
+   */
+  inline fun fastForEachIndices(callback: (index: Int) -> Unit) {
+    values.fastForEach { it: Entry ->
+      callback(it.index)
+    }
+  }
+
+  /**
+   * Iterates over all indices - top one first (highest to lowest).
+   * This method is usually used for event handling
+   */
+  inline fun fastForEachIndicesTopToBottom(callback: (index: Int) -> Unit) {
+    values.fastForEachReverse { it: Entry ->
+      callback(it.index)
     }
   }
 

@@ -18,19 +18,23 @@ package com.meistercharts.canvas.layout.cache
 import it.neckar.open.collections.fastForEachWithIndex
 
 /**
- * Caches objects
+ * Caches string values
  */
-class ObjectCache<T>(val initialValue: T) : AbstractLayoutVariableObjectCache<T>({
-  initialValue
+class StringsCache : AbstractObjectsCache<String>({
+  Uninitialized
 }) {
 
   override fun reset() {
     values.fastForEachWithIndex { index, _ ->
-      values[index] = initialValue
+      values[index] = Uninitialized
     }
   }
 
-  operator fun set(index: Int, value: T) {
+  operator fun set(index: Int, value: String) {
     values[index] = value
+  }
+
+  companion object {
+    const val Uninitialized: String = "UNINITIALIZED"
   }
 }
