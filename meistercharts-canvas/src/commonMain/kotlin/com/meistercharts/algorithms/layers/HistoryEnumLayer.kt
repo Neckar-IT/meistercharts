@@ -118,5 +118,5 @@ class HistoryEnumLayer(
   )
 }
 
-interface HistoryEnumPaintingVariables : AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables<HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
+interface HistoryEnumPaintingVariables : AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
 }

@@ -19,23 +19,24 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 
 /**
- * Provides the color for a status enum
+ * Provides the colors for the status
  */
 fun interface ReferenceEntryStatusColorProvider {
   /**
    * Returns the color for the given reference entry id
    */
-  fun color(value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration): Color
+  fun color(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration): Color
 
   companion object {
     /**
      * Creates a new instance of the default implementation
      */
     fun default(): ReferenceEntryStatusColorProvider {
-      return ReferenceEntryStatusColorProvider { _, statusEnumSet, _ ->
+      return ReferenceEntryStatusColorProvider { _, _, statusEnumSet, _ ->
         when {
           statusEnumSet.isNoValue() -> {
             Color.silver

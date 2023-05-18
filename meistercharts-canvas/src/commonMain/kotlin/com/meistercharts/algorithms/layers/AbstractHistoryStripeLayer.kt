@@ -65,12 +65,12 @@ abstract class AbstractHistoryStripeLayer<
 
   override val type: LayerType = LayerType.Content
 
-  abstract override fun paintingVariables(): HistoryStripeLayerPaintingVariables<Value1Type, Value2Type, Value3Type, Value4Type>
+  abstract override fun paintingVariables(): HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
 
   /**
    * Abstract base class for painting variables
    */
-  abstract inner class AbstractHistoryStripeLayerPaintingVariables : HistoryStripeLayerPaintingVariables<Value1Type, Value2Type, Value3Type, Value4Type> {
+  abstract inner class AbstractHistoryStripeLayerPaintingVariables : HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
     override var historyBuckets: List<HistoryBucket> = emptyList()
     var minGapDistance: @ms Double = Double.NaN
 
@@ -87,19 +87,19 @@ abstract class AbstractHistoryStripeLayer<
 
     var historyConfiguration: HistoryConfiguration = HistoryConfiguration.empty
 
-    override val activeInformation: HistoryStripeLayerPaintingVariables.ActiveInformation<Value1Type, Value2Type, Value3Type, Value4Type> = object : HistoryStripeLayerPaintingVariables.ActiveInformation<Value1Type, Value2Type, Value3Type, Value4Type> {
+    override val activeInformation: HistoryStripeLayerPaintingVariables.ActiveInformation<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> = object : HistoryStripeLayerPaintingVariables.ActiveInformation<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
       override var value1: Value1Type = value1Default()
       override var value2: Value2Type = value2Default()
       override var value3: Value3Type = value3Default()
       override var value4: Value4Type = value4Default()
 
+      override var activeDataSeriesIndex: DataSeriesIndexType? = null
+
       /**
        * The geometrical center for the [Configuration.activeDataSeriesIndex] and [Configuration.activeTimeStamp].
        */
       override var geometricalCenter: @Window @MayBeNaN Double = Double.NaN
-        private set(value) {
-          field = value
-        }
+        private set
 
       override var geometricalCenterIfFinite: @Window @MayBeNaN Double
         @Deprecated("Not supported", level = DeprecationLevel.HIDDEN) get() {
@@ -153,6 +153,8 @@ abstract class AbstractHistoryStripeLayer<
       run {
         activeInformation.reset()
         configuration.activeDataSeriesIndex?.let { activeDataSeriesIndex ->
+          activeInformation.activeDataSeriesIndex = activeDataSeriesIndex
+
           @ms val activeTimeStamp = configuration.activeTimeStamp.requireIsFinite { "activeTimeStamp" }
 
           historyBuckets.find(activeTimeStamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
@@ -392,7 +394,7 @@ abstract class AbstractHistoryStripeLayer<
     var activeDataSeriesBackgroundSize: (dataSeriesHeight: @Zoomed Double) -> Double = { dataSeriesHeight -> dataSeriesHeight }
   }
 
-  interface HistoryStripeLayerPaintingVariables<Value1Type, Value2Type, Value3Type, Value4Type> : PaintingVariables {
+  interface HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> : PaintingVariables {
     /**
      * The history bucket that have been used to display the strips
      */
@@ -412,17 +414,22 @@ abstract class AbstractHistoryStripeLayer<
     /**
      * Contains the information about the active (usually related mouse over / tooltip) data
      */
-    val activeInformation: ActiveInformation<Value1Type, Value2Type, Value3Type, Value4Type>
+    val activeInformation: ActiveInformation<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
 
 
     /**
      * Used for tooltips
      */
-    interface ActiveInformation<Value1Type, Value2Type, Value3Type, Value4Type> {
+    interface ActiveInformation<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
       /**
        * Resets all values
        */
       fun reset()
+
+      /**
+       * The active data series index
+       */
+      var activeDataSeriesIndex: DataSeriesIndexType?
 
       /**
        * The geometrical center of the active segment

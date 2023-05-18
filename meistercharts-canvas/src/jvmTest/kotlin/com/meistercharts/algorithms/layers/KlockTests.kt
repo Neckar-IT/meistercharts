@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.axis.utc2DateTimeTz
 import com.meistercharts.algorithms.time.timeZoneOffsetProvider
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
-import com.soywiz.klock.*
+import korlibs.time.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneId

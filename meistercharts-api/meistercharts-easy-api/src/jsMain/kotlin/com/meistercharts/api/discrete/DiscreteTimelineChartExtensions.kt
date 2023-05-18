@@ -17,7 +17,6 @@ package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
 import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
@@ -97,54 +96,52 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
     recalculateContentViewportMargin()
   }
 
-  jsConfiguration.discreteDataSeriesConfigurations?.let { jsConfigurations ->
-    val stripePainters = jsConfigurations.map { jsConfiguration ->
-      RectangleReferenceEntryStripePainter {
 
-        jsConfiguration.stripeStyles?.let { jsStripeStyles ->
+  jsConfiguration.discreteDataSeriesConfigurations?.let { dataSeriesConfigurations: Array<DiscreteDataSeriesConfiguration> ->
+
+    //Create the stripe painters - one for each discrete data series
+    val stripePainters: List<RectangleReferenceEntryStripePainter> = dataSeriesConfigurations.map { jsDiscreteDataSeriesConfiguration ->
+      //Create the stripe painter for this data series
+      RectangleReferenceEntryStripePainter {
+        //The stripe styles for the ordinals
+        jsDiscreteDataSeriesConfiguration.stripeStyles?.let { jsStripeStyles ->
           //TODO support other fill types, too
 
+          //The fill colors for the different state ordinals
           val fillColors = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
             jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
           }
 
-          ReferenceEntryStatusColorProvider { _, statusEnumSet, _ ->
+          this.fillProvider = ReferenceEntryStatusColorProvider { _, _, statusEnumSet, _ ->
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
             fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
-          }.also { statusColorProvider ->
-            fillProvider = statusColorProvider
-            configuration.tooltipStatusColorProvider = statusColorProvider
-          }
-
-          val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
-            jsStripeStyle?.labelColor?.toColor() ?: Color.white
-          }
-
-          labelColorProvider = { _, statusEnumSet, _ ->
-            val firstOrdinal = statusEnumSet.firstSetOrdinal()
-            labelColors.getModuloOrNull(firstOrdinal.value) ?: Color.white
           }
         }
 
-        jsConfiguration.stripeLabelFont?.toFontDescriptorFragment()?.let {
+        jsDiscreteDataSeriesConfiguration.stripeLabelFont?.toFontDescriptorFragment()?.let {
           labelFont = it
         }
 
-        jsConfiguration.stripeSegmentSeparatorColor?.toColor()?.let {
+        jsDiscreteDataSeriesConfiguration.stripeSegmentSeparatorColor?.toColor()?.let {
           separatorStroke = it
         }
-        jsConfiguration.stripeSegmentSeparatorWidth?.sanitize()?.let {
+        jsDiscreteDataSeriesConfiguration.stripeSegmentSeparatorWidth?.sanitize()?.let {
           separatorSize = it
         }
 
-        jsConfiguration.aggregationMode?.let {
+        jsDiscreteDataSeriesConfiguration.aggregationMode?.let {
           //TODO support aggregation mode somehow
           //aggregationMode = it.sanitize()
         }
       }
     }
 
-    historyReferenceEntryLayer.configuration.stripePainters = MultiProvider.forListOr<ReferenceEntryDataSeriesIndex, RectangleReferenceEntryStripePainter>(values = stripePainters) { RectangleReferenceEntryStripePainter() }.cached()
+    //Delegate to the stripe painters
+    configuration.tooltipStatusColorProviders = MultiProvider { index ->
+      stripePainters[index].configuration.fillProvider
+    }
+
+    referenceEntryStripePainters = MultiProvider.forListOr<ReferenceEntryDataSeriesIndex, RectangleReferenceEntryStripePainter>(values = stripePainters) { RectangleReferenceEntryStripePainter() }.cached()
   }
 
   jsConfiguration.discreteStripeHeight?.let {

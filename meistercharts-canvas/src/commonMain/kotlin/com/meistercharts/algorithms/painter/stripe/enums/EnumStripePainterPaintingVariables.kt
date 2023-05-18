@@ -24,33 +24,20 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 
 /**
- * Painting variables for enums
- */
-abstract class EnumStripePainterPaintingVariables(
-  dataSeriesIndexDefault: EnumDataSeriesIndex,
-  value1Default: HistoryEnumSet,
-  value2Default: HistoryEnumOrdinal,
-  value3Default: Unit,
-  value4Default: Unit,
-) :
-  StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(dataSeriesIndexDefault, value1Default, value2Default, value3Default, value4Default) {
-  abstract val historyEnum: HistoryEnum
-}
-
-/**
  * Painting variables for enum stripes
  */
-class DefaultEnumStripePainterPaintingVariables : EnumStripePainterPaintingVariables(
-  dataSeriesIndexDefault = EnumDataSeriesIndex.zero,
-  value1Default = HistoryEnumSet.NoValue,
-  value2Default = HistoryEnumOrdinal.NoValue,
-  value3Default = Unit,
-  value4Default = Unit,
-) {
+open class EnumStripePainterPaintingVariables :
+  StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(
+    dataSeriesIndexDefault = EnumDataSeriesIndex.zero,
+    value1Default = HistoryEnumSet.NoValue,
+    value2Default = HistoryEnumOrdinal.NoValue,
+    value3Default = Unit,
+    value4Default = Unit,
+  ) {
   /**
    * The current history enum for [currentDataSeriesIndex]
    */
-  override var historyEnum: HistoryEnum = HistoryEnum.Boolean
+  var historyEnum: HistoryEnum = HistoryEnum.Boolean
     private set
 
   override fun prepareLayout(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {

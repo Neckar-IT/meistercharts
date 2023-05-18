@@ -114,7 +114,7 @@ class RectangleReferenceEntryStripePainter(
       }
 
       count.value == 1 -> {
-        gc.fill(configuration.fillProvider.color(idToPaint, statusEnumSet, historyConfiguration))
+        gc.fill(configuration.fillProvider.color(dataSeriesIndex, idToPaint, statusEnumSet, historyConfiguration))
 
         val snapConfiguration = configuration.snapConfiguration()
         gc.snapPhysicalTranslation(snapConfiguration)

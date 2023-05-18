@@ -38,7 +38,7 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
   /**
    * The painting properties that are held
    */
-  private val paintingVariables = DefaultEnumStripePainterPaintingVariables()
+  private val paintingVariables = EnumStripePainterPaintingVariables()
 
   /**
    * Returns the history enum value for the given index

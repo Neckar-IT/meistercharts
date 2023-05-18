@@ -16,15 +16,15 @@
 package com.meistercharts.algorithms.axis
 
 import com.meistercharts.algorithms.time.PredefinedDuration
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeSpan
-import com.soywiz.klock.DateTimeTz
-import com.soywiz.klock.Month
-import com.soywiz.klock.MonthSpan
-import com.soywiz.klock.days
-import com.soywiz.klock.hours
-import com.soywiz.klock.minutes
-import com.soywiz.klock.seconds
+import korlibs.time.DateTime
+import korlibs.time.DateTimeSpan
+import korlibs.time.DateTimeTz
+import korlibs.time.Month
+import korlibs.time.MonthSpan
+import korlibs.time.days
+import korlibs.time.hours
+import korlibs.time.minutes
+import korlibs.time.seconds
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.fastForEach

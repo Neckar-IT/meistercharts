@@ -26,7 +26,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
-import com.soywiz.klock.DateTimeTz
+import korlibs.time.DateTimeTz
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -47,8 +47,7 @@ class TimeAxisTickCalculatorTest {
   fun testFirstTick() {
 
     val start = LocalDateTime.of(2020, 11, 22, 1, 2, 3, 4).atZone(ZoneId.of("Europe/Berlin")).toInstant()
-
-    val startTz: DateTimeTz = DateTimeTz.fromUnixLocal(start.toDoubleMillis())
+    val startTz: DateTimeTz = DateTimeTz.fromUnixLocal(start.toEpochMilli())
 
 
     DistanceYears(1).calculateFirstTick(startTz, TimeZone.Berlin).let {

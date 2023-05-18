@@ -18,9 +18,9 @@ package com.meistercharts.algorithms.axis
 import com.meistercharts.algorithms.time.timeZoneOffsetProvider
 import it.neckar.open.time.TimeZone
 import it.neckar.open.unit.si.ms
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.DateTimeTz
-import com.soywiz.klock.TimezoneOffset
+import korlibs.time.DateTime
+import korlibs.time.DateTimeTz
+import korlibs.time.TimezoneOffset
 
 /**
  *

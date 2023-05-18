@@ -25,13 +25,7 @@ import com.meistercharts.history.ReferenceEntryId
 /**
  * Painting variables for enums
  */
-open class ReferenceEntryStripePainterPaintingVariables(
-  dataSeriesIndexDefault: ReferenceEntryDataSeriesIndex,
-  value1Default: ReferenceEntryId,
-  value2Default: ReferenceEntryDifferentIdsCount,
-  value3Default: HistoryEnumSet,
-  value4Default: ReferenceEntryData?,
-) :
+open class ReferenceEntryStripePainterPaintingVariables :
   StripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>(
     dataSeriesIndexDefault = ReferenceEntryDataSeriesIndex.zero,
     value1Default = ReferenceEntryId.NoValue,
@@ -42,15 +36,3 @@ open class ReferenceEntryStripePainterPaintingVariables(
     ) {
   //TODO add
 }
-
-/**
- * Painting variables for referenceEntry stripes
- */
-class DefaultReferenceEntryStripePainterPaintingVariables :
-  ReferenceEntryStripePainterPaintingVariables(
-    dataSeriesIndexDefault = ReferenceEntryDataSeriesIndex.zero,
-    value1Default = ReferenceEntryId.NoValue,
-    value2Default = ReferenceEntryDifferentIdsCount.NoValue,
-    value3Default = HistoryEnumSet.NoValue,
-    value4Default = null,
-  )

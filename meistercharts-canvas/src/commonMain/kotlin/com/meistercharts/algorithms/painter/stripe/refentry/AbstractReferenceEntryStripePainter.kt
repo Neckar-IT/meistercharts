@@ -38,7 +38,7 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
   /**
    * The painting properties that are held
    */
-  private val paintingVariables = DefaultReferenceEntryStripePainterPaintingVariables()
+  private val paintingVariables = ReferenceEntryStripePainterPaintingVariables()
 
 
   override fun haveRelevantValuesChanged(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
