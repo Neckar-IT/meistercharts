@@ -89,7 +89,7 @@ class DownSamplingReferenceEntryCalculatorTest {
     }
 
     val recordedChunkDescriptors = HistoryBucketDescriptor.fromChunk(recordedChunkLarge, samplingPeriod)
-    assertThat(recordedChunkDescriptors).hasSize(2)
+    assertThat(recordedChunkDescriptors).hasSize(1)
 
     val recordedBuckets = recordedChunkDescriptors.mapNotNull {
       val historyChunk = recordedChunkLarge.range(it.start, it.end)
@@ -100,17 +100,17 @@ class DownSamplingReferenceEntryCalculatorTest {
       }
     }
 
-    assertThat(recordedBuckets).hasSize(2)
+    assertThat(recordedBuckets).hasSize(1)
 
     recordedBuckets[0].let { bucket ->
-      assertThat((bucket.chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(190)
+      assertThat((bucket.chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(572)
 
       val historyChunk = bucket.chunk
 
       println(historyChunk.dump())
 
-      assertThat(bucket.start.formatUtc()).isEqualTo("2001-09-09T01:46:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2001-09-09T01:47:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000")
       assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(25912)
       assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(30701)
 
@@ -123,37 +123,21 @@ class DownSamplingReferenceEntryCalculatorTest {
       assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b10)
       assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
     }
-    recordedBuckets[1].let { bucket ->
-      assertThat((bucket.chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries).hasSize(384)
-      val historyChunk = bucket.chunk
-
-      println(historyChunk.dump())
-      assertThat(bucket.start.formatUtc()).isEqualTo("2001-09-09T01:47:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2001-09-09T01:48:00.000")
-
-      assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(23372)
-      assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(88193)
-
-      assertThat(historyChunk.getReferenceEntryData(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryId(23372))).isNotNull()
-      assertThat(historyChunk.getReferenceEntryData(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryId(88193))).isNotNull()
-
-      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b10)
-      assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
-    }
 
     val descriptorForDownSampling = HistoryBucketDescriptor.forTimestamp(TimeConstants.referenceTimestamp, samplingPeriod.above()!!)
     val downSampled = descriptorForDownSampling.calculateDownSampled(recordedBuckets)
 
-    assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.Pending)
-    assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualToReferenceEntryId(25912)
+    assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(25912)
+    assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualTo(ReferenceEntryId.Pending)
 
     downSampled.chunk.getReferenceEntryData(ReferenceEntryDataSeriesIndex.zero, ReferenceEntryId(25912)).let {
       requireNotNull(it)
       assertThat(it.id).isEqualToReferenceEntryId(25912)
     }
 
-    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualToHistoryEnumSet(0b11)
-    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(401))).isEqualToHistoryEnumSet(0b11)
-    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(402))).isEqualToHistoryEnumSet(0b11)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToHistoryEnumSet(0b11)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(400))).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(401))).isEqualTo(HistoryEnumSet.Pending)
+    assertThat(downSampled.chunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(402))).isEqualTo(HistoryEnumSet.Pending)
   }
 }

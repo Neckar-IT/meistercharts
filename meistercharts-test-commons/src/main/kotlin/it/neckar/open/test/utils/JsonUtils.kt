@@ -30,10 +30,11 @@
  */
 package it.neckar.open.test.utils
 
+import assertk.*
+import assertk.assertions.support.*
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.ComparisonFailure
 import java.io.StringWriter
 import java.net.URL
 import java.nio.charset.Charset
@@ -58,17 +59,17 @@ object JsonUtils {
     actualTreeModifier: JsonNode.() -> Unit = {},
   ) {
     if (actual == null || actual.trim { it <= ' ' }.isEmpty()) {
-      throw ComparisonFailure("Empty actual json", formatJson(expected).trim { it <= ' ' }, formatJson(actual).trim { it <= ' ' })
+      assertThat(formatJson(expected).trim()).fail(formatJson(expected).trim(), formatJson(actual).trim())
     }
     if (expected == null || expected.trim { it <= ' ' }.isEmpty()) {
-      throw ComparisonFailure("Empty expected json", formatJson(expected).trim { it <= ' ' }, formatJson(actual).trim { it <= ' ' })
+      assertThat(formatJson(expected).trim()).fail(formatJson(expected).trim(), formatJson(actual).trim())
     }
     try {
       val mapper = ObjectMapper()
       val expectedTree = mapper.readTree(expected)
       val actualTree = mapper.readTree(actual).also(actualTreeModifier)
       if (expectedTree != actualTree) {
-        throw ComparisonFailure("JSON comparison failed", formatJson(expected).trim { it <= ' ' }, formatJson(actual).trim { it <= ' ' })
+        assertThat(formatJson(expected).trim()).fail(formatJson(expected).trim(), formatJson(actual).trim())
       }
     } catch (e: JsonProcessingException) {
       throw AssertionError("JSON parsing error (" + e.message + ")\n Actual: \n${formatJson(actual).trim { it <= ' ' }}", e)

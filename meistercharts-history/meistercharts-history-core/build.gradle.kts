@@ -78,13 +78,11 @@ kotlin{
         implementation(Libs.filepeek) //necessary to ensure the file peek version is updated to latest version
         implementation(Libs.assertk_jvm)
 
-        implementation(Libs.junit)
         implementation(Libs.assertk_jvm)
 
         implementation(Libs.junit_jupiter_api)
         implementation(Libs.junit_jupiter_params)
         implementation(Libs.junit_jupiter_engine)
-        implementation(Libs.junit_vintage_engine)
 
         implementation(Libs.assertj_core)
         implementation(KotlinX.coroutines.core)

@@ -7,9 +7,9 @@ object TimeConstants {
   /**
    * A timestamp that may serve as a reference point in time.
    *
-   * Sun Sep 09 2001 03:46:40 GMT+0200 (Central European standard time)
+   * 2001-09-09T01:46:40.000
    */
-  const val referenceTimestamp: @ms Double = 1000000000000.0 //Beware that changing this constant may break pixel-related regression tests!
+  const val referenceTimestamp: @ms Double = 1.7040672E12 //Beware that changing this constant may break pixel-related regression tests!
 
   /**
    * Milli seconds per second
