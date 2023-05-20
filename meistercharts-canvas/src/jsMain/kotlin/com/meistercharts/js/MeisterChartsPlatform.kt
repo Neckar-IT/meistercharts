@@ -28,6 +28,9 @@ import com.meistercharts.platform.MeisterChartsAbstractPlatform
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.i18n.I18nConfiguration
 import kotlinx.browser.document
+import kotlinx.browser.window
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventListener
 import org.w3c.dom.get
 
 /**
@@ -54,7 +57,6 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
      */
     urlConverter: UrlConverter? = null,
   ) {
-
     initBasics(corporateDesign, defaultI18nConfiguration)
 
     urlConverter?.let {
@@ -63,6 +65,12 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   override fun initializeOnce() {
+    window.addEventListener("load", object : EventListener {
+      override fun handleEvent(event: Event) {
+        logger.debug("window.load: ${event.type}")
+      }
+    })
+
     FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
 
     MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()

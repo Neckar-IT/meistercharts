@@ -15,8 +15,10 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.model.Size
 import com.meistercharts.events.ImageLoadedEventBroker
+import com.meistercharts.model.Size
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
 
@@ -25,19 +27,25 @@ import org.w3c.dom.HTMLImageElement
  *
  */
 actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
+  logger.debug { "Loading image: $url" }
+
   (document.createElement("IMG") as HTMLImageElement).apply {
     style.width = "${this.width} px"
     style.height = "${this.height} px"
 
     // only after the load-event IE11 is able to draw the image on a canvas
     addEventListener("load", {
+      logger.debug {
+        "Image loaded: $url"
+      }
+
       // update image property or UrlPaintable
       callback(createImage())
       // notify the world about the event
       ImageLoadedEventBroker.notifyLoaded()
     })
     addEventListener("error", {
-      console.warn("Could not load image <$url>")
+      logger.warn("Could not load image <$url>")
     })
 
     // set src after(!) adding the event-listener for the load-event
@@ -56,3 +64,5 @@ actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
 private fun HTMLImageElement.createImage(): Image {
   return Image(this, Size(this.naturalWidth.toDouble(), this.naturalHeight.toDouble()))
 }
+
+private val logger = LoggerFactory.getLogger("com.meistercharts.canvas.LoadImageJs")

@@ -17,6 +17,7 @@ package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
 import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
@@ -111,10 +112,17 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
           val fillColors = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
             jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
           }
-
           this.fillProvider = ReferenceEntryStatusColorProvider { _, _, statusEnumSet, _ ->
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
             fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
+          }
+          
+          val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
+            jsStripeStyle?.labelColor?.toColor() ?: Color.white
+          }
+          labelColorProvider = { _, statusEnumSet, _ ->
+            val firstOrdinal = statusEnumSet.firstSetOrdinal()
+            labelColors.getModuloOrNull(firstOrdinal.value) ?: Color.white
           }
         }
 

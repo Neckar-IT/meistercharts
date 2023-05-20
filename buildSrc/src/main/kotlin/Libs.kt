@@ -205,8 +205,6 @@ public object Libs {
 
     public const val joda_time: String = "joda-time:joda-time:_"
 
-    public const val junit: String = "junit:junit:_"
-
     public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
 
     public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
@@ -374,8 +372,6 @@ public object Libs {
     public const val junit_jupiter_engine: String = "org.junit.jupiter:junit-jupiter-engine:_"
 
     public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params:_"
-
-    public const val junit_vintage_engine: String = "org.junit.vintage:junit-vintage-engine:_"
 
     public const val org_openjfx_javafxplugin_gradle_plugin: String =
             "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"

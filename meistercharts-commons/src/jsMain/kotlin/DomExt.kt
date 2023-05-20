@@ -32,6 +32,6 @@ inline fun <T> ItemArrayLike<T>.forEach(callback: (element: T) -> Unit) {
  */
 fun Document.requireComplete() {
   require(this.readyState == DocumentReadyState.COMPLETE) {
-    "Expected ready state to be [${DocumentReadyState.COMPLETE}] but was [${this.readyState}]. Maybe `window.onLoad()` should be used."
+    "Expected ready state to be [${DocumentReadyState.COMPLETE}] but was [${this.readyState}]. Maybe `window.addEventListener(\"load\", ...)` should be used."
   }
 }
