@@ -140,8 +140,6 @@ public object Libs {
     public const val io_gitlab_arturbosch_detekt_gradle_plugin: String =
             "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin:_"
 
-    public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
-
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
     public const val ktor_client_cio: String = "io.ktor:ktor-client-cio:_"
