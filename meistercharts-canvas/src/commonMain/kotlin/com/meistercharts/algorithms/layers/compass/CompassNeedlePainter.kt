@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.domain2rad
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.PolarCoordinates
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
@@ -65,7 +65,7 @@ class CompassNeedlePainter(
     gc.fill()
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The radius of the lower corners

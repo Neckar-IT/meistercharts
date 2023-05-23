@@ -24,7 +24,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
 import com.meistercharts.design.corporateDesign
@@ -126,7 +126,7 @@ class PuristicCompassPainter(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Returns the ticks

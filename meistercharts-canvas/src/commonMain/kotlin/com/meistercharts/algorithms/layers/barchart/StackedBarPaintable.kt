@@ -38,7 +38,7 @@ import com.meistercharts.canvas.CanvasStringShortener
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.StrokeLocation
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
 import com.meistercharts.canvas.fillRoundedRect
@@ -825,7 +825,7 @@ class StackedBarPaintable(
   @MultiProviderIndexContextAnnotation
   annotation class StackedBarValueIndex
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The orientation of the bar.

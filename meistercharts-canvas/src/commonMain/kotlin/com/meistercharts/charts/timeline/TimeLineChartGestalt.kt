@@ -54,7 +54,6 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.LabelIndex
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
-import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
@@ -96,7 +95,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
@@ -149,7 +148,6 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.PointPainter
-import com.meistercharts.painter.PointStylePainter
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
@@ -1256,7 +1254,7 @@ class TimeLineChartGestalt
     var thresholdLabelProvider: @Domain MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> = MultiProvider2.empty()
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   inner class Style {
     /**
      * Value axis style configuration - is called when a new value axis is instantiated

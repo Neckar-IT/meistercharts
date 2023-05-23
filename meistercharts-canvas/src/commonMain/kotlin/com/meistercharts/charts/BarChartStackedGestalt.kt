@@ -43,7 +43,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.charts.support.CategoryAxisSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
@@ -218,7 +218,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     var categorySeriesModel: CategorySeriesModel,
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   open inner class Style {
     /**
      * The value range of the bar chart

@@ -18,6 +18,7 @@ package com.meistercharts.api.discrete
 import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.TimeRelative
@@ -101,7 +102,9 @@ class DiscreteTimelineChart internal constructor(
     meisterCharts.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf {
       meisterCharts.layerSupport.recordPaintStatistics
     })
-
+    meisterCharts.layerSupport.layers.addLayer(FramesPerSecondLayer().visibleIf {
+      meisterCharts.layerSupport.recordPaintStatistics
+    })
   }
 
   override fun setConfiguration(jsConfiguration: DiscreteTimelineChartConfiguration) {

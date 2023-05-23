@@ -22,7 +22,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.canvas.textService
@@ -100,7 +100,7 @@ class ScrollWithoutModifierMessageLayer(
   /**
    * Style configuration for the layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The color of the text

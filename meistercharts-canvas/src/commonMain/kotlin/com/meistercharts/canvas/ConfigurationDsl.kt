@@ -16,8 +16,9 @@
 package com.meistercharts.canvas
 
 /**
- * Annotations that is used to ensure the styles are configured correctly
+ * Annotations that is used to ensure the configuration objects are configured correctly
+ *
+ * This annotation is also used for Styles. Those will be replaced by Configuration objects step by step
  */
 @DslMarker
-//TODO rename to ConfigurationDsl
-annotation class StyleDsl
+annotation class ConfigurationDsl

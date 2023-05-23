@@ -27,7 +27,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.findXWithAnchor
 import com.meistercharts.canvas.findYWithAnchor
@@ -246,7 +246,7 @@ class ToolbarLayer(
     All, OnlyLowPriority
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Configuration constructor(
     /**
      * The (fixed) list of buttons.

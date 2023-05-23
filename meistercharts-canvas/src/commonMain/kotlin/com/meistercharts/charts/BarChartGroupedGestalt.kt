@@ -65,7 +65,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.support.CategoryAxisSupport
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
@@ -504,7 +504,7 @@ class BarChartGroupedGestalt constructor(
   }
 
   //Note that all default values are chosen in regard to a vertical chart orientation.
-  @StyleDsl
+  @ConfigurationDsl
   open inner class Style {
     /**
      * The margin for the active category background

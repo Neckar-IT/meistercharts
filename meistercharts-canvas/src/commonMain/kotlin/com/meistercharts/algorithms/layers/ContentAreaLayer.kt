@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.ContentAreaPainter
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.SidesSelection
 import it.neckar.open.unit.other.px
 
@@ -47,7 +47,7 @@ class ContentAreaLayer(
       .paint(gc, paintingContext.chartCalculator)
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The color for the lines

@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.toolbar.zoomInButton
 import com.meistercharts.algorithms.layers.toolbar.zoomOutButton
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.ChartGestalt
@@ -79,7 +79,7 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Whether the toolbar is visible (true) or not (false)

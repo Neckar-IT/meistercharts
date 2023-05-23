@@ -27,7 +27,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.model.RotationDirection
@@ -120,7 +120,7 @@ class ModernCompassGestalt(
     var valueRangeProvider: ValueRangeProvider = ValueRange.degrees.asProvider(),
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(0.0))
 

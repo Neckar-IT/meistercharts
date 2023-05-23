@@ -26,7 +26,7 @@ import com.meistercharts.algorithms.layers.slippymap.PaintableOnSlippyMap
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.canvas.paintable.SymbolAndTextKeyPaintable
@@ -86,7 +86,7 @@ class MapWithPaintablesGestalt(
     var paintables: List<PaintableOnSlippyMap<*>> = createDefaultPaintables()
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Whether to show the legend or not

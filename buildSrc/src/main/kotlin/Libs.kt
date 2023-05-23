@@ -54,6 +54,7 @@ public object Libs {
     public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val kotlin_csv_jvm: String = "com.github.doyaaaaaken:kotlin-csv-jvm:_"
+    public const val kotlin_csv_js: String = "com.github.doyaaaaaken:kotlin-csv-js:_"
 
     public const val com_github_hierynomus_license_base_gradle_plugin: String =
             "com.github.hierynomus.license-base:com.github.hierynomus.license-base.gradle.plugin:_"

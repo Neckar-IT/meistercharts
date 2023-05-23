@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Direction.BottomRight
@@ -75,7 +75,7 @@ class TextsLayer(
   /**
    * Style configuration for the text layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The color of the text

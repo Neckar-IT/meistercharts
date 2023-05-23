@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
@@ -33,7 +34,7 @@ import it.neckar.open.kotlin.lang.toggle
  * A layer that toggles the debugging mode
  */
 class ToggleDebuggingModeLayer : AbstractLayer() {
-  val data: Data = Data()
+  val configuration: Configuration = Configuration()
 
   /**
    * Move to background to ensure this layer is the last layer that receives the key events
@@ -49,14 +50,14 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
   override val keyEventHandler: CanvasKeyEventHandler = object : CanvasKeyEventHandler {
     override fun onDown(event: KeyDownEvent, chartSupport: ChartSupport): EventConsumption {
       when (event.keyStroke) {
-        data.toggleDebugKeyStroke -> {
+        configuration.toggleDebugKeyStroke -> {
           chartSupport.debug.toggle()
           chartSupport.layerSupport.markAsDirty(DirtyReason.UserInteraction)
 
           return EventConsumption.Consumed
         }
 
-        data.toggleRecordPaintStatisticsKeyStroke -> {
+        configuration.toggleRecordPaintStatisticsKeyStroke -> {
           chartSupport.layerSupport::recordPaintStatistics.toggle()
           chartSupport.layerSupport.markAsDirty(DirtyReason.UserInteraction)
 
@@ -69,7 +70,8 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
     }
   }
 
-  class Data {
+  @ConfigurationDsl
+  class Configuration {
     val toggleDebugKeyStroke: KeyStroke = KeyStroke(KeyCode('D'), ModifierCombination.CtrlShiftAlt)
     val toggleRecordPaintStatisticsKeyStroke: KeyStroke = KeyStroke(KeyCode('P'), ModifierCombination.CtrlShiftAlt)
   }

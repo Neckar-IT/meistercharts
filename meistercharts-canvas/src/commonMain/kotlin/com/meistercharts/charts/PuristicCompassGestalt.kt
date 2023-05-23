@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.canvas.FontSize
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.design.corporateDesign
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
@@ -122,7 +122,7 @@ class PuristicCompassGestalt(
     var valueRangeProvider: ValueRangeProvider = { ValueRange.degrees },
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(5.0))
 

@@ -30,7 +30,7 @@ import com.meistercharts.algorithms.model.valueAt
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.design.Theme
@@ -202,7 +202,7 @@ class CategoryLinesLayer(
     var categorySeriesModel: CategorySeriesModel,
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Provides the layout

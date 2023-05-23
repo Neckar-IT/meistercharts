@@ -20,8 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.StyleDsl
-import com.meistercharts.history.impl.MockSinusHistoryStorage.Companion.valueRange
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.PolarCoordinates
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
@@ -49,7 +48,7 @@ class ArrowValuePainter(
     gc.stroke(Arrows.toTop(radius, 20.0, 10.0))
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The pointer stroke width

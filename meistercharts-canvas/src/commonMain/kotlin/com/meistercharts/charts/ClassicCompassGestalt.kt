@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.compass.CompassBasePainter
 import com.meistercharts.algorithms.layers.compass.GaugePaintable
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
 import com.meistercharts.provider.ValueRangeProvider
@@ -90,7 +90,7 @@ class ClassicCompassGestalt(
     val currentValueProvider: @deg DoubleProvider = 10.0.asDoubleProvider(),
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(50.0, 50.0, 50.0, 50.0))
 

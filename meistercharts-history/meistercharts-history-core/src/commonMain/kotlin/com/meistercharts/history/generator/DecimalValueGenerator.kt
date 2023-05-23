@@ -18,12 +18,14 @@ package com.meistercharts.history.generator
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.coerceIn
 import com.meistercharts.animation.Easing
+import com.meistercharts.history.MayBeNoValueOrPending
 import it.neckar.open.kotlin.lang.cos
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.kotlin.lang.randomNormal
 import it.neckar.open.kotlin.lang.sin
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.si.rad
@@ -39,7 +41,7 @@ fun interface DecimalValueGenerator {
   /**
    * Generates a value for the input [timestamp]
    */
-  fun generate(timestamp: @ms Double): Double
+  fun generate(timestamp: @ms Double): @MayBeNaN Double
 
   companion object {
     /**

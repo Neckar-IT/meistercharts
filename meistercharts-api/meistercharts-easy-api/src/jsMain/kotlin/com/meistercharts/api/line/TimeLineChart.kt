@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
@@ -154,6 +155,9 @@ class TimeLineChart internal constructor(
 
     //Add refresh listener as debug
     meisterCharts.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf {
+      meisterCharts.layerSupport.recordPaintStatistics
+    })
+    meisterCharts.layerSupport.layers.addLayer(FramesPerSecondLayer().visibleIf {
       meisterCharts.layerSupport.recordPaintStatistics
     })
 

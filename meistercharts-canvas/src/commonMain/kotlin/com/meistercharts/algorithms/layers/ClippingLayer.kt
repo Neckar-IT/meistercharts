@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.SidesSelection
 
@@ -46,7 +46,7 @@ class ClippingLayer<T : Layer>(
   override val description: String
     get() = "ClippingLayer{${delegate.description}}"
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The insets

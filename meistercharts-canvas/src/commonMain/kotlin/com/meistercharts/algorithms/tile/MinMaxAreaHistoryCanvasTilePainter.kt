@@ -32,7 +32,6 @@ import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
-import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.valueAt
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.LinePainter
@@ -121,11 +120,8 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
 
         @DomainRelative val domainRelative = valueRange.toDomainRelative(value)
 
-        val finite = domainRelative.isFinite()
-        val pending = domainRelative.isPending()
-
         //The current value is NaN - this is an *explicit* gap
-        if (!value.isFinite() || !domainRelative.isFinite()) {
+        if (value.isFinite().not() || domainRelative.isFinite().not()) {
           //We have a gap, paint only the parts that are relevant
 
           if (paintMinMaxArea) {

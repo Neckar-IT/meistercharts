@@ -33,7 +33,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
@@ -148,7 +148,7 @@ class MapGestalt(
     var slippyMapProvider: SlippyMapProvider by slippyMapProviderProperty
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * If set to true the copy right marker is shown at the bottom left

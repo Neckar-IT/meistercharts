@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ArcType
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Rectangle
 import it.neckar.open.kotlin.lang.toRadians
@@ -96,7 +96,7 @@ class CircularChartPaintable(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Provides the color for the segment at a certain index

@@ -60,7 +60,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
@@ -388,7 +388,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * The current category model for this line chart.

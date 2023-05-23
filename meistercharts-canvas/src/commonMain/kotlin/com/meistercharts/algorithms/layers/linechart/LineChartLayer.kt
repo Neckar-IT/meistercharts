@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
@@ -97,7 +97,7 @@ open class LineChartLayer(
     var model: LinesChartModel
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Provides the point painters for the given line index

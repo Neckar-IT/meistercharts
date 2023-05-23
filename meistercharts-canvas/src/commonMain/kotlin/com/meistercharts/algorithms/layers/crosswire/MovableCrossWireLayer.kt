@@ -25,7 +25,7 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.MouseCursorSupport
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.model.Coordinates
@@ -118,7 +118,7 @@ class MovableCrossWireLayer(
   /**
    * The style for the movable cross wire layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The location of the cross wire

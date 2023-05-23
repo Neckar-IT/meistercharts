@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.painter.OverlappingPasspartoutPaintingStrate
 import com.meistercharts.algorithms.painter.PasspartoutPainter
 import com.meistercharts.algorithms.painter.PasspartoutPaintingStrategy
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.provider.ColorProvider
@@ -55,7 +55,7 @@ class PasspartoutLayer(
     )
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     var strategy: PasspartoutPaintingStrategy = OverlappingPasspartoutPaintingStrategy
 

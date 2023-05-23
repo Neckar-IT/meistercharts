@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontMetrics
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
@@ -54,7 +54,7 @@ operator fun AxisTitleProvider.invoke(chartSupport: ChartSupport): String? {
 /**
  * The style configuration for an axis
  */
-@StyleDsl
+@ConfigurationDsl
 open class AxisStyle {
   /**
    * The range that is painted

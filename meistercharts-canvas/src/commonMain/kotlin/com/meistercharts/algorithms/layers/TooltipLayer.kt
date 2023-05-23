@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.tooltipSupport
 import com.meistercharts.model.Direction
@@ -85,7 +85,7 @@ class TooltipLayer(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The style for the box

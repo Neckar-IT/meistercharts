@@ -30,7 +30,7 @@ import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Coordinates
@@ -98,7 +98,7 @@ class SlippyMapLayer @JvmOverloads constructor(
   /**
    * Style for the [SlippyMapLayer]
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Whether the values for latitude and longitude are painted on each tile

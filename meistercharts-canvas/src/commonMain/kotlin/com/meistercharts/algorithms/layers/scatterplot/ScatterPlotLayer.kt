@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.design.corporateDesign
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
@@ -82,7 +82,7 @@ class ScatterPlotLayer(
     val valueRangeYProvider: ValueRangeProvider
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The point painter that is used to point the paints

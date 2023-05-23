@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Side
@@ -132,7 +132,7 @@ class MultiValueAxisLayer constructor(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Configuration(
     /**
      * Provides the value axes
