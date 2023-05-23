@@ -31,6 +31,7 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.model.Size
 import it.neckar.open.i18n.DefaultTextService
@@ -42,9 +43,10 @@ import it.neckar.open.i18n.resolve
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProvider1
+import it.neckar.open.unit.number.MayBeNegative
 
 /**
- * Ballon tooltip support for discrete series.
+ * Balloon tooltip support for discrete series.
  * Specific implementation for discrete series
  */
 class DiscreteSeriesModelBalloonTooltipSupport(
@@ -59,14 +61,18 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * Returns the reference entry ID
    */
   val referenceEntryIdProvider: () -> @MayBeNoValueOrPending ReferenceEntryId,
+  /**
+   * Returns the reference entry data - only useful if [referenceEntryIdProvider] has provided an entry id
+   */
   val referenceEntryDataProvider: () -> ReferenceEntryData?,
+
   statusProvider: () -> @MayBeNoValueOrPending HistoryEnumSet,
   statusEnumProvider: () -> HistoryEnum?,
 
   /**
-   * Provides the colors for a series index - for the status
+   * Provides the status colors
    */
-  val statusColor: (ReferenceEntryId) -> Color,
+  val statusColor: () -> Color,
 ) {
 
   /**
@@ -133,13 +139,15 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * Creates the symbols provider that is used by the [symbolAndLegendPaintable]
    * This method can be called later to recreate the provider with a different symbol size
    */
-  private fun createSymbolsProvider(symbolSize: Size = Size.PX_16): MultiProvider<LegendEntryIndex, Paintable> = defaultSymbols(symbolSize = symbolSize, symbolColors = { index: Int ->
-    if (index == 0 && referenceEntryDataProvider()?.label.isEmpty().not()) {
-      Color.transparent
-    } else {
-      statusColor(referenceEntryIdProvider())
-    }
-  })
+  private fun createSymbolsProvider(symbolSize: Size = Size.PX_16): MultiProvider<LegendEntryIndex, Paintable> {
+    return defaultSymbols(symbolSize = symbolSize, symbolColors = { index: Int ->
+      if (index == 0 && referenceEntryDataProvider()?.label.isEmpty().not()) {
+        Color.transparent
+      } else {
+        statusColor()
+      }
+    })
+  }
 
   /**
    * The tooltip content paintable

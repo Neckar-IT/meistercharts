@@ -20,7 +20,7 @@ import assertk.assertions.isEqualTo
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.unit.si.ms
-import com.soywiz.klock.DateTime
+import korlibs.time.DateTime
 import org.junit.jupiter.api.Test
 
 /**

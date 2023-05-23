@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test
 class DiscreteCalculationsTest {
   @Test
   fun testEmpty() {
-    assertThat(DiscreteTimelineChartData(emptyArray(), 10_000.0).toChunk(HistoryConfiguration.empty)).isNull()
+    assertThat(DiscreteTimelineChartData(emptyArray()).toChunk(HistoryConfiguration.empty)).isNull()
   }
 
   @Test
@@ -184,8 +184,7 @@ class DiscreteCalculationsTest {
             DiscreteDataEntry(2002.0, 4003.0, "the label2", 2.0),
           )
         )
-      ),
-      10.0
+      )
     )
 
     val pair = data.toChunk(historyConfiguration)
@@ -193,29 +192,29 @@ class DiscreteCalculationsTest {
     val samplingPeriod = pair.second
     val chunk = pair.first
 
-    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryMillisecond)
+    assertThat(samplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
 
     assertThat(chunk.firstTimeStamp()).isEqualTo(1001.0)
     assertThat(chunk.lastTimeStamp()).isEqualTo(4003.0)
 
-    assertThat(chunk.timeStampsCount).isEqualTo(3003)
+    assertThat(chunk.timeStampsCount).isEqualTo(33)
 
     if (false) {
       println(chunk.dump())
     }
 
-    assertThat(chunk.timestampCenter(TimestampIndex(199))).isEqualTo(1200.0)
-    assertThat(chunk.timestampCenter(TimestampIndex(1100))).isEqualTo(2101.0)
-    assertThat(chunk.timestampCenter(TimestampIndex(1101))).isEqualTo(2102.0) //from entry
+    assertThat(chunk.timestampCenter(TimestampIndex(0))).isEqualTo(1001.0)
+    assertThat(chunk.timestampCenter(TimestampIndex(20))).isEqualTo(2901.0)
+    assertThat(chunk.timestampCenter(TimestampIndex(32))).isEqualTo(4003.0) //from entry
 
 
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0)).id).isEqualTo(1001)
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1)).id).isEqualTo(1001)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1990)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(2000)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(2010)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3000)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3001)).id).isEqualTo(1002)
-    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3002))).isEqualTo(ReferenceEntryId.NoValue)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(10)).id).isEqualTo(1001)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(11)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(20)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(21)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(31)).id).isEqualTo(1002)
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(32))).isEqualTo(ReferenceEntryId.NoValue)
   }
 }

@@ -24,7 +24,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.saved
@@ -132,7 +132,7 @@ open class ContentAreaDebugLayer(
   }
 
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Sets all lines to the given color

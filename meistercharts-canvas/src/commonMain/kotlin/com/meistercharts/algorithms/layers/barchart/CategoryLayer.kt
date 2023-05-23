@@ -28,7 +28,7 @@ import com.meistercharts.algorithms.model.CategoryModel
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
@@ -216,7 +216,7 @@ class CategoryLayer<T : CategoryModel>(
   /**
    * Holds information about the appearance of this chart
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style<T : CategoryModel> {
     /**
      * Provides the layout

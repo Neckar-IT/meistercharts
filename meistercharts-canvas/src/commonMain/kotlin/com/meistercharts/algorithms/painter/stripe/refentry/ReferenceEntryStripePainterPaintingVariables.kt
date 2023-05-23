@@ -15,31 +15,24 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
-import com.meistercharts.algorithms.painter.stripe.AbstractStripePainterPaintingVariables
 import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariables
-import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
-import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
+import com.meistercharts.history.ReferenceEntryId
 
 /**
  * Painting variables for enums
  */
-interface ReferenceEntryStripePainterPaintingVariables : StripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?> {
-  //TODO add
-}
+open class ReferenceEntryStripePainterPaintingVariables :
+  StripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>(
+    dataSeriesIndexDefault = ReferenceEntryDataSeriesIndex.zero,
+    value1Default = ReferenceEntryId.NoValue,
+    value2Default = ReferenceEntryDifferentIdsCount.NoValue,
+    value3Default = HistoryEnumSet.NoValue,
+    value4Default = null,
 
-/**
- * Painting variables for referenceEntry stripes
- */
-class DefaultReferenceEntryStripePainterPaintingVariables : AbstractStripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>(
-  dataSeriesIndexDefault = ReferenceEntryDataSeriesIndex.zero,
-  value1Default = ReferenceEntryId.NoValue,
-  value2Default = ReferenceEntryDifferentIdsCount.NoValue,
-  value3Default = HistoryEnumSet.NoValue,
-  value4Default = null,
-), ReferenceEntryStripePainterPaintingVariables {
+    ) {
+  //TODO add
 }

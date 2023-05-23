@@ -17,11 +17,10 @@ package com.meistercharts.algorithms.painter.stripe
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LoopIndexAware
-import com.meistercharts.algorithms.layers.LoopIndexAwarePaintingVariables
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.layout.cache.LayoutVariable
-import com.meistercharts.canvas.layout.cache.LayoutVariableObjectCache
+import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.canvas.layout.cache.MappedLayoutCache
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -29,147 +28,185 @@ import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
 /**
- * Paining variables for stripe painters
+ * Painting variables for [StripePainter]s.
+ *
+ * This painting variables supports multiple data series by using [MappedLayoutCache] with the data series index as key
  */
-interface StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type> : LoopIndexAware {
+abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type>(
   /**
-   * Calculates the values. This method will be called initially before/when the painter is used.
-   * Afterward [prepareForNextValue] is called for each new value.
+   * Defaults value for data series index - will be set initially and on reset
    */
-  fun prepareLayout(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration)
-
+  val dataSeriesIndexDefault: DataSeriesIndexType,
   /**
-   * Prepares for the next value.
-   *
-   * This method might be called multiple times for each painter.
-   * This method must only be called after [prepareLayout] has been called once.
+   * The default value for value1* - will be set initially and on reset
    */
-  fun prepareForNextValue()
-
+  val value1Default: Value1Type,
   /**
-   * Is called during the layout phase to store the next segment that will then be painted in the painting phase
+   * The default value for value2* - will be set initially and on reset
    */
-  fun storeSegment(startX: @Window Double, endX: @Window Double, activeTimeStamp: @ms @MayBeNaN Double, value1ToPaint: Value1Type, value2ToPaint: Value2Type, value3ToPaint: Value3Type, value4ToPaint: Value4Type)
+  val value2Default: Value2Type,
 
   /**
-   * Contains the information about the segments.
-   * Is filled by calling [storeSegment]
+   * The default value for value3 - will be set initially and on reset
    */
-  val segments: LayoutVariableObjectCache<SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>>
+  val value3Default: Value3Type,
 
   /**
-   * The height of the stripe
+   * The default value for value4 - will be set initially and on reset
    */
-  val height: @Zoomed Double
+  val value4Default: Value4Type,
+
+  ) : LoopIndexAware {
 
   /**
-   * The history configuration - will be set delayed
+   * Contains the delegate painting variables for each data series
    */
-  val historyConfiguration: HistoryConfiguration
+  private val paintingVariables4DataSeries = MappedLayoutCache<DataSeriesIndexType, StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>> {
+    StripePainterPaintingVariablesForOneDataSeries(dataSeriesIndexDefault, value1Default, value2Default, value3Default, value4Default)
+  }
 
   /**
-   * The data series index that is currently painted.
-   * The index can be used to resolve other values (e.g. colors, fonts, labels)
+   * Returns the painting variables for the provided data series index
    */
-  val visibleDataSeriesIndex: DataSeriesIndexType
+  fun getPaintingVariables(dataSeriesIndex: DataSeriesIndexType): StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
+    return paintingVariables4DataSeries.get(dataSeriesIndex)
+  }
 
+  override var loopIndex: PaintingLoopIndex = PaintingLoopIndex.Unknown
 
   /**
-   * The value1 that will be painted.
+   * The current history configuration
    */
-  val currentValue1: @MayBeNoValueOrPending Value1Type
+  var historyConfiguration: HistoryConfiguration = HistoryConfiguration.empty
+
+  @Deprecated("Check if this is necessary - or could be replaced by parameters")
+  var currentDataSeriesIndex: DataSeriesIndexType = dataSeriesIndexDefault
 
   /**
-   * The value2 that will be painted.
+   * This method is called once for *each* data series index.
+   * Therefore, if there are multiple data series shown, this method is called multiple times per loop.
    */
-  val currentValue2: @MayBeNoValueOrPending Value2Type
+  open fun prepareLayout(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
+    reset(paintingContext.loopIndex)
+    this.historyConfiguration = historyConfiguration
+    this.currentDataSeriesIndex = dataSeriesIndex
+
+    getPaintingVariables(dataSeriesIndex).prepareLayout(height, historyConfiguration, dataSeriesIndex)
+  }
 
   /**
-   * The value3 that will be painted.
+   * Updates *only* the end values. This method is called if no relevant values have changed.
    */
-  val currentValue3: @MayBeNoValueOrPending Value3Type
-
-  val currentValue4: @MayBeNoValueOrPending Value4Type
-
-
-  /**
-   * The value1 that has been painted before the current value
-   */
-  val previousValue1: @MayBeNoValueOrPending Value1Type
-
-  /**
-   * The value2 that has been painted before the current value
-   */
-  val previousValue2: @MayBeNoValueOrPending Value2Type
-
-  /**
-   * The value3 that has been painted before the current value
-   */
-  val previousValue3: @MayBeNoValueOrPending Value3Type
-
-  val previousValue4: @MayBeNoValueOrPending Value4Type
-
-
-  /**
-   * The start location of the current stripe segment
-   */
-  val currentStartX: @Window Double
-
-  /**
-   * The end of the current segment.
-   * This allows optimized painting (single rect of one color instead of multiple rects with the same color)
-   */
-  var currentEndX: @Window Double
-
-  val currentStartTime: @ms Double
-  var currentEndTime: @ms Double
-
-  /**
-   * The active timestamp - if there is one
-   */
-  var activeTimeStamp: @ms @MayBeNaN Double
-
-  var nextValue1: @MayBeNoValueOrPending Value1Type
-  var nextValue2: @MayBeNoValueOrPending Value2Type
-  var nextValue3: @MayBeNoValueOrPending Value3Type
-  var nextValue4: @MayBeNoValueOrPending Value4Type
-
-  var nextStartX: @Window Double
-  var nextEndX: @Window Double
-  var nextStartTime: @ms Double
-  var nextEndTime: @ms Double
-
-
-  /**
-   * Contains the variables for a single segment
-   */
-  class SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>(
-    val defaultValue1ToPaint: Value1Type,
-    val defaultValue2ToPaint: Value2Type,
-    val defaultValue3ToPaint: Value3Type,
-    val defaultValue4ToPaint: Value4Type,
-
-    ) : LayoutVariable {
-
-    var startX: @Window Double = Double.NaN
-    var endX: @Window Double = Double.NaN
-    var activeTimeStamp: @ms @MayBeNaN Double = Double.NaN
-
-    var value1ToPaint: Value1Type = defaultValue1ToPaint
-    var value2ToPaint: Value2Type = defaultValue2ToPaint
-    var value3ToPaint: Value3Type = defaultValue3ToPaint
-    var value4ToPaint: Value4Type = defaultValue4ToPaint
-
-
-    override fun reset() {
-      startX = Double.NaN
-      endX = Double.NaN
-      activeTimeStamp = Double.NaN
-
-      value1ToPaint = defaultValue1ToPaint
-      value2ToPaint = defaultValue2ToPaint
-      value3ToPaint = defaultValue3ToPaint
-      value4ToPaint = defaultValue4ToPaint
+  fun updateCurrentEnd(endX: @Window Double, endTime: @ms Double) {
+    getPaintingVariables(currentDataSeriesIndex).let { paintingVariables ->
+      paintingVariables.currentEndX = endX
+      paintingVariables.currentEndTime = endTime
     }
   }
+
+  /**
+   * Reset all values
+   */
+  fun reset(loopIndex: PaintingLoopIndex) {
+    this.loopIndex = loopIndex
+    this.currentDataSeriesIndex = dataSeriesIndexDefault
+    this.historyConfiguration = HistoryConfiguration.empty
+    paintingVariables4DataSeries.resetIfNewLoopIndex(loopIndex)
+  }
+
+  /**
+   * Is called if the relevant values have changed
+   */
+  fun relevantValuesChanged(
+    dataSeriesIndex: DataSeriesIndexType,
+    newValue1: Value1Type,
+    newValue2: Value2Type,
+    newValue3: Value3Type,
+    newValue4: Value4Type,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+  ) {
+
+    getPaintingVariables(dataSeriesIndex).let { paintingVariables ->
+      //Remember the updated properties - for the next paint
+      paintingVariables.nextValue1 = newValue1
+      paintingVariables.nextValue2 = newValue2
+      paintingVariables.nextValue3 = newValue3
+      paintingVariables.nextValue4 = newValue4
+
+      paintingVariables.nextStartX = startX
+      paintingVariables.nextEndX = endX
+      paintingVariables.nextStartTime = startTime
+      paintingVariables.nextEndTime = endTime
+
+      //Paint the *current* value until the next start
+      paintingVariables.currentEndX = startX
+      paintingVariables.currentEndTime = endTime
+
+      paintingVariables.activeTimeStamp = activeTimeStamp
+    }
+  }
+
+  /**
+   * Is called for each "new" segment.
+   *
+   * @return the optical center if this segment itself is active
+   */
+  fun layoutSegment(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType): @Window @MayBeNaN Double {
+    getPaintingVariables(dataSeriesIndex).let { paintingVariables ->
+
+      @MayBeNoValueOrPending val value1ToPaint = paintingVariables.currentValue1
+      @MayBeNoValueOrPending val value2ToPaint = paintingVariables.currentValue2
+      @MayBeNoValueOrPending val value3ToPaint = paintingVariables.currentValue3
+      @MayBeNoValueOrPending val value4ToPaint = paintingVariables.currentValue4
+
+      @Window val startX = paintingVariables.currentStartX
+      @Window val endX = paintingVariables.currentEndX
+
+      @Window val startTime = paintingVariables.currentStartTime
+      @Window val endTime = paintingVariables.currentEndTime
+
+      @ms @MayBeNaN val activeTimeStamp = paintingVariables.activeTimeStamp
+
+      try {
+        paintingVariables.storeSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+
+        @MayBeNaN @Window val opticalCenter = layoutSegment(paintingContext, dataSeriesIndex, startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+        if (paintingVariables.activeTimeStamp in startTime..endTime) {
+          return opticalCenter //Only return if this is relevant for the active time stamp
+        }
+
+        return Double.NaN
+      } finally {
+        //Switch to *next*
+        paintingVariables.prepareForNextValue()
+      }
+    }
+  }
+
+  /**
+   * Layouts the segment
+   * @return the geometrical center
+   */
+  fun layoutSegment(
+    paintingContext: LayerPaintingContext,
+    dataSeriesIndex: DataSeriesIndexType,
+    startX: @Window Double,
+    endX: @Window Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    value1ToPaint: Value1Type,
+    value2ToPaint: Value2Type,
+    value3ToPaint: Value3Type,
+    value4ToPaint: Value4Type,
+  ): @Window @MayBeNaN Double {
+    getPaintingVariables(dataSeriesIndex).let { paintingVariables ->
+      paintingVariables.storeSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      return (startX + endX) / 2.0
+    }
+  }
+
 }
+

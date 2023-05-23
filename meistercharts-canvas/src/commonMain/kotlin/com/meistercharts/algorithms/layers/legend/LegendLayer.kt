@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.findXWithAnchor
 import com.meistercharts.canvas.findYWithAnchor
 import com.meistercharts.canvas.paintMark
@@ -75,7 +75,7 @@ class LegendLayer constructor(
   }
 
 
-  @StyleDsl
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * Provides the elements of the legend

@@ -319,6 +319,9 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     val blue2: RgbaColor = RgbaColor(0, 125, 192)
 
     @JvmField
+    val blue3: RgbaColor = RgbaColor(0, 92, 142)
+
+    @JvmField
     val blueviolet: RgbaColor = RgbaColor(138, 43, 226)
 
     @JvmField
@@ -362,6 +365,9 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
 
     @JvmField
     val darkgray: RgbaColor = RgbaColor(169, 169, 169)
+
+    @JvmField
+    val darkergray: RgbaColor = RgbaColor(101, 101, 101)
 
     @JvmField
     val darkgreen: RgbaColor = RgbaColor(0, 100, 0)

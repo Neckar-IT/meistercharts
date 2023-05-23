@@ -20,7 +20,7 @@ import assertk.assertions.*
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.time.toDoubleMillis
-import com.soywiz.klock.DateTime
+import korlibs.time.DateTime
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 import java.time.ZonedDateTime

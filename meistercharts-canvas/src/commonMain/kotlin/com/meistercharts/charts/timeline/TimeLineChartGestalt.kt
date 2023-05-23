@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
+import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
 import com.meistercharts.algorithms.layers.HudElementIndex
@@ -39,6 +40,7 @@ import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.TilesLayer
 import com.meistercharts.algorithms.layers.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TransformingChartStateLayer
+import com.meistercharts.algorithms.layers.ValueAxisHudInteractionLayer
 import com.meistercharts.algorithms.layers.ValueAxisHudLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
@@ -92,14 +94,15 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.layout.cache.IntCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
-import com.meistercharts.canvas.layout.cache.StringCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.canvas.layout.cache.StringsCache
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
@@ -108,9 +111,9 @@ import com.meistercharts.charts.ChartGestalt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
-import com.meistercharts.charts.support.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
-import com.meistercharts.charts.support.thresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.thresholdsSupport
 import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
 import com.meistercharts.history.AndBefore
@@ -144,6 +147,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
+import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
@@ -152,6 +156,8 @@ import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
 import it.neckar.open.formatting.TimeFormatWithMillis
+import it.neckar.open.formatting.appendUnit
+import it.neckar.open.formatting.cached
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
@@ -168,10 +174,12 @@ import it.neckar.open.kotlin.lang.random
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.provider.CachedMultiProvider
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
 import it.neckar.open.provider.mapped
 import it.neckar.open.time.TimeConstants
@@ -249,7 +257,8 @@ class TimeLineChartGestalt
       valueRanges = style::lineValueRanges.delegate(),
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
-      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false))
+      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
+      pointPainters = style::pointPainters.delegate(),
     )
   )
 
@@ -271,7 +280,7 @@ class TimeLineChartGestalt
       valueRanges = style::lineValueRanges.delegate(),
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
-      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false))
+      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
     )
   )
 
@@ -366,6 +375,7 @@ class TimeLineChartGestalt
     hudLayerConfiguration = { decimalDataSeriesIndex: DecimalDataSeriesIndex, axis: ValueAxisHudLayer ->
       val color = style.lineStyles.valueAt(decimalDataSeriesIndex).color
       axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5))
+      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop))
       axis.configuration.textColors = MultiProvider.always(color)
     }
   }
@@ -394,7 +404,6 @@ class TimeLineChartGestalt
     }
   })
 
-
   /**
    * Returns the threshold layer for the given data series index
    */
@@ -418,6 +427,8 @@ class TimeLineChartGestalt
       return getThresholdLinesLayer(decimalDataSeriesIndex)
     }
   })
+
+  val thresholdInteractionLayers: Pair<DirectionalLinesInteractionLayer, ValueAxisHudInteractionLayer> = ThresholdsSupport.createInteractionLayers(thresholdLinesLayersDelegate.delegates, hudLayersDelegate.delegates).interactionLayers
 
   private fun visibleValueAxisCount(): Int {
     return style.actualVisibleValueAxesIndices.size()
@@ -678,17 +689,17 @@ class TimeLineChartGestalt
     /**
      * The label texts
      */
-    val labelsCache = StringCache()
+    val labelsCache = StringsCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = style.actualVisibleDecimalSeriesIndices.size()
@@ -742,8 +753,7 @@ class TimeLineChartGestalt
         @DomainRelative val relativeValueAtCrossWire = style.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
         locationsYCache[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
 
-        val formatForLabel = style.crossWireDecimalFormat.valueAt(dataSeriesIndex) ?: decimalFormat()
-        labelsCache[index] = formatForLabel.format(valueAtCrossWire)
+        labelsCache[index] = style.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
 
         //Update the formats
         boxStylesCache[index] = style.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
@@ -827,7 +837,7 @@ class TimeLineChartGestalt
     /**
      * Contains the history enums at the given location
      */
-    val historyEnumsCache = ObjectCache(HistoryEnum.Boolean)
+    val historyEnumsCache = ObjectsCache(HistoryEnum.Boolean)
 
     /**
      * The enum set at the cross wire
@@ -837,17 +847,17 @@ class TimeLineChartGestalt
     /**
      * The translated labels
      */
-    val labelsCache = StringCache()
+    val labelsCache = StringsCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
 
     /**
      * Clears all labels
@@ -1034,6 +1044,10 @@ class TimeLineChartGestalt
       tileProvider.clear()
     }
 
+    style.pointPaintersProperty.consumeImmediately {
+      tileProvider.clear()
+    }
+
     style.requestedVisibleValueAxesIndicesProperty.consumeImmediately {
       //updateValueAxisLayers()
     }
@@ -1144,7 +1158,7 @@ class TimeLineChartGestalt
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {
-              markAsDirty()
+              markAsDirty(DirtyReason.DataUpdated)
             }
           }
 
@@ -1165,6 +1179,9 @@ class TimeLineChartGestalt
           @PaintingOrder val hudLayersDelegateIndex = layers.addLayer(hudLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() })
           layers.addLayerAt(thresholdLinesLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() }, valueAxesLayerIndex, hudLayersDelegateIndex + 1)
 
+          //Interaction layers for thresholds
+          layers.addLayer(thresholdInteractionLayers.first)
+          layers.addLayer(thresholdInteractionLayers.second)
 
           //Must be painted above the value axis - because of the background
           layers.addLayer(enumCategoryAxisLayerTransformed)
@@ -1237,7 +1254,7 @@ class TimeLineChartGestalt
     var thresholdLabelProvider: @Domain MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> = MultiProvider2.empty()
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   inner class Style {
     /**
      * Value axis style configuration - is called when a new value axis is instantiated
@@ -1301,6 +1318,15 @@ class TimeLineChartGestalt
       }
     )
     var lineStyles: MultiProvider<DecimalDataSeriesIndex, LineStyle> by lineStylesProperty
+
+    /**
+     * The (optional) point painters
+     */
+    val pointPaintersProperty: ObservableObject<MultiProvider<DecimalDataSeriesIndex, PointPainter?>> = ObservableObject(
+      MultiProvider.always(null)
+    )
+
+    var pointPainters: MultiProvider<DecimalDataSeriesIndex, PointPainter?> by pointPaintersProperty
 
     /**
      * The indices of the lines whose value axis should be visible.
@@ -1440,7 +1466,18 @@ class TimeLineChartGestalt
      *
      * If null a format suitable for the given data series will be used
      */
-    var crossWireDecimalFormat: MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat?> = MultiProvider.alwaysNull()
+    var crossWireDecimalFormat: MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> = defaultCrossWireDecimalFormat()
+
+    /**
+     * Creates a new instance of the default crosswire decimal format. Uses the unit from the history configuration
+     */
+    fun defaultCrossWireDecimalFormat(): CachedMultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> = MultiProvider.cached { index ->
+      val dataSeriesIndex = DecimalDataSeriesIndex(index)
+
+      decimalFormat().appendUnit {
+        data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+      }
+    }
 
     /**
      * The text colors for the cross wire label
@@ -1492,25 +1529,12 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
     style.size = 120.0
     style.ticksFormat = when (dataSeriesIndex.value) {
+      2 -> decimalFormat1digit
       3 -> decimalFormat2digits
-      7 -> decimalFormat1digit
       else -> intFormat
     }
   }
-  style.requestedVisibleValueAxesIndices = object : DecimalDataSeriesIndexProvider {
-    override fun valueAt(index: Int): DecimalDataSeriesIndex {
-      return when (index) {
-        0 -> DecimalDataSeriesIndex(1)
-        1 -> DecimalDataSeriesIndex(2)
-        2 -> DecimalDataSeriesIndex(3)
-        else -> throw IllegalArgumentException("invalid index $index")
-      }
-    }
-
-    override fun size(): Int {
-      return 3
-    }
-  }
+  style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
 
   //Avoid gaps for the cross wire - when adding only
   data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
@@ -1522,28 +1546,50 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
     decimalDataSeries(DataSeriesId(23), TextKey.simple("Flow Velocity [m/s]"), HistoryUnit("m/s"))
     decimalDataSeries(DataSeriesId(56), TextKey.simple("Volume [m³]"), HistoryUnit("m³"))
     decimalDataSeries(DataSeriesId(89), TextKey.simple("Volumetric Flow Rate [m³/h]"), HistoryUnit("m³/h"))
-    decimalDataSeries(DataSeriesId(117), TextKey.simple("Mass [kg]"), HistoryUnit("kg"))
-    decimalDataSeries(DataSeriesId(118), TextKey.simple("Energy [kWh]"), HistoryUnit("kWh"))
-    decimalDataSeries(DataSeriesId(123), TextKey.simple("Temperature [°C]"), HistoryUnit("°C"))
-    decimalDataSeries(DataSeriesId(143), TextKey.simple("Pressure [bar]"), HistoryUnit("bar"))
 
-    enumDataSeries(DataSeriesId(1001), TextKey.simple("Global State"), HistoryEnum.createSimple("Warning State", listOf("Ok", "Warning", "Error")))
+    enumDataSeries(DataSeriesId(1001), TextKey.simple("Global State"), HistoryEnum.createSimple("Warning State", listOf("Ok", "Warning", "Error", "Unknown")))
     enumDataSeries(DataSeriesId(1002), TextKey.simple("Valve"), HistoryEnum.createSimple("Valve State", listOf("Open", "Closed")))
-    enumDataSeries(DataSeriesId(1003), TextKey.simple("Compliance"), HistoryEnum.createSimple("Compliance State", listOf("Compliant", "Not Compliant", "Unknown")))
+    enumDataSeries(DataSeriesId(1003), TextKey.simple("Heating"), HistoryEnum.createSimple("Compliance State", listOf("On", "Off", "Unknown")))
+  }
+
+  style.crossWireDecimalFormat = SizedProvider.of(4) { dataSeriesIndex ->
+    val unit = data.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name ?: ""
+    when (dataSeriesIndex) {
+      2 -> decimalFormat1digit.appendUnit(unit).cached()
+      3 -> decimalFormat2digits.appendUnit(unit).cached()
+      else -> intFormat.appendUnit(unit).cached()
+    }
+  }
+
+  style.crossWireDecimalFormat = MultiProvider.cached { index ->
+    val dataSeriesIndex = DecimalDataSeriesIndex(index)
+    val unitProvider = {
+      data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+    }
+
+    when (index) {
+      2 -> decimalFormat1digit.appendUnit(unitProvider)
+      3 -> decimalFormat2digits.appendUnit(unitProvider)
+      else -> intFormat.appendUnit(unitProvider)
+    }
   }
 
   style.lineValueRanges = MultiProvider.forListModulo(
     listOf(
       ValueRange.linear(0.0, 1000.0),
       ValueRange.linear(-120.0, 300.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(-0.5, 17.0),
-      ValueRange.linear(0.0, 1000.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(0.0, 999999.0),
-      ValueRange.linear(-50.0, 100.0)
+      ValueRange.linear(-10.0, 10.0),
+      ValueRange.linear(-0.5, 0.5),
     )
   )
+
+  historyEnumLayer.configuration.stripePainters = MultiProvider.forListOr<EnumDataSeriesIndex, RectangleEnumStripePainter>(listOf(RectangleEnumStripePainter {
+    fillProvider = RectangleEnumStripePainter.enumStateFillProvider()
+  }), fallbackProvider = {
+    RectangleEnumStripePainter {
+      fillProvider = { value, _ -> Theme.chartColors().valueAt(value.value) }
+    }
+  }).cached()
 
   val easings = listOf(
     Easing.inOut,
@@ -1564,9 +1610,9 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   }
 
   val enumValueGenerators: List<EnumValueGenerator> = listOf<EnumValueGenerator>(
-    EnumValueGenerator.modulo(5.seconds),
-    EnumValueGenerator.modulo(2.seconds),
-    EnumValueGenerator.modulo(3.seconds),
+    EnumValueGenerator.weighted(listOf(0.8, 0.1, 0.075, 0.025), 5.seconds),
+    EnumValueGenerator.weighted(listOf(0.1, 0.9), 3.seconds),
+    EnumValueGenerator.weighted(listOf(0.49, 0.5, 0.01), 7.seconds),
   )
 
   val referenceEntryGenerators: List<ReferenceEntryGenerator> = data.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
@@ -1592,18 +1638,16 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   this.data.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
     override fun size(param1: DecimalDataSeriesIndex): Int {
       return when (param1.value) {
-        1 -> 2
-        2 -> 1
+        0 -> 2
+        1 -> 1
         else -> 0
       }
     }
 
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex): Double {
-      val valueRange = style.lineValueRanges.valueAt(param1.value)
-      val valueRangeCenter = valueRange.center()
       return when (param1.value) {
-        1 -> if (index == 0) valueRangeCenter - valueRange.deltaPositive * 0.4 else valueRangeCenter + valueRange.deltaPositive * 0.33333
-        2 -> valueRangeCenter * 0.7
+        0 -> if (index == 0) 300.0 else 700.0
+        1 -> 63.0
         else -> 0.0
       }
     }
@@ -1612,8 +1656,8 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
       return when (param1.value) {
-        1 -> listOf(if (index == 0) "Minimum" else "Maximum", data.thresholdValueProvider.valueAt(index, param1).format(0))
-        2 -> listOf("Average", data.thresholdValueProvider.valueAt(index, param1).format(0))
+        0 -> listOf("${if (index == 0) "Min" else "Max"} ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
+        1 -> listOf("Target ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
         else -> emptyList()
       }
     }

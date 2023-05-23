@@ -24,6 +24,27 @@ import org.junit.jupiter.api.fail
  */
 class DirtySupportTest {
   @Test
+  fun testReason() {
+    val dirtySupport = DirtySupport()
+    assertThat(dirtySupport.dirtyReasonsBits.value).isEqualTo(0)
+
+    dirtySupport.markAsDirty(DirtyReason.Unknown)
+    assertThat(dirtySupport.dirty).isTrue()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.Unknown)).isTrue()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.UserInteraction)).isFalse()
+
+    dirtySupport.markAsDirty(DirtyReason.UserInteraction)
+    assertThat(dirtySupport.dirty).isTrue()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.Unknown)).isTrue()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.UserInteraction)).isTrue()
+
+    dirtySupport.clearIsDirty()
+    assertThat(dirtySupport.dirty).isFalse()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.Unknown)).isFalse()
+    assertThat(dirtySupport.isDirtyBecause(DirtyReason.UserInteraction)).isFalse()
+  }
+
+  @Test
   fun testLogger() {
     val dirtySupport = DirtySupport()
 
@@ -31,7 +52,7 @@ class DirtySupportTest {
       fail("Must not be called")
     }
 
-    dirtySupport.markAsDirty()
+    dirtySupport.markAsDirty(DirtyReason.Unknown)
 
     var called = false
     dirtySupport.ifDirty {

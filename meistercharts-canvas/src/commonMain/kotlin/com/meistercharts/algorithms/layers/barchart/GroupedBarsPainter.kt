@@ -39,7 +39,7 @@ import com.meistercharts.canvas.CanvasStringShortener
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LocationType
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.forTranslationX
 import com.meistercharts.canvas.forTranslationY
 import com.meistercharts.canvas.paintMark
@@ -425,7 +425,7 @@ class GroupedBarsPainter(
     )
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Configuration {
     /**
      * The value range to be used for all categories painted by the painter

@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
 import com.meistercharts.model.Direction
@@ -80,7 +80,7 @@ class DirtyRangesDebugLayer(
   }
 
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     var insetsTop: @Zoomed Double = 50.0
 

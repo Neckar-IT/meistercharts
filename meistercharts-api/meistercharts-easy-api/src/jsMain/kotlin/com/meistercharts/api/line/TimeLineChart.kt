@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
@@ -156,6 +157,9 @@ class TimeLineChart internal constructor(
     meisterCharts.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf {
       meisterCharts.layerSupport.recordPaintStatistics
     })
+    meisterCharts.layerSupport.layers.addLayer(FramesPerSecondLayer().visibleIf {
+      meisterCharts.layerSupport.recordPaintStatistics
+    })
 
     //Apply the defaults for all axis styles
     gestalt.timeLineChartGestalt.style.valueAxisStyleConfiguration = { style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex ->
@@ -202,6 +206,10 @@ class TimeLineChart internal constructor(
 
     jsStyle.showToolbar?.let {
       gestalt.style.showToolbar = it
+    }
+
+    jsStyle.showMouseWheelModifierHint?.let {
+      gestalt.style.showMouseWheelModifierHint = it
     }
 
     jsStyle.visibleTimeRange?.toModel()?.let {
@@ -330,7 +338,9 @@ class TimeLineChart internal constructor(
    */
   @Suppress("unused")
   fun setUpDemo() {
-    gestalt.timeLineChartGestalt.setUpDemo()
+    gestalt.timeLineChartGestalt.setUpDemo().also {
+      gestalt.timeLineChartGestalt.onDispose(it)
+    }
   }
 
   companion object {
@@ -357,11 +367,11 @@ private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
     crossWireLayerEnumValues.style.applyCrossWireFont(it)
   }
 
-  TimeLineChartConverter.toCrossWireFormat(jsStyle.crossWireDecimalsFormat).let {
-    this.style.crossWireDecimalFormat = it
+  jsStyle.crossWireDecimalsFormat?.let {
+    this.style.crossWireDecimalFormat = TimeLineChartConverter.toCrossWireFormat(it)
   }
 
-  jsStyle.crossWireDecimalsLabelTextColor?.let { it.toColor() }?.let {
+  jsStyle.crossWireDecimalsLabelTextColor?.toColor()?.let {
     this.style.crossWireDecimalsLabelTextColors = MultiProvider.always(it)
   }
 

@@ -28,7 +28,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
@@ -131,7 +131,7 @@ class ScatterPlotGestalt(
   ) : ScatterPlotLayer.Data(xValues, yValues, valueRangeX, valueRangeY) {
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The margin of the chart

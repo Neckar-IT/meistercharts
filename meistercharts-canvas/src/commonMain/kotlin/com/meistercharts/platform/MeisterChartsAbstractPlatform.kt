@@ -49,9 +49,10 @@ abstract class MeisterChartsAbstractPlatform {
       updateDefaultI18nConfiguration(it)
     }
 
-    initializeOnce()
-
-    initialized = true
+    if (initialized.not()) {
+      initializeOnce()
+      initialized = true
+    }
   }
 
   /**

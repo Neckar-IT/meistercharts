@@ -116,15 +116,6 @@ class HistoryValues(
   )
 
   init {
-    if (decimalHistoryValues.minValues != null) {
-      requireNotNull(enumHistoryValues.mostOfTheTimeValues) {
-        "mostOfTheTimeValues must also be set if min values are set"
-      }
-      requireNotNull(referenceEntryHistoryValues.hasIdsCount) {
-        "referenceEntryHistoryValues must also contain ids count if min values are set"
-      }
-    }
-
     require(enumHistoryValues.isEmpty || decimalHistoryValues.isEmpty || decimalHistoryValues.timeStampsCount == enumHistoryValues.timeStampsCount) {
       "Non matching timestamps count <${decimalHistoryValues.timeStampsCount}> - ${enumHistoryValues.timeStampsCount}"
     }
@@ -279,6 +270,10 @@ class HistoryValues(
   @Deprecated("No longer needed?")
   fun calculateEnumStartIndex(timeStampIndex: TimestampIndex): Int {
     return calculateStartIndex(enumDataSeriesCount, timeStampIndex)
+  }
+
+  fun hasDecimalMinMaxValues(): Boolean {
+    return decimalHistoryValues.hasMinMax
   }
 
   /**

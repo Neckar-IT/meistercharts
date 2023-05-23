@@ -37,7 +37,7 @@ class LayoutVariableObjectCacheTest {
 
     var factoryCalled = false
 
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       factoryCalled = true
       layoutObject
     }
@@ -72,7 +72,7 @@ class LayoutVariableObjectCacheTest {
 
     var factoryCalled = false
 
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       factoryCalled = true
       layoutObject
     }
@@ -102,7 +102,7 @@ class LayoutVariableObjectCacheTest {
     val layoutObject: LayoutVariable = mockk()
     every { layoutObject.reset() }.returns(Unit)
 
-    val cache = LayoutVariableObjectCache { layoutObject }
+    val cache = LayoutVariablesObjectCache { layoutObject }
 
     //Initial
     confirmVerified(layoutObject)
@@ -140,7 +140,7 @@ class LayoutVariableObjectCacheTest {
 
   @Test
   fun testSortResize() {
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       MyLayoutObject()
     }
 
@@ -166,7 +166,7 @@ class LayoutVariableObjectCacheTest {
   fun testResize() {
     var creationCounter = 0
 
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       creationCounter++
       MyLayoutObject()
     }
@@ -211,7 +211,7 @@ class LayoutVariableObjectCacheTest {
 
   @Test
   fun testSortForward() {
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       MyLayoutObject()
     }
 
@@ -240,7 +240,7 @@ class LayoutVariableObjectCacheTest {
 
   @Test
   fun testSortBackwards() {
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       MyLayoutObject()
     }
 
@@ -267,7 +267,7 @@ class LayoutVariableObjectCacheTest {
 
   @Test
   fun testSortBackwardReducedSizes() {
-    val cache = LayoutVariableObjectCache {
+    val cache = LayoutVariablesObjectCache {
       MyLayoutObject()
     }
 
@@ -303,7 +303,7 @@ class LayoutVariableObjectCacheTest {
 /**
  * Verifies the instances of the objects
  */
-private fun <T : LayoutVariable> LayoutVariableObjectCache<T>.verifyInstancesMatch() {
+private fun <T : LayoutVariable> LayoutVariablesObjectCache<T>.verifyInstancesMatch() {
   assertThat(values.size).isLessThanOrEqualTo(objectsStock.size)
 
   values.fastForEachIndexed { index, value ->

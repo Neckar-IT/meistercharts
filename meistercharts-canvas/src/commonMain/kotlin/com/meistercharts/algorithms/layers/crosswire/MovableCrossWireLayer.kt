@@ -25,10 +25,12 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.MouseCursorSupport
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.events.EventConsumption
+import com.meistercharts.events.MouseEventBroker
+import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Rectangle
-import com.meistercharts.events.MouseEventBroker
 import it.neckar.open.observable.clear
 import it.neckar.open.unit.other.px
 
@@ -55,12 +57,13 @@ class MovableCrossWireLayer(
     }
   }
 
-  private val mousePositionProperty = mouseEvents.mousePositionProperty
+  override fun initialize(paintingContext: LayerPaintingContext) {
+    super.initialize(paintingContext)
+    val layerSupport = paintingContext.layerSupport
 
-  init {
-    mousePositionProperty.consumeImmediately {
-      updateCursor()
-    }.disposeOnRemove()
+    layerSupport.mouseEvents.onMove {
+      updateCursorOnMouseMove(it.coordinates)
+    }
   }
 
   /**
@@ -83,27 +86,23 @@ class MovableCrossWireLayer(
 
     gc.fill(style.markerFill)
     gc.fill(MarkerPath.path)
-
-    //Update after each paint
-    updateCursor()
   }
 
   /**
    * Check if the mouse is above one of hte labels
    */
-  private fun updateCursor() {
+  private fun updateCursorOnMouseMove(mousePosition: @Window Coordinates?): EventConsumption {
     //Enable later when dragging is implemented
     if (true) {
-      return
+      return EventConsumption.Ignored
     }
 
-    val mousePosition = mousePositionProperty.value
     @px @Zoomed val translation = lastMarkerTopTranslation
 
     if (mousePosition == null || translation == null) {
       //Mouse outside if canvas, just clear
       cursorProperty.clear()
-      return
+      return EventConsumption.Ignored
     }
 
     //Check if over path
@@ -112,12 +111,14 @@ class MovableCrossWireLayer(
     } else {
       cursorProperty.clear()
     }
+
+    return EventConsumption.Ignored
   }
 
   /**
    * The style for the movable cross wire layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The location of the cross wire

@@ -44,6 +44,21 @@ data class Distance(
     return "$x/$y"
   }
 
+  /**
+   * Returns the magnitude squared
+   */
+  fun squaredMagnitude(): Double {
+    return x * x + y * y
+  }
+
+  fun lengthSquared(): Double {
+    return x * x + y * y
+  }
+
+  operator fun times(factor: Double): Distance {
+    return Distance(x * factor, y + factor)
+  }
+
   fun multiply(factorX: Double, factorY: Double): Distance {
     return Distance(x * factorX, y + factorY)
   }
@@ -169,6 +184,14 @@ data class Distance(
     }
 
     return this.copy(y = y.coerceIn(min, max))
+  }
+
+  /**
+   * Multiplies this with the provided distance vektor
+   * Calculates the dot product
+   */
+  fun dot(other: Distance): Double {
+    return x * other.x + y * other.y
   }
 
   companion object {

@@ -32,7 +32,7 @@ class LayerSupportApiTest {
 
     val layerSupport = ChartSupport(mockCanvas)
 
-    layerSupport.markAsDirty()
+    layerSupport.markAsDirty(DirtyReason.Unknown)
     layerSupport.disabled = true
   }
 
@@ -56,7 +56,7 @@ class LayerSupportApiTest {
     assertThat(chartSupport.dirtySupport.dirty).isFalse()
     chartSupport.refresh(nowMillis())
 
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(DirtyReason.Unknown)
     chartSupport.disabled = true
 
     //Repaint is disabled

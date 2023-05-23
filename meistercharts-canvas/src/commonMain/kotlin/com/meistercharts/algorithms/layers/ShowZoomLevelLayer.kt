@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
@@ -63,7 +63,7 @@ class ShowZoomLevelLayer(
   /**
    * The style configuration for a [ShowZoomLevelLayer]
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The style for the box (background fill + border stroke + insets)

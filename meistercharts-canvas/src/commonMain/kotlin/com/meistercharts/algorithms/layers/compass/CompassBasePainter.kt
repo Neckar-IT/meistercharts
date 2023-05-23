@@ -26,7 +26,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.PolarCoordinates
@@ -99,7 +99,7 @@ class CompassBasePainter(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Provides the ticks

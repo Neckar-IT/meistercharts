@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Insets
 import it.neckar.open.provider.DoublesProvider
@@ -93,7 +93,7 @@ class CircularChartGestalt(
     var relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative()
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val colorsProviderProperty: ObservableObject<MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color>> = ObservableObject(createDefaultColorsProvider())
     var colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by colorsProviderProperty

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.timerSupport
 import it.neckar.open.async.TimerSupport
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
@@ -27,7 +28,6 @@ import kotlin.time.Duration
 class HideAfterTimeoutLayer<T : Layer>(
   delegate: LayerVisibilityAdapterWithState<T>,
   @ms val duration: Duration,
-  private val timerSupport: TimerSupport,
 ) : DelegatingLayer<LayerVisibilityAdapterWithState<T>>(delegate) {
 
   private var lastShowTime: Double? = null
@@ -46,12 +46,19 @@ class HideAfterTimeoutLayer<T : Layer>(
       }
     }
   }
+
+  private lateinit var timerSupport: TimerSupport
+
+  override fun initialize(paintingContext: LayerPaintingContext) {
+    super.initialize(paintingContext)
+    timerSupport = paintingContext.chartSupport.timerSupport
+  }
 }
 
 
 /**
  * Wraps this into an [HideAfterTimeoutLayer]
  */
-fun <T : Layer> LayerVisibilityAdapterWithState<T>.autoHideAfter(@ms duration: Duration, timerSupport: TimerSupport): HideAfterTimeoutLayer<T> {
-  return HideAfterTimeoutLayer<T>(this, duration, timerSupport)
+fun <T : Layer> LayerVisibilityAdapterWithState<T>.autoHideAfter(@ms duration: Duration): HideAfterTimeoutLayer<T> {
+  return HideAfterTimeoutLayer(this, duration)
 }

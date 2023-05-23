@@ -1,0 +1,39 @@
+name: Meistercharts
+run-name: meistercharts Github Action 🚀
+
+# Rule: only trigger action if a push was made.
+on: [push]
+
+env:
+  BUILD_ARGS: "--info --stacktrace --parallel --no-build-cache --no-daemon --no-configuration-cache --no-watch-fs"
+
+jobs:
+  # build meistercharts
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Checkout Repository
+      - name: "🔍 Checkout Code"
+        uses: actions/checkout@v3
+
+      # Setup global java version
+      - name: "📦 Setup Java 19 Installation"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: adopt
+
+      # Cache Gradle dependencies
+      - name: "🔄 Cache Gradle dependencies"
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      # Build
+      - name: "🛠️ build"
+        run: ./gradlew build $BUILD_ARGS

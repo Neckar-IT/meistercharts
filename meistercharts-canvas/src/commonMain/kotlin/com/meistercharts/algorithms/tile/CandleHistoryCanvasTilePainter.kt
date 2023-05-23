@@ -90,7 +90,7 @@ class CandleHistoryCanvasTilePainter(val configuration: Configuration) : History
         @Tile val x = tileCalculator.time2tileX(time, contentAreaTimeRange)
 
         //Paint the candle rect first (if there are min/max values)
-        if (chunk.recordingType == RecordingType.Calculated) {
+        if (chunk.hasDecimalMinMaxValues()) {
           @DomainRelative val maxDomainRelative = valueRange.toDomainRelative(chunk.getMax(dataSeriesIndex, timestampIndex))
           val maxY = tileCalculator.domainRelative2tileY(maxDomainRelative)
 

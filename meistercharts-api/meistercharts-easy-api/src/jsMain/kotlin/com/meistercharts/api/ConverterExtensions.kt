@@ -43,7 +43,7 @@ import com.meistercharts.canvas.FontSize
 import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.style.Palette
 import it.neckar.commons.kotlin.js.debug
@@ -55,6 +55,7 @@ import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiDoublesProvider
@@ -571,7 +572,7 @@ fun AxisTopTopTitleLayer.Configuration.applyTitleStyle(jsStyle: AxisStyle) {
 fun com.meistercharts.api.NumberFormat.toNumberFormat(): CachedNumberFormat {
   val ref = this
   return object : NumberFormat {
-    override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+    override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
       return ref.format(value, i18nConfiguration.formatLocale.locale)
     }
   }.cached()
@@ -659,10 +660,13 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   }
 
   val hudLayer = getHudLayer(key)
-  val thresholdLinesLayer = getThresholdLinesLayer(key)
 
   hudLayer.configuration.boxStyles = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyle.toModel() }
+  )
+  hudLayer.configuration.boxStylesActive = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
   )
 
   hudLayer.configuration.arrowHeadLength = MultiDoublesProvider.forArrayModulo(
@@ -676,13 +680,25 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   hudLayer.configuration.textColors = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelColor.toColor() }
   )
+  hudLayer.configuration.textColorsActive = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+    jsThresholds.map { jsThreshold -> jsThreshold.labelColorActive.toColor() ?: jsThreshold.labelColor.toColor() }
+  )
 
   hudLayer.configuration.textFonts = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.labelFont.toFontDescriptorFragment() }
   )
 
+  //Threshold lines layer
+  val thresholdLinesLayer = getThresholdLinesLayer(key)
+
   thresholdLinesLayer.configuration.lineStyles = MultiProvider.forListModulo(
     jsThresholds.map { jsThreshold -> jsThreshold.lineStyle.toModel() }
+  )
+
+  thresholdLinesLayer.configuration.activeLineStyles = MultiProvider.forListModulo(
+    //TODO remove the fallback asap
+    jsThresholds.map { jsThreshold -> jsThreshold.lineStyleActive?.toModel() ?: jsThreshold.lineStyle.toModel() }
   )
 }
 

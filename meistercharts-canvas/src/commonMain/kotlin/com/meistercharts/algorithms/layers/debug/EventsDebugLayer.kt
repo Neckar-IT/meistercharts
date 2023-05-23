@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
@@ -84,7 +85,7 @@ class EventsDebugLayer(
 
     private fun processMouseEvent(event: MouseEvent, chartSupport: ChartSupport): EventConsumption {
       if (data.mouseEventFilter(event)) {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
       return EventConsumption.Ignored
@@ -123,7 +124,7 @@ class EventsDebugLayer(
 
     private fun processKeyEvent(event: KeyEvent, chartSupport: ChartSupport): EventConsumption {
       if (data.keyEventFilter(event)) {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event")
       }
       return EventConsumption.Ignored
@@ -146,7 +147,7 @@ class EventsDebugLayer(
 
     private fun processPointerEvent(event: PointerEvent, chartSupport: ChartSupport): EventConsumption {
       if (data.pointerEventFilter(event)) {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
       return EventConsumption.Ignored
@@ -189,7 +190,7 @@ class EventsDebugLayer(
 
     private fun processTouchEvent(event: TouchEvent, chartSupport: ChartSupport): EventConsumption {
       if (data.touchEventFilter(event)) {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
       return EventConsumption.Ignored

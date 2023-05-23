@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Distance
 import com.meistercharts.events.KeyCode
@@ -44,7 +44,7 @@ import it.neckar.open.unit.si.ms
  */
 class PaintPerformanceLayer(
   /**
-   * The amount of pixels that are painted per milli second
+   * The amount of pixels that are painted per millisecond
    */
   @px
   val pixelsPerMilli: Double = 5.0,
@@ -58,13 +58,13 @@ class PaintPerformanceLayer(
    */
   @ms
   val maxMillis: Int = 25,
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
   /**
    * The style configuration
    */
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Notification
@@ -98,26 +98,26 @@ class PaintPerformanceLayer(
     @px val thresholdHeight = threshold * pixelsPerMilli
 
     val gc = paintingContext.gc
-    gc.translate(style.margin) //margin
+    gc.translate(configuration.margin) //margin
     gc.translate(0.0, maxHeight) //y axis to bottom
 
     //Paint the background
-    gc.fill(style.backgroundColor)
+    gc.fill(configuration.backgroundColor)
     gc.fillRect(0.0, -maxHeight, valuesAreaWidth + marginAxis, maxHeight)
 
     //The y axis
-    gc.stroke(style.axis)
+    gc.stroke(configuration.axis)
     gc.strokeLine(0.0, 0.0, 0.0, -thresholdHeight)
-    gc.stroke(style.warning)
+    gc.stroke(configuration.warning)
     gc.strokeLine(0.0, -thresholdHeight, 0.0, -maxHeight)
 
     //The ticks
-    gc.stroke(style.axis)
+    gc.stroke(configuration.axis)
     for (i in 0..maxMillis step 5) {
       if (i >= threshold) {
-        gc.stroke(style.warning)
+        gc.stroke(configuration.warning)
       } else {
-        gc.stroke(style.axis)
+        gc.stroke(configuration.axis)
       }
       paintYTick(i.toDouble(), gc)
     }
@@ -144,7 +144,7 @@ class PaintPerformanceLayer(
 
       //Red background if over threshold
       if (total >= threshold) {
-        gc.fill(style.warning)
+        gc.fill(configuration.warning)
         @px val totalHeight = total * pixelsPerMilli
         gc.fillRect(x - 1, -totalHeight, pixelsPerValue + 2, totalHeight)
       }
@@ -170,12 +170,12 @@ class PaintPerformanceLayer(
       }
 
       //Background
-      gc.fill(style.backgroundColor)
+      gc.fill(configuration.backgroundColor)
 
       val height = paintDurations.size * lineHeight + 5.0
       gc.fillRect(0.0, 4.0, valuesAreaWidth, height)
 
-      gc.fill(style.value)
+      gc.fill(configuration.value)
       val size = paintDurations.size
       gc.translate(28.0, size * lineHeight - 4)
 
@@ -188,12 +188,12 @@ class PaintPerformanceLayer(
     }
   }
 
-  private fun Double.format(i18nConfiguration: I18nConfiguration) = style.format.format(this, i18nConfiguration)
+  private fun Double.format(i18nConfiguration: I18nConfiguration) = configuration.format.format(this, i18nConfiguration)
 
   private fun paintTickLabel(@ms millis: Double, gc: CanvasRenderingContext) {
     @px val height = -millis * pixelsPerMilli
-    gc.fill(style.axis)
-    gc.font(style.tickLabelsFont)
+    gc.fill(configuration.axis)
+    gc.font(configuration.tickLabelsFont)
     gc.fillText("${millis.toInt()}", -4.0, height, Direction.CenterRight)
   }
 
@@ -206,8 +206,8 @@ class PaintPerformanceLayer(
   /**
    * The style configuration
    */
-  @StyleDsl
-  open class Style {
+  @ConfigurationDsl
+  open class Configuration {
     /**
      * The color the background is filled with
      */
@@ -250,17 +250,9 @@ class PaintPerformanceLayer(
   }
 }
 
-
 /**
  * Adds a background layer of the given color
  */
 fun Layers.addPerformanceLayer() {
   addLayer(PaintPerformanceLayer())
-}
-
-/**
- * Adds a performance layer that can be toggled
- */
-fun Layers.addPerformanceLayerToggled(shortCut: KeyStroke = KeyStroke(KeyCode('P'), ModifierCombination.CtrlAlt), initialVisibility: Boolean = false) {
-  addLayer(PaintPerformanceLayer().visible(initialVisibility).toggleShortcut(shortCut))
 }

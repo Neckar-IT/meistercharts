@@ -18,7 +18,7 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Rectangle
@@ -64,7 +64,7 @@ class SymbolAndImagePaintable(
     image.paintInBoundingBox(paintingContext, x, y, Direction.CenterLeft, style.gapHorizontal / 2.0, style.gapVertical / 2.0, boundingBox.getWidth(), boundingBox.getHeight())
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The size of the image

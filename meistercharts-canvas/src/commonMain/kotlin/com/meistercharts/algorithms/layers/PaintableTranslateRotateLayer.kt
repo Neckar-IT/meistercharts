@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.model.Direction
@@ -76,7 +76,7 @@ class PaintableTranslateRotateLayer(
     var angle: () -> @rad Double = { 0.0 }
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Direction to paint the paintable relative to the given Coordinates

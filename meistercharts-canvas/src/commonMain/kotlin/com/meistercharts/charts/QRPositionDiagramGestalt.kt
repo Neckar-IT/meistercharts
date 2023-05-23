@@ -32,7 +32,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.model.Coordinates
@@ -205,7 +205,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     var angle: @rad Double by angleProperty
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets(50.0, 50.0, 50.0, 70.0))
 

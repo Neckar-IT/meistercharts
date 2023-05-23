@@ -15,7 +15,6 @@
  */
 package com.meistercharts.algorithms.layers.toolbar
 
-import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AbstractPaintingVariables
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -26,8 +25,9 @@ import com.meistercharts.algorithms.layout.PaintablesLayouter
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.findXWithAnchor
 import com.meistercharts.canvas.findYWithAnchor
@@ -35,14 +35,6 @@ import com.meistercharts.canvas.mouseCursorSupport
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonPriority
 import com.meistercharts.canvas.paintable.ButtonState
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Direction
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.collections.fastMap
-import it.neckar.open.provider.ListSizedProvider
-import it.neckar.open.provider.SizedProvider
-import it.neckar.open.provider.asMultiProvider
-import it.neckar.open.provider.fastForEachIndexed
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
@@ -51,10 +43,18 @@ import com.meistercharts.events.MouseDownEvent
 import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
+import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Direction
+import com.meistercharts.model.Orientation
+import it.neckar.logging.LoggerFactory
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.fastMap
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.reduceObservables
+import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.asMultiProvider
+import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.other.px
-import it.neckar.logging.LoggerFactory
 
 /**
  * A toolbar with interactive buttons.
@@ -88,7 +88,7 @@ class ToolbarLayer(
     //force repaint if the state has changed
     configuration.buttons.fastForEach { button ->
       button.stateProperty.consume {
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       }
     }
 
@@ -246,7 +246,7 @@ class ToolbarLayer(
     All, OnlyLowPriority
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Configuration constructor(
     /**
      * The (fixed) list of buttons.
@@ -259,13 +259,13 @@ class ToolbarLayer(
      * Provides all buttons (including low priority).
      * Always returns the *same* buttons
      */
-    val allButtonsProvider: ListSizedProvider<Button> = SizedProvider.forList(buttons)
+    val allButtonsProvider: SizedProvider<Button> = SizedProvider.forList(buttons)
 
     /**
      * Provides only the high priority buttons
      * Always returns the *same* buttons
      */
-    val highPriorityButtonsProvider: ListSizedProvider<Button> = SizedProvider.forList(buttons.filter { it.priority == ButtonPriority.AlwaysVisible })
+    val highPriorityButtonsProvider: SizedProvider<Button> = SizedProvider.forList(buttons.filter { it.priority == ButtonPriority.AlwaysVisible })
 
     /**
      * where to place the toolbar - relative to the window

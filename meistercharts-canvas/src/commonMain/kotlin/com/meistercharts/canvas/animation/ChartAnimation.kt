@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.animation
 
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.RefreshListener
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -52,7 +53,7 @@ class ChartAnimation(
     //@pct val interpolated = tween.interpolate(frameTimestamp)
     //setter(startValue + (targetValue - startValue) * interpolated)
 
-    chartSupport.markAsDirty()
+    chartSupport.markAsDirty(DirtyReason.Animation)
   }
 
   /**

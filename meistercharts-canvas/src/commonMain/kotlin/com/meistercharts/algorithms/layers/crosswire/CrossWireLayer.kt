@@ -28,7 +28,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
@@ -232,7 +232,7 @@ class CrossWireLayer(
   /**
    * The style configuration for the cross wire layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The location of the cross wire itself

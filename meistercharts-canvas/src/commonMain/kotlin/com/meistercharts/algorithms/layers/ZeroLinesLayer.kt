@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import it.neckar.open.unit.other.px
 
 /**
@@ -50,7 +50,7 @@ class ZeroLinesLayer(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The color for the lines

@@ -19,17 +19,16 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
-import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
+import com.meistercharts.style.Palette
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
-import com.meistercharts.style.Palette
 
 /**
  * A layer that displays lines
@@ -51,7 +50,7 @@ open class LineChartLayer(
   }
 
   /**
-   * Paints a single line
+   * Paints a single line - including the points
    */
   private fun paintLine(paintingContext: LayerPaintingContext, lineIndex: Int) {
     //Skip all empty lines
@@ -76,7 +75,7 @@ open class LineChartLayer(
 
     linePainter.paint(gc)
 
-    //Paint the points
+    //Paint the points - must be done after the line has finished to be ensure the z order is correct
     paintPoints(paintingContext, lineIndex, dataPointCount)
   }
 
@@ -98,7 +97,7 @@ open class LineChartLayer(
     var model: LinesChartModel
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Provides the point painters for the given line index

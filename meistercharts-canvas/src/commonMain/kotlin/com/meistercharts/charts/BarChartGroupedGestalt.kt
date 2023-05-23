@@ -63,17 +63,19 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.support.CategoryAxisSupport
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
-import com.meistercharts.charts.support.thresholdsSupportSingle
+import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
@@ -81,22 +83,22 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.BoxProvider1
-import it.neckar.open.kotlin.lang.asProvider1
-import it.neckar.open.kotlin.lang.fastFor
-import it.neckar.open.provider.DoublesProvider
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.provider.MultiProvider1
-import it.neckar.open.provider.delegate
+import com.meistercharts.style.BoxStyle
+import com.meistercharts.style.Palette.chartColors
+import com.meistercharts.style.Shadow
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
+import it.neckar.open.kotlin.lang.asProvider1
+import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.observable.ObservableBoolean
-import com.meistercharts.style.BoxStyle
-import com.meistercharts.style.Palette.chartColors
-import com.meistercharts.style.Shadow
+import it.neckar.open.provider.DoublesProvider
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.provider.MultiProvider1
+import it.neckar.open.provider.delegate
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 
@@ -198,7 +200,7 @@ class BarChartGroupedGestalt constructor(
     selectionSink = { newSelection, chartSupport ->
       if (activeCategoryIndexOrNull != newSelection) {
         activeCategoryIndexOrNull = newSelection
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
     }
   )
@@ -502,7 +504,7 @@ class BarChartGroupedGestalt constructor(
   }
 
   //Note that all default values are chosen in regard to a vertical chart orientation.
-  @StyleDsl
+  @ConfigurationDsl
   open inner class Style {
     /**
      * The margin for the active category background

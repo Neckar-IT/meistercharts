@@ -62,12 +62,12 @@ class BooleanEnumStripePainter(
     binaryPainter = BinaryPainter(false, false, height, paintingContext.width, height)
   }
 
-  override fun beginPainting(paintingContext: LayerPaintingContext) {
-    super.beginPainting(paintingContext)
+  override fun beginPainting(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex) {
+    super.beginPainting(paintingContext, dataSeriesIndex)
     binaryPainter.reset()
   }
 
-  override fun paintSegment(paintingContext: LayerPaintingContext, startX: Double, endX: Double, activeTimeStamp: Double, value1ToPaint: HistoryEnumSet, value2ToPaint: HistoryEnumOrdinal, value3ToPaint: Unit, value4ToPaint: Unit) {
+  override fun paintSegment(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex, startX: Double, endX: Double, activeTimeStamp: Double, value1ToPaint: HistoryEnumSet, value2ToPaint: HistoryEnumOrdinal, value3ToPaint: Unit, value4ToPaint: Unit) {
     if (value1ToPaint.isNoValue()) {
       return
     }
@@ -82,7 +82,7 @@ class BooleanEnumStripePainter(
 
     val gc = paintingContext.gc
 
-    @Zoomed val height = paintingVariables().height
+    @Zoomed val height = paintingVariables(dataSeriesIndex).height
 
     val ordinalToPaint: HistoryEnumOrdinal = when (configuration.aggregationMode) {
       EnumAggregationMode.ByOrdinal -> value1ToPaint.firstSetOrdinal()

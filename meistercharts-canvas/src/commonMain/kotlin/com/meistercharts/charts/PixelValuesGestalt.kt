@@ -43,14 +43,13 @@ import com.meistercharts.algorithms.layers.linechart.toDomainRelativeY
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
@@ -382,7 +381,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     var minColor: Color = Color.web("#3f51b5")
     var averageColor: Color = Color.web("#2196f3")

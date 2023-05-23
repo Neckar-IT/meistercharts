@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.RadialGradient
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 
 /**
  * Configuration for a slogan above the Neckar IT 'flow'
@@ -67,7 +67,7 @@ class NeckarITSloganWithFlowGestalt(
     // TODO
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     // TODO
   }

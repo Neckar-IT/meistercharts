@@ -18,9 +18,9 @@ package com.meistercharts.charts
 import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.delegate
-import com.meistercharts.algorithms.layers.ScrollWithoutModifierMessageLayer
+import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
-import com.meistercharts.algorithms.layers.addScrollWithoutModifierHint
+import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMap
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMapDe
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
@@ -33,7 +33,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
@@ -126,7 +126,7 @@ class MapGestalt(
         layers.addLayer(legalNoticeLayer.visibleIf(style.showCopyrightMarkerProperty))
         layers.addLayer(toolbarLayer.visibleIf(style.showToolbarProperty))
 
-        layers.addScrollWithoutModifierHint(chartSupport, listOf(ScrollWithoutModifierMessageLayer.textKeyUseCtrlZoom))
+        layers.addMouseWheelWithoutModifierHint(listOf(MouseWheelWithoutModifierMessageLayer.textKeyUseCtrlZoom))
       }
     }
   }
@@ -148,7 +148,7 @@ class MapGestalt(
     var slippyMapProvider: SlippyMapProvider by slippyMapProviderProperty
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * If set to true the copy right marker is shown at the bottom left

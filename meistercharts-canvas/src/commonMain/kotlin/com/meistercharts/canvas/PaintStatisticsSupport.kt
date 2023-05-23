@@ -15,6 +15,7 @@
  */
 package com.meistercharts.canvas
 
+import it.neckar.open.kotlin.lang.orNanIfNull
 import it.neckar.open.unit.other.fps
 import it.neckar.open.unit.si.ms
 
@@ -30,7 +31,7 @@ class PaintStatisticsSupport(
   private val _paintingStatsList: MutableList<PaintingStats> = mutableListOf()
 
   /**
-   * The average duration
+   * The average duration of the painted frames
    */
   @ms
   val averageDuration: Double
@@ -42,12 +43,53 @@ class PaintStatisticsSupport(
         .average()
     }
 
+  @ms
+  val maxDuration: Double
+    get() {
+      return _paintingStatsList.asSequence()
+        .map {
+          it.layerPaintDurations.total
+        }
+        .maxOrNull().orNanIfNull()
+    }
+
+  @ms
+  val minDuration: Double
+    get() {
+      return _paintingStatsList.asSequence()
+        .map {
+          it.layerPaintDurations.total
+        }
+        .minOrNull().orNanIfNull()
+    }
+
+  /**
+   * The (calculated) FPS that (could) been painted.
+   */
+  @fps
+  val fps: Double
+    get() {
+      return 1000.0 / averageDuration
+    }
+
+  @fps
+  val minFps: Double
+    get() {
+      return 1000.0 / maxDuration
+    }
+
+  @fps
+  val maxFps: Double
+    get() {
+      return 1000.0 / minDuration
+    }
+
   /**
    * Calculates the *real* FPS that have been painted - over the last 100 repaints.
    * This value does *not* take paints into account that have been skipped, since the canvas has not been marked as dirty.
    */
   @fps
-  val fps: Double
+  val paintedFPS: Double
     get() {
       val first = _paintingStatsList.firstOrNull()
       val last = _paintingStatsList.lastOrNull()

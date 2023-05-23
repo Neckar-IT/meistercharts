@@ -20,11 +20,10 @@ import com.meistercharts.algorithms.domain2rad
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
@@ -34,6 +33,8 @@ import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.WhitespaceConfig
+import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
@@ -141,7 +142,7 @@ class ModernCompassPainter(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Returns the ticks
@@ -219,8 +220,8 @@ class ModernCompassPainter(
      * Format for formatting values
      */
     var valueFormat: CachedNumberFormat = object : NumberFormat {
-      override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
-        return formatDegreesAsDirection(value) ?: intFormat.format(value, i18nConfiguration)
+      override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+        return formatDegreesAsDirection(value) ?: intFormat.format(value, i18nConfiguration, whitespaceConfig)
       }
 
       override val precision: Double = intFormat.precision

@@ -47,6 +47,10 @@ class HistoryEnumLayer(
     override fun calculate(paintingContext: LayerPaintingContext) {
       super.calculate(paintingContext)
     }
+
+    override fun dataSeriesIndexFromInt(indexAsInt: Int): EnumDataSeriesIndex {
+      return EnumDataSeriesIndex(indexAsInt)
+    }
   }
 
   override fun dataSeriesCount(): Int {
@@ -110,9 +114,9 @@ class HistoryEnumLayer(
     historyConfiguration = historyConfiguration,
     requestedVisibleIndices = requestedVisibleIndices,
     contentAreaTimeRange = contentAreaTimeRange,
-    stripePainters = MultiProvider.cached<EnumDataSeriesIndex, EnumStripePainter> { RectangleEnumStripePainter() },
+    stripePainters = MultiProvider.always(RectangleEnumStripePainter()),
   )
 }
 
-interface HistoryEnumPaintingVariables : AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables<HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
+interface HistoryEnumPaintingVariables : AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {
 }

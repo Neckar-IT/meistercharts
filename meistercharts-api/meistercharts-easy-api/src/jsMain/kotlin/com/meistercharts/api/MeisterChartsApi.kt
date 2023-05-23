@@ -16,6 +16,7 @@
 package com.meistercharts.api
 
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.canvas.DirtyReason
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.js.MeisterChartJS
@@ -95,7 +96,7 @@ internal constructor(
    * Should be called after each update of data/configuration/style
    */
   protected fun markAsDirty() {
-    meisterCharts.chartSupport.markAsDirty()
+    meisterCharts.chartSupport.markAsDirty(DirtyReason.Unknown)
   }
 
   /**

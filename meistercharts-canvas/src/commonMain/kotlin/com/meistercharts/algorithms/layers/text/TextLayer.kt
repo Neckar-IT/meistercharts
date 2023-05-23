@@ -24,7 +24,7 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
@@ -110,7 +110,7 @@ class TextLayer(
   /**
    * Style configuration for the text layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * The color of the text

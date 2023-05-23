@@ -15,13 +15,13 @@
  */
 package com.meistercharts.model
 
-import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.annotations.Zoomed
+import it.neckar.open.formatting.CachedNumberFormat
+import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.distance
 import it.neckar.open.kotlin.lang.isPositive
-import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
 import kotlinx.serialization.Serializable
@@ -31,6 +31,7 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
@@ -40,7 +41,7 @@ import kotlin.math.sqrt
 @Serializable
 data class Coordinates(
   val x: Double,
-  val y: Double
+  val y: Double,
 ) {
   constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
@@ -83,7 +84,7 @@ data class Coordinates(
   /**
    * Adds the given size and returns the resulting coordinate
    */
-  fun plus(size: Size): Coordinates {
+  operator fun plus(size: Size): Coordinates {
     return of(x + size.width, y + size.height)
   }
 
@@ -214,8 +215,41 @@ data class Coordinates(
     return distanceTo(target.x, target.y)
   }
 
+  inline fun distanceToPoint(target: Coordinates): Double {
+    return distanceTo(target)
+  }
+
   fun distanceTo(targetX: Double, targetY: Double): Double {
     return distance(x, y, targetX, targetY)
+  }
+
+  /**
+   * Calculates the distance of this coordinate to a line segment that is defined by start/end
+   */
+  fun distanceToLine(lineStartX: Double, lineStartY: Double, lineEndX: Double, lineEndY: Double): Double {
+    if (lineStartX == lineEndX && lineStartY == lineEndY) {
+      //If the line has the same start and end
+      return this.distanceTo(lineStartX, lineStartY)
+    }
+
+    if (isPerpendicularToLineSegment(lineStartX, lineStartY, lineEndX, lineEndY).not()) {
+      //Not perpendicular to the line segment, so the closest point is either the start point or end point
+      return min(distanceTo(lineStartX, lineStartY), distanceTo(lineEndX, lineEndY))
+    }
+
+    //Link to the method used: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+    val doubleTheSizeOfTheTriangle = rectangleAreaFromThreePoints(lineStartX, lineStartY, lineEndX, lineEndY, x, y)
+    val hypotenuseVectorX = lineEndX - lineStartX
+    val hypotenuseVectorY = lineEndY - lineStartY
+    val hypotenuseLength = sqrt(hypotenuseVectorX.pow(2) + hypotenuseVectorY.pow(2))
+
+    (doubleTheSizeOfTheTriangle / hypotenuseLength).let { triangleHeight ->
+      return triangleHeight
+    }
+  }
+
+  fun distanceToLine(lineStart: Coordinates, lineEnd: Coordinates): Double {
+    return distanceToLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y)
   }
 
   /**
@@ -282,7 +316,43 @@ data class Coordinates(
  * Returns true if this coordinates lies within a rectangle defined by the given location and size
  */
 fun Coordinates.within(location: Coordinates, size: @Zoomed Size): Boolean {
-  return x.betweenInclusive(location.x, location.x + size.width)
-    &&
-    y.betweenInclusive(location.y, location.y + size.height)
+  return within(location, location + size)
+}
+
+fun Coordinates.within(start: Coordinates, end: Coordinates): Boolean {
+  return within(start.x, start.y, end.x, end.y)
+}
+
+fun Coordinates.within(startX: Double, startY: Double, endX: Double, endY: Double): Boolean {
+  return x.betweenInclusive(startX, endX) && y.betweenInclusive(startY, endY)
+}
+
+fun Coordinates.withinSized(startX: Double, startY: Double, width: Double, height: Double): Boolean {
+  return x.betweenInclusive(startX, startX + width) && y.betweenInclusive(startY, startY + height)
+}
+
+/**
+ * Returns true of the [Coordinates] are perpendicular either above or below the line segment defined by the given two points
+ */
+fun Coordinates.isPerpendicularToLineSegment(lineSegmentStartX: Double, lineSegmentStartY: Double, lineSegmentEndX: Double, lineSegmentEndY: Double): Boolean {
+  //If the line segment is only a single point, any other point is perpendicular
+  if (lineSegmentStartX == lineSegmentEndX && lineSegmentStartY == lineSegmentEndY) return true
+  //If the line segment is vertical, the y coordinate is the adjusted x coordinate
+  if (lineSegmentStartX == lineSegmentEndX) return y.betweenInclusive(lineSegmentStartY, lineSegmentEndY)
+  //If the line segment is horizontal, the x coordinate does not need to be adjusted
+  if (lineSegmentStartY == lineSegmentEndY) return x.betweenInclusive(lineSegmentStartX, lineSegmentEndX)
+
+  //The [Coordinates] must lie within the bounds defined by the inverse functions going through the start and end of the line segment
+  val inverseSlopeBetweenPoints = -1 / getSlopeBetweenPoints(lineSegmentStartX, lineSegmentStartY, lineSegmentEndX, lineSegmentEndY)
+  val adjustedStartX = lineSegmentStartX + (y - lineSegmentStartY) / inverseSlopeBetweenPoints
+  val adjustedEndX = lineSegmentEndX + (y - lineSegmentEndY) / inverseSlopeBetweenPoints
+  return x.betweenInclusive(adjustedStartX, adjustedEndX)
+}
+
+fun Coordinates.isPerpendicularToLineSegment(lineSegmentStart: Coordinates, lineSegmentEnd: Coordinates): Boolean {
+  return isPerpendicularToLineSegment(lineSegmentStart.x, lineSegmentStart.y, lineSegmentEnd.x, lineSegmentEnd.y)
+}
+
+fun getSlopeBetweenPoints(point1X: Double, point1Y: Double, point2X: Double, point2Y: Double): Double {
+  return (point2Y - point1Y) / (point2X - point1X)
 }

@@ -24,9 +24,11 @@ import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
 import com.meistercharts.canvas.events.CanvasTouchEventHandlerBroker
+import com.meistercharts.events.DragAction
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Size
@@ -34,58 +36,22 @@ import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
 import com.meistercharts.events.MouseClickEvent
+import com.meistercharts.events.MouseDoubleClickAction
 import com.meistercharts.events.MouseDoubleClickEvent
+import com.meistercharts.events.MouseDownEvent
 import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
+import com.meistercharts.events.MouseUpEvent
+import com.meistercharts.events.MouseWheelAction
 import com.meistercharts.events.MouseWheelEvent
+import com.meistercharts.events.TouchDoubleTapAction
+import com.meistercharts.events.TouchPanAction
+import com.meistercharts.events.TouchPinchAction
 import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
 import it.neckar.open.unit.other.pct
-
-
-typealias MouseDoubleClickAction = (MouseDoubleClickEvent) -> EventConsumption
-typealias MouseClickAction = (MouseClickEvent) -> EventConsumption
-typealias MouseMoveAction = (MouseMoveEvent) -> EventConsumption
-typealias MouseDragAction = (MouseDragEvent) -> EventConsumption
-typealias MouseWheelAction = (MouseWheelEvent) -> EventConsumption
-/**
- * A simple drag action that is only notified about the drags - but not the start/finish events
- * @return whether the event should be consumed
- */
-typealias DragAction = (dragDistance: Distance) -> EventConsumption
-
-
-/**
- * Will be called on translate using a touch screen
- */
-typealias TouchPanAction = (oldCenter: @Window Coordinates, newCenter: @Window Coordinates, deltaCenter: @Zoomed Distance) -> EventConsumption
-
-/**
- * Is called on pinch action using a touch screen
- */
-typealias TouchPinchAction = (
-  oldCenter: @Window Coordinates,
-  newCenter: @Window Coordinates,
-  oldDistanceBetweenTouches: @Zoomed Distance,
-  newDistanceBetweenTouches: @Zoomed Distance,
-  /**
-   * The zoom factor change.
-   *
-   * Examples:
-   * * 1.0: Nothing has changed
-   * * 0.5: Zoomed out
-   */
-  zoomFactorChangeX: @pct Double,
-  zoomFactorChangeY: @pct Double,
-) -> EventConsumption
-
-/**
- * Is called on double tap using a touch screen
- */
-typealias TouchDoubleTapAction = (coordinates: @Window Coordinates) -> EventConsumption
-
 
 /**
  * Zoom and translation layer that can be configured to handle different zoom and translation actions.
@@ -339,7 +305,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
 
     override fun onDrag(source: CanvasDragSupport, location: @Window Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
       rubberBandCurrentLocation = location
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       return Consumed
     }
 
@@ -366,7 +332,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
       rubberBandStartLocation = null
       rubberBandCurrentLocation = null
 
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.UiStateChanged)
       return Consumed
     }
   })

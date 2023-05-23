@@ -15,14 +15,12 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.algorithms.layers.gesture.MouseClickAction
-import com.meistercharts.algorithms.layers.gesture.MouseDoubleClickAction
-import com.meistercharts.algorithms.layers.gesture.MouseDragAction
-import com.meistercharts.algorithms.layers.gesture.MouseMoveAction
-import com.meistercharts.algorithms.layers.gesture.MouseWheelAction
 import com.meistercharts.annotations.Window
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Distance
 import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 
 /**
@@ -34,9 +32,13 @@ import it.neckar.open.unit.other.px
 interface MouseEventBroker {
   /**
    * Contains the current/last x position of the mouse.
+   *
+   * Do *not* use this property to handle events!
+   * Instead, use {onMove} and return the correct [EventConsumption] value.
    */
   @px
   @Window
+  @Deprecated("Use the on* methods for event handling instead")
   val mousePositionProperty: ReadOnlyObservableObject<@Window Coordinates?>
 
   /**
@@ -71,7 +73,52 @@ interface MouseEventBroker {
    */
   fun onWheel(callback: MouseWheelAction)
 
-  fun onDown(callback: (MouseDownEvent) -> EventConsumption)
+  fun onDown(callback: MouseDownAction)
 
-  fun onUp(callback: (MouseUpEvent) -> EventConsumption)
+  fun onUp(callback: MouseUpAction)
 }
+
+
+
+typealias MouseDoubleClickAction = (MouseDoubleClickEvent) -> EventConsumption
+typealias MouseClickAction = (MouseClickEvent) -> EventConsumption
+typealias MouseMoveAction = (MouseMoveEvent) -> EventConsumption
+typealias MouseDragAction = (MouseDragEvent) -> EventConsumption
+typealias MouseWheelAction = (MouseWheelEvent) -> EventConsumption
+typealias MouseDownAction = (MouseDownEvent) -> EventConsumption
+typealias MouseUpAction = (MouseUpEvent) -> EventConsumption
+/**
+ * A simple drag action that is only notified about the drags - but not the start/finish events
+ * @return whether the event should be consumed
+ */
+typealias DragAction = (dragDistance: Distance) -> EventConsumption
+
+
+/**
+ * Will be called on translate using a touch screen
+ */
+typealias TouchPanAction = (oldCenter: @Window Coordinates, newCenter: @Window Coordinates, deltaCenter: @Zoomed Distance) -> EventConsumption
+
+/**
+ * Is called on pinch action using a touch screen
+ */
+typealias TouchPinchAction = (
+  oldCenter: @Window Coordinates,
+  newCenter: @Window Coordinates,
+  oldDistanceBetweenTouches: @Zoomed Distance,
+  newDistanceBetweenTouches: @Zoomed Distance,
+  /**
+   * The zoom factor change.
+   *
+   * Examples:
+   * * 1.0: Nothing has changed
+   * * 0.5: Zoomed out
+   */
+  zoomFactorChangeX: @pct Double,
+  zoomFactorChangeY: @pct Double,
+) -> EventConsumption
+
+/**
+ * Is called on double tap using a touch screen
+ */
+typealias TouchDoubleTapAction = (coordinates: @Window Coordinates) -> EventConsumption

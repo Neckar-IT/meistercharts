@@ -109,6 +109,14 @@ data class BoxStyle(
       radii = BorderRadius.all2,
       shadow = Shadow.LightDrop
     )
+
+    @JvmStatic
+    val modernDarkBlue: BoxStyle = BoxStyle(
+      fill = Color.white,
+      borderColor = Color.blue3,
+      radii = BorderRadius.all2,
+      shadow = Shadow.LightDrop
+    )
   }
 }
 

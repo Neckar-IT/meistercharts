@@ -26,6 +26,8 @@ import com.meistercharts.api.EnumConfiguration
 import com.meistercharts.api.FontStyle
 import com.meistercharts.api.LineStyle
 import com.meistercharts.api.NumberFormat
+import com.meistercharts.api.PointConnectionType
+import com.meistercharts.api.PointType
 import com.meistercharts.api.SamplingPeriod
 import com.meistercharts.api.StripeStyle
 import com.meistercharts.api.Threshold
@@ -181,6 +183,20 @@ external interface Sample {
   val decimalValues: Array<Double>?
 
   /**
+   * The min value for each line at the timestamp of this sample
+   * [Double.NaN] represents "No value"
+   */
+  @Suppress("ArrayPrimitive")
+  val decimalMinValues: Array<Double>?
+
+  /**
+   * The max value for each line at the timestamp of this sample
+   * [Double.NaN] represents "No value"
+   */
+  @Suppress("ArrayPrimitive")
+  val decimalMaxValues: Array<Double>?
+
+  /**
    * The ordinal values for each enumeration at the timestamp of this sample
    *
    * [Double.NaN] represents "No value"
@@ -195,6 +211,11 @@ external interface TimeLineChartStyle {
    *
    */
   val showToolbar: Boolean?
+
+  /**
+   * Whether to show the hint on mouse wheel events without any modifier (true, default) or not (false)
+   */
+  val showMouseWheelModifierHint: Boolean?
 
   /**
    * The time range that is currently visible (in UTC)
@@ -223,9 +244,9 @@ external interface TimeLineChartStyle {
 
   /**
    * How the lines should be painted.
-   * This information is used in a module-fashion.
+   * This information is used in a modulo-fashion.
    */
-  val lineStyles: Array<LineStyle>?
+  val lineStyles: Array<TimeLineChartLineStyle>?
 
   /**
    * The indices of the visible (decimal) lines.
@@ -362,3 +383,52 @@ external interface EnumDataSeriesStyle {
   val aggregationMode: EnumAggregationMode?
 }
 
+/**
+ * Configuration for a single (decimal) line in the timeline chart.
+ */
+external interface TimeLineChartLineStyle {
+  /**
+   * The line style
+   */
+  val lineStyle: LineStyle
+
+  /**
+   * How the points are painted - default is [PointType.None]
+   * Uses the line color.
+   */
+  val pointType: PointType?
+
+  /**
+   * The size of the point in pixels - depending on the [pointType].
+   * Usually the diameter.
+   */
+  val pointSize: Double?
+
+  //Currently, we do not support custom colors and styles
+  ///**
+  // * The line-width to be used for a point; only relevant for cross and cross-45-degrees like points
+  // */
+  //val pointLineWidth: Double?
+  //
+  ///**
+  // * The first color to be used for a point
+  // */
+  //val pointColor1: String?
+  //
+  ///**
+  // * The second color to be used for a point
+  // */
+  //val pointColor2: String?
+
+
+  /**
+   * The color for the min/max area
+   */
+  val minMaxAreaColor: String?
+
+  /**
+   * If set to true the min/max area is visible, default is false
+   */
+  val showMinMaxArea: Boolean?
+
+}

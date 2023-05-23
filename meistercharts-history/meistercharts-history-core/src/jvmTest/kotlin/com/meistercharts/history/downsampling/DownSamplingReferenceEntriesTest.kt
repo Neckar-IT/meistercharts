@@ -251,8 +251,8 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2001-09-09T01:46:40.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2001-09-09T01:47:39.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
 
 
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(45)
@@ -266,7 +266,7 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).isEmpty()
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty()
     historyStorage.storeWithoutCache(generated, samplingPeriod)
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty() //no down sampling!
 
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
@@ -277,13 +277,13 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[SamplingPeriod.EverySecond]).isNull() //not dirty anymore
 
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     val downSampled = historyStorage.query(generated.timeRange(), samplingPeriodAbove)
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2001-09-09T01:40:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2001-09-09T01:50:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)
@@ -315,8 +315,8 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2001-09-09T01:46:40.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2001-09-09T01:47:39.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
 
 
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(17667)
@@ -332,7 +332,7 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).isEmpty()
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty()
     historyStorage.storeWithoutCache(generated, samplingPeriod)
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty() //no down sampling!
 
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
@@ -343,13 +343,13 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[SamplingPeriod.EverySecond]).isNull() //not dirty anymore
 
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     val downSampled = historyStorage.query(generated.timeRange(), samplingPeriodAbove)
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2001-09-09T01:40:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2001-09-09T01:50:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)
@@ -381,18 +381,17 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2001-09-09T01:46:40.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2001-09-09T01:47:39.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
 
-
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(0)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(0)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3))).isEqualToReferenceEntryId(0)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(4))).isEqualToReferenceEntryId(0)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(5))).isEqualToReferenceEntryId(1)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(8))).isEqualToReferenceEntryId(1)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(9))).isEqualToReferenceEntryId(1)
-    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(10))).isEqualToReferenceEntryId(2)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(34400)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(34400)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(3))).isEqualToReferenceEntryId(34400)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(4))).isEqualToReferenceEntryId(34400)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(5))).isEqualToReferenceEntryId(34401)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(8))).isEqualToReferenceEntryId(34401)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(9))).isEqualToReferenceEntryId(34401)
+    assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(10))).isEqualToReferenceEntryId(34402)
     assertThat(generated.getReferenceEntryIdsCount(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one).value).isEqualTo(1)
 
 
@@ -405,7 +404,7 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).isEmpty()
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty()
     historyStorage.storeWithoutCache(generated, samplingPeriod)
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     assertThat(historyStorage.query(generated.timeRange(), samplingPeriodAbove)).isEmpty() //no down sampling!
 
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
@@ -416,19 +415,19 @@ class DownSamplingReferenceEntriesTest {
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[samplingPeriod]).isNull()
     assertThat(historyStorage.downSamplingService.dirtyRangesCollector[SamplingPeriod.EverySecond]).isNull() //not dirty anymore
 
-    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(2)
+    assertThat(historyStorage.query(generated.timeRange(), samplingPeriod)).hasSize(1)
     val downSampled = historyStorage.query(generated.timeRange(), samplingPeriodAbove)
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2001-09-09T01:40:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2001-09-09T01:50:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)
-      assertThat(timestampIndex).isEqualTo(TimestampIndex(400))
+      assertThat(timestampIndex).isEqualTo(TimestampIndex(0))
 
-      assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.one, timestampIndex)).isEqualToReferenceEntryId(0)
+      assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.one, timestampIndex)).isEqualToReferenceEntryId(34400)
       assertThat(chunk.getReferenceEntryIdsCount(ReferenceEntryDataSeriesIndex.one, timestampIndex)).isEqualToReferenceEntryIdsCount(2)
     }
   }

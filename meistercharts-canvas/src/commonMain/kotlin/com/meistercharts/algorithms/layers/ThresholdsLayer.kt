@@ -20,7 +20,6 @@ import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
@@ -29,7 +28,7 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.BasePointProvider
@@ -217,7 +216,7 @@ class ThresholdsLayer @JvmOverloads constructor(
   annotation class ThresholdValues {
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The orientation of this layer:

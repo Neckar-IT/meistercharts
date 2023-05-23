@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.PaintableLocation
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextWithPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.TransparentPaintable
@@ -126,7 +126,7 @@ class CircularChartLegendLayer(
     val valuesProvider: @Domain DoublesProvider
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     var padding: Insets = Insets.of(20.0)
 

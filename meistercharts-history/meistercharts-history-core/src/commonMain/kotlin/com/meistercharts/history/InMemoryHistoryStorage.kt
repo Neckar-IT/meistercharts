@@ -76,22 +76,6 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
     get() = map.size
 
   /**
-   * Returns the youngest bucket - that has been measured!
-   */
-  fun getYoungest(recordingType: RecordingType): HistoryBucket? {
-    return map.values.lastOrNull {
-      it.chunk.recordingType == recordingType
-    }
-  }
-
-  /**
-   * Returns the youngest time stamp that has been added directly
-   */
-  fun getYoungestMeasuredTime(): @ms Double? {
-    return getYoungest(RecordingType.Measured)?.chunk?.lastTimeStampOrNull()
-  }
-
-  /**
    * Returns all descriptors
    */
   internal fun keys(): Set<HistoryBucketDescriptor> {

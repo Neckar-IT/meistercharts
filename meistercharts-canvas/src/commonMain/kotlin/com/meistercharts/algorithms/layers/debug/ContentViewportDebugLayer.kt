@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.NonOverlappingPasspartoutPaintingStrategy
 import com.meistercharts.algorithms.painter.PasspartoutPainter
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 
 /**
@@ -60,7 +60,7 @@ open class ContentViewportDebugLayer(
     )
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Configuration {
     var fill: Color = Color.blue.withAlpha(0.5)
     var stroke: Color = Color.blue

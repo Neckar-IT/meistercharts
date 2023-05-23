@@ -23,6 +23,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.snapPhysicalTranslation
 import com.meistercharts.design.Theme
+import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
@@ -42,6 +43,7 @@ class RectangleEnumStripePainter(
 
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
+    dataSeriesIndex: EnumDataSeriesIndex,
     startX: @Window Double,
     endX: @Window Double,
     activeTimeStamp: @ms @MayBeNaN Double,
@@ -68,7 +70,7 @@ class RectangleEnumStripePainter(
 
     val gc = paintingContext.gc
 
-    @Zoomed val rectangleHeight = paintingVariables().height
+    @Zoomed val rectangleHeight = paintingVariables(dataSeriesIndex).height
     @Zoomed val rectangleWidth = endX - startX
 
     if (valueToPaint.isNoValue()) {
@@ -97,7 +99,10 @@ class RectangleEnumStripePainter(
       EnumAggregationMode.MostTime -> valueMostTimeToPaint
     }
 
-    gc.fill(configuration.fillProvider(ordinalToPaint, paintingVariables().historyEnum))
+    val paintingVariables: EnumStripePainterPaintingVariables = paintingVariables()
+    paintingVariables.historyConfiguration
+
+    gc.fill(configuration.fillProvider(ordinalToPaint, paintingVariables.historyEnum))
     val snapConfiguration = configuration.snapConfiguration()
     gc.snapPhysicalTranslation(snapConfiguration)
     gc.fillRect(startX, 0.0, snapConfiguration.snapXSize(rectangleWidth), snapConfiguration.snapYSize(rectangleHeight))

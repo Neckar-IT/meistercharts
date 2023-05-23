@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.BinaryValueRange
 import com.meistercharts.algorithms.painter.BinaryPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import it.neckar.open.provider.BooleanValuesProvider
 
 /**
@@ -70,7 +70,7 @@ class BinaryLayer(
     val valuesProvider: BooleanValuesProvider
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     var lineWidth: Double = 5.0
     var stroke: Color = Color.rgba(10, 10, 10, 0.5)

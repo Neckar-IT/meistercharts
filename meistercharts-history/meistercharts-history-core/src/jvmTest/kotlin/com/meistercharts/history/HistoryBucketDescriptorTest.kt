@@ -18,20 +18,52 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.history.impl.HistoryChunk
-import it.neckar.open.serialization.roundTrip
+import com.meistercharts.history.impl.historyChunk
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.serialization.roundTrip
 import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
-import com.meistercharts.history.impl.historyChunk
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 /**
  */
 class HistoryBucketDescriptorTest {
+  @Disabled
+  @Test
+  fun testPringValues() {
+    println(TimeConstants.referenceTimestamp.formatUtc())
+
+    SamplingPeriod.entries.forEach { samplingPeriod ->
+      println("--------------- $samplingPeriod --> ${samplingPeriod.toHistoryBucketRange()}")
+
+      val descriptor = HistoryBucketDescriptor.forTimestamp(TimeConstants.referenceTimestamp, samplingPeriod)
+
+      println("start: ${descriptor.start.formatUtc()}")
+      println("end: ${descriptor.end.formatUtc()}")
+      println()
+    }
+
+    println("--------")
+    println("--------")
+    println("--------")
+    println()
+
+    SamplingPeriod.entries.forEach { samplingPeriod ->
+      println("--------------- $samplingPeriod --> ${samplingPeriod.toHistoryBucketRange()}")
+
+      val descriptor = HistoryBucketDescriptor.forTimestamp(0.0, samplingPeriod)
+
+      println("start: ${descriptor.start.formatUtc()}")
+      println("end: ${descriptor.end.formatUtc()}")
+      println()
+    }
+  }
+
   @Test
   fun name() {
     roundTrip(HistoryBucketDescriptor(44.0, HistoryBucketRange.OneMinute)){

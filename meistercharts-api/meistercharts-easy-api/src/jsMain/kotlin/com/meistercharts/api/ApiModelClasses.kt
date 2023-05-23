@@ -823,6 +823,12 @@ external interface Threshold {
   val labelColor: String
 
   /**
+   * The color to b eused for the threshold label if it is active
+   */
+  //TODO make non nullable!
+  val labelColorActive: String?
+
+  /**
    * The font to be used for the threshold label
    */
   val labelFont: FontStyle
@@ -833,9 +839,23 @@ external interface Threshold {
   val lineStyle: LineStyle
 
   /**
+   * The style to be used for the threshold line - if it is active.
+   * Is this property null, the [lineStyle] is used.
+   */
+  //TODO make non nullable!
+  val lineStyleActive: LineStyle?
+
+  /**
    * The box style for the label
    */
   val labelBoxStyle: BoxStyle
+
+  /**
+   * The box style for the label - if active
+   * Is this property null, the [labelBoxStyle] is used.
+   */
+  //TODO make non nullable!
+  val labelBoxStyleActive: BoxStyle?
 }
 
 /**

@@ -15,12 +15,13 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Rectangle
+import com.meistercharts.model.withinSized
 import it.neckar.open.kotlin.lang.betweenInclusive
+import it.neckar.open.unit.number.MayBeNegative
 
 /**
  * Caches bounds (x,y,width,height) without creating any objects
@@ -203,7 +204,7 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
     ) -> Unit
   ) {
 
-    xValues.fastForEachIndexedReverse { index, x, _ ->
+    xValues.fastForEachIndexedReversed { index, x ->
       val y = yValues[index]
       val width = widthValues[index]
       val height = heightValues[index]
@@ -272,6 +273,18 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
       y(index),
       width(index),
       height(index)
+    )
+  }
+
+  /**
+   * Returns true if the provided coordinates are within the bounds
+   */
+  fun contains(index: Int, location: Coordinates): Boolean {
+    return location.withinSized(
+      startX = x(index),
+      startY = y(index),
+      width = width(index),
+      height = height(index),
     )
   }
 }

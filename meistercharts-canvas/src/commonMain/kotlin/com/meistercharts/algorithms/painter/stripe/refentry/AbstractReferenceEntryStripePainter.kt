@@ -15,7 +15,6 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
-import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryData
@@ -39,14 +38,16 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
   /**
    * The painting properties that are held
    */
-  private val paintingVariables = DefaultReferenceEntryStripePainterPaintingVariables()
+  private val paintingVariables = ReferenceEntryStripePainterPaintingVariables()
 
 
-  override fun haveRelevantValuesChanged(value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
-    val currentId = paintingVariables.currentValue1
-    val currentCount = paintingVariables.currentValue2
-    val currentEnumSet = paintingVariables.currentValue3
-    val currentReferenceData = paintingVariables.currentValue4 //do not check - these values must never change for the same [ReferenceEntryId]
+  override fun haveRelevantValuesChanged(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
+    val paintingVariablesForDataSeries = paintingVariables(dataSeriesIndex)
+
+    val currentId = paintingVariablesForDataSeries.currentValue1
+    val currentCount = paintingVariablesForDataSeries.currentValue2
+    val currentEnumSet = paintingVariablesForDataSeries.currentValue3
+    val currentReferenceData = paintingVariablesForDataSeries.currentValue4 //do not check - these values must never change for the same [ReferenceEntryId]
 
     return currentId != value1 || currentCount != value2 || currentEnumSet != value3
   }

@@ -26,8 +26,10 @@ import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
 import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.formatting.percentageFormat
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.unit.other.px
 import kotlin.math.min
 
@@ -205,11 +207,11 @@ class ChartingStateDebugPainter {
      */
     private val windowFill = Color.color(0.0, 1.0, 0.0, 0.2)
 
-    private fun Double.format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1): String {
-      return decimalFormat(maxFractionDigits).format(this, i18nConfiguration)
+    private fun Double.format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+      return decimalFormat(maxFractionDigits).format(this, i18nConfiguration, whitespaceConfig)
     }
 
-    private fun Double.formatPct(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1): String {
+    private fun Double.formatPct(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
       return "${decimalFormat(maxFractionDigits).format(this, i18nConfiguration)}%"
     }
   }

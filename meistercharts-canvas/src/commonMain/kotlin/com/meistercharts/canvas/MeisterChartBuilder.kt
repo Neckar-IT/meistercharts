@@ -281,7 +281,7 @@ interface MeisterChart : Disposable, OnDispose {
   /**
    * Marks the canvas as dirty
    */
-  fun markAsDirty() {
-    chartSupport.markAsDirty()
+  fun markAsDirty(reason: DirtyReason) {
+    chartSupport.markAsDirty(reason)
   }
 }

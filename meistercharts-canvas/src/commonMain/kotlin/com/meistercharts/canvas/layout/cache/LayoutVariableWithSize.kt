@@ -36,7 +36,7 @@ interface LayoutVariableWithSize : LayoutVariable {
   /**
    * ATTENTION: Please call prepare instead
    */
-  @Deprecated("Use reset instead")
+  @Deprecated("Use prepare instead")
   override fun reset()
 
   /**
@@ -47,7 +47,7 @@ interface LayoutVariableWithSize : LayoutVariable {
    * - recreation of all objects
    * - ....
    */
-  @Deprecated("Use reset instead")
+  @Deprecated("Use prepare instead")
   fun ensureSize(size: Int)
 
   /**

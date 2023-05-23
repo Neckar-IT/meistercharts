@@ -52,7 +52,7 @@ class ValueAxisSupport<Key>(
   }
 
   /**
-   * Adds multiple layers
+   * Adds layers for all provided keys
    */
   fun addMultipleLayers(layers: Layers, keys: Iterable<Key>): AddLayersResult {
     val multiAxisLayer = createMultiValueAxisLayer(keys)
@@ -119,10 +119,25 @@ class ValueAxisSupport<Key>(
       }
   }
 
+  /**
+   * Describes which layers have been added at which index
+   */
   data class AddLayersResult(
+    /**
+     * The index of hte axis layer
+     */
     val axisLayerIndex: @PaintingOrder Int,
+    /**
+     * The value axis layer that has been added
+     */
     val multiValueAxisLayer: MultiValueAxisLayer,
+    /**
+     * The index of the top title layer
+     */
     val topTitleLayerIndex: @PaintingOrder Int,
+    /**
+     * The top title layer that has been added
+     */
     val multiTopTitleLayer: MultipleLayersDelegatingLayer<AxisTopTopTitleLayer>,
   )
 

@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.HistoryUpdateInfo
 import it.neckar.open.unit.other.px
 
@@ -46,7 +46,7 @@ class HistoryUpdatesVisualizationLayer(val contentAreaTimeRange: TimeRange) : Ab
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The minimum width that is visualized

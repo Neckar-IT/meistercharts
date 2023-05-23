@@ -117,8 +117,8 @@ class RectanglePointPainter(
  * Paints a circle
  */
 class CirclePointPainter(
-  snapXValues: Boolean,
-  snapYValues: Boolean
+  snapXValues: Boolean = false,
+  snapYValues: Boolean = false,
 ) : AbstractPointPainter(snapXValues, snapYValues), Paintable {
   var fill: Color = Color.white
   var stroke: Color = Color.web("#ffc83e")

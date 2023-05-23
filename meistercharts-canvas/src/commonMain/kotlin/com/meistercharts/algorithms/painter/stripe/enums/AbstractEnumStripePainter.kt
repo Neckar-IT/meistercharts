@@ -38,7 +38,7 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
   /**
    * The painting properties that are held
    */
-  private val paintingVariables = DefaultEnumStripePainterPaintingVariables()
+  private val paintingVariables = EnumStripePainterPaintingVariables()
 
   /**
    * Returns the history enum value for the given index
@@ -51,9 +51,9 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
   /**
    * Returns true if the relevant value has changed - depending on the
    */
-  override fun haveRelevantValuesChanged(value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit, value4: Unit): Boolean {
-    @MayBeNoValueOrPending val currentEnumSet = paintingVariables.currentValue1
-    @MayBeNoValueOrPending val currentEnumOrdinalMostTime = paintingVariables.currentValue2
+  override fun haveRelevantValuesChanged(dataSeriesIndex: EnumDataSeriesIndex, value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit, value4: Unit): Boolean {
+    @MayBeNoValueOrPending val currentEnumSet = paintingVariables(dataSeriesIndex).currentValue1
+    @MayBeNoValueOrPending val currentEnumOrdinalMostTime = paintingVariables(dataSeriesIndex).currentValue2
 
     return when (configuration.aggregationMode) {
       EnumAggregationMode.ByOrdinal -> {

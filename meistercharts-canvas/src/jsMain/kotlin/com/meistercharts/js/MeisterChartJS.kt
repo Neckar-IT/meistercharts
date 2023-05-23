@@ -16,6 +16,7 @@
 package com.meistercharts.js
 
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.MeisterChart
 import com.meistercharts.canvas.MeisterChartsPlatformState
@@ -89,12 +90,12 @@ class MeisterChartJS(
 
     ImageLoadedEventBroker.onLoaded {
       //repaint when an image becomes available
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.ResourcesLoaded)
     }.also(chartSupport::onDispose)
 
     FontLoadedEventBroker.onLoaded {
       //repaint when a font becomes available
-      chartSupport.markAsDirty()
+      chartSupport.markAsDirty(DirtyReason.ResourcesLoaded)
     }.also(chartSupport::onDispose)
 
     //Dispose the canvas when the chart support is disposed

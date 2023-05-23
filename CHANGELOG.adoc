@@ -1,5 +1,37 @@
 = MeisterCharts Release Notes
 
+== MeisterCharts 1.32.0
+
+Release date: 2023-04-25 +
+
+=== Added
+
+* added chart `DiscreteTimelineChart`
+* added function `setUpDemo` to `TimeLineChart`
+* added property `labelColor` to `StripeStyle`
+
+=== Changed
+
+* `TimeLineChart` has a toolbar per default (can be hidden via `showToolbar`)
+
+== MeisterCharts 1.31.0
+
+Release date: 2023-03-09 +
+
+=== Changed
+
+* renamed to MeisterCharts.
+* Resources-Loading improved
+* `TimeLineChartGestalt` - enums: performance improvements regarding the painter
+* improved Date/Time Formatter
+* first preview version: MeisterCharts Data Server
+* Using Kotlin 1.8
+
+=== Bugfixes
+
+* `CrossWireLayer`: fixed distribution of labels along the cross-wire
+* fix IndexOutOfBoundsException for visible data series (enums and decimals)
+
 == MeisterCharts 1.30.0
 
 Release date: 2023-02-01 +

@@ -112,7 +112,12 @@ class HistoryValuesBuilderTest {
       assertThat(it.build().enumHistoryValues.mostOfTheTimeValues).isNull()
     }
 
-    assertThat(HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Calculated).build().decimalHistoryValues.maxValues).isNotNull()
+    val builder = HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Calculated)
+
+    assertThat(builder.maxValues).isNull()
+    assertThat(builder.minValues).isNull()
+
+    assertThat(builder.build().decimalHistoryValues.maxValues).isNotNull()
   }
 
   @Test

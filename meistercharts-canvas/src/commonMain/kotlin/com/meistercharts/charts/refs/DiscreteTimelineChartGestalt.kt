@@ -51,6 +51,7 @@ import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartRefreshGestalt
@@ -215,15 +216,25 @@ class DiscreteTimelineChartGestalt(
     },
     referenceEntryIdProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryId },
     referenceEntryDataProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryData },
+
     statusProvider = { historyReferenceEntryLayer.paintingVariables().activeInformation.status },
     statusEnumProvider = {
       configuration.historyConfiguration().referenceEntryConfiguration.getStatusEnum(activeDataSeriesIndex)
     },
 
-    statusColor = { referenceEntryId ->
+    statusColor = {
+      val referenceEntryId = historyReferenceEntryLayer.paintingVariables().activeInformation.referenceEntryId
+      val activeDataSeriesIndex = historyReferenceEntryLayer.configuration.activeDataSeriesIndex
+
+      if (activeDataSeriesIndex == null) {
+        return@DiscreteSeriesModelBalloonTooltipSupport Color.pink //TODO!!!
+      }
+
       val status = historyReferenceEntryLayer.paintingVariables().activeInformation.status
       val historyConfiguration = configuration.historyConfiguration()
-      configuration.tooltipStatusColorProvider.color(referenceEntryId, status, historyConfiguration)
+
+      val colorProvider = configuration.tooltipStatusColorProviders.valueAt(activeDataSeriesIndex)
+      colorProvider.color(activeDataSeriesIndex, referenceEntryId, status, historyConfiguration)
     },
   )
 
@@ -269,7 +280,7 @@ class DiscreteTimelineChartGestalt(
     selectionSink = { relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport ->
       if (activeDataSeriesIndexOrNull != referenceEntryDataSeriesIndex) {
         activeDataSeriesIndexOrNull = referenceEntryDataSeriesIndex
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
 
       val newValue = if (relativeTime == null) {
@@ -283,7 +294,7 @@ class DiscreteTimelineChartGestalt(
 
         if (activeDataSeriesIndexOrNull != null) {
           //repaint is only necessary when a data series is active
-          chartSupport.markAsDirty()
+          chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
         }
       }
     })
@@ -361,9 +372,8 @@ class DiscreteTimelineChartGestalt(
     configure {
       chartSupport.windowResizeBehavior = KeepOriginOnWindowResize //keep the top left corner
 
-      historyStorage.observe { historyBucketDescriptor, updateInfo ->
-        //TODO optimize! Only repaint if necessary
-        this.markAsDirty()
+      historyStorage.observe { _, _ ->
+        this.markAsDirty(DirtyReason.DataUpdated)
       }
 
       configuration.contentAreaTimeRangeProperty.consumeImmediately {
@@ -392,7 +402,7 @@ class DiscreteTimelineChartGestalt(
     }
   }
 
-  class Configuration(
+  inner class Configuration(
     /**
      * The history storage this chart is based on
      */
@@ -476,9 +486,9 @@ class DiscreteTimelineChartGestalt(
 
     /**
      * Is used by the tooltip to resolve the status color.
-     * Usually should be the same as the [historyReferenceEntryLayer] uses (see [HistoryReferenceEntryLayer.Configuration.stripePainters]).
+     * Usually should provide the same color as the[DiscreteTimelineChartGestalt.referenceEntryStripePainters] use.
      */
-    var tooltipStatusColorProvider: ReferenceEntryStatusColorProvider = ReferenceEntryStatusColorProvider.default()
+    var tooltipStatusColorProviders: MultiProvider<ReferenceEntryDataSeriesIndex, ReferenceEntryStatusColorProvider> = MultiProvider.always(ReferenceEntryStatusColorProvider.default())
   }
 
   companion object {

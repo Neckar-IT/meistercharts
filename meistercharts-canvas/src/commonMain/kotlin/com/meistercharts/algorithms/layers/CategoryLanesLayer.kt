@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.BorderRadius
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.strokeRoundedRect
 import it.neckar.open.provider.DoublesProvider
@@ -104,7 +104,7 @@ class CategoryLanesLayer(
   /**
    * Style for the category lanes layer
    */
-  @StyleDsl
+  @ConfigurationDsl
   open class Style {
     /**
      * Provides the layout

@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.provider.CoordinatesProvider
 
@@ -51,7 +51,7 @@ class DomainAxisMarkersLayer(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * Color for the current position lines

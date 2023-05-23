@@ -263,8 +263,8 @@ class DefaultLayerSupport(
    *
    * This method can be called often
    */
-  override fun markAsDirty() {
-    chartSupport.markAsDirty()
+  override fun markAsDirty(reason: DirtyReason ) {
+    chartSupport.markAsDirty(reason)
   }
 
   /**
@@ -272,8 +272,8 @@ class DefaultLayerSupport(
    */
   private val missingResourcesHandlers: MutableList<MissingResourcesHandler> = mutableListOf()
 
-  override fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex) {
-    val paintingContext = LayerPaintingContext(chartSupport.canvas.gc, this, frameTimestamp, delta, paintingLoopIndex)
+  override fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet) {
+    val paintingContext = LayerPaintingContext(chartSupport.canvas.gc, this, frameTimestamp, delta, paintingLoopIndex, dirtyReasons)
 
     //Clear all painting properties *before* painting.
     //This is necessary to ensure the painting variables are calculated before they are used

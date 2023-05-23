@@ -78,16 +78,36 @@ class HistoryValuesBuilder(
     private set
 
   /**
-   * The min values - only set if [recordingType] is set to [RecordingType.Calculated]
+   * The min values - will be initialized lazily on first access
    */
-  var minValues: DoubleArray2? = if (recordingType == RecordingType.Calculated) DoubleArray2(decimalDataSeriesCount, initialTimestampsCount) { HistoryChunk.Pending } else null
+  var minValues: DoubleArray2? = null
     private set
+
+  /**
+   * Automatically initializes the values
+   */
+  val minValuesInitialized: DoubleArray2
+    get() {
+      return minValues ?: DoubleArray2(decimalValues.width, decimalValues.height) { HistoryChunk.Pending }.also {
+        minValues = it
+      }
+    }
 
   /**
    * The max values - only set if [recordingType] is set to [RecordingType.Calculated]
    */
-  var maxValues: DoubleArray2? = if (recordingType == RecordingType.Calculated) DoubleArray2(decimalDataSeriesCount, initialTimestampsCount) { HistoryChunk.Pending } else null
+  var maxValues: DoubleArray2? = null
     private set
+
+  /**
+   * Automatically initializes the values
+   */
+  val maxValuesInitialized: DoubleArray2
+    get() {
+      return maxValues ?: DoubleArray2(decimalValues.width, decimalValues.height) { HistoryChunk.Pending }.also {
+        maxValues = it
+      }
+    }
 
   /**
    * First index: data series index
@@ -101,8 +121,15 @@ class HistoryValuesBuilder(
   /**
    * Contains the ordinal that has been recorded for most of the time
    */
-  var enumOrdinalsMostTime: IntArray2? = if (recordingType == RecordingType.Calculated) IntArray2(enumDataSeriesCount, initialTimestampsCount) { HistoryEnumOrdinal.Pending.value } else null
+  var enumOrdinalsMostTime: IntArray2? = null
     private set
+
+  val enumOrdinalsMostTimeInitialized: IntArray2
+    get() {
+      return enumOrdinalsMostTime ?: IntArray2(enumValues.width, enumValues.height) { HistoryEnumOrdinal.Pending.value }.also {
+        enumOrdinalsMostTime = it
+      }
+    }
 
   /**
    * First index: data series index
@@ -125,8 +152,15 @@ class HistoryValuesBuilder(
    * First index: data series index
    * Second index: time stamp index
    */
-  var referenceEntryDifferentIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray2? = if (recordingType == RecordingType.Calculated) IntArray2(referenceEntryDataSeriesCount, initialTimestampsCount) { ReferenceEntryId.PendingAsInt } else null
+  var referenceEntryDifferentIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray2? = null
     private set
+
+  val referenceEntryDifferentIdsCountInitialized: IntArray2
+    get() {
+      return referenceEntryDifferentIdsCount ?: IntArray2(referenceEntryIds.width, referenceEntryIds.height) { ReferenceEntryId.PendingAsInt }.also {
+        referenceEntryDifferentIdsCount = it
+      }
+    }
 
   /**
    * The [DefaultReferenceEntriesDataMap.Builder] that is later used to build the [ReferenceEntriesDataMap] (for all data series)
@@ -222,7 +256,7 @@ class HistoryValuesBuilder(
   fun setDecimalValuesForTimestamp(timestampIndex: TimestampIndex, decimalValues: DoubleArray, minValues: DoubleArray? = null, maxValues: DoubleArray? = null) {
     //Verify the parameters
     when (recordingType) {
-      RecordingType.Measured -> require(minValues == null && maxValues == null) { "Min/max values must only be provided when recordingType is Measured" }
+      RecordingType.Measured -> {}
       RecordingType.Calculated -> require(minValues != null && maxValues != null) { "Min/max values must be provided when recordingType is Calculated" }
     }
 
@@ -233,10 +267,8 @@ class HistoryValuesBuilder(
     val targetStartIndex = HistoryValues.calculateStartIndex(decimalDataSeriesCount, timestampIndex)
 
     decimalValues.copyInto(this.decimalValues.data, targetStartIndex, 0, decimalDataSeriesCount)
-    @Suppress("ReplaceNotNullAssertionWithElvisReturn")
-    maxValues?.copyInto(this.maxValues!!.data, targetStartIndex, 0, decimalDataSeriesCount)
-    @Suppress("ReplaceNotNullAssertionWithElvisReturn")
-    minValues?.copyInto(this.minValues!!.data, targetStartIndex, 0, decimalDataSeriesCount)
+    maxValues?.copyInto(this.maxValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount)
+    minValues?.copyInto(this.minValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount)
   }
 
   fun setEnumValuesForTimestamp(timestampIndex: TimestampIndex, enumValues: @HistoryEnumSetInt IntArray, enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null) {
@@ -245,7 +277,7 @@ class HistoryValuesBuilder(
     }
 
     when (recordingType) {
-      RecordingType.Measured -> require(enumOrdinalsMostTime == null) { "enumOrdinalsMostTime must only be provided when recordingType is Measured" }
+      RecordingType.Measured -> {}
       RecordingType.Calculated -> require(enumOrdinalsMostTime!=null) { "enumOrdinalsMostTime must be provided when recordingType is Calculated" }
     }
 
@@ -287,7 +319,7 @@ class HistoryValuesBuilder(
     val targetStartIndex = HistoryValues.calculateStartIndex(enumDataSeriesCount, timestampIndex)
     enumValues.copyInto(this.enumValues.data, targetStartIndex, 0, enumDataSeriesCount)
 
-    enumOrdinalsMostTime?.copyInto(requireNotNull(this.enumOrdinalsMostTime).data, targetStartIndex, 0, enumDataSeriesCount)
+    enumOrdinalsMostTime?.copyInto(this.enumOrdinalsMostTimeInitialized.data, targetStartIndex, 0, enumDataSeriesCount)
   }
 
   /**
@@ -318,7 +350,7 @@ class HistoryValuesBuilder(
     }
 
     when (recordingType) {
-      RecordingType.Measured -> require(referenceEntryIdsCount == null) { "referenceEntryIdsCount must only be provided when recordingType is Measured" }
+      RecordingType.Measured -> {}
       RecordingType.Calculated -> require(referenceEntryIdsCount != null) { "referenceEntryIdsCount must be provided when recordingType is Calculated" }
     }
 
@@ -331,7 +363,7 @@ class HistoryValuesBuilder(
     val targetStartIndex = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, timestampIndex)
     referenceEntryIds.copyInto(this.referenceEntryIds.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
 
-    referenceEntryIdsCount?.copyInto(requireNotNull(this.referenceEntryDifferentIdsCount).data, targetStartIndex, 0, referenceEntryDataSeriesCount)
+    referenceEntryIdsCount?.copyInto(this.referenceEntryDifferentIdsCountInitialized.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
     referenceEntryStatuses.copyInto(this.referenceEntryStatuses.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
 
     //Store all data elements
@@ -375,35 +407,21 @@ class HistoryValuesBuilder(
    * Builds the history values for the given recording type
    */
   fun build(): HistoryValues {
-    return when (recordingType) {
-      RecordingType.Measured -> HistoryValues(
-        decimalValues = decimalValues,
-        enumValues = enumValues,
-        referenceEntryIds = referenceEntryIds,
+    val isCalculated = recordingType == RecordingType.Calculated
 
-        minValues = null,
-        maxValues = null,
-        enumMostOfTheTimeValues = null,
+    return HistoryValues(
+      decimalValues = decimalValues,
+      enumValues = enumValues,
+      referenceEntryIds = referenceEntryIds,
 
-        referenceEntryIdsCount = null,
-        referenceEntryStatuses = referenceEntryStatuses,
-        referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
-      )
+      minValues = if (isCalculated) minValuesInitialized else minValues,
+      maxValues = if (isCalculated) maxValuesInitialized else maxValues,
+      enumMostOfTheTimeValues = if (isCalculated) enumOrdinalsMostTimeInitialized else enumOrdinalsMostTime,
 
-      RecordingType.Calculated -> HistoryValues(
-        decimalValues = decimalValues,
-        enumValues = enumValues,
-        referenceEntryIds = referenceEntryIds,
-
-        minValues = minValues,
-        maxValues = maxValues,
-        enumMostOfTheTimeValues = enumOrdinalsMostTime,
-
-        referenceEntryIdsCount = referenceEntryDifferentIdsCount,
-        referenceEntryStatuses = referenceEntryStatuses,
-        referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
-      )
-    }
+      referenceEntryIdsCount = if (isCalculated) referenceEntryDifferentIdsCountInitialized else referenceEntryDifferentIdsCount,
+      referenceEntryStatuses = referenceEntryStatuses,
+      referenceEntriesDataMap = referenceEntriesDataMapBuilder.build()
+    )
   }
 
   /**

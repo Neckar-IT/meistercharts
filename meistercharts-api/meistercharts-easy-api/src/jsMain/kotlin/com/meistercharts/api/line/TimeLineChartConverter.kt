@@ -40,6 +40,7 @@ import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider.Companion.alwaysNull
 import it.neckar.open.provider.MultiProvider.Companion.forListModulo
@@ -53,9 +54,9 @@ object TimeLineChartConverter {
     return MultiProvider { index -> valueRanges.getOrNull(index) ?: ValueRange.default }
   }
 
-  fun toLineStyles(jsLineStyles: Array<com.meistercharts.api.LineStyle>): MultiProvider<DecimalDataSeriesIndex, LineStyle> {
+  fun toLineStyles(jsLineStyles: Array<TimeLineChartLineStyle>): MultiProvider<DecimalDataSeriesIndex, LineStyle> {
     val lineStyles = jsLineStyles.map { jsLineStyle ->
-      toLineStyle(jsLineStyle)
+      toLineStyle(jsLineStyle.lineStyle)
     }
 
     return forListModulo(lineStyles, LineStyle.Continuous)
@@ -140,17 +141,13 @@ object TimeLineChartConverter {
     }
   }
 
-  fun toCrossWireFormat(dataSeriesNumberFormat: DataSeriesNumberFormat?): MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat?> {
-    if (dataSeriesNumberFormat == null) {
-      return alwaysNull()
-    }
-
+  fun toCrossWireFormat(dataSeriesNumberFormat: DataSeriesNumberFormat): MultiProvider<DecimalDataSeriesIndex, CachedNumberFormat> {
     val map = IntMap<CachedNumberFormat>()
 
     return invoke { dataSeriesIndex ->
       map.getOrPut(dataSeriesIndex) {
         object : NumberFormat {
-          override fun format(value: Double, i18nConfiguration: I18nConfiguration): String {
+          override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
             return dataSeriesNumberFormat.format(dataSeriesIndex, value, i18nConfiguration.formatLocale.locale)
           }
         }.cached()

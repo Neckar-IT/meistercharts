@@ -50,6 +50,10 @@ class HistoryReferenceEntryLayer(
     override fun calculate(paintingContext: LayerPaintingContext) {
       super.calculate(paintingContext)
     }
+
+    override fun dataSeriesIndexFromInt(indexAsInt: Int): ReferenceEntryDataSeriesIndex {
+      return ReferenceEntryDataSeriesIndex(indexAsInt)
+    }
   }
 
   override fun dataSeriesCount(): Int {
@@ -112,28 +116,33 @@ class HistoryReferenceEntryLayer(
     historyConfiguration = historyConfiguration,
     requestedVisibleIndices = requestedVisibleIndices,
     contentAreaTimeRange = contentAreaTimeRange,
-    stripePainters = MultiProvider.cached { RectangleReferenceEntryStripePainter() })
+    stripePainters = MultiProvider.always(RectangleReferenceEntryStripePainter())
+  )
 
-  interface HistoryReferenceEntryPaintingVariables : HistoryStripeLayerPaintingVariables<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>
+  interface HistoryReferenceEntryPaintingVariables : HistoryStripeLayerPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?> {
+    override val activeInformation: ReferenceEntryActiveInformation
+  }
 }
 
+typealias ReferenceEntryActiveInformation = AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables.ActiveInformation<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>
 
-inline val AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables.ActiveInformation<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>.referenceEntryId: @MayBeNoValueOrPending ReferenceEntryId
+
+inline val ReferenceEntryActiveInformation.referenceEntryId: @MayBeNoValueOrPending ReferenceEntryId
   get() {
     return value1
   }
 
-inline val AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables.ActiveInformation<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>.differentIdsCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount
+inline val ReferenceEntryActiveInformation.differentIdsCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount
   get() {
     return value2
   }
 
-inline val AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables.ActiveInformation<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>.status: @MayBeNoValueOrPending HistoryEnumSet
+inline val ReferenceEntryActiveInformation.status: @MayBeNoValueOrPending HistoryEnumSet
   get() {
     return value3
   }
 
-inline val AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables.ActiveInformation<ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>.referenceEntryData: ReferenceEntryData?
+inline val ReferenceEntryActiveInformation.referenceEntryData: ReferenceEntryData?
   get() {
     return value4
   }

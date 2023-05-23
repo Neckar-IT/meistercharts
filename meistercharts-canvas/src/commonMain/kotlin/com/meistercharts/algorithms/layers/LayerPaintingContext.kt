@@ -26,6 +26,7 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.DirtyReasonBitSet
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
@@ -76,6 +77,10 @@ data class LayerPaintingContext(
    * The painting loop index (will overflow after about 414 days).
    */
   val loopIndex: PaintingLoopIndex,
+  /**
+   * The dirty reasons
+   */
+  val dirtyReasons: DirtyReasonBitSet,
 ) {
   val chartSupport: ChartSupport
     get() = layerSupport.chartSupport

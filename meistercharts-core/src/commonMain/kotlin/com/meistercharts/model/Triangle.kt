@@ -15,14 +15,14 @@
  */
 package com.meistercharts.model
 
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.model.RightTriangleType.MissingCornerInFirstQuadrant
 import com.meistercharts.model.RightTriangleType.MissingCornerInFourthQuadrant
 import com.meistercharts.model.RightTriangleType.MissingCornerInSecondQuadrant
 import com.meistercharts.model.RightTriangleType.MissingCornerInThirdQuadrant
+import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.pointIsLeftOfLine
-import it.neckar.open.annotations.Slow
+import it.neckar.open.unit.number.MayBeNegative
 
 /**
  * This is the enum describing the 4 possible right triangles inside a rectangle
@@ -222,4 +222,9 @@ data class Triangle(
       return Triangle(Coordinates.of(0.0, -height / 2.0), Size(width, height), rightTriangleType)
     }
   }
+}
+
+fun triangleAreaFromThreePoints(point1X: Double, point1Y: Double, point2X: Double, point2Y: Double, point3X: Double, point3Y: Double): Double {
+  //Link to the method used: https://en.wikipedia.org/wiki/Area_of_a_triangle#Using_coordinates
+  return rectangleAreaFromThreePoints(point1X, point1Y, point2X, point2Y, point3X, point3Y) * 0.5
 }

@@ -16,11 +16,11 @@
 package com.meistercharts.model
 
 import com.meistercharts.algorithms.axis.AxisSelection
-import it.neckar.open.unit.number.MayBeNaN
-import it.neckar.open.kotlin.lang.normalize
-import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.intFormat
+import it.neckar.open.kotlin.lang.normalize
+import it.neckar.open.kotlin.lang.or0ifNaN
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.pct
 import kotlinx.serialization.Serializable
 import kotlin.math.max
@@ -32,7 +32,7 @@ import kotlin.math.min
 @Serializable
 data class Size(
   val width: Double,
-  val height: Double
+  val height: Double,
 ) {
 
   constructor(width: Int, height: Int) : this(width.toDouble(), height.toDouble())

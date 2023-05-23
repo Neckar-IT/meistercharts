@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Vicinity
 import it.neckar.open.provider.BooleanValuesProvider
@@ -82,7 +82,7 @@ class BinaryGestalt(
     var valuesProvider: BooleanValuesProvider = createSampleValuesProvider()
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     val marginProperty: @Zoomed ObservableObject<Insets> = (ObservableObject(Insets.of(30.0, 30.0, 50.0, 80.0)))
     var margin: Insets by marginProperty

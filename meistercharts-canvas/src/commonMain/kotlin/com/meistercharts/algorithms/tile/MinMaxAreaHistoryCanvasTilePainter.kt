@@ -32,7 +32,6 @@ import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
-import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.valueAt
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.LinePainter
@@ -78,7 +77,7 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
     //Paint all points for all buckets for one data series
     buckets.fastForEach { bucket ->
       val chunk = bucket.chunk
-      val paintMinMaxArea = chunk.recordingType == RecordingType.Calculated
+      val paintMinMaxArea = chunk.hasDecimalMinMaxValues()
 
       for (timestampIndexAsInt in 0 until chunk.timeStampsCount) {
         val timestampIndex = TimestampIndex(timestampIndexAsInt)
@@ -121,11 +120,8 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
 
         @DomainRelative val domainRelative = valueRange.toDomainRelative(value)
 
-        val finite = domainRelative.isFinite()
-        val pending = domainRelative.isPending()
-
         //The current value is NaN - this is an *explicit* gap
-        if (!value.isFinite() || !domainRelative.isFinite()) {
+        if (value.isFinite().not() || domainRelative.isFinite().not()) {
           //We have a gap, paint only the parts that are relevant
 
           if (paintMinMaxArea) {
@@ -152,7 +148,7 @@ class MinMaxAreaHistoryCanvasTilePainter(val configuration: Configuration) : His
 
         //min / max if available
         if (DebugFeature.ShowMinMax.enabled(paintingContext)) {
-          if (chunk.recordingType == RecordingType.Calculated) {
+          if (chunk.hasDecimalMinMaxValues()) {
             val maxY = tileCalculator.domainRelative2tileY(maxDomainRelative)
             gc.stroke(Color.blue)
             gc.strokeLine(x - 3, maxY, x + 3, maxY)

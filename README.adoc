@@ -30,9 +30,9 @@ JS based demos and runner
 
 Common documentation and stuff related to charting
 
-=== examples (Deprecated?)
+=== examples
 
-Some (old?) examples
+Contains examples of MeisterCharts
 
 === history-algorithms
 

@@ -57,17 +57,19 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
-import com.meistercharts.charts.support.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.getTopTitleLayer
 import com.meistercharts.charts.support.getValueAxisLayer
-import com.meistercharts.charts.support.thresholdsSupportSingle
+import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
@@ -76,7 +78,6 @@ import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoublesProvider
-import it.neckar.open.provider.ListSizedProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProvider
@@ -148,7 +149,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     selectionSink = { newCategoryIndex, chartSupport: ChartSupport ->
       if (categoryLinesLayer.style.activeCategoryIndex != newCategoryIndex) {
         categoryLinesLayer.style.activeCategoryIndex = newCategoryIndex
-        chartSupport.markAsDirty()
+        chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
     })
 
@@ -350,8 +351,6 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
         layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
 
-        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
-
         when (configuration.toolTipType) {
           ToolTipType.CrossWire -> {
             layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
@@ -365,6 +364,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         layers.addLayer(categoryAxisLayer)
         valueAxisSupport.addLayers(this)
         thresholdsSupport.addLayers(this)
+
+        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
 
         layers.addVersionNumberHidden()
       }
@@ -387,7 +388,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     }
   }
 
-  @StyleDsl
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * The current category model for this line chart.
@@ -585,13 +586,11 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
     private val defaultNumberFormat: CachedNumberFormat = intFormat
 
-    private fun createDefaultThresholds(): ListSizedProvider<Threshold> {
+    private fun createDefaultThresholds(): SizedProvider<Threshold> {
       return SizedProvider.forValues(
         Threshold(35.0, listOf(TextKey.simple("Min"), TextKey.simple(defaultNumberFormat.format(35.0)))),
         Threshold(95.0, listOf(TextKey.simple("Max"), TextKey.simple(defaultNumberFormat.format(95.0)))),
       )
     }
-
   }
-
 }

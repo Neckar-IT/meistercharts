@@ -100,14 +100,14 @@ interface LayerSupport : PaintListener {
    *
    * This method can be called often
    */
-  fun markAsDirty()
+  fun markAsDirty(reason: DirtyReason)
 }
 
 /**
  * Registers a dirty listeners for the given [layerSupport]
  */
-fun ReadOnlyObservableObject<Any?>.registerDirtyListener(layerSupport: LayerSupport) {
+fun ReadOnlyObservableObject<Any?>.registerDirtyListener(layerSupport: LayerSupport, reason: DirtyReason) {
   consume {
-    layerSupport.markAsDirty()
+    layerSupport.markAsDirty(reason)
   }
 }

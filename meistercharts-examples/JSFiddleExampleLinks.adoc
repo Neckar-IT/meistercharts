@@ -1,6 +1,0 @@
-= JSFiddle meistercharts demo
-
-This file contains all Links for the JSFiddle Demo projects of meistercharts
-
-=== meistercharts-minimal
-https://jsfiddle.net/gh/get/library/pure/Neckar-IT/meistercharts/tree/main/meistercharts-examples/fiddles/meistercharts-minimal

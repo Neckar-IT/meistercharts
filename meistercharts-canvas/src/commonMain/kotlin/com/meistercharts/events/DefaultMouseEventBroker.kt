@@ -15,11 +15,6 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.algorithms.layers.gesture.MouseClickAction
-import com.meistercharts.algorithms.layers.gesture.MouseDoubleClickAction
-import com.meistercharts.algorithms.layers.gesture.MouseDragAction
-import com.meistercharts.algorithms.layers.gesture.MouseMoveAction
-import com.meistercharts.algorithms.layers.gesture.MouseWheelAction
 import com.meistercharts.annotations.Window
 import com.meistercharts.model.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil

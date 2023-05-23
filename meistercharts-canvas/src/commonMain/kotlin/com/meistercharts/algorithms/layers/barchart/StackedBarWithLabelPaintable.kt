@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -88,7 +88,7 @@ class StackedBarWithLabelPaintable(
     var valueRange: LinearValueRange = ValueRange.default
   )
 
-  @StyleDsl
+  @ConfigurationDsl
   class Style {
     /**
      * The color of the label text

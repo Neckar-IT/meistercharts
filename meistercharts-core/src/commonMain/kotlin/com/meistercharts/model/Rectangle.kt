@@ -15,9 +15,11 @@
  */
 package com.meistercharts.model
 
+import com.meistercharts.annotations.Zoomed
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.Positive
+import kotlin.math.abs
 
 /**
  * Represents a rectangle.
@@ -36,7 +38,7 @@ data class Rectangle(
     x: Double,
     y: Double,
     width: @MayBeNegative Double,
-    height: @MayBeNegative Double
+    height: @MayBeNegative Double,
   ) : this(Coordinates(x, y), Size(width, height))
 
   override fun vertices(): List<Coordinates> {
@@ -96,6 +98,13 @@ data class Rectangle(
 
   fun isFinite(): Boolean {
     return location.isFinite() && size.isFinite()
+  }
+
+  /**
+   * Returns a new object with the added values
+   */
+  fun plus(x: Double, y: Double): @Zoomed Rectangle {
+    return Rectangle(this.location.plus(x, y), size)
   }
 
   companion object {
@@ -184,4 +193,13 @@ data class Rectangle(
  */
 infix fun Coordinates.with(size: Size): Rectangle {
   return Rectangle(this, size)
+}
+
+fun rectangleAreaFromThreePoints(point1X: Double, point1Y: Double, point2X: Double, point2Y: Double, point3X: Double, point3Y: Double): Double {
+  //Link to the method used: https://en.wikipedia.org/wiki/Area_of_a_triangle#Using_coordinates
+  val point1point2deltaX = point2X - point1X
+  val point1point2deltaY = point2Y - point1Y
+  val point1point3deltaX = point3X - point1X
+  val point1point3deltaY = point3Y - point1Y
+  return abs(point1point3deltaX * point1point2deltaY - point1point3deltaY * point1point2deltaX)
 }

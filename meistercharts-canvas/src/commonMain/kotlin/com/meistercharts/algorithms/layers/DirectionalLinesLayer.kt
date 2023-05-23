@@ -17,13 +17,12 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.painter.Color
-import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectCache
+import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Side
@@ -35,6 +34,8 @@ import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.fastForEachIndexed
+import it.neckar.open.unit.number.IsFinite
+import it.neckar.open.unit.number.MayBeNaN
 
 /**
  * Paints lines from a given point into a direction (left/right/up/down)
@@ -50,22 +51,22 @@ class DirectionalLinesLayer(
 
   override val type: LayerType = LayerType.Content
 
-  override fun paintingVariables(): PaintingVariables {
+  override fun paintingVariables(): DirectionalLinesLayerPaintingVariables {
     return paintingVariables
   }
 
-  private val paintingVariables = object : PaintingVariables {
+  private val paintingVariables = object : DirectionalLinesLayerPaintingVariables {
     /**
      * Contains the coordinates for the HUD element
      */
-    val startCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
+    override val startCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
 
     /**
      * The coordinates where the line ends
      */
-    val endCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
+    override val endCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
 
-    val directionsCache = ObjectCache(Direction.TopLeft)
+    override val directionsCache = ObjectsCache(Direction.TopLeft)
 
 
     override fun calculate(paintingContext: LayerPaintingContext) {
@@ -139,16 +140,13 @@ class DirectionalLinesLayer(
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
-    paintingVariables.startCoordinatesCache.fastForEachIndexed { index: @LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
-      if (startX.isFinite().not() || startY.isFinite().not()) {
-        //Skip if x or y are not finite
-        return@fastForEachIndexed
+    paintingVariables.fastForEach { index: @LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double ->
+      if (configuration.activeLineIndex == index) {
+        configuration.activeLineStyles.valueAt(index).apply(gc)
+      } else {
+        configuration.lineStyles.valueAt(index).apply(gc)
       }
 
-      val endX = paintingVariables.endCoordinatesCache.x(index)
-      val endY = paintingVariables.endCoordinatesCache.y(index)
-
-      configuration.lineStyles.valueAt(index).apply(gc)
       gc.strokeLine(startX, startY, endX, endY)
     }
   }
@@ -160,7 +158,11 @@ class DirectionalLinesLayer(
   @MustBeDocumented
   @Retention(AnnotationRetention.SOURCE)
   @MultiProviderIndexContextAnnotation
-  annotation class LineIndex
+  annotation class LineIndex {
+    companion object {
+      const val None: @LineIndex Int = -1
+    }
+  }
 
 
   class Configuration(
@@ -186,14 +188,39 @@ class DirectionalLinesLayer(
     var anchorGapVertical: @Zoomed MultiDoublesProvider<LineIndex> = MultiDoublesProvider.always(0.0)
 
     /**
-     * The line style for each line
+     * The line style for each line.
+     * See [activeLineStyles] for the style if the line is active (usually mouse over)
      */
     var lineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.lightgray, lineWidth = 1.0))
+
+    /**
+     * The style for the active line
+     */
+    var activeLineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.darkgray, lineWidth = 2.0))
 
     /**
      * Describes where the lines end
      */
     var lineEndsAtMode: () -> LineEndsAtMode = LineEndsAtMode.WithinContentViewport.asProvider()
+
+
+    /**
+     * The index of the active (highlighted) line.
+     * Is set to -1 if there is no active line
+     */
+    var activeLineIndex: @LineIndex Int = -1
+
+    /**
+     * Sets the active line index if necessary. calls [callbackOnChange] only if the value has changed
+     */
+    inline fun setActiveLineIndex(index: @LineIndex Int, callbackOnChange: () -> Unit = {}) {
+      if (activeLineIndex == index) {
+        return
+      }
+
+      activeLineIndex = index
+      callbackOnChange()
+    }
   }
 
   companion object {
@@ -265,5 +292,46 @@ class DirectionalLinesLayer(
      * Keeps the line within the content viewport
      */
     WithinContentViewport,
+  }
+
+  interface DirectionalLinesLayerPaintingVariables : PaintingVariables {
+
+    /**
+     * Contains the coordinates for the HUD element
+     */
+    val startCoordinatesCache: @Window @MayBeNaN CoordinatesCache
+
+    /**
+     * The coordinates where the line ends
+     */
+    val endCoordinatesCache: @Window @MayBeNaN CoordinatesCache
+
+    /**
+     * The directions for the lines
+     */
+    val directionsCache: ObjectsCache<Direction>
+  }
+}
+
+/**
+ * Calls the backend for all *finite* lines.
+ * Lines with infinite values are skipped
+ */
+inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForEach(callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit) {
+  startCoordinatesCache.fastForEachIndexed { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
+    if (startX.isFinite().not() || startY.isFinite().not()) {
+      //Skip if x or y are not finite
+      return@fastForEachIndexed
+    }
+
+    @Window @MayBeNaN val endX = endCoordinatesCache.x(index)
+    @Window @MayBeNaN val endY = endCoordinatesCache.y(index)
+
+    if (endX.isFinite().not() || endY.isFinite().not()) {
+      //Skip if x or y are not finite
+      return@fastForEachIndexed
+    }
+
+    callback(index, startX, startY, endX, endY)
   }
 }
