@@ -351,8 +351,6 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
         layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
 
-        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
-
         when (configuration.toolTipType) {
           ToolTipType.CrossWire -> {
             layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
@@ -366,6 +364,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         layers.addLayer(categoryAxisLayer)
         valueAxisSupport.addLayers(this)
         thresholdsSupport.addLayers(this)
+
+        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
 
         layers.addVersionNumberHidden()
       }

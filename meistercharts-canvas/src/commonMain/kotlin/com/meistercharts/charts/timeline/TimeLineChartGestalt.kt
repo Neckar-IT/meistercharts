@@ -62,6 +62,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
+import com.meistercharts.algorithms.painter.WebColor
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
@@ -76,7 +77,6 @@ import com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer
 import com.meistercharts.algorithms.tile.HistoryTileInvalidator
 import com.meistercharts.algorithms.tile.HistoryTilesInvalidationResult
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
-import com.meistercharts.algorithms.tile.MinMaxAreaHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.algorithms.tile.canvasTiles
 import com.meistercharts.algorithms.tile.delegate
@@ -94,8 +94,8 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
@@ -147,6 +147,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
+import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.style.BoxStyle
@@ -181,7 +182,6 @@ import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
-import it.neckar.open.provider.mapped
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
@@ -250,17 +250,24 @@ class TimeLineChartGestalt
   /**
    * Creates a new instance of [HistoryCanvasTilePainter]
    */
-  private fun createAverageHistoryCanvasTilePainter(): HistoryCanvasTilePainter = AverageHistoryCanvasTilePainter(
-    AverageHistoryCanvasTilePainter.Configuration(
-      historyStorage = data.historyStorage,
-      contentAreaTimeRange = { style.contentAreaTimeRange },
-      valueRanges = style::lineValueRanges.delegate(),
-      visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
-      lineStyles = style::lineStyles.delegate(),
-      linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
-      pointPainters = style::pointPainters.delegate(),
+  private fun createAverageHistoryCanvasTilePainter(): AverageHistoryCanvasTilePainter {
+    return AverageHistoryCanvasTilePainter(
+      AverageHistoryCanvasTilePainter.Configuration(
+        historyStorage = data.historyStorage,
+        contentAreaTimeRange = { style.contentAreaTimeRange },
+        valueRanges = style::lineValueRanges.delegate(),
+        visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
+
+        averageLineStyles = style::lineStyles.delegate(),
+
+        averageLinePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
+        pointPainters = style::pointPainters.delegate(),
+
+        minMaxAreaPainters = style::minMaxAreaPainters.delegate(),
+        minMaxAreaColors = style::minMaxAreaColors.delegate(),
+      )
     )
-  )
+  }
 
   /**
    * Configures this gestalt to show candles
@@ -281,31 +288,6 @@ class TimeLineChartGestalt
       visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
       lineStyles = style::lineStyles.delegate(),
       linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
-    )
-  )
-
-  /**
-   * Configures the gestalt to show min/max areas
-   */
-  fun configureForMinMaxArea() {
-    tilePainter = createMinMaxAreaHistoryCanvasTilePainter()
-    //TODO: check
-    //historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
-  }
-
-  private fun createMinMaxAreaHistoryCanvasTilePainter(): HistoryCanvasTilePainter = MinMaxAreaHistoryCanvasTilePainter(
-    MinMaxAreaHistoryCanvasTilePainter.Configuration(
-      historyStorage = data.historyStorage,
-      contentAreaTimeRange = { style.contentAreaTimeRange },
-      valueRanges = style::lineValueRanges.delegate(),
-      visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
-      lineStyles = style::lineStyles.delegate(),
-      //minMaxAreaColors = MultiProvider.always(Color.blue.withAlpha(0.3)), //TODO
-      minMaxAreaColors = Theme.chartColors().mapped {
-        (it as RgbaColor).withAlpha(0.3)
-      },
-      minMaxAreaPainters = MultiProvider.always(SimpleAreaBetweenLinesPainter(false, false)),
-      averageLinePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
     )
   )
 
@@ -1327,6 +1309,32 @@ class TimeLineChartGestalt
     )
 
     var pointPainters: MultiProvider<DecimalDataSeriesIndex, PointPainter?> by pointPaintersProperty
+
+    /**
+     * The min/max area painters for each decimal data series.
+     * If set to `null` no min/max area is painted for that decimal data series
+     */
+    var minMaxAreaPainters: MultiProvider<DecimalDataSeriesIndex, AreaBetweenLinesPainter?> = MultiProvider.alwaysNull()
+
+    /**
+     * Returns the fill color for the min/max area.
+     * Will only be called, if there is a [AreaBetweenLinesPainter] provided by [minMaxAreaPainters]
+     */
+    var minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider {
+      val averageLineStyle = lineStyles.valueAt(it)
+
+      when (val lineStyleColor = averageLineStyle.color) {
+        is RgbaColor -> lineStyleColor.withAlpha(0.3)
+        is WebColor -> Color.gray.withAlpha(0.3)
+      }
+    }
+
+    fun applyMinMaxAreaVisibility(showMinMaxArea: Boolean) {
+      minMaxAreaPainters = when (showMinMaxArea) {
+        true -> MultiProvider.always(SimpleAreaBetweenLinesPainter(false, false))
+        false -> MultiProvider.alwaysNull()
+      }
+    }
 
     /**
      * The indices of the lines whose value axis should be visible.

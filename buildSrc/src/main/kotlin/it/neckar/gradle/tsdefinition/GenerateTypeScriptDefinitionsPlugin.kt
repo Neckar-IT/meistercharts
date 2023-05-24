@@ -107,6 +107,21 @@ open class GenerateTypeScriptDefinitionsTask : DefaultTask() {
   @InputFile
   val exportConfigFile: RegularFileProperty = project.objects.fileProperty()
 
+  private var collectedFiles: FileCollection? = null
+
+  @Optional
+  @InputFiles
+  fun getExportFilesFromConfigFile(): FileCollection {
+    val current = collectedFiles
+    if (current != null) {
+      return current
+    }
+
+    return collectFilesToExport().also {
+      collectedFiles = it
+    }
+  }
+
   @OutputFile
   val typeScriptDefinitionFile: RegularFileProperty = project.objects.fileProperty()
 
@@ -115,7 +130,7 @@ open class GenerateTypeScriptDefinitionsTask : DefaultTask() {
     val targetFile = typeScriptDefinitionFile.get().asFile
     targetFile.parentFile.mkdirs()
 
-    val filesToExport = collectFilesToExport()
+    val filesToExport = getExportFilesFromConfigFile()
 
     val kotlinSourceFileContents = filesToExport
       .map { sourceFile ->

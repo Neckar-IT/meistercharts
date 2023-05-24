@@ -18,9 +18,9 @@ package com.meistercharts.charts
 import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.delegate
-import com.meistercharts.algorithms.layers.ScrollWithoutModifierMessageLayer
+import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
-import com.meistercharts.algorithms.layers.addScrollWithoutModifierHint
+import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMap
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMapDe
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
@@ -126,7 +126,7 @@ class MapGestalt(
         layers.addLayer(legalNoticeLayer.visibleIf(style.showCopyrightMarkerProperty))
         layers.addLayer(toolbarLayer.visibleIf(style.showToolbarProperty))
 
-        layers.addScrollWithoutModifierHint(chartSupport, listOf(ScrollWithoutModifierMessageLayer.textKeyUseCtrlZoom))
+        layers.addMouseWheelWithoutModifierHint(listOf(MouseWheelWithoutModifierMessageLayer.textKeyUseCtrlZoom))
       }
     }
   }

@@ -15,69 +15,79 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer.Companion.create
 import com.meistercharts.algorithms.layers.text.LinesProvider
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
-import com.meistercharts.canvas.registerDirtyListener
 import com.meistercharts.canvas.textService
-import com.meistercharts.canvas.timerSupport
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.ModifierCombination
 import com.meistercharts.events.MouseWheelEvent
+import com.meistercharts.model.Direction
+import com.meistercharts.model.HorizontalAlignment
+import com.meistercharts.style.BoxStyle
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.observable.ObservableBoolean
-import com.meistercharts.style.BoxStyle
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Shows a hint that a modifier needs to be pressed for scrolling
  *
  */
-class ScrollWithoutModifierMessageLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+class MouseWheelWithoutModifierMessageLayer(
+  /**
+   * If the messages is currently visible
+   */
+  messageVisible: ObservableBoolean = ObservableBoolean(),
+  /**
+   * Provides the texts
+   */
+  linesProvider: LinesProvider,
+
+  /**
+   * Additional configuration
+   */
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Notification
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration(messageVisible, linesProvider).also(additionalConfiguration)
 
   private val messagePainter = TextPainter()
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     //show background
-    gc.fill(style.backgroundFill)
+    gc.fill(configuration.backgroundFill)
     gc.fillRect(0.0, 0.0, gc.width, gc.height)
 
-    val texts = data.linesProvider(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
+    val texts = configuration.linesProvider(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
 
-    gc.font(style.font)
+    gc.font(configuration.font)
     gc.translateToCenter()
     messagePainter.paintText(
       gc,
       texts,
-      style.textColor,
-      style.boxStyle,
-      style.lineSpacing,
+      configuration.textColor,
+      configuration.boxStyle,
+      configuration.lineSpacing,
       HorizontalAlignment.Center,
-      style.anchorDirection,
-      style.anchorGapHorizontal,
-      style.anchorGapVertical,
+      configuration.anchorDirection,
+      configuration.anchorGapHorizontal,
+      configuration.anchorGapVertical,
     )
   }
 
   override val mouseEventHandler: CanvasMouseEventHandler = object : CanvasMouseEventHandler {
     override fun onWheel(event: MouseWheelEvent, chartSupport: ChartSupport): EventConsumption {
       if (event.modifierCombination == ModifierCombination.None) {
-        data.messageVisible.value = true
+        configuration.messageVisible.value = true
         chartSupport.markAsDirty(DirtyReason.UserInteraction)
         return EventConsumption.Consumed
       }
@@ -86,7 +96,11 @@ class ScrollWithoutModifierMessageLayer(
     }
   }
 
-  class Data(
+  /**
+   * Style configuration for the layer
+   */
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * If the messages is currently visible
      */
@@ -94,14 +108,8 @@ class ScrollWithoutModifierMessageLayer(
     /**
      * Provides the texts
      */
-    val linesProvider: LinesProvider
-  )
-
-  /**
-   * Style configuration for the layer
-   */
-  @ConfigurationDsl
-  open class Style {
+    val linesProvider: LinesProvider,
+  ) {
     /**
      * The color of the text
      */
@@ -140,29 +148,38 @@ class ScrollWithoutModifierMessageLayer(
     val textKeyUseCtrlZoomHorizontally: TextKey = TextKey("useCtrlToZoomHorizontally", "Use ctrl + scroll to zoom the chart horizontally")
     val textKeyUseShiftZoomVertically: TextKey = TextKey("useShiftToZoomVertically", "Use shift + scroll to zoom the chart vertically")
     val textKeyUseCtrlZoom: TextKey = TextKey("ctrl.to.zoom", "Use ctrl + scroll to zoom the map")
+
+    val defaultTextKeys: List<TextKey> = listOf(
+      textKeyUseCtrlZoomHorizontally,
+      textKeyUseShiftZoomVertically
+    )
+
+    fun create(
+      lines: List<TextKey> = defaultTextKeys,
+      additionalConfiguration: Configuration.() -> Unit = {},
+    ): HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> {
+      val visible = ObservableBoolean()
+      val layer = MouseWheelWithoutModifierMessageLayer(visible, { textService, i18nConfiguration ->
+        lines.map {
+          textService[it, i18nConfiguration]
+        }
+      }, additionalConfiguration)
+        .visibleIf(visible, true)
+        .autoHideAfter(2500.milliseconds)
+      return layer
+    }
   }
 }
 
 /**
  * Shows the layer that warns if wheel is used without modifiers
  */
-fun Layers.addScrollWithoutModifierHint(
-  chartSupport: ChartSupport,
-  lines: List<TextKey> = listOf(
-    ScrollWithoutModifierMessageLayer.textKeyUseCtrlZoomHorizontally,
-    ScrollWithoutModifierMessageLayer.textKeyUseShiftZoomVertically
-  ),
-  styleConfiguration: ScrollWithoutModifierMessageLayer.Style.() -> Unit = {}
-) {
-  val visible = ObservableBoolean() //TODO bind dirty state
-  visible.registerDirtyListener(chartSupport, DirtyReason.Visibility)
-  addLayer(
-    ScrollWithoutModifierMessageLayer(ScrollWithoutModifierMessageLayer.Data(visible) { textService, i18nConfiguration ->
-      lines.map {
-        textService[it, i18nConfiguration]
-      }
-    }, styleConfiguration)
-      .visibleIf(visible, true)
-      .autoHideAfter(2500.milliseconds, chartSupport.timerSupport)
-  )
+fun Layers.addMouseWheelWithoutModifierHint(
+  lines: List<TextKey> = MouseWheelWithoutModifierMessageLayer.defaultTextKeys,
+  additionalConfiguration: MouseWheelWithoutModifierMessageLayer.Configuration.() -> Unit = {},
+  ): HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> {
+
+  val layer = create(lines, additionalConfiguration)
+  addLayer(layer)
+  return layer
 }

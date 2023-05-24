@@ -15,8 +15,9 @@
  */
 package com.meistercharts.charts.timeline
 
+import com.meistercharts.algorithms.layers.HideAfterTimeoutLayer
+import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
-import com.meistercharts.algorithms.layers.addScrollWithoutModifierHint
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
@@ -24,15 +25,14 @@ import com.meistercharts.algorithms.layers.toolbar.resetZoomAndTranslationButton
 import com.meistercharts.algorithms.layers.toolbar.zoomInButton
 import com.meistercharts.algorithms.layers.toolbar.zoomOutButton
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.ChartGestalt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.InMemoryHistoryStorage
-import it.neckar.open.observable.ObservableBoolean
 import com.meistercharts.resources.Icons
 import kotlin.jvm.JvmOverloads
 
@@ -52,13 +52,13 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
 
   val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(chartId, TimeLineChartGestalt.Data(historyStorage))
 
+  val scrollWithoutModifierHintLayer: HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> = MouseWheelWithoutModifierMessageLayer.create()
+
   override fun configure(meisterChartBuilder: MeisterChartBuilder) {
     timeLineChartGestalt.configure(meisterChartBuilder)
 
-    val buttonFactory = ToolbarButtonFactory()
-
     meisterChartBuilder.configure {
-
+      val buttonFactory = ToolbarButtonFactory()
       val customButtons: List<Button> = toolbarConfiguration(buttonFactory)
 
       val toolbarLayer = ToolbarLayer(
@@ -73,8 +73,11 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
       ) {
       }
 
-      layers.addScrollWithoutModifierHint(chartSupport)
-      layers.addLayer(toolbarLayer.visibleIf(style.showToolbarProperty))
+      layers.addLayer(scrollWithoutModifierHintLayer.visibleIf { style.showMouseWheelModifierHint })
+
+      layers.addLayer(toolbarLayer.visibleIf {
+        style.showToolbar
+      })
       layers.addVersionNumberHidden()
     }
   }
@@ -84,8 +87,12 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
     /**
      * Whether the toolbar is visible (true) or not (false)
      */
-    val showToolbarProperty: ObservableBoolean = ObservableBoolean(true)
-    var showToolbar: Boolean by showToolbarProperty
+    var showToolbar: Boolean = true
+
+    /**
+     * If set to true, the hint for scrolling without modifier is shown
+     */
+    var showMouseWheelModifierHint: Boolean = true
   }
 
 }

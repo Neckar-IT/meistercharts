@@ -208,6 +208,10 @@ class TimeLineChart internal constructor(
       gestalt.style.showToolbar = it
     }
 
+    jsStyle.showMouseWheelModifierHint?.let {
+      gestalt.style.showMouseWheelModifierHint = it
+    }
+
     jsStyle.visibleTimeRange?.toModel()?.let {
       @DomainRelative val startDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.start)
       @DomainRelative val endDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.end)
@@ -492,6 +496,10 @@ private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
 
   jsStyle.lineStyles?.let { jsLineStyles ->
     this.style.lineStyles = TimeLineChartConverter.toLineStyles(jsLineStyles)
+
+    this.style.pointPainters = TimeLineChartConverter.toPointPainters(jsLineStyles)
+    this.style.minMaxAreaPainters = TimeLineChartConverter.toMinMaxAreaPainters(jsLineStyles)
+    this.style.minMaxAreaColors = TimeLineChartConverter.toMinMaxAreaColors(jsLineStyles)
   }
 
   jsStyle.enumDataSeriesStyles?.let { jsEnumDataSeriesStyles ->
