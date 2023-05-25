@@ -38,13 +38,12 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
   /**
    * Returns the painting variables for the provided data series index
    */
-  protected fun paintingVariables(dataSeriesIndex: DataSeriesIndexType): StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
-    return paintingVariables().getPaintingVariables(dataSeriesIndex)
+  protected fun forDataSeriesIndex(dataSeriesIndex: DataSeriesIndexType): StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
+    return paintingVariables().forDataSeriesIndex(dataSeriesIndex)
   }
 
   override fun layoutBegin(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
-    val paintingVariables = paintingVariables()
-    paintingVariables.prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
+    paintingVariables().prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
   }
 
   override fun layoutValueChange(
@@ -65,13 +64,13 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
     if (haveRelevantValuesChanged(dataSeriesIndex, newValue1, newValue2, newValue3, newValue4).not()) {
       //Values have not changed, just update the end - but do not paint
-      paintingVariables.updateCurrentEnd(endX, endTime)
+      paintingVariables.forDataSeriesIndex(dataSeriesIndex).updateCurrentEnd(endX, endTime)
       return Double.NaN
     }
 
-    paintingVariables.relevantValuesChanged(dataSeriesIndex, newValue1, newValue2, newValue3, newValue4, startX, endX, startTime, endTime, activeTimeStamp)
+    paintingVariables.forDataSeriesIndex(dataSeriesIndex).relevantValuesChanged(newValue1, newValue2, newValue3, newValue4, startX, endX, startTime, endTime, activeTimeStamp)
 
-    return paintingVariables.layoutSegment(paintingContext, dataSeriesIndex)
+    return paintingVariables.forDataSeriesIndex(dataSeriesIndex).layoutSegment()
   }
 
   /**
@@ -89,7 +88,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
   override fun layoutFinish(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType): @Window @MayBeNaN Double {
     //Paint the last value
-    return paintingVariables().layoutSegment(paintingContext, dataSeriesIndex)
+    return paintingVariables().forDataSeriesIndex(dataSeriesIndex).layoutSegment()
   }
 
   override fun paint(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType) {
@@ -99,7 +98,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
     beginPainting(paintingContext, dataSeriesIndex)
 
     //Use the painting variables for the data series
-    paintingVariables.getPaintingVariables(dataSeriesIndex).let { paintingVariablesForDataSeries ->
+    paintingVariables.forDataSeriesIndex(dataSeriesIndex).let { paintingVariablesForDataSeries ->
       paintingVariablesForDataSeries.segments.fastForEachWithIndex { _, segmentLayoutVariables ->
         paintSegment(
           paintingContext,
@@ -123,7 +122,7 @@ abstract class AbstractStripePainter<DataSeriesIndexType : DataSeriesIndex, Valu
 
   /**
    * Paints a single segment.
-   * This method might be called multiple times.
+   * This method might be called multiple times - if there are multiple segments.
    *
    * * [beginPainting] is called once before
    * * [finishPainting] is called once after

@@ -70,7 +70,7 @@ class RectangleEnumStripePainter(
 
     val gc = paintingContext.gc
 
-    @Zoomed val rectangleHeight = paintingVariables(dataSeriesIndex).height
+    @Zoomed val rectangleHeight = forDataSeriesIndex(dataSeriesIndex).height
     @Zoomed val rectangleWidth = endX - startX
 
     if (valueToPaint.isNoValue()) {

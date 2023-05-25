@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.provider.MultiProvider
+
 
 /**
  * Interface that is implemented by concrete series index value classes
@@ -24,4 +26,9 @@ interface DataSeriesIndex {
    * The int value representation of the data series index
    */
   val value: Int
+}
+
+
+inline fun <DataSeriesIndexType : DataSeriesIndex, T> MultiProvider<DataSeriesIndexType, T>.valueAt(index: DataSeriesIndexType): T {
+  return this.valueAt(index.value)
 }

@@ -21,7 +21,7 @@ inline fun FloatArray2.map2(gen: (x: Int, y: Int, v: Float) -> Float): FloatArra
     gen(x, y, this[x, y])
   }
 
-inline fun DoubleArray2.map2(gen: (x: Int, y: Int, v: Double) -> Double): DoubleArray2 =
+inline fun DoubleArray2.map2(gen: (x: Int, y: Int, value: Double) -> Double): DoubleArray2 =
   DoubleArray2(width, height) {
     val x = it % width
     val y = it / width

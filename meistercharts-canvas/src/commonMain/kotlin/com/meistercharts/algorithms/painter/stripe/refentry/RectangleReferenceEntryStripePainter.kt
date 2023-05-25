@@ -85,7 +85,7 @@ class RectangleReferenceEntryStripePainter(
     @Window val startXinViewport = chartCalculator.coerceInViewportX(startX)
     @Window val endXinViewport = chartCalculator.coerceInViewportX(endX)
 
-    @Zoomed val rectangleHeight = paintingVariables(dataSeriesIndex).height
+    @Zoomed val rectangleHeight = forDataSeriesIndex(dataSeriesIndex).height
     @Zoomed val rectangleWidth = endXinViewport - startXinViewport
 
     if (idToPaint.isNoValue()) {

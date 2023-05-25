@@ -97,11 +97,14 @@ object TimeLineChartConverter {
   fun toPointPainters(jsLineStyles: Array<TimeLineChartLineStyle>): MultiProvider<DecimalDataSeriesIndex, PointPainter?> {
     val pointPainters: List<PointPainter?> = jsLineStyles.map { jsTimelineChartLineStyle ->
       val pointSize = jsTimelineChartLineStyle.pointSize?.sanitize() ?: 2.0
+      val color = jsTimelineChartLineStyle.lineStyle.color.toColor()
 
       when (jsTimelineChartLineStyle.pointType?.sanitize()) {
         PointType.None -> null
         PointType.Dot -> {
-          PointStylePainter(PointStyle.Dot, pointSize, false, false)
+          PointStylePainter(PointStyle.Dot, pointSize, false, false).also {
+            it.color = color
+          }
         }
 
         PointType.Cross -> {
@@ -112,8 +115,8 @@ object TimeLineChartConverter {
 
         PointType.Circle -> CirclePointPainter(false, false) {
           this.pointSize = pointSize
-          this.fill //TODO update
-          this.stroke //TODO update
+          this.fill = Color.orange //TODO update
+          this.stroke = Color.black //TODO update
         }
 
         null -> null
@@ -125,8 +128,6 @@ object TimeLineChartConverter {
 
   fun toMinMaxAreaPainters(jsLineStyles: Array<TimeLineChartLineStyle>): MultiProvider<DecimalDataSeriesIndex, AreaBetweenLinesPainter?> {
     val areaPainters: List<AreaBetweenLinesPainter?> = jsLineStyles.map { jsTimelineChartLineStyle ->
-      val color = jsTimelineChartLineStyle.minMaxAreaColor.toColor()
-
       when (jsTimelineChartLineStyle.showMinMaxArea.sanitize()) {
         true -> {
           SimpleAreaBetweenLinesPainter(false, false)

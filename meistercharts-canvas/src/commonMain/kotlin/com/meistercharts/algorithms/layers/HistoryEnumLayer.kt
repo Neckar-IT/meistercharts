@@ -43,14 +43,7 @@ class HistoryEnumLayer(
     return paintingVariables
   }
 
-  private val paintingVariables = object : AbstractHistoryStripeLayerPaintingVariables(), HistoryEnumPaintingVariables {
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-    }
-
-    override fun dataSeriesIndexFromInt(indexAsInt: Int): EnumDataSeriesIndex {
-      return EnumDataSeriesIndex(indexAsInt)
-    }
+  private val paintingVariables = object : DefaultHistoryStripeLayerPaintingVariables(), HistoryEnumPaintingVariables {
   }
 
   override fun dataSeriesCount(): Int {

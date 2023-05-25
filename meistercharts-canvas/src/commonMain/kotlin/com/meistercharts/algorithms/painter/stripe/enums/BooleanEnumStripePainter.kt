@@ -82,7 +82,7 @@ class BooleanEnumStripePainter(
 
     val gc = paintingContext.gc
 
-    @Zoomed val height = paintingVariables(dataSeriesIndex).height
+    @Zoomed val height = forDataSeriesIndex(dataSeriesIndex).height
 
     val ordinalToPaint: HistoryEnumOrdinal = when (configuration.aggregationMode) {
       EnumAggregationMode.ByOrdinal -> value1ToPaint.firstSetOrdinal()

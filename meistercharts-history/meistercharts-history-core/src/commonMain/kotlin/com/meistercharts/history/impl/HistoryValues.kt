@@ -62,7 +62,7 @@ import kotlinx.serialization.Serializable
  * ```
  */
 @Serializable
-class HistoryValues(
+data class HistoryValues(
   /**
    * Contains the decimal values
    */

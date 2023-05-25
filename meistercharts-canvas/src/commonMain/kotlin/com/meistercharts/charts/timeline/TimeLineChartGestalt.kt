@@ -64,7 +64,7 @@ import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
 import com.meistercharts.algorithms.painter.WebColor
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
-import com.meistercharts.algorithms.tile.AverageHistoryCanvasTilePainter
+import com.meistercharts.algorithms.tile.AverageMinMaxHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.CandleHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CanvasTilePainter
@@ -235,7 +235,7 @@ class TimeLineChartGestalt
    * Is used to calculate the history render properties
    */
   val historyRenderPropertiesCalculatorLayer: HistoryRenderPropertiesCalculatorLayer = HistoryRenderPropertiesCalculatorLayer(
-    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(1.0).withMinimum { data.minimumSamplingPeriod },
+    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod },
     historyGapCalculator = { renderedSamplingPeriod ->
       data.historyGapCalculator.calculateMinGapDistance(renderedSamplingPeriod)
     },
@@ -250,9 +250,9 @@ class TimeLineChartGestalt
   /**
    * Creates a new instance of [HistoryCanvasTilePainter]
    */
-  private fun createAverageHistoryCanvasTilePainter(): AverageHistoryCanvasTilePainter {
-    return AverageHistoryCanvasTilePainter(
-      AverageHistoryCanvasTilePainter.Configuration(
+  private fun createAverageHistoryCanvasTilePainter(): AverageMinMaxHistoryCanvasTilePainter {
+    return AverageMinMaxHistoryCanvasTilePainter(
+      AverageMinMaxHistoryCanvasTilePainter.Configuration(
         historyStorage = data.historyStorage,
         contentAreaTimeRange = { style.contentAreaTimeRange },
         valueRanges = style::lineValueRanges.delegate(),

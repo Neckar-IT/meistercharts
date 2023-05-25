@@ -67,7 +67,7 @@ import kotlin.math.min
  * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
  */
 @Serializable
-class HistoryChunk(
+data class HistoryChunk(
 
   /**
    * The history configuration - contains the IDs, decimal places and display names

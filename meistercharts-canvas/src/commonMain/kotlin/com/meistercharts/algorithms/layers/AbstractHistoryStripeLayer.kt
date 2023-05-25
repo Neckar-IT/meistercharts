@@ -41,6 +41,7 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.requireIsFinite
 import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
+import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.provider.MultiProvider
@@ -70,7 +71,7 @@ abstract class AbstractHistoryStripeLayer<
   /**
    * Abstract base class for painting variables
    */
-  abstract inner class AbstractHistoryStripeLayerPaintingVariables : HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
+  open inner class DefaultHistoryStripeLayerPaintingVariables : HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
     override var historyBuckets: List<HistoryBucket> = emptyList()
     var minGapDistance: @ms Double = Double.NaN
 
@@ -168,10 +169,8 @@ abstract class AbstractHistoryStripeLayer<
 
       //Calculate the layout for the stripes
       visibleIndices.fastForEachIndexed { visibleIndexAsInt, visibleDataSeriesIndex ->
-        val stripePainter: StripePainterType = configuration.stripePainters.valueAt(visibleDataSeriesIndex.value)
-
-        val dataSeriesIndex: DataSeriesIndexType = dataSeriesIndexFromInt(visibleIndexAsInt)
-        val isActiveDataSeries = configuration.activeDataSeriesIndex == dataSeriesIndex
+        val stripePainter: StripePainterType = configuration.stripePainters.valueAt(visibleDataSeriesIndex)
+        val isActiveDataSeries = configuration.activeDataSeriesIndex == visibleDataSeriesIndex
 
         //Is only set if the current series is the active series
         @MayBeNaN @ms val relevantActiveTimeStamp = if (isActiveDataSeries) configuration.activeTimeStamp else Double.NaN
@@ -212,7 +211,7 @@ abstract class AbstractHistoryStripeLayer<
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
               activeInformation.geometricalCenterIfFinite = stripePainter.layoutValueChange(
-                paintingContext = paintingContext, dataSeriesIndex = dataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
+                paintingContext = paintingContext, dataSeriesIndex = visibleDataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
               )
               break
             }
@@ -221,7 +220,7 @@ abstract class AbstractHistoryStripeLayer<
             @ms val distanceToLastDataPoint = startTime - lastTime
             if (distanceToLastDataPoint > minGapDistance) {
               //We have a gap -> finish the current line and begin a new one
-              activeInformation.geometricalCenterIfFinite = stripePainter.layoutFinish(paintingContext, dataSeriesIndex)
+              activeInformation.geometricalCenterIfFinite = stripePainter.layoutFinish(paintingContext, visibleDataSeriesIndex)
               stripePainter.layoutBegin(paintingContext, stripesLayout.boxSize, visibleDataSeriesIndex, historyConfiguration)
             }
 
@@ -230,16 +229,14 @@ abstract class AbstractHistoryStripeLayer<
             lastTime = startTime
 
             activeInformation.geometricalCenterIfFinite = stripePainter.layoutValueChange(
-              paintingContext = paintingContext, dataSeriesIndex = dataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
+              paintingContext = paintingContext, dataSeriesIndex = visibleDataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
             )
           }
         }
 
-        activeInformation.geometricalCenterIfFinite = stripePainter.layoutFinish(paintingContext, dataSeriesIndex)
+        activeInformation.geometricalCenterIfFinite = stripePainter.layoutFinish(paintingContext, visibleDataSeriesIndex)
       }
     }
-
-    protected abstract fun dataSeriesIndexFromInt(indexAsInt: Int): DataSeriesIndexType
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
@@ -266,7 +263,7 @@ abstract class AbstractHistoryStripeLayer<
 
     //Iterate over all visible reference entry data series
     visibleIndices.fastForEachIndexed { visibleIndexAsInt, visibleDataSeriesIndex ->
-      val stripePainter = configuration.stripePainters.valueAt(visibleDataSeriesIndex.value)
+      val stripePainter = configuration.stripePainters.valueAt(visibleDataSeriesIndex)
 
       val boxIndex = BoxIndex(visibleIndexAsInt)
       @Zoomed val startY = stripesLayout.calculateStart(boxIndex)
@@ -394,6 +391,9 @@ abstract class AbstractHistoryStripeLayer<
     var activeDataSeriesBackgroundSize: (dataSeriesHeight: @Zoomed Double) -> Double = { dataSeriesHeight -> dataSeriesHeight }
   }
 
+  /**
+   * The painting variables for a [AbstractHistoryStripeLayer]
+   */
   interface HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> : PaintingVariables {
     /**
      * The history bucket that have been used to display the strips
