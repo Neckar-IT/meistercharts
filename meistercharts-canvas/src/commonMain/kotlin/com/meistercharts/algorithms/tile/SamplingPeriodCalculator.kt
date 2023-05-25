@@ -43,7 +43,7 @@ fun interface SamplingPeriodCalculator {
 
 /**
  * Ensures the max distance between two data points.
- * This implementation is useful for [AverageHistoryCanvasTilePainter]
+ * This implementation is useful for [AverageMinMaxHistoryCanvasTilePainter]
  */
 class MaxDistanceSamplingPeriodCalculator(
   /**

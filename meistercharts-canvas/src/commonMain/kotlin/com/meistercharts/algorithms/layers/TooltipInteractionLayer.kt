@@ -166,6 +166,9 @@ class TooltipInteractionLayer<T>(
       )
     }
 
+    /**
+     * Creates a new tooltip interaction layer for discrete data series
+     */
     fun forDiscreteDataSeries(
       /**
        * Provides the current [EquisizedBoxLayout] (usually from painting properties)
@@ -174,9 +177,11 @@ class TooltipInteractionLayer<T>(
 
       /**
        * This method is called *often* (potentially on every mouse / touch event).
-       * Therefore, it must be very, very fast
+       * Therefore, it must be very, very fast.
+       *
+       * The boxIndex must be converted to the corresponding [ReferenceEntryDataSeriesIndex] - depending on the visible indices.
        */
-      selectionSink: (relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport) -> Unit,
+      selectionSink: (relativeTime: @TimeRelative Double?, boxIndex: BoxIndex?, chartSupport: ChartSupport) -> Unit,
 
       ): TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> {
       return TooltipInteractionLayer(
@@ -199,7 +204,7 @@ class TooltipInteractionLayer<T>(
           if (boxIndex == null) {
             selectionSink(timeRelative, null, chartSupport)
           } else {
-            selectionSink(timeRelative, ReferenceEntryDataSeriesIndex(boxIndex.value), chartSupport)
+            selectionSink(timeRelative, boxIndex, chartSupport)
           }
         }
       )

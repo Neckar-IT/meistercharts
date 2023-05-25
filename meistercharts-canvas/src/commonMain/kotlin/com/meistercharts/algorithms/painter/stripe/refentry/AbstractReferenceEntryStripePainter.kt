@@ -42,7 +42,7 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
 
 
   override fun haveRelevantValuesChanged(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
-    val paintingVariablesForDataSeries = paintingVariables(dataSeriesIndex)
+    val paintingVariablesForDataSeries = forDataSeriesIndex(dataSeriesIndex)
 
     val currentId = paintingVariablesForDataSeries.currentValue1
     val currentCount = paintingVariablesForDataSeries.currentValue2

@@ -28,6 +28,20 @@ interface DataSeriesIndexProvider<out DataSeriesIndexType : DataSeriesIndex> : H
    * Returns the data series index.
    */
   fun valueAt(index: Int): DataSeriesIndexType
+
+}
+
+/**
+ * Returns the index of this provided data series index
+ */
+fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataSeriesIndexType>.indexOf(dataSeriesIndex: DataSeriesIndexType): Int {
+  this.fastForEachIndexed { index, currentDataSeriesIndex ->
+    if (currentDataSeriesIndex == dataSeriesIndex) {
+      return index
+    }
+  }
+
+  throw IllegalArgumentException("No index found for $dataSeriesIndex")
 }
 
 /**

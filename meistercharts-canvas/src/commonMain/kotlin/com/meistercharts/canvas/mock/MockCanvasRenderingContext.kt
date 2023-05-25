@@ -52,6 +52,14 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
 
   override var font: FontDescriptor = FontDescriptor.Default
 
+  override fun currentFillDebug(): String {
+    return "not implemented"
+  }
+
+  override fun currentStrokeDebug(): String {
+    return "not implemented"
+  }
+
   override fun paintImage(image: Image, x: Double, y: Double, width: Double, height: Double) {
   }
 

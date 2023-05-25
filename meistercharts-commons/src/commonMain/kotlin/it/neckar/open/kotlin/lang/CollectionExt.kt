@@ -40,6 +40,11 @@ fun <T> List<T>.getModuloOrNull(index: Int): T? {
   return if (isEmpty()) null else this[index.wrapAround(size)]
 }
 
+fun <T> List<T>.getModuloOrElse(index: Int, fallback: T): T {
+  //This calculation produces a "wrap around" effect for negative indices
+  return if (isEmpty()) fallback else this[index.wrapAround(size)]
+}
+
 /**
  * Iterates over this collection delivering its elements to [consumer] while the [consumer] returns true for a consumed element
  * @see [consumeUntil]

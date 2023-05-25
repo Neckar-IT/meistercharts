@@ -52,8 +52,8 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
    * Returns true if the relevant value has changed - depending on the
    */
   override fun haveRelevantValuesChanged(dataSeriesIndex: EnumDataSeriesIndex, value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit, value4: Unit): Boolean {
-    @MayBeNoValueOrPending val currentEnumSet = paintingVariables(dataSeriesIndex).currentValue1
-    @MayBeNoValueOrPending val currentEnumOrdinalMostTime = paintingVariables(dataSeriesIndex).currentValue2
+    @MayBeNoValueOrPending val currentEnumSet = forDataSeriesIndex(dataSeriesIndex).currentValue1
+    @MayBeNoValueOrPending val currentEnumOrdinalMostTime = forDataSeriesIndex(dataSeriesIndex).currentValue2
 
     return when (configuration.aggregationMode) {
       EnumAggregationMode.ByOrdinal -> {

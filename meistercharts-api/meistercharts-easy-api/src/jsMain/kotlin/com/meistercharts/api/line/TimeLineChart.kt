@@ -496,6 +496,10 @@ private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
 
   jsStyle.lineStyles?.let { jsLineStyles ->
     this.style.lineStyles = TimeLineChartConverter.toLineStyles(jsLineStyles)
+
+    this.style.pointPainters = TimeLineChartConverter.toPointPainters(jsLineStyles)
+    this.style.minMaxAreaPainters = TimeLineChartConverter.toMinMaxAreaPainters(jsLineStyles)
+    this.style.minMaxAreaColors = TimeLineChartConverter.toMinMaxAreaColors(jsLineStyles)
   }
 
   jsStyle.enumDataSeriesStyles?.let { jsEnumDataSeriesStyles ->

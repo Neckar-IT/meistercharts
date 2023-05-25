@@ -36,6 +36,7 @@ import com.meistercharts.algorithms.layers.referenceEntryData
 import com.meistercharts.algorithms.layers.referenceEntryId
 import com.meistercharts.algorithms.layers.status
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
@@ -65,6 +66,7 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.atMost
+import com.meistercharts.history.indexOf
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
@@ -209,7 +211,11 @@ class DiscreteTimelineChartGestalt(
       boxLayout = { historyReferenceEntryLayer.paintingVariables().stripesLayout }, dataSeriesHeight = {
         val layout = historyReferenceEntryLayer.paintingVariables().stripesLayout
         historyReferenceEntryLayer.configuration.activeDataSeriesBackgroundSize(layout.boxSize)
-      }, contentAreaTimeRange = configuration::contentAreaTimeRange
+      },
+      referenceEntryDataSeriesIndex2BoxIndex = { refIndex ->
+        BoxIndex(configuration.actualVisibleReferenceEntrySeriesIndices.indexOf(refIndex))
+      },
+      contentAreaTimeRange = configuration::contentAreaTimeRange
     ),
     headline = { textService, i18nConfiguration ->
       configuration.historyConfiguration().referenceEntryConfiguration.getDisplayName(activeDataSeriesIndex).resolve(textService, i18nConfiguration)
@@ -250,6 +256,7 @@ class DiscreteTimelineChartGestalt(
   var activeDataSeriesIndexOrNull: ReferenceEntryDataSeriesIndex?
     get() = historyReferenceEntryLayer.configuration.activeDataSeriesIndex
     private set(value) {
+      println("set active data series index to $value")
       historyReferenceEntryLayer.configuration.activeDataSeriesIndex = value
     }
 
@@ -276,8 +283,11 @@ class DiscreteTimelineChartGestalt(
   /**
    * Handles the mouse over - does *not* paint anything itself
    */
-  val toolbarInteractionLayer: TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> = TooltipInteractionLayer.forDiscreteDataSeries(layoutProvider = { historyReferenceEntryLayer.paintingVariables().stripesLayout },
-    selectionSink = { relativeTime: @TimeRelative Double?, referenceEntryDataSeriesIndex: ReferenceEntryDataSeriesIndex?, chartSupport: ChartSupport ->
+  val toolbarInteractionLayer: TooltipInteractionLayer<ReferenceEntryDataSeriesIndex> = TooltipInteractionLayer.forDiscreteDataSeries(
+    layoutProvider = { historyReferenceEntryLayer.paintingVariables().stripesLayout },
+    selectionSink = { relativeTime: @TimeRelative Double?, boxIndex: BoxIndex?, chartSupport: ChartSupport ->
+      val referenceEntryDataSeriesIndex = boxIndex?.let { configuration.actualVisibleReferenceEntrySeriesIndices.valueAt(it.value) }
+
       if (activeDataSeriesIndexOrNull != referenceEntryDataSeriesIndex) {
         activeDataSeriesIndexOrNull = referenceEntryDataSeriesIndex
         chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)

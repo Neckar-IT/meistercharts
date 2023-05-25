@@ -327,6 +327,14 @@ class CanvasRenderingContextJS(
     context.fill()
   }
 
+  override fun currentFillDebug(): String {
+    return context.fillStyle.toString()
+  }
+
+  override fun currentStrokeDebug(): String {
+    return context.strokeStyle.toString()
+  }
+
   override fun translate(deltaX: Double, deltaY: Double) {
     super.translate(deltaX, deltaY)
     context.translate(deltaX, deltaY)

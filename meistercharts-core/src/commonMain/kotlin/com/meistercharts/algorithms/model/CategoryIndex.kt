@@ -20,7 +20,7 @@ import it.neckar.open.provider.MultiProvider
 import kotlin.jvm.JvmInline
 
 /**
- *
+ * Represents a category index
  */
 @JvmInline
 value class CategoryIndex(val value: Int) {

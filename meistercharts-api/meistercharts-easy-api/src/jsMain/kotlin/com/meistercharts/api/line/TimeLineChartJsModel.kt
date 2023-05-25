@@ -400,7 +400,7 @@ external interface TimeLineChartLineStyle {
 
   /**
    * The size of the point in pixels - depending on the [pointType].
-   * Usually the diameter.
+   * Usually the diameter. Default: 2.0
    */
   val pointSize: Double?
 

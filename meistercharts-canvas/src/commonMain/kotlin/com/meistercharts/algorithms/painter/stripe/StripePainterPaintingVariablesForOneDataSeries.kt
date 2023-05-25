@@ -119,10 +119,64 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
     this.visibleDataSeriesIndex = dataSeriesIndex
   }
 
+  fun relevantValuesChanged(newValue1: Value1Type, newValue2: Value2Type, newValue3: Value3Type, newValue4: Value4Type, startX: @Window Double, endX: @Window Double, startTime: @ms Double, endTime: @ms Double, activeTimeStamp: @ms @MayBeNaN Double) {
+    //Remember the updated properties - for the next paint
+    nextValue1 = newValue1
+    nextValue2 = newValue2
+    nextValue3 = newValue3
+    nextValue4 = newValue4
+
+    nextStartX = startX
+    nextEndX = endX
+    nextStartTime = startTime
+    nextEndTime = endTime
+
+    //Paint the *current* value until the next start
+    currentEndX = startX
+    currentEndTime = endTime
+
+    this.activeTimeStamp = activeTimeStamp
+  }
+
+  /**
+   * Is called every time a segment should be layouted.
+   * This method will then prepare a new segment.
+   */
+  fun layoutSegment(): @Window Double {
+    @MayBeNoValueOrPending val value1ToPaint = currentValue1
+    @MayBeNoValueOrPending val value2ToPaint = currentValue2
+    @MayBeNoValueOrPending val value3ToPaint = currentValue3
+    @MayBeNoValueOrPending val value4ToPaint = currentValue4
+
+    @Window val startX = currentStartX
+    @Window val endX = currentEndX
+
+    @Window val startTime = currentStartTime
+    @Window val endTime = currentEndTime
+
+    @ms @MayBeNaN val activeTimeStamp = activeTimeStamp
+
+    try {
+      layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+
+      @MayBeNaN @Window val opticalCenter = this.layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      if (activeTimeStamp in startTime..endTime) {
+        return opticalCenter //Only return if this is relevant for the active time stamp
+      }
+
+      return Double.NaN
+    } finally {
+      //Switch to *next*
+      prepareForNextValue()
+    }
+  }
+
   /**
    * Is called during the layout phase to store the next segment that will then be painted in the painting phase
+   *
+   * @return the geometrical center
    */
-  fun storeSegment(startX: @Window Double, endX: @Window Double, activeTimeStamp: @ms @MayBeNaN Double, value1ToPaint: Value1Type, value2ToPaint: Value2Type, value3ToPaint: Value3Type, value4ToPaint: Value4Type) {
+  fun layoutSegment(startX: @Window Double, endX: @Window Double, activeTimeStamp: @ms @MayBeNaN Double, value1ToPaint: Value1Type, value2ToPaint: Value2Type, value3ToPaint: Value3Type, value4ToPaint: Value4Type): @Window Double {
     val segmentLayoutVariable = segments.addNewElement()
 
     segmentLayoutVariable.startX = startX
@@ -132,6 +186,8 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
     segmentLayoutVariable.value2ToPaint = value2ToPaint
     segmentLayoutVariable.value3ToPaint = value3ToPaint
     segmentLayoutVariable.value4ToPaint = value4ToPaint
+
+    return (startX + endX) / 2.0
   }
 
   override fun reset() {
@@ -201,6 +257,14 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
     nextEndX = Double.NaN
     nextStartTime = Double.NaN
     nextEndTime = Double.NaN
+  }
+
+  /**
+   * Updates the end of the current segment
+   */
+  fun updateCurrentEnd(endX: @Window Double, endTime: @ms Double) {
+    currentEndX = endX
+    currentEndTime = endTime
   }
 
   /**

@@ -22,7 +22,6 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.canvas.strokeCross45Degrees
@@ -119,11 +118,18 @@ class RectanglePointPainter(
 class CirclePointPainter(
   snapXValues: Boolean = false,
   snapYValues: Boolean = false,
-) : AbstractPointPainter(snapXValues, snapYValues), Paintable {
+
+  configuration: CirclePointPainter.() -> Unit = {},
+
+  ) : AbstractPointPainter(snapXValues, snapYValues), Paintable {
   var fill: Color = Color.white
   var stroke: Color = Color.web("#ffc83e")
 
   var lineWidth: @Zoomed Double = 1.0
+
+  init {
+    configuration()
+  }
 
   override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     val centerX = snapXPosition(x)

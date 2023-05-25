@@ -46,14 +46,7 @@ class HistoryReferenceEntryLayer(
     return paintingVariables
   }
 
-  private val paintingVariables = object : AbstractHistoryStripeLayerPaintingVariables(), HistoryReferenceEntryPaintingVariables {
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-    }
-
-    override fun dataSeriesIndexFromInt(indexAsInt: Int): ReferenceEntryDataSeriesIndex {
-      return ReferenceEntryDataSeriesIndex(indexAsInt)
-    }
+  private val paintingVariables = object : DefaultHistoryStripeLayerPaintingVariables(), HistoryReferenceEntryPaintingVariables {
   }
 
   override fun dataSeriesCount(): Int {

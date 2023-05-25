@@ -484,8 +484,8 @@ class DownSamplingCalculator(
     averages.fastForEachIndexed { dataSeriesIndex, _ ->
       averageCalculationCounts[dataSeriesIndex] = 0
       averages[dataSeriesIndex] = HistoryChunk.Pending
-      minValues[dataSeriesIndex] = Double.MAX_VALUE
-      maxValues[dataSeriesIndex] = Double.MIN_VALUE
+      minValues[dataSeriesIndex] = HistoryChunk.Pending
+      maxValues[dataSeriesIndex] = HistoryChunk.Pending
       containsNoValueDecimal[dataSeriesIndex] = false
     }
 

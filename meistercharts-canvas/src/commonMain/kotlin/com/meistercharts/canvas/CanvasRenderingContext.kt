@@ -904,6 +904,17 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   fun calculatePhysicalSnapCorrectionY(translationY: Double, snapY: Boolean = true): @px Double
 
+  /**
+   * Returns a string representation of the current fill.
+   * Only for debugging purposes
+   */
+  fun currentFillDebug(): String
+  /**
+   * Returns a string representation of the current fill
+   * Only for debugging purposes
+   */
+  fun currentStrokeDebug(): String
+
   @px
   var lineWidth: Double
 
@@ -922,12 +933,12 @@ interface CanvasRenderingContext : SupportsPathActions {
   val translationPhysicalY: @PhysicalPixel Double
 
   /**
-   * The translation on the x axis
+   * The translation on the x-axis
    */
   val translationX: @Zoomed Double
 
   /**
-   * The translation on the y axis
+   * The translation on the y-axis
    */
   val translationY: @Zoomed Double
 

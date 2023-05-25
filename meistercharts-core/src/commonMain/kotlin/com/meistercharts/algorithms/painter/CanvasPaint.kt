@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
+import it.neckar.open.collections.cache
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -98,10 +99,20 @@ data class RgbaColor(
    * With alpha
    */
   fun withAlpha(newAlpha: @pct Double): RgbaColor {
-    return RgbaColor(red, green, blue, newAlpha)
+    val key = 31 * newAlpha.hashCode() + 17 * this.hashCode()
+
+    return alphaColorsCache.getOrStore(key) {
+      RgbaColor(red, green, blue, newAlpha)
+    }
   }
 
   companion object {
+    /**
+     * Contains the cached alpha colors - extract from a color
+     */
+    private val alphaColorsCache = cache<Int, RgbaColor>(description = "alphaColorsCache", maxSize = 100)
+
+
     /**
      * Creates a new rgb color using double values (0.0..1.0)
      */

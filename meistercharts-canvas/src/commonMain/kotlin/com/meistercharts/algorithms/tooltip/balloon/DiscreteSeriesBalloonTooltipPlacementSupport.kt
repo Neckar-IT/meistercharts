@@ -60,6 +60,12 @@ class DiscreteSeriesBalloonTooltipPlacementSupport(
   boxLayout: () -> EquisizedBoxLayout,
 
   /**
+   * Converts the [ReferenceEntryDataSeriesIndex] to an box index.
+   * Has to use the visible indices to figure out, a which location this [ReferenceEntryDataSeriesIndex] is currently visible.
+   */
+  referenceEntryDataSeriesIndex2BoxIndex: (refIndex: ReferenceEntryDataSeriesIndex) -> BoxIndex,
+
+  /**
    * Provides the height of a data series (height)
    */
   dataSeriesHeight: @px DoubleProvider,
@@ -77,6 +83,7 @@ class DiscreteSeriesBalloonTooltipPlacementSupport(
     boxLayout = boxLayout,
     dataSeriesHeight = dataSeriesHeight,
     contentAreaTimeRange = contentAreaTimeRange,
+    referenceEntryDataSeriesIndex2BoxIndex = referenceEntryDataSeriesIndex2BoxIndex,
   ).also(additionalConfiguration)
 
   /**
@@ -167,6 +174,12 @@ class DiscreteSeriesBalloonTooltipPlacementSupport(
     val boxLayout: () -> EquisizedBoxLayout,
 
     /**
+     * Converts the [ReferenceEntryDataSeriesIndex] to an box index.
+     * Has to use the visible indices to figure out, a which location this [ReferenceEntryDataSeriesIndex] is currently visible.
+     */
+    val referenceEntryDataSeriesIndex2BoxIndex: (refIndex: ReferenceEntryDataSeriesIndex) -> BoxIndex,
+
+    /**
      * Provides the height of a data series (height)
      */
     val dataSeriesHeight: @px DoubleProvider,
@@ -189,7 +202,8 @@ class DiscreteSeriesBalloonTooltipPlacementSupport(
      * Returns the active segment index
      */
     fun activeSegmentIndex(): BoxIndex {
-      return BoxIndex(activeDataSeriesIndex().value)
+      val activeDataSeriesIndex = activeDataSeriesIndex()
+      return referenceEntryDataSeriesIndex2BoxIndex(activeDataSeriesIndex)
     }
   }
 }

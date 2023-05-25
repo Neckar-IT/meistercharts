@@ -17,10 +17,8 @@ package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.linechart.LineStyle as ModelLineStyle
 import com.meistercharts.api.LineStyle as JsLineStyle
-import com.meistercharts.algorithms.painter.DirectLineLivePainter
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.painter.SplineLinePainter
-import it.neckar.open.charting.api.sanitizing.sanitize
 import com.meistercharts.api.PointConnectionStyle
 import com.meistercharts.api.PointConnectionType
 import com.meistercharts.api.PointType
@@ -35,6 +33,9 @@ import com.meistercharts.painter.DotCategoryPointPainter
 import com.meistercharts.painter.XyCategoryLinePainter
 import com.meistercharts.painter.emptyCategoryLinePainter
 import com.meistercharts.painter.emptyCategoryPointPainter
+import it.neckar.open.charting.api.sanitizing.sanitize
+import it.neckar.open.collections.fastMapIndexed
+import it.neckar.open.kotlin.lang.getModuloOrElse
 import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
 
@@ -52,47 +53,47 @@ object LineChartSimpleConverter {
       return emptyCategoryPointPainter
     }
 
-    val pointTypes = jsLineStyle.pointType?.map { it?.let { PointType.valueOf(it.toString()) } } ?: emptyList()
+    val pointTypes = jsLineStyle.pointType?.map { it?.let { it.sanitize() } } ?: emptyList()
     val pointColors1 = jsLineStyle.pointColor1?.map { it?.let { it.toColor() } } ?: emptyList()
     val pointColors2 = jsLineStyle.pointColor2?.map { it?.let { it.toColor() } } ?: emptyList()
     val pointSizes = jsLineStyle.pointSize?.toList() ?: emptyList()
     val pointLineWidths = jsLineStyle.pointLineWidth?.toList() ?: emptyList()
 
-    return CategoryPointPainter { gc, x, y, categoryIndex, seriesIndex, value ->
-      val categoryPointPainter: CategoryPointPainter = when (pointTypes.getModuloOrNull(categoryIndex.value)) {
+    val categoryPointPainters = pointTypes.fastMapIndexed { index, pointType ->
+      when (pointType) {
         PointType.None -> {
           emptyCategoryPointPainter
         }
 
         PointType.Dot -> {
           DotCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.color = it }
-            pointSizes.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.pointSize = it }
-            pointLineWidths.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.lineWidth = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
+            pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
         }
 
-        PointType.Cross   -> {
+        PointType.Cross -> {
           CrossCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.color = it }
-            pointSizes.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.pointSize = it }
-            pointLineWidths.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.lineWidth = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
+            pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
         }
 
         PointType.Cross45 -> {
           Cross45DegreesCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.color = it }
-            pointSizes.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.pointSize = it }
-            pointLineWidths.getModuloOrNull(categoryIndex.value)?.let { pointStylePainter.lineWidth = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
+            pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
         }
 
         PointType.Circle -> {
           CircleCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(categoryIndex.value)?.let { circlePointPainter.fill = it }
-            pointColors2.getModuloOrNull(categoryIndex.value)?.let { circlePointPainter.stroke = it }
-            pointSizes.getModuloOrNull(categoryIndex.value)?.let { circlePointPainter.pointSize = it }
+            pointColors1.getModuloOrNull(index)?.let { circlePointPainter.fill = it }
+            pointColors2.getModuloOrNull(index)?.let { circlePointPainter.stroke = it }
+            pointSizes.getModuloOrNull(index)?.let { circlePointPainter.pointSize = it }
           }
         }
 
@@ -100,6 +101,10 @@ object LineChartSimpleConverter {
           emptyCategoryPointPainter
         }
       }
+    }
+
+    return CategoryPointPainter { gc, x, y, categoryIndex, seriesIndex, value ->
+      val categoryPointPainter = categoryPointPainters.getModuloOrElse(categoryIndex.value, emptyCategoryPointPainter)
       categoryPointPainter.paintPoint(gc, x, y, categoryIndex, seriesIndex, value)
     }
   }

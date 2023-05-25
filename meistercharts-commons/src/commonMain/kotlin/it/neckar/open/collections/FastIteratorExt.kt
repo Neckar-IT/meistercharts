@@ -197,6 +197,23 @@ inline fun <T, V> List<T>.fastMap(mapper: (value: T) -> V): List<V> {
 }
 
 /**
+ * Iterates over the entries of a list with their indices
+ *
+ * Do *not* modify the underlying data structure while iterating
+ */
+inline fun <T, V> List<T>.fastMapIndexed(mapper: (index: Int, value: T) -> V): List<V> {
+  val targetList = mutableListOf<V>()
+
+  this.fastForEachIndexed { index, original ->
+    mapper(index, original).let {
+      targetList.add(it)
+    }
+  }
+
+  return targetList
+}
+
+/**
  * Iterates over the entries of a list
  *
  * Do *not* modify the underlying data structure while iterating
