@@ -235,7 +235,7 @@ class TimeLineChartGestalt
    * Is used to calculate the history render properties
    */
   val historyRenderPropertiesCalculatorLayer: HistoryRenderPropertiesCalculatorLayer = HistoryRenderPropertiesCalculatorLayer(
-    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod },
+    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(1.0).withMinimum { data.minimumSamplingPeriod },
     historyGapCalculator = { renderedSamplingPeriod ->
       data.historyGapCalculator.calculateMinGapDistance(renderedSamplingPeriod)
     },
