@@ -24,6 +24,7 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
+import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
@@ -31,6 +32,8 @@ import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
+import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
+import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import it.neckar.open.annotations.Slow
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArrayList
@@ -148,9 +151,27 @@ class HistoryChunkBuilder(
   }
 
   @Slow
+  @Deprecated("Use addValues")
+  @TestOnly
+  fun addDecimalValuesWithMinMax(
+    timestamp: @ms Double,
+    decimalValues: DoubleArray,
+    minValues: DoubleArray?,
+    maxValues: DoubleArray?,
+  ) {
+    require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
+
+    val currentTimestampIndex = nextTimestampIndex
+    nextTimestampIndex++
+    setDecimalValues(currentTimestampIndex, timestamp, decimalValues, minValues, maxValues)
+  }
+
+  @Slow
   fun addValues(
     timestamp: @ms Double,
     decimalValues: @Domain DoubleArray,
+    decimalMinValues: @Domain DoubleArray?,
+    decimalMaxValues: @Domain DoubleArray?,
     enumValues: @HistoryEnumSetInt IntArray,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryStatuses: @HistoryEnumSetInt IntArray,
@@ -165,6 +186,8 @@ class HistoryChunkBuilder(
       timestampIndex = currentTimestampindex,
       timestamp = timestamp,
       decimalValues = decimalValues,
+      decimalMaxValues = decimalMaxValues,
+      decimalMinValues = decimalMinValues,
       enumValues = enumValues,
       referenceEntryIds = referenceEntryIds,
       referenceEntryStatuses = referenceEntryStatuses,
@@ -200,8 +223,8 @@ class HistoryChunkBuilder(
       timestampIndex = currentTimestampindex,
       timestamp = timestamp,
       decimalValues = decimalValues,
-      minValues = minValues,
-      maxValues = maxValues,
+      decimalMinValues = minValues,
+      decimalMaxValues = maxValues,
       enumValues = enumValues,
       enumOrdinalsMostTime = enumOrdinalsMostTime,
       referenceEntryIds = referenceEntryIds,
@@ -237,7 +260,9 @@ class HistoryChunkBuilder(
   @Slow
   fun addValues(
     timestamp: @ms Double,
-    decimalValuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double,
+    decimalValuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double,
+    decimalMinValuesProvider: ((dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double)? = null,
+    decimalMaxValuesProvider: ((dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double)? = null,
     enumValuesProvider: (dataSeriesIndex: EnumDataSeriesIndex) -> HistoryEnumSet,
     referenceEntryIdProvider: (dataSeriesIndex: ReferenceEntryDataSeriesIndex) -> ReferenceEntryId,
     referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId) -> HistoryEnumSet,
@@ -250,11 +275,35 @@ class HistoryChunkBuilder(
     addValues(
       timestamp = timestamp,
       decimalValues = DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> decimalValuesProvider(DecimalDataSeriesIndex(i)) },
+      decimalMinValues = decimalMinValuesProvider?.toDoubleArray(historyConfiguration.decimalDataSeriesCount),
+      decimalMaxValues = decimalMaxValuesProvider?.toDoubleArray(historyConfiguration.decimalDataSeriesCount),
       enumValues = IntArray(historyConfiguration.enumDataSeriesCount) { i -> enumValuesProvider(EnumDataSeriesIndex(i)).bitset },
       referenceEntryIds = referenceEntryIds,
       referenceEntryStatuses = referenceEntryStatuses,
       entryDataSet = entryDataSet,
     )
+  }
+
+  /**
+   * Converts to a double array
+   */
+  private fun ((dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double).toDoubleArray(count: Int): @Domain DoubleArray? {
+    var hasAtLeastOneValue = false
+
+    val values = DoubleArray(count) { index ->
+      this.invoke(DecimalDataSeriesIndex(index)).also { value ->
+        if (value.isInfinite() && value.isPending().not() && value.isNoValue().not()) {
+          hasAtLeastOneValue = true
+        }
+      }
+    }
+
+    if (hasAtLeastOneValue) {
+      return values
+    }
+
+    //Return null if there is at least one useful value
+    return null
   }
 
   /**
@@ -336,8 +385,8 @@ class HistoryChunkBuilder(
     timestamp: @ms Double,
     decimalValues: @Domain DoubleArray,
 
-    minValues: @Domain DoubleArray? = null,
-    maxValues: @Domain DoubleArray? = null,
+    decimalMinValues: @Domain DoubleArray? = null,
+    decimalMaxValues: @Domain DoubleArray? = null,
 
     enumValues: @HistoryEnumSetInt IntArray,
     enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null,
@@ -355,7 +404,7 @@ class HistoryChunkBuilder(
 
     setTimestamp(timestampIndex, timestamp)
 
-    historyValuesBuilder.setDecimalValuesForTimestamp(timestampIndex, decimalValues, minValues, maxValues)
+    historyValuesBuilder.setDecimalValuesForTimestamp(timestampIndex, decimalValues, decimalMinValues, decimalMaxValues)
     historyValuesBuilder.setEnumValuesForTimestamp(timestampIndex, enumValues, enumOrdinalsMostTime)
     historyValuesBuilder.setReferenceEntryIdsForTimestamp(timestampIndex, referenceEntryIds, referenceEntryIdsCount, referenceEntryStatuses, entryDataSet)
   }

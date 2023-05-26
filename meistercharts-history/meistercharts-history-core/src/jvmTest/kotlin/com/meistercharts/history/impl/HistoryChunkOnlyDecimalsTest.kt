@@ -31,7 +31,6 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
 
@@ -408,7 +407,7 @@ class HistoryChunkOnlyDecimalsTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), null, null, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
     assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -439,7 +438,7 @@ class HistoryChunkOnlyDecimalsTest {
 
 
     //Now add a new timestamp with new values
-    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), null, null, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
     assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
     assertThat(chunk.timeStampsCount).isEqualTo(3)
@@ -457,7 +456,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testPending() {
-    val newChunk = chunk.withAddedValues(1004.0, DoubleArray(4) { HistoryChunk.Pending }, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
+    val newChunk = chunk.withAddedValues(1004.0, DoubleArray(4) { HistoryChunk.Pending }, null, null, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
     assertThat(newChunk.isPending(TimestampIndex(0))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(1))).isFalse()
     assertThat(newChunk.isPending(TimestampIndex(2))).isFalse()

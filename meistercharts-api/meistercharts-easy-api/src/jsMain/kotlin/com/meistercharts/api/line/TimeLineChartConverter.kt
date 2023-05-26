@@ -153,7 +153,7 @@ object TimeLineChartConverter {
    * Converts the given [Sample] into a [HistoryChunk]
    */
   fun toHistoryChunk(jsSample: Sample, historyConfiguration: HistoryConfiguration): HistoryChunk? {
-    return toHistoryChunk(arrayOf(jsSample), historyConfiguration)
+    return toHistoryChunk(jsSamples = arrayOf(jsSample), historyConfiguration = historyConfiguration)
   }
 
   /**
@@ -176,6 +176,12 @@ object TimeLineChartConverter {
         timestamp = jsSample.timestamp,
         decimalValuesProvider = { dataSeriesIndex ->
           jsSample.decimalValues?.get(dataSeriesIndex.value) ?: HistoryChunk.NoValue
+        },
+        decimalMinValuesProvider = { dataSeriesIndex ->
+          jsSample.decimalMinValues?.getOrNull(dataSeriesIndex.value) ?: HistoryChunk.NoValue
+        },
+        decimalMaxValuesProvider = { dataSeriesIndex ->
+          jsSample.decimalMaxValues?.getOrNull(dataSeriesIndex.value) ?: HistoryChunk.NoValue
         },
         enumValuesProvider = { dataSeriesIndex ->
           val jsEnumValue = jsSample.enumValues?.get(dataSeriesIndex.value)

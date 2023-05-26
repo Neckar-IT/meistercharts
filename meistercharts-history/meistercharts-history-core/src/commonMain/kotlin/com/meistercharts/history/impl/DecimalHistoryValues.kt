@@ -138,6 +138,24 @@ data class DecimalHistoryValues(
     return values.data.copyOfRange(startIndex, endIndex)
   }
 
+  fun getMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
+
+    val startIndex = HistoryValues.calculateStartIndex(dataSeriesCount, timeStampIndex)
+    val endIndex = startIndex + dataSeriesCount
+
+    return minValues?.data?.copyOfRange(startIndex, endIndex)
+  }
+
+  fun getMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
+
+    val startIndex = HistoryValues.calculateStartIndex(dataSeriesCount, timeStampIndex)
+    val endIndex = startIndex + dataSeriesCount
+
+    return maxValues?.data?.copyOfRange(startIndex, endIndex)
+  }
+
   /**
    * Returns the min value - falls back to the value if no max value exists
    */

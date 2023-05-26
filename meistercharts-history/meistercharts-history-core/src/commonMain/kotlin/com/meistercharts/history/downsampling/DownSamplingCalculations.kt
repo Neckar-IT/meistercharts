@@ -138,7 +138,11 @@ fun HistoryBucketDescriptor.calculateDownSampled(
       }
 
       //Add the sample to the calculator
-      downSamplingCalculator.addDecimalsSample(childChunk.getDecimalValues(index))
+      downSamplingCalculator.addDecimalsSample(
+        newDecimalValues = childChunk.getDecimalValues(index),
+        minDecimalValues = childChunk.getDecimalMinValues(index),
+        maxDecimalValues = childChunk.getDecimalMaxValues(index),
+      )
       downSamplingCalculator.addEnumSample(childChunk.getEnumValues(index))
       downSamplingCalculator.addReferenceEntrySample(
         newReferenceEntries = childChunk.getReferenceEntryIds(index),

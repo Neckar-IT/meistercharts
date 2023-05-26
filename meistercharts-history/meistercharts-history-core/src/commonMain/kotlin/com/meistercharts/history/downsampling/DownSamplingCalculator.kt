@@ -350,7 +350,17 @@ class DownSamplingCalculator(
    * Adds a new sample
    * @param newDecimalValues the values for each data series of the sample (at *one* point in time)
    */
-  fun addDecimalsSample(newDecimalValues: DoubleArray) {
+  fun addDecimalsSample(
+    newDecimalValues: @MayBeNoValueOrPending DoubleArray,
+    /**
+     * The current min values
+     */
+    minDecimalValues: @MayBeNoValueOrPending DoubleArray?,
+    /**
+     * The current max values
+     */
+    maxDecimalValues: @MayBeNoValueOrPending DoubleArray?,
+  ) {
     newDecimalValues.fastForEachIndexed { dataSeriesIndex, value ->
       when {
         value.isNoValue() -> {
@@ -380,6 +390,16 @@ class DownSamplingCalculator(
           minValues[dataSeriesIndex] = minHistoryAware(value, minValues[dataSeriesIndex])
         }
       }
+    }
+
+    //Merge max values
+    maxDecimalValues?.fastForEachIndexed { dataSeriesIndex, maxValue ->
+      maxValues[dataSeriesIndex] = maxHistoryAware(maxValues[dataSeriesIndex], maxValue)
+    }
+
+    //Merge min values
+    minDecimalValues?.fastForEachIndexed { dataSeriesIndex, minValue ->
+      minValues[dataSeriesIndex] = minHistoryAware(minValues[dataSeriesIndex], minValue)
     }
   }
 

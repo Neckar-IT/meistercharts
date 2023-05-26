@@ -223,6 +223,14 @@ data class HistoryValues(
     return decimalHistoryValues.getDecimalValues(timeStampIndex)
   }
 
+  fun getDecimalMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    return decimalHistoryValues.getMinValues(timeStampIndex)
+
+  }
+  fun getDecimalMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    return decimalHistoryValues.getMaxValues(timeStampIndex)
+  }
+
   fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return enumHistoryValues.getEnumValues(timeStampIndex)
   }

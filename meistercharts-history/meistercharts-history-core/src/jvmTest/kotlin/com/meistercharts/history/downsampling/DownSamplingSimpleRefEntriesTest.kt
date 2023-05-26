@@ -26,7 +26,7 @@ import com.meistercharts.history.impl.chunk
 import it.neckar.open.formatting.formatUtc
 import org.junit.jupiter.api.Test
 
-class DownSamplingSimpleTest {
+class DownSamplingSimpleRefEntriesTest {
   private val historyConfiguration = historyConfiguration {
     referenceEntryDataSeries(DataSeriesId(17), "Series A", HistoryEnum.Active)
   }

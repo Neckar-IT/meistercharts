@@ -256,7 +256,6 @@ class DiscreteTimelineChartGestalt(
   var activeDataSeriesIndexOrNull: ReferenceEntryDataSeriesIndex?
     get() = historyReferenceEntryLayer.configuration.activeDataSeriesIndex
     private set(value) {
-      println("set active data series index to $value")
       historyReferenceEntryLayer.configuration.activeDataSeriesIndex = value
     }
 

@@ -208,7 +208,7 @@ class HistoryChunkGenerator(
       @ms val timestamp = timestamps[timestampIndex.value]
 
       addValues(
-        timestamp,
+        timestamp = timestamp,
         decimalValuesProvider = { dataSeriesIndex: DecimalDataSeriesIndex -> decimalValueGenerators.valueAt(dataSeriesIndex).generate(timestamp) },
         enumValuesProvider = { dataSeriesIndex ->
           val historyEnum = historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)

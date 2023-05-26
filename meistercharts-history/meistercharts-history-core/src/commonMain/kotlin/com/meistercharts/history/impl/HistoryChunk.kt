@@ -353,6 +353,16 @@ data class HistoryChunk(
   }
 
   @ForOnePointInTime
+  fun getDecimalMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    return values.getDecimalMinValues(timeStampIndex)
+  }
+
+  @ForOnePointInTime
+  fun getDecimalMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
+    return values.getDecimalMaxValues(timeStampIndex)
+  }
+
+  @ForOnePointInTime
   fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return values.getEnumValues(timeStampIndex)
   }
@@ -431,6 +441,9 @@ data class HistoryChunk(
     additionalTimeStamp: @ms Double,
 
     additionalDecimalValues: @Domain @ForOnePointInTime DoubleArray,
+    additionalDecimalMinValues: @Domain @ForOnePointInTime DoubleArray?,
+    additionalDecimalMaxValues: @Domain @ForOnePointInTime DoubleArray?,
+
     additionalEnumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray,
 
     additionalReferenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray,
@@ -461,6 +474,9 @@ data class HistoryChunk(
     mergedTimeStamps.fastForEachIndexed { index, timestamp: @ms Double ->
       //Add the values
       val decimalValues: @Domain @ForOnePointInTime DoubleArray
+      val decimalMinValues: @Domain @ForOnePointInTime DoubleArray?
+      val decimalMaxValues: @Domain @ForOnePointInTime DoubleArray?
+
       val enumValues: @HistoryEnumSetInt @ForOnePointInTime IntArray
       val referenceEntryIds: @ReferenceEntryIdInt @ForOnePointInTime IntArray
       val referenceEntryDataSet: @ForOnePointInTime Set<ReferenceEntryData>
@@ -468,6 +484,8 @@ data class HistoryChunk(
 
       if (additionalTimeStamp == timestamp) {
         decimalValues = additionalDecimalValues
+        decimalMinValues = additionalDecimalMinValues
+        decimalMaxValues = additionalDecimalMaxValues
         enumValues = additionalEnumValues
         referenceEntryIds = additionalReferenceEntryIds
         referenceEntryStatuses = additionalReferenceEntryStatuses
@@ -476,6 +494,8 @@ data class HistoryChunk(
         //Use from us
         val timeStampIndex = TimestampIndex(bestTimestampIndexFor(timestamp).index)
         decimalValues = getDecimalValues(timeStampIndex)
+        decimalMinValues = getDecimalMinValues(timeStampIndex)
+        decimalMaxValues = getDecimalMaxValues(timeStampIndex)
         enumValues = getEnumValues(timeStampIndex)
         referenceEntryIds = getReferenceEntryIds(timeStampIndex)
         referenceEntryStatuses = getReferenceEntryStatuses(timeStampIndex)
@@ -484,7 +504,7 @@ data class HistoryChunk(
 
       newHistoryValuesBuilder.setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(index),
-        decimalValues = decimalValues, minValues = null, maxValues = null,
+        decimalValues = decimalValues, minValues = decimalMinValues, maxValues = decimalMaxValues,
         enumValues = enumValues, enumOrdinalsMostTime = null,
         referenceEntryIds = referenceEntryIds, referenceEntryDifferentIdsCount = null, referenceEntryStatuses = referenceEntryStatuses,
         entryDataSet = referenceEntryDataSet,
