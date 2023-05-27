@@ -177,6 +177,8 @@ class TimeLineChart internal constructor(
   }
 
   override fun setData(jsData: TimeLineChartData) {
+    logger.ifDebug { console.debug("setData", jsData) }
+
     jsData.historySettings?.let {
       val expectedSamplingPeriod = it.expectedSamplingPeriod.toModel()
       gestalt.timeLineChartGestalt.data.minimumSamplingPeriod = expectedSamplingPeriod
@@ -274,6 +276,9 @@ class TimeLineChart internal constructor(
     if (jsSamples.isEmpty()) {
       return
     }
+
+    logger.ifDebug { console.debug("addSamples", jsSamples) }
+
     val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
       gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->

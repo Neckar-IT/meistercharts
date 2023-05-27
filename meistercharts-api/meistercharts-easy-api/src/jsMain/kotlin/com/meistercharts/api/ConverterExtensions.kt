@@ -102,8 +102,8 @@ fun Array<Size>.toModelSizes(): List<com.meistercharts.model.Size> {
 }
 
 fun com.meistercharts.model.Size.toJs(): Size = object : Size {
-  override val width: Double = this@toJs.width
-  override val height: Double = this@toJs.height
+  override val width: Double = this@toJs.width.sanitize()
+  override val height: Double = this@toJs.height.sanitize()
 }
 
 /**
@@ -111,10 +111,10 @@ fun com.meistercharts.model.Size.toJs(): Size = object : Size {
  */
 fun Insets.toModel(): com.meistercharts.model.Insets {
   return com.meistercharts.model.Insets(
-    top ?: 0.0,
-    right ?: 0.0,
-    bottom ?: 0.0,
-    left ?: 0.0
+    top?.sanitize() ?: 0.0,
+    right?.sanitize() ?: 0.0,
+    bottom?.sanitize() ?: 0.0,
+    left?.sanitize() ?: 0.0
   )
 }
 
@@ -124,10 +124,10 @@ fun Insets.toModel(): com.meistercharts.model.Insets {
  */
 fun com.meistercharts.model.Insets.withValues(jsInsets: @px Insets): com.meistercharts.model.Insets {
   return this.copy(
-    top = jsInsets.top ?: top,
-    left = jsInsets.left ?: left,
-    right = jsInsets.right ?: right,
-    bottom = jsInsets.bottom ?: bottom,
+    top = jsInsets.top?.sanitize() ?: top,
+    left = jsInsets.left?.sanitize() ?: left,
+    right = jsInsets.right?.sanitize() ?: right,
+    bottom = jsInsets.bottom?.sanitize() ?: bottom,
   )
 }
 
@@ -138,9 +138,9 @@ fun Shadow?.toModel(): com.meistercharts.style.Shadow? {
 
   return com.meistercharts.style.Shadow(
     color = color.toColor() ?: com.meistercharts.style.Shadow.Default.color,
-    blurRadius = blurRadius ?: com.meistercharts.style.Shadow.Default.blurRadius,
-    offsetX = offsetX ?: com.meistercharts.style.Shadow.Default.offsetX,
-    offsetY = offsetY ?: com.meistercharts.style.Shadow.Default.offsetY,
+    blurRadius = blurRadius?.sanitize() ?: com.meistercharts.style.Shadow.Default.blurRadius,
+    offsetX = offsetX?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetX,
+    offsetY = offsetY?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetY,
   )
 }
 
@@ -150,10 +150,10 @@ fun BorderRadius?.toModel(): com.meistercharts.canvas.BorderRadius? {
   }
 
   return com.meistercharts.canvas.BorderRadius(
-    topLeft ?: 0.0,
-    topRight ?: 0.0,
-    bottomRight ?: 0.0,
-    bottomLeft ?: 0.0,
+    topLeft?.sanitize() ?: 0.0,
+    topRight?.sanitize() ?: 0.0,
+    bottomRight?.sanitize() ?: 0.0,
+    bottomLeft?.sanitize() ?: 0.0,
   )
 }
 
@@ -169,13 +169,13 @@ fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
   }
 
   //ensure that the client uses the correct types
-  require(start is Double) { "<$start> is not of type number but <${js("typeof start")}>" }
-  require(end is Double) { "<$end> is not not of type number <${js("typeof end")}>" }
+  val startSanitized = start.sanitize()
+  val endSanitized = end.sanitize()
 
   //'linear' is the default range scale
   return when (this.scale?.sanitize() ?: ValueRangeScale.Linear) {
-    ValueRangeScale.Linear -> com.meistercharts.algorithms.ValueRange.linear(start, end)
-    ValueRangeScale.Log10 -> com.meistercharts.algorithms.ValueRange.logarithmic(start, end)
+    ValueRangeScale.Linear -> com.meistercharts.algorithms.ValueRange.linear(startSanitized, endSanitized)
+    ValueRangeScale.Log10 -> com.meistercharts.algorithms.ValueRange.logarithmic(startSanitized, endSanitized)
   }
 }
 

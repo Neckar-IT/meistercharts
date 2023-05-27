@@ -34,6 +34,7 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
 import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.annotations.Slow
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArrayList
@@ -292,7 +293,7 @@ class HistoryChunkBuilder(
 
     val values = DoubleArray(count) { index ->
       this.invoke(DecimalDataSeriesIndex(index)).also { value ->
-        if (value.isInfinite() && value.isPending().not() && value.isNoValue().not()) {
+        if (value.isFinite() && value.isPending().not() && value.isNoValue().not()) {
           hasAtLeastOneValue = true
         }
       }

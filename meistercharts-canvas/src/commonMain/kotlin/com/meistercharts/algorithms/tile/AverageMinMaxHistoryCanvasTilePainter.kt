@@ -38,7 +38,9 @@ import com.meistercharts.painter.LinePainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
 /**
@@ -125,13 +127,15 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
         lastTime = time
 
 
-        @Domain val value = chunk.getDecimalValue(dataSeriesIndex, timestampIndex)
-        @DomainRelative val domainRelative = valueRange.toDomainRelative(value)
+        @MayBeNaN @Domain val value = chunk.getDecimalValue(dataSeriesIndex, timestampIndex)
+        @MayBeNaN @DomainRelative val domainRelative = valueRange.toDomainRelative(value)
 
-        @Domain val maxValue = chunk.getMax(dataSeriesIndex, timestampIndex)
+        //It does not make sense to have a value, but no max value, so we use the value as max value
+        @Domain val maxValue = chunk.getMax(dataSeriesIndex, timestampIndex).ifNaN(value)
         @DomainRelative val maxDomainRelative = valueRange.toDomainRelative(maxValue)
 
-        @Domain val minValue = chunk.getMin(dataSeriesIndex, timestampIndex)
+        //It does not make sense to have a value, but no min value, so we use the value as min value
+        @Domain val minValue = chunk.getMin(dataSeriesIndex, timestampIndex).ifNaN(value)
         @DomainRelative val minDomainRelative = valueRange.toDomainRelative(minValue)
 
         //The current value is NaN - this is an *explicit* gap
