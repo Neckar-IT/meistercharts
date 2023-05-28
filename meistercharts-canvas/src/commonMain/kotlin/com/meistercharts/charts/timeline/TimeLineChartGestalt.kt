@@ -62,7 +62,7 @@ import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
-import com.meistercharts.algorithms.painter.WebColor
+import com.meistercharts.algorithms.painter.UnparsedWebColor
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageMinMaxHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
@@ -1325,7 +1325,7 @@ class TimeLineChartGestalt
 
       when (val lineStyleColor = averageLineStyle.color) {
         is RgbaColor -> lineStyleColor.withAlpha(0.3)
-        is WebColor -> Color.gray.withAlpha(0.3)
+        is UnparsedWebColor -> Color.gray.withAlpha(0.3)
       }
     }
 

@@ -15,15 +15,21 @@
  */
 package com.meistercharts.algorithms.painter
 
+import it.neckar.open.unit.other.px
 
 /**
- * A paint that can be set on a canvas. Supports flat colors and gradients.
+ * The simplest linear gradient containing two stops
  */
-//Should be a sealed class. But since Color must be an interface (Kotlin bug related to initializers and companion objects), this is also an interface for now
-sealed interface CanvasPaint
+data class CanvasLinearGradient(
+  val x0: @px Double,
+  val y0: @px Double,
+  val x1: @px Double,
+  val y1: @px Double,
+  val color0: Color,
+  val color1: Color,
+) : CanvasPaint {
 
-
-
-
-
-
+  override fun toString(): String {
+    return "LinearGradient($x0/$y0 - $x1/$y1, color0=$color0, color1=$color1)"
+  }
+}

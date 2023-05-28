@@ -19,8 +19,17 @@ import assertk.*
 import assertk.assertions.*
 import org.junit.jupiter.api.Test
 import javax.annotation.Nonnull
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.companionObject
 
 class ColorTest {
+  @Test
+  fun testParseHexOrRgb() {
+    assertThat(Color.parseHexOrRgba("#FF0000")).isEqualTo(Color.red)
+    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 1)")).isEqualTo(Color.red)
+    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 0.5)")).isEqualTo(Color.red.withAlpha(0.5))
+  }
+
   @Test
   fun testBasics() {
     assertThat(Color.red.web).isEqualTo("#FF0000")
@@ -41,42 +50,9 @@ class ColorTest {
   @Test
   fun testParseHex() {
     assertThat(Color.red.web).isEqualTo("#FF0000")
-    assertThat(RgbaColor.parseHex(Color.red.web)).isEqualTo(Color.red)
-    assertThat(RgbaColor.parseHex(Color.bisque.web)).isEqualTo(Color.bisque)
+    assertThat(Color.parseHex(Color.red.web)).isEqualTo(Color.red)
+    assertThat(Color.parseHex(Color.bisque.web)).isEqualTo(Color.bisque)
   }
-
-  //@Test
-  //fun testConvertToRgba() {
-  //  val kClass = Color::class
-  //  val companionObject = kClass.companionObject!!
-  //  companionObject.members.forEach {
-  //
-  //    if (it is KProperty) {
-  //      val result = it.getter.call(companionObject)
-  //
-  //      if (result is WebColor) {
-  //        val webString = result.web
-  //
-  //        val parsed = RgbaColor.parseHex(webString)
-  //
-  //        val alpha = parsed.alpha
-  //        val alphaSuffix = if (alpha != null) {
-  //          ", $alpha"
-  //        } else {
-  //          ""
-  //        }
-  //
-  //
-  //        println(
-  //          """
-  //          @JvmField
-  //          val ${it.name}:RgbaColor  = RgbaColor(${parsed.red}, ${parsed.green}, ${parsed.blue}$alphaSuffix)
-  //          """.trimIndent()
-  //        )
-  //      }
-  //    }
-  //  }
-  //}
 }
 
 //@Nonnull

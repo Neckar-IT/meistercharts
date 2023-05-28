@@ -73,10 +73,10 @@ class CanvasPaintProviderTest {
 
   @Test
   fun testHex() {
-    assertThat(to2DigitHex(0)).isEqualTo("00")
-    assertThat(to2DigitHex(255)).isEqualTo("FF")
-    assertThat(to2DigitHex(127)).isEqualTo("7F")
-    assertThat(to2DigitHex(-255)).isEqualTo("-FF")
+    assertThat(Colors.to2DigitHexString(0)).isEqualTo("00")
+    assertThat(Colors.to2DigitHexString(255)).isEqualTo("FF")
+    assertThat(Colors.to2DigitHexString(127)).isEqualTo("7F")
+    assertThat(Colors.to2DigitHexString(-255)).isEqualTo("-FF")
   }
 
 }

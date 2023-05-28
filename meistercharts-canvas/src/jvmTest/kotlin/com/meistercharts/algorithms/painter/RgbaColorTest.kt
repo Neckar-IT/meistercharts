@@ -25,12 +25,37 @@ import org.junit.jupiter.api.Test
 class RgbaColorTest {
   @Test
   fun testTint() {
-    assertThat(RgbaColor(64, 168, 245).formatRgba()).isEqualTo("rgb(64,168,245)")
+    assertThat(RgbaColor(64, 168, 245).formatRgba()).isEqualTo("rgba(64, 168, 245, 1)")
 
     assertThat(RgbaColor(64, 168, 245).lighter(0.2).formatRgba()).isEqualTo(RgbaColor(102, 185, 247).formatRgba())
     assertThat(RgbaColor(64, 168, 245).lighter(0.7).formatRgba()).isEqualTo(RgbaColor(198, 229, 252).formatRgba())
 
     assertThat(RgbaColor(159, 211, 213).lighter(0.2).formatRgba()).isEqualTo(RgbaColor(178, 220, 221).formatRgba())
     assertThat(RgbaColor(159, 211, 213).lighter(0.7).formatRgba()).isEqualTo(RgbaColor(226, 242, 242).formatRgba())
+  }
+
+  @Test
+  fun testParse() {
+    assertThat(Color.parseRgba("rgba(64,168,245,0.5)")).isEqualTo(RgbaColor(64, 168, 245, 0.5))
+    assertThat(Color.parseRgba("rgba(64, 168, 245, 0.5)")).isEqualTo(RgbaColor(64, 168, 245, 0.5))
+    assertThat(Color.parseRgb("rgb(64,168,245)")).isEqualTo(RgbaColor(64, 168, 245, 1.0))
+    assertThat(Color.parseRgb("rgb(64, 168, 245)")).isEqualTo(RgbaColor(64, 168, 245, 1.0))
+  }
+
+  @Test
+  fun testParseSpaces() {
+    Color.parseRgba("rgba(64, 168, 245, 0.5)").let {
+      assertThat(it.red).isEqualTo(64)
+      assertThat(it.green).isEqualTo(168)
+      assertThat(it.blue).isEqualTo(245)
+      assertThat(it.alpha).isEqualTo(0.5)
+    }
+
+    Color.parseRgb("rgb(64, 168, 245)").let {
+      assertThat(it.red).isEqualTo(64)
+      assertThat(it.green).isEqualTo(168)
+      assertThat(it.blue).isEqualTo(245)
+      assertThat(it.alpha).isEqualTo(1.0)
+    }
   }
 }
