@@ -71,7 +71,7 @@ class DebugTileProvider(
         gc.fill(style.textColor)
 
         @px var y = 10.0
-        gc.fillText("x/y=${identifier.x}/${identifier.y}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
+        gc.fillText("x/y=${identifier.tileIndex}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
         y += rowHeight
         gc.fillText("zoom=${numberFormat.format(identifier.zoom.scaleX, paintingContext.i18nConfiguration)}/${numberFormat.format(identifier.zoom.scaleY, paintingContext.i18nConfiguration)}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
         y += rowHeight

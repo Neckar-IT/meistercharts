@@ -95,20 +95,33 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Parses a hex string (#231122) consisting of 6 digits
+     * Parses a hex string (#231122) consisting of 6 digits (or 8 digits if alpha is included)
      */
     fun parseHex(web: String): RgbaColor {
       require(web.startsWith("#")) { "Hex string must start with # but was <$web>" }
 
       val hex = web.removePrefix("#")
 
-      require(hex.length == 6) { "Only hex strings in the format #112233 are supported but was <$web>" }
+      when (hex.length) {
+        6 -> {
+          val red = hex.substring(0, 2).parse2DigitHex()
+          val green = hex.substring(2, 4).parse2DigitHex()
+          val blue = hex.substring(4, 6).parse2DigitHex()
 
-      val red = hex.substring(0, 2).parse2DigitHex()
-      val green = hex.substring(2, 4).parse2DigitHex()
-      val blue = hex.substring(4, 6).parse2DigitHex()
+          return RgbaColor(red, green, blue)
+        }
 
-      return RgbaColor(red, green, blue)
+        8 -> {
+          val red = hex.substring(0, 2).parse2DigitHex()
+          val green = hex.substring(2, 4).parse2DigitHex()
+          val blue = hex.substring(4, 6).parse2DigitHex()
+          val alpha = hex.substring(6, 8).parse2DigitHex() / 255.0
+
+          return RgbaColor(red, green, blue, alpha)
+        }
+
+        else -> throw IllegalArgumentException("Only hex strings in the format #112233 are supported but was <$web>")
+      }
     }
 
     /**

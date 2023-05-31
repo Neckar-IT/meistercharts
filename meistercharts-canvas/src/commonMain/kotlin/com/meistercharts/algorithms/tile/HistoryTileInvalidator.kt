@@ -47,7 +47,7 @@ fun interface HistoryTileInvalidator {
 }
 
 /**
- * Represents the result of an history tiles invalidation
+ * Represents the result of a history tiles invalidation
  */
 enum class HistoryTilesInvalidationResult {
   None,
@@ -123,8 +123,9 @@ class DefaultHistoryTileInvalidator : HistoryTileInvalidator {
  * Calculates a hash code for the x related properties.
  * This hash can be used to identify tiles within the same column
  */
-private fun TileIdentifier.xDataHashCode(): Int {
-  var result = this.x
-  result = 31 * result + this.zoom.scaleX.hashCode()
+internal fun TileIdentifier.xDataHashCode(): Int {
+  var result = 0
+  result = 31 * result + mainX.hashCode()
+  result = 31 * result + subX.hashCode()
   return result
 }

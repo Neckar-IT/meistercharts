@@ -36,6 +36,13 @@ abstract class ValueRange protected constructor(
 ) {
 
   init {
+    require(start.isFinite()) {
+      "Start must be finite but was $start"
+    }
+    require(end.isFinite()) {
+      "End must be finite but was $start"
+    }
+
     require(start <= end) {
       "The start ($start) must be smaller or same as the end ($end)."
     }

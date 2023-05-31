@@ -68,8 +68,8 @@ class TilesLayer(
     override var zoom: Zoom = Zoom.default
     override var tileSize: @Zoomed Size = Size.none
 
-    override var tileIndexUpperLeft: TileIndex = TileIndex.origin
-    override var tileIndexLowerRight: TileIndex = TileIndex.origin
+    override var tileIndexUpperLeft: TileIndex = TileIndex.Origin
+    override var tileIndexLowerRight: TileIndex = TileIndex.Origin
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       val chartCalculator = paintingContext.chartCalculator
@@ -93,16 +93,14 @@ class TilesLayer(
     val gc = paintingContext.gc
     gc.clipToContentViewport(chartCalculator)
 
-    for (x in paintingVariables.tileIndexUpperLeft.x..paintingVariables.tileIndexLowerRight.x) {
-      for (y in paintingVariables.tileIndexUpperLeft.y..paintingVariables.tileIndexLowerRight.y) {
-        val tileIdentifier = TileIdentifier.of(paintingContext.chartId, x, y, paintingVariables.zoom)
-        val tile: Tile = tileProvider.getTile(tileIdentifier) ?: continue
+    TileIndex.iterateOverTileIndices(paintingVariables.tileIndexUpperLeft, paintingVariables.tileIndexLowerRight) { mainX, subX, mainY, subY ->
+      val tileIdentifier = TileIdentifier.of(paintingContext.chartId, mainX, subX, mainY, subY, paintingVariables.zoom)
+      val tile: Tile = tileProvider.getTile(tileIdentifier) ?: return@iterateOverTileIndices
 
-        gc.saved {
-          @Window val tileOrigin = chartCalculator.tileIndex2window(tileIdentifier.tileIndex, tileProvider.tileSize)
-          it.translate(snapConfiguration.snapXValue(tileOrigin.x), snapConfiguration.snapYValue(tileOrigin.y))
-          tile.paint(it, paintingContext)
-        }
+      gc.saved {
+        @Window val tileOrigin = chartCalculator.tileIndex2window(tileIdentifier.tileIndex, tileProvider.tileSize)
+        it.translate(snapConfiguration.snapXValue(tileOrigin.x), snapConfiguration.snapYValue(tileOrigin.y))
+        tile.paint(it, paintingContext)
       }
     }
   }

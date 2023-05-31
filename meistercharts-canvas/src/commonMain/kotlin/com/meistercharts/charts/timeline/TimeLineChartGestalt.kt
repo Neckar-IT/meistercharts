@@ -1010,7 +1010,7 @@ class TimeLineChartGestalt
   init {
     data.minimumSamplingPeriodProperty.consumeImmediately {
       //adjust the content area in order to display about 600 samples
-      style.applySamplingPeriod(it)
+      style.applyMinimumSamplingPeriod(it)
     }
 
     style.contentAreaTimeRangeProperty.consumeImmediately {
@@ -1512,12 +1512,13 @@ class TimeLineChartGestalt
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.
      */
-    fun applySamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
+    fun applyMinimumSamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
+      //TODO replace this method with some kind of configuration/wizard/... object
       contentAreaDuration = samplingPeriod.distance * 600 //600 samples
     }
 
     init {
-      applySamplingPeriod()
+      applyMinimumSamplingPeriod()
       showAllDecimalSeries()
       showEnumSeriesAtMost(3)
     }

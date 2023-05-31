@@ -59,13 +59,13 @@ fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
  */
 data object OpenStreetMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+    return "https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -80,13 +80,13 @@ data object OpenStreetMap : SlippyMapProvider {
  */
 data object OpenStreetMapDe : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+    return "https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -102,12 +102,12 @@ data object OpenStreetMapDe : SlippyMapProvider {
  */
 data object OpenStreetMapHumanitarian : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 2) {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 2) {
       0 -> "a"
       1 -> "b"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return "http://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -124,7 +124,7 @@ data object OpenStreetMapHumanitarian : SlippyMapProvider {
  */
 data object OpenStreetMapGrayscale : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    return "https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return "https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -139,14 +139,14 @@ data object OpenStreetMapGrayscale : SlippyMapProvider {
  */
 data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return "http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -163,14 +163,14 @@ data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
  */
 data object OpenStreetMapTerrain : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return "http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -185,7 +185,7 @@ data object OpenStreetMapTerrain : SlippyMapProvider {
  */
 data object WikimediaMaps : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
-    return "https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+    return "https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"
   }
 
   // https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use

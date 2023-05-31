@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.environment
 import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.algorithms.tile.SubIndex
 import com.meistercharts.algorithms.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PhysicalPixel
@@ -116,21 +117,21 @@ fun computeSlippyMapTileIndex(latitude: Latitude, longitude: Longitude, zoom: In
     yTile = tilesPerRowOrColumn - 1
   }
 
-  return TileIndex(xTile, yTile)
+  return TileIndex.of(xTile, yTile)
 }
 
 /**
  * Computes the longitude for the given tile-index and zoom
  */
-fun computeLongitude(tileIndexX: Int, zoom: Int): Longitude {
-  return Longitude((tileIndexX.toDouble() / tilesPerRowOrColumn(zoom)) * 360.0 - 180.0)
+fun computeLongitude(tileIndexX: SubIndex, zoom: Int): Longitude {
+  return Longitude((tileIndexX.value.toDouble() / tilesPerRowOrColumn(zoom)) * 360.0 - 180.0)
 }
 
 /**
  * Computes the latitude for the given tile-index and zoom
  */
-fun computeLatitude(tileIndexY: Int, zoom: Int): Latitude {
-  return Latitude(((PI - tileIndexY.toDouble() * 2.0 * PI / tilesPerRowOrColumn(zoom)).sinh()).atan() * 180.0 / PI)
+fun computeLatitude(tileIndexY: SubIndex, zoom: Int): Latitude {
+  return Latitude(((PI - tileIndexY.value.toDouble() * 2.0 * PI / tilesPerRowOrColumn(zoom)).sinh()).atan() * 180.0 / PI)
 }
 
 /**
@@ -288,8 +289,9 @@ fun tilesPerRowOrColumn(zoom: Int): Int {
  */
 fun TileIndex.ensureSlippyMapBounds(zoom: Int): TileIndex {
   val tileCount = tilesPerRowOrColumn(zoom)
-  val tileX = x.wrapAround(tileCount)
-  val tileY = y.wrapAround(tileCount)
-  return TileIndex(tileX, tileY)
+
+  val x = xAsInt().wrapAround(tileCount)
+  val y = yAsInt().wrapAround(tileCount)
+  return TileIndex.of(x, y)
 }
 

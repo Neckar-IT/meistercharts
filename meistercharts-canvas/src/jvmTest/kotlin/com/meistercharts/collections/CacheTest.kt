@@ -34,20 +34,20 @@ class CacheTest {
     val cache = Cache<TileIdentifier, String>(cacheCapacity)
 
     for (i in 1..cacheCapacity) {
-      val initialCacheContent = TileIdentifier(chartId, TileIndex(1000 * i, 1000 * i), Zoom(2.0, 3.0))
+      val initialCacheContent = TileIdentifier(chartId, TileIndex.of(1000 * i, 1000 * i), Zoom(2.0, 3.0))
       cache[initialCacheContent] = "val-initial-$i"
     }
 
     for (i in 1..100) {
       for (j in 1..100) {
-        val tileIdentifier = TileIdentifier(chartId, TileIndex(i, j), Zoom(2.0, 3.0))
+        val tileIdentifier = TileIdentifier(chartId, TileIndex.of(i, j), Zoom(2.0, 3.0))
         cache[tileIdentifier] = "val-$i-$j"
         assert(cache.size == cacheCapacity)
       }
     }
 
     for (j in 1..100) {
-      val tileIdentifier = TileIdentifier(chartId, TileIndex(100, j), Zoom(2.0, 3.0))
+      val tileIdentifier = TileIdentifier(chartId, TileIndex.of(100, j), Zoom(2.0, 3.0))
       assert(cache[tileIdentifier] == "val-100-$j")
     }
   }
@@ -57,10 +57,10 @@ class CacheTest {
   fun storeOne() {
     val cache = Cache<TileIdentifier, String>(1)
 
-    cache[TileIdentifier(chartId, TileIndex(0, 0), Zoom(2.0, 3.0))] = "val0"
+    cache[TileIdentifier(chartId, TileIndex.of(0, 0), Zoom(2.0, 3.0))] = "val0"
 
     for (i in 1..1000) {
-      val initialCacheContent = TileIdentifier(chartId, TileIndex(i, i), Zoom(2.0, 3.0))
+      val initialCacheContent = TileIdentifier(chartId, TileIndex.of(i, i), Zoom(2.0, 3.0))
       cache[initialCacheContent] = "val$i"
       assert(cache.size == 1)
     }

@@ -53,6 +53,11 @@ class ColorTest {
     assertThat(Color.parseHex(Color.red.web)).isEqualTo(Color.red)
     assertThat(Color.parseHex(Color.bisque.web)).isEqualTo(Color.bisque)
   }
+
+  @Test
+  fun testParseHex8Digits() {
+    assertThat(Color.parseHex("#FF0000FF")).isEqualTo(Color.red)
+  }
 }
 
 //@Nonnull

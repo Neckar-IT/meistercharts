@@ -127,7 +127,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
         gc.translateToCenter()
         gc.paintTextBox(
           listOf(
-            "${identifier.x}/${identifier.y}",
+            "${identifier.tileIndex}",
             identifier.zoom.format(),
             renderedSamplingPeriod.label
           ),

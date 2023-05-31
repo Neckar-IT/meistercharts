@@ -21,6 +21,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.setLast
 import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.other.pct
@@ -38,8 +39,8 @@ import kotlin.time.DurationUnit
  *
  */
 class TimeRange(
-  start: @Inclusive @Time @ms Double,
-  end: @Inclusive @Time @ms Double
+  start: @Inclusive @Time @ms @IsFinite Double,
+  end: @Inclusive @Time @ms @IsFinite Double,
 ) : LinearValueRange(start, end), Comparable<TimeRange> {
 
   /**

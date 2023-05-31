@@ -42,20 +42,20 @@ class TilesCalculationTest {
 
   @Test
   internal fun testTileCoordinatesCalc() {
-    assertThat(InternalCalculations.calculateTileOrigin(TileIndex(0, 0), Size.zero))
+    assertThat(InternalCalculations.calculateTileOrigin(TileIndex.of(0, 0), Size.zero))
       .isEqualTo(Coordinates.origin)
 
-    assertThat(InternalCalculations.calculateTileOrigin(TileIndex(0, 0), Size.of(100.0, 100.0)))
+    assertThat(InternalCalculations.calculateTileOrigin(TileIndex.of(0, 0), Size(100.0, 100.0)))
       .isEqualTo(Coordinates.origin)
 
-    assertThat(InternalCalculations.calculateTileOrigin(TileIndex(1, 0), Size.of(100.0, 100.0)))
-      .isEqualTo(Coordinates.of(100.0, 0.0))
+    assertThat(InternalCalculations.calculateTileOrigin(TileIndex.of(1, 0), Size(100.0, 100.0)))
+      .isEqualTo(Coordinates(100.0, 0.0))
 
-    assertThat(InternalCalculations.calculateTileOrigin(TileIndex(2, 0), Size.of(100.0, 100.0)))
-      .isEqualTo(Coordinates.of(200.0, 0.0))
+    assertThat(InternalCalculations.calculateTileOrigin(TileIndex.of(2, 0), Size(100.0, 100.0)))
+      .isEqualTo(Coordinates(200.0, 0.0))
 
-    assertThat(InternalCalculations.calculateTileOrigin(TileIndex(2, -7), Size.of(100.0, 100.0)))
-      .isEqualTo(Coordinates.of(200.0, -700.0))
+    assertThat(InternalCalculations.calculateTileOrigin(TileIndex.of(2, -7), Size(100.0, 100.0)))
+      .isEqualTo(Coordinates(200.0, -700.0))
   }
 
   @Test
@@ -66,24 +66,24 @@ class TilesCalculationTest {
     val tileSize = Size(200.0, 150.0)
     val calculator = ChartCalculator(chartState)
 
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(0.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(200.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(0.0, 150.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(200.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 150.0))
 
     chartState.zoomX = 2.0
     chartState.zoomY = 2.0
 
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(0.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(100.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(0.0, 75.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(100.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 75.0))
 
     //now translate
-    chartState.windowTranslation = Distance.of(17.0, 14.0)
+    chartState.windowTranslation = Distance(17.0, 14.0)
 
     //translation does not have any effects
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(0.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(100.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(0.0, 75.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(100.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 75.0))
   }
 
   @Test
@@ -94,35 +94,35 @@ class TilesCalculationTest {
     val tileSize = Size(200.0, 150.0)
     val calculator = ChartCalculator(chartState)
 
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(0.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(200.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(0.0, 150.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(200.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 150.0))
 
     chartState.zoomX = 2.0
     chartState.zoomY = 2.0
 
     //Window coordinates are not dependent of the zoom factor
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(0.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(200.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(0.0, 150.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(200.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 150.0))
 
 
     //now translate the content to bottom/left
-    chartState.windowTranslation = Distance.of(17.0, 14.0)
+    chartState.windowTranslation = Distance(17.0, 14.0)
 
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.of(17.0, 14.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates.of(217.0, 14.0))
-    assertThat(calculator.tileIndex2window(TileIndex(0, 1), tileSize)).isEqualTo(Coordinates.of(17.0, 164.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 0), tileSize)).isEqualTo(Coordinates(17.0, 14.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(217.0, 14.0))
+    assertThat(calculator.tileIndex2window(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(17.0, 164.0))
   }
 
   @Test
   internal fun testChartContent2TileIndex() {
-    @ContentArea val tileSize = Size.of(100.0, 100.0)
+    @ContentArea val tileSize = Size(100.0, 100.0)
     assertThat(InternalCalculations.calculateTileIndex(Coordinates(0, 0), tileSize))
-      .isEqualTo(TileIndex.origin)
+      .isEqualTo(TileIndex.Origin)
 
     assertThat(InternalCalculations.calculateTileIndex(Coordinates(99, 0), tileSize))
-      .isEqualTo(TileIndex.origin)
+      .isEqualTo(TileIndex.Origin)
     assertThat(InternalCalculations.calculateTileIndex(Coordinates(100, 0), tileSize))
       .isEqualTo(TileIndex.of(1, 0))
     assertThat(InternalCalculations.calculateTileIndex(Coordinates(101, 0), tileSize))
@@ -157,7 +157,7 @@ class TilesCalculationTest {
 
   @Test
   internal fun testCalculateInTileCoords() {
-    val tileSize = Size.of(100.0, 100.0)
+    val tileSize = Size(100.0, 100.0)
 
     assertThat(InternalCalculations.calculateCoordsInTile(Coordinates(0, 0), tileSize))
       .isEqualTo(Coordinates(0, 0))
@@ -173,15 +173,15 @@ class TilesCalculationTest {
 
   @Test
   internal fun testTileCoordinates() {
-    val tileSize = Size.of(100.0, 100.0)
+    val tileSize = Size(100.0, 100.0)
 
     assertThat(InternalCalculations.contentArea2TileCoordinates(Coordinates(0, 0), tileSize))
-      .isEqualTo(TileCoordinates.of(TileIndex(0, 0), Coordinates(0.0, 0.0)))
+      .isEqualTo(TileCoordinates(TileIndex.of(0, 0), Coordinates(0.0, 0.0)))
 
     assertThat(InternalCalculations.contentArea2TileCoordinates(Coordinates(1, 2), tileSize))
-      .isEqualTo(TileCoordinates.of(TileIndex(0, 0), Coordinates(1.0, 2.0)))
+      .isEqualTo(TileCoordinates(TileIndex.of(0, 0), Coordinates(1.0, 2.0)))
 
     assertThat(InternalCalculations.contentArea2TileCoordinates(Coordinates(101, 2), tileSize))
-      .isEqualTo(TileCoordinates.of(TileIndex(1, 0), Coordinates(1.0, 2.0)))
+      .isEqualTo(TileCoordinates(TileIndex.of(1, 0), Coordinates(1.0, 2.0)))
   }
 }

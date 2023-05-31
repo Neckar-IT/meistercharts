@@ -472,18 +472,18 @@ internal class ChartCalculatorTest {
   @Test
   fun testTileIndex2Window() {
     val tileSize = Size(300.0, 200.0)
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.none)
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates.none)
+    assertThat(calculator.tileIndex2window(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
 
     chartState.windowTranslationX = 10.0
     chartState.windowTranslationY = 20.0
 
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates(10.0, 20.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0 + 10, 0.0 + 20))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 0.0 + 20))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 1400.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates(10.0, 20.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0 + 10, 0.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 0.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 1400.0 + 20))
 
 
     chartState.windowTranslationX = 0.0
@@ -493,99 +493,99 @@ internal class ChartCalculatorTest {
     chartState.zoomY = 3.0
     //the zoom does not change anything
 
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates(0.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
 
     chartState.windowTranslationX = 10.0
     chartState.windowTranslationY = 20.0
 
-    assertThat(calculator.tileIndex2window(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates(10.0, 20.0))
-    assertThat(calculator.tileIndex2window(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0 + 10, 0.0 + 20))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 0.0 + 20))
-    assertThat(calculator.tileIndex2window(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 1400.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates(10.0, 20.0))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0 + 10, 0.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 0.0 + 20))
+    assertThat(calculator.tileIndex2window(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0 + 10, 1400.0 + 20))
   }
 
   @Test
   fun testWindow2tileIndex() {
     val tileSize = Size(300.0, 200.0)
 
-    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
-    assertThat(calculator.window2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
-    assertThat(calculator.window2tileIndex(Coordinates(300.0, 0.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.window2tileIndex(Coordinates(301.0, 0.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.window2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.window2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(1, 1))
-    assertThat(calculator.window2tileIndex(Coordinates(301.0, 201.0), tileSize)).isEqualTo(TileIndex(1, 1))
+    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
+    assertThat(calculator.window2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
+    assertThat(calculator.window2tileIndex(Coordinates(300.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.window2tileIndex(Coordinates(301.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.window2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.window2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
+    assertThat(calculator.window2tileIndex(Coordinates(301.0, 201.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
 
     chartState.windowTranslationX = 100.0
     chartState.windowTranslationY = 700.0
 
-    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(-1, -4))
+    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(-1, TileIndex.SubIndexFactor - 1, -1, TileIndex.SubIndexFactor - 4))
 
     chartState.zoomX = 10.0
     chartState.zoomY = 30.0
     //does not change anything
 
-    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(-1, -4))
+    assertThat(calculator.window2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(-1, TileIndex.SubIndexFactor - 1, -1, TileIndex.SubIndexFactor - 4))
   }
 
   @Test
   fun testContentArea2TileIndex() {
     val tileSize = Size(300.0, 200.0)
 
-    assertThat(calculator.contentArea2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(300.0, 0.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 0.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(1, 1))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 201.0), tileSize)).isEqualTo(TileIndex(1, 1))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(300.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 201.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
 
     chartState.windowTranslationX = 100.0
     chartState.windowTranslationY = 700.0
     //does not have any effect
 
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(1, 1))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 199.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0, 200.0), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
 
     chartState.zoomX = 2.0
     chartState.zoomY = 3.0
 
-    assertThat(calculator.contentArea2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(0.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(1.0, 0.0), tileSize)).isEqualTo(TileIndex(0, 0, 0, 0))
 
-    assertThat(calculator.contentArea2tileIndex(Coordinates(300.0 / 2, 0.0 / 3), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 0.0 / 3), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 199.0 / 3), tileSize)).isEqualTo(TileIndex(1, 0))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 200.0 / 3), tileSize)).isEqualTo(TileIndex(1, 1))
-    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 201.0 / 3), tileSize)).isEqualTo(TileIndex(1, 1))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(300.0 / 2, 0.0 / 3), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 0.0 / 3), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 199.0 / 3), tileSize)).isEqualTo(TileIndex(0, 1, 0, 0))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 200.0 / 3), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
+    assertThat(calculator.contentArea2tileIndex(Coordinates(301.0 / 2, 201.0 / 3), tileSize)).isEqualTo(TileIndex(0, 1, 0, 1))
   }
 
   @Test
   fun testTileIndex2ContentArea() {
     val tileSize = Size(300.0, 200.0)
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.none)
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates.none)
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
 
     chartState.windowTranslationX = 100.0
     chartState.windowTranslationY = 700.0
     //does not have any effect
 
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.none)
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates.none)
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0, 1400.0))
 
     chartState.zoomX = 2.0
     chartState.zoomY = 3.0
 
-    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0), tileSize)).isEqualTo(Coordinates.none)
-    assertThat(calculator.tileIndex2contentArea(TileIndex(1, 0), tileSize)).isEqualTo(Coordinates(300.0 / 2, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 0), tileSize)).isEqualTo(Coordinates(3000.0 / 2, 0.0))
-    assertThat(calculator.tileIndex2contentArea(TileIndex(10, 7), tileSize)).isEqualTo(Coordinates(3000.0 / 2, 1400.0 / 3))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 0, 0, 0), tileSize)).isEqualTo(Coordinates.none)
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 1, 0, 0), tileSize)).isEqualTo(Coordinates(300.0 / 2, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 0), tileSize)).isEqualTo(Coordinates(3000.0 / 2, 0.0))
+    assertThat(calculator.tileIndex2contentArea(TileIndex(0, 10, 0, 7), tileSize)).isEqualTo(Coordinates(3000.0 / 2, 1400.0 / 3))
   }
 }

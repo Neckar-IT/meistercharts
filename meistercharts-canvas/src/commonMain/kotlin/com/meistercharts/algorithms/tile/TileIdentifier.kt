@@ -38,19 +38,47 @@ data class TileIdentifier(
   val zoom: Zoom,
 ) {
 
-  val x: Int
-    get() = tileIndex.x
+  val mainX: MainIndex
+    get() = tileIndex.mainX
 
-  val y: Int
-    get() = tileIndex.y
+  val subX: SubIndex
+    get() = tileIndex.subX
+
+  val mainY: MainIndex
+    get() = tileIndex.mainY
+
+  val subY: SubIndex
+    get() = tileIndex.subY
 
   override fun toString(): String {
-    return "TileIdentifier(x=$x, y=$y, zoomX=${zoom.scaleX}, zoomY=${zoom.scaleY})"
+    return "TileIdentifier(tileIndex: $tileIndex, zoomX=${zoom.scaleX}, zoomY=${zoom.scaleY})"
+  }
+
+  /**
+   * Returns true if this tile index is within the provided top left / bottom right tile index
+   */
+  fun isWithin(topLeft: TileIndex, bottomRight: TileIndex): Boolean {
+    return tileIndex.isWithin(topLeft, bottomRight)
   }
 
   companion object {
-    fun of(chartId: ChartId, x: Int, y: Int, zoom: Zoom): TileIdentifier {
-      return TileIdentifier(chartId, TileIndex(x, y), zoom)
+    /**
+     * Creates a new instance
+     */
+    fun of(
+      chartId: ChartId,
+      mainX: MainIndex,
+      subX: SubIndex,
+      mainY: MainIndex,
+      subY: SubIndex,
+      zoom: Zoom,
+    ): TileIdentifier {
+      val tileIndex = TileIndex(mainX, subX, mainY, subY)
+      return TileIdentifier(chartId, tileIndex, zoom)
     }
+
+    val compareByX: Comparator<in TileIdentifier> = compareBy(TileIndex.compareByX) { it.tileIndex }
+    val compareByY: Comparator<in TileIdentifier> = compareBy(TileIndex.compareByY) { it.tileIndex }
+    val compareByRow: Comparator<in TileIdentifier> = compareBy(TileIndex.compareByRow) { it.tileIndex }
   }
 }

@@ -177,13 +177,15 @@ class TimeLineChart internal constructor(
   }
 
   override fun setData(jsData: TimeLineChartData) {
-    logger.ifDebug { console.debug("setData", jsData) }
+    logger.ifDebug {
+      console.debug("TimeLineChartGestalt.setData", jsData)
+    }
 
-    jsData.historySettings?.let {
-      val expectedSamplingPeriod = it.expectedSamplingPeriod.toModel()
+    jsData.historySettings?.let { jsHistorySettings ->
+      val expectedSamplingPeriod = jsHistorySettings.expectedSamplingPeriod.toModel()
       gestalt.timeLineChartGestalt.data.minimumSamplingPeriod = expectedSamplingPeriod
 
-      @s val guaranteedHistoryLength = it.guaranteedHistoryLength
+      @s val guaranteedHistoryLength = jsHistorySettings.guaranteedHistoryLength
       gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
         val naturalHistoryBucketRange = expectedSamplingPeriod.toHistoryBucketRange()
         storage.naturalSamplingPeriod = naturalHistoryBucketRange.samplingPeriod
@@ -191,7 +193,7 @@ class TimeLineChart internal constructor(
       }
 
       //configure the gap calculator
-      it.minGapSizeFactor?.let { factor ->
+      jsHistorySettings.minGapSizeFactor?.let { factor ->
         gestalt.timeLineChartGestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(factor)
       }
     }

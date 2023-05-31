@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms
 
 import com.meistercharts.algorithms.axis.AxisInversionInformation
+import com.meistercharts.algorithms.tile.MainIndex
+import com.meistercharts.algorithms.tile.SubIndex
 import com.meistercharts.algorithms.tile.TileCoordinates
 import com.meistercharts.algorithms.tile.TileIndex
 import com.meistercharts.annotations.ContentArea
@@ -122,15 +124,17 @@ object InternalCalculations {
    * The origin of the tile is returned relative to the contentArea.
    */
   fun calculateTileOrigin(tileIndex: TileIndex, @ContentArea tileSize: Size): @ContentArea Coordinates {
-    return Coordinates.of(tileIndex.x * tileSize.width, tileIndex.y * tileSize.height)
+    val x = calculateTileOriginX(tileIndex, tileSize.width)
+    val y = calculateTileOriginY(tileIndex, tileSize.height)
+    return Coordinates.of(x, y)
   }
 
   fun calculateTileOriginX(tileIndex: TileIndex, @ContentArea tileWidth: Double): @ContentArea Double {
-    return tileIndex.x * tileWidth
+    return tileIndex.mainX.value.toDouble() * TileIndex.SubIndexFactor * tileWidth + tileIndex.subX.value * tileWidth
   }
 
-  fun calculateTileOriginY(tileIndex: TileIndex, @ContentArea tileWidth: Double): @ContentArea Double {
-    return tileIndex.y * tileWidth
+  fun calculateTileOriginY(tileIndex: TileIndex, @ContentArea tileHeight: Double): @ContentArea Double {
+    return tileIndex.mainY.value.toDouble() * TileIndex.SubIndexFactor * tileHeight + tileIndex.subY.value * tileHeight
   }
 
   /**
@@ -142,16 +146,72 @@ object InternalCalculations {
     return calculateTileIndex(contentAreaX, contentAreaY, tileSize)
   }
 
+  /**
+   * Calculates the tile index based on the given content area coordinates and tile size.
+   *
+   * @param contentAreaX The x-coordinate within the content area.
+   * @param contentAreaY The y-coordinate within the content area.
+   * @param tileSize The size of a single tile.
+   * @return A TileIndex representing the calculated tile index.
+   */
   fun calculateTileIndex(contentAreaX: @ContentArea Double, contentAreaY: @ContentArea Double, tileSize: @ContentArea Size): TileIndex {
-    val x = calculateTileIndexX(contentAreaX, tileSize.width)
-    val y = calculateTileIndexY(contentAreaY, tileSize.height)
-    return TileIndex.of(x, y)
+    val mainX = calculateMainTileIndexX(contentAreaX, tileSize.width)
+    val subX = calculateSubTileIndexX(contentAreaX, tileSize.width)
+    val mainY = calculateMainTileIndexY(contentAreaY, tileSize.height)
+    val subY = calculateSubTileIndexY(contentAreaY, tileSize.height)
+    return TileIndex.of(mainX, subX, mainY, subY)
   }
 
+  /**
+   * Calculates the main tile index on the x-axis based on the given content area x-coordinate and tile width.
+   *
+   * @param contentAreaX The x-coordinate within the content area.
+   * @param tileWidth The width of a single tile.
+   * @return The main index as an Int.
+   */
+  fun calculateMainTileIndexX(contentAreaX: @ContentArea Double, tileWidth: @ContentArea Double): Int {
+    return MainIndex.calculateMainTileIndexPart(contentAreaX / tileWidth)
+  }
+
+  /**
+   * Calculates the sub tile index on the x-axis based on the given content area x-coordinate and tile width.
+   *
+   * @param contentAreaCoordinateX The x-coordinate within the content area.
+   * @param tileWidth The width of a single tile.
+   * @return The sub-index as an Int.
+   */
+  fun calculateSubTileIndexX(contentAreaCoordinateX: @ContentArea Double, tileWidth: @ContentArea Double): Int {
+    return SubIndex.calculateSubTileIndexPart(contentAreaCoordinateX / tileWidth)
+  }
+
+  /**
+   * Calculates the main tile index on the y-axis based on the given content area y-coordinate and tile height.
+   *
+   * @param contentAreaY The y-coordinate within the content area.
+   * @param tileHeight The height of a single tile.
+   * @return The main index as an Int.
+   */
+  fun calculateMainTileIndexY(contentAreaY: @ContentArea Double, tileHeight: @ContentArea Double): Int {
+    return MainIndex.calculateMainTileIndexPart(contentAreaY / tileHeight)
+  }
+
+  /**
+   * Calculates the sub tile index on the y-axis based on the given content area y-coordinate and tile height.
+   *
+   * @param contentAreaY The y-coordinate within the content area.
+   * @param tileHeight The height of a single tile.
+   * @return The sub-index as an Int.
+   */
+  fun calculateSubTileIndexY(contentAreaY: @ContentArea Double, tileHeight: @ContentArea Double): Int {
+    return SubIndex.calculateSubTileIndexPart(contentAreaY / tileHeight)
+  }
+
+  @Deprecated("do not use anymore")
   fun calculateTileIndexX(contentAreaCoordinateX: @ContentArea Double, tileWidth: @ContentArea Double): Int {
     return floor(contentAreaCoordinateX / tileWidth).toInt()
   }
 
+  @Deprecated("do not use anymore")
   fun calculateTileIndexY(contentAreaCoordinateY: @ContentArea Double, tileHeight: @ContentArea Double): Int {
     return floor(contentAreaCoordinateY / tileHeight).toInt()
   }

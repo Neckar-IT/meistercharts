@@ -24,13 +24,12 @@ import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.Tile
 import com.meistercharts.algorithms.tile.TileIdentifier
-import com.meistercharts.algorithms.tile.TileIndex
 import com.meistercharts.algorithms.tile.TileProvider
 import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Coordinates
@@ -130,10 +129,10 @@ private class MapTileProvider(
   override val tileSize: Size
     get() = calculateSlippyMapTileSize()
 
-  override fun getTile(identifier: TileIdentifier): Tile? {
+  override fun getTile(identifier: TileIdentifier): Tile {
     val slippyMapZoom = identifier.zoom.toSlippyMapZoom()
 
-    val slippyMapTileIndex = TileIndex(identifier.x, identifier.y).ensureSlippyMapBounds(slippyMapZoom)
+    val slippyMapTileIndex = identifier.tileIndex.ensureSlippyMapBounds(slippyMapZoom)
 
     val url = slippyMapProvider.url(slippyMapTileIndex, slippyMapZoom)
     val urlPaintable = UrlPaintable.naturalSize(url)
@@ -153,12 +152,12 @@ private class MapTileProvider(
 
         @px var y = 0.0
         if (style.showTileIndex) {
-          gc.fillText("${slippyMapTileIndex.x} / ${slippyMapTileIndex.y}", 0.0, y, Direction.TopLeft, 5.0, 5.0)
+          gc.fillText("${slippyMapTileIndex.subX} / ${slippyMapTileIndex.subY}", 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0
         }
         if (style.showTileCoordinates) {
-          @deg val latitude = computeLatitude(slippyMapTileIndex.y, slippyMapZoom)
-          @deg val longitude = computeLongitude(slippyMapTileIndex.x, slippyMapZoom)
+          @deg val latitude = computeLatitude(slippyMapTileIndex.subY, slippyMapZoom)
+          @deg val longitude = computeLongitude(slippyMapTileIndex.subX, slippyMapZoom)
 
           gc.fillText("$latitude° / $longitude°", 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0

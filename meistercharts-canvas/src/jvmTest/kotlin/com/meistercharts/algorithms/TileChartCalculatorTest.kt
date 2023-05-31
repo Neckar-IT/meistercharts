@@ -42,7 +42,7 @@ class TileChartCalculatorTest {
   @BeforeEach
   fun setUp() {
     chartState = DefaultChartState()
-    calculator = TileChartCalculator(chartState, TileIndex(4, 7), Size(200.0, 300.0))
+    calculator = TileChartCalculator(chartState, TileIndex(0, 4, 0, 7), Size(200.0, 300.0))
     chartState.contentAreaWidth = 1000.0
     chartState.contentAreaHeight = 600.0
 
@@ -62,13 +62,13 @@ class TileChartCalculatorTest {
     }
     assertThat(chartState.contentAreaWidth).isEqualTo(1000.0)
 
-    calculator = TileChartCalculator(chartState, TileIndex(4, 0), Size(400.0, 300.0))
+    calculator = TileChartCalculator(chartState, TileIndex(0, 4, 0, 0), Size(400.0, 300.0))
 
     //the content area is 2.5 tiles wide
     @ms val expectedTileWidthInMillis = contentAreaTimeRange.span / 2.5
 
     // tile index 3
-    TileChartCalculator(chartState, TileIndex(3, 0), Size(400.0, 300.0)).also { tileChartCalculator ->
+    TileChartCalculator(chartState, TileIndex(0, 3, 0, 0), Size(400.0, 300.0)).also { tileChartCalculator ->
       @ms val startTime = tileChartCalculator.tileRelative2TimeX(0.0, contentAreaTimeRange)
       assertThat(startTime).isEqualTo(1.58981596318E12)
       @ms val endTime = tileChartCalculator.tileRelative2TimeX(1.0, contentAreaTimeRange)
@@ -78,7 +78,7 @@ class TileChartCalculatorTest {
     }
 
     // tile index 4
-    TileChartCalculator(chartState, TileIndex(4, 0), Size(400.0, 300.0)).also { tileChartCalculator ->
+    TileChartCalculator(chartState, TileIndex(0, 4, 0, 0), Size(400.0, 300.0)).also { tileChartCalculator ->
       @ms val startTime = tileChartCalculator.tileRelative2TimeX(0.0, contentAreaTimeRange)
       assertThat(startTime).isEqualTo(1.58981598718E12) //end time from tile index 3
       @ms val endTime = tileChartCalculator.tileRelative2TimeX(1.0, contentAreaTimeRange)
@@ -96,7 +96,7 @@ class TileChartCalculatorTest {
       assertThat(it.span).isEqualTo(1_000.0)
     }
 
-    assertThat(calculator.tileIndex).isEqualTo(TileIndex(4, 7))
+    assertThat(calculator.tileIndex).isEqualTo(TileIndex(0, 4, 0, 7))
 
     val visibleTimeRange = calculator.visibleTimeRangeXinTile(contentAreaTimeRange)
 
@@ -225,7 +225,7 @@ class TileChartCalculatorTest {
   @Test
   fun testTime2tileYOriginAtTop() {
     assertThat(calculator.tileHeight).isEqualTo(300.0)
-    assertThat(calculator.tileIndex.y).isEqualTo(7)
+    assertThat(calculator.tileIndex.subY.value).isEqualTo(7)
     chartState.contentAreaHeight = 600.0
     chartState.axisOrientationY = AxisOrientationY.OriginAtTop
 
@@ -259,7 +259,7 @@ class TileChartCalculatorTest {
   @Test
   fun testTime2tileYOriginAtBottom() {
     assertThat(calculator.tileHeight).isEqualTo(300.0)
-    assertThat(calculator.tileIndex.y).isEqualTo(7)
+    assertThat(calculator.tileIndex.subY.value).isEqualTo(7)
     chartState.contentAreaHeight = 600.0
     chartState.axisOrientationY = AxisOrientationY.OriginAtBottom
 
@@ -298,7 +298,7 @@ class TileChartCalculatorTest {
 
   @Test
   fun testTimeRange() {
-    assertThat(calculator.tileIndex).isEqualTo(TileIndex(4, 7))
+    assertThat(calculator.tileIndex).isEqualTo(TileIndex(0, 4, 0, 7))
     assertThat(calculator.tileWidth).isEqualTo(200.0)
     assertThat(calculator.tileHeight).isEqualTo(300.0)
     assertThat(calculator.chartState.contentAreaWidth).isEqualTo(1000.0)
@@ -343,7 +343,7 @@ class TileChartCalculatorTest {
     val tileSize = Size(500.0, 200.0) //1/4 / 1/5 of content area with zoom 1/1
     val timeRange = TimeRange(100_000.0, 110_000.0)
 
-    TileChartCalculator(chartState, TileIndex(0, 0), tileSize).also {
+    TileChartCalculator(chartState, TileIndex(0, 0, 0, 0), tileSize).also {
       assertThat(it.tileOrigin2contentAreaRelativeX()).isEqualTo(0.0)
       assertThat(it.tileOrigin2contentAreaRelativeY()).isEqualTo(0.0)
 
@@ -356,7 +356,7 @@ class TileChartCalculatorTest {
       assertThat(it.visibleTimeRangeXinTile(timeRange)).isEqualTo(TimeRange(100_000.0, 100_000.0 + 2500))
     }
 
-    TileChartCalculator(chartState, TileIndex(1, 1), tileSize).also {
+    TileChartCalculator(chartState, TileIndex.of(1, 1), tileSize).also {
       assertThat(it.tileOrigin2contentAreaRelativeX()).isEqualTo(0.25)
       assertThat(it.tileOrigin2contentAreaRelativeY()).isEqualTo(0.2)
 
@@ -369,7 +369,7 @@ class TileChartCalculatorTest {
       assertThat(it.visibleTimeRangeXinTile(timeRange)).isEqualTo(TimeRange(100_000.0 + 2500, 100_000.0 + 2500 + 2500))
     }
 
-    TileChartCalculator(chartState, TileIndex(2, 2), tileSize).also {
+    TileChartCalculator(chartState, TileIndex.of(2, 2), tileSize).also {
       assertThat(it.tileOrigin2contentAreaRelativeX()).isEqualTo(0.5)
       assertThat(it.tileOrigin2contentAreaRelativeY()).isEqualTo(0.4)
 
@@ -386,7 +386,7 @@ class TileChartCalculatorTest {
     chartState.zoomX = 10.0
     chartState.zoomY = 10.0
 
-    TileChartCalculator(chartState, TileIndex(0, 0), tileSize).also {
+    TileChartCalculator(chartState, TileIndex.of(0, 0), tileSize).also {
       assertThat(it.tileOrigin2contentAreaRelativeX()).isEqualTo(0.0)
       assertThat(it.tileOrigin2contentAreaRelativeY()).isEqualTo(0.0)
 
@@ -399,7 +399,7 @@ class TileChartCalculatorTest {
       assertThat(it.visibleTimeRangeXinTile(timeRange)).isEqualTo(TimeRange(100_000.0, 100_000.0 + 250))
     }
 
-    TileChartCalculator(chartState, TileIndex(1, 1), tileSize).also {
+    TileChartCalculator(chartState, TileIndex.of(1, 1), tileSize).also {
       assertThat(it.tileOrigin2contentAreaRelativeX()).isEqualTo(0.025)
       assertThat(it.tileOrigin2contentAreaRelativeY()).isEqualTo(0.02)
 
@@ -473,7 +473,7 @@ class TileChartCalculatorTest {
 
     val timeRange = TimeRange(10_000.0, 15_000.0)
 
-    assertThat(calculator.tileIndex).isEqualTo(TileIndex(4, 7))
+    assertThat(calculator.tileIndex).isEqualTo(TileIndex.of(4, 7))
     assertThat(calculator.tileWidth).isEqualTo(200.0)
 
     assertThat(calculator.tileOrigin2contentAreaRelativeX()).isEqualTo(0.8)
@@ -493,7 +493,7 @@ class TileChartCalculatorTest {
     assertThat(chartState.contentAreaHeight).isEqualTo(600.0)
     val timeRange = TimeRange(10_000.0, 15_000.0)
 
-    assertThat(calculator.tileIndex).isEqualTo(TileIndex(4, 7))
+    assertThat(calculator.tileIndex).isEqualTo(TileIndex.of(4, 7))
     assertThat(calculator.tileHeight).isEqualTo(300.0)
 
     assertThat(calculator.tileOrigin2contentAreaRelativeY()).isEqualTo(3.5)
@@ -516,17 +516,17 @@ class TileChartCalculatorTest {
     assertThat(changedChartState.contentAreaWidth).isEqualTo(1000.0)
     assertThat(changedChartState.contentAreaHeight).isEqualTo(600.0)
 
-    val tileIndex = TileIndex(3, 4)
+    val tileIndex = TileIndex.of(3, 4)
     val tileSize = Size(200.0, 300.0)
     val tileCalculator = changedChartState.tileCalculator(tileIndex, tileSize)
     assertThat(tileCalculator.tileIndex).isEqualTo(tileIndex)
     assertThat(tileCalculator.tileSize).isEqualTo(tileSize)
 
     val timeRange = TimeRange(10_000.0, 15_000.0)
-    assertThat(tileCalculator.tile2timeX(0.0, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleX) / (changedChartState.contentAreaWidth / tileSize.width)) * tileIndex.x)
-    assertThat(tileCalculator.tile2timeX(tileSize.width, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleX) / (changedChartState.contentAreaWidth / tileSize.width)) * (tileIndex.x + 1))
+    assertThat(tileCalculator.tile2timeX(0.0, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleX) / (changedChartState.contentAreaWidth / tileSize.width)) * tileIndex.xAsDouble())
+    assertThat(tileCalculator.tile2timeX(tileSize.width, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleX) / (changedChartState.contentAreaWidth / tileSize.width)) * (tileIndex.xAsDouble() + 1))
 
-    assertThat(tileCalculator.tile2timeY(0.0, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleY) / (changedChartState.contentAreaHeight / tileSize.height)) * tileIndex.y)
-    assertThat(tileCalculator.tile2timeY(tileSize.height, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleY) / (changedChartState.contentAreaHeight / tileSize.height)) * (tileIndex.y + 1))
+    assertThat(tileCalculator.tile2timeY(0.0, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleY) / (changedChartState.contentAreaHeight / tileSize.height)) * tileIndex.yAsDouble())
+    assertThat(tileCalculator.tile2timeY(tileSize.height, timeRange)).isEqualTo(timeRange.start + ((timeRange.span / zoomOverride.scaleY) / (changedChartState.contentAreaHeight / tileSize.height)) * (tileIndex.yAsDouble() + 1))
   }
 }
