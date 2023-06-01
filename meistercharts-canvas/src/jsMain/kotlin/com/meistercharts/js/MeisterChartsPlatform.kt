@@ -22,15 +22,15 @@ import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
 import com.meistercharts.design.CorporateDesign
 import com.meistercharts.events.FontLoadedEventBroker
+import com.meistercharts.js.external.FontFace
 import com.meistercharts.js.external.FontFaceSet
 import com.meistercharts.js.external.listenForLoadingDone
 import com.meistercharts.platform.MeisterChartsAbstractPlatform
+import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.ifDebug
 import it.neckar.open.i18n.I18nConfiguration
 import kotlinx.browser.document
-import kotlinx.browser.window
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.EventListener
 import org.w3c.dom.get
 
 /**
@@ -39,9 +39,14 @@ import org.w3c.dom.get
  * Is referenced from [MeisterChartBuilder] and ensures that initial code is executed once
  */
 object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
-
   init {
     (document["fonts"]?.unsafeCast<FontFaceSet>())?.listenForLoadingDone {
+      logger.ifDebug {
+        console.debug("${it.fontfaces.size} fonts loaded:")
+        it.fontfaces.forEach {
+          console.debug(" - ${it.format()}")
+        }
+      }
       FontLoadedEventBroker.notifyLoaded()
     } ?: logger.warn("WARNING: document.fonts is not supported by this browser -> fonts loaded from now on may not be rendered correctly")
   }
@@ -65,16 +70,13 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   override fun initializeOnce() {
-    window.addEventListener("load", object : EventListener {
-      override fun handleEvent(event: Event) {
-        logger.debug("window.load: ${event.type}")
-      }
-    })
-
     FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
-
     MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()
   }
+}
+
+private fun FontFace.format(): String {
+  return "$family $style, $variant $weight"
 }
 
 private val logger = LoggerFactory.getLogger("com.meistercharts.js.MeisterChartsPlatform")

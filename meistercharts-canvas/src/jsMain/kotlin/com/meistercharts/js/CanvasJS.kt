@@ -84,7 +84,9 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   /**
    * The html canvas element
    */
-  val canvasElement: HTMLCanvasElement = document.createElement("CANVAS") as HTMLCanvasElement
+  val canvasElement: HTMLCanvasElement = (document.createElement("CANVAS") as HTMLCanvasElement).also {
+    it.classList.add(MeisterChartClasses.canvas)
+  }
 
   override val gc: CanvasRenderingContext = CanvasRenderingContextJS(this)
 

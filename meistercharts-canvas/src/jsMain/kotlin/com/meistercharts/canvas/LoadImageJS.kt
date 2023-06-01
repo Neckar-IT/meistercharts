@@ -16,6 +16,7 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.events.ImageLoadedEventBroker
+import com.meistercharts.js.MeisterChartClasses
 import com.meistercharts.model.Size
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
@@ -30,6 +31,8 @@ actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
   logger.debug { "Loading image: $url" }
 
   (document.createElement("IMG") as HTMLImageElement).apply {
+    this.classList.add(MeisterChartClasses.imageLoader)
+
     style.width = "${this.width} px"
     style.height = "${this.height} px"
 

@@ -23,6 +23,10 @@ import kotlin.reflect.KProperty0
  * Provides urls to slippy map tile servers.
  *
  * For a list of tile servers see [TileServers](https://wiki.openstreetmap.org/wiki/Tile_servers)
+ *
+ * Or look here:
+ * https://raw.githubusercontent.com/leaflet-extras/leaflet-providers/master/leaflet-providers.js
+ *
  */
 interface SlippyMapProvider {
   /**
@@ -122,6 +126,7 @@ data object OpenStreetMapHumanitarian : SlippyMapProvider {
  *
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
+@Deprecated("Does not work anymore")
 data object OpenStreetMapGrayscale : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): String {
     return "https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png"

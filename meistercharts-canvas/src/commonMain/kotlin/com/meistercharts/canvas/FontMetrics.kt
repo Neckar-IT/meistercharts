@@ -126,7 +126,7 @@ data class AlignmentCorrectionInformation(
 object FontMetricsCacheAccess {
   /**
    * The current font metrics cache.
-   * The value is initialized in the Platform.init method
+   * The value is initialized in the Platform.init() method
    */
   var fontMetricsCache: FontMetricsCache? = null
 }

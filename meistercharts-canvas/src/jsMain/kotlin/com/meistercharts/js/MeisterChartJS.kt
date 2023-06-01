@@ -40,6 +40,7 @@ class MeisterChartJS(
    */
   val holder: HTMLDivElement = (document.createElement("DIV") as HTMLDivElement).also {
     it.appendChild(htmlCanvas.canvasElement)
+    it.classList.add(MeisterChartClasses.holder, MeisterChartClasses.chartId(chartSupport.chartId))
     chartSupport.onDispose {
       it.removeChild(htmlCanvas.canvasElement)
     }
