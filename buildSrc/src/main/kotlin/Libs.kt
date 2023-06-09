@@ -338,6 +338,15 @@ public object Libs {
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
             "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"
 
+    public const val kotlin_deeplearning_onnx: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-onnx:_"
+
+    public const val kotlin_deeplearning_tensorflow: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:_"
+
+    public const val kotlin_deeplearning_visualization: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-visualization:_"
+
     public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
 
     public const val kotlinx_coroutines_core: String =
@@ -383,6 +392,8 @@ public object Libs {
     public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
 
     public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
+
+    public const val opencv: String = "org.openpnp:opencv:_"
 
     public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
 
