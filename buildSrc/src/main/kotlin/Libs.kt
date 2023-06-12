@@ -215,7 +215,7 @@ public object Libs {
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
 
-    public const val launch4j: String = "net.sf.launch4j:launch4j:_"
+    public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
 
