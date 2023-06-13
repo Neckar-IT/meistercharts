@@ -17,7 +17,7 @@ package com.meistercharts.api.line
 
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.category.CategoryConverter
-import com.meistercharts.api.category.applySickDefaults
+import com.meistercharts.api.category.applyEasyApiDefaults
 import com.meistercharts.api.category.applyStyle
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.CategoryLineChartGestalt
@@ -34,7 +34,7 @@ class LineChartSimple internal constructor(
 ) : MeisterChartsApiLegacy<LineChartSimpleData, LineChartSimpleStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setData(jsData: LineChartSimpleData) {

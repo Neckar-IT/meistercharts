@@ -38,9 +38,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy Api defaults
  */
-fun BarChartStackedGestalt.applySickDefaults() {
+fun BarChartStackedGestalt.applyEasyApiDefaults() {
   style.applyAxisTitleOnTop(40.0)
   // Enable as soon as the bar chart stacked supports value axis
   // thresholdsSupport.getHudLayer().configuration.maxWidth = MultiDoublesProvider.always(Double.NaN)

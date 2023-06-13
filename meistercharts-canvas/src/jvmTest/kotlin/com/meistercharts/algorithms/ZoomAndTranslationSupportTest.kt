@@ -40,20 +40,20 @@ class ZoomAndTranslationSupportTest {
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
     assertThat(chartState.zoom).isEqualTo(Zoom.default)
 
-    zoomAndPanSupport.resetToDefaults()
-    zoomAndPanSupport.setWindowTranslationX(17.0)
-    zoomAndPanSupport.setWindowTranslationY(99.0)
-    zoomAndPanSupport.fitX(5.0, 17.0)
-    zoomAndPanSupport.fitY(5.0, 17.0)
+    zoomAndPanSupport.resetToDefaults(reason = UpdateReason.UserInteraction)
+    zoomAndPanSupport.setWindowTranslationX(17.0, reason = UpdateReason.UserInteraction)
+    zoomAndPanSupport.setWindowTranslationY(99.0, reason = UpdateReason.UserInteraction)
+    zoomAndPanSupport.fitX(5.0, 17.0, reason = UpdateReason.UserInteraction)
+    zoomAndPanSupport.fitY(5.0, 17.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoom).isEqualTo(Zoom.default)
 
-    zoomAndPanSupport.modifyZoom(true, AxisSelection.Both, zoomChangeFactor = 2.0)
+    zoomAndPanSupport.modifyZoom(true, AxisSelection.Both, zoomChangeFactor = 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoom).isEqualTo(Zoom.of(2.0, 2.0))
 
-    zoomAndPanSupport.modifyZoom(true, AxisSelection.Both, zoomCenterX = 334.4, zoomCenterY = 234234.0, zoomChangeFactor = 2.0)
+    zoomAndPanSupport.modifyZoom(true, AxisSelection.Both, zoomCenterX = 334.4, zoomCenterY = 234234.0, zoomChangeFactor = 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoom).isEqualTo(Zoom.of(4.0, 4.0))
 
-    zoomAndPanSupport.setZoom(Zoom.default, Coordinates.of(123.09, 3123.0))
+    zoomAndPanSupport.setZoom(Zoom.default, Coordinates.of(123.09, 3123.0), reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoom).isEqualTo(Zoom.default)
   }
 
@@ -64,12 +64,12 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.moveWindow(10.0, 20.0)
+    zoomAndPanSupport.moveWindow(10.0, 20.0, reason = UpdateReason.UserInteraction)
 
     assertThat(chartState.windowTranslationX).isEqualTo(10.0)
     assertThat(chartState.windowTranslationY).isEqualTo(20.0)
 
-    zoomAndPanSupport.setZoom(2.0, 3.0, null)
+    zoomAndPanSupport.setZoom(2.0, 3.0, null, reason = UpdateReason.UserInteraction)
 
     assertThat(chartState.zoomX).isEqualTo(2.0)
     assertThat(chartState.zoomY).isEqualTo(3.0)
@@ -87,25 +87,25 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.setZoom(4.0, 5.0)
+    zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
     assertThat {
       assertThat(chartState.zoomX).isEqualTo(4.0)
       assertThat(chartState.zoomY).isEqualTo(5.0)
     }
 
-    zoomAndPanSupport.fitX(0.0, 1.0)
+    zoomAndPanSupport.fitX(0.0, 1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.windowTranslationX).isCloseTo(0.0, 0.0)
 
-    zoomAndPanSupport.fitX(1.0, 2.0)
+    zoomAndPanSupport.fitX(1.0, 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.windowTranslationX).isCloseTo(-800.0, 0.0)
 
-    zoomAndPanSupport.fitX(1.1, 2.1)
+    zoomAndPanSupport.fitX(1.1, 2.1, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isCloseTo(1.0, 0.00000001)
     assertThat(chartState.windowTranslationX).isCloseTo(-880.0, 0.00001)
 
-    zoomAndPanSupport.fitX(-1.0, 2.0)
+    zoomAndPanSupport.fitX(-1.0, 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isCloseTo(1 / 3.0, 0.00000001)
     assertThat(chartState.windowTranslationX).isCloseTo(800.0 / 3, 0.00001)
   }
@@ -120,26 +120,26 @@ class ZoomAndTranslationSupportTest {
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
     val chartCalculator = zoomAndPanSupport.chartCalculator
 
-    zoomAndPanSupport.setZoom(4.0, 5.0)
+    zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
     assertThat {
       assertThat(chartState.zoomX).isEqualTo(4.0)
       assertThat(chartState.zoomY).isEqualTo(5.0)
     }
 
 
-    zoomAndPanSupport.fitX(1.0, 0.0)
+    zoomAndPanSupport.fitX(1.0, 0.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.windowTranslationX).isCloseTo(0.0, 0.0)
 
-    zoomAndPanSupport.fitX(2.0, 1.0)
+    zoomAndPanSupport.fitX(2.0, 1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.windowTranslationX).isCloseTo(800.0, 0.0)
 
-    zoomAndPanSupport.fitX(2.1, 1.1)
+    zoomAndPanSupport.fitX(2.1, 1.1, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.windowTranslationX).isCloseTo(880.0, 0.00001)
 
-    zoomAndPanSupport.fitX(2.0, -1.0)
+    zoomAndPanSupport.fitX(2.0, -1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1 / 3.0)
     assertThat(chartState.windowTranslationX).isCloseTo(800.0 / 3, 0.00001)
   }
@@ -161,23 +161,23 @@ class ZoomAndTranslationSupportTest {
     assertThat(zoomAndPanSupport.chartCalculator.domainRelative2contentAreaY(-1.0)).isEqualTo(-600.0)
 
 
-    zoomAndPanSupport.setZoom(4.0, 5.0)
+    zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(4.0)
     assertThat(chartState.zoomY).isEqualTo(5.0)
 
-    zoomAndPanSupport.fitY(0.0, 1.0)
+    zoomAndPanSupport.fitY(0.0, 1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(0.0, 0.00001)
 
-    zoomAndPanSupport.fitY(1.0, 2.0)
+    zoomAndPanSupport.fitY(1.0, 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(-600.0, 0.00001)
 
-    zoomAndPanSupport.fitY(1.1, 2.1)
+    zoomAndPanSupport.fitY(1.1, 2.1, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(-660.0, 0.00001)
 
-    zoomAndPanSupport.fitY(-1.0, 2.0)
+    zoomAndPanSupport.fitY(-1.0, 2.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1 / 3.0)
     assertThat(chartState.windowTranslationY).isCloseTo(600.0 / 3.0, 0.00001)
   }
@@ -199,23 +199,23 @@ class ZoomAndTranslationSupportTest {
     assertThat(zoomAndPanSupport.chartCalculator.domainRelative2contentAreaY(-1.0)).isEqualTo(1200.0)
 
 
-    zoomAndPanSupport.setZoom(4.0, 5.0)
+    zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(4.0)
     assertThat(chartState.zoomY).isEqualTo(5.0)
 
-    zoomAndPanSupport.fitY(1.0, 0.0)
+    zoomAndPanSupport.fitY(1.0, 0.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(0.0, 0.00001)
 
-    zoomAndPanSupport.fitY(2.0, 1.0)
+    zoomAndPanSupport.fitY(2.0, 1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(600.0, 0.00001)
 
-    zoomAndPanSupport.fitY(2.1, 1.1)
+    zoomAndPanSupport.fitY(2.1, 1.1, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1.0)
     assertThat(chartState.windowTranslationY).isCloseTo(660.0, 0.00001)
 
-    zoomAndPanSupport.fitY(2.0, -1.0)
+    zoomAndPanSupport.fitY(2.0, -1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomY).isEqualTo(1 / 3.0)
     assertThat(chartState.windowTranslationY).isCloseTo(600.0 / 3.0, 0.00001)
   }
@@ -228,7 +228,7 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.fitX(0.5, 0.6) // must no raise an exception
+    zoomAndPanSupport.fitX(0.5, 0.6, reason = UpdateReason.UserInteraction) // must not raise an exception
   }
 
   @Test
@@ -239,7 +239,7 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.fitY(0.5, 0.6) // must no raise an exception
+    zoomAndPanSupport.fitY(0.5, 0.6, reason = UpdateReason.UserInteraction) // must not raise an exception
   }
 
   @Test
@@ -250,7 +250,7 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.fitX(0.5, 0.6) // must no raise an exception
+    zoomAndPanSupport.fitX(0.5, 0.6, reason = UpdateReason.UserInteraction) // must not raise an exception
   }
 
   @Test
@@ -261,7 +261,7 @@ class ZoomAndTranslationSupportTest {
 
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
-    zoomAndPanSupport.fitY(0.5, 0.6) // must no raise an exception
+    zoomAndPanSupport.fitY(0.5, 0.6, reason = UpdateReason.UserInteraction) // must not raise an exception
   }
 
   @Test
@@ -284,7 +284,7 @@ class ZoomAndTranslationSupportTest {
     assertThat(zoomAndPanSupport.chartCalculator.window2domainRelative(10.0, 20.0)).isEqualTo(Coordinates.of(1.0 / 800.0 * 10.0, 1.0 / 600.0 * 20.0))
 
 
-    zoomAndPanSupport.moveWindow(-10.0, -20.0)
+    zoomAndPanSupport.moveWindow(-10.0, -20.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.windowTranslationX).isEqualTo(-10.0)
     assertThat(chartState.windowTranslationY).isEqualTo(-20.0)
 
@@ -297,7 +297,7 @@ class ZoomAndTranslationSupportTest {
     assertThat(zoomAndPanSupport.chartCalculator.window2domainRelativeX(zoomCenter.x)).isCloseTo(1.0 / 800.0 * (10 + 15), 0.0001)
     assertThat(zoomAndPanSupport.chartCalculator.window2domainRelativeY(zoomCenter.y)).isCloseTo(1.0 / 600.0 * (20 + 25), 0.0001)
 
-    zoomAndPanSupport.setZoom(20.0, 30.0, zoomCenter)
+    zoomAndPanSupport.setZoom(20.0, 30.0, zoomCenter, reason = UpdateReason.UserInteraction)
 
     //AFTER zoom - must be the same domain relative values!
     assertThat(zoomAndPanSupport.chartCalculator.window2domainRelativeX(zoomCenter.x)).isCloseTo(1.0 / 800.0 * (10 + 15), 0.0001)
@@ -339,13 +339,13 @@ class ZoomAndTranslationSupportTest {
     )
 
     zoomList.forEach {
-      zoomAndPanSupport.setZoom(it, null)
-      zoomAndPanSupport.setWindowTranslationX(100.0)
-      zoomAndPanSupport.setWindowTranslationY(200.0)
+      zoomAndPanSupport.setZoom(it, null, reason = UpdateReason.UserInteraction)
+      zoomAndPanSupport.setWindowTranslationX(100.0, reason = UpdateReason.UserInteraction)
+      zoomAndPanSupport.setWindowTranslationY(200.0, reason = UpdateReason.UserInteraction)
       assertThat(chartState.windowTranslationX).isEqualTo(100.0)
       assertThat(chartState.windowTranslationY).isEqualTo(200.0)
 
-      zoomAndPanSupport.resetWindowTranslation()
+      zoomAndPanSupport.resetWindowTranslation( reason = UpdateReason.UserInteraction)
       assertThat(chartState.windowTranslationX, "Zoom: $it").isEqualTo(40.0 * it.scaleX)
       assertThat(chartState.windowTranslationY).isEqualTo(60.0 * it.scaleY)
     }

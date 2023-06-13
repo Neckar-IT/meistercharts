@@ -71,7 +71,7 @@ object KeepCenterOnWindowResize : KeepLocation(0.5, 0.5)
  */
 object ResetToDefaultsOnWindowResize : WindowResizeBehavior {
   override fun handleResize(zoomAndTranslationSupport: ZoomAndTranslationSupport, windowResizeEvent: WindowResizeEvent) {
-    zoomAndTranslationSupport.resetToDefaults()
+    zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.WindowResize)
   }
 }
 
@@ -107,7 +107,7 @@ open class KeepLocation(
     if (windowResizeEvent.oldWindowSize.atLeastOneZero()) {
       //If the old size has been "0.0" we do not have a meaningful value.
       //So we reset the zoom
-      zoomAndTranslationSupport.resetToDefaults()
+      zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.WindowResize)
       return
     }
 
@@ -127,6 +127,6 @@ open class KeepLocation(
     @Zoomed val deltaX = windowResizeEvent.newWindowSize.width * windowRelativeX - newLocationOfOldCenterValue.x
     @Zoomed val deltaY = windowResizeEvent.newWindowSize.height * windowRelativeY - newLocationOfOldCenterValue.y
 
-    zoomAndTranslationSupport.moveWindow(deltaX, deltaY)
+    zoomAndTranslationSupport.moveWindow(deltaX, deltaY, reason = UpdateReason.WindowResize)
   }
 }

@@ -16,6 +16,7 @@
 package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
@@ -57,15 +58,15 @@ private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.Dis
 /**
  * Overwrites defaults set by the gestalt
  */
-fun MeisterChartBuilder.applyDiscreteTimelineChartSickDefaults() {
+fun MeisterChartBuilder.applyDiscreteTimelineChartEasyApiDefaults() {
   zoomAndTranslationConfiguration {
     //ATTENTION: Copied from DiscreteTimelineChartGestalt#init
     translateAxisSelection = AxisSelection.X
-    mouseWheelZoom = false //Disable zoom for SICK
+    mouseWheelZoom = false //Disable zoom for Easy API
   }
 }
 
-fun DiscreteTimelineChartGestalt.applySickDefaults() {
+fun DiscreteTimelineChartGestalt.applyEasyApiDefaults() {
   //configuration.applyAxisTitleOnTop(40.0)
   chartSupport().windowResizeBehavior = ResetToDefaultsOnWindowResize //always reset to the defaults, we do not have any live data
 }
@@ -116,7 +117,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
             fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
           }
-          
+
           val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
             jsStripeStyle?.labelColor?.toColor() ?: Color.white
           }
@@ -163,7 +164,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
   jsConfiguration.visibleTimeRange?.toModel()?.let { timeRange ->
     @DomainRelative val startDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.start)
     @DomainRelative val endDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.end)
-    chartSupport().zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative)
+    chartSupport().zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative, reason = UpdateReason.ApiCall)
   }
 
 

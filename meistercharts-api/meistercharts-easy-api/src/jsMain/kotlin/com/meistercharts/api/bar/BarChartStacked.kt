@@ -36,7 +36,7 @@ class BarChartStacked internal constructor(
 ) : MeisterChartsApiLegacy<BarChartData, BarChartStackedStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   /**

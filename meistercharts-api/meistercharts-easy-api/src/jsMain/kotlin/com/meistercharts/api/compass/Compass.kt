@@ -31,7 +31,7 @@ class Compass internal constructor(
 ) : MeisterChartsApiLegacy<CompassData, CompassStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setData(jsData: CompassData) {

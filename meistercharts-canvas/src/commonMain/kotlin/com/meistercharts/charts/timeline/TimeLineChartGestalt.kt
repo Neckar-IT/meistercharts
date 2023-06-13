@@ -1069,7 +1069,10 @@ class TimeLineChartGestalt
    * - space at top (e.g. for title)
    * - space at bottom for time axis
    */
-  private val contentViewportGestalt = ContentViewportGestalt(Insets.of(25.0, 0.0, 0.0, 0.0))
+  private val contentViewportGestalt = ContentViewportGestalt(
+    Insets.of(25.0, 0.0, 0.0, 0.0),
+    updateBehavior = ContentViewportGestalt.UpdateBehavior.KeepCurrentZoomAndTranslation //do not reset to keep the zoom and translation
+  )
 
   /**
    * The content viewport margin

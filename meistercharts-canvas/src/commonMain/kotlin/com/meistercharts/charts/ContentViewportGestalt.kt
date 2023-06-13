@@ -15,6 +15,7 @@
  */
 package com.meistercharts.charts
 
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.impl.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder
@@ -26,13 +27,16 @@ import it.neckar.open.observable.ObservableObject
 /**
  * Configures the content viewport using margins
  */
-open class ContentViewportGestalt(contentViewportMargin: @Zoomed Insets) : ChartGestalt {
+open class ContentViewportGestalt(
+  contentViewportMargin: @Zoomed Insets,
+  val updateBehavior: UpdateBehavior = UpdateBehavior.ResetToDefaults,
+) : ChartGestalt {
   /**
    * The current content viewport margin
    */
   val contentViewportMarginProperty: ObservableObject<@Zoomed Insets> = ObservableObject(contentViewportMargin).also {
-    it.consumeImmediately { margin ->
-      logger.debug("contentViewportMargin changed to $margin")
+    it.consumeChanges { oldValue, newValue ->
+      logger.debug("contentViewportMargin changed from $oldValue to $newValue")
     }
   }
 
@@ -42,9 +46,18 @@ open class ContentViewportGestalt(contentViewportMargin: @Zoomed Insets) : Chart
   override fun configure(meisterChartBuilder: MeisterChartBuilder) {
     meisterChartBuilder.apply {
       configure {
-        contentViewportMarginProperty.consumeImmediately {
-          chartSupport.rootChartState.contentViewportMargin = it
-          chartSupport.zoomAndTranslationSupport.resetToDefaults()
+        contentViewportMarginProperty.consumeImmediately { newValue ->
+          chartSupport.rootChartState.contentViewportMargin = newValue
+
+          when (updateBehavior) {
+            UpdateBehavior.ResetToDefaults -> {
+              chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.ConfigurationUpdate)
+            }
+
+            UpdateBehavior.KeepCurrentZoomAndTranslation -> {
+              //do nothing
+            }
+          }
         }
       }
 
@@ -70,5 +83,21 @@ open class ContentViewportGestalt(contentViewportMargin: @Zoomed Insets) : Chart
 
   companion object {
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.charts.ContentViewportGestalt")
+  }
+
+
+  /**
+   * Defines the behavior when the content viewport margin changes
+   */
+  enum class UpdateBehavior {
+    /**
+     * Resets the zoom and translation to the defaults
+     */
+    ResetToDefaults,
+
+    /**
+     * Keeps the current zoom and translation
+     */
+    KeepCurrentZoomAndTranslation
   }
 }

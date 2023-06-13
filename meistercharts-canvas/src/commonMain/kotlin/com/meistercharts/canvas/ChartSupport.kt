@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.ChartState
 import com.meistercharts.algorithms.GlobalCacheSupport
 import com.meistercharts.algorithms.KeepCenterOnWindowResize
 import com.meistercharts.algorithms.MutableChartState
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.WindowResizeBehavior
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.ZoomAndTranslationSupport
@@ -704,12 +705,13 @@ val ChartSupport.translateOverTime: ChartTranslateOverTimeService
  * @see zoomOut
  * @see resetOnlyZoom
  */
-fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.modifyZoom(
     true,
     AxisSelection.Both,
     canvas.width * zoomCenterFactorX,
-    canvas.height * zoomCenterFactorY
+    canvas.height * zoomCenterFactorY,
+    reason = reason,
   )
 }
 
@@ -719,12 +721,13 @@ fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFac
  * @see zoomIn
  * @see resetOnlyZoom
  */
-fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.modifyZoom(
     false,
     AxisSelection.Both,
     canvas.width * zoomCenterFactorX,
-    canvas.height * zoomCenterFactorY
+    canvas.height * zoomCenterFactorY,
+    reason = reason,
   )
 }
 
@@ -738,20 +741,21 @@ fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFa
  * @see zoomOut
  * @see resetZoomAndTranslationToDefaults
  */
-fun ChartSupport.resetOnlyZoom(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.resetOnlyZoom(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.resetZoom(
     zoomCenter = Coordinates.of(
       canvas.width * zoomCenterFactorX,
       canvas.height * zoomCenterFactorY
-    )
+    ),
+    reason = reason,
   )
 }
 
 /**
  * Resets the view to the defaults (zoom and translation)
  */
-fun ChartSupport.resetZoomAndTranslationToDefaults() {
-  zoomAndTranslationSupport.resetToDefaults()
+fun ChartSupport.resetZoomAndTranslationToDefaults(reason: UpdateReason) {
+  zoomAndTranslationSupport.resetToDefaults(reason = reason)
 }
 
 /**
@@ -774,12 +778,12 @@ fun ChartSupport.bindVisibleRangeBidirectional(other: ChartSupport, axisSelectio
 
         if (axisSelection.containsX) {
           if (!topLeft.x.isNanOrInfinite() && !bottomRight.x.isNanOrInfinite() && topLeft.x != bottomRight.x) {
-            target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x)
+            target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x, UpdateReason.BoundToOtherChart)
           }
         }
         if (axisSelection.containsY) {
           if (!topLeft.y.isNanOrInfinite() && !bottomRight.y.isNanOrInfinite() && topLeft.y != bottomRight.y) {
-            target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y)
+            target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y, UpdateReason.BoundToOtherChart)
           }
         }
       } finally {

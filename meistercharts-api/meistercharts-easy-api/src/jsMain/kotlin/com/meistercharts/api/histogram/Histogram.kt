@@ -31,7 +31,7 @@ class Histogram internal constructor(
 ) : MeisterChartsApiLegacy<HistogramData, HistogramStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setData(jsData: HistogramData) {

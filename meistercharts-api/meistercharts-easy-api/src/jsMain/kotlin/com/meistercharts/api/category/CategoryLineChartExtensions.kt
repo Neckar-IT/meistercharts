@@ -46,9 +46,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.cate
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy API defaults
  */
-fun CategoryLineChartGestalt.applySickDefaults() {
+fun CategoryLineChartGestalt.applyEasyApiDefaults() {
   // use all the available space on the right
   contentViewportMargin = contentViewportMargin.copy(right = 0.0)
   configuration.applyValueAxisTitleOnTop(40.0)

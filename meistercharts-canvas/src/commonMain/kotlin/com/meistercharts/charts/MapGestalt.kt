@@ -15,6 +15,7 @@
  */
 package com.meistercharts.charts
 
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.delegate
@@ -114,11 +115,11 @@ class MapGestalt(
 
       configure {
         zoomInToolbarButton.action {
-          chartSupport.zoomAndTranslationSupport.modifyZoom(true, AxisSelection.Both)
+          chartSupport.zoomAndTranslationSupport.modifyZoom(true, AxisSelection.Both, reason = UpdateReason.UserInteraction)
         }
 
         zoomOutToolbarButton.action {
-          chartSupport.zoomAndTranslationSupport.modifyZoom(false, AxisSelection.Both)
+          chartSupport.zoomAndTranslationSupport.modifyZoom(false, AxisSelection.Both, reason = UpdateReason.UserInteraction)
         }
 
         layers.addClearBackground()

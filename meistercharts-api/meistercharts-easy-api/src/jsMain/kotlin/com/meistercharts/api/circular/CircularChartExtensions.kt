@@ -18,7 +18,7 @@ package com.meistercharts.api.circular
 import com.meistercharts.charts.CircularChartGestalt
 
 /**
- * Applies the default configuration for SICK
+ * Applies the default configuration for Easy API
  */
-fun CircularChartGestalt.applySickDefaults() {
+fun CircularChartGestalt.applyEasyApiDefaults() {
 }

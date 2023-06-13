@@ -18,7 +18,7 @@ package com.meistercharts.api.histogram
 import com.meistercharts.charts.HistogramGestalt
 
 /**
- * Applies the default configuration for SICK
+ * Applies the default configuration for Easy API
  */
-fun HistogramGestalt.applySickDefaults() {
+fun HistogramGestalt.applyEasyApiDefaults() {
 }

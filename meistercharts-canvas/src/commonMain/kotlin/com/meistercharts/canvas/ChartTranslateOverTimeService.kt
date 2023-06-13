@@ -16,6 +16,7 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
@@ -74,18 +75,18 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshLis
     }
 
     //Calculate the new translation
-    translateTo(frameTimestamp)
+    translateTo(frameTimestamp, reason = UpdateReason.Animation)
   }
 
   /**
    * Translates the chart to the given timestamp
    */
-  fun translateTo(timestamp: @ms Double) {
+  fun translateTo(timestamp: @ms Double, reason: UpdateReason) {
     contentAreaTimeRangeX?.let {
       @TimeRelative val timeRelative = it.time2relative(timestamp)
 
       @Zoomed val newTranslation = -chartSupport.chartCalculator.domainRelative2zoomedX(timeRelative) + chartSupport.currentChartState.windowSize.width - insets.right
-      chartSupport.zoomAndTranslationSupport.setWindowTranslationX(roundingStrategy.round(newTranslation))
+      chartSupport.zoomAndTranslationSupport.setWindowTranslationX(roundingStrategy.round(newTranslation), reason = reason)
     }
   }
 }

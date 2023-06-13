@@ -23,12 +23,6 @@ import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.Image
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Size
-import it.neckar.open.kotlin.lang.abs
-import it.neckar.open.time.nowMillis
-import it.neckar.open.dispose.Disposable
-import it.neckar.open.dispose.DisposeSupport
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseClickEvent
 import com.meistercharts.events.MouseDoubleClickEvent
@@ -37,11 +31,8 @@ import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelEvent
-import it.neckar.open.observable.ObservableObject
-import it.neckar.open.observable.ReadOnlyObservableObject
-import it.neckar.open.unit.other.px
-import it.neckar.open.unit.si.ms
-import it.neckar.open.unit.time.RelativeMillis
+import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Size
 import convertCancel
 import convertDown
 import convertEnd
@@ -59,6 +50,15 @@ import extractModifierCombination
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.kotlin.lang.abs
+import it.neckar.open.observable.ObservableObject
+import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.other.px
+import it.neckar.open.unit.si.ms
+import it.neckar.open.unit.time.RelativeMillis
 import kotlinx.browser.document
 import kotlinx.browser.window
 import noFocusBorder
@@ -97,9 +97,11 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * in [CanvasRenderingContextJS].
    */
   override val sizeProperty: ReadOnlyObservableObject<Size> = ObservableObject(Size.zero).also {
-    it.consume { newSize ->
+    it.consumeChanges { oldSize, newSize ->
       require(newSize.bothNotNegative()) { "Invalid size: $newSize" }
-      logger.debug { "Canvas size changed to $newSize" }
+      if (type == CanvasType.Main) {
+        logger.debug { "Main Canvas size changed from $oldSize to $newSize" }
+      }
     }
   }
 
@@ -223,7 +225,9 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     canvasElement.width = targetRenderingWidth.toInt() //TODO cast correct????
     canvasElement.height = targetRenderingHeight.toInt() //TODO cast correct????
 
-    logger.debug { "Updated canvas element width/height to ${canvasElement.width}/${canvasElement.height}" }
+    if (type == CanvasType.Main) {
+      logger.debug { "Updated Main canvas element width/height to ${canvasElement.width}/${canvasElement.height}" }
+    }
   }
 
   /**
@@ -242,14 +246,16 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
       logger.debug { "Updating size from BoundingClientRect: ${it.width}/${it.height}" }
 
       boundingClientLocation = Coordinates(it.left, it.top) // do not(!) use x/y because Edge and IE11 do not support them
-      applySize(Size(it.width, it.height))
+      val newSize = Size(it.width, it.height)
+      applySize(newSize, "bounding client rect changed to ${it.x}/${it.y} : ${it.width}/${it.height}}")
     }
   }
 
   /**
    * Applies the new size
    */
-  fun applySize(newSize: Size) {
+  fun applySize(newSize: Size, reason: String) {
+    logger.debug("Applying new size: $newSize (old: ${sizeProperty.value}) because: $reason")
     (sizeProperty as ObservableObject<Size>).value = newSize
   }
 

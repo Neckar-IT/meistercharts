@@ -165,6 +165,9 @@ value class DirtyReason(val value: Int) {
      * Contains all entries.
      *
      * ATTENTION: Do *not* use in production code, since the elements are boxed!
+     *
+     * These values are verified by a unit test.
+     * If the test fails the updated code will be generated on the console.
      */
     @Boxed
     val entries: List<DirtyReason> = listOf(
@@ -173,6 +176,9 @@ value class DirtyReason(val value: Int) {
 
     /**
      * Contains the labels
+     *
+     * These values are verified by a unit test.
+     * If the test fails the updated code will be generated on the console.
      */
     @Boxed
     val entryLabels: Map<DirtyReason, String> = mapOf(

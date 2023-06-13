@@ -19,6 +19,7 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
 import it.neckar.open.kotlin.lang.or1ifInfinite
@@ -71,9 +72,9 @@ class AutoScaleByZoomSupport(val chartSupport: ChartSupport) {
 
     chartSupport.zoomAndTranslationSupport.let {
       //set the zoom factor to fit the y-axis
-      it.setZoom(newZoomFactorY = newZoomFactoryY)
+      it.setZoom(newZoomFactorY = newZoomFactoryY, reason = UpdateReason.AutoScale)
       //fix the translation to make the values on the y axis visible
-      it.setWindowTranslationY(-chartSupport.chartCalculator.domainRelative2zoomedY(maxRelative + additional) + margin.top)
+      it.setWindowTranslationY(-chartSupport.chartCalculator.domainRelative2zoomedY(maxRelative + additional) + margin.top, reason = UpdateReason.AutoScale)
     }
   }
 }

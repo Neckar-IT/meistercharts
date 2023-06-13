@@ -15,6 +15,7 @@
  */
 package com.meistercharts.charts
 
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.axis.AxisOrientationY
 import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
@@ -55,7 +56,7 @@ class SlippyMapBaseGestalt : ChartGestalt {
         //Update the content area size if the device pixel ratio has been updated
         chartSupport.devicePixelRatioSupport.devicePixelRatioProperty.consume {
           chartSupport.rootChartState.contentAreaSizeProperty.value = calculateSlippyMapContentAreaSize()
-          chartSupport.zoomAndTranslationSupport.resetToDefaults()
+          chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.EnvironmentUpdate)
         }
       }
 

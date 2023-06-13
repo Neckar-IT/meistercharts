@@ -33,7 +33,7 @@ class BulletChart internal constructor(
 ) : MeisterChartsApi<BulletChartConfiguration>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setConfiguration(jsConfiguration: BulletChartConfiguration) {

@@ -49,9 +49,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy API defaults
  */
-fun BarChartGroupedGestalt.applySickDefaults() {
+fun BarChartGroupedGestalt.applyEasyApiDefaults() {
   style.applyAxisTitleOnTop(40.0)
   groupedBarsPainter.configuration.overflowIndicatorPainter?.configuration?.applyDefaultIndicators(
     Color.darkgray, Color.white, 1.0, 7.0, 7.0

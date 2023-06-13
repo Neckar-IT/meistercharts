@@ -16,6 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.autoScaleByZoomSupport
 import com.meistercharts.algorithms.axis.AxisEndConfiguration
@@ -161,7 +162,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
         createDefaultZoomButtons(toolbarButtonFactory)
           .plus(
             toolbarButtonFactory.button(Icons::autoScale) {
-              fitValuesInY(it.chartSupport)
+              fitValuesInY(it.chartSupport, reason = UpdateReason.UserInteraction)
             }
           )
       )
@@ -228,7 +229,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   /**
    * Adapts the zoom level to make all y values visible
    */
-  private fun fitValuesInY(chartSupport: ChartSupport) {
+  private fun fitValuesInY(chartSupport: ChartSupport, reason: UpdateReason) {
     var max: @DomainRelative Double = -Double.MAX_VALUE
     var min: @DomainRelative Double = Double.MAX_VALUE
 
@@ -255,7 +256,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
 
     //Reset to defaults to be sure the x-axis is correct
-    chartSupport.resetZoomAndTranslationToDefaults()
+    chartSupport.resetZoomAndTranslationToDefaults(reason = reason)
 
     chartSupport.autoScaleByZoomSupport.autoScaleY(min, max, fitContentInViewportGestalt.contentViewportMargin, 0.05)
   }

@@ -40,7 +40,7 @@ class BarChartGrouped internal constructor(
 ) : MeisterChartsApiLegacy<BarChartGroupedData, BarChartGroupedStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   /**

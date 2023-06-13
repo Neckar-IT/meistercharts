@@ -15,7 +15,6 @@
  */
 package com.meistercharts.api.bullet
 
-import StyleDebugEnabled
 import com.meistercharts.algorithms.model.CategoryIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
@@ -23,7 +22,6 @@ import com.meistercharts.api.applyStyle
 import com.meistercharts.api.applyThresholdStyles
 import com.meistercharts.api.applyTitleStyle
 import com.meistercharts.api.applyValueAxisStyle
-import com.meistercharts.api.bar.applyStyle
 import com.meistercharts.api.category.CategoryBulletChartData
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.setImagesProvider
@@ -48,9 +46,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bull
 
 
 /**
- * Applies the default configuration for SICK
+ * Applies the default configuration for Easy API
  */
-fun BulletChartGestalt.applySickDefaults() {
+fun BulletChartGestalt.applyEasyApiDefaults() {
   configuration.applyAxisTitleOnTop(40.0)
 }
 

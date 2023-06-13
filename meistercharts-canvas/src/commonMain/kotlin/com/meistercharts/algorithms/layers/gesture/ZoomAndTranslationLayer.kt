@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.ZoomAndTranslationSupport
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.layers.AbstractLayer
@@ -29,19 +30,11 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
 import com.meistercharts.canvas.events.CanvasTouchEventHandlerBroker
 import com.meistercharts.events.DragAction
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Size
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
-import com.meistercharts.events.MouseClickEvent
 import com.meistercharts.events.MouseDoubleClickAction
 import com.meistercharts.events.MouseDoubleClickEvent
-import com.meistercharts.events.MouseDownEvent
-import com.meistercharts.events.MouseDragEvent
-import com.meistercharts.events.MouseMoveEvent
-import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelAction
 import com.meistercharts.events.MouseWheelEvent
 import com.meistercharts.events.TouchDoubleTapAction
@@ -51,7 +44,9 @@ import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
-import it.neckar.open.unit.other.pct
+import com.meistercharts.model.Coordinates
+import com.meistercharts.model.Distance
+import com.meistercharts.model.Size
 
 /**
  * Zoom and translation layer that can be configured to handle different zoom and translation actions.
@@ -221,7 +216,7 @@ class ZoomAndTranslationLayer(
  */
 fun ZoomAndTranslationLayer.resetToDefaultsOnDoubleClick() {
   onDoubleClick {
-    zoomAndTranslationSupport.resetToDefaults()
+    zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -231,7 +226,7 @@ fun ZoomAndTranslationLayer.resetToDefaultsOnDoubleClick() {
  */
 fun ZoomAndTranslationLayer.resetToDefaultsOnDoubleTap() {
   onTouchDoubleTap {
-    zoomAndTranslationSupport.resetToDefaults()
+    zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -258,7 +253,7 @@ fun ZoomAndTranslationLayer.zoomOnMouseWheel(
     if (zoomAxis == AxisSelection.None) {
       return@onMouseWheel Ignored
     }
-    zoomAndTranslationSupport.modifyZoom(event.delta < 0, zoomAxis, event.coordinates)
+    zoomAndTranslationSupport.modifyZoom(event.delta < 0, zoomAxis, event.coordinates, reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -268,7 +263,7 @@ fun ZoomAndTranslationLayer.zoomOnMouseWheel(
  */
 fun ZoomAndTranslationLayer.translateOnMouseDrag(axis: AxisSelection = AxisSelection.Both) {
   onMouseDrag { distance ->
-    zoomAndTranslationSupport.translateWindow(axis, distance.x, distance.y)
+    zoomAndTranslationSupport.translateWindow(axis, distance.x, distance.y, reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -278,7 +273,7 @@ fun ZoomAndTranslationLayer.translateOnMouseDrag(axis: AxisSelection = AxisSelec
  */
 fun ZoomAndTranslationLayer.translateOnTouchDrag(axis: AxisSelection = AxisSelection.Both) {
   onTouchPan { _, _, deltaCenter ->
-    zoomAndTranslationSupport.translateWindow(axis, deltaCenter.x, deltaCenter.y)
+    zoomAndTranslationSupport.translateWindow(axis, deltaCenter.x, deltaCenter.y, reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -288,7 +283,7 @@ fun ZoomAndTranslationLayer.translateOnTouchDrag(axis: AxisSelection = AxisSelec
  */
 fun ZoomAndTranslationLayer.zoomOnPinch() {
   onTouchPinch { _, newCenter, _, _, zoomFactorChangeX, zoomFactorChangeY ->
-    zoomAndTranslationSupport.modifyZoom(zoomFactorChangeX, zoomFactorChangeY, zoomCenter = newCenter)
+    zoomAndTranslationSupport.modifyZoom(zoomFactorChangeX, zoomFactorChangeY, zoomCenter = newCenter, reason = UpdateReason.UserInteraction)
     Consumed
   }
 }
@@ -324,7 +319,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
           val factorY = 1 / relevantRubberBandSize.height * chartSupport.canvas.height * chartSupport.rootChartState.zoom.scaleY
 
           @Window val center = rubberBandStartLocation.center(rubberBandCurrentLocation)
-          zoomAndTranslationSupport.setZoom(factorX, factorY, center)
+          zoomAndTranslationSupport.setZoom(factorX, factorY, center, reason = UpdateReason.UserInteraction)
         }
       }
 

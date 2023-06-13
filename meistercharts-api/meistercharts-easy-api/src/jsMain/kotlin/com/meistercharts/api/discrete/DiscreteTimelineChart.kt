@@ -16,6 +16,7 @@
 package com.meistercharts.api.discrete
 
 import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
@@ -74,7 +75,7 @@ class DiscreteTimelineChart internal constructor(
   private val historyStorageCache = HistoryStorageCache(gestalt.inMemoryStorage)
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
 
     //decrease number of repaints
     meisterCharts.chartSupport.translateOverTime.roundingStrategy = RoundingStrategy.round
@@ -153,7 +154,7 @@ class DiscreteTimelineChart internal constructor(
       logger.debug("relative start/end: $startRelative - $endRelative")
 
       //Set the values immediately + set the defaults (for resize operations)
-      chartSupport.zoomAndTranslationSupport.fitX(startRelative, endRelative)
+      chartSupport.zoomAndTranslationSupport.fitX(startRelative, endRelative, reason = UpdateReason.DataChanged)
       chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = object : ZoomAndTranslationDefaults {
         override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
@@ -199,7 +200,7 @@ class DiscreteTimelineChart internal constructor(
       }
 
       //Reset to defaults to force application of the new zoom/translation
-      chartSupport.zoomAndTranslationSupport.resetToDefaults()
+      chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.DataChanged)
     }
   }
 
@@ -254,7 +255,7 @@ class DiscreteTimelineChart internal constructor(
    * Reset zoom and translation
    */
   fun resetView() {
-    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults()
+    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.ApiCall)
   }
 
   /**
@@ -278,7 +279,7 @@ class DiscreteTimelineChart internal constructor(
       with(meisterCharts.chartSupport) {
         @Window val centerX = chartCalculator.windowRelative2WindowX(zoomCenterX ?: 0.5)
         @Window val centerY = chartCalculator.windowRelative2WindowY(zoomCenterY ?: 0.5)
-        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY))
+        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY), reason = UpdateReason.ApiCall)
       }
     }
   }

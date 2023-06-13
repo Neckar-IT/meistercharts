@@ -19,7 +19,7 @@ import com.meistercharts.api.bullet.BulletChart
 import com.meistercharts.api.circular.CircularChart
 import com.meistercharts.api.compass.Compass
 import com.meistercharts.api.discrete.DiscreteTimelineChart
-import com.meistercharts.api.discrete.applyDiscreteTimelineChartSickDefaults
+import com.meistercharts.api.discrete.applyDiscreteTimelineChartEasyApiDefaults
 import com.meistercharts.api.histogram.Histogram
 import com.meistercharts.api.line.LineChartSimple
 import com.meistercharts.api.line.TimeLineChart
@@ -473,7 +473,7 @@ fun createDiscreteTimelineChart(): DiscreteTimelineChart {
   val gestalt = DiscreteTimelineChartGestalt(historyStorage).apply {
     configure(meisterChartBuilder)
 
-    meisterChartBuilder.applyDiscreteTimelineChartSickDefaults()
+    meisterChartBuilder.applyDiscreteTimelineChartEasyApiDefaults()
   }
 
   val meisterChart = meisterChartBuilder.build()

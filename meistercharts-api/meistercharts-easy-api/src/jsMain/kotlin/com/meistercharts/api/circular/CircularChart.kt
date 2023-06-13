@@ -37,7 +37,7 @@ class CircularChart internal constructor(
 
   init {
     require(gestalt.data.absoluteValuesProvider is MutableDoublesProvider) { "please provide a mutable model" }
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   /**

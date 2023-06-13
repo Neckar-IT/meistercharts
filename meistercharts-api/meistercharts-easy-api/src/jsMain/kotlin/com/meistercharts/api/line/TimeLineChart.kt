@@ -15,6 +15,7 @@
  */
 package com.meistercharts.api.line
 
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -92,7 +93,7 @@ class TimeLineChart internal constructor(
 ) : MeisterChartsApiLegacy<TimeLineChartData, TimeLineChartStyle>(meisterCharts) {
 
   init {
-    gestalt.timeLineChartGestalt.applySickDefaults()
+    gestalt.timeLineChartGestalt.applyEasyApiDefaults()
   }
 
   /**
@@ -107,9 +108,9 @@ class TimeLineChart internal constructor(
   private var previousVisibleTimeRange: com.meistercharts.algorithms.TimeRange = com.meistercharts.algorithms.TimeRange(0.0, 0.0)
 
   /**
-   * Notifies the observers about a time range change
+   * Notifies the observers about a time range change - if the time range has changed
    */
-  private fun notifyVisibleTimeRangeChanged() {
+  private fun notifyVisibleTimeRangeChangedIfNecessary() {
     val currentVisibleTimeRange = meisterCharts.chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.style.contentAreaTimeRange)
     if (currentVisibleTimeRange == previousVisibleTimeRange) {
       return
@@ -172,7 +173,7 @@ class TimeLineChart internal constructor(
    */
   private fun scheduleTimeRangeChangedNotification() {
     meisterCharts.chartSupport.timerSupport.throttleLast(visibleTimeRangeChangedEventWindow, this) {
-      notifyVisibleTimeRangeChanged()
+      notifyVisibleTimeRangeChangedIfNecessary()
     }
   }
 
@@ -219,7 +220,7 @@ class TimeLineChart internal constructor(
     jsStyle.visibleTimeRange?.toModel()?.let {
       @DomainRelative val startDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.start)
       @DomainRelative val endDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.end)
-      meisterCharts.chartSupport.zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative)
+      meisterCharts.chartSupport.zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative, reason = UpdateReason.ApiCall)
     }
 
     jsStyle.crossWirePosition?.let {
@@ -304,7 +305,7 @@ class TimeLineChart internal constructor(
   @Suppress("unused")
   @JsName("resetView")
   fun resetView() {
-    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults()
+    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.ApiCall)
   }
 
   /**
@@ -335,7 +336,7 @@ class TimeLineChart internal constructor(
       with(meisterCharts.chartSupport) {
         @Window val centerX = chartCalculator.windowRelative2WindowX(zoomCenterX ?: 0.5)
         @Window val centerY = chartCalculator.windowRelative2WindowY(zoomCenterY ?: 0.5)
-        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY))
+        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY), reason = UpdateReason.ApiCall)
       }
     }
   }

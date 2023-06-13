@@ -17,6 +17,7 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.ZoomLevelCalculator
 import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
@@ -135,7 +136,7 @@ class LayerSupportTest {
     canvas.size = Size.of(800.0, 600.0) //--> this results in an automatic call to resetToDefaults
     assertThat(chartState.contentAreaSize).isEqualTo(canvas.size)
 
-    chartSupport.zoomAndTranslationSupport.resetToDefaults()
+    chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.UserInteraction)
 
     assertThat(chartState.contentAreaSize).isEqualTo(canvas.size)
     assertThat(chartState.zoom).isEqualTo(expectedDefaultZoom)

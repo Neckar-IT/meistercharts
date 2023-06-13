@@ -30,7 +30,7 @@ class MapWithStackedBars internal constructor(
 ) : MeisterChartsApiLegacy<MapWithBarsData, MapWithBarsStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setData(jsData: MapWithBarsData) {

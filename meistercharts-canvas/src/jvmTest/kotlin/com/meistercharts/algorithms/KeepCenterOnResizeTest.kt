@@ -35,7 +35,7 @@ class KeepCenterOnResizeTest {
     val smallSize = Size.of(800.0, 600.0)
     chartState.contentAreaSize = smallSize
     chartState.windowSize = smallSize
-    zoomAndPanSupport.setZoom(4.0, 7.0, Coordinates(400.0, 300.0))
+    zoomAndPanSupport.setZoom(4.0, 7.0, Coordinates(400.0, 300.0), reason = UpdateReason.Initial)
 
     assertThat(zoomAndPanSupport.chartCalculator.contentAreaRelative2domainRelativeX(0.5)).isEqualTo(0.5)
     assertThat(zoomAndPanSupport.chartCalculator.contentAreaRelative2domainRelativeY(0.5)).isEqualTo(0.5)

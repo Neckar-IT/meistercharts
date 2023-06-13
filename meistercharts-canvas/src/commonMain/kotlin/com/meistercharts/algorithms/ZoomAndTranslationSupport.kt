@@ -25,12 +25,13 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.kotlin.lang.or1ifNaN
 import it.neckar.open.unit.number.Positive
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
-import kotlin.jvm.JvmOverloads
 
 /**
  * Helper class that offers panning and zooming support
@@ -58,7 +59,7 @@ class ZoomAndTranslationSupport(
     chartState: MutableChartState,
     zoomAndPanModifier: ZoomAndTranslationModifier,
     zoomAndTranslationDefaults: ZoomAndTranslationDefaults,
-    zoomChangeFactor: Double = ZoomLevelCalculator.SQRT_2
+    zoomChangeFactor: Double = ZoomLevelCalculator.SQRT_2,
   ) : this(ChartCalculator(chartState), chartState, zoomAndPanModifier, zoomAndTranslationDefaults, zoomChangeFactor)
 
   init {
@@ -66,18 +67,18 @@ class ZoomAndTranslationSupport(
       "Chart state of chart calculator must be the same as the chart state"
     }
 
-    resetToDefaults()
+    resetToDefaults(reason = UpdateReason.Initial)
   }
 
-  fun translateWindowX(deltaX: @Zoomed Double) {
-    moveWindow(deltaX, 0.0)
+  fun translateWindowX(deltaX: @Zoomed Double, reason: UpdateReason) {
+    moveWindow(deltaX, 0.0, reason = reason)
   }
 
-  fun translateWindowY(deltaY: @Zoomed Double) {
-    moveWindow(0.0, deltaY)
+  fun translateWindowY(deltaY: @Zoomed Double, reason: UpdateReason) {
+    moveWindow(0.0, deltaY, reason = reason)
   }
 
-  fun translateWindow(axisSelection: AxisSelection, deltaX: @Zoomed Double, deltaY: @Zoomed Double) {
+  fun translateWindow(axisSelection: AxisSelection, deltaX: @Zoomed Double, deltaY: @Zoomed Double, reason: UpdateReason) {
     @Zoomed var relevantDeltaX = 0.0
     if (axisSelection.containsX) {
       relevantDeltaX = deltaX
@@ -88,38 +89,42 @@ class ZoomAndTranslationSupport(
       relevantDeltaY = deltaY
     }
 
-    moveWindow(relevantDeltaX, relevantDeltaY)
+    moveWindow(relevantDeltaX, relevantDeltaY, reason = reason)
   }
 
   /**
    * Move the window by the relative amount
    */
-  fun moveWindowRelative(@ContentAreaRelative deltaX: Double, @ContentAreaRelative deltaY: Double) {
+  fun moveWindowRelative(@ContentAreaRelative deltaX: Double, @ContentAreaRelative deltaY: Double, reason: UpdateReason) {
     @Zoomed val deltaXZoomed = chartCalculator.contentAreaRelative2zoomedX(deltaX).or0ifNaN()
     @Zoomed val deltaYZoomed = chartCalculator.contentAreaRelative2zoomedY(deltaY).or0ifNaN()
-    moveWindow(deltaXZoomed, deltaYZoomed)
+    moveWindow(deltaXZoomed, deltaYZoomed, reason = reason)
   }
 
   /**
    * Move the window by the given pixels
    */
-  fun moveWindow(deltaX: @Zoomed Double, deltaY: @Zoomed Double) {
-    setWindowTranslation(chartState.windowTranslation.plus(deltaX, deltaY))
+  fun moveWindow(deltaX: @Zoomed Double, deltaY: @Zoomed Double, reason: UpdateReason) {
+    setWindowTranslation(chartState.windowTranslation.plus(deltaX, deltaY), reason = reason)
   }
 
-  fun moveWindow(delta: @Zoomed Distance) {
-    moveWindow(delta.x, delta.y)
+  fun moveWindow(delta: @Zoomed Distance, reason: UpdateReason) {
+    moveWindow(delta.x, delta.y, reason = reason)
   }
 
-  fun setWindowTranslationX(translationX: @Zoomed Double) {
-    setWindowTranslation(Distance.of(translationX, chartState.windowTranslationY))
+  fun setWindowTranslationX(translationX: @Zoomed Double, reason: UpdateReason) {
+    setWindowTranslation(Distance.of(translationX, chartState.windowTranslationY), reason = reason)
   }
 
-  fun setWindowTranslationY(translationY: @Zoomed Double) {
-    setWindowTranslation(Distance.of(chartState.windowTranslationX, translationY))
+  fun setWindowTranslationY(translationY: @Zoomed Double, reason: UpdateReason) {
+    setWindowTranslation(Distance.of(chartState.windowTranslationX, translationY), reason = reason)
   }
 
-  fun setWindowTranslation(windowTranslation: @Zoomed Distance) {
+  fun setWindowTranslation(windowTranslation: @Zoomed Distance, reason: UpdateReason) {
+    if (reason != UpdateReason.Animation) { //the animation events happen a lot of times, do not debug these
+      logger.debug("Setting window translation to $windowTranslation because ${reason.label()}")
+    }
+
     chartState.windowTranslation = zoomAndTranslationModifier
       .modifyTranslation(windowTranslation, chartCalculator)
       .avoidNaN()
@@ -128,17 +133,18 @@ class ZoomAndTranslationSupport(
   /**
    * Updates the zoom. Keeps the given zoom center
    */
-  @JvmOverloads
-  fun setZoom(zoom: Zoom, @Window @px zoomCenter: Coordinates? = null) {
-    setZoom(zoom.scaleX, zoom.scaleY, zoomCenter)
+  fun setZoom(zoom: Zoom, @Window @px zoomCenter: Coordinates? = null, reason: UpdateReason) {
+    setZoom(zoom.scaleX, zoom.scaleY, zoomCenter, reason = reason)
   }
 
-  @JvmOverloads
   fun setZoom(
     newZoomFactorX: @Positive Double = chartState.zoomX,
     newZoomFactorY: @Positive Double = chartState.zoomY,
-    @Window zoomCenter: Coordinates? = null
+    @Window zoomCenter: Coordinates? = null,
+    reason: UpdateReason,
   ) {
+    logger.debug("Setting zoom to $newZoomFactorX, $newZoomFactorY with center $zoomCenter because ${reason.label()}")
+
     if (zoomCenter == null) {
       //Simple zooming mode without a zoom center
       chartState.zoom = Zoom.of(newZoomFactorX, newZoomFactorY)
@@ -155,18 +161,18 @@ class ZoomAndTranslationSupport(
     val (@ContentAreaRelative x1, @ContentAreaRelative y1) = chartCalculator.window2contentAreaRelative(zoomCenter.x, zoomCenter.y)
 
     //Move the window so that the old content area relative is again placed under the zoom center
-    moveWindowRelative(x1 - x, y1 - y)
+    moveWindowRelative(x1 - x, y1 - y, reason = reason)
   }
 
-  @JvmOverloads
   fun modifyZoom(
     zoomIn: Boolean,
     axisSelection: AxisSelection,
     @Window @px zoomCenterX: Double = chartState.windowWidth * 0.5,
     @Window @px zoomCenterY: Double = chartState.windowHeight * 0.5,
-    zoomChangeFactor: Double = this.zoomChangeFactor
+    zoomChangeFactor: Double = this.zoomChangeFactor,
+    reason: UpdateReason,
   ) {
-    modifyZoom(zoomIn, axisSelection, Coordinates(zoomCenterX, zoomCenterY), zoomChangeFactor)
+    modifyZoom(zoomIn, axisSelection, Coordinates(zoomCenterX, zoomCenterY), zoomChangeFactor, reason = reason)
   }
 
   /**
@@ -176,9 +182,10 @@ class ZoomAndTranslationSupport(
     zoomIn: Boolean,
     axisSelection: AxisSelection,
     @Window @px zoomCenter: Coordinates? = chartState.windowCenter,
-    zoomChangeFactor: Double = this.zoomChangeFactor
+    zoomChangeFactor: Double = this.zoomChangeFactor,
+    reason: UpdateReason,
   ) {
-    modifyZoom(zoomIn, axisSelection, zoomCenter, zoomChangeFactor, zoomChangeFactor)
+    modifyZoom(zoomIn, axisSelection, zoomCenter, zoomChangeFactor, zoomChangeFactor, reason = reason)
   }
 
   /**
@@ -189,7 +196,8 @@ class ZoomAndTranslationSupport(
     axisSelection: AxisSelection,
     @Window @px zoomCenter: Coordinates? = chartState.windowCenter,
     zoomChangeFactorX: @Positive Double = this.zoomChangeFactor,
-    zoomChangeFactorY: @Positive Double = this.zoomChangeFactor
+    zoomChangeFactorY: @Positive Double = this.zoomChangeFactor,
+    reason: UpdateReason,
   ) {
     val oldZoomFactors = chartState.zoom
 
@@ -214,7 +222,7 @@ class ZoomAndTranslationSupport(
       }
     }
 
-    setZoom(newZoomFactorX, newZoomFactorY, zoomCenter)
+    setZoom(newZoomFactorX, newZoomFactorY, zoomCenter, reason = reason)
   }
 
   fun modifyZoom(
@@ -225,8 +233,9 @@ class ZoomAndTranslationSupport(
 
     axisSelection: AxisSelection = AxisSelection.Both,
     @Window @px zoomCenter: Coordinates? = chartState.windowCenter,
+    reason: UpdateReason,
   ) {
-    modifyZoom(zoomChangeFactor, zoomChangeFactor, axisSelection, zoomCenter)
+    modifyZoom(zoomChangeFactor, zoomChangeFactor, axisSelection, zoomCenter, reason = reason)
   }
 
   fun modifyZoom(
@@ -238,6 +247,7 @@ class ZoomAndTranslationSupport(
 
     axisSelection: AxisSelection = AxisSelection.Both,
     @Window @px zoomCenter: Coordinates? = chartState.windowCenter,
+    reason: UpdateReason,
   ) {
     val oldZoomFactors = chartState.zoom
 
@@ -251,39 +261,45 @@ class ZoomAndTranslationSupport(
       newZoomFactorY *= zoomChangeFactorY
     }
 
-    setZoom(newZoomFactorX, newZoomFactorY, zoomCenter)
+    setZoom(newZoomFactorX, newZoomFactorY, zoomCenter, reason = reason)
   }
 
   /**
    * Resets zoom and translation to the default values
    * @param zoomAndTranslationDefaults The amount of overscan Results in a smaller zoom
    */
-  @JvmOverloads
-  fun resetToDefaults(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults) {
-    resetZoom(zoomAndTranslationDefaults)
-    resetWindowTranslation(zoomAndTranslationDefaults)
+  fun resetToDefaults(
+    zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults,
+    reason: UpdateReason,
+  ) {
+    resetZoom(zoomAndTranslationDefaults, reason = reason)
+    resetWindowTranslation(zoomAndTranslationDefaults, reason = reason)
   }
 
-  fun resetZoom(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, @Window @px zoomCenter: Coordinates? = null) {
+  fun resetZoom(
+    zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults,
+    @Window @px zoomCenter: Coordinates? = null,
+    reason: UpdateReason,
+  ) {
     //Reduce the zoom accordingly and translate to center
-    setZoom(zoomAndTranslationDefaults.defaultZoom(chartCalculator), zoomCenter)
+    setZoom(zoomAndTranslationDefaults.defaultZoom(chartCalculator), zoomCenter, reason)
   }
 
   /**
    * Resets the window translation
    */
-  fun resetWindowTranslation(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults) {
-    setWindowTranslation(zoomAndTranslationDefaults.defaultTranslation(chartCalculator))
+  fun resetWindowTranslation(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, reason: UpdateReason) {
+    setWindowTranslation(zoomAndTranslationDefaults.defaultTranslation(chartCalculator), reason = reason)
   }
 
-  fun resetWindowTranslationX(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults) {
+  fun resetWindowTranslationX(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, reason: UpdateReason) {
     @Zoomed val correctionX = zoomAndTranslationDefaults.defaultTranslation(chartCalculator).x
-    setWindowTranslationX(correctionX)
+    setWindowTranslationX(correctionX, reason = reason)
   }
 
-  fun resetWindowTranslationY(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults) {
+  fun resetWindowTranslationY(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, reason: UpdateReason) {
     @Zoomed val correctionY = zoomAndTranslationDefaults.defaultTranslation(chartCalculator).y
-    setWindowTranslationY(correctionY)
+    setWindowTranslationY(correctionY, reason = reason)
   }
 
   /**
@@ -315,20 +331,20 @@ class ZoomAndTranslationSupport(
   /**
    * Modifies the zoom and pan to show exactly the given range.
    */
-  fun fitX(start: @DomainRelative Double, end: @DomainRelative Double) {
+  fun fitX(start: @DomainRelative Double, end: @DomainRelative Double, reason: UpdateReason) {
     if (chartState.hasZeroSize) {
       // nothing useful to be done here
       return
     }
 
-    setZoom(newZoomFactorX = calculateFitZoomX(start, end))
-    setWindowTranslationX(calculateFitWindowTranslationX(start))
+    setZoom(newZoomFactorX = calculateFitZoomX(start, end), reason = reason)
+    setWindowTranslationX(calculateFitWindowTranslationX(start), reason = reason)
   }
 
   /**
    * Modifies the zoom and pan to show exactly the given range.
    */
-  fun fitY(start: @DomainRelative Double, end: @DomainRelative Double) {
+  fun fitY(start: @DomainRelative Double, end: @DomainRelative Double, reason: UpdateReason) {
     if (chartState.hasZeroSize) {
       // nothing useful to be done here
       return
@@ -341,8 +357,12 @@ class ZoomAndTranslationSupport(
     @ContentArea val targetVisibleContentAreaHeight = endContentArea - startContentArea
 
     val newZoomFactorY = (chartState.windowHeight / targetVisibleContentAreaHeight).or1ifNaN()
-    setZoom(newZoomFactorY = newZoomFactorY)
+    setZoom(newZoomFactorY = newZoomFactorY, reason = reason)
 
-    setWindowTranslationY(-chartCalculator.domainRelative2zoomedY(start))
+    setWindowTranslationY(-chartCalculator.domainRelative2zoomedY(start), reason = reason)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.algorithms.ZoomAndTranslationSupport")
   }
 }

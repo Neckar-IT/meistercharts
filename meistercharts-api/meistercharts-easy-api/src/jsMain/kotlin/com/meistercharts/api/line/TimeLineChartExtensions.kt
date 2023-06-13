@@ -20,9 +20,9 @@ import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
 
 /**
- * Applies the default configuration for SICK
+ * Applies the default configuration for Easy API
  */
-fun TimeLineChartGestalt.applySickDefaults() {
+fun TimeLineChartGestalt.applyEasyApiDefaults() {
   this.style.applyValueAxisTitleOnTop()
   thresholdsSupport.configuration.hudLayerConfiguration = { _: DecimalDataSeriesIndex, _: ValueAxisHudLayer ->
   }
