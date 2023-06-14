@@ -9,12 +9,17 @@
 <div class="example">
   <h1>MeisterCharts minimal example:</h1>
 
-  <div id="timeLineChart" style="width: 1000px; height:500px;">
+  <div id="timeLineChart" style="width: 1000px; height: 500px;">
+    <h3>TimeLineChart</h3>
   </div>
+
+  <script type="module">
+    import meistercharts from "https://cdn.skypack.dev/@meistercharts/meistercharts@1.32.0";
+
+    meistercharts.createTimeLineChartFromId('timeLineChart');
+    meistercharts.setUpDemo();
+  </script>
+
 </div>
-
-<script type="module" src="main.js"></script>
-
 </body>
 </html>
-

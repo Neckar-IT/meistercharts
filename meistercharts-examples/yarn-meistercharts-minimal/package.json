@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "main": "src/index.js",
   "dependencies": {
-    "@meistercharts/meistercharts": "^1.32.0"
+    "@meistercharts/meistercharts": "1.33.0"
   },
   "devDependencies": {
     "webpack": "5.82.0",

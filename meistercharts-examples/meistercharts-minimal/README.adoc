@@ -1,43 +1,51 @@
-# Getting Started
+= Getting Started
 
-## Requirements
+== Requirements
 For this example no requirements are needed. It shows how you can run MeisterCharts directly on pure
 HTML and JavasScript without any Package Manager and bundling tools.
 
-## Download and Install MeisterCharts
+== Download and Install MeisterCharts
 
-### option 1: Installation with our CDN
-```HTML
+=== option 1: Installation with our CDN
+
+[source,HTML]
+----
 <script src="https://cdn.skypack.dev/@meistercharts/meistercharts@1.32.0"></script>
-```
+----
 
-### option 2: Load MeisterCharts from the CDN as ECMAScript modules
+=== option 2: Load MeisterCharts from the CDN as ECMAScript modules
 
 You can import ES Modules directly into your Browser without needing any bundling tools.
-```HTML
+
+[source,HTML]
+----
 <script type="module">
   import meistercharts from "https://cdn.skypack.dev/@meistercharts/meistercharts@1.32.0";
   meistercharts.createTimeLineChartFromId('timeLineChart');
 </script>
-```
+----
 
-## Your First Chart
+== Your First Chart
 With MeisterCharts included in your webpage you are ready to create your first chart.
 
 Add a div in your webpage.
-```html
+
+[source,html]
+----
 <div id="timeLineChart" style="width: 500px; height: 200px;"></div>
-```
+----
 
 The ID of the div is accessed by the ``createTimeLineChartFromId`` and the
 chart will be created in this container.
 
-### Adding Data to your chart
+=== Adding Data to your chart
 
 You can add your first sample data with the ``setUpDemo()`` method:
-```js
+
+[source,js]
+----
 meistercharts.setUpDemo();
-```
+----
 
 After we created the chart you should now see the following chart on your browser
 <p align="center">
@@ -47,7 +55,8 @@ After we created the chart you should now see the following chart on your browse
 If you are facing any problems you can clone this example project
 or just try this code snippet:
 
-```html
+[source,html]
+----
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +82,7 @@ or just try this code snippet:
 </div>
 </body>
 </html>
-```
+----
 
 
 
