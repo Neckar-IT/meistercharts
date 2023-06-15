@@ -46,12 +46,15 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Creates an unparsed color from a web string.
+     * Parses the given string and creates an RGBA-color.
      */
     fun web(web: String): RgbaColor {
       return parseHexOrRgba(web)
     }
 
+    /**
+     * Creates an unparsed color from a web string.
+     */
     fun unparsed(web: String): UnparsedWebColor {
       return UnparsedWebColor(web)
     }

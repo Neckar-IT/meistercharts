@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
+import it.neckar.open.provider.DoubleProvider
 
 /**
  * Builder for a zoom and pan modifiers
@@ -86,6 +87,16 @@ class ZoomAndTranslationModifiersBuilder(config: ZoomAndTranslationModifiersBuil
 
   fun onlyPositiveTranslation(): ZoomAndTranslationModifiersBuilder {
     current = OnlyPositiveTranslationModifier(current)
+    return this
+  }
+
+  fun maxZoom(maxZoomFactorX: DoubleProvider, maxZoomFactorY: DoubleProvider): ZoomAndTranslationModifiersBuilder {
+    current = MaxZoomModifier(maxZoomFactorX, maxZoomFactorY, current)
+    return this
+  }
+
+  fun minZoom(minZoomFactorX: DoubleProvider, minZoomFactorY: DoubleProvider): ZoomAndTranslationModifiersBuilder {
+    current = MinZoomModifier(minZoomFactorX, minZoomFactorY, current)
     return this
   }
 

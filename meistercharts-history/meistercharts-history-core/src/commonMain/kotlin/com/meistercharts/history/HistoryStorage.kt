@@ -31,6 +31,13 @@ import it.neckar.open.unit.si.ms
  *
  */
 interface HistoryStorage : OnDispose {
+
+  //TODO think about this
+  @Deprecated("not implemented yet, think about it!")
+  fun getAvailableDataRange(): TimeRange {
+    TODO()
+  }
+
   /**
    * Returns a list of buckets that span the given time
    *

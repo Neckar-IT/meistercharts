@@ -18,7 +18,6 @@ package com.meistercharts.history
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValues
-import com.meistercharts.history.impl.RecordingType
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.number.MayBeNaN

@@ -20,11 +20,9 @@ import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.unit.si.ms
 import com.meistercharts.history.cleanup.HistoryCleanupService
 import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
 import com.meistercharts.history.downsampling.DownSamplingService
-import com.meistercharts.history.impl.RecordingType
 
 
 /**

@@ -15,11 +15,6 @@
  */
 package com.meistercharts.algorithms
 
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.modules.EmptySerializersModule
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import it.neckar.open.serialization.roundTrip
 

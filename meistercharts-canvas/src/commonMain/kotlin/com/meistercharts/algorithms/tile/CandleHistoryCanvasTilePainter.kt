@@ -31,7 +31,6 @@ import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
-import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach

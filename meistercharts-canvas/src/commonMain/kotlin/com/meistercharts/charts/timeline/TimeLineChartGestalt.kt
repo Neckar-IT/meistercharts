@@ -272,6 +272,7 @@ class TimeLineChartGestalt
   /**
    * Configures this gestalt to show candles
    */
+  @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
   fun configureForCandle() {
     tilePainter = createCandleHistoryCanvasTilePainter()
     historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
@@ -280,7 +281,7 @@ class TimeLineChartGestalt
   /**
    * Creates a new instance of [HistoryCanvasTilePainter]
    */
-  private fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
+  fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
     CandleHistoryCanvasTilePainter.Configuration(
       historyStorage = data.historyStorage,
       contentAreaTimeRange = { style.contentAreaTimeRange },
@@ -1214,7 +1215,10 @@ class TimeLineChartGestalt
     /**
      * The smallest sampling period that is used when creating the tiles
      */
+    @Deprecated("required? Or obsolete now?")
     val minimumSamplingPeriodProperty: ObservableObject<SamplingPeriod> = ObservableObject(defaultMinimumSamplingPeriod)
+
+    @Deprecated("required? Or obsolete now?")
     var minimumSamplingPeriod: SamplingPeriod by minimumSamplingPeriodProperty
 
     /**
@@ -1515,6 +1519,7 @@ class TimeLineChartGestalt
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.
      */
+    @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
     fun applyMinimumSamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
       //TODO replace this method with some kind of configuration/wizard/... object
       contentAreaDuration = samplingPeriod.distance * 600 //600 samples

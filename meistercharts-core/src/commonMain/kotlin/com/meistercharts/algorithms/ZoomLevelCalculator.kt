@@ -38,6 +38,7 @@ class ZoomLevelCalculator(
 
   companion object {
     const val SQRT_2: Double = 1.4142135623730951
+    const val SQRT_2_TWICE: Double = 2.0
 
     /**
      * Converts a zoom level to a zoom factor

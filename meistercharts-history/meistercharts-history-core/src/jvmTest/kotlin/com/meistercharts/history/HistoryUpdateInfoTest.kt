@@ -19,7 +19,6 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.TimeRange
 import com.meistercharts.algorithms.TimeRanges
-import org.junit.jupiter.api.Assertions.*
 
 import org.junit.jupiter.api.*
 

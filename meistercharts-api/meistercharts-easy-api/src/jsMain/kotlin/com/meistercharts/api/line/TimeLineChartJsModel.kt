@@ -26,9 +26,7 @@ import com.meistercharts.api.EnumConfiguration
 import com.meistercharts.api.FontStyle
 import com.meistercharts.api.LineStyle
 import com.meistercharts.api.NumberFormat
-import com.meistercharts.api.PointConnectionType
 import com.meistercharts.api.PointType
-import com.meistercharts.api.SamplingPeriod
 import com.meistercharts.api.StripeStyle
 import com.meistercharts.api.Threshold
 import com.meistercharts.api.TimeAxisStyle
@@ -62,10 +60,8 @@ external interface TimeLineChartData {
 external interface HistorySettings {
   /**
    * The expected time between two consecutive samples.
-   *
-   * The size of the history also depends on this value.
    */
-  val expectedSamplingPeriod: SamplingPeriod
+  val durationBetweenSamples: @ms Double?
 
   /**
    * This factor is used to calculate the minimal distance between two data points that will be interpreted as gap.

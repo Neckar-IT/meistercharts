@@ -20,6 +20,8 @@ import it.neckar.open.collections.fastForEachReversed
 import it.neckar.open.unit.si.ms
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 /**
  * Represents the temporal resolution when recording the history.
@@ -172,6 +174,20 @@ enum class SamplingPeriod(
       }
 
       return Every360Days
+    }
+
+    /**
+     * Returns the first sampling period that has a distance same or smaller than the given one
+     */
+    fun withMaxDuration(maxDuration: Duration): SamplingPeriod {
+      return withMaxDistance(maxDuration.toDouble(DurationUnit.MILLISECONDS))
+    }
+
+    /**
+     * Returns the first sampling period that has a distance same or greater than the given one
+     */
+    fun withMinDuration(minDuration: Duration): SamplingPeriod {
+      return withMinDistance(minDuration.toDouble(DurationUnit.MILLISECONDS))
     }
 
     /**

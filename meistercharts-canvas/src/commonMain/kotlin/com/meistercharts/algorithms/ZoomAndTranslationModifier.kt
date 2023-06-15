@@ -15,7 +15,6 @@
  */
 package com.meistercharts.algorithms
 
-import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom

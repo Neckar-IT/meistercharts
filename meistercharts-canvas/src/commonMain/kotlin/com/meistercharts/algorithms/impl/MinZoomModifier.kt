@@ -17,28 +17,35 @@ package com.meistercharts.algorithms.impl
 
 import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Zoom
+import it.neckar.open.provider.DoubleProvider
 
 /**
  * Ensures a max zoom level
  *
  */
 class MinZoomModifier(
-  private val minZoomFactorX: Double,
-  private val minZoomFactorY: Double,
-  private val delegate: ZoomAndTranslationModifier
+  private val minZoomFactorX: DoubleProvider,
+  private val minZoomFactorY: DoubleProvider,
+  private val delegate: ZoomAndTranslationModifier,
 ) :
   ZoomAndTranslationModifier {
+
+  constructor(
+    minZoomFactorX: Double,
+    minZoomFactorY: Double,
+    delegate: ZoomAndTranslationModifier,
+  ) : this({ minZoomFactorX }, { minZoomFactorY }, delegate)
+
   override fun modifyTranslation(@Zoomed translation: Distance, calculator: ChartCalculator): @Zoomed Distance {
     return delegate.modifyTranslation(translation, calculator)
   }
 
   override fun modifyZoom(zoom: Zoom, calculator: ChartCalculator): Zoom {
     return delegate.modifyZoom(zoom, calculator)
-      .withMin(minZoomFactorX, minZoomFactorY)
+      .withMin(minZoomFactorX(), minZoomFactorY())
   }
 
 }
