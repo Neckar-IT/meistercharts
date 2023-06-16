@@ -577,7 +577,7 @@ class TimeLineChartGestalt
      * Creates a new chart state for the decimals area
      */
     fun calculateDecimalsAreaChartState(originalChartState: ChartState): ChartState {
-      val updatedViewportMargin = originalChartState.contentViewportMargin.withBottom(decimalsAreaViewportMarginBottom())
+      val updatedViewportMargin = originalChartState.contentViewportMargin.withTopBottom(decimalsAreaViewportMarginTop(), decimalsAreaViewportMarginBottom())
       return originalChartState.withContentViewportMargin(updatedViewportMargin)
     }
 
@@ -620,11 +620,15 @@ class TimeLineChartGestalt
       return enumsAreaViewportMarginBottom() + totalHeightRequiredForEnumsLayer()
     }
 
+    fun decimalsAreaViewportMarginTop(): @Zoomed Double {
+      return style.decimalsAreaMarginTop
+    }
+
     /**
      * The margin for the decimals area viewport
      */
     fun decimalsAreaViewportMargin(): @Zoomed Insets {
-      return contentViewportMargin.withBottom(decimalsAreaViewportMarginBottom())
+      return contentViewportMargin.withTopBottom(newTop = decimalsAreaViewportMarginTop(), newBottom = decimalsAreaViewportMarginBottom())
     }
 
     /**
@@ -1071,7 +1075,7 @@ class TimeLineChartGestalt
    * - space at bottom for time axis
    */
   private val contentViewportGestalt = ContentViewportGestalt(
-    Insets.of(25.0, 0.0, 0.0, 0.0),
+    Insets.of(0.0, 0.0, 0.0, 0.0),
     updateBehavior = ContentViewportGestalt.UpdateBehavior.KeepCurrentZoomAndTranslation //do not reset to keep the zoom and translation
   )
 
@@ -1245,6 +1249,12 @@ class TimeLineChartGestalt
 
   @ConfigurationDsl
   inner class Style {
+    /**
+     * The margin of the decimals area at top.
+     * Is used to calculate the viewport of the decimals area
+     */
+    val decimalsAreaMarginTop: @Zoomed Double = 15.0
+
     /**
      * Value axis style configuration - is called when a new value axis is instantiated
      */

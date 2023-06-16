@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.ZoomLevelCalculator
@@ -14,15 +29,15 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.times
 
 class ConfigurationCalculator(
-  var durationBetweenRecordedDataPoints: Duration,
+  var durationBetweenSamples: Duration,
   var gapFactor: Double,
 
   @OnlyForPros
-  var manualMinDistanceBetweenDataPoints: @px Double?,
+  var manualMinDistanceBetweenSamples: @px Double?,
   @OnlyForPros
-  var manualMaxDistanceBetweenDataPoints: @px Double?,
+  var manualMaxDistanceBetweenSamples: @px Double?,
   @OnlyForPros
-  var manualIdealDistanceBetweenDataPoints: @px Double?,
+  var manualIdealDistanceBetweenSamples: @px Double?,
 
   @OnlyForPros
   var manualMinZoom: Double?,
@@ -31,31 +46,32 @@ class ConfigurationCalculator(
 ) {
 
   val recordingSamplingPeriod: SamplingPeriod
-    get() = SamplingPeriod.withMaxDuration(durationBetweenRecordedDataPoints)
+    get() = SamplingPeriod.withMaxDuration(durationBetweenSamples)
 
-  val minDistanceBetweenDataPoints: @px Double
-    get() = manualMinDistanceBetweenDataPoints ?: 2.0 // TODO: Calculate based on data
+  val minDistanceBetweenSamples: @px Double
+    get() = (manualMinDistanceBetweenSamples ?: 2.0) // TODO: Calculate based on data
 
-  val maxDistanceBetweenDataPoints: @px Double
-    get() = manualMaxDistanceBetweenDataPoints ?: 50.0 // TODO: Calculate based on data
+  val maxDistanceBetweenSamples: @px Double
+    get() = (manualMaxDistanceBetweenSamples ?: 50.0) // TODO: Calculate based on data
 
-  val idealDistanceBetweenDataPoints: @px Double
-    get() = manualIdealDistanceBetweenDataPoints ?: (minDistanceBetweenDataPoints * ZoomLevelCalculator.SQRT_2_TWICE).coerceAtMost(maxDistanceBetweenDataPoints)
+  val idealDistanceBetweenSamples: @px Double
+    get() = (manualIdealDistanceBetweenSamples ?: (minDistanceBetweenSamples * ZoomLevelCalculator.SQRT_2_TWICE))
+      .coerceIn(minDistanceBetweenSamples, maxDistanceBetweenSamples)
 
   val maxPointsPer1000px: Double
-    get() = 1000.0 / minDistanceBetweenDataPoints
+    get() = 1000.0 / minDistanceBetweenSamples
 
   val minPointsPer1000px: Double
-    get() = 1000.0 / maxDistanceBetweenDataPoints
+    get() = 1000.0 / maxDistanceBetweenSamples
 
   val idealPointsPer1000px: Double
-    get() = 1000.0 / idealDistanceBetweenDataPoints
+    get() = 1000.0 / idealDistanceBetweenSamples
 
   val contentAreaDuration: Duration // Per 1000px
-    get() = durationBetweenRecordedDataPoints * idealPointsPer1000px
+    get() = durationBetweenSamples * idealPointsPer1000px
 
   val minContentAreaDuration: Duration
-    get() = minPointsPer1000px * durationBetweenRecordedDataPoints
+    get() = minPointsPer1000px * durationBetweenSamples
   //val maxContentAreaDuration: Duration = TODO("Hängt dynamisch von der Menge der Daten ab")
 
   val maxZoomX: DoubleProvider
@@ -89,6 +105,6 @@ class ConfigurationCalculator(
    * Distanz zwischen Punkten, die eintreten darf bevor es als Lücke gesehen wird
    */
   val gapDuration: Duration
-    get() = durationBetweenRecordedDataPoints * gapFactor
+    get() = durationBetweenSamples * gapFactor
 
 }

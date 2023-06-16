@@ -60,6 +60,10 @@ data class Insets(
     return Insets(top, right, newBottom, left)
   }
 
+  fun withTopBottom(newTop: Double, newBottom: Double): Insets {
+    return Insets(newTop, right, newBottom, left)
+  }
+
   /**
    * Creates a copy of this [Insets] whose left value is changed to [newLeft]
    */

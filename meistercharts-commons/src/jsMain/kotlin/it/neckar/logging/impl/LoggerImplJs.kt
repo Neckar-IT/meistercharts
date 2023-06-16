@@ -3,6 +3,7 @@ package it.neckar.logging.impl
 import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
+import it.neckar.logging.LoggerLocalStorage
 import it.neckar.logging.Logger
 import it.neckar.logging.isEnabled
 

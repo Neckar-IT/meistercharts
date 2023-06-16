@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.charts.timeline
 
 import assertk.*
@@ -18,7 +33,7 @@ class ConfigurationAssistantTest {
 
   @BeforeEach
   fun setUpAssistant() {
-    defaultAssistant = ConfigurationAssistant.withDurationBetweenRecordedDataPoints(200.milliseconds)
+    defaultAssistant = ConfigurationAssistant.withDurationBetweenSamples(200.milliseconds)
   }
 
 
@@ -30,9 +45,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerYear(3.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(30437.5.days)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2435.days)
@@ -45,9 +60,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerMonth(15.25)
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(500.days)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(40.days)
@@ -60,9 +75,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerDay(10.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(25.days)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2.days)
@@ -75,9 +90,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerHour(10.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(25.hours)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2.hours)
@@ -90,9 +105,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerMinute(10.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(25.minutes)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2.minutes)
@@ -106,9 +121,9 @@ class ConfigurationAssistantTest {
     assistant.useDots()
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(6.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(12.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(6.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(12.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(8.minutes + 20.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2.minutes)
@@ -121,9 +136,9 @@ class ConfigurationAssistantTest {
     val assistant = ConfigurationAssistant.withDataPointCountPerSecond(10.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(25.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(2.seconds)
@@ -133,12 +148,12 @@ class ConfigurationAssistantTest {
 
   @Test
   fun testApiEndUserDataPeroid() {
-    val assistant = ConfigurationAssistant.withDurationBetweenRecordedDataPoints(500.milliseconds)
+    val assistant = ConfigurationAssistant.withDurationBetweenSamples(500.milliseconds)
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(125.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(10.seconds)
@@ -156,9 +171,9 @@ class ConfigurationAssistantTest {
     val assistant = defaultAssistant//.showAllData() //Update on window size change, too
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(50.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(4.seconds)
@@ -174,9 +189,9 @@ class ConfigurationAssistantTest {
     assistant.setDefaultCrossWireDate(DateTime(2023, 3, 5, 7, 8, 9))
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(2.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(50.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(4.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(50.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(4.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(50.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(4.seconds)
@@ -196,9 +211,9 @@ class ConfigurationAssistantTest {
     assistant.setMaxDistanceBetweenDataPoints(5.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(5.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(5.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(5.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(5.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(5.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(5.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(40.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(200.0)
     assertThat(calculator.minContentAreaDuration).isEqualTo(40.seconds)
@@ -214,9 +229,9 @@ class ConfigurationAssistantTest {
     assistant.setCandleMaxWidth(15.toDouble())
     val calculator = assistant.calculator
 
-    assertThat(calculator.minDistanceBetweenDataPoints).isEqualTo(5.0)
-    assertThat(calculator.maxDistanceBetweenDataPoints).isEqualTo(15.0)
-    assertThat(calculator.idealDistanceBetweenDataPoints).isEqualTo(10.0)
+    assertThat(calculator.minDistanceBetweenSamples).isEqualTo(5.0)
+    assertThat(calculator.maxDistanceBetweenSamples).isEqualTo(15.0)
+    assertThat(calculator.idealDistanceBetweenSamples).isEqualTo(10.0)
     assertThat(calculator.contentAreaDuration).isEqualTo(20.seconds)
     assertThat(calculator.minPointsPer1000px).isEqualTo(200.0 / 3)
     assertThat(calculator.minContentAreaDuration).isEqualTo((40.0 / 3.0).seconds)

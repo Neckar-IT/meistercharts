@@ -190,7 +190,7 @@ class TimeLineChart internal constructor(
     jsData.historySettings?.let { jsHistorySettings ->
 
       jsHistorySettings.durationBetweenSamples?.sanitize()?.let { duration ->
-        configurationAssistant.setDurationBetweenRecordedDataPoints(duration.milliseconds)
+        configurationAssistant.setDurationBetweenSamples(duration.milliseconds)
       }
 
       //configure the gap calculator

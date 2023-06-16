@@ -5,7 +5,7 @@ import it.neckar.logging.impl.LoggerImplJs
 /**
  * Logger factory implementation for JS.
  *
- * Is configured using [LogConfigurer] - which loads the settings from the local storage ([LocalStorageKey])
+ * Is configured using [LoggerLocalStorage] - which loads the settings from the local storage ([LocalStorageKey])
  */
 actual object LoggerFactory {
   /**

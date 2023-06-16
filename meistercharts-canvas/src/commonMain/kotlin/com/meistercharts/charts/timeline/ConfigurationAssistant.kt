@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
@@ -31,21 +46,21 @@ class ConfigurationAssistant(
 ) {
 
   constructor(
-    durationBetweenRecordedDataPoints: Duration,
+    durationBetweenSamples: Duration,
     gapFactor: Double = 12.0,
-    manualMinDistanceBetweenDataPoints: @px Double? = null,
-    manualMaxDistanceBetweenDataPoints: @px Double? = null,
-    manualIdealDistanceBetweenDataPoints: @px Double? = null,
+    manualMinDistanceBetweenSamples: @px Double? = null,
+    manualMaxDistanceBetweenSamples: @px Double? = null,
+    manualIdealDistanceBetweenSamples: @px Double? = null,
     manualMinZoom: Double? = null,
     manualMaxZoom: Double? = null,
     crossWireDate: DateTime? = null,
   ) : this(
     calculator = ConfigurationCalculator(
-      durationBetweenRecordedDataPoints = durationBetweenRecordedDataPoints,
+      durationBetweenSamples = durationBetweenSamples,
       gapFactor = gapFactor,
-      manualMinDistanceBetweenDataPoints = manualMinDistanceBetweenDataPoints,
-      manualMaxDistanceBetweenDataPoints = manualMaxDistanceBetweenDataPoints,
-      manualIdealDistanceBetweenDataPoints = manualIdealDistanceBetweenDataPoints,
+      manualMinDistanceBetweenSamples = manualMinDistanceBetweenSamples,
+      manualMaxDistanceBetweenSamples = manualMaxDistanceBetweenSamples,
+      manualIdealDistanceBetweenSamples = manualIdealDistanceBetweenSamples,
       manualMinZoom = manualMinZoom,
       manualMaxZoom = manualMaxZoom,
     ),
@@ -85,47 +100,51 @@ class ConfigurationAssistant(
   }
 
   fun setMinDistanceBetweenDataPoints(minDistance: @px Double?) {
-    calculator.manualMinDistanceBetweenDataPoints = minDistance
+    calculator.manualMinDistanceBetweenSamples = minDistance
   }
 
   fun setMaxDistanceBetweenDataPoints(maxDistance: @px Double?) {
-    calculator.manualMaxDistanceBetweenDataPoints = maxDistance
+    calculator.manualMaxDistanceBetweenSamples = maxDistance
   }
 
-  fun setDurationBetweenRecordedDataPoints(duration: @ms Duration) {
-    calculator.durationBetweenRecordedDataPoints = duration
+  fun setDurationBetweenSamples(duration: @ms Duration) {
+    calculator.durationBetweenSamples = duration
+  }
+
+  fun setIdealDistanceBetweenSamples(idealDistance: @px Double?) {
+    calculator.manualIdealDistanceBetweenSamples = idealDistance
   }
 
   /**
    * Bei "krummen" Werten, die nicht zur Sampling Period passen, treffen wir die Entscheidung!
    */
   fun setDataPointCountPerSecond(perSecond: Double) {
-    calculator.durationBetweenRecordedDataPoints = (1.0 / perSecond).seconds
+    calculator.durationBetweenSamples = (1.0 / perSecond).seconds
   }
 
   fun setDataPointCountPerMinute(perMinute: Double) {
-    calculator.durationBetweenRecordedDataPoints = (1.0 / perMinute).minutes
+    calculator.durationBetweenSamples = (1.0 / perMinute).minutes
   }
 
   fun setDataPointCountPerHour(perHour: Double) {
-    calculator.durationBetweenRecordedDataPoints = (1.0 / perHour).hours
+    calculator.durationBetweenSamples = (1.0 / perHour).hours
   }
 
   fun setDataPointCountPerDay(perDay: Double) {
-    calculator.durationBetweenRecordedDataPoints = (1.0 / perDay).days
+    calculator.durationBetweenSamples = (1.0 / perDay).days
   }
 
   fun setDataPointCountPerMonth(perMonth: Double) {
-    calculator.durationBetweenRecordedDataPoints = (30.5 / perMonth).days
+    calculator.durationBetweenSamples = (30.5 / perMonth).days
   }
 
   fun setDataPointCountPerYear(perYear: Double) {
-    calculator.durationBetweenRecordedDataPoints = (365.25 / perYear).days
+    calculator.durationBetweenSamples = (365.25 / perYear).days
   }
 
   @OnlyForPros
   fun setSamplingPeriod(durationBetweenRecordedDataPoints: Duration) {
-    calculator.durationBetweenRecordedDataPoints = durationBetweenRecordedDataPoints
+    calculator.durationBetweenSamples = durationBetweenRecordedDataPoints
   }
 
   fun setDefaultCrossWireDate(crossWireDate: DateTime) {
@@ -145,11 +164,10 @@ class ConfigurationAssistant(
 
   fun applyToGestalt(gestalt: TimeLineChartGestalt) {
     gestalt.data.minimumSamplingPeriod = calculator.recordingSamplingPeriod
-    gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(calculator.minDistanceBetweenDataPoints).withMinimum(calculator.recordingSamplingPeriod)
+    gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(calculator.minDistanceBetweenSamples).withMinimum(calculator.recordingSamplingPeriod)
     //gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MaxDistanceSamplingPeriodCalculator(maxDistanceBetweenDataPoints).withMinimum(recordingSamplingPeriod)
     gestalt.style.contentAreaDuration = calculator.contentAreaDuration.toDouble(DurationUnit.MILLISECONDS)
     gestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(calculator.gapFactor)
-
 
     gestalt.chartSupport().let {
       it.zoomAndTranslationSupport.zoomAndTranslationDefaults = createZoomAndTranslationDefaults(gestalt)
@@ -178,42 +196,42 @@ class ConfigurationAssistant(
   companion object {
 
     fun withDataPointCountPerSecond(perSecond: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (1.0 / perSecond).seconds)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perSecond).seconds)
     }
 
     fun withDataPointCountPerMinute(perMinute: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (1.0 / perMinute).minutes)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perMinute).minutes)
     }
 
     fun withDataPointCountPerHour(perHour: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (1.0 / perHour).hours)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perHour).hours)
     }
 
     fun withDataPointCountPerDay(perDay: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (1.0 / perDay).days)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perDay).days)
     }
 
     fun withDataPointCountPerMonth(perMonth: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (30.5 / perMonth).days)
+      return ConfigurationAssistant(durationBetweenSamples = (30.5 / perMonth).days)
     }
 
     fun withDataPointCountPerYear(perYear: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = (365.25 / perYear).days)
+      return ConfigurationAssistant(durationBetweenSamples = (365.25 / perYear).days)
     }
 
     @OnlyForPros
-    fun withDurationBetweenRecordedDataPoints(durationBetweenRecordedDataPoints: Duration): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = durationBetweenRecordedDataPoints)
+    fun withDurationBetweenSamples(durationBetweenSamples: Duration): ConfigurationAssistant {
+      return ConfigurationAssistant(durationBetweenSamples = durationBetweenSamples)
     }
 
     @OnlyForPros
     fun withSamplingPeriod(samplingPeriod: SamplingPeriod): ConfigurationAssistant {
-      return withDurationBetweenRecordedDataPoints(samplingPeriod.distance.milliseconds)
+      return withDurationBetweenSamples(samplingPeriod.distance.milliseconds)
     }
 
     fun hereIsMyDataThatsAll(myData: Any, targetWindowWidth: @px Double): ConfigurationAssistant {
       TODO("Not yet implemented")
-      return ConfigurationAssistant(durationBetweenRecordedDataPoints = TODO("calculate"))
+      return ConfigurationAssistant(durationBetweenSamples = TODO("calculate"))
       //.showAllData()
     }
 

@@ -31,8 +31,10 @@ import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.valueAt
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.si.ms
 
 /**
@@ -152,6 +154,7 @@ class HistoryChunkGenerator(
       timestamps.add(until)
     } else {
       @ms var timestampToAdd = lastTimestamp + samplingPeriod.distance
+      timestampToAdd.requireFinite()
       while (timestampToAdd <= until) {
         timestamps.add(timestampToAdd)
         timestampToAdd += samplingPeriod.distance
@@ -180,7 +183,7 @@ class HistoryChunkGenerator(
     @ms val timestamps = mutableListOf<@ms Double>()
     @ms var timestampToAdd = timeRange.start
     while (timestampToAdd < timeRange.end) {
-      timestamps.add(timestampToAdd)
+      timestamps.add(timestampToAdd.requireFinite())
       timestampToAdd += samplingPeriod.distance
     }
 
@@ -196,7 +199,7 @@ class HistoryChunkGenerator(
     return generate(listOf(nowMillis()))
   }
 
-  private fun generate(timestamps: List<@ms Double>): HistoryChunk? {
+  private fun generate(timestamps: List<@ms @IsFinite Double>): HistoryChunk? {
     if (timestamps.isEmpty()) {
       return null
     }
@@ -205,7 +208,7 @@ class HistoryChunkGenerator(
     }
 
     val chunk = historyConfiguration.chunk(timestamps.size) { timestampIndex ->
-      @ms val timestamp = timestamps[timestampIndex.value]
+      @IsFinite @ms val timestamp = timestamps[timestampIndex.value].requireFinite()
 
       addValues(
         timestamp = timestamp,

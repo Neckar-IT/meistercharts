@@ -71,6 +71,8 @@ public object Libs {
     public const val com_github_node_gradle_node_gradle_plugin: String =
             "com.github.node-gradle.node:com.github.node-gradle.node.gradle.plugin:_"
 
+    public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
+
     public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
 
     public const val com_github_turansky_kfc_latest_webpack_gradle_plugin: String =
@@ -96,6 +98,8 @@ public object Libs {
             "com.javagen.schema-gen:com.javagen.schema-gen.gradle.plugin:_"
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
+
+    public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
 

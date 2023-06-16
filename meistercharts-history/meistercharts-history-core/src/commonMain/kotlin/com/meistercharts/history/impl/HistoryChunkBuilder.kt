@@ -34,13 +34,13 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
 import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
-import it.neckar.logging.LoggerFactory
 import it.neckar.open.annotations.Slow
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.mapInt
 import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
@@ -89,10 +89,11 @@ class HistoryChunkBuilder(
 
   @Deprecated("Use addValues")
   fun addEnumValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     enumValues: @HistoryEnumSetInt IntArray,
     enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null,
   ) {
+    requireTimestampFinite(timestamp)
     require(enumValues.size == historyConfiguration.enumDataSeriesCount) { "Invalid enumValues size. Was <${enumValues.size}> but expected <${historyConfiguration.enumDataSeriesCount}>" }
 
     val currentTimestampIndex = nextTimestampIndex
@@ -107,7 +108,7 @@ class HistoryChunkBuilder(
   @TestOnly
   @ForOnePointInTime
   fun addReferenceEntryValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     vararg referenceEntryValues: @ReferenceEntryIdInt Int,
     referenceEntryStatuses: @HistoryEnumSetInt IntArray = IntArray(referenceEntryValues.size) { HistoryEnumSet.NoValueAsInt },
     referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
@@ -124,12 +125,13 @@ class HistoryChunkBuilder(
   @TestOnly
   @ForOnePointInTime
   fun addReferenceEntryValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     referenceEntryValues: @ReferenceEntryIdInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
     referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
   ) {
+    requireTimestampFinite(timestamp)
     require(referenceEntryValues.size == historyConfiguration.referenceEntryDataSeriesCount) { "Invalid referenceEntryValues size. Was <${referenceEntryValues.size}> but expected <${historyConfiguration.referenceEntryDataSeriesCount}>" }
 
     val currentTimestampIndex = nextTimestampIndex
@@ -143,7 +145,8 @@ class HistoryChunkBuilder(
   @Slow
   @Deprecated("Use addValues")
   @TestOnly
-  fun addDecimalValues(timestamp: @ms Double, vararg values: @Domain Double) {
+  fun addDecimalValues(timestamp: @ms @IsFinite Double, vararg values: @Domain Double) {
+    requireTimestampFinite(timestamp)
     require(values.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${values.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
     val currentTimestampIndex = nextTimestampIndex
@@ -155,11 +158,12 @@ class HistoryChunkBuilder(
   @Deprecated("Use addValues")
   @TestOnly
   fun addDecimalValuesWithMinMax(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValues: DoubleArray,
     minValues: DoubleArray?,
     maxValues: DoubleArray?,
   ) {
+    requireTimestampFinite(timestamp)
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
     val currentTimestampIndex = nextTimestampIndex
@@ -169,7 +173,7 @@ class HistoryChunkBuilder(
 
   @Slow
   fun addValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValues: @Domain DoubleArray,
     decimalMinValues: @Domain DoubleArray?,
     decimalMaxValues: @Domain DoubleArray?,
@@ -178,6 +182,7 @@ class HistoryChunkBuilder(
     referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     entryDataSet: Set<ReferenceEntryData>,
   ) {
+    requireTimestampFinite(timestamp)
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
     val currentTimestampindex = nextTimestampIndex
@@ -196,12 +201,17 @@ class HistoryChunkBuilder(
     )
   }
 
+  private fun requireTimestampFinite(timestamp: @ms @IsFinite Double) {
+    timestamp.requireFinite()
+    require(timestamp.isFinite()) { "Timestamp must be finite but was <$timestamp>" }
+  }
+
   /**
    * Adds the values for one timestamp index
    */
   @Slow
   fun addValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValues: @Domain DoubleArray,
 
     minValues: @Domain DoubleArray? = null,
@@ -215,6 +225,7 @@ class HistoryChunkBuilder(
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
     entryDataSet: Set<ReferenceEntryData>,
   ) {
+    requireTimestampFinite(timestamp)
     require(decimalValues.size == historyConfiguration.decimalDataSeriesCount) { "Invalid values count. Was <${decimalValues.size}> but expected <${historyConfiguration.decimalDataSeriesCount}>" }
 
     val currentTimestampindex = nextTimestampIndex
@@ -243,7 +254,8 @@ class HistoryChunkBuilder(
   @Deprecated("Use addValues instead")
   @Slow
   @TestOnly
-  fun addDecimalValues(timestamp: @ms Double, valuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double) {
+  fun addDecimalValues(timestamp: @ms @IsFinite Double, valuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain Double) {
+    requireTimestampFinite(timestamp)
     addDecimalValues(timestamp, *DoubleArray(historyConfiguration.decimalDataSeriesCount) { i -> valuesProvider(DecimalDataSeriesIndex(i)) })
   }
 
@@ -254,13 +266,14 @@ class HistoryChunkBuilder(
    */
   @Deprecated("Use addValues instead")
   @Slow
-  fun addEnumValues(timestamp: @ms Double, valuesProvider: (dataStructureIndex: EnumDataSeriesIndex) -> HistoryEnumSet) {
+  fun addEnumValues(timestamp: @ms @IsFinite Double, valuesProvider: (dataStructureIndex: EnumDataSeriesIndex) -> HistoryEnumSet) {
+    requireTimestampFinite(timestamp)
     addEnumValues(timestamp, *IntArray(historyConfiguration.enumDataSeriesCount) { i -> valuesProvider(EnumDataSeriesIndex(i)).bitset })
   }
 
   @Slow
   fun addValues(
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValuesProvider: (dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double,
     decimalMinValuesProvider: ((dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double)? = null,
     decimalMaxValuesProvider: ((dataSeriesIndex: DecimalDataSeriesIndex) -> @Domain @MayBeNoValueOrPending Double)? = null,
@@ -269,6 +282,8 @@ class HistoryChunkBuilder(
     referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId) -> HistoryEnumSet,
     referenceEntriesDataMap: ReferenceEntriesDataMap,
   ) {
+    requireTimestampFinite(timestamp)
+
     val referenceEntryIds: @ReferenceEntryIdInt IntArray = IntArray(historyConfiguration.referenceEntryDataSeriesCount) { i -> referenceEntryIdProvider(ReferenceEntryDataSeriesIndex(i)).id }
     val entryDataSet = referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int -> referenceEntriesDataMap.get(ReferenceEntryId(idAsInt)) }.filterNotNull().toSet()
     val referenceEntryStatuses = referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int -> referenceEntryStatusProvider(ReferenceEntryId(idAsInt)) }.mapInt { it.bitset }.toIntArray()
@@ -313,11 +328,12 @@ class HistoryChunkBuilder(
   @Deprecated("use setValues instead")
   fun setDecimalValues(
     timestampIndex: TimestampIndex,
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValues: DoubleArray,
     minValues: DoubleArray? = null,
     maxValues: DoubleArray? = null,
   ) {
+    requireTimestampFinite(timestamp)
     setTimestamp(timestampIndex, timestamp)
 
     //ensure the size
@@ -332,7 +348,7 @@ class HistoryChunkBuilder(
   @Deprecated("use setValues instead")
   fun setEnumValues(
     timestampIndex: TimestampIndex,
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     enumValues: @HistoryEnumSetInt IntArray,
     enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null,
   ) {
@@ -352,7 +368,7 @@ class HistoryChunkBuilder(
   @ForOnePointInTime
   fun setReferenceEntryValues(
     timestampIndex: TimestampIndex,
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     referenceEntryIds: @ReferenceEntryIdInt IntArray,
     referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
@@ -383,7 +399,7 @@ class HistoryChunkBuilder(
    */
   fun setValues(
     timestampIndex: TimestampIndex,
-    timestamp: @ms Double,
+    timestamp: @ms @IsFinite Double,
     decimalValues: @Domain DoubleArray,
 
     decimalMinValues: @Domain DoubleArray? = null,
@@ -397,6 +413,8 @@ class HistoryChunkBuilder(
     referenceEntryIdsCount: @ReferenceEntryIdInt IntArray? = null,
     entryDataSet: Set<ReferenceEntryData>,
   ) {
+    requireTimestampFinite(timestamp)
+
     //ensure the size
     if (historyValuesBuilder.timestampsCount <= timestampIndex.value) {
       //Resize the values builder
@@ -414,8 +432,8 @@ class HistoryChunkBuilder(
    * Sets the timestamp.
    * Does *not* update the [timestampIndex]
    */
-  fun setTimestamp(timestampIndex: TimestampIndex, timestamp: @ms Double) {
-    timestamp.requireIsFinite { "timestamp for <$timestampIndex>" }
+  fun setTimestamp(timestampIndex: TimestampIndex, timestamp: @ms @IsFinite Double) {
+    requireTimestampFinite(timestamp)
 
     require(nextTimestampIndex > timestampIndex) {
       "Invalid timestamp index $timestampIndex. Expected to be smaller than $nextTimestampIndex. Resize first!"
@@ -458,7 +476,7 @@ class HistoryChunkBuilder(
 /**
  * Creates a bucket
  */
-fun HistoryConfiguration.bucket(descriptor: HistoryBucketDescriptor, valueProvider: (dataSeriesIndex: DecimalDataSeriesIndex, timestamp: @ms Double) -> Double): HistoryBucket {
+fun HistoryConfiguration.bucket(descriptor: HistoryBucketDescriptor, valueProvider: (dataSeriesIndex: DecimalDataSeriesIndex, timestamp: @ms @IsFinite Double) -> Double): HistoryBucket {
   @ms val distanceBetweenTimestamps = descriptor.bucketRange.distance
 
   val decimalDataSeriesCount = this.decimalDataSeriesCount
@@ -588,21 +606,4 @@ fun HistoryConfiguration.chunk(
 
     addDecimalValues(timestamp, *valuesForTimeStamp)
   }
-}
-
-
-/**
- * Throws an exception if the given value is not a valid number
- */
-fun @MayBeNaN Double.requireIsFinite(descriptionProvider: () -> String? = { null }): @IsFinite Double {
-  require(isFinite()) {
-    val description = descriptionProvider()
-    if (description != null) {
-      "<$description> is not finite but $this"
-    } else {
-      "is not finite but $this"
-    }
-  }
-
-  return this
 }

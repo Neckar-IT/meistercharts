@@ -5,14 +5,14 @@ import kotlinx.browser.window
 
 
 /**
- * The key for the debug root level
- */
-const val LocalStorageKey: String = "logging.rootLevel"
-
-/**
  * Configures the log levels for JS
  */
 object LogConfigurer {
+  /**
+   * The key for the debug root level
+   */
+  const val LocalStorageKey: String = it.neckar.logging.LoggerLocalStorage.LocalStorageKey
+
   /**
    * The root logger level
    */
@@ -53,11 +53,11 @@ object LogConfigurer {
    * Loads the root level from local storage
    */
   fun getRootLevelFromLocalStorage(): Level? {
-    val item = window.localStorage.getItem(LocalStorageKey) ?: return null
+    val item = window.localStorage.getItem(LoggerLocalStorage.LocalStorageKey) ?: return null
     return try {
       Level.valueOf(item.trim())
     } catch (e: Exception) {
-      console.warn("Invalid value for $LocalStorageKey: $item. Expected one of ${Level.entries.joinToString(", ")}")
+      console.warn("Invalid value for ${LoggerLocalStorage.LocalStorageKey}: $item. Expected one of ${Level.entries.joinToString(", ")}")
       null //Fallback to null
     }
   }

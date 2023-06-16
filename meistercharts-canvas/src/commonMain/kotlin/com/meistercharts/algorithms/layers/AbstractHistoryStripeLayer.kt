@@ -38,12 +38,12 @@ import com.meistercharts.history.atMost
 import com.meistercharts.history.fastForEachIndexed
 import com.meistercharts.history.find
 import com.meistercharts.history.impl.HistoryChunk
-import com.meistercharts.history.impl.requireIsFinite
 import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
 import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
@@ -156,7 +156,7 @@ abstract class AbstractHistoryStripeLayer<
         configuration.activeDataSeriesIndex?.let { activeDataSeriesIndex ->
           activeInformation.activeDataSeriesIndex = activeDataSeriesIndex
 
-          @ms val activeTimeStamp = configuration.activeTimeStamp.requireIsFinite { "activeTimeStamp" }
+          @ms val activeTimeStamp = configuration.activeTimeStamp.requireFinite { "activeTimeStamp" }
 
           historyBuckets.find(activeTimeStamp) { bucket: HistoryBucket, timestampIndex: TimestampIndex ->
             activeInformation.value1 = bucket.chunk.getValue1(activeDataSeriesIndex, timestampIndex)

@@ -474,6 +474,14 @@ fun Double.requireFinite(): Double {
   throw IllegalStateException("Finite value required - but was <$this>")
 }
 
+inline fun Double.requireFinite(descriptionProvider: (() -> String)): Double {
+  if (this.isFinite()) {
+    return this
+  }
+
+  throw IllegalStateException("Finite value required for ${descriptionProvider()} - but was <$this>")
+}
+
 /**
  * Returns 0.0 if this is NaN
  */
