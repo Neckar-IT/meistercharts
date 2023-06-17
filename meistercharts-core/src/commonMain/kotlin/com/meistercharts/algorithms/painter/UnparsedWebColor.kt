@@ -34,9 +34,9 @@ data class UnparsedWebColor(override val web: String) : Color, CanvasPaint {
   }
 
   /**
-   * Parses the color
+   * Parses this color
    */
-  fun parse(): Color {
+  override fun toRgba(): RgbaColor {
     return Color.parseHexOrRgba(web)
   }
 

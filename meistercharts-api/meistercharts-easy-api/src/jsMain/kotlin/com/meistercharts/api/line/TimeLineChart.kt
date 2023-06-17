@@ -239,7 +239,7 @@ class TimeLineChart internal constructor(
   }
 
   private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
-    TimeLineChart.logger.ifDebug {
+    logger.ifDebug {
       console.debug("TimeLineChartGestalt.applyStyle", jsStyle)
     }
 
@@ -383,7 +383,7 @@ class TimeLineChart internal constructor(
       this.style.minMaxAreaColors = TimeLineChartConverter.toMinMaxAreaColors(jsLineStyles)
 
 
-      val atLeastOneLineWithDots: Boolean = jsLineStyles.any { it.pointType == PointType.Dot }
+      val atLeastOneLineWithDots: Boolean = jsLineStyles.any { it.pointType?.sanitize() == PointType.Dot }
 
       if (atLeastOneLineWithDots) {
         val maxPointSize: @px Double? = jsLineStyles.mapNotNull { it.pointSize }.maxOrNull()

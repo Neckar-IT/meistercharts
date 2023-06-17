@@ -26,8 +26,8 @@ class CanvasPaintProviderTest {
     assertThat(Color.rgb(0, 0, 0)).isEqualTo(Color.web("#000000"))
     assertThat(Color.rgb(255, 255, 255)).isEqualTo(Color.web("#FFFFFF"))
 
-    assertThat(Color.rgb(7, 8, 255)).isEqualTo(Color.web("#0708FF"))
-    assertThat(Color.rgba(7, 8, 255, 0.5)).isEqualTo(Color.web("rgba(7,8,255,0.5)"))
+    assertThat(Color.rgb(7, 8, 255)).isEqualTo(Color.web("#0708FF").toRgba())
+    assertThat(Color.rgba(7, 8, 255, 0.5)).isEqualTo(Color.web("rgba(7,8,255,0.5)").toRgba())
 
     try {
       Color.rgb(7, 8, 256)
@@ -65,10 +65,10 @@ class CanvasPaintProviderTest {
   internal fun testCreation() {
     assertThat(Color.color(1.0, 1.0, 1.0)).isEqualTo(Color.web("#FFFFFF"))
     assertThat(Color.color(0.0, 0.0, 0.0)).isEqualTo(Color.web("#000000"))
-    assertThat(Color.color(0.0, 0.0, 0.0, 1.0)).isEqualTo(Color.web("rgba(0,0,0,1)"))
-    assertThat(Color.color(0.0, 0.0, 0.0, 0.0)).isEqualTo(Color.web("rgba(0,0,0,0)"))
-    assertThat(Color.color(0.5, 0.5, 0.5, 0.5)).isEqualTo(Color.web("rgba(128,128,128,0.5)"))
-    assertThat(Color.color(1.0, 0.5, 0.5, 0.5)).isEqualTo(Color.web("rgba(255,128,128,0.5)"))
+    assertThat(Color.color(0.0, 0.0, 0.0, 1.0)).isEqualTo(Color.web("rgba(0,0,0,1)").toRgba())
+    assertThat(Color.color(0.0, 0.0, 0.0, 0.0)).isEqualTo(Color.web("rgba(0,0,0,0)").toRgba())
+    assertThat(Color.color(0.5, 0.5, 0.5, 0.5)).isEqualTo(Color.web("rgba(128,128,128,0.5)").toRgba())
+    assertThat(Color.color(1.0, 0.5, 0.5, 0.5)).isEqualTo(Color.web("rgba(255,128,128,0.5)").toRgba())
   }
 
   @Test
@@ -78,5 +78,4 @@ class CanvasPaintProviderTest {
     assertThat(Colors.to2DigitHexString(127)).isEqualTo("7F")
     assertThat(Colors.to2DigitHexString(-255)).isEqualTo("-FF")
   }
-
 }

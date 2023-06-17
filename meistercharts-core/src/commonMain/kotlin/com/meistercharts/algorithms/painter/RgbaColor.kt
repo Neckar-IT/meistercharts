@@ -50,7 +50,7 @@ data class RgbaColor(
     require((0.0..1.0).contains(alpha)) { "Alpha out of range: <$alpha>. Allowed values between 0.0 and 1.0" }
   }
 
-  override val web: String = Colors.asWebString(red, green, blue, alpha)
+  override val web: String = Colors.toWebString(red, green, blue, alpha)
 
   /**
    * Returns a rgba string
@@ -60,6 +60,10 @@ data class RgbaColor(
   }
 
   override fun toCanvasPaint(x0: Double, y0: Double, x1: Double, y1: Double): CanvasPaint {
+    return this
+  }
+
+  override fun toRgba(): RgbaColor {
     return this
   }
 

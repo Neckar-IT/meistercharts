@@ -19,13 +19,14 @@ import com.meistercharts.algorithms.axis.AxisOrientationX
 import com.meistercharts.algorithms.axis.AxisOrientationY
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.annotations.ContentArea
-import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import it.neckar.open.observable.ObservableObject
+import it.neckar.open.unit.number.MayBeZero
+import it.neckar.open.unit.number.Positive
 
 /**
  * Contains the setter for the chart state
@@ -98,4 +99,39 @@ interface MutableChartState : ObservableChartState {
    * Therefore, they zoom and pan synchronized.
    */
   fun bindBidirectional(otherState: MutableChartState, axisSelection: AxisSelection)
+
+  /**
+   * Sets the zoom for the given axis selection.
+   */
+  fun setZoom(newZoom: @Positive Zoom, axisSelection: AxisSelection) {
+    setZoom(newZoom.scaleX, newZoom.scaleY, axisSelection)
+  }
+
+  /**
+   * Sets the zoom for the given axis selection.
+   */
+  fun setZoom(newZoomFactorX: @Positive Double, newZoomFactorY: @Positive Double, axisSelection: AxisSelection) {
+    when (axisSelection) {
+      AxisSelection.Both -> zoom = Zoom.of(newZoomFactorX, newZoomFactorY)
+      AxisSelection.X -> zoom = zoom.withX(newZoomFactorX)
+      AxisSelection.Y -> zoom = zoom.withY(newZoomFactorY)
+      AxisSelection.None -> {
+        //do nothing
+      }
+    }
+  }
+
+  /**
+   * Sets the window translation for the given axis selection.
+   */
+  fun setWindowTranslation(newTranslation: Distance, axisSelection: AxisSelection) {
+    when (axisSelection) {
+      AxisSelection.Both -> windowTranslation = newTranslation
+      AxisSelection.X -> windowTranslationX = newTranslation.x
+      AxisSelection.Y -> windowTranslationY = newTranslation.y
+      AxisSelection.None -> {
+        //do nothing
+      }
+    }
+  }
 }

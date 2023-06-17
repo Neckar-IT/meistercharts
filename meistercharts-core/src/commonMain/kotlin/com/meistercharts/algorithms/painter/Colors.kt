@@ -30,13 +30,11 @@ object Colors {
   private val opacityFormat: CachedNumberFormat = decimalFormat(2, 0, 1, false)
 
   /**
-   * Creates the web string with the rgba(...) representation
-   * @param red 0..255
-   * @param green 0..255
-   * @param blue 0..255
-   * @param opacity 0..1.0
+   * Creates the web string.
+   *
+   * If the color is opaque, a hex string is returned, otherwise the rgba(...) representation
    */
-  fun asWebString(red: Int, green: Int, blue: Int, opacity: @pct Double = 1.0): String {
+  fun toWebString(red: Int, green: Int, blue: Int, opacity: @pct Double = 1.0): String {
     return when (opacity) {
       1.0 -> {
         toHexString(red, green, blue)
@@ -71,7 +69,7 @@ object Colors {
   /**
    * Returns the int value for a two digit hex value
    */
-  fun String.parse2DigitHex(): Int {
+  internal fun String.parse2DigitHex(): Int {
     return toInt(16)
   }
 }

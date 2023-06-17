@@ -107,4 +107,12 @@ class ConfigurationCalculator(
   val gapDuration: Duration
     get() = durationBetweenSamples * gapFactor
 
+
+  override fun toString(): String {
+    return "ConfigurationCalculator(durationBetweenSamples=$durationBetweenSamples\ngapFactor=$gapFactor\nmanualMinDistanceBetweenSamples=$manualMinDistanceBetweenSamples\n" +
+      "manualMaxDistanceBetweenSamples=$manualMaxDistanceBetweenSamples\nmanualIdealDistanceBetweenSamples=$manualIdealDistanceBetweenSamples\nmanualMinZoom=$manualMinZoom\n" +
+      "manualMaxZoom=$manualMaxZoom\nrecordingSamplingPeriod=$recordingSamplingPeriod\nminDistanceBetweenSamples=$minDistanceBetweenSamples\nmaxDistanceBetweenSamples=$maxDistanceBetweenSamples\n" +
+      "idealDistanceBetweenSamples=$idealDistanceBetweenSamples\nmaxPointsPer1000px=$maxPointsPer1000px\nminPointsPer1000px=$minPointsPer1000px\nidealPointsPer1000px=$idealPointsPer1000px\n" +
+      "contentAreaDuration=$contentAreaDuration\nminContentAreaDuration=$minContentAreaDuration\nmaxZoomX=${maxZoomX.invoke()}\nhistoryBucketRange=$historyBucketRange\ngapDuration=$gapDuration)"
+  }
 }

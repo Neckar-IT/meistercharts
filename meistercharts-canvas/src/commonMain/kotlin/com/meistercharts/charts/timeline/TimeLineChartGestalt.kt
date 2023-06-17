@@ -1076,7 +1076,7 @@ class TimeLineChartGestalt
    */
   private val contentViewportGestalt = ContentViewportGestalt(
     Insets.of(0.0, 0.0, 0.0, 0.0),
-    updateBehavior = ContentViewportGestalt.UpdateBehavior.KeepCurrentZoomAndTranslation //do not reset to keep the zoom and translation
+    updateBehavior = ContentViewportGestalt.ResetAffectedAxisOnMarginIncreaseToDefaults //On Axis visibility change, do not update x-axis. Also, only reset y-axis if the margin increases
   )
 
   /**

@@ -26,6 +26,8 @@ import com.meistercharts.algorithms.tile.withMinimum
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.asDoubleProvider
 import it.neckar.open.time.nowMillis
@@ -163,6 +165,10 @@ class ConfigurationAssistant(
   }
 
   fun applyToGestalt(gestalt: TimeLineChartGestalt) {
+    logger.debug {
+      "applyToGestalt: $calculator"
+    }
+
     gestalt.data.minimumSamplingPeriod = calculator.recordingSamplingPeriod
     gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(calculator.minDistanceBetweenSamples).withMinimum(calculator.recordingSamplingPeriod)
     //gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MaxDistanceSamplingPeriodCalculator(maxDistanceBetweenDataPoints).withMinimum(recordingSamplingPeriod)
@@ -235,6 +241,6 @@ class ConfigurationAssistant(
       //.showAllData()
     }
 
+    private val logger = LoggerFactory.getLogger("com.meistercharts.charts.timeline.ConfigurationAssistant")
   }
-
 }

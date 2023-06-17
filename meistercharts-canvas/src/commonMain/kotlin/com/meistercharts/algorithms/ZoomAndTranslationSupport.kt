@@ -120,34 +120,38 @@ class ZoomAndTranslationSupport(
     setWindowTranslation(Distance.of(chartState.windowTranslationX, translationY), reason = reason)
   }
 
-  fun setWindowTranslation(windowTranslation: @Zoomed Distance, reason: UpdateReason) {
+  fun setWindowTranslation(windowTranslation: @Zoomed Distance, axisSelection: AxisSelection = AxisSelection.Both, reason: UpdateReason) {
     if (reason != UpdateReason.Animation) { //the animation events happen a lot of times, do not debug these
       logger.debug("Setting window translation to $windowTranslation because ${reason.label()}")
     }
 
-    chartState.windowTranslation = zoomAndTranslationModifier
-      .modifyTranslation(windowTranslation, chartCalculator)
-      .avoidNaN()
+    chartState.setWindowTranslation(
+      zoomAndTranslationModifier
+        .modifyTranslation(windowTranslation, chartCalculator)
+        .avoidNaN(),
+      axisSelection = axisSelection
+    )
   }
 
   /**
    * Updates the zoom. Keeps the given zoom center
    */
-  fun setZoom(zoom: Zoom, @Window @px zoomCenter: Coordinates? = null, reason: UpdateReason) {
-    setZoom(zoom.scaleX, zoom.scaleY, zoomCenter, reason = reason)
+  fun setZoom(zoom: Zoom, @Window @px zoomCenter: Coordinates? = null, axisSelection: AxisSelection = AxisSelection.Both, reason: UpdateReason) {
+    setZoom(zoom.scaleX, zoom.scaleY, zoomCenter, axisSelection = axisSelection, reason = reason)
   }
 
   fun setZoom(
     newZoomFactorX: @Positive Double = chartState.zoomX,
     newZoomFactorY: @Positive Double = chartState.zoomY,
     @Window zoomCenter: Coordinates? = null,
+    axisSelection: AxisSelection = AxisSelection.Both,
     reason: UpdateReason,
   ) {
     logger.debug("Setting zoom to $newZoomFactorX, $newZoomFactorY with center $zoomCenter because ${reason.label()}")
 
     if (zoomCenter == null) {
       //Simple zooming mode without a zoom center
-      chartState.zoom = Zoom.of(newZoomFactorX, newZoomFactorY)
+      chartState.setZoom(newZoomFactorX, newZoomFactorY, axisSelection = axisSelection)
       return
     }
 
@@ -155,7 +159,7 @@ class ZoomAndTranslationSupport(
     val (@ContentAreaRelative x, @ContentAreaRelative y) = chartCalculator.window2contentAreaRelative(zoomCenter.x, zoomCenter.y)
 
     //ensure the limits of the zoom are respected
-    chartState.zoom = zoomAndTranslationModifier.modifyZoom(Zoom(newZoomFactorX, newZoomFactorY), chartCalculator)
+    chartState.setZoom(zoomAndTranslationModifier.modifyZoom(Zoom(newZoomFactorX, newZoomFactorY), chartCalculator), axisSelection = axisSelection)
 
     //which relative value is now under the zoom center? Necessary to calculate the correction
     val (@ContentAreaRelative x1, @ContentAreaRelative y1) = chartCalculator.window2contentAreaRelative(zoomCenter.x, zoomCenter.y)
@@ -270,26 +274,28 @@ class ZoomAndTranslationSupport(
    */
   fun resetToDefaults(
     zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults,
+    axisSelection: AxisSelection = AxisSelection.Both,
     reason: UpdateReason,
   ) {
-    resetZoom(zoomAndTranslationDefaults, reason = reason)
-    resetWindowTranslation(zoomAndTranslationDefaults, reason = reason)
+    resetZoom(zoomAndTranslationDefaults, axisSelection = axisSelection, reason = reason)
+    resetWindowTranslation(zoomAndTranslationDefaults, axisSelection = axisSelection, reason = reason)
   }
 
   fun resetZoom(
     zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults,
     @Window @px zoomCenter: Coordinates? = null,
+    axisSelection: AxisSelection = AxisSelection.Both,
     reason: UpdateReason,
   ) {
     //Reduce the zoom accordingly and translate to center
-    setZoom(zoomAndTranslationDefaults.defaultZoom(chartCalculator), zoomCenter, reason)
+    setZoom(zoomAndTranslationDefaults.defaultZoom(chartCalculator), zoomCenter, axisSelection = axisSelection, reason = reason)
   }
 
   /**
    * Resets the window translation
    */
-  fun resetWindowTranslation(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, reason: UpdateReason) {
-    setWindowTranslation(zoomAndTranslationDefaults.defaultTranslation(chartCalculator), reason = reason)
+  fun resetWindowTranslation(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, axisSelection: AxisSelection = AxisSelection.Both, reason: UpdateReason) {
+    setWindowTranslation(zoomAndTranslationDefaults.defaultTranslation(chartCalculator), axisSelection = axisSelection, reason = reason)
   }
 
   fun resetWindowTranslationX(zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults, reason: UpdateReason) {

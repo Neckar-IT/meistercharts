@@ -666,7 +666,7 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   )
   hudLayer.configuration.boxStylesActive = MultiProvider.forListModulo(
     //TODO remove the fallback asap
-     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
+    jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
   )
 
   hudLayer.configuration.arrowHeadLength = MultiDoublesProvider.forArrayModulo(
@@ -791,7 +791,7 @@ fun String?.toColor(): Color? {
  * Converts a string to a color
  */
 fun String.toColor(): Color {
-  return Color(this.sanitize())
+  return Color.unparsed(this.sanitize())
 }
 
 /**

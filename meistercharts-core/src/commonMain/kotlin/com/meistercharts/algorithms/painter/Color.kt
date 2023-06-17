@@ -37,19 +37,27 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
    */
   val web: String
 
+  /**
+   * Converts this color to a [RgbaColor].
+   * This method parses the [web] string if necessary.
+   */
+  fun toRgba(): RgbaColor
+
   companion object {
     /**
-     * Creates a web string
+     * Creates a color from a web string.
      */
-    operator fun invoke(web: String): RgbaColor {
-      return parseHexOrRgba(web)
+    operator fun invoke(web: String): UnparsedWebColor {
+      return web(web)
     }
 
     /**
-     * Parses the given string and creates an RGBA-color.
+     * Creates a color from a web string.
+     *
+     * Does *not* parse the color. Call [Color.toRgba] to parse the color.
      */
-    fun web(web: String): RgbaColor {
-      return parseHexOrRgba(web)
+    fun web(web: String): UnparsedWebColor {
+      return unparsed(web)
     }
 
     /**
@@ -59,6 +67,9 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
       return UnparsedWebColor(web)
     }
 
+    /**
+     * Creates a rgba color
+     */
     fun rgba(
       /**
        * Red (0..225)
@@ -128,7 +139,7 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Parses a rgb string
+     * Parses a rgb string (e.g. "rgb(177,210,37)")
      */
     fun parseRgb(rgbValue: String): RgbaColor {
       val rgb = rgbValue
@@ -146,7 +157,7 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
     }
 
     /**
-     * Parses a rgba string
+     * Parses a rgba string (e.g. "rgba(144,236,55,0.5)")
      */
     fun parseRgba(rgbaValue: String): RgbaColor {
       val rgba = rgbaValue.removePrefix("rgba(").removeSuffix(")").split(",")
