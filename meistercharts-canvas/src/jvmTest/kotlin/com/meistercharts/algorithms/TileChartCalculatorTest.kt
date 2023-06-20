@@ -27,6 +27,7 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.canvas.tileRelative2TimeX
+import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Distance
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
@@ -51,6 +52,17 @@ class TileChartCalculatorTest {
 
     assertThat(chartState.contentAreaWidth).isEqualTo(1000.0)
     assertThat(chartState.contentAreaHeight).isEqualTo(600.0)
+  }
+
+  @Test
+  fun testDifferentSizes() {
+    calculator.tileIndex2contentArea(TileIndex.Companion.of(0, 0), Size(100.0, 100.0)).also {
+      assertThat(it).isEqualTo(Coordinates(0.0, 0.0))
+    }
+
+    calculator.tileIndex2contentArea(TileIndex.Companion.of(0, 0), Size(19900.0, 101530.0)).also {
+      assertThat(it).isEqualTo(Coordinates(0.0, 0.0))
+    }
   }
 
   @Test

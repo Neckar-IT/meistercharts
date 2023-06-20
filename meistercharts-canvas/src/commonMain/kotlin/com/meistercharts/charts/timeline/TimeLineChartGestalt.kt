@@ -229,7 +229,7 @@ class TimeLineChartGestalt
   /**
    * THe physical tile size that is used by the tiles for this gestalt
    */
-  private val physicalTileSize: @PhysicalPixel Size = Size.of(400.0, 400.0)
+  private val physicalTileSize: @PhysicalPixel Size = Size.of(100.0, 2_000.0)
 
   /**
    * Is used to calculate the history render properties
@@ -621,7 +621,7 @@ class TimeLineChartGestalt
     }
 
     fun decimalsAreaViewportMarginTop(): @Zoomed Double {
-      return style.decimalsAreaMarginTop
+      return contentViewportGestalt.contentViewportMargin.top
     }
 
     /**
@@ -1249,12 +1249,6 @@ class TimeLineChartGestalt
 
   @ConfigurationDsl
   inner class Style {
-    /**
-     * The margin of the decimals area at top.
-     * Is used to calculate the viewport of the decimals area
-     */
-    val decimalsAreaMarginTop: @Zoomed Double = 15.0
-
     /**
      * Value axis style configuration - is called when a new value axis is instantiated
      */
