@@ -37,6 +37,7 @@ import com.meistercharts.canvas.timerSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.history.HistoryStorageCache
+import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
@@ -67,12 +68,15 @@ class DiscreteTimelineChart internal constructor(
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
   meisterChart: MeisterChartJS,
+  val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApi<DiscreteTimelineChartConfiguration>(meisterChart) {
+
+  private val historyStorage: InMemoryHistoryStorage = historyStorageQueryMonitor.historyStorage
 
   /**
    * The history-storage cache that is used to add the values
    */
-  private val historyStorageCache = HistoryStorageCache(gestalt.inMemoryStorage)
+  private val historyStorageCache = HistoryStorageCache(historyStorage)
 
   init {
     gestalt.applyEasyApiDefaults()
@@ -122,8 +126,7 @@ class DiscreteTimelineChart internal constructor(
       console.debug("setHistory", data)
     }
 
-    val inMemoryHistoryStorage = gestalt.inMemoryHistoryStorage
-    inMemoryHistoryStorage.clear() //clear history
+    historyStorage.clear() //clear history
 
     val historyConfiguration = gestalt.configuration.historyConfiguration()
 
@@ -209,7 +212,7 @@ class DiscreteTimelineChart internal constructor(
    */
   fun clearHistory() {
     historyStorageCache.clear()
-    gestalt.inMemoryStorage.clear()
+    historyStorage.clear()
   }
 
   /**
@@ -233,7 +236,7 @@ class DiscreteTimelineChart internal constructor(
     }
     //We dispatch a CustomEvent of type "VisibleTimeRangeChanged" every time the translation along the x-axis changes
     previousVisibleTimeRange = currentVisibleTimeRange
-    dispatchCustomEvent("VisibleTimeRangeChanged", currentVisibleTimeRange.toJs())
+    dispatchCustomEvent("visible-time-range-changed", currentVisibleTimeRange.toJs())
   }
 
   /**
@@ -289,9 +292,6 @@ class DiscreteTimelineChart internal constructor(
   }
 }
 
-private val DiscreteTimelineChartGestalt.inMemoryHistoryStorage: InMemoryHistoryStorage
-  get() = this.historyStorage as InMemoryHistoryStorage
-
 /**
  * Contains the data for the discrete timeline chart
  */
@@ -331,8 +331,3 @@ actual external interface DiscreteDataEntry {
    */
   actual val status: Double? //must be double since JS does not support Int
 }
-
-private val DiscreteTimelineChartGestalt.inMemoryStorage: InMemoryHistoryStorage
-  get() {
-    return configuration.historyStorage as InMemoryHistoryStorage
-  }

@@ -67,6 +67,14 @@ class FileHistoryStorage(
     }
   }
 
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): Double {
+    return Double.NaN
+  }
+
   /**
    * Returns the file for the given descriptor
    */

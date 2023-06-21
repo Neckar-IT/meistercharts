@@ -17,14 +17,30 @@ package com.meistercharts.history.impl
 
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.history.HistoryObserver
 import com.meistercharts.history.HistoryStorage
+import com.meistercharts.history.ObservableHistoryStorage
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Mock implementation that returns a new (empty) instance every time
  */
-class EmptyHistoryStorage : HistoryStorage {
+class EmptyHistoryStorage : HistoryStorage, ObservableHistoryStorage {
   override fun get(descriptor: HistoryBucketDescriptor): HistoryBucket? {
     return null
+  }
+
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): @ms @MayBeNaN Double {
+    return Double.NaN
+  }
+
+  override fun observe(observer: HistoryObserver) {
+    //do nothing
   }
 
   /**

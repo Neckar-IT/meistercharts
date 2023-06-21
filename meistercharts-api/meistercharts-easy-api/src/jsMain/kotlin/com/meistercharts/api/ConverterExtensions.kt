@@ -44,6 +44,7 @@ import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.style.Palette
 import it.neckar.commons.kotlin.js.debug
@@ -228,6 +229,27 @@ fun SamplingPeriod.toModel(): com.meistercharts.history.SamplingPeriod {
   }
 }
 
+fun com.meistercharts.history.SamplingPeriod.toJs(): SamplingPeriod {
+  return when (this) {
+    com.meistercharts.history.SamplingPeriod.EveryMillisecond -> SamplingPeriod.EveryMillisecond
+    com.meistercharts.history.SamplingPeriod.EveryTenMillis -> SamplingPeriod.EveryTenMillis
+    com.meistercharts.history.SamplingPeriod.EveryHundredMillis -> SamplingPeriod.EveryHundredMillis
+    com.meistercharts.history.SamplingPeriod.EverySecond -> SamplingPeriod.EverySecond
+    com.meistercharts.history.SamplingPeriod.EveryTenSeconds -> SamplingPeriod.EveryTenSeconds
+    com.meistercharts.history.SamplingPeriod.EveryMinute -> SamplingPeriod.EveryMinute
+    com.meistercharts.history.SamplingPeriod.EveryTenMinutes -> SamplingPeriod.EveryTenMinutes
+    com.meistercharts.history.SamplingPeriod.EveryHour -> SamplingPeriod.EveryHour
+    com.meistercharts.history.SamplingPeriod.Every6Hours -> SamplingPeriod.Every6Hours
+    com.meistercharts.history.SamplingPeriod.Every24Hours -> SamplingPeriod.Every24Hours
+
+    com.meistercharts.history.SamplingPeriod.Every5Days,
+    com.meistercharts.history.SamplingPeriod.Every30Days,
+    com.meistercharts.history.SamplingPeriod.Every90Days,
+    com.meistercharts.history.SamplingPeriod.Every360Days,
+    -> throw UnsupportedOperationException("$this is not supported")
+  }
+}
+
 /**
  * Converts this JavaScript [TimeRange] object into a model TimeRange object
  */
@@ -241,9 +263,19 @@ fun TimeRange.toModel(): com.meistercharts.algorithms.TimeRange {
 /**
  * Converts a chart time range to a JS time range
  */
-fun com.meistercharts.algorithms.TimeRange.toJs() = object : TimeRange {
-  override val start: Double = this@toJs.start
-  override val end: Double = this@toJs.end
+fun com.meistercharts.algorithms.TimeRange.toJs(): TimeRange {
+  val timeRange = js("{}") as TimeRange
+  timeRange.asDynamic().start = start
+  timeRange.asDynamic().end = end
+  return timeRange
+}
+
+fun HistoryBucketDescriptor.toHistoryQueryDescriptorJs(): HistoryQueryDescriptor {
+  return HistoryQueryDescriptor(
+    start,
+    end,
+    bucketRange.samplingPeriod.distance
+  )
 }
 
 /**

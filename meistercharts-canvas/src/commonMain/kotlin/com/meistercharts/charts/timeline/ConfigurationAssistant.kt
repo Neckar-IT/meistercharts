@@ -48,7 +48,7 @@ class ConfigurationAssistant(
 ) {
 
   constructor(
-    durationBetweenSamples: Duration,
+    durationBetweenSamples: @ms Double,
     gapFactor: Double = 12.0,
     manualMinDistanceBetweenSamples: @px Double? = null,
     manualMaxDistanceBetweenSamples: @px Double? = null,
@@ -109,7 +109,7 @@ class ConfigurationAssistant(
     calculator.manualMaxDistanceBetweenSamples = maxDistance
   }
 
-  fun setDurationBetweenSamples(duration: @ms Duration) {
+  fun setDurationBetweenSamples(duration: @ms Double) {
     calculator.durationBetweenSamples = duration
   }
 
@@ -121,31 +121,31 @@ class ConfigurationAssistant(
    * Bei "krummen" Werten, die nicht zur Sampling Period passen, treffen wir die Entscheidung!
    */
   fun setDataPointCountPerSecond(perSecond: Double) {
-    calculator.durationBetweenSamples = (1.0 / perSecond).seconds
+    calculator.durationBetweenSamples = (1.0 / perSecond).seconds.toDouble(DurationUnit.MILLISECONDS)
   }
 
   fun setDataPointCountPerMinute(perMinute: Double) {
-    calculator.durationBetweenSamples = (1.0 / perMinute).minutes
+    calculator.durationBetweenSamples = (1.0 / perMinute).minutes.toDouble(DurationUnit.MILLISECONDS)
   }
 
   fun setDataPointCountPerHour(perHour: Double) {
-    calculator.durationBetweenSamples = (1.0 / perHour).hours
+    calculator.durationBetweenSamples = (1.0 / perHour).hours.toDouble(DurationUnit.MILLISECONDS)
   }
 
   fun setDataPointCountPerDay(perDay: Double) {
-    calculator.durationBetweenSamples = (1.0 / perDay).days
+    calculator.durationBetweenSamples = (1.0 / perDay).days.toDouble(DurationUnit.MILLISECONDS)
   }
 
   fun setDataPointCountPerMonth(perMonth: Double) {
-    calculator.durationBetweenSamples = (30.5 / perMonth).days
+    calculator.durationBetweenSamples = (30.5 / perMonth).days.toDouble(DurationUnit.MILLISECONDS)
   }
 
   fun setDataPointCountPerYear(perYear: Double) {
-    calculator.durationBetweenSamples = (365.25 / perYear).days
+    calculator.durationBetweenSamples = (365.25 / perYear).days.toDouble(DurationUnit.MILLISECONDS)
   }
 
   @OnlyForPros
-  fun setSamplingPeriod(durationBetweenRecordedDataPoints: Duration) {
+  fun setSamplingPeriod(durationBetweenRecordedDataPoints: @ms Double) {
     calculator.durationBetweenSamples = durationBetweenRecordedDataPoints
   }
 
@@ -172,7 +172,7 @@ class ConfigurationAssistant(
     gestalt.data.minimumSamplingPeriod = calculator.recordingSamplingPeriod
     gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(calculator.minDistanceBetweenSamples).withMinimum(calculator.recordingSamplingPeriod)
     //gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MaxDistanceSamplingPeriodCalculator(maxDistanceBetweenDataPoints).withMinimum(recordingSamplingPeriod)
-    gestalt.style.contentAreaDuration = calculator.contentAreaDuration.toDouble(DurationUnit.MILLISECONDS)
+    gestalt.style.contentAreaDuration = calculator.contentAreaDuration
     gestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(calculator.gapFactor)
 
     gestalt.chartSupport().let {
@@ -193,7 +193,7 @@ class ConfigurationAssistant(
 
   fun createZoomAndTranslationModifier(gestalt: TimeLineChartGestalt): ZoomAndTranslationModifier {
     return ZoomAndTranslationModifiersBuilder()
-      .minZoom(calculator.getMinZoomX(gestalt), 0.000001.asDoubleProvider()) //the x zoom works with 24 hours and 1 millis for the applied sampling rate
+      .minZoom(calculator.getMinZoomXProvider(gestalt), 0.000001.asDoubleProvider()) //the x zoom works with 24 hours and 1 millis for the applied sampling rate
       .maxZoom(calculator.maxZoomX, 500.0.asDoubleProvider())
       .build()
   }
@@ -202,32 +202,32 @@ class ConfigurationAssistant(
   companion object {
 
     fun withDataPointCountPerSecond(perSecond: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perSecond).seconds)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perSecond).seconds.toDouble(DurationUnit.MILLISECONDS))
     }
 
     fun withDataPointCountPerMinute(perMinute: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perMinute).minutes)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perMinute).minutes.toDouble(DurationUnit.MILLISECONDS))
     }
 
     fun withDataPointCountPerHour(perHour: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perHour).hours)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perHour).hours.toDouble(DurationUnit.MILLISECONDS))
     }
 
     fun withDataPointCountPerDay(perDay: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perDay).days)
+      return ConfigurationAssistant(durationBetweenSamples = (1.0 / perDay).days.toDouble(DurationUnit.MILLISECONDS))
     }
 
     fun withDataPointCountPerMonth(perMonth: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (30.5 / perMonth).days)
+      return ConfigurationAssistant(durationBetweenSamples = (30.5 / perMonth).days.toDouble(DurationUnit.MILLISECONDS))
     }
 
     fun withDataPointCountPerYear(perYear: Double): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = (365.25 / perYear).days)
+      return ConfigurationAssistant(durationBetweenSamples = (365.25 / perYear).days.toDouble(DurationUnit.MILLISECONDS))
     }
 
     @OnlyForPros
     fun withDurationBetweenSamples(durationBetweenSamples: Duration): ConfigurationAssistant {
-      return ConfigurationAssistant(durationBetweenSamples = durationBetweenSamples)
+      return ConfigurationAssistant(durationBetweenSamples = durationBetweenSamples.toDouble(DurationUnit.MILLISECONDS))
     }
 
     @OnlyForPros

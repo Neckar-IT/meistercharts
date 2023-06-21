@@ -16,13 +16,15 @@
 package com.meistercharts.history
 
 import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.history.cleanup.HistoryCleanupService
+import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
+import com.meistercharts.history.downsampling.DownSamplingService
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.formatting.formatUtc
-import com.meistercharts.history.cleanup.HistoryCleanupService
-import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
-import com.meistercharts.history.downsampling.DownSamplingService
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 
 /**
@@ -40,6 +42,30 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
    * Bookkeeping class
    */
   val bookKeeping: InMemoryBookKeeping = InMemoryBookKeeping()
+
+  override fun getStart(): Double {
+    val historyBucketRange = naturalSamplingPeriod.toHistoryBucketRange()
+    val descriptor = bookKeeping.earliestBound(historyBucketRange) ?: return Double.NaN
+
+    val first = get(descriptor) ?: return Double.NaN
+    if (first.isEmpty()) {
+      return Double.NaN
+    }
+
+    return first.chunk.firstTimeStamp()
+  }
+
+  override fun getEnd(): @ms @MayBeNaN Double {
+    val historyBucketRange = naturalSamplingPeriod.toHistoryBucketRange()
+    val descriptor = bookKeeping.latestBound(historyBucketRange) ?: return Double.NaN
+
+    val last = get(descriptor) ?: return Double.NaN
+    if (last.isEmpty()) {
+      return Double.NaN
+    }
+
+    return last.chunk.lastTimeStamp()
+  }
 
   /**
    * The down sampling service that can be used to calculate the down sampling ([scheduleDownSampling])
@@ -192,19 +218,20 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
 }
 
 /**
- * Book keeping class for [InMemoryHistoryStorage]
+ * Bookkeeping class for [InMemoryHistoryStorage]
  */
 class InMemoryBookKeeping {
   /**
    * Returns the time range from the earliest to the latest
    */
+  @Deprecated("do not use anymore")
   fun getTimeRange(range: HistoryBucketRange): TimeRange? {
-    val start = earliestBound(range) ?: return null
-    val end = latestBound(range) ?: return null
+    val startDescriptor = earliestBound(range) ?: return null
+    val endDescriptor = latestBound(range) ?: return null
 
-    check(start.start <= end.end) { "start ${start.start.formatUtc()} is greater than end ${end.end.formatUtc()}" }
+    check(startDescriptor.start <= endDescriptor.end) { "start ${startDescriptor.start.formatUtc()} is greater than end ${endDescriptor.end.formatUtc()}" }
 
-    return TimeRange(start.start, end.end)
+    return TimeRange(startDescriptor.start, endDescriptor.end)
   }
 
   /**
@@ -233,6 +260,9 @@ class InMemoryBookKeeping {
     }
   }
 
+  /**
+   * Stores the history bucket descriptor
+   */
   fun store(descriptor: HistoryBucketDescriptor) {
     val bucketRange = descriptor.bucketRange
 

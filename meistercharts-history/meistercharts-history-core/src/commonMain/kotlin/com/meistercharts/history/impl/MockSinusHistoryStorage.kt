@@ -23,6 +23,7 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import kotlin.math.sin
 
@@ -32,6 +33,14 @@ import kotlin.math.sin
 class MockSinusHistoryStorage : HistoryStorage {
   override fun get(descriptor: HistoryBucketDescriptor): HistoryBucket {
     return HistoryBucket(descriptor, createSinusChunk(descriptor))
+  }
+
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): Double {
+    return Double.NaN
   }
 
   override fun onDispose(action: () -> Unit) {

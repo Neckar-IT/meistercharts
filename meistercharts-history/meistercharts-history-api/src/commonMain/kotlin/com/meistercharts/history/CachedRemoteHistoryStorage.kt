@@ -27,6 +27,14 @@ class CachedRemoteHistoryStorage(val asyncHistoryAccess: AsyncHistoryAccess) : H
    */
   private val cache = cache<HistoryBucketDescriptor, HistoryBucket>("CachedRemoteHistoryStorage", 100)
 
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): Double {
+    return Double.NaN
+  }
+
   override fun get(descriptor: HistoryBucketDescriptor): HistoryBucket? {
     val cached = cache[descriptor]
 

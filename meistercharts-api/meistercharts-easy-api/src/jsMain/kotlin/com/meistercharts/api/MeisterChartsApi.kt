@@ -27,6 +27,7 @@ import it.neckar.logging.ifDebug
 import it.neckar.open.kotlin.lang.isCloseTo
 import it.neckar.open.unit.number.MayBeZero
 import org.w3c.dom.CustomEvent
+import org.w3c.dom.CustomEventInit
 import org.w3c.dom.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -69,15 +70,19 @@ internal constructor(
       return
     }
     previousContentAreaSize = size
-    dispatchCustomEvent("ContentAreaSizeChanged", size.toJs())
+    dispatchCustomEvent("content-area-size-changed", size.toJs())
   }
 
   /**
    * Dispatches a custom-event of type [eventType] and with detail [eventDetail]
    */
   protected fun dispatchCustomEvent(eventType: String, eventDetail: Any) {
-    val customEvent = CustomEvent("CustomEvent")
-    customEvent.initCustomEvent(type = eventType, bubbles = true, cancelable = false, detail = eventDetail)
+    val customEvent = CustomEvent(
+      type = "meistercharts:$eventType",
+      eventInitDict = CustomEventInit(detail = eventDetail, bubbles = true, cancelable = false, composed = true)
+    )
+
+    //customEvent.initCustomEvent(type = eventType, bubbles = true, cancelable = false, detail = eventDetail)
     logger.ifDebug {
       console.debug("dispatching custom-event: $eventType", customEvent)
     }

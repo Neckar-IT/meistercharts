@@ -151,14 +151,8 @@ class TilesDebugLayer(
                 add("\t${it.label} (${it.distance} ms")
               }
 
-              creationInfo.get(HistoryCanvasTilePainter.queryResultTimeRange)?.let {
+              creationInfo.get(HistoryCanvasTilePainter.queryResultTimeRangeKey)?.let {
                 add("Query Result Time Range:")
-                add("\t${it.start.formatUtc()}")
-                add("\t${it.end.formatUtc()}")
-              }
-
-              creationInfo.get(HistoryCanvasTilePainter.historyStorageBookKeepingStateKey)?.let {
-                add("Book Keeping Range:")
                 add("\t${it.start.formatUtc()}")
                 add("\t${it.end.formatUtc()}")
               }

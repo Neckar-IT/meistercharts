@@ -185,6 +185,7 @@ enum class ValueRangeScale {
 /**
  * Represents a time range
  */
+@JsExport
 external interface TimeRange {
   /**
    * The start of the time range in milliseconds since 1 January 1970 UTC
@@ -196,6 +197,27 @@ external interface TimeRange {
    */
   val end: @ms Double
 }
+
+/**
+ * Represents a history bucket descriptor
+ */
+@JsExport
+data class HistoryQueryDescriptor(
+  /**
+   * The start of the time range in milliseconds since 1 January 1970 UTC
+   */
+  val start: @ms Double,
+
+  /**
+   * The end of the time range in milliseconds since 1 January 1970 UTC
+   */
+  val end: @ms Double,
+
+  /**
+   * The distance between two data points
+   */
+  val distanceBetweenDataPoints: @ms Double,
+)
 
 /**
  * Represents a pair of zoom for both axis

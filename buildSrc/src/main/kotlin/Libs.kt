@@ -105,8 +105,6 @@ public object Libs {
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
 
-    public const val mockito_kotlin: String = "com.nhaarman.mockitokotlin2:mockito-kotlin:_"
-
     public const val klock: String = "com.soywiz.korlibs.klock:klock:_"
 
     public const val okhttp: String = "com.squareup.okhttp3:okhttp:_"
@@ -219,6 +217,8 @@ public object Libs {
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
 
+    public const val launch4j: String = "net.sf.launch4j:launch4j:_"
+
     public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
@@ -288,6 +288,12 @@ public object Libs {
 
     public const val org_jetbrains_dokka_gradle_plugin: String =
             "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:_"
+
+    public const val intellij_coverage_agent: String =
+            "org.jetbrains.intellij.deps:intellij-coverage-agent:_"
+
+    public const val intellij_coverage_reporter: String =
+            "org.jetbrains.intellij.deps:intellij-coverage-reporter:_"
 
     public const val org_jetbrains_intellij_gradle_plugin: String =
             "org.jetbrains.intellij:org.jetbrains.intellij.gradle.plugin:_"

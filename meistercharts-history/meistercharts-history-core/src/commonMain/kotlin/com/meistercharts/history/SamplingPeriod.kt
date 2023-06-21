@@ -179,15 +179,15 @@ enum class SamplingPeriod(
     /**
      * Returns the first sampling period that has a distance same or smaller than the given one
      */
-    fun withMaxDuration(maxDuration: Duration): SamplingPeriod {
-      return withMaxDistance(maxDuration.toDouble(DurationUnit.MILLISECONDS))
+    fun withMaxDuration(maxDuration: @ms Double): SamplingPeriod {
+      return withMaxDistance(maxDuration)
     }
 
     /**
      * Returns the first sampling period that has a distance same or greater than the given one
      */
-    fun withMinDuration(minDuration: Duration): SamplingPeriod {
-      return withMinDistance(minDuration.toDouble(DurationUnit.MILLISECONDS))
+    fun withMinDuration(minDuration: @ms Double): SamplingPeriod {
+      return withMinDistance(minDuration)
     }
 
     /**

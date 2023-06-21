@@ -20,6 +20,7 @@ import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastMapNotNull
 import it.neckar.open.dispose.OnDispose
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
 
@@ -31,12 +32,17 @@ import it.neckar.open.unit.si.ms
  *
  */
 interface HistoryStorage : OnDispose {
+  /**
+   * Returns the first timestamp this storage has data for.
+   * Returns NaN if the information is not known.
+   */
+  fun getStart(): @ms @MayBeNaN Double
 
-  //TODO think about this
-  @Deprecated("not implemented yet, think about it!")
-  fun getAvailableDataRange(): TimeRange {
-    TODO()
-  }
+  /**
+   * Returns the last timestamp this storage has data for.
+   * Returns NaN if the information is not known.
+   */
+  fun getEnd(): @ms @MayBeNaN Double
 
   /**
    * Returns a list of buckets that span the given time

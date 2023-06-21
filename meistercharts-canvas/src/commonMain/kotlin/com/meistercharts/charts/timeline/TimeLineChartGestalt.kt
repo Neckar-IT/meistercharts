@@ -170,6 +170,7 @@ import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
 import it.neckar.open.kotlin.lang.fastMap
 import it.neckar.open.kotlin.lang.getModulo
+import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.observable.ObservableBoolean
@@ -1097,7 +1098,10 @@ class TimeLineChartGestalt
         zoomAndTranslationDefaults {
           DelegatingZoomAndTranslationDefaults(
             MoveDomainValueToLocation(
-              domainRelativeValueProvider = { style.contentAreaTimeRange.time2relative(nowMillis()) },
+              domainRelativeValueProvider = {
+                @ms val relevantTimestamp = data.historyStorage.getEnd().ifNaN { nowMillis() }
+                style.contentAreaTimeRange.time2relative(relevantTimestamp)
+              },
               targetLocationProvider = { chartCalculator -> chartCalculator.windowRelative2WindowX(style.crossWirePositionX) }
             ),
             FittingWithMargin { viewportSupport.decimalsAreaViewportMargin() }
@@ -1544,7 +1548,7 @@ class TimeLineChartGestalt
 /**
  * Set up with nice data for a demo.
  */
-fun TimeLineChartGestalt.setUpDemo(): Disposable {
+fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disposable {
   val samplingPeriod = SamplingPeriod.EveryHundredMillis
 
   style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
@@ -1559,8 +1563,6 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
 
   //Avoid gaps for the cross wire - when adding only
   data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
-
-  val writableHistoryStorage = data.historyStorage as WritableHistoryStorage
 
   data.historyConfiguration = historyConfiguration {
     decimalDataSeries(DataSeriesId(17), TextKey.simple("Mass Flow Rate [kg/h]"), HistoryUnit("kg/h"))
@@ -1641,7 +1643,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   }
 
   val historyChunkGenerator = HistoryChunkGenerator(
-    historyStorage = writableHistoryStorage, samplingPeriod = samplingPeriod,
+    historyStorage = historyStorage, samplingPeriod = samplingPeriod,
     decimalValueGenerators = decimalValueGenerators,
     enumValueGenerators = enumValueGenerators,
     referenceEntryGenerators = referenceEntryGenerators,
@@ -1650,7 +1652,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
 
   val addSamplesDisposable = it.neckar.open.time.repeat(100.milliseconds) {
     historyChunkGenerator.next()?.let {
-      writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+      historyStorage.storeWithoutCache(it, samplingPeriod)
     }
   }.also {
     onDispose(it)

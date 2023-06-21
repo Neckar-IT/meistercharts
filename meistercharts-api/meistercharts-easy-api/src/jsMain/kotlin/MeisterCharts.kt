@@ -35,7 +35,9 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
+import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
+import com.meistercharts.history.withQueryMonitor
 import com.meistercharts.js.MeisterChartBuilderJS
 import it.neckar.logging.LoggerFactory
 import kotlinx.browser.document
@@ -313,18 +315,19 @@ fun createTimeLineChartFromElement(
 @Suppress("unused")
 fun createTimeLineChart(): TimeLineChart {
   val historyStorage = InMemoryHistoryStorage()
+  val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage> = historyStorage.withQueryMonitor()
 
   /**
    * Creates a timeline chart for the given history storage
    */
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterChartBuilderJS.create("TimeLineChart")
-  val gestalt = TimeLineChartWithToolbarGestalt(meisterChartBuilder.chartId, historyStorage).apply {
+  val gestalt = TimeLineChartWithToolbarGestalt(meisterChartBuilder.chartId, historyStorageQueryMonitor).apply {
     configure(meisterChartBuilder)
   }
 
   val meisterChart = meisterChartBuilder.build()
-  val timeLineChart = TimeLineChart(gestalt, meisterChart)
+  val timeLineChart = TimeLineChart(gestalt, meisterChart, historyStorageQueryMonitor)
 
   historyStorage.scheduleDownSampling()
   historyStorage.scheduleCleanupService()
@@ -467,17 +470,18 @@ fun createDiscreteTimelineChartFromElement(
 @Suppress("unused")
 fun createDiscreteTimelineChart(): DiscreteTimelineChart {
   val historyStorage = InMemoryHistoryStorage()
+  val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage> = historyStorage.withQueryMonitor()
 
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterChartBuilderJS.create("DiscreteTimelineChart")
-  val gestalt = DiscreteTimelineChartGestalt(historyStorage).apply {
+  val gestalt = DiscreteTimelineChartGestalt(historyStorageQueryMonitor).apply {
     configure(meisterChartBuilder)
 
     meisterChartBuilder.applyDiscreteTimelineChartEasyApiDefaults()
   }
 
   val meisterChart = meisterChartBuilder.build()
-  val discreteTimelineChart = DiscreteTimelineChart(gestalt, meisterChart)
+  val discreteTimelineChart = DiscreteTimelineChart(gestalt, meisterChart, historyStorageQueryMonitor)
 
   historyStorage.scheduleDownSampling()
   historyStorage.scheduleCleanupService()

@@ -1,0 +1,17 @@
+= fiddles
+
+== MeisterCharts Examples
+
+This folder contains a collection of examples demonstrating the usage of the MeisterCharts API. Each example is organized in a separate directory.
+
+=== Directory Structure
+
+The "fiddles" folder contains the following examples:
+
+- link:./meistercharts-minimal[meistercharts-minimal]: A minimal example of meistercharts using a **timeLineChart**
+  * JSFiddle Link: https://jsfiddle.net/gh/get/library/pure/Neckar-IT/meistercharts/tree/main/meistercharts-examples/fiddles/meistercharts-minimal
+
+=== Usage
+
+To run the examples, navigate to the respective directory and open the associated Fiddle Link in the Browser or open the
+JSFiddle link directly in this document.

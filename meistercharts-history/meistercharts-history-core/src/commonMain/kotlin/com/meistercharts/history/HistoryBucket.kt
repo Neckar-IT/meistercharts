@@ -109,6 +109,10 @@ data class HistoryBucket(
   override fun toString(): String {
     return "HistoryBucket(descriptor=$descriptor)"
   }
+
+  fun isEmpty(): Boolean {
+    return chunk.isEmpty()
+  }
 }
 
 /**

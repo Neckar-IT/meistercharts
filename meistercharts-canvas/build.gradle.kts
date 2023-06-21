@@ -66,7 +66,6 @@ kotlin{
         implementation(Libs.commons_lang3)
         implementation(Libs.assertj_core)
         implementation(Libs.commons_math3)
-        implementation(Libs.mockito_kotlin)
         implementation(Libs.logback_classic)
         implementation(Libs.awaitility)
         implementation(Libs.measured)

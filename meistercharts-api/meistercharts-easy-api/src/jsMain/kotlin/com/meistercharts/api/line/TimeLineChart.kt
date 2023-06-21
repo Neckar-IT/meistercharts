@@ -42,6 +42,7 @@ import com.meistercharts.api.toBoxStyles
 import com.meistercharts.api.toColor
 import com.meistercharts.api.toColors
 import com.meistercharts.api.toFontDescriptorFragment
+import com.meistercharts.api.toHistoryQueryDescriptorJs
 import com.meistercharts.api.toJs
 import com.meistercharts.api.toModel
 import com.meistercharts.api.toNumberFormat
@@ -62,6 +63,7 @@ import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryStorageCache
+import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
@@ -93,7 +95,10 @@ import kotlin.time.Duration.Companion.seconds
 class TimeLineChart internal constructor(
   internal val gestalt: TimeLineChartWithToolbarGestalt,
   meisterCharts: MeisterChartJS,
+  internal val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApiLegacy<TimeLineChartData, TimeLineChartStyle>(meisterCharts) {
+
+  private val historyStorage: InMemoryHistoryStorage = historyStorageQueryMonitor.historyStorage
 
   init {
     gestalt.timeLineChartGestalt.applyEasyApiDefaults()
@@ -122,13 +127,13 @@ class TimeLineChart internal constructor(
     }
     //We dispatch a CustomEvent of type "VisibleTimeRangeChanged" every time the translation along the x-axis changes
     previousVisibleTimeRange = currentVisibleTimeRange
-    dispatchCustomEvent("VisibleTimeRangeChanged", currentVisibleTimeRange.toJs())
+    dispatchCustomEvent("visible-time-range-changed", currentVisibleTimeRange.toJs())
   }
 
   /**
    * The history store cache that is used to add the values
    */
-  private val historyStorageCache = HistoryStorageCache(gestalt.timeLineChartGestalt.inMemoryStorage)
+  private val historyStorageCache = HistoryStorageCache(historyStorage)
 
   init {
     //decrease number of repaints
@@ -171,6 +176,11 @@ class TimeLineChart internal constructor(
     gestalt.timeLineChartGestalt.style.valueAxisStyleConfiguration = { style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex ->
       style.applyTimeLineChartStyle()
     }
+
+    //Fire a custom event if a new history query has been executed
+    historyStorageQueryMonitor.onQueryForNewDescriptor {
+      dispatchCustomEvent("history-query-update", it.toHistoryQueryDescriptorJs())
+    }
   }
 
   /**
@@ -190,7 +200,7 @@ class TimeLineChart internal constructor(
     jsData.historySettings?.let { jsHistorySettings ->
 
       jsHistorySettings.durationBetweenSamples?.sanitize()?.let { duration ->
-        configurationAssistant.setDurationBetweenSamples(duration.milliseconds)
+        configurationAssistant.setDurationBetweenSamples(duration)
       }
 
       //configure the gap calculator
@@ -200,7 +210,7 @@ class TimeLineChart internal constructor(
 
       @s val guaranteedHistoryLength = jsHistorySettings.guaranteedHistoryLength.sanitize()
 
-      configurationAssistant.applyToStorage(gestalt.timeLineChartGestalt.inMemoryStorage, guaranteedHistoryLength.seconds)
+      configurationAssistant.applyToStorage(historyStorage, guaranteedHistoryLength.seconds)
       configurationAssistant.applyToGestalt(gestalt.timeLineChartGestalt)
     }
 
@@ -482,9 +492,7 @@ class TimeLineChart internal constructor(
   fun addSample(jsSample: Sample) {
     val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSample, historyConfiguration)?.let {
-      gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
-        historyStorageCache.scheduleForStore(it, storage.naturalSamplingPeriod)
-      }
+      historyStorageCache.scheduleForStore(it, historyStorage.naturalSamplingPeriod)
     }
   }
 
@@ -502,9 +510,7 @@ class TimeLineChart internal constructor(
 
     val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
-      gestalt.timeLineChartGestalt.inMemoryStorage.let { storage ->
-        historyStorageCache.scheduleForStore(it, storage.naturalSamplingPeriod)
-      }
+      historyStorageCache.scheduleForStore(it, historyStorage.naturalSamplingPeriod)
     }
   }
 
@@ -514,7 +520,7 @@ class TimeLineChart internal constructor(
   @Suppress("unused")
   fun clearHistory() {
     historyStorageCache.clear()
-    gestalt.timeLineChartGestalt.inMemoryStorage.clear()
+    historyStorage.clear()
   }
 
   /**
@@ -564,7 +570,7 @@ class TimeLineChart internal constructor(
    */
   @Suppress("unused")
   fun setUpDemo() {
-    gestalt.timeLineChartGestalt.setUpDemo().also {
+    gestalt.timeLineChartGestalt.setUpDemo(historyStorage).also {
       gestalt.timeLineChartGestalt.onDispose(it)
     }
   }
@@ -582,12 +588,6 @@ private fun ValueAxisLayer.Style.applyTimeLineChartStyle() {
   tickOrientation = Vicinity.Outside
   paintRange = AxisStyle.PaintRange.Continuous
 }
-
-private val TimeLineChartGestalt.inMemoryStorage: InMemoryHistoryStorage
-  get() {
-    return data.historyStorage as InMemoryHistoryStorage
-  }
-
 
 /**
  * Cache that can be used to optimize splitting of strings into lines
