@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.time
+package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.time.DefaultCachedTimeZoneOffsetProvider
 import com.meistercharts.algorithms.time.DefaultTimeZoneOffsetProvider
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.time.TimeZone
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.DurationUnit

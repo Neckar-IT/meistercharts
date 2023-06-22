@@ -349,6 +349,8 @@ class DownSamplingCalculator(
   /**
    * Adds a new sample
    * @param newDecimalValues the values for each data series of the sample (at *one* point in time)
+   * @param minDecimalValues the min decimal values
+   * @param maxDecimalValues the max decimal values
    */
   fun addDecimalsSample(
     newDecimalValues: @MayBeNoValueOrPending DoubleArray,

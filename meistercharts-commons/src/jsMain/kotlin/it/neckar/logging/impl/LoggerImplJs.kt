@@ -3,7 +3,6 @@ package it.neckar.logging.impl
 import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
-import it.neckar.logging.LoggerLocalStorage
 import it.neckar.logging.Logger
 import it.neckar.logging.isEnabled
 
@@ -22,7 +21,9 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun debug(msg: String?) {
-    console.debug(msg)
+    if (isDebugEnabled()) {
+      console.debug(msg)
+    }
   }
 
   override fun isInfoEnabled(): Boolean {
@@ -30,7 +31,9 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun info(msg: String?) {
-    console.info(msg)
+    if (isInfoEnabled()) {
+      console.info(msg)
+    }
   }
 
   override fun isWarnEnabled(): Boolean {
@@ -38,7 +41,9 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun warn(msg: String?) {
-    console.warn(msg)
+    if (isWarnEnabled()) {
+      console.warn(msg)
+    }
   }
 
   override fun isErrorEnabled(): Boolean {
@@ -53,6 +58,8 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun error(msg: String?) {
-    console.error(msg)
+    if (isErrorEnabled()) {
+      console.error(msg)
+    }
   }
 }

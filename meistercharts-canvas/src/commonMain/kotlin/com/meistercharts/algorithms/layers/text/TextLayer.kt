@@ -21,10 +21,10 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.LineSpacing
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
@@ -38,10 +38,10 @@ import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Rectangle
 import com.meistercharts.model.Size
+import com.meistercharts.style.BoxStyle
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
-import com.meistercharts.style.BoxStyle
 import it.neckar.open.unit.other.px
 
 
@@ -49,19 +49,14 @@ import it.neckar.open.unit.other.px
  * Shows a text as layer in the center of the canvas
  */
 class TextLayer(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  lines: LinesProvider,
+  styleConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
-
-  constructor(
-    linesProvider: LinesProvider,
-    styleConfiguration: Style.() -> Unit = {}
-  ) : this(Data(linesProvider), styleConfiguration)
 
   /**
    * The style
    */
-  val style: Style = Style().apply(styleConfiguration)
+  val configuration: Configuration = Configuration(lines).apply(styleConfiguration)
 
   override var type: LayerType = LayerType.Content
 
@@ -69,24 +64,24 @@ class TextLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.font(style.font)
+    gc.font(configuration.font)
 
     gc.saved {
-      val anchorPoint = style.anchorPointProvider.calculateBasePoint(gc.boundingBox)
+      val anchorPoint = configuration.anchorPointProvider.calculateBasePoint(gc.boundingBox)
       gc.translate(anchorPoint.x, anchorPoint.y)
       if (DebugFeature.ShowBounds.enabled(paintingContext)) {
         gc.paintMark()
       }
       painter.paintText(
         gc,
-        lines = data.linesProvider(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration),
-        textColor = style.textColor,
-        boxStyle = style.boxStyle,
-        lineSpacing = style.lineSpacing,
-        horizontalAlignment = style.horizontalAlignment,
-        anchorDirection = style.anchorDirection,
-        anchorGapHorizontal = style.anchorGapHorizontal,
-        anchorGapVertical = style.anchorGapVertical,
+        lines = configuration.linesProvider(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration),
+        textColor = configuration.textColor,
+        boxStyle = configuration.boxStyle,
+        lineSpacing = configuration.lineSpacing,
+        horizontalAlignment = configuration.horizontalAlignment,
+        anchorDirection = configuration.anchorDirection,
+        anchorGapHorizontal = configuration.anchorGapHorizontal,
+        anchorGapVertical = configuration.anchorGapVertical,
       )
 
       //painter.paint(
@@ -103,15 +98,10 @@ class TextLayer(
     }
   }
 
-  class Data(
-    var linesProvider: LinesProvider = { _, _ -> listOf("48°24'49.7\"N", "9°03'03.0\"E") }
-  )
-
-  /**
-   * Style configuration for the text layer
-   */
   @ConfigurationDsl
-  open class Style {
+  class Configuration(
+    var linesProvider: LinesProvider,
+  ) {
     /**
      * The color of the text
      */
@@ -159,13 +149,25 @@ class TextLayer(
      * Not relevant when the anchor is [Center]
      */
     var margin: Insets = Insets.empty
+
   }
 
   companion object {
     /**
      * A text layer that prints a hello message
      */
-    val helloMeisterChart: TextLayer = TextLayer(Data { _, _ -> listOf("Hello MeisterCharts") })
+    val helloMeisterChart: TextLayer = forText({ _, _ -> "Hello MeisterCharts" })
+
+    fun forText(text: TextProvider, styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(text.asLinesProvider(), styleConfiguration)
+    }
+
+    /**
+     * Creates a new text layer that has no text
+     */
+    fun empty(styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(lines = { _, _ -> emptyList() }, styleConfiguration)
+    }
   }
 }
 
@@ -204,28 +206,28 @@ fun Layers.addTextUnresolved(texts: List<String>, color: Color = Color.blueviole
 /**
  * Adds a text layer with a text that is resolved
  */
-fun Layers.addText(textKey: TextKey, styleConfiguration: TextLayer.Style.() -> Unit): TextLayer {
+fun Layers.addText(textKey: TextKey, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
   return addText(listOf(textKey), styleConfiguration)
 }
 
 /**
  * Adds a text layer with texts that are resolved
  */
-fun Layers.addText(textKeys: List<TextKey>, styleConfiguration: TextLayer.Style.() -> Unit): TextLayer {
+fun Layers.addText(textKeys: List<TextKey>, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
   return addText(textKeys.asLinesProvider(), styleConfiguration)
 }
 
 /**
  * Adds a message layer with a fixed string that is not resolved.
  */
-fun Layers.addTextUnresolved(texts: String, styleConfiguration: TextLayer.Style.() -> Unit): TextLayer {
+fun Layers.addTextUnresolved(texts: String, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
   return addTextUnresolved(listOf(texts), styleConfiguration)
 }
 
 /**
  * Adds a message layer with fixed strings that are not resolved.
  */
-fun Layers.addTextUnresolved(lines: List<String>, styleConfiguration: TextLayer.Style.() -> Unit): TextLayer {
+fun Layers.addTextUnresolved(lines: List<String>, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
   return addText({ _, _ -> lines }, styleConfiguration)
 }
 
@@ -235,18 +237,33 @@ fun Layers.addTextUnresolved(lines: List<String>, styleConfiguration: TextLayer.
  */
 fun Layers.addText(
   linesProvider: LinesProvider,
-  styleConfiguration: TextLayer.Style.() -> Unit = {}
+  styleConfiguration: TextLayer.Configuration.() -> Unit = {},
 ): TextLayer {
-  return TextLayer(TextLayer.Data(linesProvider), styleConfiguration)
+  return TextLayer(linesProvider, styleConfiguration)
     .also {
       addLayer(it)
     }
 }
 
-fun Layers.addText(
+/**
+ * Adds a text layer containing multiple lines
+ */
+fun Layers.addTexts(
   linesProvider: LinesProvider,
 ): TextLayer {
-  return TextLayer(TextLayer.Data(linesProvider)) { }
+  return TextLayer(linesProvider) { }
+    .also {
+      addLayer(it)
+    }
+}
+
+/**
+ * Adds a single line text layer
+ */
+fun Layers.addText(
+  textprovider: TextProvider,
+): TextLayer {
+  return TextLayer.forText(textprovider) { }
     .also {
       addLayer(it)
     }

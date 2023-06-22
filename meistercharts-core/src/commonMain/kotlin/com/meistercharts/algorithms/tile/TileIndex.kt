@@ -150,6 +150,7 @@ data class TileIndex(
    * Returns a string representation of the tile index, formatted according to the provided [NumberFormat].
    *
    * @param format The [NumberFormat] to use when formatting the string. Defaults to [intFormat].
+   * @param i18nConfiguration The [I18nConfiguration] to use when formatting the string. Defaults to [DefaultI18nConfiguration].
    * @return A string representation of the tile index, formatted according to the provided [NumberFormat].
    */
   fun format(format: NumberFormat = intFormat, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {

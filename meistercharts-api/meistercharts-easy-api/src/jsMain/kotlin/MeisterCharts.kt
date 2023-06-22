@@ -535,9 +535,3 @@ fun createMapWithStackedBars(): MapWithStackedBars {
   val meisterChart = meisterChartBuilder.build()
   return MapWithStackedBars(gestalt, meisterChart)
 }
-
-
-/**
- * Global logger for MeisterCharts
- */
-private val logger = LoggerFactory.getLogger("MeisterCharts")

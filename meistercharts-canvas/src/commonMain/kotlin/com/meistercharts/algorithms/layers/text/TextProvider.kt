@@ -26,8 +26,19 @@ import it.neckar.open.i18n.TextService
 typealias LinesProvider = (textService: TextService, i18nConfiguration: I18nConfiguration) -> List<String>
 
 /**
+ * Provides a single string
+ */
+typealias TextProvider = (textService: TextService, i18nConfiguration: I18nConfiguration) -> String
+
+/**
  * Resolves the text for the text provider using the [TextService] and [I18nConfiguration] from the provided painting context
  */
 fun LinesProvider.resolve(paintingContext: LayerPaintingContext): List<String> {
   return this(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
+}
+
+fun TextProvider.asLinesProvider(): LinesProvider {
+  return { textService, i18nConfiguration ->
+    listOf(this(textService, i18nConfiguration))
+  }
 }

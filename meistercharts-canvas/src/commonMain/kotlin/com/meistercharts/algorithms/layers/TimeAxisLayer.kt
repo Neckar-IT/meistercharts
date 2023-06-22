@@ -450,6 +450,7 @@ object TickDistanceAwareTickFormat : TimeAxisTickFormat {
   /**
    * Computes the [DateTimeFormat] to be used for the given timestamp
    */
+  @Suppress("UNUSED_PARAMETER")
   private fun computeDateFormat(tickDistance: TimeTickDistance): DateTimeFormat {
     throw UnsupportedOperationException("Not implemented anymore!")
     //return when (tickDistance) {

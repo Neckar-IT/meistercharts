@@ -45,10 +45,8 @@ open class ContentAreaDebugLayer(
   val style: Style = Style().also(styleConfiguration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    val layerSupport = paintingContext.layerSupport
     val calculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
-    val snapSupport = paintingContext.chartSupport.pixelSnapSupport
 
     //Outer line
     gc.lineWidth = 2.0

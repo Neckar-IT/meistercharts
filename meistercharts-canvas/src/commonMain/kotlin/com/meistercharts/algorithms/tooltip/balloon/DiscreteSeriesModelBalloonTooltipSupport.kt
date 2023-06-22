@@ -101,7 +101,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
         val textService = param1.textService
         val i18nConfiguration = param1.i18nConfiguration
 
-        val referenceEntryId = referenceEntryIdProvider()
+        //val referenceEntryId = referenceEntryIdProvider()
 
         return when (index) {
           0 -> {

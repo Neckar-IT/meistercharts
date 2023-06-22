@@ -129,9 +129,9 @@ class CanvasFontMetricsCalculatorJS(
   override fun ImageData.containsPixel(y: Int): Boolean {
     for (x in 0 until width) {
       val baseOffset = ((width * y) + x) * 4
-      val offsetRed = baseOffset + 0
-      val offsetGreen = baseOffset + 1
-      val offsetBlue = baseOffset + 2
+      //val offsetRed = baseOffset + 0
+      //val offsetGreen = baseOffset + 1
+      //val offsetBlue = baseOffset + 2
       val offsetAlpha = baseOffset + 3
 
       val alpha = data[offsetAlpha]

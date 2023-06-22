@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.time
+package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
@@ -24,6 +24,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
 import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.time.TimeZone
 import org.junit.jupiter.api.Test
 
 /**

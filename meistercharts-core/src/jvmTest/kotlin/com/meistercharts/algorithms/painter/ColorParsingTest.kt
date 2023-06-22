@@ -15,8 +15,6 @@
  */
 package com.meistercharts.algorithms.painter
 
-import assertk.*
-import assertk.assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -42,12 +40,5 @@ class ColorParsingTest {
     examples.forEach { unparsed ->
       //Color.web(unparsed).toRgba()
     }
-  }
-
-  @Test
-  fun testParsing() {
-    val color = javafx.scene.paint.Color.web("#007fc3")
-    assertThat(color.red).isEqualTo(0.0)
-    assertThat(color.green).isEqualTo(0.49803921580314636)
   }
 }

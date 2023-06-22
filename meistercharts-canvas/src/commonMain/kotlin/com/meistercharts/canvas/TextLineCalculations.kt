@@ -60,7 +60,7 @@ object TextLineCalculations {
     minLineHeight: @px Double = 0.0,
   ): @px Double {
     @px val spaceBetweenLines = fontMetrics.totalHeight * lineSpacing.spacePercentage
-    return calculateTextBlockHeight(fontMetrics, linesCount, spaceBetweenLines)
+    return calculateTextBlockHeight(fontMetrics, linesCount, spaceBetweenLines, minLineHeight)
   }
 
   /**

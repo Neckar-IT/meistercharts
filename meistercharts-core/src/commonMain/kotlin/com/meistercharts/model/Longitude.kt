@@ -55,6 +55,7 @@ value class Longitude(
    *
    * more: https://en.wikipedia.org/wiki/Geographic_coordinate_system
    */
+  @Suppress("UNUSED_PARAMETER")
   fun format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
     val longitudeMinutesCalculation = ((value % 1) * 60)
     val longitudeSecondsCalculation = (longitudeMinutesCalculation % 1) * 60

@@ -22,6 +22,7 @@ import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.lang.hex
 import it.neckar.open.kotlin.lang.toBase64
+import it.neckar.open.kotlin.serializers.DoubleArray2Serializer
 import org.junit.jupiter.api.Test
 
 /**
@@ -49,19 +50,19 @@ class DoubleArray2SerializerTest {
         intArrayOf(7000, 8000, 9000)
       ),
       referenceEntryStatuses = IntArray2(0, 0) { it * 111 }
-    ).makeRelative()
+    )
 
-    val serialized = DoubleArray2SerializerOld.toByteArray(values.decimalValues)
+    val serialized = DoubleArray2Serializer.toByteArray(values.decimalHistoryValues.values)
     assertThat(serialized.size).isEqualTo((4 * 3 * 8) + 4)
-    assertThat(serialized.hex).isEqualTo("000400033ff000000000000040240000000000004059000000000000408f4000000000003ff000000000000040240000000000004059000000000000408f4000000000003ff000000000000040240000000000004059000000000000408f400000000000")
+    assertThat(serialized.hex).isEqualTo("000400033ff000000000000040240000000000004059000000000000408f400000000000400000000000000040340000000000004069000000000000409f4000000000004008000000000000403e0000000000004072c0000000000040a7700000000000")
 
-    val deserialized = DoubleArray2SerializerOld.parse(serialized)
-    assertThat(deserialized).isEqualTo(values.decimalValues)
+    val deserialized = DoubleArray2Serializer.parse(serialized)
+    assertThat(deserialized).isEqualTo(values.decimalHistoryValues.values)
     assertThat(deserialized.data).hasSize(12)
-    assertThat(deserialized[0, 0]).isEqualTo(values.decimalValues[0, 0])
-    assertThat(deserialized[0, 1]).isEqualTo(values.decimalValues[0, 1])
-    assertThat(deserialized[0, 2]).isEqualTo(values.decimalValues[0, 2])
-    assertThat(deserialized[1, 0]).isEqualTo(values.decimalValues[1, 0])
+    assertThat(deserialized[0, 0]).isEqualTo(values.decimalHistoryValues.values[0, 0])
+    assertThat(deserialized[0, 1]).isEqualTo(values.decimalHistoryValues.values[0, 1])
+    assertThat(deserialized[0, 2]).isEqualTo(values.decimalHistoryValues.values[0, 2])
+    assertThat(deserialized[1, 0]).isEqualTo(values.decimalHistoryValues.values[1, 0])
   }
 
   @Test

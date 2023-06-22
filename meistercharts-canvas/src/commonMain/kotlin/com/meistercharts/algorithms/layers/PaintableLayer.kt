@@ -156,8 +156,8 @@ fun Layers.addPaintableFull(insets: Insets = Insets.empty, paintableProvider: (L
 /**
  * Adds the paintable
  */
-fun Layers.addPaintable(paintable: Paintable, size: Size = Size.PX_90) {
-  addLayer(PaintableLayer() {
+fun Layers.addPaintable(paintable: Paintable) {
+  addLayer(PaintableLayer {
     paintable
   })
 }

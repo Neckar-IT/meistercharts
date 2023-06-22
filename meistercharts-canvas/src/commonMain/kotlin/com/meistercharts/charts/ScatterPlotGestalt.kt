@@ -37,6 +37,7 @@ import com.meistercharts.provider.ValueRangeProvider
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.kotlin.lang.randomNormal
 import it.neckar.open.kotlin.lang.asProvider1
+import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.observable.ObservableObject
 
 /**
@@ -153,7 +154,7 @@ class ScatterPlotGestalt(
         val centerX = if (cloudIndex < 2) 25.0 else 75.0
         val centerY = if (cloudIndex % 2 == 0) 25.0 else 75.0
 
-        for (i in 0 until 100) {
+        100.fastFor {
           xValues.add(randomNormal(centerX, 12.0))
           yValues.add(randomNormal(centerY, 12.0))
         }

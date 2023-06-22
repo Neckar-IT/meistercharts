@@ -270,7 +270,6 @@ class ZoomAndTranslationSupport(
 
   /**
    * Resets zoom and translation to the default values
-   * @param zoomAndTranslationDefaults The amount of overscan Results in a smaller zoom
    */
   fun resetToDefaults(
     zoomAndTranslationDefaults: ZoomAndTranslationDefaults = this.zoomAndTranslationDefaults,

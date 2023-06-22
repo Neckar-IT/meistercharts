@@ -523,6 +523,7 @@ fun interface PaintListener {
    * @param frameTimestamp the timestamp of the current frame
    * @param delta the delta to the last paint (0 on the first paint)
    * @param paintingLoopIndex the index of the paint call
+   * @param dirtyReasons the reasons why the canvas is dirty
    */
   fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet)
 }

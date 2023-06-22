@@ -76,6 +76,6 @@ class HistoryRenderPropertiesCalculatorLayer(
   }
 
   companion object {
-    private val logger: Logger = LoggerFactory.getLogger("HistoryRenderPropertiesCalculatorLayer")
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.algorithms.tile.HistoryRenderPropertiesCalculatorLayer")
   }
 }

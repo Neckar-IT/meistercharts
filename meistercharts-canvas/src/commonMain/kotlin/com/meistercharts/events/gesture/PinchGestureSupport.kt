@@ -271,10 +271,6 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
     pinchPointer1st = null
     pinchPointer2nd = null
   }
-
-  companion object {
-    private val logger = LoggerFactory.getLogger("com.meistercharts.algorithms.impl.DebugOutputZoomAndTranslationModifier")
-  }
 }
 
 /**

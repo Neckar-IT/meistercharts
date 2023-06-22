@@ -84,19 +84,19 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
 
   fun calculateAscentLineAscent(font: FontDescriptor): @Normalized Double {
     val imageData = createImageData(font, VerticalAlignment.Baseline, accentLineChar)
-    @px val accentLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
+    //@px val accentLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
     return (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
   }
 
   fun calculatePLineDescent(font: FontDescriptor): @Normalized Double {
     val imageData = createImageData(font, VerticalAlignment.Baseline, pLineChar)
-    @px val pLineAscent = (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
+    //@px val pLineAscent = (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
     return (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
   }
 
   fun calculateCapitalHAscent(font: FontDescriptor): @Normalized Double {
     val imageData = createImageData(font, VerticalAlignment.Baseline, capitalHLineChar)
-    @px val capitalHLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
+    //@px val capitalHLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
     return (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
   }
 

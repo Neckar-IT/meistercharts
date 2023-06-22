@@ -62,7 +62,7 @@ class ChartingStateDebugPainter {
 
 
     //Calculate the relative start points for content area and window
-    @ContentArea val sizeAll = maxAll.delta(minAll)
+    //@ContentArea val sizeAll = maxAll.delta(minAll)
 
     @ContentArea val offsetContent = contentAreaMin.delta(minAll)
     @ContentArea val contentSize = contentAreaMax.delta(contentAreaMin)
@@ -212,7 +212,7 @@ class ChartingStateDebugPainter {
     }
 
     private fun Double.formatPct(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
-      return "${decimalFormat(maxFractionDigits).format(this, i18nConfiguration)}%"
+      return "${decimalFormat(maxFractionDigits).format(this, i18nConfiguration, whitespaceConfig)}%"
     }
   }
 }

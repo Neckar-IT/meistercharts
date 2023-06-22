@@ -134,6 +134,7 @@ object FlippingValueLabelAnchorDirectionProvider : GroupedBarsPainter.ValueLabel
   /**
    * Calculates the anchor direction for horizontal bars with positive values
    */
+  @Suppress("UNUSED_PARAMETER")
   private fun anchorDirectionForHorizontalBarsPointingRight(
     barLabelWidth: @Zoomed Double,
     barSize: @Zoomed Double,

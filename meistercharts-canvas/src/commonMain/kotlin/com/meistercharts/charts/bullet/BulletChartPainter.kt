@@ -57,6 +57,7 @@ class BulletChartPainter(
     @Zoomed
     var categorySize: Double = Double.NaN
 
+    @Suppress("UNUSED_PARAMETER")
     fun layout(paintingContext: LayerPaintingContext, categorySize: @Zoomed Double, categoryModel: CategoryModelBulletChart, categoryOrientation: Orientation) {
       this.categorySize = configuration.barSize.coerceAtLeast(configuration.currentValueIndicatorSize)
     }

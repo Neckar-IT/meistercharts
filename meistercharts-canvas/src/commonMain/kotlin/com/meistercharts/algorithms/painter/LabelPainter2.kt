@@ -434,7 +434,7 @@ class LabelPainter2(
         }
 
         val textToDraw = label.text
-        val bounds = gc.paintTextBox(
+        gc.paintTextBox(
           line = textToDraw,
           anchorDirection = boxAnchor,
           anchorGapHorizontal = 0.0,

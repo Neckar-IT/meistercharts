@@ -95,7 +95,7 @@ fun MouseCursor.toCss(): String {
 /**
  * Contains a list of mouse cursors that are supported by JS but currently not by MeisterCharts
  */
-private val additionalMouseCursorTypes = listOf(
+val additionalMouseCursorTypes = listOf(
   "zoom-in",
   "zoom-out",
   "help",

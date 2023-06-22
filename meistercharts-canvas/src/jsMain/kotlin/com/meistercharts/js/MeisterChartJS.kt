@@ -23,6 +23,7 @@ import com.meistercharts.canvas.MeisterChartsPlatformState
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.events.ImageLoadedEventBroker
+import it.neckar.logging.console.ConsoleLogFunctions
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLDivElement

@@ -468,7 +468,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
  */
 fun PixelValuesModel.fillWithSampleData() {
   //Initialize the held indices
-  for (heldIndex in 0..10) {
+  10.fastFor {
     heldAverageValues.add(DoubleArray(dataPointCount))
   }
 

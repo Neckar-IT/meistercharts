@@ -69,7 +69,6 @@ class TankPaintable : Paintable {
   private val waves: Paintable = LocalResourcePaintable("tank/waves.png", Size(1400.0, 82.0).times(scalingFactor), Coordinates(-1400.0 * scalingFactor * 0.5, -82.0 * scalingFactor))
 
   override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
-    val chartSupport = paintingContext.chartSupport
     val sensorUltrasonicBoundingBox = sensorUltrasonic.boundingBox(paintingContext)
     val sensorVibrationBoundingBox = sensorVibration.boundingBox(paintingContext)
     val tankCornerTopBoundingBox = tankCornerTopLeft.boundingBox(paintingContext)
@@ -77,7 +76,7 @@ class TankPaintable : Paintable {
     val tankSideTopBoundingBox = tankSideTop.boundingBox(paintingContext)
     val tankSideVerticalBoundingBox = tankSideVertical.boundingBox(paintingContext)
     val tankSideBottomBoundingBox = tankSideBottom.boundingBox(paintingContext)
-    val wavesBoundingBox = waves.boundingBox(paintingContext)
+    //val wavesBoundingBox = waves.boundingBox(paintingContext)
 
     val gc = paintingContext.gc
     gc.translate(x, y)

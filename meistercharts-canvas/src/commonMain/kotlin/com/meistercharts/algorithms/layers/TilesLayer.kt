@@ -105,6 +105,7 @@ class TilesLayer(
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   fun whatsAt(where: @Window Coordinates, precision: WhatsAtSupport.Precision, chartSupport: ChartSupport): List<WhatsAtResultElement<*>> {
     val chartCalculator = chartSupport.chartCalculator
 

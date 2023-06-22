@@ -41,7 +41,8 @@ import it.neckar.open.unit.si.ms
  * @param DataSeriesIndexType: Type of: the data series index
  * @param ValueType1: Type of: the first relevant value
  * @param ValueType2: Type of: the second relevant value
- * @param ValueType4: Type of: the third relevant value
+ * @param ValueType3: Type of: the third relevant value
+ * @param ValueType4: Type of: the fourth relevant value
  */
 interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, ValueType2, ValueType3, ValueType4> {
   /**
