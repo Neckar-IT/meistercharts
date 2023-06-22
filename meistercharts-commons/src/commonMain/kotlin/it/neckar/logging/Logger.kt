@@ -70,38 +70,38 @@ expect interface Logger {
 }
 
 /**
- * Conditional debug action that is only executed if debug is enabled
+ * Conditional debug statement that is only executed if debug is enabled
  */
-inline fun Logger.debug(action: () -> String) {
-  if (this.isDebugEnabled()) {
-    this.debug(action())
+inline fun Logger.debug(messageProvider: () -> String) {
+  if (isDebugEnabled()) {
+    debug(messageProvider())
   }
 }
 
 /**
- * Conditional debug action that is only executed if info is enabled
+ * Conditional info statement that is only executed if info is enabled
  */
-inline fun Logger.info(action: () -> String) {
-  if (this.isInfoEnabled()) {
-    this.info(action())
+inline fun Logger.info(messageProvider: () -> String) {
+  if (isInfoEnabled()) {
+    info(messageProvider())
   }
 }
 
 /**
- * Conditional debug action that is only executed if warn is enabled
+ * Conditional warn statement that is only executed if warn is enabled
  */
-inline fun Logger.warn(action: () -> String) {
-  if (this.isWarnEnabled()) {
-    this.warn(action())
+inline fun Logger.warn(messageProvider: () -> String) {
+  if (isWarnEnabled()) {
+    warn(messageProvider())
   }
 }
 
 /**
- * Conditional debug action that is only executed if error is enabled
+ * Conditional error statement that is only executed if error is enabled
  */
-inline fun Logger.error(action: () -> String) {
-  if (this.isErrorEnabled()) {
-    this.error(action())
+inline fun Logger.error(messageProvider: () -> String) {
+  if (isErrorEnabled()) {
+    error(messageProvider())
   }
 }
 

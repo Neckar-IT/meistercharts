@@ -42,7 +42,7 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
     "@meistercharts/meistercharts": "1.33.0"
   },
   "devDependencies": {
-    "webpack": "5.87.0",
+    "webpack": "5.88.0",
     "webpack-cli": "5.1.4"
   }
 }
@@ -93,9 +93,8 @@ chart.setUpDemo();
 ----
 
 After we created the chart you should now see the following chart on your browser
-<p align="center">
-<img src="img/timeLineChart.png">
-</p>
+
+image::img/timeLineChart.png[]
 
 * If you are facing problems you can view the example project files
 

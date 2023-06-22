@@ -48,9 +48,8 @@ meistercharts.setUpDemo();
 ----
 
 After we created the chart you should now see the following chart on your browser
-<p align="center">
-<img src="img/timeLineChart.png">
-</p>
+
+image::img/timeLineChart.png[]
 
 If you are facing any problems you can clone this example project
 or just try this code snippet:

@@ -6,11 +6,19 @@ import it.neckar.logging.LogConfigurer
 import it.neckar.logging.Logger
 import it.neckar.logging.isEnabled
 
-class LoggerImplJs(override val name: String) : Logger {
+class LoggerImplJs(
+  override val name: String,
+  /**
+   * The prefix that is prepended to the log message
+   */
+  val prefix: String,
+
+  ) : Logger {
   /**
    * The level for this logger
    */
   var level: Level? = null
+
 
   override fun getName(): String {
     return name
@@ -22,7 +30,7 @@ class LoggerImplJs(override val name: String) : Logger {
 
   override fun debug(msg: String?) {
     if (isDebugEnabled()) {
-      console.debug(msg)
+      console.debug("[$prefix] $msg")
     }
   }
 
@@ -32,7 +40,7 @@ class LoggerImplJs(override val name: String) : Logger {
 
   override fun info(msg: String?) {
     if (isInfoEnabled()) {
-      console.info(msg)
+      console.info("[$prefix] $msg")
     }
   }
 
@@ -42,7 +50,7 @@ class LoggerImplJs(override val name: String) : Logger {
 
   override fun warn(msg: String?) {
     if (isWarnEnabled()) {
-      console.warn(msg)
+      console.warn("[$prefix] $msg")
     }
   }
 
@@ -59,7 +67,7 @@ class LoggerImplJs(override val name: String) : Logger {
 
   override fun error(msg: String?) {
     if (isErrorEnabled()) {
-      console.error(msg)
+      console.error("[$prefix] $msg")
     }
   }
 }

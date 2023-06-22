@@ -22,7 +22,24 @@ actual object LoggerFactory {
    */
   actual fun getLogger(loggerName: String): Logger {
     return cachedInstances.getOrPut(loggerName) {
-      LoggerImplJs(loggerName)
+      LoggerImplJs(loggerName, calculatePrefix(loggerName))
+    }
+  }
+
+  /**
+   * Creates the prefix for the logger
+   */
+  private fun calculatePrefix(loggerName: String): String {
+    val parts = loggerName.split('.')
+    if (parts.isEmpty()) return ""
+
+    return buildString {
+      for (i in 0 until parts.size - 1) {
+        append(parts[i][0]) //add the first char of the part
+        append('.')
+      }
+
+      append(parts.last())
     }
   }
 

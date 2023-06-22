@@ -91,9 +91,9 @@ chart.setUpDemo();
 ----
 
 After we created the chart you should now see the following chart on your browser
-<p align="center">
-<img src="img/timeLineChart.png">
-</p>
+
+image::img/timeLineChart.png[]
+
 
 === Run this example project
 First you need to install all Dependencies:

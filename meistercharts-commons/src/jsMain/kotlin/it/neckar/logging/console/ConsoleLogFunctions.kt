@@ -2,21 +2,26 @@ package it.neckar.logging.console
 
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
+import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.LoggerLocalStorage
 import it.neckar.logging.LoggerLocalStorageKeys
 import kotlinx.browser.window
 
 
+/**
+ * Registers at the window to offer a "CLI" for thr browser console
+ */
 object ConsoleLogFunctionsSupport {
-
   /**
    * Registers the console log functions at the window object
    */
   fun init(name: String) {
-    console.log("Initializing console log functions for $name")
-    window.asDynamic()[name] = it.neckar.logging.console.ConsoleLogFunctions(name)
+    logger.debug("Initializing console log functions for $name")
+    window.asDynamic()[name] = ConsoleLogFunctions(name)
   }
+
+  private val logger: Logger = LoggerFactory.getLogger("it.neckar.logging.console.ConsoleLogFunctionsSupport")
 }
 
 @JsExport
@@ -40,6 +45,9 @@ class LocalStorageFunctions(val prefix: String) {
     )
   }
 
+  /**
+   * Clears the root level from local storage
+   */
   fun clear() {
     window.localStorage.removeItem(LoggerLocalStorageKeys.RootLevel)
   }

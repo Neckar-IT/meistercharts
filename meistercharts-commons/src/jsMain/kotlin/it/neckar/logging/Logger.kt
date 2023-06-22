@@ -6,7 +6,9 @@ package it.neckar.logging
  * The API is heavily inspired by SLF4j Logger
  */
 actual interface Logger {
-
+  /**
+   * The name of this logger
+   */
   val name: String
     get() {
       return getName()

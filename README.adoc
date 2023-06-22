@@ -1,42 +1,66 @@
-= Contains Charting related stuff
+= MeisterCharts
+
+MeisterCharts is a versatile charting API that offers a variety of
+modules to meet different charting needs.
+
+* npm package: https://www.npmjs.com/package/@meistercharts/meistercharts[www.npmjs.com/package/@meistercharts/meistercharts]
+
+== Example chart
+
+This charts shows a ``timeLineChart``. This Chart type is used to visualize
+data over time.
+
+image::img/timeLineChart.png[]
+
+== Quickstart: Installing and use Meistercharts
+
+This is only a quick guide how to install meistercharts and use it. Methods
+to use meistercharts in other ways and more detailed are listed in the link:meistercharts-examples[] module
+
+=== Install from npm
+
+install the meistercharts package
+----
+npm install @meistercharts/meistercharts
+----
+
+create a div container
+
+[source,HTML]
+----
+<div id="timeLineChart"></div>
+----
+
+create your first chart and initialize it with sample data:
+
+[source,js]
+----
+const meisterCharts = require('@meistercharts/meistercharts/meistercharts-easy-api');
+// create a new TimeLineChart
+let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
+// create the first sample data
+chart.setUpDemo();
+----
+
 
 == Modules Overview
 
-=== artwork
+Each module has a specific function in the architecture of
+MeisterCharts. Here is an overview of the different modules
+and their functions:
 
-Contains images and concepts
+=== meistercharts-examples
 
-=== backup
+Contains examples of MeisterCharts and shows how to use MeisterCharts with
+different package manager and
 
-Scripts related to creating backups of the releases
-
-=== data-* (api/client/server)
-
-Data server modules - and REST API model
-
-=== demos
-
-Platform independent code for demos
-
-==== demosfx
-
-JavaFX based demos and runner
-
-==== demosjs
-
-JS based demos and runner
-
-=== doc
-
-Common documentation and stuff related to charting
-
-=== examples
-
-Contains examples of MeisterCharts
+* link:meistercharts-examples[]
 
 === history-algorithms
 
 Data model and calculations related to history
+
+* link:meistercharts-examples[]
 
 === history (platform independent) - for usage with REST
 
