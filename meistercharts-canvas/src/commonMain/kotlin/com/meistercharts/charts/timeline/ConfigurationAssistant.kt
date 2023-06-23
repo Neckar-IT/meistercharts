@@ -184,8 +184,12 @@ class ConfigurationAssistant(
   fun createZoomAndTranslationDefaults(gestalt: TimeLineChartGestalt): DelegatingZoomAndTranslationDefaults {
     return DelegatingZoomAndTranslationDefaults(
       MoveDomainValueToLocation(
-        domainRelativeValueProvider = { gestalt.style.contentAreaTimeRange.time2relative(crossWireTargetTimeProvider()) },
-        targetLocationProvider = { chartCalculator -> chartCalculator.windowRelative2WindowX(gestalt.style.crossWirePositionX) }
+        domainRelativeValueProvider = {
+          gestalt.style.contentAreaTimeRange.time2relative(crossWireTargetTimeProvider())
+        },
+        targetLocationProvider = { chartCalculator ->
+          chartCalculator.windowRelative2WindowX(gestalt.style.crossWirePositionX)
+        }
       ),
       FittingWithMargin { gestalt.viewportSupport.decimalsAreaViewportMargin() },
     )

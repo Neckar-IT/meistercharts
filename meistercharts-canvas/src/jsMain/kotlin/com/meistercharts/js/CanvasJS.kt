@@ -18,7 +18,6 @@ package com.meistercharts.js
 import com.meistercharts.algorithms.environment
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.AbstractCanvas
-import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
 import com.meistercharts.canvas.ChartSupport
@@ -31,6 +30,7 @@ import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelEvent
+import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Size
 import convertCancel
@@ -88,7 +88,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     it.classList.add(MeisterChartClasses.canvas)
   }
 
-  override val gc: CanvasRenderingContext = CanvasRenderingContextJS(this)
+  override val gc: CanvasRenderingContextJS = CanvasRenderingContextJS(this, type.readBackFrequency())
 
   /**
    * The size of the canvas in *logic* pixels (CSS size).
