@@ -60,7 +60,7 @@ different package manager and
 
 Data model and calculations related to history
 
-* link:meistercharts-examples[]
+* link:meistercharts-history[]
 
 === history (platform independent) - for usage with REST
 
