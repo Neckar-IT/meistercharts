@@ -75,9 +75,7 @@ fun DiscreteTimelineChartGestalt.applyEasyApiDefaults() {
  * Applies the configuration to the gestalt
  */
 fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTimelineChartConfiguration) {
-  logger.ifDebug {
-    console.debug("DiscreteTimelineChartGestalt.applyConfiguration", jsConfiguration)
-  }
+  logger.debug("DiscreteTimelineChartGestalt.applyConfiguration", jsConfiguration)
 
   jsConfiguration.visibleDiscreteStripes?.let { jsVisibleStripes ->
     if (jsVisibleStripes.size == 1 && jsVisibleStripes[0] == -1) { //check for magic "-1" value

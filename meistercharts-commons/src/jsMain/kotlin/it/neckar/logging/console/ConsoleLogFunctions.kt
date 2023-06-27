@@ -2,56 +2,12 @@ package it.neckar.logging.console
 
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
-import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.LoggerLocalStorage
-import it.neckar.logging.LoggerLocalStorageKeys
-import kotlinx.browser.window
+import it.neckar.logging.LoggerName
+import it.neckar.logging.ShortenedLoggerName
+import it.neckar.open.collections.fastForEach
 
-
-/**
- * Registers at the window to offer a "CLI" for thr browser console
- */
-object ConsoleLogFunctionsSupport {
-  /**
-   * Registers the console log functions at the window object
-   */
-  fun init(name: String) {
-    logger.debug("Initializing console log functions for $name")
-    window.asDynamic()[name] = ConsoleLogFunctions(name)
-  }
-
-  private val logger: Logger = LoggerFactory.getLogger("it.neckar.logging.console.ConsoleLogFunctionsSupport")
-}
-
-@JsExport
-class LocalStorageFunctions(val prefix: String) {
-  fun help() {
-    println(
-      """
-      |Available functions:
-      | * ${prefix}.list(): Lists the local storage configuration
-      | * ${prefix}.clear(): Clears the local storage configuration for logs
-      """.trimIndent()
-    )
-  }
-
-  fun list() {
-    println(
-      """
-      |Local storage configuration:
-      | * rootLevel: ${LoggerLocalStorageKeys.RootLevel}
-    """.trimIndent()
-    )
-  }
-
-  /**
-   * Clears the root level from local storage
-   */
-  fun clear() {
-    window.localStorage.removeItem(LoggerLocalStorageKeys.RootLevel)
-  }
-}
 
 /**
  * Is registered at the window object and provides some functions to interact with the logging framework
@@ -100,7 +56,7 @@ data class ConsoleLogFunctions(val prefix: String) {
    * Returns the log level for a specific logger
    */
   operator fun get(loggerName: String): String {
-    val logger = LoggerFactory.getLoggerOrNull(loggerName)
+    val logger = LoggerFactory.getLoggerOrNull(LoggerName(loggerName))
     if (logger == null) {
       println("Logger $loggerName not found")
       return "NOT FOUND"
@@ -113,15 +69,35 @@ data class ConsoleLogFunctions(val prefix: String) {
     return effectiveLevel.name
   }
 
+  /**
+   * Sets the log level. Also supports the short logger name
+   */
   operator fun set(loggerName: String, logLevel: String?): String {
-    val logger = LoggerFactory.getLogger(loggerName)
-
     val level = guessLevel(logLevel)
-    LogConfigurer.setLogLevel(logger, level)
 
-    LoggerLocalStorage.storeLoggerLevel(logger, level)
+    //Try for a perfect hit first
+    val exactHit = LoggerFactory.getLoggerOrNull(LoggerName(loggerName))
+    if (exactHit != null) {
+      console.log("Set log level for $loggerName to $level")
+      LogConfigurer.setLogLevel(exactHit, level)
+      LoggerLocalStorage.storeLoggerLevel(exactHit, level)
+      return level.name
+    }
 
-    console.log("Set log level for $loggerName to $level")
+    val byShortened = LoggerFactory.findLoggerByShortenedName(ShortenedLoggerName(loggerName))
+    if (byShortened.isEmpty()) {
+      console.log("Set log level for $loggerName to $level (currently unknown logger)")
+      val logger = LoggerFactory.getLogger(loggerName)
+      LogConfigurer.setLogLevel(logger, level)
+      LoggerLocalStorage.storeLoggerLevel(logger, level)
+    }
+
+    byShortened.fastForEach { logger ->
+      console.log("Set log level for $loggerName to $level (matches shortened name)")
+      LogConfigurer.setLogLevel(logger, level)
+      LoggerLocalStorage.storeLoggerLevel(logger, level)
+    }
+
     return level.name
   }
 

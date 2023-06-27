@@ -165,9 +165,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.Conv
  * Converts this JavaScript [ValueRange] object into a model ValueRange object
  */
 fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
-  logger.ifDebug {
-    console.debug("ValueRange.toModel", this)
-  }
+  logger.debug("ValueRange.toModel", this)
 
   //ensure that the client uses the correct types
   val startSanitized = start.sanitize()

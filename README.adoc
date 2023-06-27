@@ -7,7 +7,8 @@ modules to meet different charting needs.
 
 == Example chart
 
-This charts shows a ``timeLineChart``. This Chart type is used to visualize
+This charts shows a ``TimelineChart``.
+This Chart type is used to visualize
 data over time.
 
 image::img/timeLineChart.png[]
@@ -42,59 +43,58 @@ let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
 chart.setUpDemo();
 ----
 
+== For Devs
 
-== Modules Overview
+To build the project follow the steps described in link:how-to-build.adoc[How To Build]
+
+=== Modules Overview
 
 Each module has a specific function in the architecture of
 MeisterCharts. Here is an overview of the different modules
 and their functions:
 
-=== meistercharts-examples
+==== meistercharts-examples
 
 Contains examples of MeisterCharts and shows how to use MeisterCharts with
 different package manager and
 
 * link:meistercharts-examples[]
 
-=== history-algorithms
+==== history-algorithms
 
 Data model and calculations related to history
 
 * link:meistercharts-history[]
 
-=== history (platform independent) - for usage with REST
+==== history (platform independent) - for usage with REST
 
 Contains history related classes - including data transfer objects and serializers for REST
 
-=== meistercharts
+==== meistercharts
 
 This project dir contains specific JS implementations for customers.
 
-=== meistercharts-algorithms (platform independent)
+==== meistercharts-algorithms (platform independent)
 
 This module contains algorithm implementations.
-All content within this module is independent from any UI framework.
+All content within this module is independent of any UI framework.
 
 This code can be compiled to JVM and JavaScript
 
 The src/test/kotlin folder contains tests that run using the JVM
 
-=== meistercharts-canvas (platform independent)
+==== meistercharts-canvas (platform independent)
 
 Contains layer implementations and canvas related stuff
 
-=== meistercharts-custom
+==== meistercharts-custom
 
 Custom charts for projects that are usually not reused.
 
-=== meistercharts-marketing
+==== meistercharts-marketing
 
 Marketing related documentation and (design) files
 
-=== meistercharts-version-info (platform independent)
+=== =meistercharts-version-info (platform independent)
 
 Contains an object that can be used to resolve the current version number
-
-=== meisterchartsfx
-
-JavaFX specific implementation for the canvas

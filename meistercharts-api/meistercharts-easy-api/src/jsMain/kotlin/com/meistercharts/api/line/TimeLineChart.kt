@@ -193,9 +193,7 @@ class TimeLineChart internal constructor(
   }
 
   override fun setData(jsData: TimeLineChartData) {
-    logger.ifDebug {
-      console.debug("TimeLineChartGestalt.setData", jsData)
-    }
+    logger.debug("TimeLineChartGestalt.setData", jsData)
 
     jsData.historySettings?.let { jsHistorySettings ->
 
@@ -249,9 +247,7 @@ class TimeLineChart internal constructor(
   }
 
   private fun TimeLineChartGestalt.applyStyle(jsStyle: TimeLineChartStyle) {
-    logger.ifDebug {
-      console.debug("TimeLineChartGestalt.applyStyle", jsStyle)
-    }
+    logger.debug("TimeLineChartGestalt.applyStyle", jsStyle)
 
     jsStyle.crossWireFont?.toFontDescriptorFragment()?.let {
       crossWireLayerDecimalValues.style.applyCrossWireFont(it)
@@ -506,7 +502,7 @@ class TimeLineChart internal constructor(
       return
     }
 
-    logger.ifDebug { console.debug("addSamples", jsSamples) }
+    loggerSamples.debug("addSamples", jsSamples)
 
     val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
@@ -577,6 +573,7 @@ class TimeLineChart internal constructor(
 
   companion object {
     internal val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.line.TimeLineChart")
+    internal val loggerSamples: Logger = LoggerFactory.getLogger("com.meistercharts.api.line.TimeLineChart-Samples")
   }
 }
 

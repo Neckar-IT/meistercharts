@@ -84,6 +84,14 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
     return configuredChartSupport ?: throw IllegalStateException("ChartSupport not available - gestalt has not yet been configured")
   }
 
+  /**
+   * Returns the chart support that has been used to configure this gestalt.
+   * Returns null if there is no chart support available.
+   */
+  fun chartSupportOrNull(): ChartSupport? {
+    return configuredChartSupport
+  }
+
   final override fun configure(meisterChartBuilder: MeisterChartBuilder) {
     ensureNotConfigured()
 

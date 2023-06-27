@@ -255,7 +255,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * Applies the new size
    */
   fun applySize(newSize: Size, reason: String) {
-    logger.debug("Applying new size: $newSize (old: ${sizeProperty.value}) because: $reason")
+    logger.debug { "Applying new size: $newSize (old: ${sizeProperty.value}) because: $reason" }
     (sizeProperty as ObservableObject<Size>).value = newSize
   }
 

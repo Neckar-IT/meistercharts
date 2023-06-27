@@ -18,7 +18,6 @@ package com.meistercharts.charts.timeline
 import com.meistercharts.algorithms.ZoomAndTranslationModifier
 import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.algorithms.impl.FittingWithMargin
-import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
 import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
@@ -30,10 +29,8 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.asDoubleProvider
-import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
-import korlibs.time.DateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -44,7 +41,6 @@ import kotlin.time.DurationUnit
 
 class ConfigurationAssistant(
   val calculator: ConfigurationCalculator,
-  var crossWireDate: DateTime? = null,
 ) {
 
   constructor(
@@ -55,7 +51,6 @@ class ConfigurationAssistant(
     manualIdealDistanceBetweenSamples: @px Double? = null,
     manualMinZoom: Double? = null,
     manualMaxZoom: Double? = null,
-    crossWireDate: DateTime? = null,
   ) : this(
     calculator = ConfigurationCalculator(
       durationBetweenSamples = durationBetweenSamples,
@@ -66,19 +61,19 @@ class ConfigurationAssistant(
       manualMinZoom = manualMinZoom,
       manualMaxZoom = manualMaxZoom,
     ),
-    crossWireDate = crossWireDate,
   )
 
-  val crossWireTargetTimeProvider: DoubleProvider
-    get() = DoubleProvider { crossWireDate?.unixMillisDouble ?: nowMillis() }
-
+  /**
+   * Provides the target time for the cross wire
+   */
+  var crossWireTargetTime: @ms DoubleProvider = DoubleProvider.nowMillis
 
   fun useCandles(candleWidth: @px Double? = null) {
     setMinDistanceBetweenDataPoints(candleWidth ?: 8.0)
   }
 
   fun useDots(dotDiameter: @px Double? = null) {
-    setMinDistanceBetweenDataPoints((dotDiameter ?: 4.0) + 2.0)
+    setMinDistanceBetweenDataPoints((dotDiameter ?: 4.0) + 2.0) // 2px margin between the points
   }
 
   fun usePlainLine() {
@@ -90,7 +85,7 @@ class ConfigurationAssistant(
   //}
 
   fun showLiveData() {
-    crossWireDate = null
+    crossWireTargetTime = DoubleProvider.nowMillis
   }
 
   fun setCandleMinWidth(minWidth: @px Double) {
@@ -149,14 +144,16 @@ class ConfigurationAssistant(
     calculator.durationBetweenSamples = durationBetweenRecordedDataPoints
   }
 
-  fun setDefaultCrossWireDate(crossWireDate: DateTime) {
-    this.crossWireDate = crossWireDate
+  /**
+   * Sets the fixed cross wire date
+   */
+  fun setFixedCrossWireDate(crossWireDate: @ms Double) {
+    this.crossWireTargetTime = crossWireDate.asDoubleProvider()
   }
 
   fun setGapFactor(gapFactor: Double) {
     calculator.gapFactor = gapFactor
   }
-
 
   fun applyToStorage(inMemoryStorage: InMemoryHistoryStorage, guaranteedHistoryLength: Duration) {
     val naturalHistoryBucketRange = calculator.historyBucketRange
@@ -181,24 +178,20 @@ class ConfigurationAssistant(
     }
   }
 
+  /**
+   * Creates the zoom and translation defaults for the chart
+   */
   fun createZoomAndTranslationDefaults(gestalt: TimeLineChartGestalt): DelegatingZoomAndTranslationDefaults {
     return DelegatingZoomAndTranslationDefaults(
-      MoveDomainValueToLocation(
-        domainRelativeValueProvider = {
-          gestalt.style.contentAreaTimeRange.time2relative(crossWireTargetTimeProvider())
-        },
-        targetLocationProvider = { chartCalculator ->
-          chartCalculator.windowRelative2WindowX(gestalt.style.crossWirePositionX)
-        }
-      ),
-      FittingWithMargin { gestalt.viewportSupport.decimalsAreaViewportMargin() },
+      xAxisDelegate = MoveTimeUnderCrossWire.create(gestalt),
+      yAxisDelegate = FittingWithMargin { gestalt.viewportSupport.decimalsAreaViewportMargin() },
     )
   }
 
   fun createZoomAndTranslationModifier(gestalt: TimeLineChartGestalt): ZoomAndTranslationModifier {
     return ZoomAndTranslationModifiersBuilder()
-      .minZoom(calculator.getMinZoomXProvider(gestalt), 0.000001.asDoubleProvider()) //the x zoom works with 24 hours and 1 millis for the applied sampling rate
-      .maxZoom(calculator.maxZoomX, 500.0.asDoubleProvider())
+      .minZoom(calculator.createMinZoomXProvider(gestalt), 0.000001.asDoubleProvider())
+      .maxZoom(calculator.createMaxZoomXProvider(), 500.0.asDoubleProvider())
       .build()
   }
 

@@ -75,4 +75,11 @@ actual interface Logger {
    * @param msg the message string to be logged
    */
   actual fun error(msg: String?)
+
+  /**
+   * Debug the message with the object
+   */
+  fun debug(message: String, objectDebug: Any?)
+
+  fun debug(messageProvider: () -> String, objectDebug: Any?)
 }

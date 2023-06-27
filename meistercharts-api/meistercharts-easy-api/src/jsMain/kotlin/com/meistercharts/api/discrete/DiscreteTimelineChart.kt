@@ -44,11 +44,9 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.js.MeisterChartJS
 import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Distance
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
-import it.neckar.logging.ifDebug
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
@@ -122,9 +120,7 @@ class DiscreteTimelineChart internal constructor(
    */
   @Suppress("unused") //called from JS
   fun setHistory(data: DiscreteTimelineChartData) {
-    logger.ifDebug {
-      console.debug("setHistory", data)
-    }
+    logger.debug("setHistory", data)
 
     historyStorage.clear() //clear history
 
@@ -143,7 +139,7 @@ class DiscreteTimelineChart internal constructor(
     historyStorageCache.scheduleForStore(chunk, samplingPeriod)
 
     logger.debug { "Sampling period: $samplingPeriod" }
-    logger.ifDebug { console.debug("Chunk", chunk.dump()) }
+    logger.debug("Chunk", chunk.dump())
 
     //Set the visible time range
     gestalt.chartSupport().let { chartSupport ->

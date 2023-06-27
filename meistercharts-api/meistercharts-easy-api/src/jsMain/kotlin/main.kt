@@ -17,10 +17,12 @@ import com.meistercharts.design.SegoeUiDesign
 import com.meistercharts.js.MeisterChartsPlatform
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
+import it.neckar.logging.console.ConsoleLogFunctionsSupport
 
 fun main() {
   //Load logger configuration from local storage
   LogConfigurer.initializeFromLocalStorage(Level.WARN)
+  ConsoleLogFunctionsSupport.init("meistercharts")
 
   MeisterChartsPlatform.init(corporateDesign = SegoeUiDesign)
 }

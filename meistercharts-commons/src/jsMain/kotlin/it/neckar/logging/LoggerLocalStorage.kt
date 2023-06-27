@@ -22,6 +22,10 @@ object LoggerLocalStorage {
     window.localStorage.setItem(LoggerLocalStorageKeys.RootLevel, rootLevel.name)
   }
 
+  /**
+   * Parses the level from the given string. Does not throw an exception.
+   * Instead, null is returned if the level is invalid.
+   */
   private fun parseLevelSafe(item: String, key: String): Level? {
     return try {
       Level.valueOf(item.trim())
@@ -34,12 +38,12 @@ object LoggerLocalStorage {
   /**
    * Reads all logger levels
    */
-  fun readLoggerLevels(callback: (loggerName: String, level: Level) -> Unit) {
+  fun readLoggerLevels(callback: (loggerName: LoggerName, level: Level) -> Unit) {
     window.localStorage.length.fastFor { index ->
       val key = window.localStorage.key(index) ?: return@fastFor
 
       if (key.startsWith(LoggerLocalStorageKeys.LoggerPrefix)) {
-        val loggerName = key.substringAfter(LoggerLocalStorageKeys.LoggerPrefix)
+        val loggerName = LoggerName(key.substringAfter(LoggerLocalStorageKeys.LoggerPrefix))
 
         val level = parseLevelSafe(window.localStorage.getItem(key) ?: return@fastFor, key)
         if (level != null) {
@@ -50,10 +54,29 @@ object LoggerLocalStorage {
   }
 
   fun storeLoggerLevel(logger: Logger, level: Level) {
-    storeLoggerLevel(logger.name, level)
+    storeLoggerLevel(logger.loggerName, level)
   }
 
-  fun storeLoggerLevel(loggerName: String, level: Level) {
+  fun storeLoggerLevel(loggerName: LoggerName, level: Level) {
     window.localStorage.setItem("${LoggerLocalStorageKeys.LoggerPrefix}$loggerName", level.name)
+  }
+
+  /**
+   * Remove the local storage entry for the root level
+   */
+  fun clearRootLevel() {
+    window.localStorage.removeItem(LoggerLocalStorageKeys.RootLevel)
+  }
+
+  /**
+   * Clears all logger levels from the local storage
+   */
+  fun clearLoggers() {
+    window.localStorage.length.fastFor { index ->
+      val key = window.localStorage.key(index) ?: return@fastFor
+      if (key.startsWith(LoggerLocalStorageKeys.LoggerPrefix)) {
+        window.localStorage.removeItem(key)
+      }
+    }
   }
 }

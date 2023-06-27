@@ -24,13 +24,13 @@ import com.meistercharts.model.Zoom
  */
 class DelegatingZoomAndTranslationDefaults(
   /**
-   * the delegate that is used to calculate the defaults for the x axis
+   * the delegate that is used to calculate the defaults for the x-axis
    */
   val xAxisDelegate: ZoomAndTranslationDefaults,
   /**
-   * the delegate that is used to calculate the defaults for the y axis
+   * the delegate that is used to calculate the defaults for the y-axis
    */
-  val yAxisDelegate: ZoomAndTranslationDefaults
+  val yAxisDelegate: ZoomAndTranslationDefaults,
 ) : ZoomAndTranslationDefaults {
 
   override fun defaultZoom(chartCalculator: ChartCalculator): Zoom {

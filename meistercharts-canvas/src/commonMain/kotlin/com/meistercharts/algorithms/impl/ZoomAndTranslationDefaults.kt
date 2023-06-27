@@ -213,7 +213,7 @@ object OriginToContentViewport : Offset({ chartCalculator ->
  * Ensures that a domain value is moved to a specific window location.
  * This is useful e.g. to ensure in context with a cross wire
  */
-class MoveDomainValueToLocation(
+open class MoveDomainValueToLocation(
   /**
    * The zoom to be used as default zoom
    */
@@ -243,7 +243,7 @@ class MoveDomainValueToLocation(
 
     @Window val targetLocation = targetLocationProvider(chartCalculator)
 
-    //Center the y axis
+    //Center the y-axis
     @Zoomed val translationY = chartCalculator.contentArea2zoomedY(chartCalculator.chartState.contentAreaHeight * (1.0 - chartCalculator.chartState.zoomY) / 2.0)
     return Distance(-distanceX + targetLocation, translationY)
   }

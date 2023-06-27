@@ -70,6 +70,13 @@ expect interface Logger {
 }
 
 /**
+ * Returns the logger name of this logger.
+ */
+inline val Logger.loggerName: LoggerName
+  //Must be an extension val, because we use a typealias on JVM side
+  get() = LoggerName(getName())
+
+/**
  * Conditional debug statement that is only executed if debug is enabled
  */
 inline fun Logger.debug(messageProvider: () -> String) {

@@ -50,7 +50,7 @@ object LogConfigurer {
   fun initializeFromLocalStorage(fallbackRootLevel: Level = Level.INFO) {
     rootLevel = LoggerLocalStorage.readRootLevel() ?: fallbackRootLevel
 
-    LoggerLocalStorage.readLoggerLevels { loggerName: String, level: Level ->
+    LoggerLocalStorage.readLoggerLevels { loggerName: LoggerName, level: Level ->
       setLogLevel(LoggerFactory.getLogger(loggerName), level)
     }
   }

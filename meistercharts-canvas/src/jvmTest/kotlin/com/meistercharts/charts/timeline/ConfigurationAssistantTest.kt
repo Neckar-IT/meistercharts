@@ -53,7 +53,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2435.days)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.Every90Days)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -68,7 +68,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(40.days)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.Every24Hours)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -83,7 +83,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2.days)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHour)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -98,7 +98,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2.hours)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryMinute)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -113,7 +113,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2.minutes)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EverySecond)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -129,7 +129,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2.minutes)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EverySecond)
-    assertThat(calculator.maxZoomX()).isEqualTo(25.0 / 6.0)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(25.0 / 6.0)
   }
 
   @Test
@@ -144,7 +144,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(2.seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -159,8 +159,8 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(10.seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
-    assertThat(calculator.getMinZoomX(18.minutes.toDouble(DurationUnit.MILLISECONDS))).isCloseTo(0.05787, 0.000001)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
+    assertThat(calculator.calculateMinZoomX(18.minutes.toDouble(DurationUnit.MILLISECONDS))).isCloseTo(0.05787, 0.000001)
   }
 
   //////////////////////////////////////
@@ -179,7 +179,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(4.seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   @Test
@@ -187,7 +187,7 @@ class ConfigurationAssistantTest {
     //TODO: window width? (target screen size?)
     val assistant = defaultAssistant
     assistant.showLiveData() //always be at now()
-    assistant.setDefaultCrossWireDate(DateTime(2023, 3, 5, 7, 8, 9))
+    assistant.setFixedCrossWireDate(DateTime(2023, 3, 5, 7, 8, 9).unixMillisDouble)
     val calculator = assistant.calculator
 
     assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)
@@ -197,7 +197,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(20.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(4.seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isEqualTo(12.5)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(12.5)
   }
 
   //////////////////////////////////////
@@ -219,7 +219,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(200.0)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo(40.seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isEqualTo(1.0)
+    assertThat(calculator.createMaxZoomXProvider()()).isEqualTo(1.0)
   }
 
   @Test
@@ -237,7 +237,7 @@ class ConfigurationAssistantTest {
     assertThat(calculator.minPointsPer1000px).isEqualTo(200.0 / 3)
     assertThat(calculator.minContentAreaDuration.milliseconds).isEqualTo((40.0 / 3.0).seconds)
     assertThat(calculator.recordingSamplingPeriod).isEqualTo(SamplingPeriod.EveryHundredMillis)
-    assertThat(calculator.maxZoomX()).isCloseTo(1.5, 0.000001)
+    assertThat(calculator.createMaxZoomXProvider()()).isCloseTo(1.5, 0.000001)
   }
 
   //////////////////////////////////////////////////////

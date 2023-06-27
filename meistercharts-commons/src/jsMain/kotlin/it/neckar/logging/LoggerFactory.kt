@@ -11,39 +11,43 @@ actual object LoggerFactory {
   /**
    * Contains the cached logger instances
    */
-  private val cachedInstances = mutableMapOf<String, Logger>()
+  private val cachedInstances = mutableMapOf<LoggerName, Logger>()
 
-  fun cachedInstances(): Map<String, Logger> {
+  /**
+   * Returns all cached logger instances.
+   * This method should only be used for testing/debugging.
+   */
+  fun cachedInstances(): Map<LoggerName, Logger> {
     return cachedInstances.toMap()
   }
 
   /**
-   * Returns a new logger instance for JS
+   * Returns a logger instance for JS.
+   * Creates a new instance if there is none.
    */
-  actual fun getLogger(loggerName: String): Logger {
+  actual fun getLogger(loggerName: LoggerName): Logger {
     return cachedInstances.getOrPut(loggerName) {
-      LoggerImplJs(loggerName, calculatePrefix(loggerName))
+      LoggerImplJs(loggerName)
     }
+  }
+
+  actual fun getLogger(loggerName: String): Logger{
+    return getLogger(LoggerName(loggerName))
   }
 
   /**
-   * Creates the prefix for the logger
+   * Returns the logger - if there is one, or returns null
    */
-  private fun calculatePrefix(loggerName: String): String {
-    val parts = loggerName.split('.')
-    if (parts.isEmpty()) return ""
-
-    return buildString {
-      for (i in 0 until parts.size - 1) {
-        append(parts[i][0]) //add the first char of the part
-        append('.')
-      }
-
-      append(parts.last())
-    }
+  fun getLoggerOrNull(loggerName: LoggerName): Logger? {
+    return cachedInstances[loggerName]
   }
 
-  fun getLoggerOrNull(loggerName: String): Logger? {
-    return cachedInstances[loggerName]
+  /**
+   * Returns all shortened loggers that match the provided [shortenedLoggerName]
+   */
+  fun findLoggerByShortenedName(shortenedLoggerName: ShortenedLoggerName): List<Logger> {
+    return cachedInstances.values.filter {
+      shortenedLoggerName.matches(it.loggerName)
+    }
   }
 }

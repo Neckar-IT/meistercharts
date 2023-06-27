@@ -20,10 +20,8 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.js.MeisterChartJS
 import com.meistercharts.model.Size
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.kotlin.lang.isCloseTo
 import it.neckar.open.unit.number.MayBeZero
 import org.w3c.dom.CustomEvent
@@ -82,10 +80,8 @@ internal constructor(
       eventInitDict = CustomEventInit(detail = eventDetail, bubbles = true, cancelable = false, composed = true)
     )
 
-    //customEvent.initCustomEvent(type = eventType, bubbles = true, cancelable = false, detail = eventDetail)
-    logger.ifDebug {
-      console.debug("dispatching custom-event: $eventType", customEvent)
-    }
+    loggerCustomEvents.debug({ "Dispatching CustomEvent: $eventType" }, customEvent)
+
     meisterCharts.htmlCanvas.canvasElement.dispatchEvent(customEvent)
   }
 
@@ -121,5 +117,6 @@ internal constructor(
 
   companion object {
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.MeisterChartsApi")
+    private val loggerCustomEvents: Logger = LoggerFactory.getLogger("com.meistercharts.api.MeisterChartsApi.CustomEvents")
   }
 }

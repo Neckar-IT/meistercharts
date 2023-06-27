@@ -62,9 +62,7 @@ fun BarChartGroupedGestalt.applyEasyApiDefaults() {
  * Applies the JS style to the bart chart gestalt style
  */
 fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
-  logger.ifDebug {
-    console.debug("BarChartGroupedGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("BarChartGroupedGestalt.applyStyle", jsStyle)
 
   //Beware that the order matters. Set the orientation before any other style
   //because a change in the orientation triggers a reset of the layout.

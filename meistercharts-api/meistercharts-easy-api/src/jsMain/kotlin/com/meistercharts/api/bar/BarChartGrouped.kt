@@ -47,9 +47,7 @@ class BarChartGrouped internal constructor(
    * Sets and replaces the data of the bar chart model
    */
   override fun setData(jsData: BarChartGroupedData) {
-    logger.ifDebug {
-      console.debug("BarChartGrouped.setData", jsData)
-    }
+    logger.debug("BarChartGrouped.setData", jsData)
 
     CategoryConverter.toCategoryModel(jsData)?.let {
       gestalt.configuration.categorySeriesModel = it

@@ -17,7 +17,6 @@ package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.ZoomLevelCalculator
 import com.meistercharts.history.HistoryBucketRange
-import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.unit.number.MayBeNaN
@@ -41,6 +40,18 @@ class ConfigurationCalculator(
   @OnlyForPros
   var manualMaxZoom: Double?,
 ) {
+
+  /**
+   * The max value for the min zoom x level.
+   * It does not make sense to set any values >= 1.0
+   */
+  var maxMinZoomX: Double = 0.25
+
+  /**
+   * The min value for the max zoom x level.
+   * It does not make sens to set any values < 1.0
+   */
+  var minMaxZoomX: Double = 1.0
 
   val recordingSamplingPeriod: SamplingPeriod
     get() = SamplingPeriod.withMaxDuration(durationBetweenSamples)
@@ -71,33 +82,33 @@ class ConfigurationCalculator(
     get() = minPointsPer1000px * durationBetweenSamples
   //val maxContentAreaDuration: Duration = TODO("Hängt dynamisch von der Menge der Daten ab")
 
-  val maxZoomX: DoubleProvider
-    get() = DoubleProvider { manualMaxZoom ?: (contentAreaDuration / minContentAreaDuration) }
-
-  fun getMinZoomXProvider(gestalt: TimeLineChartGestalt): @pct DoubleProvider {
-    val historyStorage = gestalt.data.historyStorage
-
-    return getMinZoomXProvider(historyStorage)
+  fun createMaxZoomXProvider(): DoubleProvider {
+    return DoubleProvider { manualMaxZoom ?: (contentAreaDuration / minContentAreaDuration).coerceAtLeast(minMaxZoomX) }
   }
 
-  private fun getMinZoomXProvider(historyStorage: HistoryStorage, fallback: Double = 0.00001): @pct DoubleProvider {
+  fun createMinZoomXProvider(gestalt: TimeLineChartGestalt): @pct DoubleProvider {
+    val historyStorage = gestalt.data.historyStorage
+
     return DoubleProvider {
       @MayBeNaN @ms val start = historyStorage.getStart()
       @MayBeNaN @ms val end = historyStorage.getEnd()
 
       if (start.isNaN() || end.isNaN()) {
-        return@DoubleProvider fallback
+        return@DoubleProvider 0.00001
       }
 
       require(end >= start) { "End <$end> must be >= start <$start>" }
 
-      getMinZoomX(end - start)
+      calculateMinZoomX(end - start)
     }
   }
 
-  fun getMinZoomX(totalDuration: @ms Double): @pct Double {
+  /**
+   * Calculates the min zoom for the provided total duration
+   */
+  fun calculateMinZoomX(totalDuration: @ms Double): @pct Double {
     val maxContentAreaDuration = 2.0 * totalDuration
-    return manualMinZoom ?: (contentAreaDuration / maxContentAreaDuration)
+    return manualMinZoom ?: (contentAreaDuration / maxContentAreaDuration).coerceAtMost(maxMinZoomX)
   }
 
   val historyBucketRange: HistoryBucketRange
@@ -116,6 +127,6 @@ class ConfigurationCalculator(
       "manualMaxDistanceBetweenSamples=$manualMaxDistanceBetweenSamples\nmanualIdealDistanceBetweenSamples=$manualIdealDistanceBetweenSamples\nmanualMinZoom=$manualMinZoom\n" +
       "manualMaxZoom=$manualMaxZoom\nrecordingSamplingPeriod=$recordingSamplingPeriod\nminDistanceBetweenSamples=$minDistanceBetweenSamples\nmaxDistanceBetweenSamples=$maxDistanceBetweenSamples\n" +
       "idealDistanceBetweenSamples=$idealDistanceBetweenSamples\nmaxPointsPer1000px=$maxPointsPer1000px\nminPointsPer1000px=$minPointsPer1000px\nidealPointsPer1000px=$idealPointsPer1000px\n" +
-      "contentAreaDuration=$contentAreaDuration\nminContentAreaDuration=$minContentAreaDuration\nmaxZoomX=${maxZoomX.invoke()}\nhistoryBucketRange=$historyBucketRange\ngapDuration=$gapDuration)"
+      "contentAreaDuration=$contentAreaDuration\nminContentAreaDuration=$minContentAreaDuration\nmaxZoomX=${createMaxZoomXProvider().invoke()}\nhistoryBucketRange=$historyBucketRange\ngapDuration=$gapDuration)"
   }
 }

@@ -56,9 +56,7 @@ fun BulletChartGestalt.applyEasyApiDefaults() {
  * Applies the configuration
  */
 fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfiguration) {
-  logger.ifDebug {
-    console.debug("BulletChartGestalt.applyConfiguration", jsConfiguration)
-  }
+  logger.debug("BulletChartGestalt.applyConfiguration", jsConfiguration)
 
   CategoryConverter.toCurrentValuesProvider(jsConfiguration)?.let {
     this.configuration.currentValues = it

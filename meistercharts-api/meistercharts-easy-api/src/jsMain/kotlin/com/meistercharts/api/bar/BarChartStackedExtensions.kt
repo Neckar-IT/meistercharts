@@ -50,9 +50,7 @@ fun BarChartStackedGestalt.applyEasyApiDefaults() {
  * Applies the JS style to the bart chart gestalt style
  */
 fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
-  logger.ifDebug {
-    console.debug("BarChartStackedGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("BarChartStackedGestalt.applyStyle", jsStyle)
 
   //Specific stuff for stacked
 

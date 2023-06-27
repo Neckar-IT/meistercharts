@@ -4,16 +4,22 @@ import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
 import it.neckar.logging.Logger
+import it.neckar.logging.LoggerName
+import it.neckar.logging.ShortenedLoggerName
 import it.neckar.logging.isEnabled
 
-class LoggerImplJs(
+/**
+ * Logger implementation for JS
+ */
+class LoggerImplJs private constructor(
   override val name: String,
   /**
    * The prefix that is prepended to the log message
    */
-  val prefix: String,
-
+  val shortenedLoggerName: ShortenedLoggerName,
   ) : Logger {
+  constructor(name: LoggerName) : this(name.value, name.shortened())
+
   /**
    * The level for this logger
    */
@@ -30,7 +36,19 @@ class LoggerImplJs(
 
   override fun debug(msg: String?) {
     if (isDebugEnabled()) {
-      console.debug("[$prefix] $msg")
+      console.debug("[$shortenedLoggerName] $msg")
+    }
+  }
+
+  override fun debug(message: String, objectDebug: Any?) {
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] $message", objectDebug)
+    }
+  }
+
+  override fun debug(messageProvider: () -> String, objectDebug: Any?) {
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] ${messageProvider()}", objectDebug)
     }
   }
 
@@ -40,7 +58,7 @@ class LoggerImplJs(
 
   override fun info(msg: String?) {
     if (isInfoEnabled()) {
-      console.info("[$prefix] $msg")
+      console.info("[$shortenedLoggerName] $msg")
     }
   }
 
@@ -50,7 +68,7 @@ class LoggerImplJs(
 
   override fun warn(msg: String?) {
     if (isWarnEnabled()) {
-      console.warn("[$prefix] $msg")
+      console.warn("[$shortenedLoggerName] $msg")
     }
   }
 
@@ -67,7 +85,7 @@ class LoggerImplJs(
 
   override fun error(msg: String?) {
     if (isErrorEnabled()) {
-      console.error("[$prefix] $msg")
+      console.error("[$shortenedLoggerName] $msg")
     }
   }
 }

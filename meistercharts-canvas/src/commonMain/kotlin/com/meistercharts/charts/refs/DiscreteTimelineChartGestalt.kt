@@ -17,6 +17,7 @@ package com.meistercharts.charts.refs
 
 import com.meistercharts.algorithms.KeepOriginOnWindowResize
 import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.algorithms.impl.FittingWithMargin
@@ -388,6 +389,7 @@ class DiscreteTimelineChartGestalt(
       configuration.contentAreaTimeRangeProperty.consumeImmediately {
         chartSupport.translateOverTime.contentAreaTimeRangeX = it
         timeAxisLayer.data.contentAreaTimeRange = it
+        chartSupportOrNull()?.zoomAndTranslationSupport?.resetToDefaults(axisSelection = AxisSelection.X, reason = UpdateReason.ConfigurationUpdate)
       }
       chartSupport.rootChartState.windowSizeProperty.consumeImmediately {
         updateTranslateOverTime(chartSupport)

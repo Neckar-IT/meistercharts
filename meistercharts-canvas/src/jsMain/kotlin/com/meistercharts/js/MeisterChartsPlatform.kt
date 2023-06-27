@@ -42,9 +42,9 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   init {
     (document["fonts"]?.unsafeCast<FontFaceSet>())?.listenForLoadingDone {
       logger.ifDebug {
-        console.debug("${it.fontfaces.size} fonts loaded:")
+        logger.debug("${it.fontfaces.size} fonts loaded:")
         it.fontfaces.forEach {
-          console.debug(" - ${it.format()}")
+          logger.debug(" - ${it.format()}")
         }
       }
       FontLoadedEventBroker.notifyLoaded()

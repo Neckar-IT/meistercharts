@@ -10,11 +10,19 @@ actual object LoggerFactory {
   /**
    * Returns the logger for the given name
    */
-  actual fun getLogger(loggerName: String): Logger {
-    return LoggerFactory.getLogger(loggerName)
+  actual fun getLogger(loggerName: LoggerName): Logger {
+    return LoggerFactory.getLogger(loggerName.value)
   }
 
+  actual fun getLogger(loggerName: String): Logger {
+    return getLogger(LoggerName(loggerName))
+  }
+
+  /**
+   * Returns the logger for the provided class. Uses the qualified name of the class as logger name.
+   */
   fun getLogger(kClass: KClass<*>): Logger {
-    return getLogger(kClass.qualifiedName ?: throw IllegalArgumentException("Only supported for classes with qualified name <$kClass>"))
+    val qualifiedName = kClass.qualifiedName ?: throw IllegalArgumentException("Only supported for classes with qualified name <$kClass>")
+    return getLogger(LoggerName(qualifiedName))
   }
 }

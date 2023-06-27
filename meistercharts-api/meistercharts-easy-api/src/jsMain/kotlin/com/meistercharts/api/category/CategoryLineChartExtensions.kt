@@ -58,9 +58,7 @@ fun CategoryLineChartGestalt.applyEasyApiDefaults() {
  * Applies the style for the line chart simple
  */
 fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
-  logger.ifDebug {
-    console.debug("CategoryLineChartGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("CategoryLineChartGestalt.applyStyle", jsStyle)
 
   //call apply-functions first
   jsStyle.valueRange?.toModel()?.let {

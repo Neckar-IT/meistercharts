@@ -1,5 +1,6 @@
 package it.neckar.open.provider
 
+import it.neckar.open.unit.si.ms
 import kotlin.reflect.KProperty0
 
 /**
@@ -21,6 +22,11 @@ fun interface DoubleProvider {
      * Always returns [0.0]
      */
     val Zero: DoubleProvider = DoubleProvider { 0.0 }
+
+    /**
+     * Well known provider that returns now
+     */
+    val nowMillis: @ms DoubleProvider = DoubleProvider { it.neckar.open.time.nowMillis() }
   }
 }
 

@@ -18,11 +18,12 @@ package com.meistercharts.charts.timeline
 import com.meistercharts.algorithms.ChartState
 import com.meistercharts.algorithms.LinearValueRange
 import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.algorithms.UpdateReason
 import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.axis.AxisEndConfiguration
+import com.meistercharts.algorithms.axis.AxisSelection
 import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.algorithms.impl.FittingWithMargin
-import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
@@ -170,7 +171,6 @@ import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
 import it.neckar.open.kotlin.lang.fastMap
 import it.neckar.open.kotlin.lang.getModulo
-import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.observable.ObservableBoolean
@@ -184,7 +184,6 @@ import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
 import it.neckar.open.time.TimeConstants
-import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
@@ -1013,14 +1012,31 @@ class TimeLineChartGestalt
     chartSupport.translateOverTime.insets = Insets.onlyRight(insetsRight)
   }
 
+
+  /**
+   * The viewport for the complete diagram.
+   * View port does *not* contain:
+   * - space at top (e.g. for title)
+   * - space at bottom for time axis
+   */
+  private val contentViewportGestalt = ContentViewportGestalt(
+    Insets.of(0.0, 0.0, 0.0, 0.0),
+    updateBehavior = ContentViewportGestalt.ResetAffectedAxisOnMarginIncreaseToDefaults //On Axis visibility change, do not update x-axis. Also, only reset y-axis if the margin increases
+  )
+
+  /**
+   * The content viewport margin
+   */
+  var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
+
   init {
     data.minimumSamplingPeriodProperty.consumeImmediately {
       //adjust the content area in order to display about 600 samples
       style.applyMinimumSamplingPeriod(it)
     }
 
-    style.contentAreaTimeRangeProperty.consumeImmediately {
-      timeAxisLayer.data.contentAreaTimeRange = it
+    style.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
+      timeAxisLayer.data.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
     }
 
@@ -1067,25 +1083,7 @@ class TimeLineChartGestalt
         configuration(layer.configuration, decimalDataSeriesIndex)
       }
     }
-  }
 
-  /**
-   * The viewport for the complete diagram.
-   * View port does *not* contain:
-   * - space at top (e.g. for title)
-   * - space at bottom for time axis
-   */
-  private val contentViewportGestalt = ContentViewportGestalt(
-    Insets.of(0.0, 0.0, 0.0, 0.0),
-    updateBehavior = ContentViewportGestalt.ResetAffectedAxisOnMarginIncreaseToDefaults //On Axis visibility change, do not update x-axis. Also, only reset y-axis if the margin increases
-  )
-
-  /**
-   * The content viewport margin
-   */
-  var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
-
-  init {
     configureBuilder { meisterChartBuilder ->
       chartRefreshGestalt.configure(meisterChartBuilder)
 
@@ -1095,16 +1093,11 @@ class TimeLineChartGestalt
         configureAsTimeChart()
         configureAsTiledTimeChart()
 
+
         zoomAndTranslationDefaults {
           DelegatingZoomAndTranslationDefaults(
-            MoveDomainValueToLocation(
-              domainRelativeValueProvider = {
-                @ms val relevantTimestamp = data.historyStorage.getEnd().ifNaN { nowMillis() }
-                style.contentAreaTimeRange.time2relative(relevantTimestamp)
-              },
-              targetLocationProvider = { chartCalculator -> chartCalculator.windowRelative2WindowX(style.crossWirePositionX) }
-            ),
-            FittingWithMargin { viewportSupport.decimalsAreaViewportMargin() }
+            xAxisDelegate = MoveTimeUnderCrossWire.create(this@TimeLineChartGestalt),
+            yAxisDelegate = FittingWithMargin { viewportSupport.decimalsAreaViewportMargin() }
           )
         }
 
@@ -1138,6 +1131,7 @@ class TimeLineChartGestalt
 
           style.contentAreaTimeRangeProperty.consumeImmediately {
             chartSupport.translateOverTime.contentAreaTimeRangeX = it
+            chartSupport.zoomAndTranslationSupport.resetToDefaults(axisSelection = AxisSelection.X, reason = UpdateReason.ConfigurationUpdate)
           }
 
           style.lineValueRangesProperty.consume {
