@@ -17,6 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.zoom.UpdateReason
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import org.junit.jupiter.api.Test

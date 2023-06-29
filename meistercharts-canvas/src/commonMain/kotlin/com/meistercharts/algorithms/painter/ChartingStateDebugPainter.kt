@@ -15,18 +15,18 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
+import com.meistercharts.color.Color
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
 import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.formatting.percentageFormat
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig

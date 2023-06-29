@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.tile
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.model.Direction

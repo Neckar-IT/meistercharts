@@ -16,7 +16,7 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
@@ -24,7 +24,7 @@ import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.VerticalAlignment
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.i18n.I18nConfiguration

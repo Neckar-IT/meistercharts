@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
@@ -46,14 +46,14 @@ import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultSeries
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.model.createCategoryLabelsProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.DefaultSeries
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.model.category.createCategoryLabelsProvider
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.LabelPlacement
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport

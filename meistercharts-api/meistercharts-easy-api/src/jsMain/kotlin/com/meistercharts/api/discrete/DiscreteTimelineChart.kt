@@ -15,10 +15,10 @@
  */
 package com.meistercharts.api.discrete
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
@@ -42,8 +42,8 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.js.MeisterChartJS
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
@@ -144,7 +144,7 @@ class DiscreteTimelineChart internal constructor(
     //Set the visible time range
     gestalt.chartSupport().let { chartSupport ->
       val chartCalculator = chartSupport.chartCalculator
-      val contentAreaTimeRangeX: com.meistercharts.algorithms.TimeRange = gestalt.configuration.contentAreaTimeRange
+      val contentAreaTimeRangeX: com.meistercharts.time.TimeRange = gestalt.configuration.contentAreaTimeRange
 
       @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.firstTimestamp)
       @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.lastTimestamp)
@@ -220,7 +220,7 @@ class DiscreteTimelineChart internal constructor(
   /**
    * The last visible time range. Is used to compare if a notification bout the change is necessary
    */
-  private var previousVisibleTimeRange: com.meistercharts.algorithms.TimeRange = com.meistercharts.algorithms.TimeRange(0.0, 0.0)
+  private var previousVisibleTimeRange: com.meistercharts.time.TimeRange = com.meistercharts.time.TimeRange(0.0, 0.0)
 
   /**
    * Notifies the observers about a time range change

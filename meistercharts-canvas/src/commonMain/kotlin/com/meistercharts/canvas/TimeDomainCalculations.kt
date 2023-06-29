@@ -15,10 +15,10 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.TileChartCalculator
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.UpdateReason
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.tileCalculator
 import com.meistercharts.algorithms.tile.TileIdentifier
 import com.meistercharts.annotations.ContentArea

@@ -15,20 +15,20 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeChartCalculator
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.axis.DistanceDays
-import com.meistercharts.algorithms.axis.DistanceHours
-import com.meistercharts.algorithms.axis.DistanceMillis
-import com.meistercharts.algorithms.axis.DistanceMinutes
-import com.meistercharts.algorithms.axis.DistanceMonths
-import com.meistercharts.algorithms.axis.DistanceSeconds
-import com.meistercharts.algorithms.axis.DistanceYears
-import com.meistercharts.algorithms.axis.GlobalTimeIndex
-import com.meistercharts.algorithms.axis.TimeTickDistance
-import com.meistercharts.algorithms.axis.valueAt
+import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.time.TimeRange
+import com.meistercharts.axis.DistanceDays
+import com.meistercharts.axis.DistanceHours
+import com.meistercharts.axis.DistanceMillis
+import com.meistercharts.axis.DistanceMinutes
+import com.meistercharts.axis.DistanceMonths
+import com.meistercharts.axis.DistanceSeconds
+import com.meistercharts.axis.DistanceYears
+import com.meistercharts.axis.GlobalTimeIndex
+import com.meistercharts.axis.TimeTickDistance
+import com.meistercharts.axis.valueAt
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed

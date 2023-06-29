@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive

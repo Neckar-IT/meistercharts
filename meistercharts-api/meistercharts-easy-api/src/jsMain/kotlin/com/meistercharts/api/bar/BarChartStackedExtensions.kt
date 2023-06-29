@@ -16,7 +16,7 @@
 package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyTitleStyle

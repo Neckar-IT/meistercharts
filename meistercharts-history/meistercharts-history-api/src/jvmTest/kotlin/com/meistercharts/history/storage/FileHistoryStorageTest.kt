@@ -17,7 +17,7 @@ package com.meistercharts.history.storage
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.HistoryConfiguration

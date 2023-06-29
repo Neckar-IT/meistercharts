@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.provider.BoxProvider1
 
 /**

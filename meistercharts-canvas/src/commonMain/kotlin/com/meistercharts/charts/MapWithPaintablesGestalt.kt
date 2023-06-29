@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
@@ -34,8 +34,8 @@ import com.meistercharts.canvas.paintable.withDefaultZoom
 import com.meistercharts.canvas.paintable.withOriginAtBottom
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Size
 import it.neckar.open.collections.fastForEach

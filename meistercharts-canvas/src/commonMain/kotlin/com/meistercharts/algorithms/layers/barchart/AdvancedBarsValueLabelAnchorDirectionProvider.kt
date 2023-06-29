@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter.ValueLabelAnchorDirectionProvider.Companion.barPointsLeft
 import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter.ValueLabelAnchorDirectionProvider.Companion.barPointsUp

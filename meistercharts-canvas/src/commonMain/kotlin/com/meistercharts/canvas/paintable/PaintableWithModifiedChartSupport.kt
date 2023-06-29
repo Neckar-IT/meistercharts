@@ -15,16 +15,16 @@
  */
 package com.meistercharts.canvas.paintable
 
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.withCurrentChartState
-import com.meistercharts.algorithms.withAxisOrientation
-import com.meistercharts.algorithms.withZoom
-import com.meistercharts.model.Rectangle
+import com.meistercharts.state.withAxisOrientation
+import com.meistercharts.state.withZoom
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Zoom
+import com.meistercharts.state.ChartState
 
 /**
  * A paintable that has a modified chart support

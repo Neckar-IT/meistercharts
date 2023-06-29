@@ -15,13 +15,13 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.painter.CanvasPaintProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.color.CanvasPaintProvider
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.BorderRadius

@@ -15,12 +15,12 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.StripePainter
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window

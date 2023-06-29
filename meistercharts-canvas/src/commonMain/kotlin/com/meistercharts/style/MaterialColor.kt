@@ -15,8 +15,8 @@
  */
 package com.meistercharts.style
 
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.Color.Companion.web
+import com.meistercharts.color.Color
+import com.meistercharts.color.Color.Companion.web
 
 /**
  * https://material.io/design/color/the-color-system.html#tools-for-picking-Color

@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.time.TimeRange
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tile.SamplingPeriodCalculator
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.FontDescriptorFragment

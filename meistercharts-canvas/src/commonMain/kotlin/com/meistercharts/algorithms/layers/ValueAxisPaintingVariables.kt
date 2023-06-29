@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.layout.cache.DoubleCache

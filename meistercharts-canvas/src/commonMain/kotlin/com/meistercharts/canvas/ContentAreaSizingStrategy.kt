@@ -15,14 +15,14 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.MutableChartState
-import com.meistercharts.algorithms.WindowResizeEvent
+import com.meistercharts.state.MutableChartState
+import com.meistercharts.resize.WindowResizeEvent
 import com.meistercharts.annotations.ContentArea
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
+import com.meistercharts.state.ChartState
 import it.neckar.open.collections.arrayOfNotNull
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport

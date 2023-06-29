@@ -15,7 +15,7 @@
  */
 package demo
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import it.neckar.open.kotlin.lang.and
 
 /**

@@ -18,11 +18,11 @@ package com.meistercharts.algorithms.layers.barchart
 import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.DefaultChartState
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.DefaultChartState
 import com.meistercharts.model.Size
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.kotlin.lang.abs

@@ -19,7 +19,7 @@ import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.text.TextPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
@@ -31,12 +31,12 @@ import com.meistercharts.canvas.LineSpacing
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.BasePointProvider
+import com.meistercharts.geometry.BasePointProvider
 import com.meistercharts.model.Direction
-import com.meistercharts.model.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation

@@ -16,16 +16,16 @@
 package com.meistercharts.algorithms.layers.barchart
 
 import it.neckar.open.unit.number.Positive as Positive1
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.LinearValueRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.LinearValueRange
 import com.meistercharts.model.Orientation
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.withCurrentChartState
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.withContentAreaSize
+import com.meistercharts.color.Color
+import com.meistercharts.state.withContentAreaSize
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
@@ -47,7 +47,7 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.strokeRoundedRect
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastFindAny

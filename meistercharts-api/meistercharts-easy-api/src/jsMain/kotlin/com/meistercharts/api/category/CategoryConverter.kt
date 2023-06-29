@@ -15,15 +15,15 @@
  */
 package com.meistercharts.api.category
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.MutableSeries
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.MutableSeries
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.paintable.Paintable

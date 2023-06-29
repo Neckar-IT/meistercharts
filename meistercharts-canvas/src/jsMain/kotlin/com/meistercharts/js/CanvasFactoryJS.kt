@@ -15,7 +15,7 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.PhysicalPixel
 import it.neckar.open.unit.number.Positive

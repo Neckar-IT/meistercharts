@@ -16,7 +16,7 @@
 package com.meistercharts.resources
 
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Size
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads

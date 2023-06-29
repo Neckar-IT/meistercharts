@@ -15,12 +15,12 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.circular.CircularChartLayer
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder

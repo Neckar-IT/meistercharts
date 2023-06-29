@@ -15,9 +15,9 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.color.Color
 import it.neckar.open.provider.MultiProvider
 
 /**

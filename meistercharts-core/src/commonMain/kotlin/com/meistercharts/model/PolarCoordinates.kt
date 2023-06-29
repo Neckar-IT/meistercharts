@@ -15,6 +15,7 @@
  */
 package com.meistercharts.model
 
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
 import kotlin.math.cos

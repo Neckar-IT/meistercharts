@@ -15,13 +15,13 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.autoScaleByZoomSupport
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.BoundsProvider
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.model.ValueRange
+import com.meistercharts.zoom.autoScaleByZoomSupport
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.BoundsProvider
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ClippingLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -43,7 +43,7 @@ import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.layers.linechart.toDomainRelativeY
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain

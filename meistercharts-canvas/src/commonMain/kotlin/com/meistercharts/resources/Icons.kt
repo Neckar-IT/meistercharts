@@ -15,7 +15,7 @@
  */
 package com.meistercharts.resources
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size

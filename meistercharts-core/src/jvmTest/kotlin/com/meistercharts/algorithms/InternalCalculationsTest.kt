@@ -17,8 +17,9 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.tile.SubIndex
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
+import com.meistercharts.calc.InternalCalculations
 import org.junit.jupiter.api.Test
 
 class InternalCalculationsTest {

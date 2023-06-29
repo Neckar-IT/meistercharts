@@ -16,14 +16,13 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.paintable.ObjectFit
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.annotations.Internal
 import it.neckar.open.unit.other.px

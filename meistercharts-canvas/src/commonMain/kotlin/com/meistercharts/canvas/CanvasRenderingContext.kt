@@ -15,10 +15,7 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.painter.BezierCurveTo
-import com.meistercharts.algorithms.painter.CanvasPaint
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.LineTo
 import com.meistercharts.algorithms.painter.MoveTo
 import com.meistercharts.algorithms.painter.Path
@@ -29,17 +26,20 @@ import com.meistercharts.algorithms.painter.SupportsPathActions
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.Color
 import com.meistercharts.design.corporateDesign
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
+import com.meistercharts.geometry.RightTriangleType
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Rectangle
-import com.meistercharts.model.RightTriangleType
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
-import it.neckar.open.kotlin.lang.toRadians
 import com.meistercharts.style.Shadow
+import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.other.deg

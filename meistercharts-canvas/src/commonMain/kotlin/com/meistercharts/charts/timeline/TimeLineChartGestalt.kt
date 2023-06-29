@@ -15,15 +15,9 @@
  */
 package com.meistercharts.charts.timeline
 
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.FittingWithMargin
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
@@ -59,11 +53,8 @@ import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
-import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
-import com.meistercharts.algorithms.painter.UnparsedWebColor
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageMinMaxHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
@@ -82,10 +73,6 @@ import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.algorithms.tile.canvasTiles
 import com.meistercharts.algorithms.tile.delegate
 import com.meistercharts.algorithms.tile.withMinimum
-import com.meistercharts.algorithms.withContentAreaSize
-import com.meistercharts.algorithms.withContentViewportMargin
-import com.meistercharts.algorithms.withTranslation
-import com.meistercharts.algorithms.withZoom
 import com.meistercharts.animation.Easing
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
@@ -93,6 +80,8 @@ import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.canvas.BorderRadius
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
@@ -115,6 +104,9 @@ import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.threshold.thresholdsSupport
+import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
+import com.meistercharts.color.UnparsedWebColor
 import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
 import com.meistercharts.history.AndBefore
@@ -145,15 +137,23 @@ import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
+import com.meistercharts.model.LinearValueRange
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
+import com.meistercharts.model.ValueRange
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.SizedLabelsProvider
+import com.meistercharts.state.ChartState
+import com.meistercharts.state.withContentAreaSize
+import com.meistercharts.state.withContentViewportMargin
+import com.meistercharts.state.withTranslation
+import com.meistercharts.state.withZoom
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
 import com.meistercharts.style.withFillIfNull
+import com.meistercharts.time.TimeRange
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat

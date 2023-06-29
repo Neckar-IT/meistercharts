@@ -15,11 +15,11 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.linechart.PointStyle
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
 import com.meistercharts.api.DataSeriesNumberFormat
 import com.meistercharts.api.PointConnectionStyle

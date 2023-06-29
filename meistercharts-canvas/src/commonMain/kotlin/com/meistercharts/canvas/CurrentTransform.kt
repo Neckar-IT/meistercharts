@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.geometry.Matrix
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.unit.si.rad
 

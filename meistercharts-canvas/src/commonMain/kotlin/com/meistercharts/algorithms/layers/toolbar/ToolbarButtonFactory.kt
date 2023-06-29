@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.toolbar
 
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonPressedEvent
 import com.meistercharts.canvas.paintable.ButtonPriority

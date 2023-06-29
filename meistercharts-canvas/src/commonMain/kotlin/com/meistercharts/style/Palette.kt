@@ -15,8 +15,8 @@
  */
 package com.meistercharts.style
 
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.RgbaColor
+import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
 import it.neckar.open.kotlin.lang.getModulo
 
 /**

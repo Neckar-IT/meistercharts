@@ -15,17 +15,17 @@
  */
 package com.meistercharts.algorithms.layers.compass
 
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.domain2rad
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.PolarCoordinates
 import it.neckar.open.formatting.CachedNumberFormat

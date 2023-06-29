@@ -15,9 +15,9 @@
  */
 package demo
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.impl.FittingWithMargin
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.model.ValueRange
+import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.algorithms.layers.EmptyLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.clipped

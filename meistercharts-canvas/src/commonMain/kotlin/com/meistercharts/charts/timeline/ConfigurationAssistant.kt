@@ -15,10 +15,10 @@
  */
 package com.meistercharts.charts.timeline
 
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.FittingWithMargin
-import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.zoom.FittingWithMargin
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
 import com.meistercharts.algorithms.tile.MinDistanceSamplingPeriodCalculator
 import com.meistercharts.algorithms.tile.withMinimum

@@ -15,13 +15,12 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.TileChartCalculator
-import com.meistercharts.algorithms.TimeChartCalculator
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.painter.UrlPaintable
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
@@ -39,6 +38,7 @@ import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.textService
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Size
+import com.meistercharts.state.ChartState
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve

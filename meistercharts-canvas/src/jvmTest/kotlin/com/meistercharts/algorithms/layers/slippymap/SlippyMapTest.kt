@@ -17,14 +17,14 @@ package com.meistercharts.algorithms.layers.slippymap
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.tile.SubIndex
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import org.junit.jupiter.api.Test

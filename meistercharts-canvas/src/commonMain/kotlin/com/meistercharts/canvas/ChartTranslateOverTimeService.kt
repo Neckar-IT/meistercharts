@@ -15,8 +15,8 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.UpdateReason
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets

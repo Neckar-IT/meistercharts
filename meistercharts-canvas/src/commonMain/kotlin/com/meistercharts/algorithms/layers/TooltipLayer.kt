@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
@@ -23,9 +23,9 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.tooltipSupport
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
-import com.meistercharts.model.with
+import com.meistercharts.geometry.with
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.unit.si.ms
 

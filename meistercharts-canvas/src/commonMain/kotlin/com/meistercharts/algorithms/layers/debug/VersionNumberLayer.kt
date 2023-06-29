@@ -20,10 +20,10 @@ import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.model.Direction
-import com.meistercharts.model.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.Insets
 import com.meistercharts.events.KeyCode
 import com.meistercharts.events.KeyStroke

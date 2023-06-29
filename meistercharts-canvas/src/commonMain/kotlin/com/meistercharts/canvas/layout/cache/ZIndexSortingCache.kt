@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import com.meistercharts.algorithms.ZIndex
+import com.meistercharts.model.ZIndex
 import com.meistercharts.canvas.layout.cache.ZIndexSortingCache.Entry
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachReverse

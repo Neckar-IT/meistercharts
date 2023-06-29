@@ -15,19 +15,19 @@
  */
 package com.meistercharts.algorithms.layers.slippymap
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.environment
-import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
-import com.meistercharts.algorithms.tile.SubIndex
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.environment
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
-import com.meistercharts.model.MapCoordinates
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.geometry.geo.MapCoordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import it.neckar.open.kotlin.lang.atan

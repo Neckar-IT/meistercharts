@@ -30,7 +30,7 @@ import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment

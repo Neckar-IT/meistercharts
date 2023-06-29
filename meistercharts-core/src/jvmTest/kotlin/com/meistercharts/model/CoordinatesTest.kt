@@ -17,6 +17,8 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.open.kotlin.lang.sqrt
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test

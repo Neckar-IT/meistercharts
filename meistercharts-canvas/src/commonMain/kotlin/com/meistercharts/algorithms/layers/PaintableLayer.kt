@@ -21,7 +21,7 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintableProvider
 import com.meistercharts.canvas.paintable.ResizablePaintable
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
 

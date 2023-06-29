@@ -15,10 +15,10 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.IntermediateValuesMode
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.time.TimeRange
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ChartSupport

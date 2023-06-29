@@ -15,9 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.time.TimeRange
+import com.meistercharts.model.ValueRange
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window

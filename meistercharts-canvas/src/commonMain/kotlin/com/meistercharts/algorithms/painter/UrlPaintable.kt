@@ -15,16 +15,15 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.loadImage
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.unit.other.px
 

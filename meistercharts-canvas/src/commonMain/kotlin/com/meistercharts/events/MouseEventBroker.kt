@@ -17,8 +17,8 @@ package com.meistercharts.events
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px

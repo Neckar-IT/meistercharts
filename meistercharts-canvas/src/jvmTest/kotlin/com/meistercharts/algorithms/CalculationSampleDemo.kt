@@ -15,12 +15,14 @@
  */
 package com.meistercharts.algorithms
 
-import com.meistercharts.algorithms.impl.DefaultChartState
+import com.meistercharts.state.DefaultChartState
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.model.Distance
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
+import com.meistercharts.model.ValueRange
 import org.junit.jupiter.api.Test
 import java.text.NumberFormat
 

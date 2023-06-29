@@ -32,7 +32,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
 import com.meistercharts.style.Palette

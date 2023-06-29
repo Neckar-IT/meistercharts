@@ -17,6 +17,9 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
 import org.junit.jupiter.api.Test
 
 /**

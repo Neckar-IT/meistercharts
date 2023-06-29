@@ -23,9 +23,9 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategoryModel
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategoryModel
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl

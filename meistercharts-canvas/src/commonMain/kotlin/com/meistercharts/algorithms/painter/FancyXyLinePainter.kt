@@ -17,7 +17,8 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.model.Coordinates
+import com.meistercharts.color.Color
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 
 /**

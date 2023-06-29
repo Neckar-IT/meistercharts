@@ -17,8 +17,7 @@ package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.time.DefaultCachedTimeZoneOffsetProvider
-import com.meistercharts.algorithms.time.DefaultTimeZoneOffsetProvider
+import com.meistercharts.time.DefaultTimeZoneOffsetProvider
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import org.junit.jupiter.api.Test

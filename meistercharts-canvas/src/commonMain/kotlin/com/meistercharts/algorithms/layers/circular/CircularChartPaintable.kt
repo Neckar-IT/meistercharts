@@ -17,13 +17,13 @@ package com.meistercharts.algorithms.layers.circular
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.CircleSegmentIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider

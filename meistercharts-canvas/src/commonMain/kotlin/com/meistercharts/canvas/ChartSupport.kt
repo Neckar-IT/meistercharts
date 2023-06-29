@@ -15,35 +15,36 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.GlobalCacheSupport
-import com.meistercharts.algorithms.KeepCenterOnWindowResize
-import com.meistercharts.algorithms.MutableChartState
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.WindowResizeBehavior
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.ZoomLevelCalculator
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.environment
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.cache.GlobalCacheSupport
+import com.meistercharts.resize.KeepCenterOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.environment
+import com.meistercharts.state.DefaultChartState
 import com.meistercharts.algorithms.layers.PaintingProperties
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.updateEnvironment
+import com.meistercharts.updateEnvironment
 import com.meistercharts.annotations.DomainRelative
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.canvas.components.NativeComponentsSupport
 import com.meistercharts.canvas.resize.ResizeHandlesSupport
 import com.meistercharts.charts.ChartId
+import com.meistercharts.color.Color
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
+import com.meistercharts.resize.WindowResizeBehavior
 import com.meistercharts.service.ServiceRegistry
+import com.meistercharts.state.ChartState
+import com.meistercharts.state.MutableChartState
 import com.meistercharts.whatsat.WhatsAtSupport
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import it.neckar.open.annotations.TestOnly
 import it.neckar.open.async.TimerSupport
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
@@ -481,6 +482,14 @@ class ChartSupport constructor(
  * Will be set to null when no frame is currently being painted.
  */
 private var currentFrameTimestampOrNull: @ms Double? = null
+
+/**
+ * Updates the current frame timestamp. Must only be used for tests
+ */
+@TestOnly
+internal fun setCurrentFrameTimestampForTestsOnly(currentFrameTimestamp: @ms Double? ) {
+  currentFrameTimestampOrNull = currentFrameTimestamp
+}
 
 /**
  * Returns the timestamp of the current frame.

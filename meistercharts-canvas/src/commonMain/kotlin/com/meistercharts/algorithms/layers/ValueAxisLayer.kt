@@ -15,9 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.LogarithmicValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.model.LogarithmicValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.linear
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Style

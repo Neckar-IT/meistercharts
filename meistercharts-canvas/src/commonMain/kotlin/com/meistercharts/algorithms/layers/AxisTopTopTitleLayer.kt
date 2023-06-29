@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment

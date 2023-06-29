@@ -15,10 +15,10 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.UpdateReason
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.model.Orientation
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.delegate
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.delegate
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
@@ -30,7 +30,7 @@ import com.meistercharts.algorithms.layers.slippymap.SlippyMapProvider
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterChartBuilder
@@ -41,7 +41,7 @@ import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.canvas.paintable.ZoomButtons
 import com.meistercharts.model.Direction
-import com.meistercharts.model.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 

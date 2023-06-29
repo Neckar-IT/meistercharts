@@ -17,7 +17,7 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.impl.historyChunk
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey

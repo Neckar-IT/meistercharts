@@ -15,6 +15,8 @@
  */
 package com.meistercharts.algorithms
 
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRangeSerializer
 import org.junit.jupiter.api.Test
 import it.neckar.open.serialization.roundTrip
 

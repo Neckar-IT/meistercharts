@@ -15,8 +15,8 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ContentAreaLayer
 import com.meistercharts.algorithms.layers.DomainAxisMarkersLayer
@@ -28,14 +28,14 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size

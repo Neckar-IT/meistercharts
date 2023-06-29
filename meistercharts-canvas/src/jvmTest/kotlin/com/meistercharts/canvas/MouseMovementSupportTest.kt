@@ -18,8 +18,8 @@ package com.meistercharts.canvas
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.events.gesture.MouseMovementSupport
 import it.neckar.open.observable.ObservableObject

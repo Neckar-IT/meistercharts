@@ -17,16 +17,19 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.FittingWithMarginPercentage
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.FittingWithMarginPercentage
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.annotations.ContentArea
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
 import it.neckar.open.unit.other.px
 import org.junit.jupiter.api.Test
 

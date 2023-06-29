@@ -31,6 +31,7 @@ import com.meistercharts.canvas.layout.cache.StringsCache.Companion.Uninitialize
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
 import com.meistercharts.model.Direction
 import com.meistercharts.provider.LabelsProvider
 import it.neckar.open.kotlin.lang.asProvider

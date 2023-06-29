@@ -16,9 +16,8 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 
 /**

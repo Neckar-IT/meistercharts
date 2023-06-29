@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.color.CanvasPaint
 
 /**
  * Combines a fill and a stroke

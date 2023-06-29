@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.slippymap.domainRelative2longitude
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.Tile
 import com.meistercharts.algorithms.tile.TileIdentifier
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.algorithms.tile.TileProvider
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
@@ -29,8 +29,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.clipToContentViewport
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.MapCoordinates
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.geo.MapCoordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.whatsat.ResultElementType

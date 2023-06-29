@@ -17,17 +17,17 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomLevelCalculator
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.calc.ZoomLevelCalculator
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import org.assertj.core.data.Offset

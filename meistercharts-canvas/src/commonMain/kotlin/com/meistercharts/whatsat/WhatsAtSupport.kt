@@ -18,7 +18,7 @@ package com.meistercharts.whatsat
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.Inclusive
 import kotlin.jvm.JvmInline
 

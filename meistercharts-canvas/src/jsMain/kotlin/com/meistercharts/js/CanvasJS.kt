@@ -15,7 +15,7 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.AbstractCanvas
 import com.meistercharts.canvas.CanvasType
@@ -31,7 +31,7 @@ import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelEvent
 import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Size
 import convertCancel
 import convertDown

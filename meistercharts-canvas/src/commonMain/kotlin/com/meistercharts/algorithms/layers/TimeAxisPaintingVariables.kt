@@ -15,9 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.axis.DistanceYears
-import com.meistercharts.algorithms.axis.TimeTickDistance
+import com.meistercharts.time.TimeRange
+import com.meistercharts.axis.DistanceYears
+import com.meistercharts.axis.TimeTickDistance
 import com.meistercharts.annotations.Domain
 import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.canvas.layout.cache.DoubleCache

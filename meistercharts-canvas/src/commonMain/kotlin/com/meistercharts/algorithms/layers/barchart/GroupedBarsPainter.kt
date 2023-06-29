@@ -15,21 +15,21 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider.Companion.onlySeriesColorsProvider
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.model.valuesAt
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.model.category.valuesAt
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Snapped
 import com.meistercharts.annotations.Window

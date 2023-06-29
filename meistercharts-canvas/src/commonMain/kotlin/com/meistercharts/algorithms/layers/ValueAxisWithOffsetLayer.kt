@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.OffsetTickCalculator
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.ValueRange
+import com.meistercharts.axis.OffsetTickCalculator
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed

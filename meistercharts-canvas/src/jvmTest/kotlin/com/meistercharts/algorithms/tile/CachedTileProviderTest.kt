@@ -20,6 +20,7 @@ import assertk.assertions.*
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
+import com.meistercharts.tile.TileIndex
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

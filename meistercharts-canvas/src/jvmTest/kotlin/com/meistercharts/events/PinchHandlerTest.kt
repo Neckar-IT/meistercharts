@@ -17,14 +17,7 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.events.DefaultPointerEventBroker
-import com.meistercharts.events.Pointer
-import com.meistercharts.events.PointerCancelEvent
-import com.meistercharts.events.PointerDownEvent
-import com.meistercharts.events.PointerId
-import com.meistercharts.events.PointerMoveEvent
-import com.meistercharts.events.PointerUpEvent
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.events.gesture.GestureState
 import com.meistercharts.events.gesture.PinchGestureSupport
 import org.assertj.core.data.Offset

@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.text.TextPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.FontDescriptorFragment

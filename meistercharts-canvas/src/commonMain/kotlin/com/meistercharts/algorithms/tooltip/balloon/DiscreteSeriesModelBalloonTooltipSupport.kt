@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable.Companion.defaultSymbols
 import com.meistercharts.algorithms.layers.legend.withHeadline
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintable.Paintable

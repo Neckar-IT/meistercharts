@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.algorithms.layers.text.LinesProvider
 import com.meistercharts.algorithms.layers.text.addText
 import com.meistercharts.model.Direction
-import com.meistercharts.model.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
 
 /**
  * Adds an [Layer] that displays information about the environment

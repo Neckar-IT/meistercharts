@@ -17,7 +17,7 @@ package com.meistercharts.demo
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.animation.Easing
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.test.utils.RandomWithSeed

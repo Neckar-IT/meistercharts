@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.RadialGradient
+import com.meistercharts.color.Color
+import com.meistercharts.color.RadialGradient
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize

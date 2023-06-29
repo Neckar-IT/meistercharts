@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.scatterplot.ScatterPlotLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder

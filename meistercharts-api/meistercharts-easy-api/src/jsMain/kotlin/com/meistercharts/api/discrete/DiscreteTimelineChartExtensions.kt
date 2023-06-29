@@ -15,10 +15,10 @@
  */
 package com.meistercharts.api.discrete
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
@@ -41,10 +41,8 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.historyConfiguration
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
-import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.asProvider

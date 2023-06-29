@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers.legend
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.TextLineCalculations
@@ -24,9 +24,9 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.SizedProvider1

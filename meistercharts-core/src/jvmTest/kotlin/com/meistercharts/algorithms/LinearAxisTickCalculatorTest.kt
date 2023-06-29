@@ -17,10 +17,10 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.IntermediateValuesMode
-import com.meistercharts.algorithms.axis.LinearAxisTickCalculator
-import com.meistercharts.algorithms.axis.LinearAxisTickCalculator.calculateTickValues
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.IntermediateValuesMode
+import com.meistercharts.axis.LinearAxisTickCalculator
+import com.meistercharts.axis.LinearAxisTickCalculator.calculateTickValues
 import org.junit.jupiter.api.Test
 
 /**

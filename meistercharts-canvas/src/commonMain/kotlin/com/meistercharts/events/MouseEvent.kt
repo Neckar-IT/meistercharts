@@ -15,10 +15,9 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.events.UiEvent
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.time.RelativeMillis

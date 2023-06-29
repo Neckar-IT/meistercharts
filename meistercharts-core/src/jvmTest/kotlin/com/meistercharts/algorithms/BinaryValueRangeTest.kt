@@ -17,6 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.model.BinaryValueRange
 import org.junit.jupiter.api.Test
 
 /**

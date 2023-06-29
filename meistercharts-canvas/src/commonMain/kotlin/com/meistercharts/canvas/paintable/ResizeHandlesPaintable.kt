@@ -16,11 +16,10 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.resize.HandleBoundsProvider
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.collections.fastForEach
 
 /**

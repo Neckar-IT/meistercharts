@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.UpdateReason
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -68,13 +68,11 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.js.MeisterChartJS
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
@@ -115,7 +113,7 @@ class TimeLineChart internal constructor(
   /**
    * The last visible time range. Is used to compare if a notification bout the change is necessary
    */
-  private var previousVisibleTimeRange: com.meistercharts.algorithms.TimeRange = com.meistercharts.algorithms.TimeRange(0.0, 0.0)
+  private var previousVisibleTimeRange: com.meistercharts.time.TimeRange = com.meistercharts.time.TimeRange(0.0, 0.0)
 
   /**
    * Notifies the observers about a time range change - if the time range has changed

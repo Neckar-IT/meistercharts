@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import it.neckar.open.unit.number.Integer
 import it.neckar.open.kotlin.lang.ceil
 import it.neckar.open.kotlin.lang.isEven

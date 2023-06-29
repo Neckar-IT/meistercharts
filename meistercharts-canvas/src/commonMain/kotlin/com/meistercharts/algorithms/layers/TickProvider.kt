@@ -15,10 +15,10 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.IntermediateValuesMode
-import com.meistercharts.algorithms.axis.LinearAxisTickCalculator
-import com.meistercharts.algorithms.axis.LogarithmicAxisTickCalculator
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.IntermediateValuesMode
+import com.meistercharts.axis.LinearAxisTickCalculator
+import com.meistercharts.axis.LogarithmicAxisTickCalculator
 import com.meistercharts.annotations.Domain
 import it.neckar.open.collections.emptyDoubleArray
 

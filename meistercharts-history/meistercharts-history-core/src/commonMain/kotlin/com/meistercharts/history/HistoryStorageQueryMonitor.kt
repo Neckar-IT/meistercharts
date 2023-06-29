@@ -15,7 +15,6 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.removeFirst
 import it.neckar.open.unit.number.MayBeNaN

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api
 
-import com.meistercharts.algorithms.LinearValueRange
+import com.meistercharts.model.LinearValueRange
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -33,8 +33,8 @@ import com.meistercharts.algorithms.layers.barchart.LabelVisibleCondition
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.CanvasStringShortener
@@ -47,10 +47,8 @@ import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.style.Palette
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
@@ -164,7 +162,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.Conv
 /**
  * Converts this JavaScript [ValueRange] object into a model ValueRange object
  */
-fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
+fun ValueRange.toModel(): com.meistercharts.model.ValueRange {
   logger.debug("ValueRange.toModel", this)
 
   //ensure that the client uses the correct types
@@ -173,8 +171,8 @@ fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
 
   //'linear' is the default range scale
   return when (this.scale?.sanitize() ?: ValueRangeScale.Linear) {
-    ValueRangeScale.Linear -> com.meistercharts.algorithms.ValueRange.linear(startSanitized, endSanitized)
-    ValueRangeScale.Log10 -> com.meistercharts.algorithms.ValueRange.logarithmic(startSanitized, endSanitized)
+    ValueRangeScale.Linear -> com.meistercharts.model.ValueRange.linear(startSanitized, endSanitized)
+    ValueRangeScale.Log10 -> com.meistercharts.model.ValueRange.logarithmic(startSanitized, endSanitized)
   }
 }
 
@@ -184,7 +182,7 @@ fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
  * Enforces a linear value range; ignores [ValueRange.scale]
  */
 fun ValueRange.toModelLinear(): LinearValueRange {
-  return com.meistercharts.algorithms.ValueRange.linear(start, end)
+  return com.meistercharts.model.ValueRange.linear(start, end)
 }
 
 /**
@@ -252,16 +250,16 @@ fun com.meistercharts.history.SamplingPeriod.toJs(): SamplingPeriod {
  * Converts this JavaScript [TimeRange] object into a model TimeRange object
  */
 @Suppress("RedundantRequireNotNullCall")
-fun TimeRange.toModel(): com.meistercharts.algorithms.TimeRange {
+fun TimeRange.toModel(): com.meistercharts.time.TimeRange {
   requireNotNull(start) { "no start provided " }
   requireNotNull(end) { "no end provided " }
-  return com.meistercharts.algorithms.TimeRange(start, end)
+  return com.meistercharts.time.TimeRange(start, end)
 }
 
 /**
  * Converts a chart time range to a JS time range
  */
-fun com.meistercharts.algorithms.TimeRange.toJs(): TimeRange {
+fun com.meistercharts.time.TimeRange.toJs(): TimeRange {
   val timeRange = js("{}") as TimeRange
   timeRange.asDynamic().start = start
   timeRange.asDynamic().end = end

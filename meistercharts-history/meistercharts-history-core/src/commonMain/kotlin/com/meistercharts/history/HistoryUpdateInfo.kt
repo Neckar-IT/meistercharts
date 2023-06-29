@@ -15,8 +15,8 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.TimeRanges
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.impl.HistoryChunk
 import kotlinx.serialization.Serializable
 

@@ -18,7 +18,7 @@ package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.barchart.CategoryModelBoxStylesProvider
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.api.BoxStyle
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle

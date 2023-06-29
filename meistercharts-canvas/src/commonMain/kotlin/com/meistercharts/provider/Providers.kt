@@ -15,12 +15,12 @@
  */
 package com.meistercharts.provider
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.time.TimeRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.Limit
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Insets
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.SizedProvider

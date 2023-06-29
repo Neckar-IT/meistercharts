@@ -15,7 +15,9 @@
  */
 package com.meistercharts.model
 
-import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.kotlin.lang.normalize

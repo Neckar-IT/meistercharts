@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.slippymap
 
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import kotlin.math.abs
 import kotlin.reflect.KProperty0
 

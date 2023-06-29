@@ -28,9 +28,9 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.paintable.ResizeHandlesPaintable
 import com.meistercharts.canvas.resizeHandlesSupport
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.gesture.CanvasDragSupport

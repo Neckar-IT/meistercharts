@@ -21,8 +21,8 @@ import com.meistercharts.canvas.FontVariant
 import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.MouseCursor
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.events.KeyCode
 import com.meistercharts.events.KeyDownEvent

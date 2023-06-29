@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Direction

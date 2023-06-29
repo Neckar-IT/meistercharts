@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.FittingInContentViewport
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.model.Insets

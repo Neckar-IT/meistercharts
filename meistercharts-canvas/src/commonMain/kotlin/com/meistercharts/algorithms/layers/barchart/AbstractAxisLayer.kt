@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.AxisPaintingVariables
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolveTitle
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext

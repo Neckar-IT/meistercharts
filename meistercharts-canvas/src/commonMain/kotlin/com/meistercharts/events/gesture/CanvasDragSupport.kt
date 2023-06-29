@@ -21,8 +21,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed

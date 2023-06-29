@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history.generator
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration

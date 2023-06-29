@@ -17,12 +17,14 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.tile.MainIndex
-import com.meistercharts.algorithms.tile.SubIndex
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.tile.MainIndex
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.model.Size
+import com.meistercharts.time.TimeRange
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.time.TimeConstants

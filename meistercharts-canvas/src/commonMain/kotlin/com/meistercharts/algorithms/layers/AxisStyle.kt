@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.color.Color
 import it.neckar.open.annotations.JavaFriendly
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport

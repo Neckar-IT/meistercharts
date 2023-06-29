@@ -15,14 +15,14 @@
  */
 package com.meistercharts.algorithms.tooltip.balloon
 
-import com.meistercharts.algorithms.formatted
+import com.meistercharts.provider.formatted
 import com.meistercharts.algorithms.layers.legend.HeadlineAbovePaintable
 import com.meistercharts.algorithms.layers.legend.LegendEntryIndex
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
 import com.meistercharts.algorithms.layers.legend.withHeadline
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.model.Size
 import it.neckar.open.formatting.CachedNumberFormat

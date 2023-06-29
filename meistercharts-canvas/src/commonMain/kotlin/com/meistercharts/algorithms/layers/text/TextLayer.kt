@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
@@ -30,13 +30,13 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.BasePointProvider
+import com.meistercharts.geometry.BasePointProvider
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Direction.Center
-import com.meistercharts.model.DirectionBasedBasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.i18n.TextKey

@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LoopIndexAwarePaintingVariables
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 
 /**
  * Abstract base class for a paintable that supports layout and painting variables.

@@ -16,8 +16,8 @@
 package com.meistercharts.events.gesture
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.Pointer
@@ -27,7 +27,6 @@ import com.meistercharts.events.PointerMoveEvent
 import com.meistercharts.events.PointerUpEvent
 import com.meistercharts.events.distanceDeltaAbsolute
 import it.neckar.open.unit.other.px
-import it.neckar.logging.LoggerFactory
 
 /**
  * Handles pinch gestures with pointer-events

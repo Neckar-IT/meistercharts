@@ -17,6 +17,9 @@ package com.meistercharts.algorithms.tile
 
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Zoom
+import com.meistercharts.tile.MainIndex
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
 
 /**
  * Identifies a single tile for a single chart

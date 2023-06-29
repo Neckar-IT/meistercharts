@@ -17,7 +17,7 @@ package com.meistercharts.events.gesture
 
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil
 import it.neckar.open.time.nowMillis
 import com.meistercharts.events.EventConsumption

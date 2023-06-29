@@ -25,9 +25,9 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.whatsAt
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.asDistance
+import com.meistercharts.geometry.asDistance
 import com.meistercharts.whatsat.WhatsAtResult
 import com.meistercharts.whatsat.WhatsAtSupport
 import it.neckar.open.collections.fastForEach

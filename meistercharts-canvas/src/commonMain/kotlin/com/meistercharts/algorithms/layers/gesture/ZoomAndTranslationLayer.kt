@@ -15,15 +15,14 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -44,9 +43,10 @@ import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
+import com.meistercharts.zoom.ZoomAndTranslationSupport
 
 /**
  * Zoom and translation layer that can be configured to handle different zoom and translation actions.

@@ -16,10 +16,6 @@
 package com.meistercharts.js
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.CanvasLinearGradient
-import com.meistercharts.algorithms.painter.CanvasPaint
-import com.meistercharts.algorithms.painter.CanvasRadialGradient
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
@@ -36,11 +32,15 @@ import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.CanvasLinearGradient
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.CanvasRadialGradient
+import com.meistercharts.color.Color
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.js.CanvasReadBackFrequency.Frequent
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
 import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment
 import com.meistercharts.model.Zoom

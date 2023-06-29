@@ -16,16 +16,16 @@
 package com.meistercharts.resources.svg
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.Path
 import com.meistercharts.algorithms.painter.PathActions
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px

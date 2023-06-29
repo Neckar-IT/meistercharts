@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.compass
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Domain
 import it.neckar.open.unit.number.MayBeNegative

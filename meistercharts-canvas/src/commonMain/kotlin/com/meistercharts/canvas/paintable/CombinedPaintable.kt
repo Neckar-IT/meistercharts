@@ -18,8 +18,8 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.unit.other.pct
 
 /**

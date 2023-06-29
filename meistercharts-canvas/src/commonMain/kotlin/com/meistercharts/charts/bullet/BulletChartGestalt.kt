@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
@@ -36,9 +36,9 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.valueAt
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.valueAt
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.BulletChartBalloonTooltipSupport
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport

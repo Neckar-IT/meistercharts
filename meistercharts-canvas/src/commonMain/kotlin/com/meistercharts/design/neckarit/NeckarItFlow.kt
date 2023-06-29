@@ -15,14 +15,14 @@
  */
 package com.meistercharts.design.neckarit
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.animation.Easing
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.animation.AnimationRepeatType
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 

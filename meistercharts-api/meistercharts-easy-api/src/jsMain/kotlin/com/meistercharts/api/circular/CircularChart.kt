@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.circular
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.Size
 import com.meistercharts.api.toModelSize

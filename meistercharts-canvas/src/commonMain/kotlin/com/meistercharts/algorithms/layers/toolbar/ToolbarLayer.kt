@@ -43,7 +43,7 @@ import com.meistercharts.events.MouseDownEvent
 import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Orientation
 import it.neckar.logging.LoggerFactory

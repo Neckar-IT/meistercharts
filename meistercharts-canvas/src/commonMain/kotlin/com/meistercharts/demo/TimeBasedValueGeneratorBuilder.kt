@@ -15,7 +15,7 @@
  */
 package com.meistercharts.demo
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.animation.Easing
 import com.meistercharts.history.generator.DecimalValueGenerator
 import it.neckar.open.kotlin.lang.ifNaN

@@ -15,19 +15,19 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.provider.DefaultDoublesProvider
 import it.neckar.open.provider.DoublesProvider

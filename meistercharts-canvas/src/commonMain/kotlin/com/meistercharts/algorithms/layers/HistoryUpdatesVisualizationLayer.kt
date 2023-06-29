@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.time.TimeRange
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.HistoryUpdateInfo
 import it.neckar.open.unit.other.px

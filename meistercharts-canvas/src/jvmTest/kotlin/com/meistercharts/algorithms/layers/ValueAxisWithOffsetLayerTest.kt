@@ -17,10 +17,10 @@ package com.meistercharts.algorithms.layers
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.IntermediateValuesMode
-import com.meistercharts.algorithms.axis.LinearAxisTickCalculator
-import com.meistercharts.algorithms.axis.OffsetTickCalculator
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.IntermediateValuesMode
+import com.meistercharts.axis.LinearAxisTickCalculator
+import com.meistercharts.axis.OffsetTickCalculator
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.decimalFormat
 import org.junit.jupiter.api.Disabled

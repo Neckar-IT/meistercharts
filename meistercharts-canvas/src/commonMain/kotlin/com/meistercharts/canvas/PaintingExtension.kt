@@ -15,9 +15,9 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
@@ -25,6 +25,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.*
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.floor

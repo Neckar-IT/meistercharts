@@ -16,7 +16,7 @@
 package com.meistercharts.api.circular
 
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.CircleSegmentIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.open.provider.MultiProvider

@@ -15,8 +15,8 @@
  */
 package com.meistercharts.canvas.mock
 
-import com.meistercharts.algorithms.painter.CanvasPaint
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
@@ -28,7 +28,7 @@ import com.meistercharts.canvas.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad

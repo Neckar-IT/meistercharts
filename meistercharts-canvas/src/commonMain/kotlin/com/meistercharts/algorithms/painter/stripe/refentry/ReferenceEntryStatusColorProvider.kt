@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet

@@ -17,13 +17,15 @@ package com.meistercharts.algorithms.tile
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.InternalCalculations
-import com.meistercharts.algorithms.impl.DefaultChartState
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.InternalCalculations
+import com.meistercharts.state.DefaultChartState
 import com.meistercharts.annotations.ContentArea
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
+import com.meistercharts.tile.TileCoordinates
+import com.meistercharts.tile.TileIndex
 import org.junit.jupiter.api.Test
 
 /**

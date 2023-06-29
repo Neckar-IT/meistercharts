@@ -16,12 +16,12 @@
 package com.meistercharts.resources
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.paintable.ObjectFit
+import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.unit.other.px
 

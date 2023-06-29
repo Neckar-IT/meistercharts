@@ -17,7 +17,7 @@ package com.meistercharts.processvalues
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import it.neckar.open.kotlin.lang.and
 import it.neckar.open.kotlin.lang.wrapped
 import org.junit.jupiter.api.Test

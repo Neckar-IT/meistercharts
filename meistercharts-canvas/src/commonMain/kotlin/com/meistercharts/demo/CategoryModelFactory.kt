@@ -15,11 +15,11 @@
  */
 package com.meistercharts.demo
 
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.Series
+import com.meistercharts.model.ValueRange
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.Series
 import com.meistercharts.animation.Easing
 import com.meistercharts.history.generator.repeatingValues
 import it.neckar.open.i18n.I18nConfiguration

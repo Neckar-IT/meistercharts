@@ -17,7 +17,7 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
 import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
 import com.meistercharts.history.impl.createSinusChunk

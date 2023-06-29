@@ -15,13 +15,12 @@
  */
 package com.meistercharts.charts.refs
 
-import com.meistercharts.algorithms.KeepOriginOnWindowResize
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.FittingWithMargin
-import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
+import com.meistercharts.resize.KeepOriginOnWindowResize
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.zoom.MoveDomainValueToLocation
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
@@ -38,7 +37,7 @@ import com.meistercharts.algorithms.layers.referenceEntryId
 import com.meistercharts.algorithms.layers.status
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
@@ -74,6 +73,7 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.provider.delegate
+import com.meistercharts.zoom.FittingWithMargin
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey

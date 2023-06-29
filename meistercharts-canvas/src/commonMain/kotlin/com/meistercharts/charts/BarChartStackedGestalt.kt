@@ -15,8 +15,8 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.LinearValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
@@ -34,12 +34,12 @@ import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultSeries
-import com.meistercharts.algorithms.model.createCategoryLabelsProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.DefaultSeries
+import com.meistercharts.model.category.createCategoryLabelsProvider
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.FontDescriptorFragment

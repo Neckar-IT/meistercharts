@@ -15,12 +15,12 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.algorithms.UpdateReason
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.ModifierCombination

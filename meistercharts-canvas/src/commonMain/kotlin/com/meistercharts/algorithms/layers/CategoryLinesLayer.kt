@@ -15,18 +15,18 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryPaintingVariables
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.model.valueAt
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.model.category.valueAt
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
@@ -34,7 +34,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.painter.CategoryLinePainter
 import com.meistercharts.painter.CategoryPointPainter
 import com.meistercharts.painter.CircleCategoryPointPainter

@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer.Companion.create
 import com.meistercharts.algorithms.layers.text.LinesProvider
 import com.meistercharts.algorithms.layers.text.TextPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason

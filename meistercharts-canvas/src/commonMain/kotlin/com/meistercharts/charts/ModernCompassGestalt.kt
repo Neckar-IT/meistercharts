@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.ResizablePaintableLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.compass.CompassTriangleValuePainter
@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.compass.GaugePaintable
 import com.meistercharts.algorithms.layers.compass.ModernCompassPainter
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.FontSize

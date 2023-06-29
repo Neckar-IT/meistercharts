@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history.impl
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.model.ValueRange
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
@@ -23,7 +23,6 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
-import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import kotlin.math.sin
 

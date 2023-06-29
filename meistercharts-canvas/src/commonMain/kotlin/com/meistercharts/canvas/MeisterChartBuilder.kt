@@ -15,11 +15,10 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomLevelCalculator
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.calc.ZoomLevelCalculator
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.ToggleDebuggingModeLayer
@@ -30,6 +29,7 @@ import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.charts.ChartGestaltConfiguration
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Orientation
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
@@ -125,7 +125,7 @@ abstract class MeisterChartBuilder(
 
   /**
    * Whether the [ZoomAndTranslationLayer] should be registered that connects the user interactions
-   * with the [com.meistercharts.algorithms.ZoomAndTranslationSupport]
+   * with the [com.meistercharts.zoom.ZoomAndTranslationSupport]
    *
    * If [enableZoomAndTranslation] is set to false, in nearly all cases it is necessary/useful to
    * set the `resizeBehavior` to `ResetToDefaultsOnResize`

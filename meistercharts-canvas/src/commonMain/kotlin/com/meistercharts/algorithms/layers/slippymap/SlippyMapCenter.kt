@@ -15,15 +15,15 @@
  */
 package com.meistercharts.algorithms.layers.slippymap
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
-import com.meistercharts.model.MapCoordinates
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.geometry.geo.MapCoordinates
 import com.meistercharts.model.Zoom
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import it.neckar.open.unit.other.deg
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts.timeline
 
-import com.meistercharts.algorithms.ZoomLevelCalculator
+import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.SamplingPeriod
 import it.neckar.open.provider.DoubleProvider

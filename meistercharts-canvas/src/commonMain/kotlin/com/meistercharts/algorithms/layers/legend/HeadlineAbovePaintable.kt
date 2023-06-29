@@ -22,7 +22,7 @@ import com.meistercharts.canvas.FontSize
 import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.paintable.LabelPaintable
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService

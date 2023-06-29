@@ -15,12 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.animation.ChartAnimation
 import com.meistercharts.design.neckarit.NeckarItFlowPaintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 

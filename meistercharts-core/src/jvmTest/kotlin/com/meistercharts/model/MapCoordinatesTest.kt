@@ -17,6 +17,9 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.geometry.geo.MapCoordinates
 import org.junit.jupiter.api.Test
 
 @Suppress("TestMethodWithoutAssertion", "SpellCheckingInspection")

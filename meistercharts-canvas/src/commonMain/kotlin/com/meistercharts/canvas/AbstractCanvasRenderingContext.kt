@@ -15,9 +15,9 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.annotations.PhysicalPixel
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.si.rad

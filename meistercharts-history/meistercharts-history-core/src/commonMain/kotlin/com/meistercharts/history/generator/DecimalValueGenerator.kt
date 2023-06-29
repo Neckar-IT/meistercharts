@@ -15,10 +15,9 @@
  */
 package com.meistercharts.history.generator
 
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.coerceIn
+import com.meistercharts.model.ValueRange
+import com.meistercharts.model.coerceIn
 import com.meistercharts.animation.Easing
-import com.meistercharts.history.MayBeNoValueOrPending
 import it.neckar.open.kotlin.lang.cos
 import it.neckar.open.kotlin.lang.random
 import it.neckar.open.kotlin.lang.randomNormal

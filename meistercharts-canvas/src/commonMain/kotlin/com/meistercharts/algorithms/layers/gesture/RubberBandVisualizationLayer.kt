@@ -18,10 +18,10 @@ package com.meistercharts.algorithms.layers.gesture
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.strokeRectCoordinates
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 
 /**
  * A layer that visualizers the rubber band (mouse gesture)

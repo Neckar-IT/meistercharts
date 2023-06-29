@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.barchart.GreedyCategoryAxisLabelPaint
 import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.algorithms.model.CategorySeriesModel
+import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.pixelSnapSupport

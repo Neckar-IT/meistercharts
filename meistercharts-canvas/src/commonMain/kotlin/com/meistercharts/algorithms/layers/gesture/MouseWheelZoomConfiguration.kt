@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.events.ModifierCombination
 
 /**

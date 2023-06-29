@@ -17,6 +17,9 @@ package com.meistercharts.algorithms.axis
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.meistercharts.time.minutesOfDay
+import com.meistercharts.time.secondsOfDay
+import com.meistercharts.time.utc2DateTimeTz
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.unit.si.ms

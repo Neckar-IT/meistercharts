@@ -18,10 +18,9 @@ package com.meistercharts.algorithms.layers.slippymap
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
-import com.meistercharts.model.MapCoordinates
-import it.neckar.open.unit.other.deg
+import com.meistercharts.geometry.geo.Latitude
+import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.geometry.geo.MapCoordinates
 
 /**
  * Paints [paintable] at the given map coordinates

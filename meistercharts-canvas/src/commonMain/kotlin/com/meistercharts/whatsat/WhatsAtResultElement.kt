@@ -16,8 +16,8 @@
 package com.meistercharts.whatsat
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 
 /**
  * Represents one elements for a [WhatsAtResult].

@@ -18,7 +18,7 @@ package com.meistercharts.canvas.layout.cache
 import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 
 /**
  * Caches bounds (x,y,width,height) for one object.

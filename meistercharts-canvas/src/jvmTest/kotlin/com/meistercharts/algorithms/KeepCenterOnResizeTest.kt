@@ -17,11 +17,16 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
-import com.meistercharts.model.Coordinates
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
+import com.meistercharts.resize.KeepCenterOnWindowResize
+import com.meistercharts.resize.WindowResizeEvent
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
 import org.junit.jupiter.api.Test
 
 /**

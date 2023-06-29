@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.TimeRelative
@@ -33,7 +33,7 @@ import com.meistercharts.events.KeyStroke
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.TouchStartEvent
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Orientation
 
 /**

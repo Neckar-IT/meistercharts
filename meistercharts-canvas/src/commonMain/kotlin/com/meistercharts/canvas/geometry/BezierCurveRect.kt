@@ -15,10 +15,10 @@
  */
 package com.meistercharts.canvas.geometry
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 
 /**
  * Represents a rectangle that has *two* sides (top and bottom) that are defined by bezier curves.

@@ -19,7 +19,7 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isLessThanOrEqualTo
-import com.meistercharts.algorithms.axis.TimeAxisTickCalculator
+import com.meistercharts.axis.TimeAxisTickCalculator
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.unit.si.ms

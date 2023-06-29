@@ -18,7 +18,7 @@ package com.cedarsoft.collections
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.tile.TileIdentifier
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Zoom
 import it.neckar.open.collections.Cache

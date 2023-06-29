@@ -18,14 +18,14 @@ package com.meistercharts.painter
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.painter.AbstractPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.canvas.strokeCross45Degrees
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import kotlin.math.max
 
 /**

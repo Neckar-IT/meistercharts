@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.axis
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.axis.IntermediateValuesMode
 import it.neckar.open.kotlin.lang.findMagnitude
 import it.neckar.open.kotlin.lang.findMagnitudeCeil
 import it.neckar.open.kotlin.lang.findMagnitudeValue

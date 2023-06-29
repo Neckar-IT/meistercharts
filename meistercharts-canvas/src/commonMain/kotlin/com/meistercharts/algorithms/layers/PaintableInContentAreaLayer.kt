@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.paintable.ObjectFit
+import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Direction
 

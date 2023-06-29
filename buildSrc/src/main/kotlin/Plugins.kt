@@ -33,6 +33,7 @@ object Plugins {
   const val npmBundle: String = "it.neckar.npm-bundle"
   const val taskTree: String = "com.dorongold.task-tree"
   const val detekt: String = "io.gitlab.arturbosch.detekt"
+  const val pdfOverview: String = "it.neckar.pdf-overview"
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
 
@@ -146,6 +147,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependen
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.detekt: PluginDependencySpec
   get() = id(Plugins.detekt)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.pdfOverview: PluginDependencySpec
+  get() = id(Plugins.pdfOverview)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.consoleReporter: PluginDependencySpec
   get() = id(Plugins.consoleReporter)

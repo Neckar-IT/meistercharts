@@ -17,6 +17,8 @@ package com.meistercharts.algorithms.axis
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.axis.DistanceSeconds
+import com.meistercharts.time.utc2DateTimeTz
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import it.neckar.open.time.toDoubleMillis

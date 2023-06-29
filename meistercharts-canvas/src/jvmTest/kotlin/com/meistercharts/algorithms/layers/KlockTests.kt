@@ -17,9 +17,9 @@ package com.meistercharts.algorithms.layers
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.meistercharts.algorithms.axis.local2DateTimeTz
-import com.meistercharts.algorithms.axis.utc2DateTimeTz
-import com.meistercharts.algorithms.time.timeZoneOffsetProvider
+import com.meistercharts.time.local2DateTimeTz
+import com.meistercharts.time.utc2DateTimeTz
+import com.meistercharts.time.timeZoneOffsetProvider
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
 import korlibs.time.*

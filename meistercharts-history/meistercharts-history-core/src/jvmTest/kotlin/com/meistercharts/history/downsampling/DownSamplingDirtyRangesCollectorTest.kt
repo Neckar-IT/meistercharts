@@ -17,7 +17,7 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod

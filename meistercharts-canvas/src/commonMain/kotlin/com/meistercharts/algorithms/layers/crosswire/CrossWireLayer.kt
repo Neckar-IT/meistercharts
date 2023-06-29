@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.Style
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.LabelPainter2
 import com.meistercharts.algorithms.painter.LabelPlacement
 import it.neckar.open.unit.number.MayBeNaN
@@ -33,7 +33,7 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.provider.LabelsProvider
 import it.neckar.open.provider.DoublesProvider1

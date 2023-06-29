@@ -15,17 +15,17 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.InternalCalculations
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.calc.InternalCalculations
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.CanvasTile
 import com.meistercharts.algorithms.tile.CountingTileProvider
 import com.meistercharts.algorithms.tile.GlobalTilesCache
 import com.meistercharts.algorithms.tile.HistoryCanvasTilePainter
-import com.meistercharts.algorithms.tile.MainIndex
-import com.meistercharts.algorithms.tile.SubIndex
+import com.meistercharts.tile.MainIndex
+import com.meistercharts.tile.SubIndex
 import com.meistercharts.algorithms.tile.TileIdentifier
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.algorithms.tile.TileProvider
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
@@ -37,7 +37,7 @@ import com.meistercharts.canvas.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.formatting.intFormat
 

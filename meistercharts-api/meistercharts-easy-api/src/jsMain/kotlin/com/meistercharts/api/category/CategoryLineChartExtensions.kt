@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.category
 
-import com.meistercharts.algorithms.model.SeriesIndex
+import com.meistercharts.model.category.SeriesIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyCrossWireStyle
 import com.meistercharts.api.applyLinesStyle
@@ -37,10 +37,8 @@ import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
 import com.meistercharts.api.line.LineChartSimpleStyle
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.category.CategoryLineChartExtensions")
 

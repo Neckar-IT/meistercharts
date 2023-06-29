@@ -17,9 +17,9 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.withAxisOrientation
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.withAxisOrientation
 import org.junit.jupiter.api.Test
 
 class ChartSupportTest {

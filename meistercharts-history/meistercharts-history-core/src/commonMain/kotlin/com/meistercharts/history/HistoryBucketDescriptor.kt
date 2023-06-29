@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Exclusive

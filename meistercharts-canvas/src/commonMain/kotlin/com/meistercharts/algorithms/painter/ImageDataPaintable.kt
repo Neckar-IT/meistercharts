@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 
 /**
  * A Paintable that is able to paint images with inline base64 encoded content.

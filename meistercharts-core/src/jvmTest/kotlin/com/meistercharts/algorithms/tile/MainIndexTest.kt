@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.tile
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.tile.MainIndex
 import org.junit.jupiter.api.Test
 
 class MainIndexTest {

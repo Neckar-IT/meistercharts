@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.bullet
 
-import com.meistercharts.algorithms.model.CategoryIndex
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyStyle
@@ -37,10 +37,8 @@ import com.meistercharts.charts.bullet.BulletChartGestalt
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bullet.BulletChartExtensions")
 

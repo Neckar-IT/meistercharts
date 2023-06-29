@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history.impl
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
