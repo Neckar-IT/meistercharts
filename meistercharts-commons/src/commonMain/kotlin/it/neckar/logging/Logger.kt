@@ -11,6 +11,26 @@ expect interface Logger {
    */
   fun getName(): String
 
+  //Currently not working -> https://youtrack.jetbrains.com/issue/KT-59785/
+  ///**
+  // * Returns true if the logger is enabled for the provided level
+  // */
+  //fun isEnabledForLevel(level: Level): Boolean
+
+  /**
+   * Is the logger instance enabled for the TRACE level?
+   *
+   * @return True if this Logger is enabled for the TRACE level, false otherwise.
+   */
+  fun isTraceEnabled(): Boolean
+
+  /**
+   * Log a message at the TRACE level.
+   *
+   * @param msg the message string to be logged
+   */
+  fun trace(msg: String?)
+
   /**
    * Is the logger instance enabled for the DEBUG level?
    *
@@ -75,6 +95,36 @@ expect interface Logger {
 inline val Logger.loggerName: LoggerName
   //Must be an extension val, because we use a typealias on JVM side
   get() = LoggerName(getName())
+
+
+expect fun Logger.isEnabledForLevel(level: Level): Boolean
+
+/**
+ * Conditional log statement that is only executed if the given level is enabled
+ */
+inline fun Logger.log(level: Level, messageProvider: () -> String) {
+  if (isEnabledForLevel(level)) {
+    val message = messageProvider()
+
+    when (level) {
+      Level.TRACE -> trace(message)
+      Level.DEBUG -> debug(message)
+      Level.INFO -> info(message)
+      Level.WARN -> warn(message)
+      Level.ERROR -> error(message)
+      else -> throw UnsupportedOperationException("Unsupported log level $level")
+    }
+  }
+}
+
+/**
+ * Conditional trace statement that is only executed if trace is enabled
+ */
+inline fun Logger.trace(messageProvider: () -> String) {
+  if (isTraceEnabled()) {
+    trace(messageProvider())
+  }
+}
 
 /**
  * Conditional debug statement that is only executed if debug is enabled

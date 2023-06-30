@@ -20,6 +20,21 @@ actual interface Logger {
   actual fun getName(): String
 
   /**
+   * Is the logger instance enabled for the TRACE level?
+   *
+   * @return True if this Logger is enabled for the TRACE level, false otherwise.
+   */
+  actual fun isTraceEnabled(): Boolean
+
+  /**
+   * Log a message at the TRACE level.
+   *
+   * @param msg the message string to be logged
+   */
+  actual fun trace(msg: String?)
+
+
+  /**
    * Is the logger instance enabled for the DEBUG level?
    *
    * @return True if this Logger is enabled for the DEBUG level, false otherwise.
@@ -82,4 +97,12 @@ actual interface Logger {
   fun debug(message: String, objectDebug: Any?)
 
   fun debug(messageProvider: () -> String, objectDebug: Any?)
+
+
+  fun isEnabledForLevel(level: Level): Boolean
+
+}
+
+actual fun Logger.isEnabledForLevel(level: Level): Boolean {
+  return this.isEnabledForLevel(level)
 }

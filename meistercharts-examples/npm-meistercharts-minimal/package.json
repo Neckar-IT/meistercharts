@@ -7,7 +7,7 @@
     "@meistercharts/meistercharts": "1.33.0"
   },
   "devDependencies": {
-    "webpack": "5.88.0",
+    "webpack": "5.88.1",
     "webpack-cli": "5.1.4"
   }
 }

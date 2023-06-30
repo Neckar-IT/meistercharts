@@ -26,12 +26,12 @@ import it.neckar.open.unit.si.ms
 
 /**
  * Translates a canvas over time.
- * This service is registered as refresh listener at [ChartSupport.onRefresh].
+ * This service is registered as refresh listener at [ChartSupport.onRender].
  *
  * Do *not* create a new instance. Call [ChartSupport.translateOverTime] instead.
  *
  */
-class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshListener {
+class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : ChartRenderLoopListener {
   /**
    * Whether the chart is currently animated
    */
@@ -65,7 +65,7 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshLis
    */
   var roundingStrategy: RoundingStrategy = RoundingStrategy.quarter
 
-  override fun refresh(chartSupport: ChartSupport, frameTimestamp: @ms Double, refreshDelta: @ms Double) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, refreshDelta: @ms Double) {
     if (!animated) {
       return
     }

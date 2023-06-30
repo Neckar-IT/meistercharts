@@ -15,13 +15,12 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.environment
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.AbstractCanvas
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
-import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.Image
+import com.meistercharts.environment
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseClickEvent
 import com.meistercharts.events.MouseDoubleClickEvent
@@ -30,8 +29,8 @@ import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelEvent
-import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
 import com.meistercharts.geometry.Coordinates
+import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
 import com.meistercharts.model.Size
 import convertCancel
 import convertDown
@@ -52,15 +51,10 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
-import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
-import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.other.px
-import it.neckar.open.unit.si.ms
-import it.neckar.open.unit.time.RelativeMillis
 import kotlinx.browser.document
-import kotlinx.browser.window
 import noFocusBorder
 import offset
 import org.w3c.dom.AddEventListenerOptions
@@ -328,9 +322,9 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     //DOM_DELTA_LINE  0x01 The delta values are specified in lines.
     //DOM_DELTA_PAGE  0x02 The delta values are specified in pages.
     @px val distance = when (event.deltaMode) {
-      0    -> deltaRaw
-      1    -> deltaRaw * 25.0 //we assume one line is 25 pixels high
-      2    -> deltaRaw * 500.0 //we assume one page is 500 pixels high
+      0 -> deltaRaw
+      1 -> deltaRaw * 25.0 //we assume one line is 25 pixels high
+      2 -> deltaRaw * 500.0 //we assume one page is 500 pixels high
       else -> throw IllegalArgumentException("Unsupported mode: ${event.deltaMode}")
     }
 
@@ -576,48 +570,3 @@ private fun EventConsumption.cancelIfConsumed(event: Event) {
     event.preventDefault()
   }
 }
-
-/**
- * Starts an animation that paints the canvas for every frame if necessary and calls [HtmlCanvas#applySizeFromClientWidth] on every frame
- */
-fun ChartSupport.scheduleRepaints(@ms @RelativeMillis frameTimestamp: Double) {
-  //Check if the chart support has already been disposed
-  if (disposed) {
-    return
-  }
-
-  //'frameTimestamp' represents a DOMHighResTimeStamp that states the time passed since the beginning of the current
-  //document's lifetime (see https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame and
-  //https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin).
-  //This implies that 'frameTimestamp' cannot be used as an absolute timestamp.
-  //
-  //'nowMillis()' on the other hand is not as precise as a DOMHighResTimeStamp. Furthermore, we cannot use 'nowMillis()'
-  //as a frame-timestamp without losing the correct delta of two consecutive frames rendered by the browser.
-  //
-  //Solution: adjust 'frameTimestamp' only if differs more than 'deltaRelativeMillisToAbsoluteThreshold' from 'nowMillis()'
-
-  val now = nowMillis()
-  //We use the stored delta to calculate the best absolute timestamp
-  var exactAbsoluteTimestamp = frameTimestamp + deltaRelativeMillisToAbsolute
-  if ((exactAbsoluteTimestamp - now).abs() > deltaRelativeMillisToAbsoluteThreshold) {
-    deltaRelativeMillisToAbsolute = now - frameTimestamp
-    exactAbsoluteTimestamp = frameTimestamp + deltaRelativeMillisToAbsolute
-  }
-
-  //Trigger size update. Do this during a refresh to avoid flickering.
-  (canvas as CanvasJS).applySizeFromClientSize()
-
-  refresh(exactAbsoluteTimestamp)
-
-  window.requestAnimationFrame { scheduleRepaints(it) }
-}
-
-/**
- * Stores the delta between the relative millis to absolute millis
- */
-private var deltaRelativeMillisToAbsolute: Double = 0.0
-
-/**
- * The greatest delta between the relative millis and the absolute millis that is still acceptable
- */
-private const val deltaRelativeMillisToAbsoluteThreshold: @ms Double = 10.0 // empirically evaluated; do not go below 10 milliseconds to avoid too many adjustments

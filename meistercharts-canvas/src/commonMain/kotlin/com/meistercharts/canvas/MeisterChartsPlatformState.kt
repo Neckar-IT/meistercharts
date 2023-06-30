@@ -15,16 +15,23 @@
  */
 package com.meistercharts.canvas
 
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.dispose.Disposable
 
 /**
  * Contains the state of the platform
  */
-object MeisterChartsPlatformState {
+class MeisterChartsPlatformState {
   /**
    * Holds the active instances
    */
   private val activeInstances: MutableSet<MeisterChart> = mutableSetOf()
+
+  val hasInstances: Boolean
+    get() = activeInstances.isNotEmpty()
 
   /**
    * Returns the active chart instances
@@ -37,7 +44,15 @@ object MeisterChartsPlatformState {
    * Registers a new instance
    */
   fun newInstance(meisterChart: MeisterChart) {
+    logger.debug { "New instance ${meisterChart.chartSupport.chartId}" }
+
     activeInstances.add(meisterChart)
+
+    if (activeInstances.size == 1) {
+      platformStateListeners.fastForEach {
+        it.firstInstanceCreated(meisterChart)
+      }
+    }
 
     platformStateListeners.fastForEach {
       it.instanceCreated(meisterChart)
@@ -54,6 +69,7 @@ object MeisterChartsPlatformState {
 
     if (activeInstances.isEmpty()) {
       platformStateListeners.fastForEach {
+        logger.debug { "Last instance disposed: ${meisterChart.chartSupport.chartId}" }
         it.lastInstanceDisposed()
       }
     }
@@ -63,6 +79,21 @@ object MeisterChartsPlatformState {
    * The listeners
    */
   private val platformStateListeners = mutableListOf<PlatformStateListener>()
+
+  /**
+   * Register a new listener
+   */
+  fun onPlatformStateUpdate(listener: PlatformStateListener): Disposable {
+    platformStateListeners.add(listener)
+
+    return Disposable {
+      platformStateListeners.remove(listener)
+    }
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.MeisterChartsPlatformState")
+  }
 }
 
 /**
@@ -70,12 +101,21 @@ object MeisterChartsPlatformState {
  */
 interface PlatformStateListener {
   /**
-   * Is called when an instance has been created
+   * Is called when the first instance has been created.
+   *
+   * Note: This method is called every time the last instance has been disposed and a new instance is created.
    */
-  fun instanceCreated(meisterChart: MeisterChart)
+  fun firstInstanceCreated(meisterChart: MeisterChart) {}
+
+  /**
+   * Is called when an instance has been created.
+   *
+   * Note: This method is called for *every* instance that is created. Also for the *first* one.
+   */
+  fun instanceCreated(meisterChart: MeisterChart) {}
 
   /**
    * Is called when the last instance has been disposed
    */
-  fun lastInstanceDisposed()
+  fun lastInstanceDisposed() {}
 }

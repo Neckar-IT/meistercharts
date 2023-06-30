@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.time.TimeRange
 import com.meistercharts.model.ValueRange
@@ -27,7 +28,6 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Tile
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintingProperties
@@ -158,7 +158,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     }
 
     return TileCreationInfo(
-      currentFrameTimestamp,
+      Meistercharts.renderLoop.currentFrameTimestamp,
       values = mapOf(
         visibleTimeRangeKey to visibleTimeRange,
         samplingPeriodKey to renderedSamplingPeriod,

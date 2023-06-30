@@ -138,7 +138,7 @@ class TimeLineChart internal constructor(
     meisterCharts.chartSupport.translateOverTime.roundingStrategy = RoundingStrategy.round
 
     //Set the preferred refresh rate
-    meisterCharts.chartSupport.targetRefreshRate = TargetRefreshRate.veryFast60
+    meisterCharts.chartSupport.targetRenderRate = TargetRefreshRate.veryFast60
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
       scheduleTimeRangeChangedNotification()

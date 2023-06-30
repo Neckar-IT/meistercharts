@@ -25,40 +25,42 @@ import org.junit.jupiter.api.Test
 class ChartSupportTest {
   @Test
   fun testRefreshListenerRemove() {
-    val chartSupport = ChartSupport(MockCanvas())
+    val chartSupport = ChartSupport(MockCanvas()).also {
+      it.targetRenderRate = TargetRefreshRate.veryFast60
+    }
 
     var callCount = 0
 
 
-    val refreshListener = object : RefreshListener {
-      override fun refresh(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
+    val renderLoopListener = object : ChartRenderLoopListener {
+      override fun render(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
         callCount++
 
         if (callCount == 3) {
-          chartSupport.removeOnRefresh(this)
+          chartSupport.removeOnRender(this)
         }
       }
     }
-    chartSupport.onRefresh(refreshListener)
+    chartSupport.onRender(renderLoopListener)
 
     assertThat(callCount).isEqualTo(0)
-    chartSupport.refresh(600.0)
+    chartSupport.render(600.0, 0.0)
     assertThat(callCount).isEqualTo(1)
-    chartSupport.refresh(700.0)
+    chartSupport.render(700.0, 100.0)
     assertThat(callCount).isEqualTo(2)
 
-    assertThat(chartSupport.refreshListeners).contains(refreshListener)
-    chartSupport.refresh(800.0)
+    assertThat(chartSupport.renderLoopListeners).contains(renderLoopListener)
+    chartSupport.render(800.0, 200.0)
     assertThat(callCount).isEqualTo(3)
     //Scheduled for removal, but not yet removed
-    assertThat(chartSupport.refreshListenersToRemove).contains(refreshListener)
-    assertThat(chartSupport.refreshListeners).contains(refreshListener)
+    assertThat(chartSupport.renderLoopListenersToRemove).contains(renderLoopListener)
+    assertThat(chartSupport.renderLoopListeners).contains(renderLoopListener)
 
     //Removed on next call to refresh
-    chartSupport.refresh(900.0)
+    chartSupport.render(900.0, 300.0)
     assertThat(callCount).isEqualTo(3)
-    assertThat(chartSupport.refreshListenersToRemove).containsNone(refreshListener)
-    assertThat(chartSupport.refreshListeners).containsNone(refreshListener)
+    assertThat(chartSupport.renderLoopListenersToRemove).containsNone(renderLoopListener)
+    assertThat(chartSupport.renderLoopListeners).containsNone(renderLoopListener)
   }
 
   @Test

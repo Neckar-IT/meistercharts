@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.calc.TimeChartCalculator
 import com.meistercharts.time.TimeRange
 import com.meistercharts.axis.DistanceDays
@@ -34,7 +35,6 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasStringShortener
 import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
@@ -555,7 +555,7 @@ object RelativeToNowTickFormat : RelativeTickFormat {
   private val maxLengthFormattedTick: String = "-999 ${TimeUnits.Year.unit} 99 ${TimeUnits.Month.unit} 99 ${TimeUnits.Day.unit} 99 ${TimeUnits.Hour.unit} 99 ${TimeUnits.Minute.unit} 99 ${TimeUnits.Second.unit} 999 ${TimeUnits.Millisecond.unit}"
 
   override fun format(tick: Double, tickDistance: TimeTickDistance, i18nConfiguration: I18nConfiguration): String {
-    @Domain @ms val now = currentFrameTimestamp
+    @Domain @ms val now = Meistercharts.renderLoop.currentFrameTimestamp
     @Domain @ms val distance = now - tick
     @Domain @ms var distanceAbsolute = abs(distance)
     val sign = if (distance < 0) "+" else "-"

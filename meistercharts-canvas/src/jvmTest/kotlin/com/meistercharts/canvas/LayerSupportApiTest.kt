@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.Layer
 import it.neckar.open.time.nowMillis
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 /**
@@ -54,12 +55,16 @@ class LayerSupportApiTest {
 
     //Not marked as dirty
     assertThat(chartSupport.dirtySupport.dirty).isFalse()
-    chartSupport.refresh(nowMillis())
+    chartSupport.render(nowMillis(), 1.0)
 
     chartSupport.markAsDirty(DirtyReason.Unknown)
     chartSupport.disabled = true
 
     //Repaint is disabled
-    chartSupport.refresh(nowMillis())
+    chartSupport.render(nowMillis(), 2.0)
+
+    verify(exactly = 0) {
+      mockLayer.paint(any())
+    }
   }
 }

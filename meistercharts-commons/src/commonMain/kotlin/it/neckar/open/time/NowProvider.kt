@@ -46,7 +46,10 @@ expect object ClockNowProvider : NowProvider {
  * ```
  */
 class VirtualNowProvider(
-  var virtualNow: @ms Double
+  /**
+   * The current time in millis
+   */
+  var virtualNow: @ms Double,
 ) : NowProvider {
 
   override fun nowMillis(): Double {

@@ -15,9 +15,12 @@
  */
 package com.meistercharts.js
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.canvas.FontMetricsCacheAccess
+import com.meistercharts.canvas.MeisterChart
 import com.meistercharts.canvas.MeisterChartBuilder
 import com.meistercharts.canvas.MeisterChartsFactoryAccess
+import com.meistercharts.canvas.PlatformStateListener
 import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
 import com.meistercharts.design.CorporateDesign
@@ -26,11 +29,13 @@ import com.meistercharts.js.external.FontFace
 import com.meistercharts.js.external.FontFaceSet
 import com.meistercharts.js.external.listenForLoadingDone
 import com.meistercharts.platform.MeisterChartsAbstractPlatform
-import it.neckar.commons.kotlin.js.debug
+import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.logging.ifDebug
 import it.neckar.open.i18n.I18nConfiguration
 import kotlinx.browser.document
+import kotlinx.browser.window
 import org.w3c.dom.get
 
 /**
@@ -72,6 +77,46 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   override fun initializeOnce() {
     FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
     MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()
+
+    armRenderLoop()
+  }
+
+  /**
+   * Start the animation frame when the first chart is created and stop it when the last chart is disposed
+   */
+  private fun armRenderLoop() {
+    require(Meistercharts.platformState.hasInstances.not()) { "Already contains instances!" }
+
+    Meistercharts.platformState.onPlatformStateUpdate(object : PlatformStateListener {
+      /**
+       * ID for the current animation frame request - used to cancel the request
+       */
+      var currentRequestId: Int = 0
+
+      override fun firstInstanceCreated(meisterChart: MeisterChart) {
+        requestNextFrame()
+      }
+
+      private fun requestNextFrame() {
+        logger.trace("Requesting next frame")
+
+        currentRequestId = window.requestAnimationFrame { relativeNowInMillis ->
+          Meistercharts.renderLoop.nextLoop(relativeNowInMillis)
+
+          if (Meistercharts.platformState.hasInstances) {
+            //Request next frame - if there are instances left
+            requestNextFrame()
+          }
+        }
+      }
+
+      override fun lastInstanceDisposed() {
+        if (currentRequestId != 0) {
+          logger.debug { "Canceling current frame request $currentRequestId" }
+          window.cancelAnimationFrame(currentRequestId)
+        }
+      }
+    })
   }
 }
 
@@ -79,4 +124,4 @@ private fun FontFace.format(): String {
   return "$family $style, $variant $weight"
 }
 
-private val logger = LoggerFactory.getLogger("com.meistercharts.js.MeisterChartsPlatform")
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.js.MeisterChartsPlatform")

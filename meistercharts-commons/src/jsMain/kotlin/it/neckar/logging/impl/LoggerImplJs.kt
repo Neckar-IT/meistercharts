@@ -17,7 +17,7 @@ class LoggerImplJs private constructor(
    * The prefix that is prepended to the log message
    */
   val shortenedLoggerName: ShortenedLoggerName,
-  ) : Logger {
+) : Logger {
   constructor(name: LoggerName) : this(name.value, name.shortened())
 
   /**
@@ -28,6 +28,20 @@ class LoggerImplJs private constructor(
 
   override fun getName(): String {
     return name
+  }
+
+  override fun isEnabledForLevel(level: Level): Boolean {
+    return level.isEnabled(getEffectiveLogLevel())
+  }
+
+  override fun isTraceEnabled(): Boolean {
+    return Level.TRACE.isEnabled(getEffectiveLogLevel())
+  }
+
+  override fun trace(msg: String?) {
+    if (isTraceEnabled()) {
+      console.debug("[$shortenedLoggerName] $msg")
+    }
   }
 
   override fun isDebugEnabled(): Boolean {

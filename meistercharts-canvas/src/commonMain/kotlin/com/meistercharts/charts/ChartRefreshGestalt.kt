@@ -35,7 +35,7 @@ class ChartRefreshGestalt(
   override fun configure(meisterChartBuilder: MeisterChartBuilder) {
     meisterChartBuilder.configure {
       configuration.targetRefreshRateProperty.consumeImmediately {
-        chartSupport.targetRefreshRate = it
+        chartSupport.targetRenderRate = it
       }
 
       configuration.chartAnimationRoundingStrategyProperty.consumeImmediately {

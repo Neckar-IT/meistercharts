@@ -27,20 +27,3 @@ var nowProvider: NowProvider = ClockNowProvider
 fun resetNowProvider() {
   nowProvider = ClockNowProvider
 }
-
-/**
- * Converts this millis value to nanos (Long)
- */
-@ns
-fun Double.millis2nanos(): Long {
-  return (this * 1_000_000).toLong()
-}
-
-/**
- * Converts this nano value to millis (Double)
- */
-@ms
-fun Long.nanos2millis(): Double {
-  return this / 1_000_000.0
-}
-

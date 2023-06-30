@@ -4,7 +4,10 @@ package it.neckar.logging
  * Represents a log level.
  * Inspired by slf4j to be able to use a typealias for the JVM
  */
-expect enum class Level
+expect enum class Level {
+  ERROR, WARN, INFO, DEBUG, TRACE,
+  ;
+}
 
 /**
  * Returns true if *this* level is active compared

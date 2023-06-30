@@ -143,7 +143,7 @@ interface ChartState {
    * - most of the calculations do not make any sense
    * - and will return NaN
    */
-  val hasZeroSize: Boolean
+  val hasAnyZeroSize: Boolean
     get() {
       return windowSize.atLeastOneZero() || contentAreaSize.atLeastOneZero()
     }

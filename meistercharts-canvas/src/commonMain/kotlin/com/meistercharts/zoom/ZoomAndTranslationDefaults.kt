@@ -142,7 +142,7 @@ open class FittingWithMargin(
   override fun defaultZoom(chartCalculator: ChartCalculator): Zoom {
     val chartState = chartCalculator.chartState
 
-    if (chartState.hasZeroSize) {
+    if (chartState.hasAnyZeroSize) {
       return Zoom.default
     }
 
@@ -233,7 +233,7 @@ open class MoveDomainValueToLocation(
 
   override fun defaultTranslation(chartCalculator: ChartCalculator): @Zoomed Distance {
     val chartState = chartCalculator.chartState
-    if (chartState.hasZeroSize) {
+    if (chartState.hasAnyZeroSize) {
       return Distance.zero
     }
 

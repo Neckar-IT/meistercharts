@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.tile
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.model.Size
 import it.neckar.open.collections.incr
 import it.neckar.open.unit.si.ms
@@ -29,7 +29,7 @@ class CountingTileProvider(val delegate: TileProvider) : TileProvider {
     get() = delegate.tileSize
 
   override fun getTile(identifier: TileIdentifier): Tile? {
-    lastPaintTimes[identifier] = currentFrameTimestamp
+    lastPaintTimes[identifier] = Meistercharts.renderLoop.currentFrameTimestamp
     providedCount.incr(identifier)
     return delegate.getTile(identifier)
   }

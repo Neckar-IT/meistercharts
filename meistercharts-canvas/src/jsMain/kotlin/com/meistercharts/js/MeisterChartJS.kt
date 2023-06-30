@@ -15,17 +15,17 @@
  */
 package com.meistercharts.js
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.MeisterChart
-import com.meistercharts.canvas.MeisterChartsPlatformState
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.events.ImageLoadedEventBroker
-import it.neckar.logging.console.ConsoleLogFunctions
+import it.neckar.open.unit.si.ms
+import it.neckar.open.unit.time.RelativeMillis
 import kotlinx.browser.document
-import kotlinx.browser.window
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -71,7 +71,7 @@ class MeisterChartJS(
   /**
    * The canvas from [LayerSupport] cast to [CanvasJS].
    *
-   * Do *NOT* add the html canvas directly. Instead add the [holder]
+   * Do *NOT* add the html canvas directly. Instead, add the [holder]
    */
   val htmlCanvas: CanvasJS
     get() = chartSupport.canvas as CanvasJS
@@ -116,12 +116,18 @@ class MeisterChartJS(
     htmlCanvas.canvasElement.style.setProperty("box-sizing", "border-box")
 
 
-    MeisterChartsPlatformState.newInstance(this)
+    Meistercharts.platformState.newInstance(this)
     onDispose {
-      MeisterChartsPlatformState.instanceDisposed(this)
+      Meistercharts.platformState.instanceDisposed(this)
     }
 
-    //Request the first animation
-    window.requestAnimationFrame { chartSupport.scheduleRepaints(it) }
+    //Connect with the render loop
+    Meistercharts.renderLoop.onRender { frameTimestamp: @ms Double, relativeHighRes: @RelativeMillis Double ->
+      //Trigger size update. Do this during a refresh to avoid flickering.
+      (chartSupport.canvas as CanvasJS).applySizeFromClientSize()
+      chartSupport.render(frameTimestamp, relativeHighRes)
+    }.also {
+      chartSupport.onDispose(it)  //unregister when the chart is disposed
+    }
   }
 }

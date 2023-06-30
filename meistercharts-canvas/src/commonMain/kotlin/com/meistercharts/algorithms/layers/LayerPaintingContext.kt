@@ -30,7 +30,6 @@ import com.meistercharts.canvas.LayerSupport
 import com.meistercharts.canvas.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
-import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.i18nSupport

@@ -17,8 +17,8 @@ package com.meistercharts.algorithms.layers
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.Meistercharts
 import com.meistercharts.axis.DistanceDays
-import com.meistercharts.canvas.setCurrentFrameTimestampForTestsOnly
 import it.neckar.open.i18n.I18nConfiguration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test
 class RelativeToNowTickFormatTest {
   @BeforeEach
   fun setUp() {
-    setCurrentFrameTimestampForTestsOnly(123.0)
+    Meistercharts.renderLoop.setCurrentFrameTimestampForTestsOnly(123.0)
   }
 
   @Test

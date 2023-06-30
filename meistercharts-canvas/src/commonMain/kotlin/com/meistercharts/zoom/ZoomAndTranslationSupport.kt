@@ -27,8 +27,10 @@ import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.MutableChartState
+import it.neckar.logging.Level
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.log
 import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.kotlin.lang.or1ifNaN
 import it.neckar.open.unit.number.Positive
@@ -123,8 +125,11 @@ class ZoomAndTranslationSupport(
   }
 
   fun setWindowTranslation(windowTranslation: @Zoomed Distance, axisSelection: AxisSelection = AxisSelection.Both, reason: UpdateReason) {
-    if (reason != UpdateReason.Animation) { //the animation events happen a lot of times, do not debug these
-      logger.debug("Setting window translation to $windowTranslation because ${reason.label()}")
+    when {
+      reason == UpdateReason.Animation -> Level.TRACE //the animation events happen a lot of times, do not debug these
+      else -> Level.DEBUG
+    }.let {
+      logger.log(it) { "Setting window translation to $windowTranslation because ${reason.label()}" }
     }
 
     chartState.setWindowTranslation(
@@ -313,7 +318,7 @@ class ZoomAndTranslationSupport(
    * Calculates the zoom factor that should be set to fit the provided start/end
    */
   fun calculateFitZoomX(start: @DomainRelative Double, end: @DomainRelative Double): @pct Double {
-    if (chartState.hasZeroSize) {
+    if (chartState.hasAnyZeroSize) {
       // nothing useful to be done here
       return 1.0
     }
@@ -339,7 +344,7 @@ class ZoomAndTranslationSupport(
    * Modifies the zoom and pan to show exactly the given range.
    */
   fun fitX(start: @DomainRelative Double, end: @DomainRelative Double, reason: UpdateReason) {
-    if (chartState.hasZeroSize) {
+    if (chartState.hasAnyZeroSize) {
       // nothing useful to be done here
       return
     }
@@ -352,7 +357,7 @@ class ZoomAndTranslationSupport(
    * Modifies the zoom and pan to show exactly the given range.
    */
   fun fitY(start: @DomainRelative Double, end: @DomainRelative Double, reason: UpdateReason) {
-    if (chartState.hasZeroSize) {
+    if (chartState.hasAnyZeroSize) {
       // nothing useful to be done here
       return
     }

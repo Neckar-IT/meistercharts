@@ -9,6 +9,7 @@ actual enum class Level {
   WARN,
   INFO,
   DEBUG,
+  TRACE,
   ;
 
   companion object {
@@ -26,6 +27,7 @@ actual enum class Level {
         "WARN" -> return WARN
         "INFO" -> return INFO
         "DEBUG" -> return DEBUG
+        "TRACE" -> return TRACE
         else -> {}
       }
 
@@ -34,6 +36,7 @@ actual enum class Level {
         uppercase.startsWith("W") -> return WARN
         uppercase.startsWith("I") -> return INFO
         uppercase.startsWith("D") -> return DEBUG
+        uppercase.startsWith("T") -> return TRACE
         else -> {}
       }
 
