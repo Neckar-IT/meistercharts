@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.axis.AxisOrientationX
 import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.state.DefaultChartState

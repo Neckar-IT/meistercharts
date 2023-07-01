@@ -15,18 +15,18 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.time.TimeRange
-import com.meistercharts.model.ValueRange
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.color.Color
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.model.Direction
+import com.meistercharts.range.ValueRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.unit.other.ID
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms

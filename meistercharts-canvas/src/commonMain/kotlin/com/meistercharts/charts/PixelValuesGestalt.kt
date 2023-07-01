@@ -17,7 +17,7 @@ package com.meistercharts.charts
 
 import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.zoom.autoScaleByZoomSupport
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.axis.AxisSelection

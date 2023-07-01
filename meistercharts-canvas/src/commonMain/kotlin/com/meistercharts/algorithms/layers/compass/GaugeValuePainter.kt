@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers.compass
 
-import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Domain
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.range.ValueRange
+import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.si.rad
 
 /**

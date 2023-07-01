@@ -20,7 +20,7 @@ import assertk.assertions.*
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.axis.LinearAxisTickCalculator
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import org.junit.jupiter.api.Test
 
 /**

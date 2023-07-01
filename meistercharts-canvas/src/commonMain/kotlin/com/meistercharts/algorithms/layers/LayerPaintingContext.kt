@@ -38,6 +38,7 @@ import com.meistercharts.canvas.textService
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Size
 import com.meistercharts.state.ChartState
+import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
@@ -244,13 +245,13 @@ class MissingResources() {
   /**
    * Contains the missing URLs
    */
-  val missingURLs: Set<String> = mutableSetOf()
+  val missingURLs: Set<Url> = mutableSetOf()
 
   fun reportMissing(urlPaintable: UrlPaintable) {
     reportMissing(urlPaintable.url)
   }
 
-  fun reportMissing(url: String) {
+  fun reportMissing(url: Url) {
     (missingURLs as MutableSet).add(url)
   }
 

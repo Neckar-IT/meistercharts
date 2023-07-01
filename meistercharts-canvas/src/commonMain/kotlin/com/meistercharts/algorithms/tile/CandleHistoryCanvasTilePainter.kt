@@ -15,9 +15,6 @@
  */
 package com.meistercharts.algorithms.tile
 
-import com.meistercharts.calc.TileChartCalculator
-import com.meistercharts.time.TimeRange
-import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.annotations.ContentArea
@@ -26,6 +23,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
@@ -33,6 +31,8 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.provider.TimeRangeProvider
+import com.meistercharts.range.ValueRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.si.ms

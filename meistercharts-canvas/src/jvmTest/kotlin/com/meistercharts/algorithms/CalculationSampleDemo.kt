@@ -22,7 +22,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import org.junit.jupiter.api.Test
 import java.text.NumberFormat
 

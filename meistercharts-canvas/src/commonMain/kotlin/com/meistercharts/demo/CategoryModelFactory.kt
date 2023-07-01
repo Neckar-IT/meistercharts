@@ -15,7 +15,7 @@
  */
 package com.meistercharts.demo
 
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.model.category.Category
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.DefaultCategorySeriesModel

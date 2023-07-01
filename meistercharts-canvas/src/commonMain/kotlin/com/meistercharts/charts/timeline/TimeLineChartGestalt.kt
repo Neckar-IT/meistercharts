@@ -137,10 +137,10 @@ import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter

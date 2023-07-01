@@ -24,7 +24,9 @@ import kotlinx.serialization.Serializable
  * Contains multiple time ranges.
  */
 @Serializable
-data class TimeRanges(val timeRanges: List<@Sorted @Serializable(with = TimeRangeSerializer::class) TimeRange>) : List<TimeRange> by timeRanges {
+data class TimeRanges(
+  val timeRanges: List<@Sorted @Serializable(with = TimeRangeSerializer::class) TimeRange>,
+) : List<TimeRange> by timeRanges {
   /**
    * Returns the start for the first time range.
    * Throws an exception if there are no time ranges

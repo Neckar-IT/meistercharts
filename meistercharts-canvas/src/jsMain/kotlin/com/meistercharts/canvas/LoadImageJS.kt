@@ -20,6 +20,7 @@ import com.meistercharts.js.MeisterChartClasses
 import com.meistercharts.model.Size
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.http.Url
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
 
@@ -27,7 +28,7 @@ import org.w3c.dom.HTMLImageElement
  * Loads an image from a URL (should not use caches)
  *
  */
-actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
+actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
   logger.debug { "Loading image: $url" }
 
   (document.createElement("IMG") as HTMLImageElement).apply {
@@ -52,7 +53,7 @@ actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
     })
 
     // set src after(!) adding the event-listener for the load-event
-    src = UrlConversion.convert(url)
+    src = UrlConversion.convert(url).value
 
     // Check if the image has been loaded already to avoid flickering.
     // Beware that 'complete' evaluates to true in IE11 for data-images.

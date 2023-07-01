@@ -22,6 +22,7 @@ import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.resources.LocalResourcePaintable
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.pct
 
 /**
@@ -57,16 +58,16 @@ class TankPaintable : Paintable {
     return boundingBox
   }
 
-  private val sensorUltrasonic: Paintable = LocalResourcePaintable("tank/sensor-ultrasonic.png", Size(272.0, 320.0).times(scalingFactor), Coordinates(-272.0 * scalingFactor * 0.5, -286.0 * scalingFactor))
-  private val sensorVibration: Paintable = LocalResourcePaintable("tank/sensor-vibration.png", Size(273.0, 818.0).times(scalingFactor), Coordinates(-273.0 * scalingFactor * 0.5, -286.0 * scalingFactor))
-  private val tankCornerBottomLeft: Paintable = LocalResourcePaintable("tank/tank-corner-bottom.png", Size(602.0, 474.0).times(scalingFactor))
+  private val sensorUltrasonic: Paintable = LocalResourcePaintable(Url("tank/sensor-ultrasonic.png"), Size(272.0, 320.0).times(scalingFactor), Coordinates(-272.0 * scalingFactor * 0.5, -286.0 * scalingFactor))
+  private val sensorVibration: Paintable = LocalResourcePaintable(Url("tank/sensor-vibration.png"), Size(273.0, 818.0).times(scalingFactor), Coordinates(-273.0 * scalingFactor * 0.5, -286.0 * scalingFactor))
+  private val tankCornerBottomLeft: Paintable = LocalResourcePaintable(Url("tank/tank-corner-bottom.png"), Size(602.0, 474.0).times(scalingFactor))
   private val tankCornerBottomRight: Paintable = tankCornerBottomLeft.mirrorOnY()
-  private val tankCornerTopLeft: Paintable = LocalResourcePaintable("tank/tank-corner-top.png", Size(602.0, 518.0).times(scalingFactor))
+  private val tankCornerTopLeft: Paintable = LocalResourcePaintable(Url("tank/tank-corner-top.png"), Size(602.0, 518.0).times(scalingFactor))
   private val tankCornerTopRight: Paintable = tankCornerTopLeft.mirrorOnY()
-  private val tankSideBottom: Paintable = LocalResourcePaintable("tank/tank-side-bottom.png", Size(356.0, 474.0).times(scalingFactor))
-  private val tankSideTop: Paintable = LocalResourcePaintable("tank/tank-side-top.png", Size(356.0, 518.0).times(scalingFactor))
-  private val tankSideVertical: Paintable = LocalResourcePaintable("tank/tank-side-vertical.png", Size(80.0, 1892.0).times(scalingFactor))
-  private val waves: Paintable = LocalResourcePaintable("tank/waves.png", Size(1400.0, 82.0).times(scalingFactor), Coordinates(-1400.0 * scalingFactor * 0.5, -82.0 * scalingFactor))
+  private val tankSideBottom: Paintable = LocalResourcePaintable(Url("tank/tank-side-bottom.png"), Size(356.0, 474.0).times(scalingFactor))
+  private val tankSideTop: Paintable = LocalResourcePaintable(Url("tank/tank-side-top.png"), Size(356.0, 518.0).times(scalingFactor))
+  private val tankSideVertical: Paintable = LocalResourcePaintable(Url("tank/tank-side-vertical.png"), Size(80.0, 1892.0).times(scalingFactor))
+  private val waves: Paintable = LocalResourcePaintable(Url("tank/waves.png"), Size(1400.0, 82.0).times(scalingFactor), Coordinates(-1400.0 * scalingFactor * 0.5, -82.0 * scalingFactor))
 
   override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
     val sensorUltrasonicBoundingBox = sensorUltrasonic.boundingBox(paintingContext)

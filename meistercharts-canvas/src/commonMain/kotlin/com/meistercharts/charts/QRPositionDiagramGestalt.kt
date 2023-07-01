@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ContentAreaLayer

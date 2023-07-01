@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.tooltip.balloon
 
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.algorithms.layers.legend.HeadlineAbovePaintable
 import com.meistercharts.algorithms.layers.legend.LegendEntryIndex
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable

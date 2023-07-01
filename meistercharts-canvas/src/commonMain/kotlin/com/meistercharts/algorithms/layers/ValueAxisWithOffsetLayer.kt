@@ -15,21 +15,21 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.model.ValueRange
-import com.meistercharts.axis.OffsetTickCalculator
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.axis.OffsetTickCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.open.kotlin.lang.abs

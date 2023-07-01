@@ -163,7 +163,7 @@ private class MapTileProvider(
           y += 14.0
         }
         if (style.showTileUrl) {
-          gc.fillText(url, 0.0, y, Direction.TopLeft, 5.0, 5.0)
+          gc.fillText(url.value, 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0
         }
         if (style.showTileBorder) {

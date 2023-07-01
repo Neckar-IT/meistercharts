@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ThresholdsLayer
 import com.meistercharts.algorithms.layers.ThresholdsLayer.ThresholdValues
 import com.meistercharts.annotations.Domain

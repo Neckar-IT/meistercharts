@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.time.TimeRange
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.annotations.Domain

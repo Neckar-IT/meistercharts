@@ -15,7 +15,7 @@
  */
 package com.meistercharts.axis
 
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import it.neckar.open.kotlin.lang.ceil
 import it.neckar.open.kotlin.lang.floor
 import kotlin.math.pow

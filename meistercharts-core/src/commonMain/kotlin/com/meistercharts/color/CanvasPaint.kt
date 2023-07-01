@@ -18,5 +18,4 @@ package com.meistercharts.color
 /**
  * A paint that can be set on a canvas. Supports flat colors and gradients.
  */
-//Should be a sealed class. But since Color must be an interface (Kotlin bug related to initializers and companion objects), this is also an interface for now
 sealed interface CanvasPaint

@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas
 
+import it.neckar.open.http.Url
+
 /**
  * Sometimes relative URLs have to be converted - e.g. when using React Router which changes the URLs in a non-predictable way.
  */
@@ -22,7 +24,7 @@ object UrlConversion {
   /**
    * Converts the URL
    */
-  fun convert(url: String): String {
+  fun convert(url: Url): Url {
     return converter.convert(url)
   }
 
@@ -43,7 +45,7 @@ fun interface UrlConverter {
   /**
    * Converts a URL
    */
-  fun convert(url: String): String
+  fun convert(url: Url): Url
 
   companion object {
     /**
@@ -55,23 +57,14 @@ fun interface UrlConverter {
      * Makes each URL absolute
      */
     val MakeAbsolute: UrlConverter = UrlConverter { url ->
-      if (isExternalUrl(url)) {
+      if (url.isExternalUrl()) {
         return@UrlConverter url
       }
-      if (isAbsoluteUrl(url)) {
+      if (url.isAbsoluteUrl()) {
         return@UrlConverter url
       }
 
-      return@UrlConverter "/$url"
+      return@UrlConverter Url("/$url")
     }
   }
 }
-
-private fun isAbsoluteUrl(url: String): Boolean {
-  return url.startsWith("/")
-}
-
-private fun isExternalUrl(url: String): Boolean {
-  return url.startsWith("http")
-}
-

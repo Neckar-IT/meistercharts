@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.axis
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.axis.OffsetTickCalculator
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.open.kotlin.lang.ceil
 import it.neckar.open.kotlin.lang.floor
 import org.junit.jupiter.api.Test

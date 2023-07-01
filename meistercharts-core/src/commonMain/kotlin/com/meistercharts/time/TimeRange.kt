@@ -15,7 +15,7 @@
  */
 package com.meistercharts.time
 
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.annotations.TimeRelative
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.formatUtc

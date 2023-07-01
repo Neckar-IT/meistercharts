@@ -15,9 +15,6 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.model.LinearValueRange
-import com.meistercharts.model.LogarithmicValueRange
-import com.meistercharts.model.ValueRange
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.linear
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Style
@@ -30,6 +27,9 @@ import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.LogarithmicValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits

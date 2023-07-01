@@ -16,7 +16,7 @@
 package com.meistercharts.provider
 
 import com.meistercharts.time.TimeRange
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.Limit
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain

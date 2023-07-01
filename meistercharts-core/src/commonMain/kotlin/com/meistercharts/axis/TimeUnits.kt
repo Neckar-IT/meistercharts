@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.time
+package com.meistercharts.axis
 
 import it.neckar.open.unit.si.ms
 
+/**
+ * The time units used for timeline axis
+ */
 enum class TimeUnits(@ms val span: Double, val unit: String) {
   Microsecond(0.001, "μs"),
   Millisecond(1.0, "ms"),

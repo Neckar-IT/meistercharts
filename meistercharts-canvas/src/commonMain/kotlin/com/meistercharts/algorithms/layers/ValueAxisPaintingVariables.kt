@@ -15,12 +15,12 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.model.ValueRange
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.layout.cache.StringsCache
 import com.meistercharts.model.Side
+import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.unit.other.px
 import kotlin.math.max

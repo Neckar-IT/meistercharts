@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.Meistercharts
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.time.TimeRange
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.retrieve

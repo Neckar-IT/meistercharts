@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.Cir
 import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.canvas.paintable.Paintable
+import it.neckar.open.http.Url
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
 
@@ -46,7 +47,7 @@ object CircularChartConverter {
   fun toSegmentsImageProvider(data: CircularChartData): MultiProvider<CircleSegmentIndex, Paintable?> {
     val segments = data.segments ?: return MultiProvider.alwaysNull()
     val images = segments
-      .map { it.icon?.let { idAsString -> UrlPaintable.naturalSize(idAsString) } }
+      .map { it.icon?.let { idAsString -> UrlPaintable.naturalSize(Url(idAsString)) } }
       .toList()
     return MultiProvider.Companion.forListModulo(images)
   }

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.CategoryPainter
 import com.meistercharts.algorithms.layers.barchart.CategoryPainterPaintingVariables

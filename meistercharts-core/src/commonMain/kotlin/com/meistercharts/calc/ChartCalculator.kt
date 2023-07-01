@@ -36,9 +36,9 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Distance
-import com.meistercharts.model.LinearValueRange
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.model.Size
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.ChartState
 import com.meistercharts.time.TimeRange

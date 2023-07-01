@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history.impl
 
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor

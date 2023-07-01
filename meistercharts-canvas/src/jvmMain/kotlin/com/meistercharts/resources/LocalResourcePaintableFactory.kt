@@ -23,16 +23,17 @@ import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
 
 /**
  * Loads a local resource
  */
-actual class LocalResourcePaintable @JvmOverloads actual constructor(
-  val relativePath: String,
+actual class LocalResourcePaintable actual constructor(
+  val relativePath: Url,
   size: @px Size?,
-  val alignmentPoint: Coordinates
+  val alignmentPoint: Coordinates,
 ) : Paintable {
 
   val delegate: Paintable = jvmLocalResourcePaintableFactory.get(relativePath, size, alignmentPoint)
@@ -99,5 +100,5 @@ fun interface JvmLocalResourcePaintableFactory {
   /**
    * Returns the paintable
    */
-  fun get(relativePath: String, size: @px Size?, alignmentPoint: Coordinates): Paintable
+  fun get(relativePath: Url, size: @px Size?, alignmentPoint: Coordinates): Paintable
 }

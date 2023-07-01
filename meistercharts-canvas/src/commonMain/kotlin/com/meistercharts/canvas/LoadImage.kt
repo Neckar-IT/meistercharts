@@ -15,30 +15,28 @@
  */
 package com.meistercharts.canvas
 
-import it.neckar.open.collections.Cache
-import it.neckar.open.collections.cache
+import com.meistercharts.Meistercharts
+import it.neckar.open.http.Url
 
-
-private val imageCache: Cache<String, Image> = cache("CachedImageDownloader", 100)
 
 /**
  * Loads an image from a URL.
  * The loaded image has its natural size set and will be passed to [callback]
  */
-fun loadImage(url: String, callback: (Image) -> Unit) {
-  val cachedImage = imageCache[url]
+fun loadImage(url: Url, callback: (Image) -> Unit) {
+  val cachedImage = Meistercharts.imageCache[url]
   if (cachedImage != null) {
     callback(cachedImage)
   } else {
     loadImageUncached(url) { image ->
-      imageCache.store(url, image)
+      Meistercharts.imageCache.store(url, image)
       callback(image)
     }
   }
 }
 
 /**
- * Loads an image from an URL.
- * This function should not cache the loaded image passed to [callback]
+ * Loads an image from a URL.
+ * This function should not cache the loaded image.
  */
-expect fun loadImageUncached(url: String, callback: (Image) -> Unit)
+expect fun loadImageUncached(url: Url, callback: (Image) -> Unit)

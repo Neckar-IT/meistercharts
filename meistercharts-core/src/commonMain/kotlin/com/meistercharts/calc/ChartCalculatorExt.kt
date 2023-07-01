@@ -17,7 +17,7 @@ package com.meistercharts.calc
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.model.ValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.si.rad
 

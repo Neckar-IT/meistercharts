@@ -1,9 +1,11 @@
 package it.neckar.open.kotlin.lang
 
 
+@Deprecated("Should be replaced with Kotlin version")
 object Base64 {
   @Suppress("SpellCheckingInspection")
   private const val TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+
   @Suppress("SpellCheckingInspection")
   private const val TABLE_URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
   private val DECODE = TABLE.toDecodeArray()

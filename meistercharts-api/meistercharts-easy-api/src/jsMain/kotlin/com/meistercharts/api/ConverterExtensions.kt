@@ -15,7 +15,6 @@
  */
 package com.meistercharts.api
 
-import com.meistercharts.model.LinearValueRange
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -33,8 +32,6 @@ import com.meistercharts.algorithms.layers.barchart.LabelVisibleCondition
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.CanvasStringShortener
@@ -44,8 +41,11 @@ import com.meistercharts.canvas.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.color.Color
 import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.style.Palette
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -162,7 +162,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.Conv
 /**
  * Converts this JavaScript [ValueRange] object into a model ValueRange object
  */
-fun ValueRange.toModel(): com.meistercharts.model.ValueRange {
+fun ValueRange.toModel(): com.meistercharts.range.ValueRange {
   logger.debug("ValueRange.toModel", this)
 
   //ensure that the client uses the correct types
@@ -171,8 +171,8 @@ fun ValueRange.toModel(): com.meistercharts.model.ValueRange {
 
   //'linear' is the default range scale
   return when (this.scale?.sanitize() ?: ValueRangeScale.Linear) {
-    ValueRangeScale.Linear -> com.meistercharts.model.ValueRange.linear(startSanitized, endSanitized)
-    ValueRangeScale.Log10 -> com.meistercharts.model.ValueRange.logarithmic(startSanitized, endSanitized)
+    ValueRangeScale.Linear -> com.meistercharts.range.ValueRange.linear(startSanitized, endSanitized)
+    ValueRangeScale.Log10 -> com.meistercharts.range.ValueRange.logarithmic(startSanitized, endSanitized)
   }
 }
 
@@ -182,7 +182,7 @@ fun ValueRange.toModel(): com.meistercharts.model.ValueRange {
  * Enforces a linear value range; ignores [ValueRange.scale]
  */
 fun ValueRange.toModelLinear(): LinearValueRange {
-  return com.meistercharts.model.ValueRange.linear(start, end)
+  return com.meistercharts.range.ValueRange.linear(start, end)
 }
 
 /**

@@ -25,8 +25,10 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 
-
-object TimeRangeSerializer: KSerializer<TimeRange> {
+/**
+ * Serializer for TimeRange
+ */
+object TimeRangeSerializer : KSerializer<TimeRange> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("TimeRange") {
     element("start", serialDescriptor<Double>())
     element("end", serialDescriptor<Double>())

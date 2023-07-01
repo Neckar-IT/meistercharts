@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.model.BinaryValueRange
+import com.meistercharts.range.BinaryValueRange
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.BinaryLayer
