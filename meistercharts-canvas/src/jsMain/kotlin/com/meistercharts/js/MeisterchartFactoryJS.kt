@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.fonts
+package com.meistercharts.js
+
+import com.meistercharts.canvas.CanvasFactory
+import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.MeisterchartFactory
 
 /**
- * Special implementation that optimizes the center alignment to be visually pleasing.
+ * Html/JS specific factories for chart
  *
- * This is especially important if aligning (number) values to ticks
  */
-object FontCenterAlignmentStrategy {
+class MeisterchartFactoryJS : MeisterchartFactory {
+  override val canvasFactory: CanvasFactory = CanvasFactoryJS()
 
-  /**
-   * Calculates the offset from the center for the given height of the capital "h"
-   */
-  fun calculateCenterOffset(capitalHHeight: Double): Double {
-    return -capitalHHeight * 0.02 //hard coded value to improve the position of the center line
+  override fun createChart(chartSupport: ChartSupport, description: String): MeisterchartJS {
+    return MeisterchartJS(chartSupport, description)
   }
 }

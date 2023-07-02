@@ -27,7 +27,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Tile
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintingProperties

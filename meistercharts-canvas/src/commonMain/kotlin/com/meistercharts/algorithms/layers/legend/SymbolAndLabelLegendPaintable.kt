@@ -19,8 +19,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.TextLineCalculations
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox

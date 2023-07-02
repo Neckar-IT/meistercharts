@@ -19,11 +19,9 @@ import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.BarChartGroupedGestalt
-import com.meistercharts.js.MeisterChartJS
-import it.neckar.commons.kotlin.js.debug
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -36,7 +34,7 @@ class BarChartGrouped internal constructor(
    */
   internal val gestalt: BarChartGroupedGestalt,
 
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<BarChartGroupedData, BarChartGroupedStyle>(meisterChart) {
 
   init {

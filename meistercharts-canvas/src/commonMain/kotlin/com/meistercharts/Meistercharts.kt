@@ -16,7 +16,9 @@
 package com.meistercharts
 
 import com.meistercharts.canvas.Image
+import com.meistercharts.canvas.MeisterchartFactory
 import com.meistercharts.canvas.MeisterChartsPlatformState
+import com.meistercharts.font.FontMetricsCache
 import com.meistercharts.loop.RenderLoopSupport
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
@@ -42,4 +44,23 @@ object Meistercharts {
    * Key is the URL.
    */
   val imageCache: Cache<Url, Image> = cache("ImageCache", 100)
+
+  /**
+   * The current font metrics cache.
+   * The value is initialized in the Platform.init() method.
+   *
+   * Should be accessed by [com.meistercharts.font.FontMetricsCache.Companion.get]
+   */
+  var fontMetricsCache: FontMetricsCache? = null
+
+  /**
+   * The current factory. Should be set once at startup - specific for each platform
+   */
+  var meisterchartFactory: MeisterchartFactory? = null
+
+  /**
+   * The device pixel ratio for the main screen
+   */
+  var mainScreenDevicePixelRatio: Double = 1.0
+
 }

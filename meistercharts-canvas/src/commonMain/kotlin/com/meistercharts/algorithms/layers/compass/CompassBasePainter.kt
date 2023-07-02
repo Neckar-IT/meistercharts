@@ -24,7 +24,7 @@ import com.meistercharts.axis.LinearAxisTickCalculator.calculateTickValues
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.color.Color
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction

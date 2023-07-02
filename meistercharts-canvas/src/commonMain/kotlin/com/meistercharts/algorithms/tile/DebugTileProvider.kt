@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.devicePixelRatio
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size

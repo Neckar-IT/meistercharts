@@ -17,9 +17,9 @@ package com.meistercharts.algorithms.layers.legend
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.invoke
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.LabelPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.geometry.Rectangle

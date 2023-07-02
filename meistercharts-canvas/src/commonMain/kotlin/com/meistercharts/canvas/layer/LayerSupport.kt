@@ -13,9 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.canvas.layer
 
 import com.meistercharts.algorithms.layers.Layers
+import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.DebugConfiguration
+import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.MeisterChartsBuilderDsl
+import com.meistercharts.canvas.PaintListener
+import com.meistercharts.canvas.PaintStatisticsSupport
+import com.meistercharts.canvas.debug
 import com.meistercharts.charts.ChartId
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker

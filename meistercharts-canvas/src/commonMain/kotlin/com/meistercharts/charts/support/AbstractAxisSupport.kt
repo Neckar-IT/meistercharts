@@ -21,8 +21,8 @@ import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.FontMetrics
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.font.FontMetrics
+import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.provider.BooleanProvider

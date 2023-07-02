@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.model.category.createCategoryLabelsProvider
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.provider.SizedLabelsProvider
 
 /**

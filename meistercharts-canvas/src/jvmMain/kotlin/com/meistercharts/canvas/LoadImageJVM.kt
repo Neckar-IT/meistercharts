@@ -15,6 +15,7 @@
  */
 package com.meistercharts.canvas
 
+import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.open.http.Url
 
 
@@ -22,11 +23,7 @@ import it.neckar.open.http.Url
  * Loads an image from a URL (should not use caches)
  */
 actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
-  jvmImageLoader.loadImage(url, callback)
-}
-
-var jvmImageLoader: JvmImageLoader = JvmImageLoader { _, _ ->
-  throw UnsupportedOperationException("please set the jvmImageLoader for the current platform by calling MeisterChartsPlatform.init()")
+  MeisterchartsJvm.jvmImageLoader.loadImage(url, callback)
 }
 
 /**

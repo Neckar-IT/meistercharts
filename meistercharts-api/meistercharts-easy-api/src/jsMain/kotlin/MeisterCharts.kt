@@ -38,8 +38,7 @@ import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
-import com.meistercharts.js.MeisterChartBuilderJS
-import it.neckar.logging.LoggerFactory
+import com.meistercharts.js.MeisterchartBuilderJS
 import kotlinx.browser.document
 import org.w3c.dom.Element
 
@@ -87,7 +86,7 @@ fun createBarChartStackedFromElement(
 @Suppress("unused")
 fun createBarChartStacked(): BarChartStacked {
   // The MeisterChartBuilder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("BarChartStacked")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("BarChartStacked")
   val gestalt = BarChartStackedGestalt().apply {
     configure(meisterChartBuilder)
   }
@@ -133,7 +132,7 @@ fun createBarChartGroupedFromElement(
 @Suppress("unused")
 fun createBarChartGrouped(): BarChartGrouped {
   // The builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("BarChartGrouped")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("BarChartGrouped")
   val gestalt = BarChartGroupedGestalt(toolTipType = ToolTipType.Balloon).apply {
     configure(meisterChartBuilder)
   }
@@ -180,7 +179,7 @@ fun createHistogramFromElement(
 @Suppress("unused")
 fun createHistogram(): Histogram {
   // The builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("Histogram")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("Histogram")
   val gestalt = HistogramGestalt().apply {
     configure(meisterChartBuilder)
   }
@@ -223,7 +222,7 @@ fun createCircularChartFromElement(
 @Suppress("unused")
 fun createCircularChart(): CircularChart {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("CircularChart")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("CircularChart")
   val gestalt = CircularChartGestalt().apply {
     configure(meisterChartBuilder)
   }
@@ -267,7 +266,7 @@ fun createCompassFromElement(
 @JsExport
 fun createCompass(): Compass {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("Compass")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("Compass")
   val gestalt = PuristicCompassGestalt().apply {
     configure(meisterChartBuilder)
   }
@@ -321,7 +320,7 @@ fun createTimeLineChart(): TimeLineChart {
    * Creates a timeline chart for the given history storage
    */
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("TimeLineChart")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("TimeLineChart")
   val gestalt = TimeLineChartWithToolbarGestalt(meisterChartBuilder.chartId, historyStorageQueryMonitor).apply {
     configure(meisterChartBuilder)
   }
@@ -376,7 +375,7 @@ fun createLineChartSimpleFromElement(
 @Suppress("unused")
 fun createLineChartSimple(): LineChartSimple {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("LineChartSimple")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("LineChartSimple")
   val gestalt = CategoryLineChartGestalt(toolTipType = ToolTipType.Balloon).apply {
     configure(meisterChartBuilder)
   }
@@ -423,7 +422,7 @@ fun createBulletChartFromElement(
 @Suppress("unused")
 fun createBulletChart(): BulletChart {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("BulletChart")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("BulletChart")
   val gestalt = BulletChartGestalt().apply {
     configure(meisterChartBuilder)
   }
@@ -473,7 +472,7 @@ fun createDiscreteTimelineChart(): DiscreteTimelineChart {
   val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage> = historyStorage.withQueryMonitor()
 
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("DiscreteTimelineChart")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("DiscreteTimelineChart")
   val gestalt = DiscreteTimelineChartGestalt(historyStorageQueryMonitor).apply {
     configure(meisterChartBuilder)
 
@@ -527,7 +526,7 @@ fun createMapWithStackedBarsFromElement(
 @JsExport
 fun createMapWithStackedBars(): MapWithStackedBars {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
-  val meisterChartBuilder = MeisterChartBuilderJS.create("MapWithStackedBars")
+  val meisterChartBuilder = MeisterchartBuilderJS.create("MapWithStackedBars")
   val gestalt = MapWithPaintablesGestalt(meisterChartBuilder.chartId).apply {
     configure(meisterChartBuilder)
   }

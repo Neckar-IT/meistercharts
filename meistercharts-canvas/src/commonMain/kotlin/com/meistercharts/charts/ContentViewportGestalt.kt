@@ -19,7 +19,7 @@ import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.axis.AxisSelection
 import com.meistercharts.zoom.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Insets
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -44,7 +44,7 @@ open class ContentViewportGestalt(
   var contentViewportMargin: @Zoomed Insets by contentViewportMarginProperty
 
   @ChartGestaltConfiguration
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.apply {
       configure {
 

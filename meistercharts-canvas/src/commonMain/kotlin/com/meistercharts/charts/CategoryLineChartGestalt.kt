@@ -58,8 +58,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
@@ -338,7 +338,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
       valueAxisLayer.style.ticksFormat = it
     }
 
-    configureBuilder { meisterChartBuilder: MeisterChartBuilder ->
+    configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 
       meisterChartBuilder.configure {

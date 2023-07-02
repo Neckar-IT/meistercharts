@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable

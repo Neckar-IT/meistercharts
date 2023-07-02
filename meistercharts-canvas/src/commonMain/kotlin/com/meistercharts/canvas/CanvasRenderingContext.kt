@@ -27,9 +27,14 @@ import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.CanvasPaint
 import com.meistercharts.color.Color
 import com.meistercharts.design.corporateDesign
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontMetrics
+import com.meistercharts.font.combineWith
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Distance
 import com.meistercharts.geometry.Rectangle

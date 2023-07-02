@@ -21,8 +21,8 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.Distance

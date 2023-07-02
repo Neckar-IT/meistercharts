@@ -15,16 +15,18 @@
  */
 package com.meistercharts.canvas
 
+import com.meistercharts.Meistercharts
+
 /**
  * Contains platform dependent methods / factories.
  *
- * It is suggested to get the current factory using [MeisterChartsFactoryAccess.factory].
+ * It is suggested to get the current factory using [Meistercharts.meisterchartFactory].
  *
  * It is necessary to
  * call `MeisterChartsPlatform.init()` first
  *
  */
-interface MeisterChartsFactory {
+interface MeisterchartFactory {
   /**
    * Creates a new chart instance
    */
@@ -34,30 +36,22 @@ interface MeisterChartsFactory {
      * Only used for debugging purposes
      */
     description: String,
-  ): MeisterChart
+  ): Meisterchart
 
   /**
    * The platform dependent canvas factory
    */
   val canvasFactory: CanvasFactory
-}
 
-/**
- * Offers a way to receive the chart factory
- */
-object MeisterChartsFactoryAccess {
-  /**
-   * The current factory. Should be set once at startup - specific for each platform
-   */
-  var factory: MeisterChartsFactory? = null
-}
-
-/**
- * Returns an instance for the platform dependent chart factory.
- *
- * It is necessary to
- * call `MeisterChartsPlatform.init()` first
- */
-fun meisterChartsFactory(): MeisterChartsFactory {
-  return MeisterChartsFactoryAccess.factory ?: throw IllegalStateException("No meisterChartsFactory set - please call MeisterChartsPlatform.init()")
+  companion object {
+    /**
+     * Returns an instance for the platform dependent chart factory.
+     *
+     * It is necessary to
+     * call `MeisterChartsPlatform.init()` first
+     */
+    fun get(): MeisterchartFactory {
+      return Meistercharts.meisterchartFactory ?: throw IllegalStateException("No meisterChartsFactory set - please call MeisterChartsPlatform.init()")
+    }
+  }
 }

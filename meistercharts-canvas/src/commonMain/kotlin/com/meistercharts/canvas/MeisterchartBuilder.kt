@@ -15,10 +15,6 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.zoom.ZoomAndTranslationModifier
-import com.meistercharts.calc.ZoomLevelCalculator
-import com.meistercharts.axis.AxisSelection
-import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.ToggleDebuggingModeLayer
@@ -26,22 +22,26 @@ import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationConfigurati
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationLayer
 import com.meistercharts.algorithms.layers.gesture.addZoomAndTranslation
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.calc.ZoomLevelCalculator
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.charts.ChartGestaltConfiguration
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Orientation
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.collections.fastForEach
-import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.OnDispose
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
- * A builder that builds [MeisterChart] instances.
+ * A builder that builds [Meisterchart] instances.
  */
 @MeisterChartsBuilderDsl
-abstract class MeisterChartBuilder(
+abstract class MeisterchartBuilder(
   val description: String,
   /**
    * The chart ID for the newly generated chart
@@ -50,7 +50,7 @@ abstract class MeisterChartBuilder(
   /**
    * The factory that is used to create platform dependent objects
    */
-  val meisterChartsFactory: MeisterChartsFactory = meisterChartsFactory(),
+  val meisterchartFactory: MeisterchartFactory = MeisterchartFactory.get(),
 ) : OnDispose {
 
   /**
@@ -168,7 +168,7 @@ abstract class MeisterChartBuilder(
    * Creates the chart support
    */
   fun createChartSupport(): ChartSupport {
-    return createChartSupport(meisterChartsFactory.canvasFactory.createCanvas(CanvasType.Main))
+    return createChartSupport(meisterchartFactory.canvasFactory.createCanvas(CanvasType.Main))
   }
 
   /**
@@ -234,7 +234,7 @@ abstract class MeisterChartBuilder(
   private val disposeActions = mutableListOf<() -> Unit>()
 
   /**
-   * Registers a dispose action that will be called when the build [MeisterChart] object has been be disposed.
+   * Registers a dispose action that will be called when the build [Meisterchart] object has been be disposed.
    * Is *not* called, when the builder is finished
    */
   override fun onDispose(action: () -> Unit) {
@@ -244,44 +244,11 @@ abstract class MeisterChartBuilder(
   /**
    * Builds the chart
    */
-  open fun build(): MeisterChart {
+  open fun build(): Meisterchart {
     //Set first to avoid call to configure during build
     hasBeenBuilt = true
 
     val chartSupport = createChartSupport()
-    return meisterChartsFactory.createChart(chartSupport, description)
-  }
-}
-
-/**
- * The(!) MeisterChart interface
- */
-interface MeisterChart : Disposable, OnDispose {
-  val chartSupport: ChartSupport
-
-  /**
-   * Contains a description that helps to understand why this MeisterCharts instance has been created and where it is used.
-   * Only for debugging purposes.
-   */
-  val description: String
-
-  val layerSupport: LayerSupport
-    get() {
-      return chartSupport.layerSupport
-    }
-
-  override fun dispose() {
-    chartSupport.dispose()
-  }
-
-  override fun onDispose(action: () -> Unit) {
-    chartSupport.onDispose(action)
-  }
-
-  /**
-   * Marks the canvas as dirty
-   */
-  fun markAsDirty(reason: DirtyReason) {
-    chartSupport.markAsDirty(reason)
+    return meisterchartFactory.createChart(chartSupport, description)
   }
 }

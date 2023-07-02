@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DefaultLayerSupport
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.MockCanvas
 import it.neckar.open.observable.ObservableDouble
 import org.junit.jupiter.api.BeforeEach

@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.compass.ArrowValuePainter
 import com.meistercharts.algorithms.layers.compass.CompassBasePainter
 import com.meistercharts.algorithms.layers.compass.GaugePaintable
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
@@ -67,7 +67,7 @@ class ClassicCompassGestalt(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fixedChartGestalt.configure(meisterChartBuilder)
 
 

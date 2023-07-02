@@ -26,8 +26,8 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReasonBitSet
-import com.meistercharts.canvas.LayerSupport
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.canvas.layer.LayerSupport
+import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.debug

@@ -18,8 +18,8 @@ package com.meistercharts.js
 import com.meistercharts.Meistercharts
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.LayerSupport
-import com.meistercharts.canvas.MeisterChart
+import com.meistercharts.canvas.layer.LayerSupport
+import com.meistercharts.canvas.Meisterchart
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.events.ImageLoadedEventBroker
@@ -29,12 +29,12 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 
 /**
- * JavaScript implementation for [MeisterChart]
+ * JavaScript implementation for [Meisterchart]
  */
-class MeisterChartJS(
+class MeisterchartJS(
   override val chartSupport: ChartSupport,
   override val description: String,
-) : MeisterChart {
+) : Meisterchart {
 
   /**
    * The holder of the chart

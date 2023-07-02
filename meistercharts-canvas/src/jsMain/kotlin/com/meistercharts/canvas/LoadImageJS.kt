@@ -65,6 +65,12 @@ actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
   }
 }
 
+/**
+ * Creates a new Image object from an HTMLImageElement.
+ *
+ * @receiver the HTMLImageElement from which to create the Image object
+ * @return the newly created Image object
+ */
 private fun HTMLImageElement.createImage(): Image {
   return Image(this, Size(this.naturalWidth.toDouble(), this.naturalHeight.toDouble()))
 }

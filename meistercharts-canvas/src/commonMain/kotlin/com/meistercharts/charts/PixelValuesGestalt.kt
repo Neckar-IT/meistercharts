@@ -49,7 +49,7 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.model.Insets
@@ -302,7 +302,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fitContentInViewportGestalt.configure(meisterChartBuilder)
 
     liveEdgesLayer.delegate.configuration.valuesProvider = object : DoublesProvider {

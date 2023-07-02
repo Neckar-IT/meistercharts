@@ -16,13 +16,13 @@
 package com.meistercharts.design
 
 import com.meistercharts.color.Color
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontFamily
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontStyle
-import com.meistercharts.canvas.FontVariant
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontFamily
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontStyle
+import com.meistercharts.font.FontVariant
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider

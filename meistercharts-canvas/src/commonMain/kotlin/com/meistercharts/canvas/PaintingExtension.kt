@@ -25,6 +25,10 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.text.LineSpacing
+import com.meistercharts.canvas.text.TextLineCalculations
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.*

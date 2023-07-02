@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.loop.PaintingLoopIndex
 
 /**
  * Contains a layout variable for each key.

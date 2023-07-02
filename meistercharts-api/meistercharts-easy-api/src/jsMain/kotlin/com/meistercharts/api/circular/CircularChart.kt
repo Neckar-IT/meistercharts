@@ -19,10 +19,10 @@ import com.meistercharts.color.Color
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.Size
 import com.meistercharts.api.toModelSize
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.combineWith
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.combineWith
 import com.meistercharts.charts.CircularChartGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.open.provider.MutableDoublesProvider
 import it.neckar.open.unit.other.px
 
@@ -32,7 +32,7 @@ import it.neckar.open.unit.other.px
 @JsExport
 class CircularChart internal constructor(
   internal val gestalt: CircularChartGestalt,
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<CircularChartData, CircularChartStyle>(meisterChart) {
 
   init {

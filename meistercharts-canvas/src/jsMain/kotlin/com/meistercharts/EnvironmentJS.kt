@@ -15,7 +15,6 @@
  */
 package com.meistercharts
 
-import com.meistercharts.Environment
 import kotlinx.browser.window
 
 actual fun extractEnvironment(oldEnvironment: Environment): Environment {

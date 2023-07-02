@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved

@@ -27,7 +27,7 @@ import com.meistercharts.algorithms.layers.scatterplot.ScatterPlotLayer
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
@@ -97,7 +97,7 @@ class ScatterPlotGestalt(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fixedChartGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {

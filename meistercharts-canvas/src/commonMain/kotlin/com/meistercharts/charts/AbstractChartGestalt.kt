@@ -16,8 +16,8 @@
 package com.meistercharts.charts
 
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.LayerSupport
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.layer.LayerSupport
+import com.meistercharts.canvas.MeisterchartBuilder
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -27,7 +27,7 @@ import it.neckar.open.dispose.OnDispose
  * Abstract base class for chart gestalts.
  *
  * There are two ways to register configurations:
- * *[configureBuilder] - can be used to configure the [MeisterChartBuilder] itself. These actions are applied first
+ * *[configureBuilder] - can be used to configure the [MeisterchartBuilder] itself. These actions are applied first
  * *[configure] - can be used to configure that [LayerSupport]. This method is often used in many gestalts.
  */
 abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
@@ -46,7 +46,7 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
   /**
    * Contains configuration actions
    */
-  private val builderConfigurationActions: MutableList<(meisterChartBuilder: MeisterChartBuilder) -> Unit> = mutableListOf()
+  private val builderConfigurationActions: MutableList<(meisterChartBuilder: MeisterchartBuilder) -> Unit> = mutableListOf()
 
   /**
    * Contains configurations that are applied
@@ -58,7 +58,7 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
    *
    * In many cases [configure] can be used instead.
    */
-  fun configureBuilder(configurationAction: (meisterChartBuilder: MeisterChartBuilder) -> Unit) {
+  fun configureBuilder(configurationAction: (meisterChartBuilder: MeisterchartBuilder) -> Unit) {
     ensureNotConfigured()
     this.builderConfigurationActions.add(configurationAction)
   }
@@ -92,7 +92,7 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
     return configuredChartSupport
   }
 
-  final override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  final override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     ensureNotConfigured()
 
     meisterChartBuilder.onDispose(this)

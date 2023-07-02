@@ -41,7 +41,7 @@ import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.geometry.Distance
 import it.neckar.logging.Logger
@@ -65,7 +65,7 @@ class DiscreteTimelineChart internal constructor(
   /**
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
   val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApi<DiscreteTimelineChartConfiguration>(meisterChart) {
 

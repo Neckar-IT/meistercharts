@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.model.category.CategorySeriesModel
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.model.Insets
@@ -80,7 +80,7 @@ class HistogramGestalt(
     barChartGroupedGestalt.groupedBarsPainter.configuration.overflowIndicatorPainter = null
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     barChartGroupedGestalt.configure(meisterChartBuilder)
 
     //Additional configuration for the histogram

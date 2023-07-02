@@ -16,7 +16,7 @@
 package com.meistercharts.api.bar
 
 import com.meistercharts.charts.BarChartStackedGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.open.provider.MultiProvider
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.category.CategoryConverter
@@ -32,7 +32,7 @@ class BarChartStacked internal constructor(
    */
   private val gestalt: BarChartStackedGestalt,
 
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<BarChartData, BarChartStackedStyle>(meisterChart) {
 
   init {

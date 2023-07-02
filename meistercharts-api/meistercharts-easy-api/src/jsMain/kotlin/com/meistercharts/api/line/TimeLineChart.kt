@@ -67,7 +67,7 @@ import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
@@ -92,7 +92,7 @@ import kotlin.time.Duration.Companion.seconds
 @JsExport
 class TimeLineChart internal constructor(
   internal val gestalt: TimeLineChartWithToolbarGestalt,
-  meisterCharts: MeisterChartJS,
+  meisterCharts: MeisterchartJS,
   internal val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApiLegacy<TimeLineChartData, TimeLineChartStyle>(meisterCharts) {
 

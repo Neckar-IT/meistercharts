@@ -34,10 +34,10 @@ import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.CanvasStringShortener
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
@@ -143,12 +143,12 @@ fun Shadow?.toModel(): com.meistercharts.style.Shadow? {
   )
 }
 
-fun BorderRadius?.toModel(): com.meistercharts.canvas.BorderRadius? {
+fun BorderRadius?.toModel(): com.meistercharts.model.BorderRadius? {
   if (this == null) {
     return null
   }
 
-  return com.meistercharts.canvas.BorderRadius(
+  return com.meistercharts.model.BorderRadius(
     topLeft?.sanitize() ?: 0.0,
     topRight?.sanitize() ?: 0.0,
     bottomRight?.sanitize() ?: 0.0,

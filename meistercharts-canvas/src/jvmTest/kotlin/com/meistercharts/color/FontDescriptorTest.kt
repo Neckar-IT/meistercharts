@@ -17,10 +17,10 @@ package com.meistercharts.color
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.combineWith
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.combineWith
 import org.junit.jupiter.api.Test
 
 /**

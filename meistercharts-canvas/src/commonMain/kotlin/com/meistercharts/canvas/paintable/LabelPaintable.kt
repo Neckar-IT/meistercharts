@@ -17,7 +17,7 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.i18nConfiguration

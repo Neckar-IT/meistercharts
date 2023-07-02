@@ -18,7 +18,7 @@ package com.meistercharts.api
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.timerSupport
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import com.meistercharts.model.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -39,7 +39,7 @@ internal constructor(
   /**
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
-  internal val meisterCharts: MeisterChartJS,
+  internal val meisterCharts: MeisterchartJS,
 ) {
 
   /**

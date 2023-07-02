@@ -18,8 +18,8 @@ package com.meistercharts.algorithms.layers.legend
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.TextLineCalculations
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables

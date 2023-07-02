@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.painter.ArcPathWorkaroundEpsilon
 import it.neckar.open.unit.number.NegativeOrZero
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.AbstractPaintable

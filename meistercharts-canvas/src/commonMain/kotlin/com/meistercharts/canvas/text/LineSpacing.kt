@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.canvas.text
 
 import it.neckar.open.unit.other.pct
 

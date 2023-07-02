@@ -31,7 +31,7 @@ import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
@@ -112,7 +112,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.apply {
       fixedChartGestalt.configure(this)
 

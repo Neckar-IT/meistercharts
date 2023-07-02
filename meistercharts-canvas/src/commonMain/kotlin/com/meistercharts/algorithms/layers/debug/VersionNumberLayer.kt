@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
 import com.meistercharts.color.Color
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.Insets

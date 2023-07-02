@@ -23,6 +23,7 @@ import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
+import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
@@ -36,7 +37,7 @@ actual class LocalResourcePaintable actual constructor(
   val alignmentPoint: Coordinates,
 ) : Paintable {
 
-  val delegate: Paintable = jvmLocalResourcePaintableFactory.get(relativePath, size, alignmentPoint)
+  val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)
@@ -84,14 +85,6 @@ actual class LocalResourcePaintable actual constructor(
   actual companion object {
   }
 }
-
-/**
- * Holds the current instance of the local resource paintable provider
- */
-var jvmLocalResourcePaintableFactory: JvmLocalResourcePaintableFactory = JvmLocalResourcePaintableFactory { _, _, _ ->
-  throw UnsupportedOperationException("please set the jvmLocalResourcePaintableFactory for the current platform by calling MeisterChartPlatform.init()")
-}
-
 
 /**
  * Provides jvm local resource paintables.

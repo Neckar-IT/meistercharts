@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.painter.stripe
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LoopIndexAware
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.canvas.layout.cache.MappedLayoutCache
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration

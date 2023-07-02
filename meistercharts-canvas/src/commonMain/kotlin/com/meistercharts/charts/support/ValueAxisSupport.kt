@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.Layers.PaintingOrder
 import com.meistercharts.algorithms.layers.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.provider.SizedProvider
 
 /**

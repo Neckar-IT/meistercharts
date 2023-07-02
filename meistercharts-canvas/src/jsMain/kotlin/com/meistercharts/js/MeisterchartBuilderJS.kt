@@ -16,16 +16,16 @@
 package com.meistercharts.js
 
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.ChartId
 
 /**
- * A builder for [MeisterChartJS]
+ * A builder for [MeisterchartJS]
  */
-class MeisterChartBuilderJS(
+class MeisterchartBuilderJS(
   description: String,
   chartId: ChartId = ChartId.next(),
-) : MeisterChartBuilder(description, chartId = chartId) {
+) : MeisterchartBuilder(description, chartId = chartId) {
   init {
     //Enforce a repaint on resize
     //The HTML5 canvas is cleared on resize - therefore a repaint is necessary to avoid flickering to white
@@ -36,16 +36,16 @@ class MeisterChartBuilderJS(
     }
   }
 
-  override fun build(): MeisterChartJS {
-    return (super.build() as MeisterChartJS)
+  override fun build(): MeisterchartJS {
+    return (super.build() as MeisterchartJS)
   }
 
   companion object {
     /**
      * Creates a new chart builder - calls <MeisterChartsPlatform.init()>
      */
-    fun create(description: String): MeisterChartBuilderJS {
-      return MeisterChartBuilderJS(description)
+    fun create(description: String): MeisterchartBuilderJS {
+      return MeisterchartBuilderJS(description)
     }
   }
 }

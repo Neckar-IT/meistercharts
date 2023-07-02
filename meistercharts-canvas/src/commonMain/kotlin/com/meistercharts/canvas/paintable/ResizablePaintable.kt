@@ -40,9 +40,9 @@ abstract class AbstractResizablePaintable(
    * Updates the bounding box for a new size.
    * This method is called when the size has been updated
    */
-  val calculateBoundingBox: (size: Size) -> @px Rectangle
+  val calculateBoundingBox: (size: Size) -> @px Rectangle,
 
-) : ResizablePaintable {
+  ) : ResizablePaintable {
 
   override var size: @px Size = initialSize
     set(value) {

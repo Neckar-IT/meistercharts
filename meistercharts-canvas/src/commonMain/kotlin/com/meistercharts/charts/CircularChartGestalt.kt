@@ -22,8 +22,8 @@ import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Insets
@@ -64,7 +64,7 @@ class CircularChartGestalt(
     legendLayer.style.segmentsImageProvider = createDefaultImageProvider(style::colorsProvider.delegate())
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     FixedChartGestalt(Insets.of(75.0)).configure(meisterChartBuilder)
 
     meisterChartBuilder.apply {

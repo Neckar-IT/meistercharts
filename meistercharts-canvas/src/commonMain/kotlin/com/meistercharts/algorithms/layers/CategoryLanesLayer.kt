@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.strokeRoundedRect

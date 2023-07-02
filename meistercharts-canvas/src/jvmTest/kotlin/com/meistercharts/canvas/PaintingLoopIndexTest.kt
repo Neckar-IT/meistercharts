@@ -17,6 +17,7 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.loop.PaintingLoopIndex
 import org.junit.jupiter.api.Test
 
 class PaintingLoopIndexTest {

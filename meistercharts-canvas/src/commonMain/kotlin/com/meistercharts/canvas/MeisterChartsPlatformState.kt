@@ -28,7 +28,7 @@ class MeisterChartsPlatformState {
   /**
    * Holds the active instances
    */
-  private val activeInstances: MutableSet<MeisterChart> = mutableSetOf()
+  private val activeInstances: MutableSet<Meisterchart> = mutableSetOf()
 
   val hasInstances: Boolean
     get() = activeInstances.isNotEmpty()
@@ -36,14 +36,14 @@ class MeisterChartsPlatformState {
   /**
    * Returns the active chart instances
    */
-  fun activeInstances(): List<MeisterChart> {
+  fun activeInstances(): List<Meisterchart> {
     return activeInstances.toList()
   }
 
   /**
    * Registers a new instance
    */
-  fun newInstance(meisterChart: MeisterChart) {
+  fun newInstance(meisterChart: Meisterchart) {
     logger.debug { "New instance ${meisterChart.chartSupport.chartId}" }
 
     activeInstances.add(meisterChart)
@@ -62,7 +62,7 @@ class MeisterChartsPlatformState {
   /**
    * Is called if an instance has been disposed
    */
-  fun instanceDisposed(meisterChart: MeisterChart) {
+  fun instanceDisposed(meisterChart: Meisterchart) {
     if (!activeInstances.remove(meisterChart)) {
       throw IllegalStateException("cannot remove an inactive MeisterChart instance")
     }
@@ -105,14 +105,14 @@ interface PlatformStateListener {
    *
    * Note: This method is called every time the last instance has been disposed and a new instance is created.
    */
-  fun firstInstanceCreated(meisterChart: MeisterChart) {}
+  fun firstInstanceCreated(meisterChart: Meisterchart) {}
 
   /**
    * Is called when an instance has been created.
    *
    * Note: This method is called for *every* instance that is created. Also for the *first* one.
    */
-  fun instanceCreated(meisterChart: MeisterChart) {}
+  fun instanceCreated(meisterChart: Meisterchart) {}
 
   /**
    * Is called when the last instance has been disposed

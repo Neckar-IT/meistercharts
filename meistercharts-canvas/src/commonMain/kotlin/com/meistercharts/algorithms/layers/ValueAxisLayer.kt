@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Style
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.CanvasStringShortener
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment

@@ -25,9 +25,9 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.model.RotationDirection
@@ -95,7 +95,7 @@ class ModernCompassGestalt(
     anchorDirection = Direction.TopCenter
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     style.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
       resizablePaintableLayer.insets = it

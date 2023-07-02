@@ -82,7 +82,7 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.axis.AxisSelection
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason

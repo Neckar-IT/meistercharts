@@ -17,7 +17,7 @@ package com.meistercharts.api.map
 
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.charts.MapWithPaintablesGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.logging.LoggerFactory
 
 /**
@@ -26,7 +26,7 @@ import it.neckar.logging.LoggerFactory
 @JsExport
 class MapWithStackedBars internal constructor(
   internal val gestalt: MapWithPaintablesGestalt,
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<MapWithBarsData, MapWithBarsStyle>(meisterChart) {
 
   init {

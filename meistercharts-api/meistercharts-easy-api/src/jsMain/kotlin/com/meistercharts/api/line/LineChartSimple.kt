@@ -21,7 +21,7 @@ import com.meistercharts.api.category.applyEasyApiDefaults
 import com.meistercharts.api.category.applyStyle
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.CategoryLineChartGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -30,7 +30,7 @@ import it.neckar.open.provider.MultiProvider
 @JsExport
 class LineChartSimple internal constructor(
   internal val gestalt: CategoryLineChartGestalt,
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<LineChartSimpleData, LineChartSimpleStyle>(meisterChart) {
 
   init {

@@ -16,10 +16,8 @@
 package com.meistercharts.js
 
 import com.meistercharts.Meistercharts
-import com.meistercharts.canvas.FontMetricsCacheAccess
-import com.meistercharts.canvas.MeisterChart
-import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.MeisterChartsFactoryAccess
+import com.meistercharts.canvas.Meisterchart
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.PlatformStateListener
 import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
@@ -39,9 +37,9 @@ import kotlinx.browser.window
 import org.w3c.dom.get
 
 /**
- * Global configuration / settings object for [com.meistercharts.canvas.MeisterChart].
+ * Global configuration / settings object for [com.meistercharts.canvas.Meisterchart].
  *
- * Is referenced from [MeisterChartBuilder] and ensures that initial code is executed once
+ * Is referenced from [MeisterchartBuilder] and ensures that initial code is executed once
  */
 object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   init {
@@ -75,8 +73,8 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   override fun initializeOnce() {
-    FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
-    MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()
+    Meistercharts.fontMetricsCache = FontMetricsCacheJS
+    Meistercharts.meisterchartFactory = MeisterchartFactoryJS()
 
     armRenderLoop()
   }
@@ -93,7 +91,7 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
        */
       var currentRequestId: Int = 0
 
-      override fun firstInstanceCreated(meisterChart: MeisterChart) {
+      override fun firstInstanceCreated(meisterChart: Meisterchart) {
         requestNextFrame()
       }
 

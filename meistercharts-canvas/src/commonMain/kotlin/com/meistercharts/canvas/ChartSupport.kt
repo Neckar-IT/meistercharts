@@ -22,6 +22,7 @@ import com.meistercharts.cache.GlobalCacheSupport
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.canvas.components.NativeComponentsSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.resize.ResizeHandlesSupport
 import com.meistercharts.charts.ChartId
 import com.meistercharts.color.Color
@@ -31,6 +32,7 @@ import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
 import com.meistercharts.geometry.Coordinates
+import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.loop.RenderLoopListener
 import com.meistercharts.model.Direction
 import com.meistercharts.resize.KeepCenterOnWindowResize
@@ -47,7 +49,6 @@ import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationSupport
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.debug
 import it.neckar.logging.trace
 import it.neckar.open.async.TimerSupport
 import it.neckar.open.collections.fastForEach

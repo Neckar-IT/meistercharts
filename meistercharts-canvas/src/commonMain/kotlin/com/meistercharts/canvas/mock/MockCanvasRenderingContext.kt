@@ -22,11 +22,11 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
-import com.meistercharts.canvas.CanvasStringShortener
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontMetrics
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
+import com.meistercharts.font.FontDescriptor
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size

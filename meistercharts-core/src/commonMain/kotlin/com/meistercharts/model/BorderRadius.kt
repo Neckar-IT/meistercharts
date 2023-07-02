@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.model
 
 import it.neckar.open.unit.number.PositiveOrZero
 import it.neckar.open.kotlin.lang.isPositiveOrZero

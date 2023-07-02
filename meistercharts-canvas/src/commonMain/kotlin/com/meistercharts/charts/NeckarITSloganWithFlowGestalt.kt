@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.color.Color
 import com.meistercharts.color.RadialGradient
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 
 /**
@@ -48,7 +48,7 @@ class NeckarITSloganWithFlowGestalt(
     dark()
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.apply {
       enableZoomAndTranslation = false
 

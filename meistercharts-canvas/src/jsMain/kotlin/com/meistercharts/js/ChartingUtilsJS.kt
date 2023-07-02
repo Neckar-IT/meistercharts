@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontFamily
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontStyle
-import com.meistercharts.canvas.FontVariant
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontFamily
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontStyle
+import com.meistercharts.font.FontVariant
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.geometry.Coordinates

@@ -16,6 +16,8 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.canvas.mock.MockCanvasRenderingContext
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.canvas.text.StringShortener
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 

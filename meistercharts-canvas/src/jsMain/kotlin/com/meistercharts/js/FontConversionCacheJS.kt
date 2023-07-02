@@ -15,10 +15,10 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontStyle
-import com.meistercharts.canvas.FontVariant
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontStyle
+import com.meistercharts.font.FontVariant
+import com.meistercharts.font.FontWeight
 import it.neckar.open.collections.cache
 
 /**

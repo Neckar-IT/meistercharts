@@ -46,8 +46,8 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.FixedChartGestalt
@@ -296,7 +296,7 @@ class BulletChartGestalt constructor(
       categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
     }
 
-    configureBuilder { meisterChartBuilder: MeisterChartBuilder ->
+    configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 
       meisterChartBuilder.configure {

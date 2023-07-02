@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.fonts
+package com.meistercharts.font
 
-import com.meistercharts.canvas.AlignmentCorrectionInformation
 import com.meistercharts.canvas.Canvas
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontMetrics
 import com.meistercharts.model.VerticalAlignment
 import it.neckar.open.unit.other.Normalized
 import it.neckar.open.unit.other.Scaled
@@ -233,7 +230,7 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
   abstract fun ImageData.containsPixel(y: Int): Boolean
 
   companion object {
-    private val logger = LoggerFactory.getLogger("com.meistercharts.fonts.AbstractCanvasFontMetricsCalculator")
+    private val logger = LoggerFactory.getLogger("com.meistercharts.font.AbstractCanvasFontMetricsCalculator")
 
     /**
      * The character for the accent line

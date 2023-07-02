@@ -16,9 +16,9 @@
 package com.meistercharts.js
 
 import com.meistercharts.canvas.CanvasType
-import com.meistercharts.canvas.FontDescriptor
+import com.meistercharts.font.FontDescriptor
 import com.meistercharts.canvas.saved
-import com.meistercharts.fonts.AbstractCanvasFontMetricsCalculator
+import com.meistercharts.font.AbstractCanvasFontMetricsCalculator
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment

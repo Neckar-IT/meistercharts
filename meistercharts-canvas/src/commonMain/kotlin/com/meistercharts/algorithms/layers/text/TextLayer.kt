@@ -23,8 +23,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.LineSpacing
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved

@@ -16,13 +16,13 @@
 package com.meistercharts.charts
 
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 
 /**
  * Adds a version number layer
  */
 class VersionNumberGestalt : ChartGestalt {
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
       layers.addVersionNumberHidden()
     }

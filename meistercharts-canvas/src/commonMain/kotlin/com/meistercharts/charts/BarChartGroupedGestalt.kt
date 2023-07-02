@@ -62,9 +62,9 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.support.CategoryAxisSupport

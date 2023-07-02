@@ -19,7 +19,7 @@ import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.bar.applyStyle
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.charts.HistogramGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 
 /**
  * The api towards the browser that supports the creation and manipulation of a histogram
@@ -27,7 +27,7 @@ import com.meistercharts.js.MeisterChartJS
 @JsExport
 class Histogram internal constructor(
   internal val gestalt: HistogramGestalt,
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<HistogramData, HistogramStyle>(meisterChart) {
 
   init {

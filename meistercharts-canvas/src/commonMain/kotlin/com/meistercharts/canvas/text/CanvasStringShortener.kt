@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.canvas.text
 
+import com.meistercharts.canvas.CanvasRenderingContext
 import it.neckar.open.collections.genericBinarySearchLeft
 import it.neckar.open.unit.other.px
 

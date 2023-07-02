@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.font
 
 /**
- * Selects a normal, or small-caps face from a font family
+ * Special implementation that optimizes the center alignment to be visually pleasing.
  *
- * [CSS font-variant](https://developer.mozilla.org/de/docs/Web/CSS/font-variant)
- *
- * Attention! small-caps may lead to unforeseen problems! Use with care.
+ * This is especially important if aligning (number) values to ticks
  */
-enum class FontVariant {
-  /**
-   * A normal font variant
-   */
-  Normal,
+object FontCenterAlignmentStrategy {
 
   /**
-   * Attention! This may lead to unforeseen problems. Use with care
+   * Calculates the offset from the center for the given height of the capital "h"
    */
-  SmallCaps
+  fun calculateCenterOffset(capitalHHeight: Double): Double {
+    return -capitalHHeight * 0.02 //hard coded value to improve the position of the center line
+  }
 }

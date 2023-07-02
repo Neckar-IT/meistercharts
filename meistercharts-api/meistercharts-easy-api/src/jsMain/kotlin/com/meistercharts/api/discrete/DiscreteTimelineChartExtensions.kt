@@ -33,7 +33,7 @@ import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
 import com.meistercharts.api.toModelSizes
 import com.meistercharts.api.toNumberFormat
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.design.Theme
 import com.meistercharts.history.DataSeriesId
@@ -56,7 +56,7 @@ private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.Dis
 /**
  * Overwrites defaults set by the gestalt
  */
-fun MeisterChartBuilder.applyDiscreteTimelineChartEasyApiDefaults() {
+fun MeisterchartBuilder.applyDiscreteTimelineChartEasyApiDefaults() {
   zoomAndTranslationConfiguration {
     //ATTENTION: Copied from DiscreteTimelineChartGestalt#init
     translateAxisSelection = AxisSelection.X

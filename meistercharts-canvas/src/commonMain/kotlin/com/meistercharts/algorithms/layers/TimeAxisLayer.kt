@@ -32,8 +32,8 @@ import com.meistercharts.axis.TimeTickDistance
 import com.meistercharts.axis.TimeUnits
 import com.meistercharts.axis.valueAt
 import com.meistercharts.calc.TimeChartCalculator
-import com.meistercharts.canvas.CanvasStringShortener
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color

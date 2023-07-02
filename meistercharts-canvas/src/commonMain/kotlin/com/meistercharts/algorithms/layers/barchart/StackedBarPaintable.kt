@@ -26,11 +26,11 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisOrientationX
 import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.canvas.BorderRadius
-import com.meistercharts.canvas.CanvasStringShortener
+import com.meistercharts.model.BorderRadius
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor

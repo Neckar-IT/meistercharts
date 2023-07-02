@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.js
-
-import com.meistercharts.canvas.CanvasFactory
-import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.MeisterChartsFactory
+package com.meistercharts.font
 
 /**
- * Html/JS specific factories for chart
- *
+ * Represents a font family
  */
-class MeisterChartsFactoryJS : MeisterChartsFactory {
-  override val canvasFactory: CanvasFactory = CanvasFactoryJS()
+data class FontFamily(val family: String) {
+  companion object {
+    val SansSerif: FontFamily = FontFamily("sans-serif")
+    val Serif: FontFamily = FontFamily("serif")
+    val Monospace: FontFamily = FontFamily("monospace")
+    val FontAwesome: FontFamily = FontFamily("FontAwesome")
+  }
 
-  override fun createChart(chartSupport: ChartSupport, description: String): MeisterChartJS {
-    return MeisterChartJS(chartSupport, description)
+  override fun toString(): String {
+    return family
   }
 }

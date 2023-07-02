@@ -39,7 +39,7 @@ interface CanvasFactory {
      * Returns the canvas factory
      */
     fun get(): CanvasFactory {
-      return meisterChartsFactory().canvasFactory
+      return MeisterchartFactory.get().canvasFactory
     }
   }
 }

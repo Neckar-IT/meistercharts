@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas
+package com.meistercharts.font
 
 /**
- * Represents a font family
+ * Selects a normal, or small-caps face from a font family
+ *
+ * [CSS font-variant](https://developer.mozilla.org/de/docs/Web/CSS/font-variant)
+ *
+ * Attention! small-caps may lead to unforeseen problems! Use with care.
  */
-data class FontFamily(val family: String) {
-  companion object {
-    val SansSerif: FontFamily = FontFamily("sans-serif")
-    val Serif: FontFamily = FontFamily("serif")
-    val Monospace: FontFamily = FontFamily("monospace")
-    val FontAwesome: FontFamily = FontFamily("FontAwesome")
-  }
+enum class FontVariant {
+  /**
+   * A normal font variant
+   */
+  Normal,
 
-  override fun toString(): String {
-    return family
-  }
+  /**
+   * Attention! This may lead to unforeseen problems. Use with care
+   */
+  SmallCaps
 }

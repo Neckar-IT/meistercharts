@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.loop.PaintingLoopIndex
 
 /**
  * Tagging interface for calculated layout variables.

@@ -16,7 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Insets
 import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 
@@ -24,7 +24,7 @@ import com.meistercharts.resize.ResetToDefaultsOnWindowResize
  * Configures a chart to have a fixed size and zoom
  */
 class FixedChartGestalt(contentViewportMargin: @Zoomed Insets = Insets.empty) : FitContentInViewportGestalt(contentViewportMargin) {
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     super.configure(meisterChartBuilder)
 
     meisterChartBuilder.apply {

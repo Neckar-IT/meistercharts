@@ -17,7 +17,7 @@ package com.meistercharts.api.compass
 
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.charts.PuristicCompassGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.open.provider.DoubleProvider
 
 /**
@@ -27,7 +27,7 @@ import it.neckar.open.provider.DoubleProvider
 class Compass internal constructor(
   internal val gestalt: PuristicCompassGestalt,
 
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<CompassData, CompassStyle>(meisterChart) {
 
   init {

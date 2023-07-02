@@ -22,8 +22,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.ZIndex
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.LineSpacing
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.canvas.layout.cache.ObjectsCache

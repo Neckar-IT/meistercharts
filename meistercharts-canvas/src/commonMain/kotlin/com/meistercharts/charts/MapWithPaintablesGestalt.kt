@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.legend.LegendLayer
 import com.meistercharts.algorithms.layers.slippymap.PaintableOnSlippyMap
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
@@ -71,7 +71,7 @@ class MapWithPaintablesGestalt(
     entriesGap = 10.0
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     mapGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {

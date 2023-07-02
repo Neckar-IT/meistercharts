@@ -16,15 +16,10 @@
 package com.meistercharts
 
 actual fun extractEnvironment(oldEnvironment: Environment): Environment {
-  if (oldEnvironment.devicePixelRatio == mainScreenDevicePixelRatio) {
+  if (oldEnvironment.devicePixelRatio == Meistercharts.mainScreenDevicePixelRatio) {
     return oldEnvironment
   }
 
   // TODO detect whether multi-touch is supported
-  return Environment(false, mainScreenDevicePixelRatio)
+  return Environment(false, Meistercharts.mainScreenDevicePixelRatio)
 }
-
-/**
- * The device pixel ratio for the main screen
- */
-var mainScreenDevicePixelRatio: Double = 1.0

@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.resolve
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextWithPaintable

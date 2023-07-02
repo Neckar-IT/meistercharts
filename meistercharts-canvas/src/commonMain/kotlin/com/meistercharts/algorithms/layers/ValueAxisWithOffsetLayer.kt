@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.OffsetTickCalculator
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction

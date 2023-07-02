@@ -19,9 +19,7 @@ import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontMetrics
-import com.meistercharts.canvas.calculateOffsetYForGap
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
