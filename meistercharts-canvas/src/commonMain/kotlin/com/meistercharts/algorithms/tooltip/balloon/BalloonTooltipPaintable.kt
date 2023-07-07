@@ -26,7 +26,7 @@ import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
@@ -67,7 +67,7 @@ class BalloonTooltipPaintable(
   /**
    * The painting variables for the balloon tooltip - and content
    */
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     /**
      * The total width - inclusive content padding
      */

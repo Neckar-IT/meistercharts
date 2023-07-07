@@ -15,7 +15,6 @@
  */
 package com.meistercharts.history.generator
 
-import com.meistercharts.time.TimeRange
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -29,6 +28,7 @@ import com.meistercharts.history.createDefaultHistoryConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.valueAt
+import com.meistercharts.time.TimeRange
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.requireFinite
@@ -176,10 +176,6 @@ class HistoryChunkGenerator(
       return null
     }
 
-    lastCreatedTimeStamp?.let { lastCreatedTimeStamp ->
-      require(lastCreatedTimeStamp < timeRange.start) { "time range $timeRange must lie before last created timestamp ${lastCreatedTimeStamp.formatUtc()}" }
-    }
-
     @ms val timestamps = mutableListOf<@ms Double>()
     @ms var timestampToAdd = timeRange.start
     while (timestampToAdd < timeRange.end) {
@@ -228,7 +224,7 @@ class HistoryChunkGenerator(
       )
     }
 
-    lastCreatedTimeStamp = chunk.lastTimeStamp()
+    lastCreatedTimeStamp = maxOf(chunk.lastTimeStamp(), lastCreatedTimeStamp ?: Double.MIN_VALUE)
     return chunk
   }
 }

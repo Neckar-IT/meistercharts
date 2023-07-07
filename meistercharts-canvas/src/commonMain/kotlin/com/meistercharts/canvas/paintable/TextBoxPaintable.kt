@@ -38,7 +38,7 @@ class TextBoxPaintable(
     return paintingVariables
   }
 
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     override fun calculate(paintingContext: LayerPaintingContext) {
       super.calculate(paintingContext)
 

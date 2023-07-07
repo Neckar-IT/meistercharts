@@ -22,7 +22,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Orientation
 import com.meistercharts.geometry.Rectangle
@@ -55,7 +55,7 @@ class StackedPaintablesPaintable(
   /**
    * The painting variables
    */
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     /**
      * Calculates the layout for the paintables
      */

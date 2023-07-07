@@ -15,18 +15,23 @@
  */
 package com.meistercharts.history
 
-import it.neckar.open.time.nowMillis
-import it.neckar.open.async.Async
-import it.neckar.open.unit.si.ms
 import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.impl.RecordingType
+import it.neckar.open.async.Async
+import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.si.ms
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
 /**
- * Caches history store calls
+ * Caches history store calls.
+ *
+ * Attention: This class should only be used to schedule many, small changes.
+ * This happens for example when a chart is updated in real time ("recording").
+ * Do not use this method to add large chunks. Add large chunks directly to the storage.
  */
-class HistoryStorageCache constructor(
+class HistoryStorageCache(
   /**
    * The history that is cached
    */
@@ -57,6 +62,20 @@ class HistoryStorageCache constructor(
    * Schedules the given [chunk] to be stored into the [history].
    */
   fun scheduleForStore(chunk: HistoryChunk, samplingPeriod: SamplingPeriod) {
+    scheduledChunk?.let { currentlyScheduled ->
+      //Check if it necessary to add the currently scheduled chunk first
+
+      if (currentlyScheduled.firstTimestamp > chunk.lastTimestamp) {
+        //adding an old chunk - insert the current chunk immediately
+        insertScheduledChunk(samplingPeriod)
+      }
+
+      if (currentlyScheduled.timeStampsCount >= 600) {
+        //chunk is full, insert immediately
+        insertScheduledChunk(samplingPeriod)
+      }
+    }
+
     scheduledChunk = scheduledChunk?.let {
       it.merge(chunk, it.firstTimestamp, chunk.lastTimestamp + 1)
     } ?: chunk

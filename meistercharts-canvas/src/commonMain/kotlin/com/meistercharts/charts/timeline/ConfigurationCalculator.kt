@@ -87,6 +87,16 @@ class ConfigurationCalculator(
   }
 
   fun createMinZoomXProvider(gestalt: TimeLineChartGestalt): @pct DoubleProvider {
+    if (true) {
+      //Disable the calculation based on the available data for now.
+      val maxSamplingPeriod = SamplingPeriod.EveryHour //max sampling period - we have some bugs with larger values
+      @ms val maxContentAreaDuration = maxPointsPer1000px * maxSamplingPeriod.distance
+
+      return DoubleProvider {
+        calculateMinZoomX(maxContentAreaDuration)
+      }
+    }
+
     val historyStorage = gestalt.data.historyStorage
 
     return DoubleProvider {

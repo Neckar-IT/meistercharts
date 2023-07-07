@@ -23,7 +23,7 @@ import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.geometry.Rectangle
@@ -54,7 +54,7 @@ class VerticallyStackedLabelsPaintable(
     return paintingVariables
   }
 
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     @px
     var rowHeightWithoutGap: Double = Double.NaN
 

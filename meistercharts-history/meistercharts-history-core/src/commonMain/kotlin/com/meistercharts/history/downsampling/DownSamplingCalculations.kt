@@ -26,6 +26,9 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValuesBuilder
 import com.meistercharts.history.impl.RecordingType
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
@@ -39,6 +42,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.downsampling.DownSamplingCalculations")
 
 /**
  * Creates a new down sampled bucket for the given children.
@@ -82,7 +86,6 @@ fun HistoryBucketDescriptor.calculateDownSampled(
 ): HistoryBucket {
   require(childChunks.isNotEmpty()) { "At least one bucket required for down sampling" }
 
-
   require(childChunks.first().firstTimestamp >= this.start) {
     "Invalid child bucket start <${childChunks.first().firstTimestamp.formatUtc()}> while descriptor start is <${this.start.formatUtc()}> for bucket range <${this.bucketRange}>"
   }
@@ -91,6 +94,8 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   }
 
   val firstChunk = childChunks.first()
+
+  logger.debug { "Calculating downsampling with ${childChunks.size()} chunks. Start: ${firstChunk.firstTimestamp.formatUtc()}. End: ${childChunks.last().lastTimestamp.formatUtc()}" }
 
   //Contains all possible timestamps for the (new) down sampled bucket
   val timestampsIterator = DownSamplingTargetTimestampsIterator.create(this)

@@ -214,9 +214,9 @@ data class HistoryQueryDescriptor(
   val end: @ms Double,
 
   /**
-   * The distance between two data points
+   * The duration between two data points
    */
-  val distanceBetweenDataPoints: @ms Double,
+  val durationBetweenSamples: @ms Double,
 )
 
 /**

@@ -15,10 +15,10 @@
  */
 package com.meistercharts.history.downsampling
 
-import com.meistercharts.time.TimeRange
-import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.ObservableHistoryStorage
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
 
 /**
  * A service that registers itself at a history access / storage and automatically calculates the down sampling if necessary
@@ -65,7 +65,7 @@ class DownSamplingDirtyRangesCollector {
  * Observes the given history storage and marks relevant areas as dirty
  */
 fun DownSamplingDirtyRangesCollector.observe(historyStorage: ObservableHistoryStorage) {
-  historyStorage.observe { _, updateInfo ->
+  historyStorage.observe { updateInfo ->
     updateInfo.samplingPeriod.above()?.let {
       markAsDirty(it, updateInfo.updatedTimeRanges)
     }

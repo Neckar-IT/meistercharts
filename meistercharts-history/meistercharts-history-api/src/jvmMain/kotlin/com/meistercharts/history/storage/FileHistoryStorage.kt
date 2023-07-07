@@ -37,7 +37,6 @@ import it.neckar.open.io.writeTextWithRename
 import it.neckar.open.time.millis
 import it.neckar.open.time.millisToUtc
 import kotlinx.coroutines.*
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -58,7 +57,7 @@ class FileHistoryStorage(
   }
 
 
-  internal val downSamplingService: DownSamplingService = DownSamplingService(this)
+  internal val downSamplingService: DownSamplingService<FileHistoryStorage> = DownSamplingService(this)
   val historyBucketUpdates: MutableList<HistoryBucket> = mutableListOf()
 
   init {
@@ -84,7 +83,7 @@ class FileHistoryStorage(
   }
 
   fun scheduleDownSampling() {
-    downSamplingService.scheduleDownSampling(this)
+    downSamplingService.scheduleDownSampling()
   }
 
   /**
@@ -192,11 +191,11 @@ class FileHistoryStorage(
     historyBucketUpdates.add(bucket)
 
     observers.fastForEach {
-      it(descriptor, updateInfo)
+      it(updateInfo)
     }
   }
 
-  fun getUpdates() : MutableList<HistoryBucket> {
+  fun getUpdates(): MutableList<HistoryBucket> {
     val copy = historyBucketUpdates.toMutableList()
     return copy.also { historyBucketUpdates.clear() }
   }
@@ -207,8 +206,9 @@ class FileHistoryStorage(
     val file = File(parentFile, getFileName(descriptor))
 
     file.delete()
+    val updateInfo = HistoryUpdateInfo.from(descriptor)
     observers.fastForEach {
-      it(descriptor, HistoryUpdateInfo.from(descriptor))
+      it(updateInfo)
     }
   }
 

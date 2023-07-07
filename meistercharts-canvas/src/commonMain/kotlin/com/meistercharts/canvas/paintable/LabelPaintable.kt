@@ -46,7 +46,7 @@ class LabelPaintable(
     return paintingVariables
   }
 
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     var label: String? = null
 
     override fun calculate(paintingContext: LayerPaintingContext) {

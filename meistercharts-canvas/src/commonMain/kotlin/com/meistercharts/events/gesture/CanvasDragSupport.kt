@@ -250,6 +250,7 @@ fun CanvasDragSupport.connectedMouseEventHandler(modifierCombination: ModifierCo
 /**
  * Creates a touch event handler that can be registered to update the drag handler
  */
+@Deprecated("Touch not supported at the moment")
 fun CanvasDragSupport.connectedTouchEventHandler(
   /**
    * The number of touches required to recognize a drag

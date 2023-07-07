@@ -133,8 +133,12 @@ class CurrentTransform {
    * ATTENTION: Scale is respected!
    */
   fun translateScaled(deltaX: Double, deltaY: Double) {
-    translationX += deltaX * scaleX
-    translationY += deltaY * scaleY
+    if (deltaX != 0.0) {
+      translationX += deltaX * scaleX
+    }
+    if (deltaY != 0.0) {
+      translationY += deltaY * scaleY
+    }
   }
 
   /**

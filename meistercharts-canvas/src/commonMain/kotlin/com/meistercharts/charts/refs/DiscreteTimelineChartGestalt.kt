@@ -15,12 +15,6 @@
  */
 package com.meistercharts.charts.refs
 
-import com.meistercharts.resize.KeepOriginOnWindowResize
-import com.meistercharts.time.TimeRange
-import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.axis.AxisSelection
-import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.zoom.MoveDomainValueToLocation
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
@@ -37,7 +31,6 @@ import com.meistercharts.algorithms.layers.referenceEntryId
 import com.meistercharts.algorithms.layers.status
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.algorithms.tile.DefaultHistoryGapCalculator
@@ -51,6 +44,7 @@ import com.meistercharts.algorithms.tooltip.balloon.DiscreteSeriesModelBalloonTo
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
@@ -58,6 +52,7 @@ import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
+import com.meistercharts.color.Color
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -73,7 +68,12 @@ import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.provider.delegate
+import com.meistercharts.resize.KeepOriginOnWindowResize
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.zoom.FittingWithMargin
+import com.meistercharts.zoom.MoveDomainValueToLocation
+import com.meistercharts.zoom.UpdateReason
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
@@ -382,7 +382,7 @@ class DiscreteTimelineChartGestalt(
     configure {
       chartSupport.windowResizeBehavior = KeepOriginOnWindowResize //keep the top left corner
 
-      historyStorage.observe { _, _ ->
+      historyStorage.observe { _ ->
         this.markAsDirty(DirtyReason.DataUpdated)
       }
 

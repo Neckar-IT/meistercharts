@@ -34,7 +34,7 @@ class HistoryStorageQueryMonitor<HistoryStorageType : ObservableHistoryStorage>(
    * The max size of the [knownDescriptors] set
    */
   private val knownDescriptorsMaxSize: Int = 10_000,
-  ) : HistoryStorage, ObservableHistoryStorage {
+) : HistoryStorage, ObservableHistoryStorage {
 
   /**
    * Remember the last descriptor that was queried.
@@ -108,6 +108,16 @@ class HistoryStorageQueryMonitor<HistoryStorageType : ObservableHistoryStorage>(
 
   override fun observe(observer: HistoryObserver) {
     historyStorage.observe(observer)
+  }
+
+  /**
+   * This method clears the known descriptors.
+   * The callbacks will be called again for already known descriptors.
+   *
+   * This method must be called if the history has been cleared.
+   */
+  fun clearKnownDescriptors() {
+    knownDescriptors.clear()
   }
 }
 

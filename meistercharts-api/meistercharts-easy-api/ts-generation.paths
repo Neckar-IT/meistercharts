@@ -5,6 +5,7 @@
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/painter/stripe/enums/EnumAggregationMode.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/painter/stripe/refentry/DiscreteEntryAggregationMode.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/whatsat/ResultElementType.kt
+../../meistercharts-history/meistercharts-history-core/src/commonMain/kotlin/com/meistercharts/history/DownSamplingMode.kt
 src/jsMain/kotlin/MeisterCharts.kt
 src/jsMain/kotlin/com/meistercharts/api/ApiModelClasses.kt
 src/jsMain/kotlin/com/meistercharts/api/EnumConfiguration.kt

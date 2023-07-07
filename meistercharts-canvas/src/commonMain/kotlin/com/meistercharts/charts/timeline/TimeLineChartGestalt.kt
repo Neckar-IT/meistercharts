@@ -15,9 +15,6 @@
  */
 package com.meistercharts.charts.timeline
 
-import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
@@ -82,7 +79,6 @@ import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.axis.AxisSelection
-import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
@@ -136,15 +132,16 @@ import com.meistercharts.history.generator.ReferenceEntryGenerator
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
-import com.meistercharts.range.LinearValueRange
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
-import com.meistercharts.range.ValueRange
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.SizedLabelsProvider
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.state.ChartState
 import com.meistercharts.state.withContentAreaSize
 import com.meistercharts.state.withContentViewportMargin
@@ -154,6 +151,9 @@ import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
 import com.meistercharts.style.withFillIfNull
 import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.zoom.FittingWithMargin
+import com.meistercharts.zoom.UpdateReason
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
@@ -1142,7 +1142,7 @@ class TimeLineChartGestalt
           // client that uses the gestalt. However, this automatic set-up might be useful
           // for every client.
           val tileInvalidator: HistoryTileInvalidator = DefaultHistoryTileInvalidator()
-          (data.historyStorage as? ObservableHistoryStorage)?.observe { _, updateInfo ->
+          (data.historyStorage as? ObservableHistoryStorage)?.observe { updateInfo ->
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {

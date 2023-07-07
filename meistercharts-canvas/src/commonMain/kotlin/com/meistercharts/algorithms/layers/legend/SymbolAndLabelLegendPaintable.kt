@@ -27,7 +27,7 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.geometry.Coordinates
@@ -70,7 +70,7 @@ class SymbolAndLabelLegendPaintable(
     return paintingVariables
   }
 
-  private var paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private var paintingVariables = object : AbstractPaintablePaintingVariables() {
     var labelsCount: Int = 0
 
     /**

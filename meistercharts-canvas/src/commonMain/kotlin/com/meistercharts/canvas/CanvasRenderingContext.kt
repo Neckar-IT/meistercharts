@@ -550,10 +550,15 @@ interface CanvasRenderingContext : SupportsPathActions {
   )
 
   /**
-   * Activates the shadow
+   * Activates the shadow.
+   * If null is provided, the shadow is reset
    */
-  fun shadow(shadow: Shadow = Shadow.Default) {
-    shadow(shadow.color, shadow.blurRadius, shadow.offsetX, shadow.offsetY)
+  fun shadow(shadow: Shadow? = Shadow.Default) {
+    if (shadow == null) {
+      clearShadow()
+    } else {
+      shadow(shadow.color, shadow.blurRadius, shadow.offsetX, shadow.offsetY)
+    }
   }
 
   /**
@@ -815,6 +820,13 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   fun strokeStyle(color: CanvasPaint)
 
+  var strokeStyle: String
+    @Deprecated(level = DeprecationLevel.ERROR, message = "Only setter supported")
+    get() = throw UnsupportedOperationException("Only setter supported")
+    set(value) {
+      strokeStyle(Color.web(value))
+    }
+
   /**
    * Sets the stroke style
    */
@@ -914,6 +926,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Only for debugging purposes
    */
   fun currentFillDebug(): String
+
   /**
    * Returns a string representation of the current fill
    * Only for debugging purposes

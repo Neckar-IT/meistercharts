@@ -33,8 +33,12 @@ data class Shadow(
      * Default shadow - without offset
      */
     val Default: Shadow = Shadow()
+
     val Light: Shadow = Shadow(color = Color.darkgray, blurRadius = 5.0)
     val LightDrop: Shadow = Shadow(color = Color.darkgray, blurRadius = 5.0, offsetX = 1.0, offsetY = 1.0)
+
+    val DropHigh: Shadow = Shadow(color = Color.darkergray, blurRadius = 7.0, offsetX = 2.0, offsetY = 2.0)
     val Drop: Shadow = Shadow(color = Color.darkergray, blurRadius = 5.0, offsetX = 1.0, offsetY = 1.0)
+    val DropSmall: Shadow = Shadow(color = Color.darkergray, blurRadius = 3.0, offsetX = 1.0, offsetY = 1.0)
   }
 }

@@ -15,7 +15,6 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
@@ -55,9 +54,11 @@ import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.design.Theme
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
+import com.meistercharts.history.DownSamplingMode
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryEnum
@@ -68,9 +69,9 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.js.MeisterchartJS
-import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
+import com.meistercharts.zoom.UpdateReason
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
@@ -81,6 +82,7 @@ import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.unit.other.px
+import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.si.s
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
@@ -194,6 +196,21 @@ class TimeLineChart internal constructor(
     logger.debug("TimeLineChartGestalt.setData", jsData)
 
     jsData.historySettings?.let { jsHistorySettings ->
+      jsHistorySettings.downSamplingMode?.sanitize()?.let {
+        logger.debug("TimeLineChartGestalt.setData", "downSamplingMode: $it")
+
+        when (it) {
+          DownSamplingMode.Automatic -> {
+            logger.debug("--> scheduleDownSampling")
+            historyStorage.scheduleDownSampling()
+          }
+
+          DownSamplingMode.None -> {
+            logger.debug("--> stopDownSampling")
+            historyStorage.stopDownSampling()
+          }
+        }
+      }
 
       jsHistorySettings.durationBetweenSamples?.sanitize()?.let { duration ->
         configurationAssistant.setDurationBetweenSamples(duration)
@@ -491,7 +508,8 @@ class TimeLineChart internal constructor(
   }
 
   /**
-   * Adds samples to the history stored by this chart
+   * Adds samples to the history stored by this chart.
+   * Uses the natural sampling period of the history storage.
    */
   @Suppress("unused")
   @JsName("addSamples")
@@ -509,12 +527,43 @@ class TimeLineChart internal constructor(
   }
 
   /**
+   * Adds samples to the history stored by this chart.
+   *
+   * Uses the given distance between samples to calculate the sampling period.
+   */
+  @Suppress("unused")
+  @JsName("addSamplesDirectly")
+  fun addSamplesDirectly(jsSamples: Array<Sample>, durationBetweenSamples: @ms Double) {
+    if (jsSamples.isEmpty()) {
+      return
+    }
+
+    loggerSamples.debug("addSamplesDirectly with durationBetweenSamples of $durationBetweenSamples", jsSamples)
+
+    val samplingPeriod = SamplingPeriod.withMaxDistance(durationBetweenSamples)
+
+    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
+    TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
+      historyStorageCache.scheduleForStore(it, samplingPeriod)
+    }
+  }
+
+  /**
    * Removes all samples added to the history
    */
   @Suppress("unused")
   fun clearHistory() {
+    logger.debug("clearHistory called")
     historyStorageCache.clear()
     historyStorage.clear()
+
+    //Forget about the know descriptors - will notify the client about the change
+    historyStorageQueryMonitor.clearKnownDescriptors()
+
+    //Clear the tile cache for this chart to enforce recreation of the tiles. The [historyStorageQueryMonitor] will then be called
+    gestalt.timeLineChartGestalt.tileProvider.clear()
+
+    markAsDirty()
   }
 
   /**

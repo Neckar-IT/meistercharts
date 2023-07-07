@@ -15,7 +15,6 @@
  */
 package com.meistercharts.history.impl
 
-import com.meistercharts.time.TimeRange
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
@@ -38,6 +37,10 @@ import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
+import com.meistercharts.time.TimeRange
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.BSearchResult
 import it.neckar.open.collections.DoubleArrayList
@@ -533,12 +536,17 @@ data class HistoryChunk(
    *
    */
   fun merge(other: HistoryChunk, start: @Inclusive Double, end: @Exclusive Double): HistoryChunk? {
+    require(start < end) { "start must be before end. Was ${start.formatUtc()} - ${end.formatUtc()}" }
+    logger.debug { "merge($other, ${start.formatUtc()}, ${end.formatUtc()})" }
+
     //The configurations must match - if they don't we can't merge them
     require(configuration == other.configuration) { "Configurations do not match: $configuration - ${other.configuration}." }
 
     val decimalDataSeriesCount = configuration.decimalDataSeriesCount
     val enumDataSeriesCount = configuration.enumDataSeriesCount
     val referenceEntryDataSeriesCount = configuration.referenceEntryDataSeriesCount
+
+    require(recordingType == other.recordingType) { "recordingType must match. Was $recordingType - ${other.recordingType}" }
 
     //At the moment this method is only used for measured chunks, we can not merge calculate chunks at the moment
     require(recordingType == RecordingType.Measured) { "only supported for RecordingType.Measured at the moment" }
@@ -897,7 +905,7 @@ data class HistoryChunk(
    * Returns true if this chunk contains any data from the given range
    */
   fun containsAny(start: @Inclusive @ms Double, end: @Exclusive @ms Double): Boolean {
-    require(start < end) { "start <$start> must be smaller than end <$end>" }
+    require(start < end) { "start <${start.formatUtc()}> must be smaller than end <${end.formatUtc()}>" }
 
     if (isEmpty()) {
       return false
@@ -914,7 +922,7 @@ data class HistoryChunk(
    * Returns only the given range
    */
   fun range(start: @Inclusive @ms Double, end: @Exclusive @ms Double): HistoryChunk? {
-    require(start < end) { "Start $start must be smaller than end $end" }
+    require(start < end) { "start ${start.formatUtc()} must be smaller than end ${end.formatUtc()}" }
 
     //Handle simple cases first)
     if (start <= firstTimeStamp() && end > lastTimeStamp()) {
@@ -1009,6 +1017,10 @@ data class HistoryChunk(
   }
 
   override fun toString(): String {
+    if (timeStampsCount == 0) {
+      return "HistoryChunk(time stamps: $timeStampsCount, total data series: $totalDataSeriesCount)"
+    }
+
     return "HistoryChunk(${firstTimestamp.formatUtc()} - ${lastTimestamp.formatUtc()}, time stamps: $timeStampsCount, total data series: $totalDataSeriesCount)"
   }
 
@@ -1222,6 +1234,8 @@ data class HistoryChunk(
   }
 
   companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.impl.HistoryChunk")
+
     /**
      * This value implies that a sample has been taken but the sample does not contain a valid value for the data series.
      */
