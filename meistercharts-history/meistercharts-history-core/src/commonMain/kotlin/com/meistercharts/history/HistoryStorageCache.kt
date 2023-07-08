@@ -16,8 +16,10 @@
 package com.meistercharts.history
 
 import com.meistercharts.history.impl.HistoryChunk
-import com.meistercharts.history.impl.RecordingType
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.async.Async
+import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration
@@ -54,6 +56,11 @@ class HistoryStorageCache(
     private set
 
   /**
+   * The sampling period of the scheduled chunk
+   */
+  private var samplingPeriodForScheduledChunk: SamplingPeriod? = null
+
+  /**
    * The last time a scheduled chunk has been added
    */
   private var lastInsertionTime: @ms Double = 0.0
@@ -62,23 +69,31 @@ class HistoryStorageCache(
    * Schedules the given [chunk] to be stored into the [history].
    */
   fun scheduleForStore(chunk: HistoryChunk, samplingPeriod: SamplingPeriod) {
+    logger.debug("scheduleForStore called with chunk ${chunk.firstTimestamp.formatUtc()} - ${chunk.lastTimestamp.formatUtc()} @ $samplingPeriod with ${chunk.timeStampsCount}")
+
     scheduledChunk?.let { currentlyScheduled ->
       //Check if it necessary to add the currently scheduled chunk first
 
       if (currentlyScheduled.firstTimestamp > chunk.lastTimestamp) {
         //adding an old chunk - insert the current chunk immediately
-        insertScheduledChunk(samplingPeriod)
+        insertScheduledChunk()
       }
 
       if (currentlyScheduled.timeStampsCount >= 600) {
         //chunk is full, insert immediately
-        insertScheduledChunk(samplingPeriod)
+        insertScheduledChunk()
+      }
+
+      if (samplingPeriodForScheduledChunk != samplingPeriod) {
+        //sampling period changed, insert immediately
+        insertScheduledChunk()
       }
     }
 
     scheduledChunk = scheduledChunk?.let {
       it.merge(chunk, it.firstTimestamp, chunk.lastTimestamp + 1)
     } ?: chunk
+    samplingPeriodForScheduledChunk = samplingPeriod
 
     @ms val windowMillis = window.toDouble(DurationUnit.MILLISECONDS)
 
@@ -86,14 +101,14 @@ class HistoryStorageCache(
     @ms val timeSinceLastInsertion = nowMillis() - lastInsertionTime
     if (timeSinceLastInsertion >= windowMillis) {
       //insert immediately - too long since last insertion
-      insertScheduledChunk(samplingPeriod)
+      insertScheduledChunk()
       return
     }
 
     @ms val remainingTime = windowMillis - timeSinceLastInsertion
 
     async.throttleLast(remainingTime.milliseconds, this) {
-      insertScheduledChunk(samplingPeriod)
+      insertScheduledChunk()
     }
   }
 
@@ -107,12 +122,22 @@ class HistoryStorageCache(
   /**
    * Inserts the scheduled chunk
    */
-  private fun insertScheduledChunk(samplingPeriod: SamplingPeriod) {
+  private fun insertScheduledChunk() {
     scheduledChunk?.let {
+      val samplingPeriod = samplingPeriodForScheduledChunk
+      require(samplingPeriod != null) { "Sampling period must not be null" }
+
+      logger.debug("insertScheduledChunk called with chunk ${it.firstTimestamp.formatUtc()} - ${it.lastTimestamp.formatUtc()} @ $samplingPeriod with ${it.timeStampsCount}")
+
       history.storeWithoutCache(it, samplingPeriod)
       //Remember the last insertion time
       lastInsertionTime = nowMillis()
     }
     scheduledChunk = null
+    samplingPeriodForScheduledChunk = null
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.HistoryStorageCache")
   }
 }

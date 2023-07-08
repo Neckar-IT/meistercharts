@@ -78,6 +78,7 @@ import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEachIndexed
+import it.neckar.open.formatting.formatUtc
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
@@ -179,6 +180,7 @@ class TimeLineChart internal constructor(
 
     //Fire a custom event if a new history query has been executed
     historyStorageQueryMonitor.onQueryForNewDescriptor {
+      logger.debug("history-query-update: ${it.start.formatUtc()} - ${it.end.formatUtc()} @ ${it.samplingPeriod}")
       dispatchCustomEvent("history-query-update", it.toHistoryQueryDescriptorJs())
     }
   }
