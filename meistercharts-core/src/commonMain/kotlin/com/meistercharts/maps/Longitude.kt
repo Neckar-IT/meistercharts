@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.geometry.geo
+package com.meistercharts.maps
 
 import it.neckar.open.formatting.format
 import it.neckar.open.i18n.DefaultI18nConfiguration
@@ -23,49 +23,50 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
- * The latitude (90° N - 90° S) of the location in the center of the window
+ * The longitude (180° W - 180° E) of the location in the center of the window
  *
- * Positive latitude is above the equator (N), and negative latitude is below the equator (S).
- * example: 48.48074780020653 --> North
- * example: -10.343241 --> South
+ * Positive longitude means East of the Prime Meridian, and negative longitude means West of the Prime Meridian
+ * example: 48.48074780020653 --> East
+ * example: -17.7159407 --> West
  *
- * If the Latitude is Zero Degrees (0°) the cardinal direction is North
+ * If the Longitude is Zero Degrees (0°) the cardinal direction is East
  *
  */
 @JvmInline
 @Serializable
-value class Latitude(
-  val value: @deg Double,
+value class Longitude(
+  val value: @deg Double
 ) {
   override fun toString(): String {
     return value.toString()
   }
 
-  fun isSouth(): Boolean {
-    return isNorth().not()
+  fun isWest(): Boolean {
+    return isEast().not()
   }
 
-  fun isNorth(): Boolean {
+  fun isEast(): Boolean {
     return value >= 0.0
   }
 
   /**
-   * returns the Latitude value as a formatted GPS value
-   * pattern: {degree}°{minutes}'{seconds}"{S|N}
+   * returns the Longitude value as a formatted GPS value
+   * pattern: {degree}°{minutes}'{seconds}"{E|W}
    *
    * more: https://en.wikipedia.org/wiki/Geographic_coordinate_system
    */
+  @Suppress("UNUSED_PARAMETER")
   fun format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
-    val latitudeMinutesCalculation = ((value % 1) * 60)
-    val latitudeSecondsCalculation = (latitudeMinutesCalculation % 1) * 60
+    val longitudeMinutesCalculation = ((value % 1) * 60)
+    val longitudeSecondsCalculation = (longitudeMinutesCalculation % 1) * 60
     return buildString {
       append(value.toInt())
       append("°")
-      append(latitudeMinutesCalculation.toInt())
+      append(longitudeMinutesCalculation.toInt())
       append("'")
-      append(latitudeSecondsCalculation.format(1, i18nConfiguration = i18nConfiguration))
+      append(longitudeSecondsCalculation.format(1))
       append("\"")
-      append(if (isSouth()) "S" else if (isNorth()) "N" else "")
+      append(if (isWest()) "W" else if (isEast()) "E" else "")
     }
   }
 

@@ -17,7 +17,7 @@ package com.meistercharts.whatsat
 
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.tile.TileIndex
-import com.meistercharts.geometry.geo.MapCoordinates
+import com.meistercharts.maps.MapCoordinates
 
 /**
  * Identifies a type for a result element.

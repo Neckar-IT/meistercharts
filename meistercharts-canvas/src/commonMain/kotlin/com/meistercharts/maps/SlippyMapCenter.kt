@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers.slippymap
+package com.meistercharts.maps
 
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.geometry.Distance
-import com.meistercharts.geometry.geo.Latitude
-import com.meistercharts.geometry.geo.Longitude
-import com.meistercharts.geometry.geo.MapCoordinates
 import com.meistercharts.model.Zoom
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import it.neckar.open.unit.other.deg
@@ -69,8 +66,8 @@ class SlippyMapCenter(
   }
 
   override fun defaultTranslation(chartCalculator: ChartCalculator): @Zoomed Distance {
-    @DomainRelative val relativeX = coordinates.longitudeDomainRelative()
-    @DomainRelative val relativeY = coordinates.latitudeDomainRelative()
+    @DomainRelative val relativeX = coordinates.longitude2DomainRelative()
+    @DomainRelative val relativeY = coordinates.latitude2DomainRelative()
     @Zoomed val distanceX = chartCalculator.domainRelative2zoomedX(relativeX)
     @Zoomed val distanceY = chartCalculator.domainRelative2zoomedY(relativeY)
     @Zoomed val centerOffsetX = chartCalculator.chartState.windowWidth * 0.5

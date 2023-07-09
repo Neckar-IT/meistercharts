@@ -33,6 +33,11 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.charts.ChartId
 import com.meistercharts.geometry.Coordinates
+import com.meistercharts.maps.calculateSlippyMapTileSize
+import com.meistercharts.maps.computeLatitude
+import com.meistercharts.maps.computeLongitude
+import com.meistercharts.maps.ensureSlippyMapBounds
+import com.meistercharts.maps.toSlippyMapZoom
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
 import com.meistercharts.style.Palette

@@ -18,9 +18,9 @@ package com.meistercharts.charts
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
-import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
-import com.meistercharts.algorithms.layers.slippymap.calculateSlippyMapContentAreaSize
-import com.meistercharts.algorithms.layers.slippymap.withSlippyMapZoom
+import com.meistercharts.maps.SlippyMapCenter
+import com.meistercharts.maps.calculateSlippyMapContentAreaSize
+import com.meistercharts.maps.withSlippyMapZoom
 import com.meistercharts.canvas.FixedContentAreaSize
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.SnapConfiguration

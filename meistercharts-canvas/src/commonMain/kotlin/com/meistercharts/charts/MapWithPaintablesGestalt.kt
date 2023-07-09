@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.layers.barchart.StackedBarWithLabelPaintable
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.legend.LegendLayer
 import com.meistercharts.algorithms.layers.slippymap.PaintableOnSlippyMap
-import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
+import com.meistercharts.maps.SlippyMapCenter
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
@@ -34,8 +34,8 @@ import com.meistercharts.canvas.paintable.withDefaultZoom
 import com.meistercharts.canvas.paintable.withOriginAtBottom
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
-import com.meistercharts.geometry.geo.Latitude
-import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.maps.Latitude
+import com.meistercharts.maps.Longitude
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Size
 import it.neckar.open.collections.fastForEach

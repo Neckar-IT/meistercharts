@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.layers.slippymap.domainRelative2latitude
-import com.meistercharts.algorithms.layers.slippymap.domainRelative2longitude
+import com.meistercharts.maps.domainRelative2latitude
+import com.meistercharts.maps.domainRelative2longitude
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.Tile
 import com.meistercharts.algorithms.tile.TileIdentifier
@@ -30,7 +30,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.clipToContentViewport
 import com.meistercharts.canvas.saved
 import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.geo.MapCoordinates
+import com.meistercharts.maps.MapCoordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.whatsat.ResultElementType

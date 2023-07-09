@@ -17,9 +17,9 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.geo.Latitude
-import com.meistercharts.geometry.geo.Longitude
-import com.meistercharts.geometry.geo.MapCoordinates
+import com.meistercharts.maps.Latitude
+import com.meistercharts.maps.Longitude
+import com.meistercharts.maps.MapCoordinates
 import org.junit.jupiter.api.Test
 
 @Suppress("TestMethodWithoutAssertion", "SpellCheckingInspection")
@@ -74,5 +74,4 @@ class MapCoordinatesTest {
     assertThat(MapCoordinates.neckarIt.formatMapCoordinatesToGps()).isEqualTo("""48°24'49.8"N 9°3'3.1"E""")
     assertThat(MapCoordinates(Latitude(0.0), Longitude(0.0)).formatMapCoordinatesToGps()).isEqualTo("""0°0'0.0"N 0°0'0.0"E""")
   }
-
 }

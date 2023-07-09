@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMap
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMapDe
-import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
+import com.meistercharts.maps.SlippyMapCenter
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapLayer
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapProvider
 import com.meistercharts.algorithms.layers.text.TextLayer

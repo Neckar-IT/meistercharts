@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.geometry.geo
+package com.meistercharts.maps
 
-import com.meistercharts.geometry.geo.MapCoordinates
 import kotlinx.serialization.Serializable
 
 /**

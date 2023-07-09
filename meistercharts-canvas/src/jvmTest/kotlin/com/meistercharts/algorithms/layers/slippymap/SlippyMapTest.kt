@@ -23,8 +23,24 @@ import com.meistercharts.state.DefaultChartState
 import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.geometry.geo.Latitude
-import com.meistercharts.geometry.geo.Longitude
+import com.meistercharts.maps.Latitude
+import com.meistercharts.maps.Longitude
+import com.meistercharts.maps.LatitudeBottomEdge
+import com.meistercharts.maps.LatitudeTopEdge
+import com.meistercharts.maps.LongitudeLeftEdge
+import com.meistercharts.maps.LongitudeRightEdge
+import com.meistercharts.maps.SlippyMapCenter
+import com.meistercharts.maps.SlippyMapDefaultZoom
+import com.meistercharts.maps.calculateSlippyMapContentAreaSize
+import com.meistercharts.maps.computeLongitude
+import com.meistercharts.maps.computeSlippyMapTileIndex
+import com.meistercharts.maps.domainRelative2latitude
+import com.meistercharts.maps.domainRelative2longitude
+import com.meistercharts.maps.ensureSlippyMapBounds
+import com.meistercharts.maps.tilesPerRowOrColumn
+import com.meistercharts.maps.toDomainRelativeX
+import com.meistercharts.maps.toDomainRelativeY
+import com.meistercharts.maps.toSlippyMapZoom
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import org.junit.jupiter.api.Test
@@ -78,7 +94,7 @@ internal class SlippyMapTest {
   }
 
   fun verifyLong2DomainRelativeRound(longitude: Longitude, expectedDomainRelative: @DomainRelative Double) {
-    val domainRelative = longitude2DomainRelative(longitude)
+    val domainRelative = longitude.toDomainRelativeX()
     assertThat(domainRelative, "").isCloseTo(expectedDomainRelative, 0.000001)
 
     //roundtrip
@@ -89,11 +105,11 @@ internal class SlippyMapTest {
   fun testLatitude2DomainRelativeAndBack() {
     verifyLatitude2DomainRelativeRound(LatitudeTopEdge, 0.0)
     verifyLatitude2DomainRelativeRound(LatitudeBottomEdge, 1.0)
-    assertThat(latitude2DomainRelative(Latitude(80.0))).isEqualTo(0.11225939796299506)
-    assertThat(latitude2DomainRelative(Latitude(-80.0))).isEqualTo(0.8877406020370049)
-    assertThat(latitude2DomainRelative(Latitude(0.0))).isEqualTo(0.5)
-    assertThat(latitude2DomainRelative(Latitude(11.0))).isEqualTo(0.46925498967190327)
-    assertThat(latitude2DomainRelative(Latitude(-11.0))).isEqualTo(0.5307450103280967)
+    assertThat(Latitude(80.0).toDomainRelativeY()).isEqualTo(0.11225939796299506)
+    assertThat(Latitude(-80.0).toDomainRelativeY()).isEqualTo(0.8877406020370049)
+    assertThat(Latitude(0.0).toDomainRelativeY()).isEqualTo(0.5)
+    assertThat(Latitude(11.0).toDomainRelativeY()).isEqualTo(0.46925498967190327)
+    assertThat(Latitude(-11.0).toDomainRelativeY()).isEqualTo(0.5307450103280967)
 
     verifyLatitude2DomainRelativeRound(Latitude(80.0), 0.11225939796299506)
     verifyLatitude2DomainRelativeRound(Latitude(-80.0), 0.8877406020370049)
@@ -104,7 +120,7 @@ internal class SlippyMapTest {
   }
 
   fun verifyLatitude2DomainRelativeRound(latitude: Latitude, expectedDomainRelative: @DomainRelative Double) {
-    val domainRelative = latitude2DomainRelative(latitude)
+    val domainRelative = latitude.toDomainRelativeY()
     assertThat(domainRelative, "domain relative").isCloseTo(expectedDomainRelative, 0.000001)
 
     //roundtrip
@@ -113,9 +129,9 @@ internal class SlippyMapTest {
 
   @Test
   fun longitude2DomainRelative() {
-    assertThat(longitude2DomainRelative(LongitudeLeftEdge)).isCloseTo(0.0, 0.000001)
-    assertThat(longitude2DomainRelative(LongitudeRightEdge)).isCloseTo(1.0, 0.000001)
-    assertThat(longitude2DomainRelative(Longitude(0.5 * LongitudeLeftEdge.value + 0.5 * LongitudeRightEdge.value))).isCloseTo(0.5, 0.000001)
+    assertThat(LongitudeLeftEdge.toDomainRelativeX()).isCloseTo(0.0, 0.000001)
+    assertThat(LongitudeRightEdge.toDomainRelativeX()).isCloseTo(1.0, 0.000001)
+    assertThat(Longitude(0.5 * LongitudeLeftEdge.value + 0.5 * LongitudeRightEdge.value).toDomainRelativeX()).isCloseTo(0.5, 0.000001)
     val tilesPerRow = tilesPerRowOrColumn(SlippyMapDefaultZoom)
     assertThat(tilesPerRow).isEqualTo(512)
     val longitudePerTile = 360.0 / tilesPerRow
@@ -123,15 +139,15 @@ internal class SlippyMapTest {
       val longitude = computeLongitude(SubIndex(tileSubIndexX), SlippyMapDefaultZoom)
       assertThat(longitude.value).isCloseTo(LongitudeLeftEdge.value + tileSubIndexX * longitudePerTile, 0.000001)
       val domainRelativeX = tileSubIndexX / tilesPerRow.toDouble()
-      assertThat(longitude2DomainRelative(longitude), "x=$tileSubIndexX, longitude=$longitude").isCloseTo(domainRelativeX, 0.000001)
+      assertThat(longitude.toDomainRelativeX(), "x=$tileSubIndexX, longitude=$longitude").isCloseTo(domainRelativeX, 0.000001)
     }
   }
 
   @Test
   fun latitude2DomainRelative() {
-    assertThat(latitude2DomainRelative(LatitudeTopEdge)).isCloseTo(0.0, 0.000001)
-    assertThat(latitude2DomainRelative(LatitudeBottomEdge)).isCloseTo(1.0, 0.000001)
-    assertThat(latitude2DomainRelative(Latitude(0.5 * LatitudeTopEdge.value + 0.5 * LatitudeBottomEdge.value))).isCloseTo(0.5, 0.000001) // equator
+    assertThat(LatitudeTopEdge.toDomainRelativeY()).isCloseTo(0.0, 0.000001)
+    assertThat(LatitudeBottomEdge.toDomainRelativeY()).isCloseTo(1.0, 0.000001)
+    assertThat(Latitude(0.5 * LatitudeTopEdge.value + 0.5 * LatitudeBottomEdge.value).toDomainRelativeY()).isCloseTo(0.5, 0.000001) // equator
   }
 
   @Test

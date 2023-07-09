@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers.slippymap
+package com.meistercharts.maps
 
-import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.zoom.ZoomAndTranslationModifier
-import com.meistercharts.environment
-import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
-import com.meistercharts.tile.SubIndex
-import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.environment
 import com.meistercharts.geometry.Distance
-import com.meistercharts.geometry.geo.Latitude
-import com.meistercharts.geometry.geo.Longitude
-import com.meistercharts.geometry.geo.MapCoordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import it.neckar.open.kotlin.lang.atan
 import it.neckar.open.kotlin.lang.sinh
 import it.neckar.open.kotlin.lang.toDegrees
@@ -137,47 +134,18 @@ fun computeLatitude(tileIndexY: SubIndex, zoom: Int): Latitude {
 /**
  * Converts the given longitude into a domain-relative value (horizontal)
  */
-fun longitude2DomainRelative(longitude: Longitude): @DomainRelative Double {
+fun Longitude.toDomainRelativeX(): @DomainRelative Double {
   // While the width (longitude) in degrees is constant, given a zoom level, for all tiles, this
   // does not happen for the height. In general, tiles belonging to the same row have equal height
   // in degrees, but it decreases moving from the equator to the poles.
   // Thus, we may use a linear approach to compute the domain relative value for the longitude.
-  return (longitude.value - LongitudeLeftEdge.value) / (LongitudeRightEdge.value - LongitudeLeftEdge.value)
-}
-
-/**
- * Converts a domain relative value (usually the x axis) to a longitude
- */
-fun domainRelative2longitude(domainRelativeX: @DomainRelative Double): Longitude {
-  return Longitude(domainRelativeX * (LongitudeRightEdge.value - LongitudeLeftEdge.value) + LongitudeLeftEdge.value)
-}
-
-/**
- * Returns the longitude in domain relative
- */
-fun MapCoordinates.longitudeDomainRelative(): @DomainRelative Double {
-  // While the width (longitude) in degrees is constant, given a zoom level, for all tiles, this
-  // does not happen for the height. In general, tiles belonging to the same row have equal height
-  // in degrees, but it decreases moving from the equator to the poles.
-  // Thus, we may use a linear approach to compute the domain relative value for the longitude.
-  return (longitude.value - LongitudeLeftEdge.value) / (LongitudeRightEdge.value - LongitudeLeftEdge.value)
-}
-
-fun MapCoordinates.latitudeDomainRelative(): @DomainRelative Double {
-  // While the width (longitude) in degrees is constant, given a zoom level, for all tiles, this
-  // does not happen for the height. In general, tiles belonging to the same row have equal height
-  // in degrees, but it decreases moving from the equator to the poles.
-
-  // asinh(tan(latitude.toRadians())) => [PI..-PI] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
-  // asinh(tan(latitude.toRadians())) / (2 * PI) - 0.5 => [0..-1] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
-  // -(asinh(tan(latitude.toRadians())) / (2 * PI) - 0.5) => [0..1] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
-  return -(asinh(tan(latitude.value.coerceAtLeast(LatitudeBottomEdge.value).coerceAtMost(LatitudeTopEdge.value).toRadians())) / (2 * PI) - 0.5) // equivalent to -(ln(tan((45.0 + latitude * 0.5).toRadians())) / (2 * PI) - 0.5)
+  return (value - LongitudeLeftEdge.value) / (LongitudeRightEdge.value - LongitudeLeftEdge.value)
 }
 
 /**
  * Converts the given latitude into a domain-relative value (vertical)
  */
-fun latitude2DomainRelative(latitude: Latitude): @DomainRelative Double {
+fun Latitude.toDomainRelativeY(): @DomainRelative Double {
   // While the width (longitude) in degrees is constant, given a zoom level, for all tiles, this
   // does not happen for the height. In general, tiles belonging to the same row have equal height
   // in degrees, but it decreases moving from the equator to the poles.
@@ -185,7 +153,25 @@ fun latitude2DomainRelative(latitude: Latitude): @DomainRelative Double {
   // asinh(tan(latitude.toRadians())) => [PI..-PI] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
   // asinh(tan(latitude.toRadians())) / (2 * PI) - 0.5 => [0..-1] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
   // -(asinh(tan(latitude.toRadians())) / (2 * PI) - 0.5) => [0..1] for latitude in [LatitudeTopEdge..LatitudeBottomEdge]
-  return -(asinh(tan(latitude.value.coerceAtLeast(LatitudeBottomEdge.value).coerceAtMost(LatitudeTopEdge.value).toRadians())) / (2 * PI) - 0.5) // equivalent to -(ln(tan((45.0 + latitude * 0.5).toRadians())) / (2 * PI) - 0.5)
+  return -(asinh(tan(value.coerceAtLeast(LatitudeBottomEdge.value).coerceAtMost(LatitudeTopEdge.value).toRadians())) / (2 * PI) - 0.5) // equivalent to -(ln(tan((45.0 + latitude * 0.5).toRadians())) / (2 * PI) - 0.5)
+}
+
+/**
+ * Returns the longitude in domain relative
+ */
+inline fun MapCoordinates.longitude2DomainRelative(): @DomainRelative Double {
+  return longitude.toDomainRelativeX()
+}
+
+inline fun MapCoordinates.latitude2DomainRelative(): @DomainRelative Double {
+  return latitude.toDomainRelativeY()
+}
+
+/**
+ * Converts a domain relative value (usually the x-axis) to a longitude
+ */
+fun domainRelative2longitude(domainRelativeX: @DomainRelative Double): Longitude {
+  return Longitude(domainRelativeX * (LongitudeRightEdge.value - LongitudeLeftEdge.value) + LongitudeLeftEdge.value)
 }
 
 /**
@@ -234,9 +220,9 @@ fun Zoom.toSlippyMapZoom(): Int {
  */
 fun toCanvasZoom(slippyMapZoom: Int): Zoom {
   val source = when {
-    slippyMapZoom < 0  -> 0
+    slippyMapZoom < 0 -> 0
     slippyMapZoom > 19 -> 19
-    else               -> slippyMapZoom
+    else -> slippyMapZoom
   }
 
   val scale = 2.0.pow(source - SlippyMapDefaultZoom)

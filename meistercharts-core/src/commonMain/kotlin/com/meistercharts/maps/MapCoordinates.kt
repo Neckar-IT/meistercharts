@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.geometry.geo
+package com.meistercharts.maps
 
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.i18n.DefaultI18nConfiguration
@@ -26,7 +26,13 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MapCoordinates(
+  /**
+   * The latitude (north to south, usually painted on the y-axis)
+   */
   val latitude: Latitude,
+  /**
+   * The longitude (east to west, usually painted on the x-axis)
+   */
   val longitude: Longitude,
 ) {
   fun format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
@@ -54,6 +60,7 @@ data class MapCoordinates(
       Latitude(48.116979),
       Longitude(7.853423)
     )
+
     val lizergy: MapCoordinates = MapCoordinates(
       Latitude(48.48074780020653),
       Longitude(8.408058960597911)
