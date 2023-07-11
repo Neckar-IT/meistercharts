@@ -53,6 +53,7 @@ import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.reduceObservables
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.asMultiProvider
+import it.neckar.open.provider.asSizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.other.px
 
@@ -247,7 +248,7 @@ class ToolbarLayer(
   }
 
   @ConfigurationDsl
-  class Configuration constructor(
+  class Configuration(
     /**
      * The (fixed) list of buttons.
      * The buttons must not change during runtime!
@@ -259,13 +260,13 @@ class ToolbarLayer(
      * Provides all buttons (including low priority).
      * Always returns the *same* buttons
      */
-    val allButtonsProvider: SizedProvider<Button> = SizedProvider.forList(buttons)
+    val allButtonsProvider: SizedProvider<Button> = buttons.asSizedProvider()
 
     /**
      * Provides only the high priority buttons
      * Always returns the *same* buttons
      */
-    val highPriorityButtonsProvider: SizedProvider<Button> = SizedProvider.forList(buttons.filter { it.priority == ButtonPriority.AlwaysVisible })
+    val highPriorityButtonsProvider: SizedProvider<Button> = buttons.filter { it.priority == ButtonPriority.AlwaysVisible }.asSizedProvider()
 
     /**
      * where to place the toolbar - relative to the window

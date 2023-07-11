@@ -49,7 +49,19 @@ data class MapCoordinates(
     return "${latitude.format(I18nConfiguration.US)} ${longitude.format(I18nConfiguration.US)}"
   }
 
+  override fun toString(): String {
+    return "MapCoordinates($latitude, $longitude)"
+  }
+
   companion object {
+    /**
+     * Creates a new instance from double values.
+     * Use the constructor with [Latitude] and [Longitude] instead if possible
+     */
+    operator fun invoke(latitude: Double, longitude: Double): MapCoordinates {
+      return MapCoordinates(Latitude(latitude), Longitude(longitude))
+    }
+
     val neckarIt: MapCoordinates = MapCoordinates(
       Latitude(48.4138247),
       Longitude(9.050864314),

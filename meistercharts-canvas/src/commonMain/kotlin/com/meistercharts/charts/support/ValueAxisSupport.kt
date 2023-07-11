@@ -15,7 +15,6 @@
  */
 package com.meistercharts.charts.support
 
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.Layers
@@ -24,7 +23,8 @@ import com.meistercharts.algorithms.layers.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.canvas.layer.LayerSupport
-import it.neckar.open.provider.SizedProvider
+import com.meistercharts.range.ValueRange
+import it.neckar.open.provider.asSizedProvider
 
 /**
  * This class supports multiple value axis.
@@ -70,9 +70,9 @@ class ValueAxisSupport<Key>(
    */
   fun createMultiValueAxisLayer(keys: Iterable<Key>): MultiValueAxisLayer {
     val multiValueAxisLayer = MultiValueAxisLayer(
-      valueAxesProvider = SizedProvider.forList(keys.map {
+      valueAxesProvider = keys.map {
         getAxisLayer(it)
-      }),
+      }.asSizedProvider(),
     )
     return multiValueAxisLayer
   }

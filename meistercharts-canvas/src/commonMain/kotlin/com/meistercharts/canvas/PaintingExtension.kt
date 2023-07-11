@@ -654,8 +654,8 @@ fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: D
     label?.let {
       stroke(Color.white)
       fill(color ?: Color.black)
-      strokeText(text = label, x = 0.0, y = 0.0, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
-      fillText(text = label, x = 0.0, y = 0.0, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
+      strokeText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
+      fillText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
     }
   }
 }

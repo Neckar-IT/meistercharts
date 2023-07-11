@@ -21,12 +21,12 @@ import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.layer.LayerSupport
+import com.meistercharts.font.FontMetrics
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.provider.BooleanProvider
-import it.neckar.open.provider.SizedProvider
+import it.neckar.open.provider.asSizedProvider
 import it.neckar.open.unit.other.px
 
 /**
@@ -125,9 +125,9 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
    */
   fun createMultiTopTitleLayer(keys: Iterable<Key>): MultipleLayersDelegatingLayer<AxisTopTopTitleLayer> {
     val multiTopTitleLayer = MultipleLayersDelegatingLayer(
-      SizedProvider.forList(keys.map {
+      keys.map {
         getTopTitleLayer(it)
-      })
+      }.asSizedProvider()
     )
     return multiTopTitleLayer
   }

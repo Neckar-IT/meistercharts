@@ -168,6 +168,15 @@ inline fun MapCoordinates.latitude2DomainRelative(): @DomainRelative Double {
 }
 
 /**
+ * Creates a new [MapCoordinates] instance from the given domain relative values
+ */
+fun MapCoordinates.Companion.fromDomainRelative(domainRelativeX: @DomainRelative Double, domainRelativeY: @DomainRelative Double): MapCoordinates {
+  val longitude = domainRelative2longitude(domainRelativeX)
+  val latitude = domainRelative2latitude(domainRelativeY)
+  return MapCoordinates(latitude, longitude)
+}
+
+/**
  * Converts a domain relative value (usually the x-axis) to a longitude
  */
 fun domainRelative2longitude(domainRelativeX: @DomainRelative Double): Longitude {

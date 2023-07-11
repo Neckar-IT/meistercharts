@@ -39,6 +39,30 @@ interface SlippyMapProvider {
    * Retrieve the legal notice for this provider
    */
   val legalNotice: String?
+
+  companion object {
+    /**
+     * Contains a list of all known slippy map providers
+     */
+    val all: List<SlippyMapProvider> = listOf(
+      CartoDBPositron,
+      CartoDBPositronNoLabels,
+      CartoDBDarkMatter,
+      CartoDBVoyager,
+      MtbMap,
+      OpenTopoMap,
+      MemoMaps,
+      Cyclosm,
+      CyclosmLite,
+      OsmFrance,
+      OpenStreetMap,
+      OpenStreetMapDe,
+      OpenStreetMapHumanitarian,
+      OpenStreetMapBlackAndWhite,
+      OpenStreetMapTerrain,
+      WikimediaMaps
+    )
+  }
 }
 
 /**

@@ -48,9 +48,9 @@ interface Bezier {
   }
 
   class Temp {
-    val tvalues: DoubleArray = DoubleArray(6)
-    val xvalues: DoubleArray = DoubleArray(8)
-    val yvalues: DoubleArray = DoubleArray(8)
+    val tValues: DoubleArray = DoubleArray(6)
+    val xValues: DoubleArray = DoubleArray(8)
+    val yValues: DoubleArray = DoubleArray(8)
   }
 
   companion object {
@@ -138,38 +138,38 @@ interface Bezier {
         if (abs(a) < 1e-12) {
           if (abs(b) >= 1e-12) {
             val t = -c / b
-            if (0 < t && t < 1) temp.tvalues[j++] = t
+            if (0 < t && t < 1) temp.tValues[j++] = t
           }
         } else {
           b2ac = b * b - 4 * c * a
           if (b2ac < 0) continue
           sqrtb2ac = sqrt(b2ac)
           val t1 = (-b + sqrtb2ac) / (2.0 * a)
-          if (0 < t1 && t1 < 1) temp.tvalues[j++] = t1
+          if (0 < t1 && t1 < 1) temp.tValues[j++] = t1
           val t2 = (-b - sqrtb2ac) / (2.0 * a)
-          if (0 < t2 && t2 < 1) temp.tvalues[j++] = t2
+          if (0 < t2 && t2 < 1) temp.tValues[j++] = t2
         }
       }
 
       while (j-- > 0) {
-        val t = temp.tvalues[j]
+        val t = temp.tValues[j]
         val mt = 1 - t
-        temp.xvalues[j] = (mt * mt * mt * x0) + (3 * mt * mt * t * x1) + (3 * mt * t * t * x2) +
+        temp.xValues[j] = (mt * mt * mt * x0) + (3 * mt * mt * t * x1) + (3 * mt * t * t * x2) +
           (t * t * t * x3)
-        temp.yvalues[j] = (mt * mt * mt * y0) + (3 * mt * mt * t * y1) + (3 * mt * t * t * y2) +
+        temp.yValues[j] = (mt * mt * mt * y0) + (3 * mt * mt * t * y1) + (3 * mt * t * t * y2) +
           (t * t * t * y3)
       }
 
-      temp.xvalues[temp.tvalues.size + 0] = x0
-      temp.xvalues[temp.tvalues.size + 1] = x3
-      temp.yvalues[temp.tvalues.size + 0] = y0
-      temp.yvalues[temp.tvalues.size + 1] = y3
+      temp.xValues[temp.tValues.size + 0] = x0
+      temp.xValues[temp.tValues.size + 1] = x3
+      temp.yValues[temp.tValues.size + 0] = y0
+      temp.yValues[temp.tValues.size + 1] = y3
 
       return Rectangle(
-        temp.xvalues.minOrElse(0.0),
-        temp.yvalues.minOrElse(0.0),
-        temp.xvalues.maxOrElse(0.0),
-        temp.yvalues.maxOrElse(0.0)
+        temp.xValues.minOrElse(0.0),
+        temp.yValues.minOrElse(0.0),
+        temp.xValues.maxOrElse(0.0),
+        temp.yValues.maxOrElse(0.0)
       )
     }
 

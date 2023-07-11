@@ -75,6 +75,7 @@ import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import com.meistercharts.resources.Icons
 import com.meistercharts.style.Palette
+import it.neckar.open.provider.asSizedProvider
 import kotlin.jvm.JvmOverloads
 import kotlin.math.max
 import kotlin.math.min
@@ -219,7 +220,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }.clipped()
 
-  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(SizedProvider.forList(model.limits))) {
+  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(model.limits.asSizedProvider())) {
     orientation = Orientation.Horizontal
     fill = Color.rgba(255, 255, 255, 0.85)
     stroke = Color.white

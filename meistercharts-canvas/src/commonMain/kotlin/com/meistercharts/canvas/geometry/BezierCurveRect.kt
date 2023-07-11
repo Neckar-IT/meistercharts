@@ -21,7 +21,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.geometry.Coordinates
 
 /**
- * Represents a rectangle that has *two* sides (top and bottom) that are defined by bezier curves.
+ * Represents a rectangle that has *two* sides (top and bottom) that are defined by Bézier curves.
  * The other sides are defined by connecting the:
  * - start points with each other
  * - end points with each other
@@ -62,7 +62,7 @@ data class BezierCurveRect(
   }
 
   /**
-   * Scales the bezier curve (returns a new instance)
+   * Scales the Bézier curve (returns a new instance)
    */
   fun scale(scaleX: Double, scaleY: Double): BezierCurveRect {
     return BezierCurveRect(
