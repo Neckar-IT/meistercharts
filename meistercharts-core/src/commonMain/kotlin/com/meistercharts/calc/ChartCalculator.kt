@@ -939,3 +939,19 @@ open class ChartCalculator(val chartState: ChartState) {
     }
   }
 }
+
+fun @DomainRelative Double.domainRelative2WindowX(chartCalculator: ChartCalculator): Double {
+  return chartCalculator.domainRelative2windowX(this)
+}
+
+fun @DomainRelative Double.domainRelative2WindowY(chartCalculator: ChartCalculator): Double {
+  return chartCalculator.domainRelative2windowY(this)
+}
+
+fun @ContentAreaRelative Double.contentAreaRelative2WindowX(chartCalculator: ChartCalculator): Double {
+  return chartCalculator.contentAreaRelative2windowX(this)
+}
+
+fun @ContentAreaRelative Double.contentAreaRelative2WindowY(chartCalculator: ChartCalculator): Double {
+  return chartCalculator.contentAreaRelative2windowY(this)
+}

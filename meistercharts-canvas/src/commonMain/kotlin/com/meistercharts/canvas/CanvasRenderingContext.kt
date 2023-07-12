@@ -1138,3 +1138,11 @@ fun CanvasRenderingContext.forTranslationY(absoluteValueY: @Zoomed Double): @Zoo
 fun CanvasRenderingContext.clipToContentViewport(chartCalculator: ChartCalculator) {
   clip(chartCalculator.contentViewportMinX(), chartCalculator.contentViewportMinY(), chartCalculator.contentViewportWidth, chartCalculator.contentViewportHeight)
 }
+
+inline fun CanvasRenderingContext.circle(@Window @px centerX: Double, @Window @px centerY: Double, @px @Zoomed radius: Double) {
+  ovalCenter(centerX, centerY, radius, radius)
+}
+
+inline fun CanvasRenderingContext.rectCenter(@px centerX: Double, @px centerY: Double, width: @MayBeNegative Double, height: @MayBeNegative Double) {
+  rect(centerX - width / 2, centerY - height / 2, width, height)
+}
