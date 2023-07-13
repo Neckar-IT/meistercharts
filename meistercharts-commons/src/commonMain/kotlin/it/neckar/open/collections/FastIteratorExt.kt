@@ -169,6 +169,52 @@ inline fun <T> List<T>.fastForEach(currentSize: Int, callback: (value: T) -> Uni
   }
 }
 
+//inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> FastForEachDeleteResult) {
+//  var index = 0
+//  while (index < size) { //do *not* cache the size, we are removing elements
+//    val currentObject = this[index]
+//    val result = callback(currentObject)
+//
+//    when (result) {
+//      FastForEachDeleteResult.Keep -> index++
+//      FastForEachDeleteResult.Remove -> removeAt(index) //do *not* increase the index
+//      FastForEachDeleteResult.Break -> return
+//    }
+//  }
+//}
+
+inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> Boolean) {
+  var index = 0
+  while (index < size) { //do *not* cache the size, we are removing elements
+    val currentObject = this[index]
+    val result = callback(currentObject)
+
+    if (result) {
+      removeAt(index) //do *not* increase the index
+
+    } else {
+      index++
+    }
+  }
+}
+
+enum class FastForEachDeleteResult {
+  /**
+   * Keeps the current element in the list
+   */
+  Keep,
+
+  /**
+   * Removes the current element from the list
+   */
+  Remove,
+
+  /**
+   * Breaks the loop
+   */
+  Break,
+}
+
 inline fun <T, V> List<T>.fastMapNotNull(mapper: (value: T) -> V?): List<V> {
   val targetList = mutableListOf<V>()
 

@@ -18,8 +18,8 @@ package com.meistercharts.history.downsampling
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.InMemoryHistoryStorage
-import it.neckar.open.time.JVMTimerCoroutineSupport
-import it.neckar.open.time.jvmTimerSupport
+import it.neckar.open.time.JVMTimerCoroutineImplementation
+import it.neckar.open.time.timerImplementation
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import org.junit.jupiter.api.Test
@@ -31,7 +31,7 @@ class DownSamplingServiceStartStopTest {
     val context = StandardTestDispatcher(testScheduler)
 
     val timerScope = TestScope()
-    jvmTimerSupport = JVMTimerCoroutineSupport(CoroutineScope(context), CoroutineScope(context))
+    timerImplementation = JVMTimerCoroutineImplementation(CoroutineScope(context), CoroutineScope(context))
 
     var called = false
 

@@ -16,13 +16,14 @@
 package com.meistercharts
 
 import com.meistercharts.canvas.Image
-import com.meistercharts.canvas.MeisterchartFactory
 import com.meistercharts.canvas.MeisterChartsPlatformState
+import com.meistercharts.canvas.MeisterchartFactory
 import com.meistercharts.font.FontMetricsCache
 import com.meistercharts.loop.RenderLoopSupport
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.http.Url
+import it.neckar.open.time.TimerImplementation
 
 /**
  * Contains all static references to all meistercharts related classes
@@ -63,4 +64,15 @@ object Meistercharts {
    */
   var mainScreenDevicePixelRatio: Double = 1.0
 
+
+  /**
+   * Reference to the current [TimerImplementation]
+   */
+  var timerImplementation: TimerImplementation
+    get() {
+      return it.neckar.open.time.timerImplementation
+    }
+    set(value) {
+      it.neckar.open.time.timerImplementation = value
+    }
 }

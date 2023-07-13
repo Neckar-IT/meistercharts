@@ -122,6 +122,11 @@ class ChartSupport(
     it.onDispose {
       //Cleanup all global caches
       GlobalCacheSupport.cleanup(chartId)
+
+      //Clear listeners
+      paintListeners.clear()
+      renderLoopListeners.clear()
+      renderLoopListenersToRemove.clear()
     }
   }
 
@@ -444,12 +449,26 @@ class ChartSupport(
     paintListeners.add(paintListener)
   }
 
+  /**
+   * Registers a listener that is notified on every repaint. Adds the listener at first position
+   */
+  fun onPaintPrepend(paintListener: PaintListener) {
+    paintListeners.add(0, paintListener)
+  }
+
 
   /**
    * Registers a refresh listener that is notified whenever refresh is called
    */
   fun onRender(renderLoopListener: ChartRenderLoopListener) {
     renderLoopListeners.add(renderLoopListener)
+  }
+
+  /**
+   * Registers the listener at the start of the list
+   */
+  fun onRenderPrepend(renderLoopListener: ChartRenderLoopListener) {
+    renderLoopListeners.add(0, renderLoopListener)
   }
 
   /**
@@ -468,7 +487,9 @@ class ChartSupport(
 }
 
 /**
- * Is called on each render frame.
+ * Is called on each render frame. The frequency of calls to registered listeners depends on the [com.meistercharts.canvas.ChartSupport.targetRenderRate]
+ *
+ *
  * Is also called if the canvas is *not* dirty.
  *
  * Use [PaintListener] if you want to be notified only if the canvas is dirty.

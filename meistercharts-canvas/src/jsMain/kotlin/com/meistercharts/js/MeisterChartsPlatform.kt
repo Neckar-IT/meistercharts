@@ -73,6 +73,8 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   override fun initializeOnce() {
+    super.initializeOnce()
+
     Meistercharts.fontMetricsCache = FontMetricsCacheJS
     Meistercharts.meisterchartFactory = MeisterchartFactoryJS()
 

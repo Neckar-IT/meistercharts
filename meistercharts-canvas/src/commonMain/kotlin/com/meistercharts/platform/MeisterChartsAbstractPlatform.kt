@@ -15,6 +15,10 @@
  */
 package com.meistercharts.platform
 
+import com.meistercharts.Meistercharts
+import com.meistercharts.canvas.Meisterchart
+import com.meistercharts.canvas.PlatformStateListener
+import com.meistercharts.canvas.timer.CanvasBasedTimerImplementation
 import com.meistercharts.design.CorporateDesign
 import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.version.MeisterChartsVersion
@@ -23,6 +27,7 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.info
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.updateDefaultI18nConfiguration
+import it.neckar.open.time.timerImplementation
 
 /**
  * Abstract base class for meister charts platform implementations
@@ -58,7 +63,16 @@ abstract class MeisterChartsAbstractPlatform {
   /**
    * This method is only called once - if the platform has not yet been initialized
    */
-  abstract fun initializeOnce()
+  open fun initializeOnce() {
+    timerImplementation = CanvasBasedTimerImplementation().also { timer ->
+      Meistercharts.platformState.onPlatformStateUpdate(object : PlatformStateListener {
+        override fun instanceCreated(meisterChart: Meisterchart) {
+          meisterChart.chartSupport.onRenderPrepend(timer)
+        }
+      })
+    }
+
+  }
 
   companion object {
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.platform.MeisterChartsPlatform")

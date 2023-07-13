@@ -117,6 +117,8 @@ class HistoryChunkGenerator(
     require(referenceEntryGenerators.size == historyConfiguration.referenceEntryDataSeriesCount) {
       "Invalid reference entry value generators size. Was ${referenceEntryGenerators.size} but require ${historyConfiguration.referenceEntryDataSeriesCount}"
     }
+
+    lastCreatedTimeStamp = nowMillis() //set initial time to now - helps with creation of initial data when using a virtual now provider
   }
 
   val decimalDataSeriesCount: Int
