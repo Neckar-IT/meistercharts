@@ -788,25 +788,25 @@ fun ChartSupport.bindVisibleRangeBidirectional(other: ChartSupport, axisSelectio
   var updating = false
 
   fun apply(source: ChartSupport, target: ChartSupport) {
-    if (!updating) {
-      updating = true
-      try {
-        @DomainRelative val topLeft = source.chartCalculator.window2domainRelative(0.0, 0.0)
-        @DomainRelative val bottomRight = source.chartCalculator.window2domainRelative(source.currentChartState.windowWidth, source.currentChartState.windowHeight)
+    if (!updating.not()) return
 
-        if (axisSelection.containsX) {
-          if (!topLeft.x.isNanOrInfinite() && !bottomRight.x.isNanOrInfinite() && topLeft.x != bottomRight.x) {
-            target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x, UpdateReason.BoundToOtherChart)
-          }
+    updating = true
+    try {
+      @DomainRelative val topLeft = source.chartCalculator.window2domainRelative(0.0, 0.0)
+      @DomainRelative val bottomRight = source.chartCalculator.window2domainRelative(source.currentChartState.windowWidth, source.currentChartState.windowHeight)
+
+      if (axisSelection.containsX) {
+        if (!topLeft.x.isNanOrInfinite() && !bottomRight.x.isNanOrInfinite() && topLeft.x != bottomRight.x) {
+          target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x, UpdateReason.BoundToOtherChart)
         }
-        if (axisSelection.containsY) {
-          if (!topLeft.y.isNanOrInfinite() && !bottomRight.y.isNanOrInfinite() && topLeft.y != bottomRight.y) {
-            target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y, UpdateReason.BoundToOtherChart)
-          }
-        }
-      } finally {
-        updating = false
       }
+      if (axisSelection.containsY) {
+        if (!topLeft.y.isNanOrInfinite() && !bottomRight.y.isNanOrInfinite() && topLeft.y != bottomRight.y) {
+          target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y, UpdateReason.BoundToOtherChart)
+        }
+      }
+    } finally {
+      updating = false
     }
   }
 

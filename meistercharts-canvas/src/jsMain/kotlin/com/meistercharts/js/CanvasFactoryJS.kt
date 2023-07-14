@@ -31,7 +31,7 @@ class CanvasFactoryJS : CanvasFactory {
   override fun createCanvas(type: CanvasType, size: @MayBeZero Size): CanvasJS {
     return CanvasJS(type)
       .also {
-        it.applySize(size, "set initial size for canvas with type $type")
+        it.applySize(size, "set initial size for canvas with type [$type]")
 
         it.canvasElement.style.width = "${size.width} px"
         it.canvasElement.style.height = "${size.height} px"

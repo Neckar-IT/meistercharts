@@ -3,6 +3,9 @@ package it.neckar.logging.console
 import it.neckar.open.kotlin.lang.fastFor
 import kotlinx.browser.window
 
+/**
+ * JS CLI for the browser console
+ */
 @JsExport
 class LocalStorageFunctions(val prefix: String) {
   fun help() {

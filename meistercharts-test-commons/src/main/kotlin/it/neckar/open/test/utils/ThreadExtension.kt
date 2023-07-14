@@ -76,7 +76,7 @@ class ThreadExtension @JvmOverloads constructor(
   private fun after() {
     try {
       val remainingThreads = remainingThreads
-      if (!remainingThreads.isEmpty()) {
+      if (remainingThreads.isNotEmpty()) {
         System.err.println(
           """
   --> Some threads have been left:

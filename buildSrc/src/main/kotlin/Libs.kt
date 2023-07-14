@@ -143,9 +143,6 @@ public object Libs {
 
     public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
 
-    public const val io_gitlab_arturbosch_detekt_gradle_plugin: String =
-            "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin:_"
-
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
     public const val ktor_client_cio: String = "io.ktor:ktor-client-cio:_"
@@ -285,9 +282,6 @@ public object Libs {
 
     public const val jekyll_template_processing_plugin: String =
             "org.jetbrains.dokka:jekyll-template-processing-plugin:_"
-
-    public const val org_jetbrains_dokka_gradle_plugin: String =
-            "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:_"
 
     public const val intellij_coverage_agent: String =
             "org.jetbrains.intellij.deps:intellij-coverage-agent:_"
