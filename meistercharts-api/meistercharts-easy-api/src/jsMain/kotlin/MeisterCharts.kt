@@ -321,7 +321,7 @@ fun createTimeLineChart(): TimeLineChart {
    */
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("TimeLineChart")
-  val gestalt = TimeLineChartWithToolbarGestalt(meisterChartBuilder.chartId, historyStorageQueryMonitor).apply {
+  val gestalt = TimeLineChartWithToolbarGestalt(historyStorageQueryMonitor).apply {
     configure(meisterChartBuilder)
   }
 

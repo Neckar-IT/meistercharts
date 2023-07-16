@@ -16,9 +16,9 @@
 package com.meistercharts.algorithms.tile
 
 import com.meistercharts.charts.ChartId
+import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
-import it.neckar.open.annotations.Slow
 
 /**
  * Global cache for tiles.
@@ -85,8 +85,15 @@ object GlobalTilesCache {
    */
   @Slow
   fun tiles(chartId: ChartId): Collection<Tile> {
+    println("GlobalTilesCache.tiles($chartId)")
+    println("Cache size: ${cache.size}")
+
     return cache.values.filter {
+      println("tile.chartId: ${it.identifier.chartId}")
+
       it.identifier.chartId == chartId
+    }.also {
+      println("FOund ${it.size}")
     }
   }
 }

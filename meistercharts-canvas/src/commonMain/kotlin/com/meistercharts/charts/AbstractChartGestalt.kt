@@ -16,8 +16,8 @@
 package com.meistercharts.charts
 
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.MeisterchartBuilder
+import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -41,7 +41,11 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
     disposeSupport.onDispose(action)
   }
 
-  private var configured: Boolean = false
+  /**
+   * Is set to true if this gestalt has been configured
+   */
+  var configured: Boolean = false
+    private set
 
   /**
    * Contains configuration actions
@@ -81,7 +85,8 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
    * Attention!
    */
   fun chartSupport(): ChartSupport {
-    return configuredChartSupport ?: throw IllegalStateException("ChartSupport not available - gestalt has not yet been configured")
+    return configuredChartSupport
+      ?: throw IllegalStateException("ChartSupport not available - gestalt has not yet been configured")
   }
 
   /**
@@ -91,6 +96,23 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
   fun chartSupportOrNull(): ChartSupport? {
     return configuredChartSupport
   }
+
+  /**
+   * Returns the chart ID for this gestalt.
+   * Only available after the gestalt has been configured.
+   */
+  val chartId: ChartId
+    get() {
+      return chartSupport().chartId
+    }
+
+  /**
+   * Returns the chart ID or null if no chart ID is available
+   */
+  val chartIdOrNull: ChartId?
+    get() {
+      return chartSupportOrNull()?.chartId
+    }
 
   final override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     ensureNotConfigured()

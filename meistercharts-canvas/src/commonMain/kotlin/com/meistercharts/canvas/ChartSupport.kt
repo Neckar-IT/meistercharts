@@ -414,6 +414,8 @@ class ChartSupport(
         return@ifDirty
       }
 
+      logger.trace { "Paint ${frameTimestamp.formatUtc()} $relativeHighRes - because of $dirtyReasons" }
+
       //The canvas might have been reset (HTML canvas on resize)
       //Therefore it is necessary to set the defaults
       canvas.gc.applyDefaults()

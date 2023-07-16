@@ -42,7 +42,6 @@ import kotlin.jvm.JvmOverloads
  * Supports at most 10 visible [ValueAxisLayer]s at once.
  */
 class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
-  val chartId: ChartId,
   historyStorage: HistoryStorage = InMemoryHistoryStorage(),
   styleConfiguration: Style.() -> Unit = {},
   val toolbarConfiguration: ToolbarButtonFactory.() -> List<Button> = { emptyList() }
@@ -50,7 +49,7 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
 
   val style: Style = Style().also(styleConfiguration)
 
-  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(chartId, TimeLineChartGestalt.Data(historyStorage))
+  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(TimeLineChartGestalt.Data(historyStorage))
 
   val scrollWithoutModifierHintLayer: HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> = MouseWheelWithoutModifierMessageLayer.create()
 

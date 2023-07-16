@@ -94,7 +94,6 @@ import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartGestalt
-import com.meistercharts.charts.ChartId
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.support.ValueAxisSupport
@@ -211,7 +210,6 @@ typealias ValueAxisTopTitleStyleConfiguration = (style: AxisTopTopTitleLayer.Con
  */
 class TimeLineChartGestalt
 @JvmOverloads constructor(
-  val chartId: ChartId,
   /**
    * The data
    */
@@ -295,7 +293,7 @@ class TimeLineChartGestalt
   /**
    * The tile provider that is used to get the tiles
    */
-  val tileProvider: CachedTileProvider = CanvasTileProvider(physicalTileSize, ::tilePainter.delegate()).cached(chartId)
+  val tileProvider: CachedTileProvider = CanvasTileProvider(physicalTileSize, ::tilePainter.delegate()).cached { chartIdOrNull }
 
   /**
    * The tiles layer that paints the tiles (for decimal values)

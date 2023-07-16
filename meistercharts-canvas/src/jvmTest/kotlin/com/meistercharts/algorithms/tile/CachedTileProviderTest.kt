@@ -44,7 +44,7 @@ class CachedTileProviderTest {
 
   @Test
   fun testRenew() {
-    val cachedTileProvider = CachedTileProvider(ChartId(77), DebugTileProvider(Size.PX_120))
+    val cachedTileProvider = CachedTileProvider({ ChartId(77) }, DebugTileProvider(Size.PX_120))
     val cache = GlobalTilesCache.cache
 
     assertThat(cache.size).isEqualTo(0)
@@ -76,7 +76,7 @@ class CachedTileProviderTest {
 
   @Test
   fun testClear() {
-    val cachedTileProvider = CachedTileProvider(ChartId(77), DebugTileProvider(Size.PX_120))
+    val cachedTileProvider = CachedTileProvider({ ChartId(77) }, DebugTileProvider(Size.PX_120))
     val cache = GlobalTilesCache.cache
 
     assertThat(cache.size).isEqualTo(0)

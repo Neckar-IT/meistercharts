@@ -37,12 +37,12 @@ fun interface HistoryTileInvalidator {
     /**
      * The cached tiles that should be invalidated if necessary
      */
-    tiles: Iterable<CanvasTile>,
+    tiles: Collection<CanvasTile>,
 
     /**
      * The chart support
      */
-    chartSupport: ChartSupport
+    chartSupport: ChartSupport,
   ): HistoryTilesInvalidationResult
 }
 
@@ -58,7 +58,7 @@ enum class HistoryTilesInvalidationResult {
  * Invalidates all tiles - useful for tests/debugging
  */
 object InvalidateAll : HistoryTileInvalidator {
-  override fun historyHasBeenUpdated(updateInfo: HistoryUpdateInfo, tiles: Iterable<CanvasTile>, chartSupport: ChartSupport): HistoryTilesInvalidationResult {
+  override fun historyHasBeenUpdated(updateInfo: HistoryUpdateInfo, tiles: Collection<CanvasTile>, chartSupport: ChartSupport): HistoryTilesInvalidationResult {
     tiles.forEach {
       it.clearSnapshot()
     }
@@ -72,10 +72,15 @@ object InvalidateAll : HistoryTileInvalidator {
  */
 class DefaultHistoryTileInvalidator : HistoryTileInvalidator {
 
-  override fun historyHasBeenUpdated(updateInfo: HistoryUpdateInfo, tiles: Iterable<CanvasTile>, chartSupport: ChartSupport): HistoryTilesInvalidationResult {
+  override fun historyHasBeenUpdated(updateInfo: HistoryUpdateInfo, tiles: Collection<CanvasTile>, chartSupport: ChartSupport): HistoryTilesInvalidationResult {
     val relevantSamplingPeriod = chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
     if (relevantSamplingPeriod == null) {
       // Do not recalculate - no layout occurred yet
+      return HistoryTilesInvalidationResult.None
+    }
+
+    if (tiles.isEmpty()) {
+      //Nothing to do, no tiles exist
       return HistoryTilesInvalidationResult.None
     }
 
