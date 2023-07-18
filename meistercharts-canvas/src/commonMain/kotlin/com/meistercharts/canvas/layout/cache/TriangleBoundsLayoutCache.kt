@@ -17,7 +17,7 @@ package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.RightTriangleType
+import com.meistercharts.geometry.RightTriangleType
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.pointIsLeftOfLine
 import it.neckar.open.unit.number.MayBeNegative

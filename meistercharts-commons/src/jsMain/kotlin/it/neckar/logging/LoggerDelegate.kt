@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 class LoggerDelegate<in R : Any> : ReadOnlyProperty<R, Logger> {
   override fun getValue(thisRef: R, property: KProperty<*>): Logger = LoggerFactory.getLogger(getLoggerName(thisRef))
 
-  private fun getLoggerName(thisRef: R): String {
-    return thisRef::class.js.name
+  private fun getLoggerName(thisRef: R): LoggerName {
+    return LoggerName(thisRef::class.js.name)
   }
 }

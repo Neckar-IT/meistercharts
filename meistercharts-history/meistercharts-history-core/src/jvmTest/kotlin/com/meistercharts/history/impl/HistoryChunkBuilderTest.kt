@@ -73,7 +73,7 @@ class HistoryChunkBuilderTest {
 
     val builder = HistoryChunkBuilder(historyConfiguration, expectedTimestampsCount = 7)
 
-    assertThrows<IllegalArgumentException> {
+    assertThrows<IllegalStateException> {
       builder.addDecimalValues(Double.NaN, 17.0, 18.0, 20.0, 21.0)
     }
 

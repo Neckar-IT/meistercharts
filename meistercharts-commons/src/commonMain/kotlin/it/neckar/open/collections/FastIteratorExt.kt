@@ -1,5 +1,7 @@
 package it.neckar.open.collections
 
+import it.neckar.open.kotlin.lang.fastFor
+
 
 /**
  * Iterates over the entries of this [ByteArray]
@@ -167,6 +169,52 @@ inline fun <T> List<T>.fastForEach(currentSize: Int, callback: (value: T) -> Uni
   }
 }
 
+//inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> FastForEachDeleteResult) {
+//  var index = 0
+//  while (index < size) { //do *not* cache the size, we are removing elements
+//    val currentObject = this[index]
+//    val result = callback(currentObject)
+//
+//    when (result) {
+//      FastForEachDeleteResult.Keep -> index++
+//      FastForEachDeleteResult.Remove -> removeAt(index) //do *not* increase the index
+//      FastForEachDeleteResult.Break -> return
+//    }
+//  }
+//}
+
+inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> Boolean) {
+  var index = 0
+  while (index < size) { //do *not* cache the size, we are removing elements
+    val currentObject = this[index]
+    val result = callback(currentObject)
+
+    if (result) {
+      removeAt(index) //do *not* increase the index
+
+    } else {
+      index++
+    }
+  }
+}
+
+enum class FastForEachDeleteResult {
+  /**
+   * Keeps the current element in the list
+   */
+  Keep,
+
+  /**
+   * Removes the current element from the list
+   */
+  Remove,
+
+  /**
+   * Breaks the loop
+   */
+  Break,
+}
+
 inline fun <T, V> List<T>.fastMapNotNull(mapper: (value: T) -> V?): List<V> {
   val targetList = mutableListOf<V>()
 
@@ -211,6 +259,19 @@ inline fun <T, V> List<T>.fastMapIndexed(mapper: (index: Int, value: T) -> V): L
   }
 
   return targetList
+}
+
+/**
+ * Calls the provided [action] for two elements.
+ * Does not call the callback if the list has less than two elements.
+ */
+inline fun <T> List<T>.fastZipWithNext(action: (T, T) -> Unit) {
+  val currentSize = this.size
+  if (currentSize <= 1) return
+
+  (currentSize - 1).fastFor { index ->
+    action(this[index], this[index + 1])
+  }
 }
 
 /**
@@ -380,11 +441,7 @@ inline fun <T> Array<T>.fastForEachWithIndex(callback: (index: Int, value: T) ->
   }
 }
 
-inline fun <T> List<T>.fastForEachReverse(callback: (T) -> Unit) {
-  fastForEachReverse(size, callback)
-}
-
-inline fun <T> List<T>.fastForEachReverse(currentSize: Int, callback: (T) -> Unit) {
+inline fun <T> List<T>.fastForEachReversed(currentSize: Int, callback: (T) -> Unit) {
   var n = 0
   while (n < currentSize) {
     callback(this[currentSize - n - 1])

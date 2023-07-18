@@ -15,39 +15,47 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.GlobalCacheSupport
-import com.meistercharts.algorithms.KeepCenterOnWindowResize
-import com.meistercharts.algorithms.MutableChartState
-import com.meistercharts.algorithms.WindowResizeBehavior
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.ZoomLevelCalculator
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.environment
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.PaintingProperties
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.updateEnvironment
 import com.meistercharts.annotations.DomainRelative
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.cache.GlobalCacheSupport
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.canvas.components.NativeComponentsSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.resize.ResizeHandlesSupport
 import com.meistercharts.charts.ChartId
+import com.meistercharts.color.Color
+import com.meistercharts.environment
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.loop.PaintingLoopIndex
+import com.meistercharts.loop.RenderLoopListener
 import com.meistercharts.model.Direction
+import com.meistercharts.resize.KeepCenterOnWindowResize
+import com.meistercharts.resize.WindowResizeBehavior
 import com.meistercharts.service.ServiceRegistry
+import com.meistercharts.state.ChartState
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.state.MutableChartState
+import com.meistercharts.updateEnvironment
 import com.meistercharts.whatsat.WhatsAtSupport
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.trace
 import it.neckar.open.async.TimerSupport
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose
+import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.I18nSupport
@@ -56,13 +64,15 @@ import it.neckar.open.kotlin.lang.isNanOrInfinite
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
+import it.neckar.open.unit.time.RelativeMillis
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 /**
- * Contains the relevant services and stuff related to the chart.
+ * Contains the relevant services and stuff related to a single chart.
  *
  * For layer related stuff take a look at [LayerSupport]
  *
@@ -73,7 +83,7 @@ import kotlin.contracts.contract
  * In some cases it is necessary to get a reference outside of layout/painting.
  * An example implementation is done in [com.meistercharts.charts.AbstractChartGestalt].
  */
-class ChartSupport constructor(
+class ChartSupport(
   /**
    * The canvas that is painted on
    */
@@ -104,7 +114,7 @@ class ChartSupport constructor(
    * The ID is used as identifier for caches
    */
   val chartId: ChartId = ChartId.next(),
-) : Disposable, OnDispose {
+) : Disposable, OnDispose, RenderLoopListener {
   /**
    * Disposable for the chart
    */
@@ -112,6 +122,11 @@ class ChartSupport constructor(
     it.onDispose {
       //Cleanup all global caches
       GlobalCacheSupport.cleanup(chartId)
+
+      //Clear listeners
+      paintListeners.clear()
+      renderLoopListeners.clear()
+      renderLoopListenersToRemove.clear()
     }
   }
 
@@ -215,12 +230,12 @@ class ChartSupport constructor(
 
   /**
    * The target refresh rate.
-   * Attention: The target refresh rate describes the calls to the [RefreshListener]s.
+   * Attention: The target refresh rate describes the calls to the [ChartRenderLoopListener]s.
    * Not every refresh results in a repaint!
    *
    * The canvas will only be repainted if [markAsDirty] has been called and therefore [dirtySupport] returns [DirtySupport.dirty] `true`.
    */
-  var targetRefreshRate: TargetRefreshRate by targetRefreshRateProperty
+  var targetRenderRate: TargetRefreshRate by targetRefreshRateProperty
 
   /**
    * The service registry that provides services related to the chart support
@@ -254,13 +269,13 @@ class ChartSupport constructor(
   /**
    * The refresh listeners are notified on every refresh (more often than the paint listeners)
    */
-  internal val refreshListeners = mutableListOf<RefreshListener>()
+  internal val renderLoopListeners = mutableListOf<ChartRenderLoopListener>()
 
   /**
    * These refresh listeners will be removed before the next call.
    * Used to avoid concurrent modification exceptions
    */
-  internal val refreshListenersToRemove = mutableListOf<RefreshListener>()
+  internal val renderLoopListenersToRemove = mutableListOf<ChartRenderLoopListener>()
 
   /**
    * Contains the paint listeners that are notified on every paint.
@@ -271,7 +286,7 @@ class ChartSupport constructor(
   init {
     require(canvas.type == CanvasType.Main) { "A canvas with type main is required" }
 
-    onRefresh { _, _, _ -> //Update the device pixel ratio from the environment - once before each repaint
+    onRender { _, _, _ -> //Update the device pixel ratio from the environment - once before each repaint
       updateEnvironment()
       devicePixelRatioSupport.updateDevicePixelRatio(environment.devicePixelRatio)
     }
@@ -285,11 +300,9 @@ class ChartSupport constructor(
     }
 
     //Repaint is necessary if one of the snap options has been changed
-    @Suppress("LeakingThis")
     pixelSnapSupport.snapConfigurationProperty.registerDirtyListener(this, DirtyReason.ConfigurationChanged)
 
     //On tooltip changes, repaint
-    @Suppress("LeakingThis")
     tooltipSupport.tooltip.registerDirtyListener(this, DirtyReason.Tooltip)
 
     //Repaint if the paint disabled property is changed
@@ -324,18 +337,12 @@ class ChartSupport constructor(
   }
 
   /**
-   * The last time the refresh has been called
-   * Double.NaN represents a non value
-   */
-  private var lastRefreshTime: Double = Double.NaN
-
-  /**
-   * The next target refresh time.
-   * If now is greater than the time stored in this variable, a refresh is required.
+   * The next target render time.
+   * If now is greater than the time stored in this variable, a render is required.
    *
-   * We try to refresh on the first event in each interval defined by the [targetRefreshRate].
+   * We try to render on the first event in each interval defined by the [targetRenderRate].
    */
-  private var nextRefreshMinTime: @ms Double = 0.0
+  private var nextEarliestRenderHighRes: @RelativeMillis Double = 0.0
 
   /**
    * The last time we painted
@@ -349,95 +356,83 @@ class ChartSupport constructor(
   private var lastPaintingLoopIndex = PaintingLoopIndex(-1)
 
   /**
-   * Refreshes the canvas. Do *not* call this method directly.
+   * Renders the canvas if necessary. Do *not* call this method directly.
    * This method must only be called by a timer.
    *
    * Use [markAsDirty] instead to mark the canvas as dirty and trigger a paint as soon as possible.
-   *
-   * @param frameTimestamp the timestamp of the current frame
    */
-  fun refresh(frameTimestamp: @ms Double) {
-    require(!disposeSupport.disposed) {
+  override fun render(frameTimestamp: @ms @IsFinite Double, relativeHighRes: @RelativeMillis Double) {
+    logger.trace { "Render ${frameTimestamp.formatUtc()} $relativeHighRes" }
+
+    require(disposeSupport.disposed.not()) {
       "Already disposed! Do not paint anymore"
     }
 
     if (disabled) {
+      logger.trace("Disabled - do not paint")
       return
     }
 
-    if (nextRefreshMinTime > frameTimestamp) {
-      //next refresh time is in the future. Skip this refresh
+    if (nextEarliestRenderHighRes > relativeHighRes) {
+      logger.trace("Skip render - next render time is in the future $nextEarliestRenderHighRes > $relativeHighRes")
+      //next render time is in the future. Skip this render
       return
     }
 
     //Calculate the next refresh min
-    targetRefreshRate.distance?.let {
-      nextRefreshMinTime += it
+    targetRenderRate.distance?.let { renderDistance: @ms Double ->
+      nextEarliestRenderHighRes += renderDistance
       //The following lines are relevant for the first timestamp and
       //if refresh events don't come as fast as requested.
-      if (nextRefreshMinTime < frameTimestamp) {
-        nextRefreshMinTime = frameTimestamp + it * 0.5
+      if (nextEarliestRenderHighRes < relativeHighRes) {
+        nextEarliestRenderHighRes = relativeHighRes + renderDistance * 0.5
       }
     }
 
-    //Refresh all necessary things.
-    @ms val refreshDelta: Double = if (lastRefreshTime.isNaN()) {
-      Double.NaN
-    } else {
-      frameTimestamp - lastRefreshTime
+    //clean up the render listeners
+    if (renderLoopListenersToRemove.isNotEmpty()) {
+      renderLoopListeners.removeAll(renderLoopListenersToRemove)
+      renderLoopListenersToRemove.clear()
     }
 
-    //Remember the refresh time
-    lastRefreshTime = frameTimestamp
-
-    //clean up the refresh listeners
-    if (refreshListenersToRemove.isNotEmpty()) {
-      refreshListeners.removeAll(refreshListenersToRemove)
-      refreshListenersToRemove.clear()
+    renderLoopListeners.fastForEach {
+      it.render(chartSupport = this, frameTimestamp = frameTimestamp, relativeHighRes = relativeHighRes)
     }
 
-    //Store the current frame timestamp
-    currentFrameTimestampOrNull = frameTimestamp
-
-    try {
-      refreshListeners.fastForEach {
-        it.refresh(this, frameTimestamp, refreshDelta)
+    //If somebody has marked the canvas as dirty it is repainted
+    dirtySupport.ifDirty { dirtyReasons: DirtyReasonBitSet ->
+      if (canvas.width <= 0.0 || canvas.height <= 0.0) {
+        logger.trace { "Canvas has zero size (${canvas.size} - do not paint" }
+        // do not paint if there is nothing to see
+        return@ifDirty
       }
 
-      //If somebody has marked the canvas as dirty it is repainted
-      dirtySupport.ifDirty { dirtyReasons: DirtyReasonBitSet ->
-        if (canvas.width <= 0.0 || canvas.height <= 0.0) {
-          // do not paint if there is nothing to see
-          return@ifDirty
+      if (currentChartState.hasAnyZeroSize) {
+        logger.trace("Chart state has zero size - do not paint")
+        //The chart state has zeros (windows size or content area size) - do not paint
+        //This is possible if the DelayedWindowSizeBindingStrategy is used.
+        return@ifDirty
+      }
+
+      logger.trace { "Paint ${frameTimestamp.formatUtc()} $relativeHighRes - because of $dirtyReasons" }
+
+      //The canvas might have been reset (HTML canvas on resize)
+      //Therefore it is necessary to set the defaults
+      canvas.gc.applyDefaults()
+
+      //Paint with a saved canvas
+      canvas.gc.saved {
+        @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
+        lastPaintTime = frameTimestamp
+
+        val paintingIndex = lastPaintingLoopIndex.next().also {
+          lastPaintingLoopIndex = it
         }
 
-        if (currentChartState.hasZeroSize) {
-          //The chart state has zeros (windows size or content area size) - do not paint
-          //This is possible if the DelayedWindowSizeBindingStrategy is used.
-          return@ifDirty
-        }
-
-        //The canvas might have been reset (HTML canvas on resize)
-        //Therefore it is necessary to set the defaults
-        canvas.gc.applyDefaults()
-
-        //Paint with a saved canvas
-        canvas.gc.saved {
-          @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
-          lastPaintTime = frameTimestamp
-
-          val paintingIndex = lastPaintingLoopIndex.next().also {
-            lastPaintingLoopIndex = it
-          }
-
-          for (i in 0 until paintListeners.size) {
-            paintListeners[i].paint(frameTimestamp, repaintDelta, paintingIndex, dirtyReasons)
-          }
+        for (i in 0 until paintListeners.size) {
+          paintListeners[i].paint(frameTimestamp, repaintDelta, paintingIndex, dirtyReasons)
         }
       }
-    } finally {
-      //Set the frame timestamp to null after painting
-      currentFrameTimestampOrNull = null
     }
   }
 
@@ -456,12 +451,26 @@ class ChartSupport constructor(
     paintListeners.add(paintListener)
   }
 
+  /**
+   * Registers a listener that is notified on every repaint. Adds the listener at first position
+   */
+  fun onPaintPrepend(paintListener: PaintListener) {
+    paintListeners.add(0, paintListener)
+  }
+
 
   /**
    * Registers a refresh listener that is notified whenever refresh is called
    */
-  fun onRefresh(refreshListener: RefreshListener) {
-    refreshListeners.add(refreshListener)
+  fun onRender(renderLoopListener: ChartRenderLoopListener) {
+    renderLoopListeners.add(renderLoopListener)
+  }
+
+  /**
+   * Registers the listener at the start of the list
+   */
+  fun onRenderPrepend(renderLoopListener: ChartRenderLoopListener) {
+    renderLoopListeners.add(0, renderLoopListener)
   }
 
   /**
@@ -469,61 +478,73 @@ class ChartSupport constructor(
    *
    * Attention: The refresh listener is unregistered on the *next* run to avoid concurrent modifications of the listeners list.
    */
-  fun removeOnRefresh(refreshListener: RefreshListener) {
+  fun removeOnRender(renderLoopListener: ChartRenderLoopListener) {
     //Schedule for removal
-    refreshListenersToRemove.add(refreshListener)
+    renderLoopListenersToRemove.add(renderLoopListener)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.ChartSupport")
   }
 }
 
 /**
- * The backing field for the current frame timestamp.
- * Will be set to null when no frame is currently being painted.
- */
-private var currentFrameTimestampOrNull: @ms Double? = null
-
-/**
- * Returns the timestamp of the current frame.
+ * Is called on each render frame. The frequency of calls to registered listeners depends on the [com.meistercharts.canvas.ChartSupport.targetRenderRate]
  *
- * ATTENTION: Will throw an exception if called from outside the frame paint method!
+ *
+ * Is also called if the canvas is *not* dirty.
+ *
+ * Use [PaintListener] if you want to be notified only if the canvas is dirty.
  */
-val currentFrameTimestamp: @ms Double
-  get() {
-    return currentFrameTimestampOrNull ?: throw IllegalStateException("Not currently in a frame")
-  }
-
-
-/**
- * Is called on refresh
- */
-fun interface RefreshListener {
+fun interface ChartRenderLoopListener {
   /**
-   * Is called on refresh
+   * Is called on each render loop
    */
-  fun refresh(
+  fun render(
     chartSupport: ChartSupport,
     /**
-     * The timestamp of the current frame
+     * The timestamp of the current frame (absolute value)
      */
     frameTimestamp: @ms Double,
     /**
-     * The delta since the last refresh call.
-     * Contains [Double.NaN] on the first refresh.
+     * The relative high resolution timestamp (relative)
      */
-    refreshDelta: @ms Double
+    relativeHighRes: @ms Double,
   )
 }
 
 /**
- * Is called on paint
+ * Is called on paint - only if the canvas has been marked as dirty
  */
 fun interface PaintListener {
   /**
    * Paints the canvas.
+   *
    * @param frameTimestamp the timestamp of the current frame
-   * @param delta the delta to the last paint (0 on the first paint)
+   * @param relativeHighRes the relative high resolution timestamp
    * @param paintingLoopIndex the index of the paint call
+   * @param dirtyReasons the reasons why the canvas is dirty
    */
-  fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet)
+  fun paint(
+    /**
+     * The (absolute) frame timestamp.
+     *
+     * Attention: Do not use for animations. Use [relativeHighRes] instead.
+     */
+    frameTimestamp: @ms Double,
+    /**
+     * The relative high resolution timestamp (relative)
+     */
+    relativeHighRes: @ms Double,
+    /**
+     * The current painting loop index
+     */
+    paintingLoopIndex: PaintingLoopIndex,
+    /**
+     * The reasons why the canvas is repainted
+     */
+    dirtyReasons: DirtyReasonBitSet,
+  )
 }
 
 
@@ -693,7 +714,7 @@ val ChartSupport.translateOverTime: ChartTranslateOverTimeService
   get() {
     return serviceRegistry.get(ChartTranslateOverTimeService::class) {
       ChartTranslateOverTimeService(this).also {
-        onRefresh(it)
+        onRender(it)
       }
     }
   }
@@ -704,12 +725,13 @@ val ChartSupport.translateOverTime: ChartTranslateOverTimeService
  * @see zoomOut
  * @see resetOnlyZoom
  */
-fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.modifyZoom(
     true,
     AxisSelection.Both,
     canvas.width * zoomCenterFactorX,
-    canvas.height * zoomCenterFactorY
+    canvas.height * zoomCenterFactorY,
+    reason = reason,
   )
 }
 
@@ -719,12 +741,13 @@ fun ChartSupport.zoomIn(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFac
  * @see zoomIn
  * @see resetOnlyZoom
  */
-fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.modifyZoom(
     false,
     AxisSelection.Both,
     canvas.width * zoomCenterFactorX,
-    canvas.height * zoomCenterFactorY
+    canvas.height * zoomCenterFactorY,
+    reason = reason,
   )
 }
 
@@ -738,20 +761,21 @@ fun ChartSupport.zoomOut(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFa
  * @see zoomOut
  * @see resetZoomAndTranslationToDefaults
  */
-fun ChartSupport.resetOnlyZoom(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5) {
+fun ChartSupport.resetOnlyZoom(@pct zoomCenterFactorX: Double = 0.5, @pct zoomCenterFactorY: Double = 0.5, reason: UpdateReason) {
   zoomAndTranslationSupport.resetZoom(
     zoomCenter = Coordinates.of(
       canvas.width * zoomCenterFactorX,
       canvas.height * zoomCenterFactorY
-    )
+    ),
+    reason = reason,
   )
 }
 
 /**
  * Resets the view to the defaults (zoom and translation)
  */
-fun ChartSupport.resetZoomAndTranslationToDefaults() {
-  zoomAndTranslationSupport.resetToDefaults()
+fun ChartSupport.resetZoomAndTranslationToDefaults(reason: UpdateReason) {
+  zoomAndTranslationSupport.resetToDefaults(reason = reason)
 }
 
 /**
@@ -766,25 +790,25 @@ fun ChartSupport.bindVisibleRangeBidirectional(other: ChartSupport, axisSelectio
   var updating = false
 
   fun apply(source: ChartSupport, target: ChartSupport) {
-    if (!updating) {
-      updating = true
-      try {
-        @DomainRelative val topLeft = source.chartCalculator.window2domainRelative(0.0, 0.0)
-        @DomainRelative val bottomRight = source.chartCalculator.window2domainRelative(source.currentChartState.windowWidth, source.currentChartState.windowHeight)
+    if (!updating.not()) return
 
-        if (axisSelection.containsX) {
-          if (!topLeft.x.isNanOrInfinite() && !bottomRight.x.isNanOrInfinite() && topLeft.x != bottomRight.x) {
-            target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x)
-          }
+    updating = true
+    try {
+      @DomainRelative val topLeft = source.chartCalculator.window2domainRelative(0.0, 0.0)
+      @DomainRelative val bottomRight = source.chartCalculator.window2domainRelative(source.currentChartState.windowWidth, source.currentChartState.windowHeight)
+
+      if (axisSelection.containsX) {
+        if (!topLeft.x.isNanOrInfinite() && !bottomRight.x.isNanOrInfinite() && topLeft.x != bottomRight.x) {
+          target.zoomAndTranslationSupport.fitX(topLeft.x, bottomRight.x, UpdateReason.BoundToOtherChart)
         }
-        if (axisSelection.containsY) {
-          if (!topLeft.y.isNanOrInfinite() && !bottomRight.y.isNanOrInfinite() && topLeft.y != bottomRight.y) {
-            target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y)
-          }
-        }
-      } finally {
-        updating = false
       }
+      if (axisSelection.containsY) {
+        if (!topLeft.y.isNanOrInfinite() && !bottomRight.y.isNanOrInfinite() && topLeft.y != bottomRight.y) {
+          target.zoomAndTranslationSupport.fitY(topLeft.y, bottomRight.y, UpdateReason.BoundToOtherChart)
+        }
+      }
+    } finally {
+      updating = false
     }
   }
 

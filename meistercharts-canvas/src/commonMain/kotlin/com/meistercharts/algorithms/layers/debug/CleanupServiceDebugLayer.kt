@@ -15,13 +15,13 @@
  */
 package com.meistercharts.algorithms.layers.debug
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketDescriptor.Companion.MaxSupportedDescriptorsCount
 import com.meistercharts.history.InMemoryHistoryStorage

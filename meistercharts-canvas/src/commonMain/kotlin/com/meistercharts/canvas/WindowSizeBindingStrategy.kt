@@ -15,8 +15,8 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.MutableChartState
-import com.meistercharts.algorithms.axis.AxisSelection
+import com.meistercharts.state.MutableChartState
+import com.meistercharts.axis.AxisSelection
 import it.neckar.open.dispose.OnDispose
 import it.neckar.open.async.Async
 import kotlin.time.Duration

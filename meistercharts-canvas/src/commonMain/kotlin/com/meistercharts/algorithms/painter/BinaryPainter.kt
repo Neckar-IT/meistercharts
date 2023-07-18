@@ -15,9 +15,10 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.ChartingUtils
+import com.meistercharts.calc.ChartingUtils
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.color.Color
 import it.neckar.open.unit.other.px
 
 /**

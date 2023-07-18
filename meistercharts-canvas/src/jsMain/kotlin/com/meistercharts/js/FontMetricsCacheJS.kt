@@ -15,9 +15,9 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontMetrics
-import com.meistercharts.canvas.FontMetricsCache
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontMetrics
+import com.meistercharts.font.FontMetricsCache
 import it.neckar.open.collections.cache
 import com.meistercharts.events.FontLoadedEventBroker
 

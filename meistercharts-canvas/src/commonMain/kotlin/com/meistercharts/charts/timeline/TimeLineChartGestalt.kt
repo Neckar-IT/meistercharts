@@ -15,14 +15,6 @@
  */
 package com.meistercharts.charts.timeline
 
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.impl.DelegatingZoomAndTranslationDefaults
-import com.meistercharts.algorithms.impl.FittingWithMargin
-import com.meistercharts.algorithms.impl.MoveDomainValueToLocation
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
@@ -58,11 +50,8 @@ import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
-import com.meistercharts.algorithms.painter.RgbaColor
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
-import com.meistercharts.algorithms.painter.WebColor
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.algorithms.tile.AverageMinMaxHistoryCanvasTilePainter
 import com.meistercharts.algorithms.tile.CachedTileProvider
@@ -81,10 +70,6 @@ import com.meistercharts.algorithms.tile.cached
 import com.meistercharts.algorithms.tile.canvasTiles
 import com.meistercharts.algorithms.tile.delegate
 import com.meistercharts.algorithms.tile.withMinimum
-import com.meistercharts.algorithms.withContentAreaSize
-import com.meistercharts.algorithms.withContentViewportMargin
-import com.meistercharts.algorithms.withTranslation
-import com.meistercharts.algorithms.withZoom
 import com.meistercharts.animation.Easing
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
@@ -92,7 +77,8 @@ import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
@@ -108,12 +94,14 @@ import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.ChartGestalt
-import com.meistercharts.charts.ChartId
 import com.meistercharts.charts.ChartRefreshGestalt
 import com.meistercharts.charts.ContentViewportGestalt
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.threshold.thresholdsSupport
+import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
+import com.meistercharts.color.UnparsedWebColor
 import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
 import com.meistercharts.history.AndBefore
@@ -143,6 +131,7 @@ import com.meistercharts.history.generator.ReferenceEntryGenerator
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
@@ -150,9 +139,20 @@ import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.provider.SizedLabelsProvider
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
+import com.meistercharts.state.ChartState
+import com.meistercharts.state.withContentAreaSize
+import com.meistercharts.state.withContentViewportMargin
+import com.meistercharts.state.withTranslation
+import com.meistercharts.state.withZoom
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
 import com.meistercharts.style.withFillIfNull
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
+import com.meistercharts.zoom.FittingWithMargin
+import com.meistercharts.zoom.UpdateReason
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
@@ -183,7 +183,6 @@ import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
 import it.neckar.open.time.TimeConstants
-import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
@@ -211,7 +210,6 @@ typealias ValueAxisTopTitleStyleConfiguration = (style: AxisTopTopTitleLayer.Con
  */
 class TimeLineChartGestalt
 @JvmOverloads constructor(
-  val chartId: ChartId,
   /**
    * The data
    */
@@ -229,7 +227,7 @@ class TimeLineChartGestalt
   /**
    * THe physical tile size that is used by the tiles for this gestalt
    */
-  private val physicalTileSize: @PhysicalPixel Size = Size.of(400.0, 400.0)
+  private val physicalTileSize: @PhysicalPixel Size = Size.of(100.0, 2_000.0)
 
   /**
    * Is used to calculate the history render properties
@@ -272,6 +270,7 @@ class TimeLineChartGestalt
   /**
    * Configures this gestalt to show candles
    */
+  @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
   fun configureForCandle() {
     tilePainter = createCandleHistoryCanvasTilePainter()
     historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
@@ -280,7 +279,7 @@ class TimeLineChartGestalt
   /**
    * Creates a new instance of [HistoryCanvasTilePainter]
    */
-  private fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
+  fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
     CandleHistoryCanvasTilePainter.Configuration(
       historyStorage = data.historyStorage,
       contentAreaTimeRange = { style.contentAreaTimeRange },
@@ -294,7 +293,7 @@ class TimeLineChartGestalt
   /**
    * The tile provider that is used to get the tiles
    */
-  val tileProvider: CachedTileProvider = CanvasTileProvider(physicalTileSize, ::tilePainter.delegate()).cached(chartId)
+  val tileProvider: CachedTileProvider = CanvasTileProvider(physicalTileSize, ::tilePainter.delegate()).cached { chartIdOrNull }
 
   /**
    * The tiles layer that paints the tiles (for decimal values)
@@ -576,7 +575,7 @@ class TimeLineChartGestalt
      * Creates a new chart state for the decimals area
      */
     fun calculateDecimalsAreaChartState(originalChartState: ChartState): ChartState {
-      val updatedViewportMargin = originalChartState.contentViewportMargin.withBottom(decimalsAreaViewportMarginBottom())
+      val updatedViewportMargin = originalChartState.contentViewportMargin.withTopBottom(decimalsAreaViewportMarginTop(), decimalsAreaViewportMarginBottom())
       return originalChartState.withContentViewportMargin(updatedViewportMargin)
     }
 
@@ -619,11 +618,15 @@ class TimeLineChartGestalt
       return enumsAreaViewportMarginBottom() + totalHeightRequiredForEnumsLayer()
     }
 
+    fun decimalsAreaViewportMarginTop(): @Zoomed Double {
+      return contentViewportGestalt.contentViewportMargin.top
+    }
+
     /**
      * The margin for the decimals area viewport
      */
     fun decimalsAreaViewportMargin(): @Zoomed Insets {
-      return contentViewportMargin.withBottom(decimalsAreaViewportMarginBottom())
+      return contentViewportMargin.withTopBottom(newTop = decimalsAreaViewportMarginTop(), newBottom = decimalsAreaViewportMarginBottom())
     }
 
     /**
@@ -1007,14 +1010,31 @@ class TimeLineChartGestalt
     chartSupport.translateOverTime.insets = Insets.onlyRight(insetsRight)
   }
 
+
+  /**
+   * The viewport for the complete diagram.
+   * View port does *not* contain:
+   * - space at top (e.g. for title)
+   * - space at bottom for time axis
+   */
+  private val contentViewportGestalt = ContentViewportGestalt(
+    Insets.of(0.0, 0.0, 0.0, 0.0),
+    updateBehavior = ContentViewportGestalt.ResetAffectedAxisOnMarginIncreaseToDefaults //On Axis visibility change, do not update x-axis. Also, only reset y-axis if the margin increases
+  )
+
+  /**
+   * The content viewport margin
+   */
+  var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
+
   init {
     data.minimumSamplingPeriodProperty.consumeImmediately {
       //adjust the content area in order to display about 600 samples
-      style.applySamplingPeriod(it)
+      style.applyMinimumSamplingPeriod(it)
     }
 
-    style.contentAreaTimeRangeProperty.consumeImmediately {
-      timeAxisLayer.data.contentAreaTimeRange = it
+    style.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
+      timeAxisLayer.data.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
     }
 
@@ -1061,22 +1081,7 @@ class TimeLineChartGestalt
         configuration(layer.configuration, decimalDataSeriesIndex)
       }
     }
-  }
 
-  /**
-   * The viewport for the complete diagram.
-   * View port does *not* contain:
-   * - space at top (e.g. for title)
-   * - space at bottom for time axis
-   */
-  private val contentViewportGestalt = ContentViewportGestalt(Insets.of(25.0, 0.0, 0.0, 0.0))
-
-  /**
-   * The content viewport margin
-   */
-  var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
-
-  init {
     configureBuilder { meisterChartBuilder ->
       chartRefreshGestalt.configure(meisterChartBuilder)
 
@@ -1086,13 +1091,11 @@ class TimeLineChartGestalt
         configureAsTimeChart()
         configureAsTiledTimeChart()
 
+
         zoomAndTranslationDefaults {
           DelegatingZoomAndTranslationDefaults(
-            MoveDomainValueToLocation(
-              domainRelativeValueProvider = { style.contentAreaTimeRange.time2relative(nowMillis()) },
-              targetLocationProvider = { chartCalculator -> chartCalculator.windowRelative2WindowX(style.crossWirePositionX) }
-            ),
-            FittingWithMargin { viewportSupport.decimalsAreaViewportMargin() }
+            xAxisDelegate = MoveTimeUnderCrossWire.create(this@TimeLineChartGestalt),
+            yAxisDelegate = FittingWithMargin { viewportSupport.decimalsAreaViewportMargin() }
           )
         }
 
@@ -1126,6 +1129,7 @@ class TimeLineChartGestalt
 
           style.contentAreaTimeRangeProperty.consumeImmediately {
             chartSupport.translateOverTime.contentAreaTimeRangeX = it
+            chartSupport.zoomAndTranslationSupport.resetToDefaults(axisSelection = AxisSelection.X, reason = UpdateReason.ConfigurationUpdate)
           }
 
           style.lineValueRangesProperty.consume {
@@ -1136,7 +1140,7 @@ class TimeLineChartGestalt
           // client that uses the gestalt. However, this automatic set-up might be useful
           // for every client.
           val tileInvalidator: HistoryTileInvalidator = DefaultHistoryTileInvalidator()
-          (data.historyStorage as? ObservableHistoryStorage)?.observe { _, updateInfo ->
+          (data.historyStorage as? ObservableHistoryStorage)?.observe { updateInfo ->
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {
@@ -1211,7 +1215,10 @@ class TimeLineChartGestalt
     /**
      * The smallest sampling period that is used when creating the tiles
      */
+    @Deprecated("required? Or obsolete now?")
     val minimumSamplingPeriodProperty: ObservableObject<SamplingPeriod> = ObservableObject(defaultMinimumSamplingPeriod)
+
+    @Deprecated("required? Or obsolete now?")
     var minimumSamplingPeriod: SamplingPeriod by minimumSamplingPeriodProperty
 
     /**
@@ -1325,7 +1332,7 @@ class TimeLineChartGestalt
 
       when (val lineStyleColor = averageLineStyle.color) {
         is RgbaColor -> lineStyleColor.withAlpha(0.3)
-        is WebColor -> Color.gray.withAlpha(0.3)
+        is UnparsedWebColor -> Color.gray.withAlpha(0.3)
       }
     }
 
@@ -1512,12 +1519,14 @@ class TimeLineChartGestalt
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.
      */
-    fun applySamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
+    @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
+    fun applyMinimumSamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
+      //TODO replace this method with some kind of configuration/wizard/... object
       contentAreaDuration = samplingPeriod.distance * 600 //600 samples
     }
 
     init {
-      applySamplingPeriod()
+      applyMinimumSamplingPeriod()
       showAllDecimalSeries()
       showEnumSeriesAtMost(3)
     }
@@ -1531,7 +1540,7 @@ class TimeLineChartGestalt
 /**
  * Set up with nice data for a demo.
  */
-fun TimeLineChartGestalt.setUpDemo(): Disposable {
+fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disposable {
   val samplingPeriod = SamplingPeriod.EveryHundredMillis
 
   style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
@@ -1546,8 +1555,6 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
 
   //Avoid gaps for the cross wire - when adding only
   data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
-
-  val writableHistoryStorage = data.historyStorage as WritableHistoryStorage
 
   data.historyConfiguration = historyConfiguration {
     decimalDataSeries(DataSeriesId(17), TextKey.simple("Mass Flow Rate [kg/h]"), HistoryUnit("kg/h"))
@@ -1628,7 +1635,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
   }
 
   val historyChunkGenerator = HistoryChunkGenerator(
-    historyStorage = writableHistoryStorage, samplingPeriod = samplingPeriod,
+    historyStorage = historyStorage, samplingPeriod = samplingPeriod,
     decimalValueGenerators = decimalValueGenerators,
     enumValueGenerators = enumValueGenerators,
     referenceEntryGenerators = referenceEntryGenerators,
@@ -1637,7 +1644,7 @@ fun TimeLineChartGestalt.setUpDemo(): Disposable {
 
   val addSamplesDisposable = it.neckar.open.time.repeat(100.milliseconds) {
     historyChunkGenerator.next()?.let {
-      writableHistoryStorage.storeWithoutCache(it, samplingPeriod)
+      historyStorage.storeWithoutCache(it, samplingPeriod)
     }
   }.also {
     onDispose(it)

@@ -15,17 +15,17 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.color.Color
 import it.neckar.open.annotations.JavaFriendly
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontMetrics
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side

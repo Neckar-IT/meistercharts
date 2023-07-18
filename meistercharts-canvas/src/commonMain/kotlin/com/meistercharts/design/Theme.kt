@@ -15,10 +15,10 @@
  */
 package com.meistercharts.design
 
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import it.neckar.open.provider.MultiProvider
 

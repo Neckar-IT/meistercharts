@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.category
 
-import com.meistercharts.algorithms.model.SeriesIndex
+import com.meistercharts.model.category.SeriesIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyCrossWireStyle
 import com.meistercharts.api.applyLinesStyle
@@ -37,18 +37,16 @@ import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
 import com.meistercharts.api.line.LineChartSimpleStyle
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.category.CategoryLineChartExtensions")
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy API defaults
  */
-fun CategoryLineChartGestalt.applySickDefaults() {
+fun CategoryLineChartGestalt.applyEasyApiDefaults() {
   // use all the available space on the right
   contentViewportMargin = contentViewportMargin.copy(right = 0.0)
   configuration.applyValueAxisTitleOnTop(40.0)
@@ -58,9 +56,7 @@ fun CategoryLineChartGestalt.applySickDefaults() {
  * Applies the style for the line chart simple
  */
 fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
-  logger.ifDebug {
-    console.debug("CategoryLineChartGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("CategoryLineChartGestalt.applyStyle", jsStyle)
 
   //call apply-functions first
   jsStyle.valueRange?.toModel()?.let {

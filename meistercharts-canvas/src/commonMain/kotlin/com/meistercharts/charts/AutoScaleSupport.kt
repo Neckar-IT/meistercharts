@@ -15,12 +15,9 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.axis.IntermediateValuesMode
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.annotations.Domain
+import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.timerSupport
@@ -28,6 +25,9 @@ import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.ObservableHistoryStorage
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastMapNotNull
 import it.neckar.open.kotlin.lang.findMagnitudeValue
 import it.neckar.open.kotlin.lang.findMagnitudeValueCeil
@@ -80,7 +80,7 @@ class AutoScaleSupport(
   ) {
     //Listen to changes to the history
     val observableHistoryStorage = gestalt.data.historyStorage as ObservableHistoryStorage
-    observableHistoryStorage.observe { _, _ ->
+    observableHistoryStorage.observe { _ ->
       dirty = true
     }
 

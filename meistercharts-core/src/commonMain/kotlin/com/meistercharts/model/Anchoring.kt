@@ -16,6 +16,7 @@
 package com.meistercharts.model
 
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 
 /**

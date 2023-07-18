@@ -15,7 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.toolbar
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonPressedEvent
 import com.meistercharts.canvas.paintable.ButtonPriority
@@ -117,22 +118,22 @@ class ToolbarButtonFactory(
 /**
  * Creates a button that zooms in when clicked
  */
-fun ToolbarButtonFactory.zoomInButton(): Button = button(Icons::zoomIn) { event -> event.chartSupport.zoomIn() }
+fun ToolbarButtonFactory.zoomInButton(): Button = button(Icons::zoomIn) { event -> event.chartSupport.zoomIn(reason = UpdateReason.UserInteraction) }
 
 /**
  * Creates a button that zooms out when clicked
  */
-fun ToolbarButtonFactory.zoomOutButton(): Button = button(Icons::zoomOut) { event -> event.chartSupport.zoomOut() }
+fun ToolbarButtonFactory.zoomOutButton(): Button = button(Icons::zoomOut) { event -> event.chartSupport.zoomOut(reason = UpdateReason.UserInteraction) }
 
 /**
  * Creates a button that resets the zoom when clicked
  */
-fun ToolbarButtonFactory.resetZoomButton(): Button = button(Icons::resetZoom) { event -> event.chartSupport.resetOnlyZoom() }
+fun ToolbarButtonFactory.resetZoomButton(): Button = button(Icons::resetZoom) { event -> event.chartSupport.resetOnlyZoom(reason = UpdateReason.UserInteraction) }
 
 /**
  * Creates a button that resets the zoom and translation when clicked
  */
-fun ToolbarButtonFactory.resetZoomAndTranslationButton(): Button = button(Icons::home) { event -> event.chartSupport.resetZoomAndTranslationToDefaults() }
+fun ToolbarButtonFactory.resetZoomAndTranslationButton(): Button = button(Icons::home) { event -> event.chartSupport.resetZoomAndTranslationToDefaults(reason = UpdateReason.UserInteraction) }
 
 /**
  * Default implementation that

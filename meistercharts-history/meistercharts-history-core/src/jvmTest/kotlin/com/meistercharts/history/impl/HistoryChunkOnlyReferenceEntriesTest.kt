@@ -498,6 +498,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
     val newChunk = chunk.withAddedValues(
       additionalTimeStamp = 1004.0,
       additionalDecimalValues = emptyDoubleArray(),
+      additionalDecimalMinValues = null,
+      additionalDecimalMaxValues = null,
+
       additionalEnumValues = emptyIntArray(),
       additionalReferenceEntryIds = intArrayOf(4, 40, 400, 4000),
       additionalReferenceEntryStatuses = intArrayOf(1, 2, 3, 4),
@@ -536,6 +539,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
     val newChunk = chunk.withAddedValues(
       additionalTimeStamp = 1004.0,
       additionalDecimalValues = emptyDoubleArray(),
+      additionalDecimalMinValues = null,
+      additionalDecimalMaxValues = null,
+
       additionalEnumValues = emptyIntArray(),
       additionalReferenceEntryIds = intArrayOf(4, 40, 400, 4000),
       additionalReferenceEntryStatuses = intArrayOf(1, 2, 3, 4),
@@ -561,6 +567,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
     val newChunk = chunk.withAddedValues(
       additionalTimeStamp = 1004.0,
       additionalDecimalValues = emptyDoubleArray(),
+      additionalDecimalMinValues = null,
+      additionalDecimalMaxValues = null,
+
       additionalEnumValues = emptyIntArray(),
       additionalReferenceEntryIds = IntArray(4) { ReferenceEntryId.PendingAsInt },
       additionalReferenceEntryStatuses = IntArray(4) { HistoryEnumSet.PendingAsInt },

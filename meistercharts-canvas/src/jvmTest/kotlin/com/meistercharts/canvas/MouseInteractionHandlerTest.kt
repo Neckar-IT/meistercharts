@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.events.DefaultMouseEventBroker
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseClickEvent

@@ -17,7 +17,7 @@ package com.meistercharts.canvas.animation
 
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.RefreshListener
+import com.meistercharts.canvas.ChartRenderLoopListener
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose
@@ -29,14 +29,14 @@ import it.neckar.open.unit.si.ms
  */
 class ChartAnimation(
   val animated: Animated
-) : Disposable, OnDispose, RefreshListener {
+) : Disposable, OnDispose, ChartRenderLoopListener {
 
   private val disposeSupport: DisposeSupport = DisposeSupport()
 
   /**
    * Updates the consumer with an updated value
    */
-  override fun refresh(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
     if (disposeSupport.disposed) {
       unregister(chartSupport)
       return
@@ -61,7 +61,7 @@ class ChartAnimation(
    */
   private fun unregister(chartSupport: ChartSupport) {
     //Unregister this listener as soon as the animation has been finished
-    chartSupport.removeOnRefresh(this)
+    chartSupport.removeOnRender(this)
     return
   }
 

@@ -15,8 +15,8 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
@@ -40,14 +40,14 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultSeries
-import com.meistercharts.algorithms.model.SeriesIndex
-import com.meistercharts.algorithms.model.createCategoryLabelsProvider
-import com.meistercharts.algorithms.model.delegate
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.DefaultSeries
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.model.category.createCategoryLabelsProvider
+import com.meistercharts.model.category.delegate
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport
 import com.meistercharts.algorithms.tooltip.balloon.CategorySeriesModelBalloonTooltipSupport
@@ -58,8 +58,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
@@ -338,7 +338,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
       valueAxisLayer.style.ticksFormat = it
     }
 
-    configureBuilder { meisterChartBuilder: MeisterChartBuilder ->
+    configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 
       meisterChartBuilder.configure {
@@ -347,9 +347,14 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         layers.addAboveBackground(valuesGridLayer.visibleIf(configuration.showValuesGridProperty))
         layers.addAboveBackground(categoriesGridLayer.visibleIf(configuration.showCategoriesGridProperty))
 
-
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
         layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
+
+        layers.addLayer(categoryAxisLayer)
+        valueAxisSupport.addLayers(this)
+        thresholdsSupport.addLayers(this)
+
+        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
 
         when (configuration.toolTipType) {
           ToolTipType.CrossWire -> {
@@ -360,12 +365,6 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
             layers.addLayer(balloonTooltipLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
           }
         }
-
-        layers.addLayer(categoryAxisLayer)
-        valueAxisSupport.addLayers(this)
-        thresholdsSupport.addLayers(this)
-
-        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
 
         layers.addVersionNumberHidden()
       }

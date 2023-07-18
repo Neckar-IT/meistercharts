@@ -15,11 +15,12 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.ModifierCombination
@@ -50,7 +51,7 @@ class ZoomAndTranslationLayerTest {
     val layer = ZoomAndTranslationLayer(zoomAndTranslationSupport)
 
     layer.onDoubleClick {
-      zoomAndTranslationSupport.resetToDefaults()
+      zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.UserInteraction)
       Consumed
     }
 
@@ -89,12 +90,12 @@ class ZoomAndTranslationLayerTest {
         return@onMouseWheel EventConsumption.Ignored
       }
 
-      zoomAndTranslationSupport.modifyZoom(event.delta < 0, zoomedAxis, event.coordinates)
+      zoomAndTranslationSupport.modifyZoom(event.delta < 0, zoomedAxis, event.coordinates, reason = UpdateReason.UserInteraction)
       Consumed
     }
 
     layer.onMouseDrag { distance ->
-      zoomAndTranslationSupport.translateWindow(AxisSelection.X, distance.x, distance.y)
+      zoomAndTranslationSupport.translateWindow(AxisSelection.X, distance.x, distance.y, reason = UpdateReason.UserInteraction)
       Consumed
     }
   }

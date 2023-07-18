@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontFamily
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontStyle
-import com.meistercharts.canvas.FontVariant
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontFamily
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontStyle
+import com.meistercharts.font.FontVariant
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.MouseCursor
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.events.KeyCode
 import com.meistercharts.events.KeyDownEvent
@@ -95,7 +95,7 @@ fun MouseCursor.toCss(): String {
 /**
  * Contains a list of mouse cursors that are supported by JS but currently not by MeisterCharts
  */
-private val additionalMouseCursorTypes = listOf(
+val additionalMouseCursorTypes = listOf(
   "zoom-in",
   "zoom-out",
   "help",

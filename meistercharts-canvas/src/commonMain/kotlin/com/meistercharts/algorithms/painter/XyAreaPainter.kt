@@ -17,7 +17,8 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.model.Coordinates
+import com.meistercharts.color.Color
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 
 
@@ -25,9 +26,10 @@ import it.neckar.open.unit.other.px
  * Paints a xy area
  *
  */
+@Deprecated("No longer required(?)")
 class XyAreaPainter(
   /**
-   * The base line height
+   * The baseline height
    */
   @px @Window
   private val baseLineY: Double, snapXValues: Boolean, snapYValues: Boolean

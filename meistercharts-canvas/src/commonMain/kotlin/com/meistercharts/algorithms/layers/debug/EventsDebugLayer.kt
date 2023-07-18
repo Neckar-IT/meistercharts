@@ -19,11 +19,11 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.text.TextPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.LineSpacing
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasPointerEventHandler

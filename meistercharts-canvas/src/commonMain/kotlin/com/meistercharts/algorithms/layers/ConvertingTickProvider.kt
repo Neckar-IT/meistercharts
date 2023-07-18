@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
+import com.meistercharts.axis.AxisEndConfiguration
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.unit.conversion.Converter
 

@@ -30,7 +30,7 @@ class CachedTileProvider(
    * The chart ID.
    * This property is used to clear the cache
    */
-  val chartId: ChartId,
+  val chartId: () -> ChartId?,
   /**
    * Is used to create the tiles
    */
@@ -65,15 +65,21 @@ class CachedTileProvider(
    * All tiles are removed completely
    */
   fun clear() {
-    GlobalTilesCache.clear(chartId)
+    chartId()?.let { GlobalTilesCache.clear(it) }
   }
 
   /**
-   * All tiles currently held in the cache
+   * All tiles currently held in the cache.
+   *
+   * Returns an empty list if the chart ID is null
    */
   @Slow
   fun tiles(): Collection<Tile> {
-    return GlobalTilesCache.tiles(chartId)
+    chartId()?.let {
+      return GlobalTilesCache.tiles(it)
+    }
+
+    return emptyList()
   }
 
   override fun toString(): String {
@@ -84,6 +90,15 @@ class CachedTileProvider(
 /**
  * Wraps the tile provider in a [CachedTileProvider]
  */
-fun TileProvider.cached(chartId: ChartId): CachedTileProvider {
+inline fun TileProvider.cached(chartId: ChartId): CachedTileProvider {
+  return cached { chartId }
+}
+
+/**
+ * Wraps the tile provider in a [CachedTileProvider].
+ *
+ * If null is passed as [ChartId] some actions are ignored (e.g. clean). Other actions throw an exception (e.g. store)
+ */
+fun TileProvider.cached(chartId: () -> ChartId?): CachedTileProvider {
   return CachedTileProvider(chartId, this)
 }

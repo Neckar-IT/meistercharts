@@ -20,7 +20,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DefaultLayerSupport
 import com.meistercharts.canvas.DirtyReasonBitSet
 import com.meistercharts.canvas.MockCanvas
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.loop.PaintingLoopIndex
 import it.neckar.open.unit.si.ms
 
 object MockLayerPaintingContext {

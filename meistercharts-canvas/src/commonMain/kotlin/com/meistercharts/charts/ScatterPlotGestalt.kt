@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
@@ -24,10 +24,10 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.scatterplot.ScatterPlotLayer
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
@@ -37,6 +37,7 @@ import com.meistercharts.provider.ValueRangeProvider
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.kotlin.lang.randomNormal
 import it.neckar.open.kotlin.lang.asProvider1
+import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.observable.ObservableObject
 
 /**
@@ -96,7 +97,7 @@ class ScatterPlotGestalt(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fixedChartGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {
@@ -153,7 +154,7 @@ class ScatterPlotGestalt(
         val centerX = if (cloudIndex < 2) 25.0 else 75.0
         val centerY = if (cloudIndex % 2 == 0) 25.0 else 75.0
 
-        for (i in 0 until 100) {
+        100.fastFor {
           xValues.add(randomNormal(centerX, 12.0))
           yValues.add(randomNormal(centerY, 12.0))
         }

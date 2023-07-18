@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.history.SamplingPeriod

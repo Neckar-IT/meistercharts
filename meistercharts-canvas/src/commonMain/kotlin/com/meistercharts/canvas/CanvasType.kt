@@ -26,8 +26,13 @@ enum class CanvasType {
   Main,
 
   /**
-   * A canvas that is only used for calculate off screen images.
+   * A canvas that is only used for calculate off-screen images.
    * No interaction happens on this canvas - therefore no listeners are registered
    */
-  OffScreen
+  OffScreen,
+
+  /**
+   * A canvas that is used to read back the content of the canvas.
+   */
+  ReadBack,
 }

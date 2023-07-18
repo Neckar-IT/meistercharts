@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.linechart
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.style.Palette

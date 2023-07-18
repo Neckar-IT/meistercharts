@@ -11,6 +11,26 @@ expect interface Logger {
    */
   fun getName(): String
 
+  //Currently not working -> https://youtrack.jetbrains.com/issue/KT-59785/
+  ///**
+  // * Returns true if the logger is enabled for the provided level
+  // */
+  //fun isEnabledForLevel(level: Level): Boolean
+
+  /**
+   * Is the logger instance enabled for the TRACE level?
+   *
+   * @return True if this Logger is enabled for the TRACE level, false otherwise.
+   */
+  fun isTraceEnabled(): Boolean
+
+  /**
+   * Log a message at the TRACE level.
+   *
+   * @param msg the message string to be logged
+   */
+  fun trace(msg: String?)
+
   /**
    * Is the logger instance enabled for the DEBUG level?
    *
@@ -70,38 +90,75 @@ expect interface Logger {
 }
 
 /**
- * Conditional debug action that is only executed if debug is enabled
+ * Returns the logger name of this logger.
  */
-inline fun Logger.debug(action: () -> String) {
-  if (this.isDebugEnabled()) {
-    this.debug(action())
+inline val Logger.loggerName: LoggerName
+  //Must be an extension val, because we use a typealias on JVM side
+  get() = LoggerName(getName())
+
+
+expect fun Logger.isEnabledForLevel(level: Level): Boolean
+
+/**
+ * Conditional log statement that is only executed if the given level is enabled
+ */
+inline fun Logger.log(level: Level, messageProvider: () -> String) {
+  if (isEnabledForLevel(level)) {
+    val message = messageProvider()
+
+    when (level) {
+      Level.TRACE -> trace(message)
+      Level.DEBUG -> debug(message)
+      Level.INFO -> info(message)
+      Level.WARN -> warn(message)
+      Level.ERROR -> error(message)
+      else -> throw UnsupportedOperationException("Unsupported log level $level")
+    }
   }
 }
 
 /**
- * Conditional debug action that is only executed if info is enabled
+ * Conditional trace statement that is only executed if trace is enabled
  */
-inline fun Logger.info(action: () -> String) {
-  if (this.isInfoEnabled()) {
-    this.info(action())
+inline fun Logger.trace(messageProvider: () -> String) {
+  if (isTraceEnabled()) {
+    trace(messageProvider())
   }
 }
 
 /**
- * Conditional debug action that is only executed if warn is enabled
+ * Conditional debug statement that is only executed if debug is enabled
  */
-inline fun Logger.warn(action: () -> String) {
-  if (this.isWarnEnabled()) {
-    this.warn(action())
+inline fun Logger.debug(messageProvider: () -> String) {
+  if (isDebugEnabled()) {
+    debug(messageProvider())
   }
 }
 
 /**
- * Conditional debug action that is only executed if error is enabled
+ * Conditional info statement that is only executed if info is enabled
  */
-inline fun Logger.error(action: () -> String) {
-  if (this.isErrorEnabled()) {
-    this.error(action())
+inline fun Logger.info(messageProvider: () -> String) {
+  if (isInfoEnabled()) {
+    info(messageProvider())
+  }
+}
+
+/**
+ * Conditional warn statement that is only executed if warn is enabled
+ */
+inline fun Logger.warn(messageProvider: () -> String) {
+  if (isWarnEnabled()) {
+    warn(messageProvider())
+  }
+}
+
+/**
+ * Conditional error statement that is only executed if error is enabled
+ */
+inline fun Logger.error(messageProvider: () -> String) {
+  if (isErrorEnabled()) {
+    error(messageProvider())
   }
 }
 

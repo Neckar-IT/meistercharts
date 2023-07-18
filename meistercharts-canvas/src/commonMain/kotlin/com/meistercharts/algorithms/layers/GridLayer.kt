@@ -19,7 +19,7 @@ import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets

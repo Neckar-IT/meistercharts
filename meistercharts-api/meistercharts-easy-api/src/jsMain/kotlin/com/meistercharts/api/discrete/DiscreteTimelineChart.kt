@@ -15,9 +15,10 @@
  */
 package com.meistercharts.api.discrete
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
@@ -36,17 +37,16 @@ import com.meistercharts.canvas.timerSupport
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.history.HistoryStorageCache
+import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
-import com.meistercharts.js.MeisterChartJS
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
-import it.neckar.commons.kotlin.js.debug
+import com.meistercharts.js.MeisterchartJS
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
-import it.neckar.logging.ifDebug
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
@@ -65,22 +65,25 @@ class DiscreteTimelineChart internal constructor(
   /**
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
+  val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApi<DiscreteTimelineChartConfiguration>(meisterChart) {
+
+  private val historyStorage: InMemoryHistoryStorage = historyStorageQueryMonitor.historyStorage
 
   /**
    * The history-storage cache that is used to add the values
    */
-  private val historyStorageCache = HistoryStorageCache(gestalt.inMemoryStorage)
+  private val historyStorageCache = HistoryStorageCache(historyStorage)
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
 
     //decrease number of repaints
     meisterCharts.chartSupport.translateOverTime.roundingStrategy = RoundingStrategy.round
 
     //Set the preferred refresh rate
-    meisterCharts.chartSupport.targetRefreshRate = TargetRefreshRate.veryFast60
+    meisterCharts.chartSupport.targetRenderRate = TargetRefreshRate.veryFast60
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
       scheduleTimeRangeChangedNotification()
@@ -117,12 +120,9 @@ class DiscreteTimelineChart internal constructor(
    */
   @Suppress("unused") //called from JS
   fun setHistory(data: DiscreteTimelineChartData) {
-    logger.ifDebug {
-      console.debug("setHistory", data)
-    }
+    logger.debug("setHistory", data)
 
-    val inMemoryHistoryStorage = gestalt.inMemoryHistoryStorage
-    inMemoryHistoryStorage.clear() //clear history
+    historyStorage.clear() //clear history
 
     val historyConfiguration = gestalt.configuration.historyConfiguration()
 
@@ -139,12 +139,12 @@ class DiscreteTimelineChart internal constructor(
     historyStorageCache.scheduleForStore(chunk, samplingPeriod)
 
     logger.debug { "Sampling period: $samplingPeriod" }
-    logger.ifDebug { console.debug("Chunk", chunk.dump()) }
+    logger.debug("Chunk", chunk.dump())
 
     //Set the visible time range
     gestalt.chartSupport().let { chartSupport ->
       val chartCalculator = chartSupport.chartCalculator
-      val contentAreaTimeRangeX: com.meistercharts.algorithms.TimeRange = gestalt.configuration.contentAreaTimeRange
+      val contentAreaTimeRangeX: com.meistercharts.time.TimeRange = gestalt.configuration.contentAreaTimeRange
 
       @TimeRelative val startRelative = contentAreaTimeRangeX.time2relative(chunk.firstTimestamp)
       @TimeRelative val endRelative = contentAreaTimeRangeX.time2relative(chunk.lastTimestamp)
@@ -153,7 +153,7 @@ class DiscreteTimelineChart internal constructor(
       logger.debug("relative start/end: $startRelative - $endRelative")
 
       //Set the values immediately + set the defaults (for resize operations)
-      chartSupport.zoomAndTranslationSupport.fitX(startRelative, endRelative)
+      chartSupport.zoomAndTranslationSupport.fitX(startRelative, endRelative, reason = UpdateReason.DataChanged)
       chartSupport.zoomAndTranslationSupport.zoomAndTranslationDefaults = object : ZoomAndTranslationDefaults {
         override fun defaultZoom(chartCalculator: ChartCalculator): com.meistercharts.model.Zoom {
           val targetNumberOfSamples = chartCalculator.chartState.windowWidth / DiscreteTimelineChartGestalt.MinDistanceBetweenDataPoints //how many samples should be visible
@@ -199,7 +199,7 @@ class DiscreteTimelineChart internal constructor(
       }
 
       //Reset to defaults to force application of the new zoom/translation
-      chartSupport.zoomAndTranslationSupport.resetToDefaults()
+      chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.DataChanged)
     }
   }
 
@@ -208,7 +208,7 @@ class DiscreteTimelineChart internal constructor(
    */
   fun clearHistory() {
     historyStorageCache.clear()
-    gestalt.inMemoryStorage.clear()
+    historyStorage.clear()
   }
 
   /**
@@ -220,7 +220,7 @@ class DiscreteTimelineChart internal constructor(
   /**
    * The last visible time range. Is used to compare if a notification bout the change is necessary
    */
-  private var previousVisibleTimeRange: com.meistercharts.algorithms.TimeRange = com.meistercharts.algorithms.TimeRange(0.0, 0.0)
+  private var previousVisibleTimeRange: com.meistercharts.time.TimeRange = com.meistercharts.time.TimeRange(0.0, 0.0)
 
   /**
    * Notifies the observers about a time range change
@@ -232,7 +232,7 @@ class DiscreteTimelineChart internal constructor(
     }
     //We dispatch a CustomEvent of type "VisibleTimeRangeChanged" every time the translation along the x-axis changes
     previousVisibleTimeRange = currentVisibleTimeRange
-    dispatchCustomEvent("VisibleTimeRangeChanged", currentVisibleTimeRange.toJs())
+    dispatchCustomEvent("visible-time-range-changed", currentVisibleTimeRange.toJs())
   }
 
   /**
@@ -254,7 +254,7 @@ class DiscreteTimelineChart internal constructor(
    * Reset zoom and translation
    */
   fun resetView() {
-    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults()
+    meisterCharts.chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.ApiCall)
   }
 
   /**
@@ -278,7 +278,7 @@ class DiscreteTimelineChart internal constructor(
       with(meisterCharts.chartSupport) {
         @Window val centerX = chartCalculator.windowRelative2WindowX(zoomCenterX ?: 0.5)
         @Window val centerY = chartCalculator.windowRelative2WindowY(zoomCenterY ?: 0.5)
-        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY))
+        zoomAndTranslationSupport.setZoom(it.scaleX, it.scaleY, Coordinates(centerX, centerY), reason = UpdateReason.ApiCall)
       }
     }
   }
@@ -287,9 +287,6 @@ class DiscreteTimelineChart internal constructor(
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.DiscreteTimelineChart")
   }
 }
-
-private val DiscreteTimelineChartGestalt.inMemoryHistoryStorage: InMemoryHistoryStorage
-  get() = this.historyStorage as InMemoryHistoryStorage
 
 /**
  * Contains the data for the discrete timeline chart
@@ -330,8 +327,3 @@ actual external interface DiscreteDataEntry {
    */
   actual val status: Double? //must be double since JS does not support Int
 }
-
-private val DiscreteTimelineChartGestalt.inMemoryStorage: InMemoryHistoryStorage
-  get() {
-    return configuration.historyStorage as InMemoryHistoryStorage
-  }

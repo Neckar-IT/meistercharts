@@ -16,7 +16,7 @@
 package com.meistercharts.events
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored

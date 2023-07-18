@@ -24,6 +24,7 @@ import com.meistercharts.history.HistoryUpdateInfo
 import com.meistercharts.history.WritableHistoryStorage
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import kotlin.math.sin
 
@@ -32,6 +33,14 @@ class MockWritableHistoryStorage(val fileStorage: WritableHistoryStorage? = null
     decimalDataSeries(DataSeriesId(10), TextKey("val1", "Value 1"), HistoryUnit("kg"))
     decimalDataSeries(DataSeriesId(11), TextKey("val2", "Value 2"), HistoryUnit("cm"))
     decimalDataSeries(DataSeriesId(12), TextKey("val3", "Value 3"), HistoryUnit("C"))
+  }
+
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): Double {
+    return Double.NaN
   }
 
   override fun storeWithoutCache(bucket: HistoryBucket, updateInfo: HistoryUpdateInfo) {

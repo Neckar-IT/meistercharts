@@ -15,17 +15,17 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.loadImage
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
 /**
@@ -39,7 +39,7 @@ private constructor(
   /**
    * The URL
    */
-  val url: String,
+  val url: Url,
 
   /**
    * The size of the bounding box.
@@ -50,7 +50,7 @@ private constructor(
   /**
    * The alignment point of the bounding box
    */
-  val alignmentPoint: Coordinates = Coordinates.origin
+  val alignmentPoint: Coordinates = Coordinates.origin,
 ) : Paintable {
 
   private var boundingBox = recalculateBoundingBox()
@@ -155,11 +155,11 @@ private constructor(
       /**
        * The URL
        */
-      url: String,
+      url: Url,
       /**
        * The alignment point for the bounding box
        */
-      alignmentPoint: Coordinates = Coordinates.origin
+      alignmentPoint: Coordinates = Coordinates.origin,
     ): UrlPaintable {
       return UrlPaintable(url, null, alignmentPoint)
     }
@@ -172,7 +172,7 @@ private constructor(
       /**
        * The URL
        */
-      url: String,
+      url: Url,
       /**
        * The size of the paintable
        */
@@ -180,7 +180,7 @@ private constructor(
       /**
        * The alignment point for the bounding box
        */
-      alignmentPoint: Coordinates = Coordinates.origin
+      alignmentPoint: Coordinates = Coordinates.origin,
     ): UrlPaintable {
       return UrlPaintable(url, size, alignmentPoint)
     }
@@ -189,11 +189,11 @@ private constructor(
       /**
        * The URL
        */
-      url: String,
+      url: Url,
       /**
        * The size of the paintable
        */
-      size: @px Size
+      size: @px Size,
     ): UrlPaintable {
       return UrlPaintable(url, size, Coordinates(-size.width / 2.0, -size.height / 2.0))
     }

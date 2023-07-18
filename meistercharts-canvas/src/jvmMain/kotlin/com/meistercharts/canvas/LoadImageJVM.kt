@@ -15,21 +15,20 @@
  */
 package com.meistercharts.canvas
 
+import com.meistercharts.platform.jvm.MeisterchartsJvm
+import it.neckar.open.http.Url
+
 
 /**
- * Loads an image from an URL (should not use caches)
+ * Loads an image from a URL (should not use caches)
  */
-actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
-  jvmImageLoader.loadImage(url, callback)
-}
-
-var jvmImageLoader: JvmImageLoader = JvmImageLoader { _, _ ->
-  throw UnsupportedOperationException("please set the jvmImageLoader for the current platform by calling MeisterChartsPlatform.init()")
+actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
+  MeisterchartsJvm.jvmImageLoader.loadImage(url, callback)
 }
 
 /**
  * Image loader for the JVM
  */
 fun interface JvmImageLoader {
-  fun loadImage(url: String, callback: (Image) -> Unit)
+  fun loadImage(url: Url, callback: (Image) -> Unit)
 }

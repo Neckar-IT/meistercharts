@@ -15,13 +15,13 @@
  */
 package com.meistercharts.canvas.paintable
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PaintableArea
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
+import com.meistercharts.state.ChartState
 
 /**
  *

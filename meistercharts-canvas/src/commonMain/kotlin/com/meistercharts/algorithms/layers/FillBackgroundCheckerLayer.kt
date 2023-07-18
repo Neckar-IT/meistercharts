@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.toIntCeil

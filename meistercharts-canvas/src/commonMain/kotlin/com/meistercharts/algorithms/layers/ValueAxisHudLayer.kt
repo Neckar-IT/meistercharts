@@ -15,23 +15,23 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.painter.ArrowHead
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.ZIndex
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.LineSpacing
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ZIndexSortingCache
 import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.canvas.layout.cache.ZIndexSortingCache
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
@@ -122,7 +122,7 @@ class ValueAxisHudLayer(
         anchorDirectionsCache[index] = configuration.anchorDirections.valueAt(index)
         labelsCache[index] = configuration.labels.valueAt(index, paintingContext)
 
-        zOrder[index] = com.meistercharts.algorithms.ZIndex(configuration.zOrder.valueAt(index))
+        zOrder[index] = com.meistercharts.model.ZIndex(configuration.zOrder.valueAt(index))
       }
 
       zOrder.sortByZIndex()
@@ -217,10 +217,10 @@ class ValueAxisHudLayer(
     /**
      * Provides the z order for the elements
      */
-    var zOrder: @ZIndex @MayBeNaN MultiDoublesProvider<HudElementIndex> = MultiDoublesProvider.always(com.meistercharts.algorithms.ZIndex.auto.value)
+    var zOrder: @ZIndex @MayBeNaN MultiDoublesProvider<HudElementIndex> = MultiDoublesProvider.always(com.meistercharts.model.ZIndex.auto.value)
 
     fun resetZOrder() {
-      this.zOrder = MultiDoublesProvider.always(com.meistercharts.algorithms.ZIndex.auto.value)
+      this.zOrder = MultiDoublesProvider.always(com.meistercharts.model.ZIndex.auto.value)
     }
 
     /**
@@ -236,7 +236,7 @@ class ValueAxisHudLayer(
         if (it == hudElementIndexTop) {
           1.0
         } else {
-          com.meistercharts.algorithms.ZIndex.auto.value
+          com.meistercharts.model.ZIndex.auto.value
         }
       }
     }

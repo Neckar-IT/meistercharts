@@ -16,14 +16,14 @@
 package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategoryModel
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategoryModel
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.model.Orientation
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 
 /**
  * Paints a category consisting of one or more series.

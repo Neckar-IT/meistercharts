@@ -15,20 +15,12 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.algorithms.environment
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.AbstractCanvas
-import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
-import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.Image
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Size
-import it.neckar.open.kotlin.lang.abs
-import it.neckar.open.time.nowMillis
-import it.neckar.open.dispose.Disposable
-import it.neckar.open.dispose.DisposeSupport
+import com.meistercharts.environment
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseClickEvent
 import com.meistercharts.events.MouseDoubleClickEvent
@@ -37,11 +29,9 @@ import com.meistercharts.events.MouseDragEvent
 import com.meistercharts.events.MouseMoveEvent
 import com.meistercharts.events.MouseUpEvent
 import com.meistercharts.events.MouseWheelEvent
-import it.neckar.open.observable.ObservableObject
-import it.neckar.open.observable.ReadOnlyObservableObject
-import it.neckar.open.unit.other.px
-import it.neckar.open.unit.si.ms
-import it.neckar.open.unit.time.RelativeMillis
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
+import com.meistercharts.model.Size
 import convertCancel
 import convertDown
 import convertEnd
@@ -59,8 +49,12 @@ import extractModifierCombination
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.observable.ObservableObject
+import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.unit.other.px
 import kotlinx.browser.document
-import kotlinx.browser.window
 import noFocusBorder
 import offset
 import org.w3c.dom.AddEventListenerOptions
@@ -84,9 +78,11 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   /**
    * The html canvas element
    */
-  val canvasElement: HTMLCanvasElement = document.createElement("CANVAS") as HTMLCanvasElement
+  val canvasElement: HTMLCanvasElement = (document.createElement("CANVAS") as HTMLCanvasElement).also {
+    it.classList.add(MeisterChartClasses.canvas)
+  }
 
-  override val gc: CanvasRenderingContext = CanvasRenderingContextJS(this)
+  override val gc: CanvasRenderingContextJS = CanvasRenderingContextJS(this, type.readBackFrequency())
 
   /**
    * The size of the canvas in *logic* pixels (CSS size).
@@ -95,9 +91,11 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * in [CanvasRenderingContextJS].
    */
   override val sizeProperty: ReadOnlyObservableObject<Size> = ObservableObject(Size.zero).also {
-    it.consume { newSize ->
+    it.consumeChanges { oldSize, newSize ->
       require(newSize.bothNotNegative()) { "Invalid size: $newSize" }
-      logger.debug { "Canvas size changed to $newSize" }
+      if (type == CanvasType.Main) {
+        logger.debug { "Main Canvas size changed from $oldSize to $newSize" }
+      }
     }
   }
 
@@ -221,7 +219,9 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     canvasElement.width = targetRenderingWidth.toInt() //TODO cast correct????
     canvasElement.height = targetRenderingHeight.toInt() //TODO cast correct????
 
-    logger.debug { "Updated canvas element width/height to ${canvasElement.width}/${canvasElement.height}" }
+    if (type == CanvasType.Main) {
+      logger.debug { "Updated Main canvas element width/height to ${canvasElement.width}/${canvasElement.height}" }
+    }
   }
 
   /**
@@ -240,14 +240,16 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
       logger.debug { "Updating size from BoundingClientRect: ${it.width}/${it.height}" }
 
       boundingClientLocation = Coordinates(it.left, it.top) // do not(!) use x/y because Edge and IE11 do not support them
-      applySize(Size(it.width, it.height))
+      val newSize = Size(it.width, it.height)
+      applySize(newSize, "bounding client rect changed to ${it.x}/${it.y} : ${it.width}/${it.height}}")
     }
   }
 
   /**
    * Applies the new size
    */
-  fun applySize(newSize: Size) {
+  fun applySize(newSize: Size, reason: String) {
+    logger.debug { "Applying new size: $newSize (old: ${sizeProperty.value}) because: $reason" }
     (sizeProperty as ObservableObject<Size>).value = newSize
   }
 
@@ -320,9 +322,9 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     //DOM_DELTA_LINE  0x01 The delta values are specified in lines.
     //DOM_DELTA_PAGE  0x02 The delta values are specified in pages.
     @px val distance = when (event.deltaMode) {
-      0    -> deltaRaw
-      1    -> deltaRaw * 25.0 //we assume one line is 25 pixels high
-      2    -> deltaRaw * 500.0 //we assume one page is 500 pixels high
+      0 -> deltaRaw
+      1 -> deltaRaw * 25.0 //we assume one line is 25 pixels high
+      2 -> deltaRaw * 500.0 //we assume one page is 500 pixels high
       else -> throw IllegalArgumentException("Unsupported mode: ${event.deltaMode}")
     }
 
@@ -568,48 +570,3 @@ private fun EventConsumption.cancelIfConsumed(event: Event) {
     event.preventDefault()
   }
 }
-
-/**
- * Starts an animation that paints the canvas for every frame if necessary and calls [HtmlCanvas#applySizeFromClientWidth] on every frame
- */
-fun ChartSupport.scheduleRepaints(@ms @RelativeMillis frameTimestamp: Double) {
-  //Check if the chart support has already been disposed
-  if (disposed) {
-    return
-  }
-
-  //'frameTimestamp' represents a DOMHighResTimeStamp that states the time passed since the beginning of the current
-  //document's lifetime (see https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame and
-  //https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp#The_time_origin).
-  //This implies that 'frameTimestamp' cannot be used as an absolute timestamp.
-  //
-  //'nowMillis()' on the other hand is not as precise as a DOMHighResTimeStamp. Furthermore, we cannot use 'nowMillis()'
-  //as a frame-timestamp without losing the correct delta of two consecutive frames rendered by the browser.
-  //
-  //Solution: adjust 'frameTimestamp' only if differs more than 'deltaRelativeMillisToAbsoluteThreshold' from 'nowMillis()'
-
-  val now = nowMillis()
-  //We use the stored delta to calculate the best absolute timestamp
-  var exactAbsoluteTimestamp = frameTimestamp + deltaRelativeMillisToAbsolute
-  if ((exactAbsoluteTimestamp - now).abs() > deltaRelativeMillisToAbsoluteThreshold) {
-    deltaRelativeMillisToAbsolute = now - frameTimestamp
-    exactAbsoluteTimestamp = frameTimestamp + deltaRelativeMillisToAbsolute
-  }
-
-  //Trigger size update. Do this during a refresh to avoid flickering.
-  (canvas as CanvasJS).applySizeFromClientSize()
-
-  refresh(exactAbsoluteTimestamp)
-
-  window.requestAnimationFrame { scheduleRepaints(it) }
-}
-
-/**
- * Stores the delta between the relative millis to absolute millis
- */
-private var deltaRelativeMillisToAbsolute: Double = 0.0
-
-/**
- * The greatest delta between the relative millis and the absolute millis that is still acceptable
- */
-private const val deltaRelativeMillisToAbsoluteThreshold: @ms Double = 10.0 // empirically evaluated; do not go below 10 milliseconds to avoid too many adjustments

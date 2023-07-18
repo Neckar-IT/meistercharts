@@ -71,7 +71,7 @@ interface CanvasMouseEventHandler {
   }
 
   /**
-   * Called when the canvas received a mouse-move event
+   * Called when the canvas received a mouse-move event with mouse button pressed
    */
   fun onDrag(event: MouseDragEvent, chartSupport: ChartSupport): EventConsumption {
     return EventConsumption.Ignored

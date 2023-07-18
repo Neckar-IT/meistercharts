@@ -17,6 +17,7 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.font.FontSize
 import org.junit.jupiter.api.Test
 
 class FontSizeTest {

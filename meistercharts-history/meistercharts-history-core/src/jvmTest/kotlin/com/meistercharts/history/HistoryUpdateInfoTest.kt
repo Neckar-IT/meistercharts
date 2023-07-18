@@ -17,11 +17,9 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.TimeRanges
-import org.junit.jupiter.api.Assertions.*
-
-import org.junit.jupiter.api.*
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
+import org.junit.jupiter.api.Test
 
 class HistoryUpdateInfoTest {
 

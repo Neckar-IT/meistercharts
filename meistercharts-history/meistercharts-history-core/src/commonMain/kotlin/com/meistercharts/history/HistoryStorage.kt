@@ -15,11 +15,12 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastMapNotNull
 import it.neckar.open.dispose.OnDispose
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
 
@@ -31,6 +32,18 @@ import it.neckar.open.unit.si.ms
  *
  */
 interface HistoryStorage : OnDispose {
+  /**
+   * Returns the first timestamp this storage has data for.
+   * Returns NaN if the information is not known.
+   */
+  fun getStart(): @ms @MayBeNaN Double
+
+  /**
+   * Returns the last timestamp this storage has data for.
+   * Returns NaN if the information is not known.
+   */
+  fun getEnd(): @ms @MayBeNaN Double
+
   /**
    * Returns a list of buckets that span the given time
    *

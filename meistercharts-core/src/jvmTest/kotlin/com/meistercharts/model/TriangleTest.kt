@@ -17,10 +17,12 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.model.RightTriangleType.MissingCornerInFirstQuadrant
-import com.meistercharts.model.RightTriangleType.MissingCornerInFourthQuadrant
-import com.meistercharts.model.RightTriangleType.MissingCornerInSecondQuadrant
-import com.meistercharts.model.RightTriangleType.MissingCornerInThirdQuadrant
+import com.meistercharts.geometry.Rectangle
+import com.meistercharts.geometry.RightTriangleType.MissingCornerInFirstQuadrant
+import com.meistercharts.geometry.RightTriangleType.MissingCornerInFourthQuadrant
+import com.meistercharts.geometry.RightTriangleType.MissingCornerInSecondQuadrant
+import com.meistercharts.geometry.RightTriangleType.MissingCornerInThirdQuadrant
+import com.meistercharts.geometry.Triangle
 import org.junit.jupiter.api.Test
 
 class TriangleTest {

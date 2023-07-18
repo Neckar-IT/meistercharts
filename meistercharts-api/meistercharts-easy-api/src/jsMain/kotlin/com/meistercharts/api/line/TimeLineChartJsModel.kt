@@ -26,9 +26,7 @@ import com.meistercharts.api.EnumConfiguration
 import com.meistercharts.api.FontStyle
 import com.meistercharts.api.LineStyle
 import com.meistercharts.api.NumberFormat
-import com.meistercharts.api.PointConnectionType
 import com.meistercharts.api.PointType
-import com.meistercharts.api.SamplingPeriod
 import com.meistercharts.api.StripeStyle
 import com.meistercharts.api.Threshold
 import com.meistercharts.api.TimeAxisStyle
@@ -36,6 +34,7 @@ import com.meistercharts.api.TimeRange
 import com.meistercharts.api.ValueAxisStyle
 import com.meistercharts.api.ValueRange
 import com.meistercharts.history.DecimalDataSeriesIndexInt
+import com.meistercharts.history.DownSamplingMode
 import com.meistercharts.history.EnumDataSeriesIndexInt
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
@@ -60,17 +59,23 @@ external interface TimeLineChartData {
  * The settings for the history
  */
 external interface HistorySettings {
+
+  /**
+   * The down sampling mode.
+   *
+   * Default: [DownSamplingMode.Automatic].
+   */
+  val downSamplingMode: DownSamplingMode?
+
   /**
    * The expected time between two consecutive samples.
-   *
-   * The size of the history also depends on this value.
    */
-  val expectedSamplingPeriod: SamplingPeriod
+  val durationBetweenSamples: @ms Double?
 
   /**
    * This factor is used to calculate the minimal distance between two data points that will be interpreted as gap.
    *
-   * The minimal gap distance ist calculated by multiplying [expectedSamplingPeriod] with the given factor.
+   * The minimal gap distance ist calculated by multiplying [durationBetweenSamples] with the given factor.
    * If the distance between two data points is smaller than the minimal gap distance, the two data points are connected by a line.
    * If the distance is larger, it is assumed that there is a gap and the data points are not connected.
    *
@@ -79,7 +84,7 @@ external interface HistorySettings {
   val minGapSizeFactor: Double?
 
   /**
-   * The history guarantees to store samples for at least this length (in seconds) at [expectedSamplingPeriod].
+   * The history guarantees to store samples for at least this length (in seconds) at [durationBetweenSamples].
    */
   val guaranteedHistoryLength: @s Int
 }

@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.annotations.Window
+import it.neckar.open.collections.IterationOrder
 import it.neckar.open.provider.CoordinatesProvider
 import it.neckar.open.provider.CoordinatesProvider1
 
@@ -116,7 +117,26 @@ class CoordinatesCache : LayoutVariableWithSize {
     ) -> Unit,
   ) {
 
-    xValues.fastForEachIndexed { index, x ->
+    return fastForEachIndexed(iterationOrder = IterationOrder.Ascending, action = action)
+  }
+
+  inline fun fastForEachIndexedReversed(
+    action: (
+      index: Int, x: @Window Double, y: @Window Double,
+    ) -> Unit,
+  ) {
+
+    return fastForEachIndexed(iterationOrder = IterationOrder.Descending, action = action)
+  }
+
+  inline fun fastForEachIndexed(
+    iterationOrder: IterationOrder,
+    action: (
+      index: Int, x: @Window Double, y: @Window Double,
+    ) -> Unit,
+  ) {
+
+    xValues.fastForEachIndexed(iterationOrder) { index, x ->
       val y = yValues[index]
 
       action(index, x, y)

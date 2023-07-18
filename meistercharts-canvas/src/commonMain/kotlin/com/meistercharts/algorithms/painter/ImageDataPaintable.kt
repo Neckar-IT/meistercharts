@@ -17,19 +17,20 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
+import it.neckar.open.http.Url
 
 /**
  * A Paintable that is able to paint images with inline base64 encoded content.
  * The URI is expected to start with "data:image"
  */
-@Suppress("unused")
-class ImageDataPaintable(uri: String) : Paintable {
+//TODO this class does probably only work for JS
+class ImageDataPaintable(data: String) : Paintable {
   init {
-    require(uri.startsWith(prefix)) { "Invalid uri: <$uri>. Expected to start with $prefix" }
+    require(data.startsWith(prefix)) { "Invalid uri: <$data>. Expected to start with $prefix" }
   }
 
-  val delegate: Paintable = UrlPaintable.naturalSize(uri)
+  val delegate: Paintable = UrlPaintable.naturalSize(Url(data)) //TODO this looks stupid, but should be ok
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)

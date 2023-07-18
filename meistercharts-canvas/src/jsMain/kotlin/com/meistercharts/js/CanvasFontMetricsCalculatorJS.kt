@@ -16,15 +16,15 @@
 package com.meistercharts.js
 
 import com.meistercharts.canvas.CanvasType
-import com.meistercharts.canvas.FontDescriptor
+import com.meistercharts.font.FontDescriptor
 import com.meistercharts.canvas.saved
-import com.meistercharts.fonts.AbstractCanvasFontMetricsCalculator
+import com.meistercharts.font.AbstractCanvasFontMetricsCalculator
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment
-import it.neckar.open.unit.other.Scaled
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.unit.other.Scaled
 import org.khronos.webgl.get
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
@@ -46,13 +46,19 @@ class CanvasFontMetricsCalculatorJS(
   scaleFactorY: Double = 4.0,
 ) : AbstractCanvasFontMetricsCalculator<CanvasJS, CanvasRenderingContextJS, ImageData>(canvas, scaleFactorY) {
 
-  override val canvasRenderingContext: CanvasRenderingContextJS = CanvasRenderingContextJS(canvas)
-
   constructor(
     canvasFactor: CanvasFactoryJS = CanvasFactoryJS(),
     scaleFactorY: Double = 4.0,
-    canvasSize: @Scaled Size = Size(200.0, 600 * scaleFactorY)
-  ) : this(canvasFactor.createCanvas(CanvasType.OffScreen, canvasSize), scaleFactorY)
+    canvasSize: @Scaled Size = Size(200.0, 600 * scaleFactorY),
+  ) : this(canvasFactor.createCanvas(CanvasType.ReadBack, canvasSize), scaleFactorY)
+
+  override val canvasRenderingContext: CanvasRenderingContextJS = canvas.gc
+
+  init {
+    require(canvas.type == CanvasType.ReadBack) {
+      "The canvas type must be CanvasType.ReadBack but is ${canvas.type}"
+    }
+  }
 
   override val ImageData.imageHeight: Int
     get() = height
@@ -129,9 +135,9 @@ class CanvasFontMetricsCalculatorJS(
   override fun ImageData.containsPixel(y: Int): Boolean {
     for (x in 0 until width) {
       val baseOffset = ((width * y) + x) * 4
-      val offsetRed = baseOffset + 0
-      val offsetGreen = baseOffset + 1
-      val offsetBlue = baseOffset + 2
+      //val offsetRed = baseOffset + 0
+      //val offsetGreen = baseOffset + 1
+      //val offsetBlue = baseOffset + 2
       val offsetAlpha = baseOffset + 3
 
       val alpha = data[offsetAlpha]

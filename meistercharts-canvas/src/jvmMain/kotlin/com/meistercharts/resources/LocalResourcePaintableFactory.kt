@@ -16,26 +16,28 @@
 package com.meistercharts.resources
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.paintable.ObjectFit
+import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
+import com.meistercharts.platform.jvm.MeisterchartsJvm
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
 
 /**
  * Loads a local resource
  */
-actual class LocalResourcePaintable @JvmOverloads actual constructor(
-  val relativePath: String,
+actual class LocalResourcePaintable actual constructor(
+  val relativePath: Url,
   size: @px Size?,
-  val alignmentPoint: Coordinates
+  val alignmentPoint: Coordinates,
 ) : Paintable {
 
-  val delegate: Paintable = jvmLocalResourcePaintableFactory.get(relativePath, size, alignmentPoint)
+  val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)
@@ -85,19 +87,11 @@ actual class LocalResourcePaintable @JvmOverloads actual constructor(
 }
 
 /**
- * Holds the current instance of the local resource paintable provider
- */
-var jvmLocalResourcePaintableFactory: JvmLocalResourcePaintableFactory = JvmLocalResourcePaintableFactory { _, _, _ ->
-  throw UnsupportedOperationException("please set the jvmLocalResourcePaintableFactory for the current platform by calling MeisterChartPlatform.init()")
-}
-
-
-/**
  * Provides jvm local resource paintables.
  */
 fun interface JvmLocalResourcePaintableFactory {
   /**
    * Returns the paintable
    */
-  fun get(relativePath: String, size: @px Size?, alignmentPoint: Coordinates): Paintable
+  fun get(relativePath: Url, size: @px Size?, alignmentPoint: Coordinates): Paintable
 }

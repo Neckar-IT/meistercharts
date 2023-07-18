@@ -17,6 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.meistercharts.calc.ChartingUtils
 import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.kotlin.lang.or0ifNaN
 import org.junit.jupiter.api.Test

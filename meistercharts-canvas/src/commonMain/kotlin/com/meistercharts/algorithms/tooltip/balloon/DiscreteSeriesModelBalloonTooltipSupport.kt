@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable.Companion.defaultSymbols
 import com.meistercharts.algorithms.layers.legend.withHeadline
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintable.Paintable
@@ -101,7 +101,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
         val textService = param1.textService
         val i18nConfiguration = param1.i18nConfiguration
 
-        val referenceEntryId = referenceEntryIdProvider()
+        //val referenceEntryId = referenceEntryIdProvider()
 
         return when (index) {
           0 -> {

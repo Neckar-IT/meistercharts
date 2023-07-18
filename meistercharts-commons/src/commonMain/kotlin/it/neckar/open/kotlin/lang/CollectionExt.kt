@@ -138,3 +138,7 @@ fun <E> List<E>.withElementAt(index: Int, element: E): List<E> {
     this[index] = element
   }
 }
+
+fun <E> LinkedHashSet<E>.removeFirst() {
+  remove(first())
+}

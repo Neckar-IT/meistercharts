@@ -17,14 +17,13 @@ package com.meistercharts.algorithms.layers
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.DistanceMonths
-import com.meistercharts.algorithms.axis.DistanceYears
-import com.meistercharts.algorithms.axis.TimeAxisTickCalculator
-import com.meistercharts.algorithms.axis.klockGreatestSupportedTimestamp
-import com.meistercharts.algorithms.axis.klockSmallestSupportedTimestamp
+import com.meistercharts.axis.DistanceMonths
+import com.meistercharts.axis.DistanceYears
+import com.meistercharts.axis.TimeAxisTickCalculator
+import com.meistercharts.time.klockGreatestSupportedTimestamp
+import com.meistercharts.time.klockSmallestSupportedTimestamp
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
-import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
 import korlibs.time.DateTimeTz
 import org.junit.jupiter.api.Disabled

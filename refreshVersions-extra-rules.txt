@@ -42,3 +42,12 @@ org.slf4j:slf4j(-*)
 
 org.jetbrains.kotlin-wrappers:*
 ^^^.^^^^^^^^^.^^^^^^^^^^^^^^^
+
+com.github.doyaaaaaken:kotlin-csv*
+                       ^^^^^^^^^^
+
+net.bis5.mattermost4j:mattermost*
+         ^^^^^^^^^^^^
+
+org.jetbrains.kotlinx:kotlin-deeplearning*
+                      ^^^^^^^^^^^^^^^^^^^

@@ -6,7 +6,9 @@ package it.neckar.logging
  * The API is heavily inspired by SLF4j Logger
  */
 actual interface Logger {
-
+  /**
+   * The name of this logger
+   */
   val name: String
     get() {
       return getName()
@@ -16,6 +18,21 @@ actual interface Logger {
    * Returns the name of this logger
    */
   actual fun getName(): String
+
+  /**
+   * Is the logger instance enabled for the TRACE level?
+   *
+   * @return True if this Logger is enabled for the TRACE level, false otherwise.
+   */
+  actual fun isTraceEnabled(): Boolean
+
+  /**
+   * Log a message at the TRACE level.
+   *
+   * @param msg the message string to be logged
+   */
+  actual fun trace(msg: String?)
+
 
   /**
    * Is the logger instance enabled for the DEBUG level?
@@ -73,4 +90,19 @@ actual interface Logger {
    * @param msg the message string to be logged
    */
   actual fun error(msg: String?)
+
+  /**
+   * Debug the message with the object
+   */
+  fun debug(message: String, objectDebug: Any?)
+
+  fun debug(messageProvider: () -> String, objectDebug: Any?)
+
+
+  fun isEnabledForLevel(level: Level): Boolean
+
+}
+
+actual fun Logger.isEnabledForLevel(level: Level): Boolean {
+  return this.isEnabledForLevel(level)
 }

@@ -58,7 +58,7 @@ class ValueAxisHudInteractionLayer(
           val paintingVariables = layer.paintingVariables()
 
           //Iterate over *all* hud elements
-          paintingVariables.zOrder.fastForEachIndices { hudElementIndex ->
+          paintingVariables.zOrder.fastForEachIndicesTopToBottom { hudElementIndex ->
 
             //First check if the mouse is within the hud element
             if (paintingVariables.boundingBoxes.contains(hudElementIndex, mouseLocation)) {

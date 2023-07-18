@@ -17,6 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.meistercharts.range.LinearValueRange
 import org.junit.jupiter.api.Test
 
 /**

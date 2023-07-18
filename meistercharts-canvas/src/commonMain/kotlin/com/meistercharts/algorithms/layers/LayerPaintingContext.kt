@@ -15,23 +15,21 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.TileChartCalculator
-import com.meistercharts.algorithms.TimeChartCalculator
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.painter.UrlPaintable
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReasonBitSet
-import com.meistercharts.canvas.LayerSupport
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.canvas.layer.LayerSupport
+import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
-import com.meistercharts.canvas.currentFrameTimestamp
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.i18nSupport
@@ -39,6 +37,8 @@ import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.textService
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Size
+import com.meistercharts.state.ChartState
+import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
@@ -245,13 +245,13 @@ class MissingResources() {
   /**
    * Contains the missing URLs
    */
-  val missingURLs: Set<String> = mutableSetOf()
+  val missingURLs: Set<Url> = mutableSetOf()
 
   fun reportMissing(urlPaintable: UrlPaintable) {
     reportMissing(urlPaintable.url)
   }
 
-  fun reportMissing(url: String) {
+  fun reportMissing(url: Url) {
     (missingURLs as MutableSet).add(url)
   }
 

@@ -17,11 +17,13 @@ package com.meistercharts.algorithms.impl
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.model.Distance
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.OnlyPositiveTranslationModifier
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

@@ -19,11 +19,9 @@ import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.BarChartGroupedGestalt
-import com.meistercharts.js.MeisterChartJS
-import it.neckar.commons.kotlin.js.debug
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -36,20 +34,18 @@ class BarChartGrouped internal constructor(
    */
   internal val gestalt: BarChartGroupedGestalt,
 
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<BarChartGroupedData, BarChartGroupedStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   /**
    * Sets and replaces the data of the bar chart model
    */
   override fun setData(jsData: BarChartGroupedData) {
-    logger.ifDebug {
-      console.debug("BarChartGrouped.setData", jsData)
-    }
+    logger.debug("BarChartGrouped.setData", jsData)
 
     CategoryConverter.toCategoryModel(jsData)?.let {
       gestalt.configuration.categorySeriesModel = it

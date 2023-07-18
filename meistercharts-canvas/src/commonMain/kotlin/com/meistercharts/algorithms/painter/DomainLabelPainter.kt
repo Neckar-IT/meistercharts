@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext

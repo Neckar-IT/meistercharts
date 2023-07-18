@@ -16,8 +16,8 @@
 package com.meistercharts.painter
 
 import com.meistercharts.algorithms.layers.linechart.PointStyle
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.SeriesIndex
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.SeriesIndex
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext

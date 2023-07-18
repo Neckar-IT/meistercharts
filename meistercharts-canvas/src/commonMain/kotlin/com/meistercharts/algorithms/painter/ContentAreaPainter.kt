@@ -15,9 +15,10 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.color.Color
 import com.meistercharts.model.SidesSelection
 
 /**

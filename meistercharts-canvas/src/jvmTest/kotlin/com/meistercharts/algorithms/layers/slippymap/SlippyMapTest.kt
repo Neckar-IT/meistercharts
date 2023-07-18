@@ -17,13 +17,30 @@ package com.meistercharts.algorithms.layers.slippymap
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.tile.SubIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.model.Latitude
-import com.meistercharts.model.Longitude
+import com.meistercharts.maps.Latitude
+import com.meistercharts.maps.Longitude
+import com.meistercharts.maps.LatitudeBottomEdge
+import com.meistercharts.maps.LatitudeTopEdge
+import com.meistercharts.maps.LongitudeLeftEdge
+import com.meistercharts.maps.LongitudeRightEdge
+import com.meistercharts.maps.SlippyMapCenter
+import com.meistercharts.maps.SlippyMapDefaultZoom
+import com.meistercharts.maps.calculateSlippyMapContentAreaSize
+import com.meistercharts.maps.computeLongitude
+import com.meistercharts.maps.computeSlippyMapTileIndex
+import com.meistercharts.maps.domainRelative2latitude
+import com.meistercharts.maps.domainRelative2longitude
+import com.meistercharts.maps.ensureSlippyMapBounds
+import com.meistercharts.maps.tilesPerRowOrColumn
+import com.meistercharts.maps.toDomainRelativeX
+import com.meistercharts.maps.toDomainRelativeY
+import com.meistercharts.maps.toSlippyMapZoom
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import org.junit.jupiter.api.Test
@@ -41,27 +58,29 @@ internal class SlippyMapTest {
   @Test
   fun longitudeLatitude2SlippyMapTileIndex() {
     // (0.0/0.0) should always be at the middle of all tiles
-    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 0)).isEqualTo(TileIndex(0, 0))
-    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 1)).isEqualTo(TileIndex(1, 1))
-    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 2)).isEqualTo(TileIndex(2, 2))
-    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 3)).isEqualTo(TileIndex(4, 4))
-    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 18)).isEqualTo(TileIndex((2.0.pow(18) / 2.0).roundToInt(), (2.0.pow(18) / 2.0).roundToInt()))
+    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 0)).isEqualTo(TileIndex.of(0, 0))
+    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 1)).isEqualTo(TileIndex.of(1, 1))
+    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 2)).isEqualTo(TileIndex.of(2, 2))
+    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 3)).isEqualTo(TileIndex.of(4, 4))
+    assertThat(computeSlippyMapTileIndex(Latitude(0.0), Longitude(0.0), 18)).isEqualTo(TileIndex.of((2.0.pow(18) / 2.0).roundToInt(), (2.0.pow(18) / 2.0).roundToInt()))
   }
 
   @Test
   fun longitudeRoundTrip() {
-    assertThat(computeLongitude(0, 2).value).isEqualTo(-180.0)
-    assertThat(computeLongitude(1, 2).value).isEqualTo(-90.0)
-    assertThat(computeLongitude(2, 2).value).isEqualTo(0.0)
-    assertThat(computeLongitude(3, 2).value).isEqualTo(90.0)
-    assertThat(computeLongitude(4, 2).value).isEqualTo(180.0)
-    assertThat(computeLongitude(5, 2).value).isEqualTo(270.0)
+    assertThat(computeLongitude(SubIndex(0), 2).value).isEqualTo(-180.0)
+    assertThat(computeLongitude(SubIndex(1), 2).value).isEqualTo(-90.0)
+    assertThat(computeLongitude(SubIndex(2), 2).value).isEqualTo(0.0)
+    assertThat(computeLongitude(SubIndex(3), 2).value).isEqualTo(90.0)
+    assertThat(computeLongitude(SubIndex(4), 2).value).isEqualTo(180.0)
+    assertThat(computeLongitude(SubIndex(5), 2).value).isEqualTo(270.0)
 
     for (zoom in 0..18) {
       val tilesPerRow = tilesPerRowOrColumn(zoom)
-      for (tileIndexX in 0 until tilesPerRow) {
-        val longitude = computeLongitude(tileIndexX, zoom)
-        assertThat(computeSlippyMapTileIndex(Latitude(0.0), longitude, zoom).x, "zoom=$zoom, tileX=$tileIndexX, longitude=$longitude").isEqualTo(tileIndexX)
+      for (tileSubIndexX in 0 until tilesPerRow) {
+        val longitude = computeLongitude(SubIndex(tileSubIndexX), zoom)
+        val tileIndex = computeSlippyMapTileIndex(Latitude(0.0), longitude, zoom)
+
+        assertThat(tileIndex.xAsDouble(), tileIndex.toString()).isCloseTo(tileSubIndexX.toDouble(), 0.001)
       }
     }
   }
@@ -75,7 +94,7 @@ internal class SlippyMapTest {
   }
 
   fun verifyLong2DomainRelativeRound(longitude: Longitude, expectedDomainRelative: @DomainRelative Double) {
-    val domainRelative = longitude2DomainRelative(longitude)
+    val domainRelative = longitude.toDomainRelativeX()
     assertThat(domainRelative, "").isCloseTo(expectedDomainRelative, 0.000001)
 
     //roundtrip
@@ -86,11 +105,11 @@ internal class SlippyMapTest {
   fun testLatitude2DomainRelativeAndBack() {
     verifyLatitude2DomainRelativeRound(LatitudeTopEdge, 0.0)
     verifyLatitude2DomainRelativeRound(LatitudeBottomEdge, 1.0)
-    assertThat(latitude2DomainRelative(Latitude(80.0))).isEqualTo(0.11225939796299506)
-    assertThat(latitude2DomainRelative(Latitude(-80.0))).isEqualTo(0.8877406020370049)
-    assertThat(latitude2DomainRelative(Latitude(0.0))).isEqualTo(0.5)
-    assertThat(latitude2DomainRelative(Latitude(11.0))).isEqualTo(0.46925498967190327)
-    assertThat(latitude2DomainRelative(Latitude(-11.0))).isEqualTo(0.5307450103280967)
+    assertThat(Latitude(80.0).toDomainRelativeY()).isEqualTo(0.11225939796299506)
+    assertThat(Latitude(-80.0).toDomainRelativeY()).isEqualTo(0.8877406020370049)
+    assertThat(Latitude(0.0).toDomainRelativeY()).isEqualTo(0.5)
+    assertThat(Latitude(11.0).toDomainRelativeY()).isEqualTo(0.46925498967190327)
+    assertThat(Latitude(-11.0).toDomainRelativeY()).isEqualTo(0.5307450103280967)
 
     verifyLatitude2DomainRelativeRound(Latitude(80.0), 0.11225939796299506)
     verifyLatitude2DomainRelativeRound(Latitude(-80.0), 0.8877406020370049)
@@ -101,7 +120,7 @@ internal class SlippyMapTest {
   }
 
   fun verifyLatitude2DomainRelativeRound(latitude: Latitude, expectedDomainRelative: @DomainRelative Double) {
-    val domainRelative = latitude2DomainRelative(latitude)
+    val domainRelative = latitude.toDomainRelativeY()
     assertThat(domainRelative, "domain relative").isCloseTo(expectedDomainRelative, 0.000001)
 
     //roundtrip
@@ -110,25 +129,25 @@ internal class SlippyMapTest {
 
   @Test
   fun longitude2DomainRelative() {
-    assertThat(longitude2DomainRelative(LongitudeLeftEdge)).isCloseTo(0.0, 0.000001)
-    assertThat(longitude2DomainRelative(LongitudeRightEdge)).isCloseTo(1.0, 0.000001)
-    assertThat(longitude2DomainRelative(Longitude(0.5 * LongitudeLeftEdge.value + 0.5 * LongitudeRightEdge.value))).isCloseTo(0.5, 0.000001)
+    assertThat(LongitudeLeftEdge.toDomainRelativeX()).isCloseTo(0.0, 0.000001)
+    assertThat(LongitudeRightEdge.toDomainRelativeX()).isCloseTo(1.0, 0.000001)
+    assertThat(Longitude(0.5 * LongitudeLeftEdge.value + 0.5 * LongitudeRightEdge.value).toDomainRelativeX()).isCloseTo(0.5, 0.000001)
     val tilesPerRow = tilesPerRowOrColumn(SlippyMapDefaultZoom)
     assertThat(tilesPerRow).isEqualTo(512)
     val longitudePerTile = 360.0 / tilesPerRow
-    for (tileIndexX in 0 until tilesPerRow) {
-      val longitude = computeLongitude(tileIndexX, SlippyMapDefaultZoom)
-      assertThat(longitude.value).isCloseTo(LongitudeLeftEdge.value + tileIndexX * longitudePerTile, 0.000001)
-      val domainRelativeX = tileIndexX / tilesPerRow.toDouble()
-      assertThat(longitude2DomainRelative(longitude), "x=$tileIndexX, longitude=$longitude").isCloseTo(domainRelativeX, 0.000001)
+    for (tileSubIndexX in 0 until tilesPerRow) {
+      val longitude = computeLongitude(SubIndex(tileSubIndexX), SlippyMapDefaultZoom)
+      assertThat(longitude.value).isCloseTo(LongitudeLeftEdge.value + tileSubIndexX * longitudePerTile, 0.000001)
+      val domainRelativeX = tileSubIndexX / tilesPerRow.toDouble()
+      assertThat(longitude.toDomainRelativeX(), "x=$tileSubIndexX, longitude=$longitude").isCloseTo(domainRelativeX, 0.000001)
     }
   }
 
   @Test
   fun latitude2DomainRelative() {
-    assertThat(latitude2DomainRelative(LatitudeTopEdge)).isCloseTo(0.0, 0.000001)
-    assertThat(latitude2DomainRelative(LatitudeBottomEdge)).isCloseTo(1.0, 0.000001)
-    assertThat(latitude2DomainRelative(Latitude(0.5 * LatitudeTopEdge.value + 0.5 * LatitudeBottomEdge.value))).isCloseTo(0.5, 0.000001) // equator
+    assertThat(LatitudeTopEdge.toDomainRelativeY()).isCloseTo(0.0, 0.000001)
+    assertThat(LatitudeBottomEdge.toDomainRelativeY()).isCloseTo(1.0, 0.000001)
+    assertThat(Latitude(0.5 * LatitudeTopEdge.value + 0.5 * LatitudeBottomEdge.value).toDomainRelativeY()).isCloseTo(0.5, 0.000001) // equator
   }
 
   @Test
@@ -158,12 +177,12 @@ internal class SlippyMapTest {
   @Test
   fun ensureSlippyMapBounds() {
     val slippyMapZoom = 3 // 2^3 x 2^3 = 8 x 8 tiles -> valid indices are 0..7
-    assertThat(TileIndex(0, 0).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(0, 0))
-    assertThat(TileIndex(7, 7).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(7, 7))
-    assertThat(TileIndex(8, 8).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(0, 0))
-    assertThat(TileIndex(-1, -1).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(7, 7))
-    assertThat(TileIndex(-2, -2).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(6, 6))
-    assertThat(TileIndex(-8, -8).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex(0, 0))
+    assertThat(TileIndex.of(0, 0).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(0, 0))
+    assertThat(TileIndex.of(7, 7).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(7, 7))
+    assertThat(TileIndex.of(8, 8).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(0, 0))
+    assertThat(TileIndex.of(-1, -1).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(7, 7))
+    assertThat(TileIndex.of(-2, -2).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(6, 6))
+    assertThat(TileIndex.of(-8, -8).ensureSlippyMapBounds(slippyMapZoom)).isEqualTo(TileIndex.of(0, 0))
   }
 
   @Test

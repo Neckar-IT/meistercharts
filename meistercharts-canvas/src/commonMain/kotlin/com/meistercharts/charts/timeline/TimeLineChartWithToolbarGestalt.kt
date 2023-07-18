@@ -26,7 +26,7 @@ import com.meistercharts.algorithms.layers.toolbar.zoomInButton
 import com.meistercharts.algorithms.layers.toolbar.zoomOutButton
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.ChartGestalt
@@ -42,7 +42,6 @@ import kotlin.jvm.JvmOverloads
  * Supports at most 10 visible [ValueAxisLayer]s at once.
  */
 class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
-  val chartId: ChartId,
   historyStorage: HistoryStorage = InMemoryHistoryStorage(),
   styleConfiguration: Style.() -> Unit = {},
   val toolbarConfiguration: ToolbarButtonFactory.() -> List<Button> = { emptyList() }
@@ -50,11 +49,11 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
 
   val style: Style = Style().also(styleConfiguration)
 
-  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(chartId, TimeLineChartGestalt.Data(historyStorage))
+  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(TimeLineChartGestalt.Data(historyStorage))
 
   val scrollWithoutModifierHintLayer: HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> = MouseWheelWithoutModifierMessageLayer.create()
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     timeLineChartGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {

@@ -18,7 +18,7 @@ package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.barchart.CategoryModelBoxStylesProvider
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.api.BoxStyle
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
@@ -49,9 +49,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy API defaults
  */
-fun BarChartGroupedGestalt.applySickDefaults() {
+fun BarChartGroupedGestalt.applyEasyApiDefaults() {
   style.applyAxisTitleOnTop(40.0)
   groupedBarsPainter.configuration.overflowIndicatorPainter?.configuration?.applyDefaultIndicators(
     Color.darkgray, Color.white, 1.0, 7.0, 7.0
@@ -62,9 +62,7 @@ fun BarChartGroupedGestalt.applySickDefaults() {
  * Applies the JS style to the bart chart gestalt style
  */
 fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
-  logger.ifDebug {
-    console.debug("BarChartGroupedGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("BarChartGroupedGestalt.applyStyle", jsStyle)
 
   //Beware that the order matters. Set the orientation before any other style
   //because a change in the orientation triggers a reset of the layout.

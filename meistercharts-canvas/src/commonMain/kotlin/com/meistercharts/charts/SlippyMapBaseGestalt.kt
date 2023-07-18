@@ -15,13 +15,14 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.ZoomAndTranslationModifiersBuilder
-import com.meistercharts.algorithms.layers.slippymap.SlippyMapCenter
-import com.meistercharts.algorithms.layers.slippymap.calculateSlippyMapContentAreaSize
-import com.meistercharts.algorithms.layers.slippymap.withSlippyMapZoom
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
+import com.meistercharts.maps.SlippyMapCenter
+import com.meistercharts.maps.calculateSlippyMapContentAreaSize
+import com.meistercharts.maps.withSlippyMapZoom
 import com.meistercharts.canvas.FixedContentAreaSize
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.pixelSnapSupport
@@ -30,7 +31,7 @@ import com.meistercharts.canvas.pixelSnapSupport
  * This gestalt can be used to configure MeisterCharts for slippy map
  */
 class SlippyMapBaseGestalt : ChartGestalt {
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     with(meisterChartBuilder) {
       contentAreaSizingStrategy = FixedContentAreaSize(calculateSlippyMapContentAreaSize())
 
@@ -55,7 +56,7 @@ class SlippyMapBaseGestalt : ChartGestalt {
         //Update the content area size if the device pixel ratio has been updated
         chartSupport.devicePixelRatioSupport.devicePixelRatioProperty.consume {
           chartSupport.rootChartState.contentAreaSizeProperty.value = calculateSlippyMapContentAreaSize()
-          chartSupport.zoomAndTranslationSupport.resetToDefaults()
+          chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.EnvironmentUpdate)
         }
       }
 

@@ -71,6 +71,8 @@ public object Libs {
     public const val com_github_node_gradle_node_gradle_plugin: String =
             "com.github.node-gradle.node:com.github.node-gradle.node.gradle.plugin:_"
 
+    public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
+
     public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
 
     public const val com_github_turansky_kfc_latest_webpack_gradle_plugin: String =
@@ -97,11 +99,11 @@ public object Libs {
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
 
+    public const val playwright: String = "com.microsoft.playwright:playwright:_"
+
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
-
-    public const val mockito_kotlin: String = "com.nhaarman.mockitokotlin2:mockito-kotlin:_"
 
     public const val klock: String = "com.soywiz.korlibs.klock:klock:_"
 
@@ -140,9 +142,6 @@ public object Libs {
             "io.codearte.nexus-staging:io.codearte.nexus-staging.gradle.plugin:_"
 
     public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
-
-    public const val io_gitlab_arturbosch_detekt_gradle_plugin: String =
-            "io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin:_"
 
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
@@ -217,6 +216,8 @@ public object Libs {
 
     public const val launch4j: String = "net.sf.launch4j:launch4j:_"
 
+    public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
+
     public const val tornadofx: String = "no.tornado:tornadofx:_"
 
     public const val tornadofx_controls: String = "no.tornado:tornadofx-controls:_"
@@ -282,8 +283,11 @@ public object Libs {
     public const val jekyll_template_processing_plugin: String =
             "org.jetbrains.dokka:jekyll-template-processing-plugin:_"
 
-    public const val org_jetbrains_dokka_gradle_plugin: String =
-            "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:_"
+    public const val intellij_coverage_agent: String =
+            "org.jetbrains.intellij.deps:intellij-coverage-agent:_"
+
+    public const val intellij_coverage_reporter: String =
+            "org.jetbrains.intellij.deps:intellij-coverage-reporter:_"
 
     public const val org_jetbrains_intellij_gradle_plugin: String =
             "org.jetbrains.intellij:org.jetbrains.intellij.gradle.plugin:_"
@@ -338,6 +342,15 @@ public object Libs {
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
             "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"
 
+    public const val kotlin_deeplearning_onnx: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-onnx:_"
+
+    public const val kotlin_deeplearning_tensorflow: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:_"
+
+    public const val kotlin_deeplearning_visualization: String =
+            "org.jetbrains.kotlinx:kotlin-deeplearning-visualization:_"
+
     public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
 
     public const val kotlinx_coroutines_core: String =
@@ -383,6 +396,8 @@ public object Libs {
     public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
 
     public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
+
+    public const val opencv: String = "org.openpnp:opencv:_"
 
     public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
 

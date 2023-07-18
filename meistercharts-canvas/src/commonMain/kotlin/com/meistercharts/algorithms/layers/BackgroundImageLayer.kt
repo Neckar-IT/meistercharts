@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.paintable.ObjectFit
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.canvas.paintable.ObjectFit
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 
 /**

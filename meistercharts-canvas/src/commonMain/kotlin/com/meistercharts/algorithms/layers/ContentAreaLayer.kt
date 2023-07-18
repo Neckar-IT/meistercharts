@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.ContentAreaPainter
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.SidesSelection

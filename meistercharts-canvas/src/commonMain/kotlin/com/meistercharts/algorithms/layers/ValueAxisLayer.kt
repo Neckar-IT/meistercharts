@@ -15,21 +15,21 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.LogarithmicValueRange
-import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.linear
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Style
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.CanvasStringShortener
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.LogarithmicValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits

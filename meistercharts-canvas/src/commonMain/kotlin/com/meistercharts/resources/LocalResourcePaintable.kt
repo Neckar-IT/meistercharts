@@ -16,16 +16,17 @@
 package com.meistercharts.resources
 
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Size
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
-import kotlin.jvm.JvmOverloads
 
 /**
  * Loads a local resource
  */
-expect class LocalResourcePaintable @JvmOverloads constructor(
-  relativePath: String,
+expect class LocalResourcePaintable(
+  relativePath: Url,
+
   /**
    * The size - if set to null the natural size will be used
    */
@@ -34,7 +35,7 @@ expect class LocalResourcePaintable @JvmOverloads constructor(
   /**
    * The alignment point for the bounding box
    */
-  alignmentPoint: Coordinates = Coordinates.origin
+  alignmentPoint: Coordinates = Coordinates.origin,
 ) : Paintable {
   fun withSize(size: Size): LocalResourcePaintable
 
@@ -45,9 +46,9 @@ expect class LocalResourcePaintable @JvmOverloads constructor(
  * Creates a paintable for a relative path to a local resource
  */
 fun Paintable.Companion.localResource(
-  relativePath: String,
+  relativePath: Url,
   size: Size? = null,
-  basePoint: Coordinates = Coordinates.none
+  basePoint: Coordinates = Coordinates.none,
 ): LocalResourcePaintable {
   return LocalResourcePaintable(relativePath, size, basePoint)
 }
@@ -56,9 +57,9 @@ fun Paintable.Companion.localResource(
  * Creates a paintable for a relative path to a local resource. Will return null if the resource does not exist.
  */
 fun Paintable.Companion.localResourceOrNull(
-  relativePath: String,
+  relativePath: Url,
   size: Size? = null,
-  basePoint: Coordinates = Coordinates.none
+  basePoint: Coordinates = Coordinates.none,
 ): LocalResourcePaintable? {
   return try {
     localResource(relativePath, size, basePoint)

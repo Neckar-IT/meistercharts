@@ -15,8 +15,8 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.BinaryValueRange
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
+import com.meistercharts.range.BinaryValueRange
+import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.BinaryLayer
 import com.meistercharts.algorithms.layers.BinaryTicksProvider
@@ -24,7 +24,7 @@ import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Vicinity
@@ -66,7 +66,7 @@ class BinaryGestalt(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     withContentViewportGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {

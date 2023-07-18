@@ -20,9 +20,9 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.PaintingVariables
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets

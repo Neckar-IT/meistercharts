@@ -1,5 +1,6 @@
 package it.neckar.open.time
 
+import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.si.ns
 
@@ -10,7 +11,7 @@ import it.neckar.open.unit.si.ns
  *
  * @returns the number of milliseconds elapsed since January 1, 1970 00:00:00 UTC.
  */
-fun nowMillis(): @ms Double {
+fun nowMillis(): @ms @IsFinite Double {
   return nowProvider.nowMillis()
 }
 
@@ -26,20 +27,3 @@ var nowProvider: NowProvider = ClockNowProvider
 fun resetNowProvider() {
   nowProvider = ClockNowProvider
 }
-
-/**
- * Converts this millis value to nanos (Long)
- */
-@ns
-fun Double.millis2nanos(): Long {
-  return (this * 1_000_000).toLong()
-}
-
-/**
- * Converts this nano value to millis (Double)
- */
-@ms
-fun Long.nanos2millis(): Double {
-  return this / 1_000_000.0
-}
-

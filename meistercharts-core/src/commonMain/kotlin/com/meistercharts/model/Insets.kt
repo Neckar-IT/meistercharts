@@ -16,6 +16,7 @@
 package com.meistercharts.model
 
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
@@ -58,6 +59,10 @@ data class Insets(
    */
   fun withBottom(newBottom: Double): Insets {
     return Insets(top, right, newBottom, left)
+  }
+
+  fun withTopBottom(newTop: Double, newBottom: Double): Insets {
+    return Insets(newTop, right, newBottom, left)
   }
 
   /**

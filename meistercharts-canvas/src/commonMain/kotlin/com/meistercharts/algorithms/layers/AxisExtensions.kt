@@ -15,12 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.FontMetrics
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Orientation
 import it.neckar.open.kotlin.lang.nullIfBlank
-import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 

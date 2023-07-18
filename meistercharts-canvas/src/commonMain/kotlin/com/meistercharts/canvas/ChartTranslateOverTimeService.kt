@@ -15,7 +15,8 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
@@ -25,12 +26,12 @@ import it.neckar.open.unit.si.ms
 
 /**
  * Translates a canvas over time.
- * This service is registered as refresh listener at [ChartSupport.onRefresh].
+ * This service is registered as refresh listener at [ChartSupport.onRender].
  *
  * Do *not* create a new instance. Call [ChartSupport.translateOverTime] instead.
  *
  */
-class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshListener {
+class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : ChartRenderLoopListener {
   /**
    * Whether the chart is currently animated
    */
@@ -64,7 +65,7 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshLis
    */
   var roundingStrategy: RoundingStrategy = RoundingStrategy.quarter
 
-  override fun refresh(chartSupport: ChartSupport, frameTimestamp: @ms Double, refreshDelta: @ms Double) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, refreshDelta: @ms Double) {
     if (!animated) {
       return
     }
@@ -74,18 +75,18 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : RefreshLis
     }
 
     //Calculate the new translation
-    translateTo(frameTimestamp)
+    translateTo(frameTimestamp, reason = UpdateReason.Animation)
   }
 
   /**
    * Translates the chart to the given timestamp
    */
-  fun translateTo(timestamp: @ms Double) {
+  fun translateTo(timestamp: @ms Double, reason: UpdateReason) {
     contentAreaTimeRangeX?.let {
       @TimeRelative val timeRelative = it.time2relative(timestamp)
 
       @Zoomed val newTranslation = -chartSupport.chartCalculator.domainRelative2zoomedX(timeRelative) + chartSupport.currentChartState.windowSize.width - insets.right
-      chartSupport.zoomAndTranslationSupport.setWindowTranslationX(roundingStrategy.round(newTranslation))
+      chartSupport.zoomAndTranslationSupport.setWindowTranslationX(roundingStrategy.round(newTranslation), reason = reason)
     }
   }
 }

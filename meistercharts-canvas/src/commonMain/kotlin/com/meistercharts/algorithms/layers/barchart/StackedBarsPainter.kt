@@ -16,9 +16,9 @@
 package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.valuesAt
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.valuesAt
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved

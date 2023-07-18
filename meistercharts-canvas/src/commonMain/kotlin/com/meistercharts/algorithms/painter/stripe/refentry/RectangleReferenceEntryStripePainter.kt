@@ -17,11 +17,11 @@ package com.meistercharts.algorithms.painter.stripe.refentry
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolve
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.snapPhysicalTranslation
 import com.meistercharts.history.HistoryConfiguration

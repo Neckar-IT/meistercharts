@@ -17,7 +17,7 @@ package com.meistercharts.api.bullet
 
 import com.meistercharts.api.MeisterChartsApi
 import com.meistercharts.charts.bullet.BulletChartGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 
 /**
  * The api towards the browser that supports the creation and manipulation of a bullet chart
@@ -29,11 +29,11 @@ class BulletChart internal constructor(
    */
   internal val gestalt: BulletChartGestalt,
 
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApi<BulletChartConfiguration>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setConfiguration(jsConfiguration: BulletChartConfiguration) {

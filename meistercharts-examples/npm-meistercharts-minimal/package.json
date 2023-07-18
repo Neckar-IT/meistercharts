@@ -1,0 +1,13 @@
+{
+  "name": "npm-meistercharts-minimal",
+  "main": "src/index.js",
+  "author": "NeckarIT",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@meistercharts/meistercharts": "1.33.0"
+  },
+  "devDependencies": {
+    "webpack": "5.88.1",
+    "webpack-cli": "5.1.4"
+  }
+}

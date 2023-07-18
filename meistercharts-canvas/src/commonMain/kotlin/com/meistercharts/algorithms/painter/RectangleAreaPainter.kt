@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.color.Color
 import com.meistercharts.model.SidesSelection
 import it.neckar.open.unit.other.px
 import kotlin.math.max

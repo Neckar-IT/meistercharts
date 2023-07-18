@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed

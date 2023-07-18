@@ -1,0 +1,126 @@
+= Meistercharts minimal yarn example
+
+== Getting Started
+This is an example that shows how to use MeisterCharts with the Yarn package
+Manager for your Project.
+
+=== System Requirements
+
+==== 1. Node.js
+Before installing and using the Yarn package manager, you will need to have Node.js installed. To see if you already have Node.js installed,
+type the following command into your local command line terminal:
+
+[source,shell]
+----
+node -v
+----
+If you see a version number node is installed.
+To install Node.js, follow <a href="https://nodejs.org/en">this link</a>
+
+==== 2. Yarn
+You have to install Yarn Globally with the following command
+
+[source,shell]
+----
+sudo npm install -g yarn
+----
+
+Now you have all you need to use the MeisterCharts API.
+
+==== Add MeisterCharts to an existing Yarn Project
+
+===== 1. Adding Dependencies
+add meistercharts to the dependencies:
+
+[source,shell]
+----
+yarn add @meistercharts/meistercharts
+----
+Your ``package.json`` should now contain the MeisterCharts dependency:
+
+[source,json]
+----
+{
+  "name": "yarn-meistercharts-minimal",
+  "author": "NeckarIT",
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "@meistercharts/meistercharts": "1.33.0"
+  },
+  "devDependencies": {
+    "webpack": "5.82.0",
+    "webpack-cli": "5.0.2"
+  }
+}
+
+----
+
+That is all you need to do. Now your project is ready to use MeisterCharts.
+The next step is to implement meistercharts in your code
+
+===== Load MeisterCharts with require and create your first Chart
+In this code we implement meisterCharts and create a new ``TimeLineChart``
+
+[source,js]
+----
+const meisterCharts = require('@meistercharts/meistercharts/meistercharts-easy-api');
+// create a new TimeLineChart
+let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
+
+// create the first sample data
+chart.setUpDemo();
+
+----
+
+* Add a new div to your webpage. The ID of the div is accessed by the ``createTimeLineChartFromId`` and the
+  chart will be created in this container.
+
+[source,HTML]
+----
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>MeisterCharts Demo</title>
+    <link rel="stylesheet" href="./style.css"/>
+  </head>
+  <body>
+    <div class="example">
+    <h1>MeisterCharts minimal example:</h1>
+
+      <div id="timeLineChart" style="width: 1000px; height:500px;">
+      </div>
+
+      <script src="../dist/bundle.js"></script>
+
+    </div>
+  </body>
+</html>
+
+----
+
+After we created the Chart you should now see the following chart on your browser
+
+image::img/timeLineChart.png[]
+
+* If you are facing problems you can view the example project files
+
+=== Run this example project
+First you need to install all Dependencies:
+
+[source,shell]
+----
+yarn install
+----
+
+After installing all dependencies we need to bundle our resources
+for our webpage
+
+[source,shell]
+----
+yarn webpack
+----
+
+You can now open the ``src/index.html``
+in your browser and see the example chart

@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.ChartState
-import com.meistercharts.algorithms.withAdditionalTranslation
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.state.withAdditionalTranslation
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
+import com.meistercharts.state.ChartState
 import it.neckar.open.provider.DoubleProvider
 
 /**

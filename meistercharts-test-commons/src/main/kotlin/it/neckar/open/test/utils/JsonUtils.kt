@@ -76,11 +76,6 @@ object JsonUtils {
     }
   }
 
-  @Deprecated("inline")
-  fun assertJsonEquals(err: String?, expected: String?, actual: String?) {
-    assertJsonEquals(expected, actual)
-  }
-
   @JvmStatic
   @Nonnull
   fun formatJson(json: String?): String {

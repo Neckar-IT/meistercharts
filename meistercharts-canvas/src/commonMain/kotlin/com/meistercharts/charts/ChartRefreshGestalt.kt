@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.RoundingStrategy
 import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.translateOverTime
@@ -32,10 +32,10 @@ class ChartRefreshGestalt(
     it.targetRefreshRate = targetRefreshRate
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
       configuration.targetRefreshRateProperty.consumeImmediately {
-        chartSupport.targetRefreshRate = it
+        chartSupport.targetRenderRate = it
       }
 
       configuration.chartAnimationRoundingStrategyProperty.consumeImmediately {

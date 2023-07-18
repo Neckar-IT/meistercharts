@@ -17,14 +17,17 @@ package com.meistercharts.algorithms.impl
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ZoomAndTranslationModifier
-import com.meistercharts.algorithms.ZoomAndTranslationSupport
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.withContentAreaSize
-import com.meistercharts.algorithms.withTranslation
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.withContentAreaSize
+import com.meistercharts.state.withTranslation
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import org.junit.jupiter.api.Test
 
 /**
@@ -105,7 +108,7 @@ internal class AbstractChartStateTest {
     //now zoom on the origin
     //Center should be held at center
 
-    zoomAndPanSupport.setZoom(4.0, 4.0, Coordinates.origin)
+    zoomAndPanSupport.setZoom(4.0, 4.0, Coordinates.origin, reason = UpdateReason.UserInteraction)
 
     assertThat(chartState.zoomX).isEqualTo(4.0)
     assertThat(chartState.zoomY).isEqualTo(4.0)
@@ -118,10 +121,10 @@ internal class AbstractChartStateTest {
 
 
     //Reset zoom
-    zoomAndPanSupport.setZoom(1.0, 1.0, Coordinates.origin)
+    zoomAndPanSupport.setZoom(1.0, 1.0, Coordinates.origin, reason = UpdateReason.UserInteraction)
 
     //Translate by 100 pixels
-    zoomAndPanSupport.moveWindow(100.0, 100.0)
+    zoomAndPanSupport.moveWindow(100.0, 100.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.windowTranslationX).isEqualTo(100.0)
     assertThat(chartState.windowTranslationY).isEqualTo(100.0)
 
@@ -130,7 +133,7 @@ internal class AbstractChartStateTest {
 
 
     //Zoom again - base should be held
-    zoomAndPanSupport.setZoom(10.0, 10.0, Coordinates.origin)
+    zoomAndPanSupport.setZoom(10.0, 10.0, Coordinates.origin, reason = UpdateReason.UserInteraction)
 
     assertThat(chartCalculator.window2domainRelativeX(0.0)).isCloseTo(-0.1, 0.000001)
     assertThat(chartCalculator.window2domainRelativeY(0.0)).isCloseTo(-0.2, 0.000001)

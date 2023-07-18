@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.geometry.Matrix
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.unit.si.rad
 
@@ -133,8 +133,12 @@ class CurrentTransform {
    * ATTENTION: Scale is respected!
    */
   fun translateScaled(deltaX: Double, deltaY: Double) {
-    translationX += deltaX * scaleX
-    translationY += deltaY * scaleY
+    if (deltaX != 0.0) {
+      translationX += deltaX * scaleX
+    }
+    if (deltaY != 0.0) {
+      translationY += deltaY * scaleY
+    }
   }
 
   /**

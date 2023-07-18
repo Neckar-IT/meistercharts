@@ -115,26 +115,26 @@ inline fun Double.isOdd(): Boolean {
   return (this % 2).abs() == 1.0
 }
 
-fun Double.sin(): Double = kotlin.math.sin(this)
-fun Double.cos(): Double = kotlin.math.cos(this)
-fun Double.tan(): Double = kotlin.math.tan(this)
-fun Double.asin(): Double = kotlin.math.asin(this)
-fun Double.acos(): Double = kotlin.math.acos(this)
-fun Double.atan(): Double = kotlin.math.atan(this)
-fun Double.exp(): Double = kotlin.math.exp(this)
-fun Double.log10(): Double = kotlin.math.log10(this)
-fun Double.sqrt(): Double = kotlin.math.sqrt(this)
-fun Double.ceil(): Double = kotlin.math.ceil(this)
-fun Double.floor(): Double = kotlin.math.floor(this)
-fun Double.atan2(x: Double): Double = kotlin.math.atan2(this, x)
-fun Double.round(): Double = kotlin.math.round(this)
-fun Double.abs(): Double = kotlin.math.abs(this)
-fun Double.sinh(): Double = kotlin.math.sinh(this)
-fun Double.cosh(): Double = kotlin.math.cosh(this)
-fun Double.tanh(): Double = kotlin.math.tanh(this)
-fun Double.expm1(): Double = kotlin.math.expm1(this)
+fun Double.sin(): Double = sin(this)
+fun Double.cos(): Double = cos(this)
+fun Double.tan(): Double = tan(this)
+fun Double.asin(): Double = asin(this)
+fun Double.acos(): Double = acos(this)
+fun Double.atan(): Double = atan(this)
+fun Double.exp(): Double = exp(this)
+fun Double.log10(): Double = log10(this)
+fun Double.sqrt(): Double = sqrt(this)
+fun Double.ceil(): Double = ceil(this)
+fun Double.floor(): Double = floor(this)
+fun Double.atan2(x: Double): Double = atan2(this, x)
+fun Double.round(): Double = round(this)
+fun Double.abs(): Double = abs(this)
+fun Double.sinh(): Double = sinh(this)
+fun Double.cosh(): Double = cosh(this)
+fun Double.tanh(): Double = tanh(this)
+fun Double.expm1(): Double = expm1(this)
 
-fun Int.abs(): Int = kotlin.math.abs(this)
+fun Int.abs(): Int = abs(this)
 
 /**
  * Ensures that this integer value lies between 0 (inclusive) and limit (exclusive).
@@ -209,13 +209,13 @@ fun Int.convertRange(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = 
 fun Long.convertRange(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = (dstMin + (dstMax - dstMin) * ((this - srcMin).toDouble() / (srcMax - srcMin).toDouble())).toLong()
 
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
-fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Double.convertRangeClamped(srcMin: Double, srcMax: Double, dstMin: Double, dstMax: Double): Double = convertRange(srcMin, srcMax, dstMin, dstMax).coerceIn(dstMin, dstMax)
 
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
-fun Int.convertRangeClamped(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Int.convertRangeClamped(srcMin: Int, srcMax: Int, dstMin: Int, dstMax: Int): Int = convertRange(srcMin, srcMax, dstMin, dstMax).coerceIn(dstMin, dstMax)
 
 /** Converts this value considering it was in the range [srcMin]..[srcMax] into [dstMin]..[dstMax], if the value is not inside the range the output value will be clamped to the nearest bound */
-fun Long.convertRangeClamped(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = convertRange(srcMin, srcMax, dstMin, dstMax).clamp(dstMin, dstMax)
+fun Long.convertRangeClamped(srcMin: Long, srcMax: Long, dstMin: Long, dstMax: Long): Long = convertRange(srcMin, srcMax, dstMin, dstMax).coerceIn(dstMin, dstMax)
 
 ////////////////////
 ////////////////////
@@ -297,10 +297,10 @@ fun Double.clamp(min: Double, max: Double): Double = coerceIn(min, max)
 fun Float.clamp(min: Float, max: Float): Float = coerceIn(min, max)
 
 /** Clamps [this] value into the range 0 and 1 */
-fun Double.clamp01(): Double = clamp(0.0, 1.0)
+fun Double.clamp01(): Double = coerceIn(0.0, 1.0)
 
 /** Clamps [this] value into the range 0 and 1 */
-fun Float.clamp01(): Float = clamp(0f, 1f)
+fun Float.clamp01(): Float = coerceIn(0f, 1f)
 
 /** Clamps [this] [Long] value into the range [min] and [max] converting it into [Int]. The default parameters will cover the whole range of values. */
 fun Long.toIntClamp(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int {
@@ -376,24 +376,24 @@ fun almostZero(a: Double) = abs(a) <= 0.0000001
 
 fun Double.roundDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
-  return kotlin.math.round(this * placesFactor) / placesFactor
+  return round(this * placesFactor) / placesFactor
 }
 
 fun Double.ceilDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
-  return kotlin.math.ceil(this * placesFactor) / placesFactor
+  return ceil(this * placesFactor) / placesFactor
 }
 
 fun Double.floorDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
-  return kotlin.math.floor(this * placesFactor) / placesFactor
+  return floor(this * placesFactor) / placesFactor
 }
 
 fun isEquivalent(a: Double, b: Double, epsilon: Double = 0.0001): Boolean = (a - epsilon < b) && (a + epsilon > b)
 
 fun Double.smoothstep(edge0: Double, edge1: Double): Double {
   val v = (this - edge0) / (edge1 - edge0)
-  val step2 = v.clamp(0.0, 1.0)
+  val step2 = v.coerceIn(0.0, 1.0)
   return step2 * step2 * (3 - 2 * step2)
 }
 
@@ -472,6 +472,14 @@ fun Double.requireFinite(): Double {
   }
 
   throw IllegalStateException("Finite value required - but was <$this>")
+}
+
+inline fun Double.requireFinite(descriptionProvider: (() -> String)): Double {
+  if (this.isFinite()) {
+    return this
+  }
+
+  throw IllegalStateException("Finite value required for ${descriptionProvider()} - but was <$this>")
 }
 
 /**

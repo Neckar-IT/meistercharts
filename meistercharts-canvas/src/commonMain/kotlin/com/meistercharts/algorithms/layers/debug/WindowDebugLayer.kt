@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.debug
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.pixelSnapSupport
 
 /**

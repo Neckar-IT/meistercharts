@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layout
 
 import com.meistercharts.model.Orientation
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
@@ -27,10 +27,10 @@ import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment
 import it.neckar.open.provider.MultiProvider

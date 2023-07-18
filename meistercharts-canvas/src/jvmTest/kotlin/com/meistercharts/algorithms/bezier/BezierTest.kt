@@ -17,7 +17,9 @@ package com.meistercharts.algorithms.bezier
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.model.Coordinates
+import com.meistercharts.canvas.geometry.Bezier
+import com.meistercharts.canvas.geometry.length
+import com.meistercharts.geometry.Coordinates
 import org.junit.jupiter.api.Test
 import kotlin.math.sqrt
 

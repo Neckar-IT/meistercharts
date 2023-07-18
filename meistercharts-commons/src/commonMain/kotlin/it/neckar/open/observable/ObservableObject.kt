@@ -172,6 +172,17 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T> {
   inline fun getAndSet(function: (oldValue: T) -> T) {
     value = function(value)
   }
+
+  /**
+   * Sets the value if it is different from the current value.
+   * Calls the callback
+   */
+  fun setIfDifferent(newValue: T, onChange: () -> Unit) {
+    if (value != newValue) {
+      value = newValue
+      onChange()
+    }
+  }
 }
 
 /**

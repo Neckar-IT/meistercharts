@@ -20,17 +20,17 @@ import com.meistercharts.algorithms.painter.ArcPathWorkaroundEpsilon
 import it.neckar.open.unit.number.NegativeOrZero
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.BorderRadius
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment
@@ -67,7 +67,7 @@ class BalloonTooltipPaintable(
   /**
    * The painting variables for the balloon tooltip - and content
    */
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     /**
      * The total width - inclusive content padding
      */

@@ -15,9 +15,9 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
@@ -25,6 +25,12 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.text.LineSpacing
+import com.meistercharts.canvas.text.TextLineCalculations
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.*
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.floor
@@ -648,8 +654,8 @@ fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: D
     label?.let {
       stroke(Color.white)
       fill(color ?: Color.black)
-      strokeText(text = label, x = 0.0, y = 0.0, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
-      fillText(text = label, x = 0.0, y = 0.0, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
+      strokeText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
+      fillText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
     }
   }
 }

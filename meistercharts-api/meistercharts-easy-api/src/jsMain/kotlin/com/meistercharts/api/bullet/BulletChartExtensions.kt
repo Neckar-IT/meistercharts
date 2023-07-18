@@ -15,15 +15,13 @@
  */
 package com.meistercharts.api.bullet
 
-import StyleDebugEnabled
-import com.meistercharts.algorithms.model.CategoryIndex
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyStyle
 import com.meistercharts.api.applyThresholdStyles
 import com.meistercharts.api.applyTitleStyle
 import com.meistercharts.api.applyValueAxisStyle
-import com.meistercharts.api.bar.applyStyle
 import com.meistercharts.api.category.CategoryBulletChartData
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.setImagesProvider
@@ -39,18 +37,16 @@ import com.meistercharts.charts.bullet.BulletChartGestalt
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bullet.BulletChartExtensions")
 
 
 /**
- * Applies the default configuration for SICK
+ * Applies the default configuration for Easy API
  */
-fun BulletChartGestalt.applySickDefaults() {
+fun BulletChartGestalt.applyEasyApiDefaults() {
   configuration.applyAxisTitleOnTop(40.0)
 }
 
@@ -58,9 +54,7 @@ fun BulletChartGestalt.applySickDefaults() {
  * Applies the configuration
  */
 fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfiguration) {
-  logger.ifDebug {
-    console.debug("BulletChartGestalt.applyConfiguration", jsConfiguration)
-  }
+  logger.debug("BulletChartGestalt.applyConfiguration", jsConfiguration)
 
   CategoryConverter.toCurrentValuesProvider(jsConfiguration)?.let {
     this.configuration.currentValues = it

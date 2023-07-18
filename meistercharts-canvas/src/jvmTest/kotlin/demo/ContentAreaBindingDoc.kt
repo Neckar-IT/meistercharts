@@ -15,22 +15,22 @@
  */
 package demo
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.impl.FittingWithMargin
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.range.ValueRange
+import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.algorithms.layers.EmptyLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.canvas.BindContentAreaSize2ContentViewport
 import com.meistercharts.canvas.FixedContentAreaSize
 import com.meistercharts.canvas.FixedContentAreaWidth
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Side
 import com.meistercharts.model.Size
 import com.meistercharts.model.Vicinity
 
-fun createBuilder(): MeisterChartBuilder {
+fun createBuilder(): MeisterchartBuilder {
   throw UnsupportedOperationException("Not implemented")
 }
 
@@ -39,7 +39,7 @@ fun createBuilder(): MeisterChartBuilder {
  * Shows how the content area can be bound
  */
 fun bindContentAreaSize() {
-  val meisterChartBuilder: MeisterChartBuilder = createBuilder()
+  val meisterChartBuilder: MeisterchartBuilder = createBuilder()
 
   // tag::bindContentAreaSize[]
 
@@ -60,7 +60,7 @@ fun bindContentAreaSize() {
  * Shows how the content area can be bound for a bar chart
  */
 fun barChartContentAreaSizeBinding() {
-  val meisterChartBuilder: MeisterChartBuilder = createBuilder()
+  val meisterChartBuilder: MeisterchartBuilder = createBuilder()
 
   // tag::barChartContentAreaSizeBinding[]
 
@@ -85,7 +85,7 @@ fun barChartContentAreaSizeBinding() {
  * Shows how the value axis can be placed on the edge of the content area
  */
 fun valueAxisOnContentAreaBounds() {
-  val meisterChartBuilder: MeisterChartBuilder = createBuilder()
+  val meisterChartBuilder: MeisterchartBuilder = createBuilder()
 
   // tag::valueAxisOnContentAreaBounds[]
 

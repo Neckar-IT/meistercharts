@@ -18,7 +18,7 @@ package com.meistercharts.painter
 import it.neckar.open.unit.number.IsFinite
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 
 /**
  * Represents painters that paints a line.

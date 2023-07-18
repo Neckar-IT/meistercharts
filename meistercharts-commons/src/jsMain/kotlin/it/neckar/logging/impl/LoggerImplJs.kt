@@ -4,16 +4,44 @@ import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
 import it.neckar.logging.Logger
+import it.neckar.logging.LoggerName
+import it.neckar.logging.ShortenedLoggerName
 import it.neckar.logging.isEnabled
 
-class LoggerImplJs(override val name: String) : Logger {
+/**
+ * Logger implementation for JS
+ */
+class LoggerImplJs private constructor(
+  override val name: String,
+  /**
+   * The prefix that is prepended to the log message
+   */
+  val shortenedLoggerName: ShortenedLoggerName,
+) : Logger {
+  constructor(name: LoggerName) : this(name.value, name.shortened())
+
   /**
    * The level for this logger
    */
   var level: Level? = null
 
+
   override fun getName(): String {
     return name
+  }
+
+  override fun isEnabledForLevel(level: Level): Boolean {
+    return level.isEnabled(getEffectiveLogLevel())
+  }
+
+  override fun isTraceEnabled(): Boolean {
+    return Level.TRACE.isEnabled(getEffectiveLogLevel())
+  }
+
+  override fun trace(msg: String?) {
+    if (isTraceEnabled()) {
+      console.debug("[$shortenedLoggerName] $msg")
+    }
   }
 
   override fun isDebugEnabled(): Boolean {
@@ -21,7 +49,21 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun debug(msg: String?) {
-    console.debug(msg)
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] $msg")
+    }
+  }
+
+  override fun debug(message: String, objectDebug: Any?) {
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] $message", objectDebug)
+    }
+  }
+
+  override fun debug(messageProvider: () -> String, objectDebug: Any?) {
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] ${messageProvider()}", objectDebug)
+    }
   }
 
   override fun isInfoEnabled(): Boolean {
@@ -29,7 +71,9 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun info(msg: String?) {
-    console.info(msg)
+    if (isInfoEnabled()) {
+      console.info("[$shortenedLoggerName] $msg")
+    }
   }
 
   override fun isWarnEnabled(): Boolean {
@@ -37,7 +81,9 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun warn(msg: String?) {
-    console.warn(msg)
+    if (isWarnEnabled()) {
+      console.warn("[$shortenedLoggerName] $msg")
+    }
   }
 
   override fun isErrorEnabled(): Boolean {
@@ -52,6 +98,8 @@ class LoggerImplJs(override val name: String) : Logger {
   }
 
   override fun error(msg: String?) {
-    console.error(msg)
+    if (isErrorEnabled()) {
+      console.error("[$shortenedLoggerName] $msg")
+    }
   }
 }

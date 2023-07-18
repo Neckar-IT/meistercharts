@@ -15,9 +15,10 @@
  */
 package com.meistercharts.api.discrete
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
@@ -32,7 +33,7 @@ import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
 import com.meistercharts.api.toModelSizes
 import com.meistercharts.api.toNumberFormat
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.design.Theme
 import com.meistercharts.history.DataSeriesId
@@ -40,10 +41,8 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.historyConfiguration
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
-import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.asProvider
@@ -57,15 +56,15 @@ private val logger = LoggerFactory.getLogger("com.meistercharts.api.discrete.Dis
 /**
  * Overwrites defaults set by the gestalt
  */
-fun MeisterChartBuilder.applyDiscreteTimelineChartSickDefaults() {
+fun MeisterchartBuilder.applyDiscreteTimelineChartEasyApiDefaults() {
   zoomAndTranslationConfiguration {
     //ATTENTION: Copied from DiscreteTimelineChartGestalt#init
     translateAxisSelection = AxisSelection.X
-    mouseWheelZoom = false //Disable zoom for SICK
+    mouseWheelZoom = false //Disable zoom for Easy API
   }
 }
 
-fun DiscreteTimelineChartGestalt.applySickDefaults() {
+fun DiscreteTimelineChartGestalt.applyEasyApiDefaults() {
   //configuration.applyAxisTitleOnTop(40.0)
   chartSupport().windowResizeBehavior = ResetToDefaultsOnWindowResize //always reset to the defaults, we do not have any live data
 }
@@ -74,9 +73,7 @@ fun DiscreteTimelineChartGestalt.applySickDefaults() {
  * Applies the configuration to the gestalt
  */
 fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTimelineChartConfiguration) {
-  logger.ifDebug {
-    console.debug("DiscreteTimelineChartGestalt.applyConfiguration", jsConfiguration)
-  }
+  logger.debug("DiscreteTimelineChartGestalt.applyConfiguration", jsConfiguration)
 
   jsConfiguration.visibleDiscreteStripes?.let { jsVisibleStripes ->
     if (jsVisibleStripes.size == 1 && jsVisibleStripes[0] == -1) { //check for magic "-1" value
@@ -116,7 +113,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
             fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
           }
-          
+
           val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
             jsStripeStyle?.labelColor?.toColor() ?: Color.white
           }
@@ -163,7 +160,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
   jsConfiguration.visibleTimeRange?.toModel()?.let { timeRange ->
     @DomainRelative val startDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.start)
     @DomainRelative val endDateRelative = configuration.contentAreaTimeRange.time2relative(timeRange.end)
-    chartSupport().zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative)
+    chartSupport().zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative, reason = UpdateReason.ApiCall)
   }
 
 

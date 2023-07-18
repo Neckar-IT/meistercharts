@@ -1,5 +1,165 @@
 = MeisterCharts Release Notes
 
+== MeisterCharts 1.34.0-SNAPSHOT
+
+=== New Features
+
+==== Timeline Chart
+
+===== Min/Max Area
+
+* add support for displaying min/max area
+
+===== Points Painter
+
+* add support for displaying points.
+* Calculate optimal distance between data points depending on the size of the points
+
+===== Tiles Precision improvements
+
+The precision of the calculations related to tiles has been greatly improved.
+Meistercharts support tiles with a resolution of microseconds in a time range of several hundred thousand years.
+
+===== Downsampling Modes
+
+There are now two downsampling modes available:
+
+* Automatic
+* None
+
+When using the automatic mode, Meistercharts will automatically select the best downsampling mode for the current zoom level.
+When using the none mode, no downsampling will be applied. The user is responsible for providing the data in the correct resolution.
+
+===== Custom Events for History Queries
+
+* Custom events are now published when querying data from the history storage.
+
+===== Timeline Chart Config Assistant
+
+The new assistant allows a much simplified configuration of a timeline chart.
+The assistant calculates the relevant properties and applies them to the chart automatically.
+
+===== Reset Zoom Improvements
+
+Reset zoom to defaults can be configured now: The affected axes can be configured now.
+
+==== Startup behavior
+
+* Meistercharts startup improvements: Meistercharts is now initialized *before* onLoad().
+* Font loading is now done in parallel.
+Repaint is triggered when all fonts are loaded.
+
+==== New Colors API
+
+A new colors API is available now.
+This API reproduces the behavior of the HTML5 Canvas API.
+All colors are now defined as RGBA values.
+The alpha value is optional and defaults to 1.0.
+
+Meisterchart supports all web colors and the following color formats:
+
+* RGB
+* RGBA
+* HSL
+* HSLA
+* HEX
+* HEXA
+* CSS color names (with alpha)
+
+* Add constants for Material Design colors
+
+==== CSS classes
+
+* All DIVs created by Meistercharts now have a CSS class.
+This allows for easier styling.
+* The Chart-ID is also added as CSS class.
+
+==== Logging
+
+Logging has been improved a lot.
+
+===== Logging "CLI"
+
+Meistercharts Log Levels can be configured using the Developer console:
+
+* `meistercharts.rootLevel = "DEBUG"`
+* `meistercharts.list()`
+
+==== Virtual "Now"
+
+Meistercharts now supports a virtual "now" for all charts.
+Therefore, we have full control about the time now.
+The is especially useful for end-to-end tests.
+
+==== E2E Tests: Playwright Tests
+
+* Meistercharts now supports end-to-end tests using Playwright.
+* The tests are executed in our CI pipeline
+
+
+===== Demos
+
+* A lot of new demos have been created to visualize/test the new features
+* Each Demo has a UUID.
+This UUID can be used to create links to a specific demo.
+
+=== Performance Improvements
+
+* Introduce cache for alpha colors
+* Improved FPS calculations
+* [TimelineChart] Tiles size has been optimized. This improves the tile recreation performance by 65%.
+* Improved precision for frame timestamps
+
+=== Minor Improvements
+
+* Sanitizing of API inputs has been improved: Additional checks have been added for min/max values
+* Improve package structure
+* [SlippyMap] Additional map providers implemented
+* React integration: Add functional component
+
+=== Bugfixes
+
+* [Discrete Data Series] Fix visible data series for NaN and invisible data series
+* [Thresholds] Improve mouse interaction handling: Avoid "flickering" when two thresholds are placed at the same location.
+* [Timeline] Improve calculation of downsampling: Min/Max values are now calculated correctly using the lower levels, too
+* [Timeline] Improve calculation of default zoom level: Viewport top is now calculated correctly.
+* [Locale] Fix initial parsing of locale from browser
+
+=== Deployment/Hosting
+
+Meistercharts is now fully available on GitHub: https://github.com/Neckar-IT/meistercharts
+
+=== Documentation
+
+* Minimal examples for Vite, NPM, Yarn
+* JS Fiddles added
+* Add example for react application
+
+== MeisterCharts 1.33.0
+
+Release date: 2023-05-25 +
+
+=== Added
+
+* added property `showMouseWheelModifierHint` to `TimeLineChartStyle` in order to show/hide the mouse-wheel-modifier-hint
+* added properties `decimalMinValues` and `decimalMaxValues` to `Sample` in order to define min/max-values for decimal-values at the native sampling period
+* added `TimeLineChartLineStyle` to configure the appearance of lines shown in `TimeLineChart`; this implies
+** the support for dots where a sample-point is supposed to be
+** the support for min/max-areas
+* added support for thresholds becoming active when hovered with the mouse; the corresponding new properties can be found in `Threshold`:
+** `labelColorActive` - defines the color of the label when the threshold is active
+** `lineStyleActive` - defines the line-style when the threshold is active
+** `labelBoxStyleActive` - defines the box-style of the label when the threshold is active
+
+=== Changed
+
+* removed `defaultEntryDuration` from `DiscreteTimelineChartData`
+* changed type of `lineStyles`-property found in `TimeLineChartStyle` from `Array<LineStyle>?` to `Array<TimeLineChartLineStyle>?` (see above)
+
+=== Bugfixes
+
+* `DiscreteTimelineChart`: fixed freeze when `defaultEntryDuration` did not match the data at hand
+
 == MeisterCharts 1.32.0
 
 Release date: 2023-04-25 +

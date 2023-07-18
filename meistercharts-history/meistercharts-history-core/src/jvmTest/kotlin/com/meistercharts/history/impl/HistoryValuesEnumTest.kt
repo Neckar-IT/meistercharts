@@ -26,7 +26,6 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.isEnumSetNoValue
 import com.meistercharts.history.isOrdinalNoValue
-import com.meistercharts.history.isOrdinalPending
 import it.neckar.open.collections.BitSet
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.emptyIntArray
@@ -58,12 +57,36 @@ class HistoryValuesEnumTest {
     assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(1)
 
     val chunk = historyChunk(historyConfiguration) {
-      addValues(100.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(0).bitset), emptyIntArray(), emptyIntArray(), emptySet())
-      addValues(101.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptyIntArray(), emptySet())
-      addValues(102.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(2).bitset), emptyIntArray(), emptyIntArray(), emptySet())
-      addValues(103.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.forEnumValue(1).bitset), emptyIntArray(), emptyIntArray(), emptySet())
+      addValues(
+        timestamp = 100.0, decimalValues = emptyDoubleArray(),
+        enumValues = intArrayOf(HistoryEnumSet.forEnumValue(0).bitset),
+        referenceEntryIds = emptyIntArray(), referenceEntryStatuses = emptyIntArray(), entryDataSet = emptySet()
+      )
+      addValues(
+        timestamp = 101.0,
+        decimalValues = emptyDoubleArray(),
+        enumValues = intArrayOf(HistoryEnumSet.forEnumValue(1).bitset),
+        referenceEntryIds = emptyIntArray(), referenceEntryStatuses = emptyIntArray(), entryDataSet = emptySet()
+      )
+      addValues(
+        timestamp = 102.0,
+        decimalValues = emptyDoubleArray(),
+        enumValues = intArrayOf(HistoryEnumSet.forEnumValue(2).bitset),
+        referenceEntryIds = emptyIntArray(), referenceEntryStatuses = emptyIntArray(), entryDataSet = emptySet()
+      )
+      addValues(
+        timestamp = 103.0,
+        decimalValues = emptyDoubleArray(),
+        enumValues = intArrayOf(HistoryEnumSet.forEnumValue(1).bitset),
+        referenceEntryIds = emptyIntArray(), referenceEntryStatuses = emptyIntArray(), entryDataSet = emptySet()
+      )
 
-      addValues(107.0, emptyDoubleArray(), intArrayOf(HistoryEnumSet.NoValue.bitset), emptyIntArray(), emptyIntArray(), emptySet())
+      addValues(
+        timestamp = 107.0,
+        decimalValues = emptyDoubleArray(),
+        enumValues = intArrayOf(HistoryEnumSet.NoValue.bitset),
+        referenceEntryIds = emptyIntArray(), referenceEntryStatuses = emptyIntArray(), entryDataSet = emptySet()
+      )
     }
 
     assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumSet.forEnumValue(0))

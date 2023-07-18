@@ -17,9 +17,9 @@ package com.meistercharts.canvas.resize
 
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.VerticalAlignment
 import it.neckar.open.unit.other.px
 

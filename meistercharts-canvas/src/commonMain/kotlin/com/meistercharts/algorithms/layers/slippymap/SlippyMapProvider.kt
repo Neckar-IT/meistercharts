@@ -15,7 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.slippymap
 
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
+import it.neckar.open.http.Url
 import kotlin.math.abs
 import kotlin.reflect.KProperty0
 
@@ -23,17 +24,45 @@ import kotlin.reflect.KProperty0
  * Provides urls to slippy map tile servers.
  *
  * For a list of tile servers see [TileServers](https://wiki.openstreetmap.org/wiki/Tile_servers)
+ *
+ * Or look here:
+ * https://raw.githubusercontent.com/leaflet-extras/leaflet-providers/master/leaflet-providers.js
+ *
  */
 interface SlippyMapProvider {
   /**
    * Compute the url of a slippy map tile for the given tile index and zoom
    */
-  fun url(tileIndex: TileIndex, zoom: Int): String
+  fun url(tileIndex: TileIndex, zoom: Int): Url
 
   /**
    * Retrieve the legal notice for this provider
    */
   val legalNotice: String?
+
+  companion object {
+    /**
+     * Contains a list of all known slippy map providers
+     */
+    val all: List<SlippyMapProvider> = listOf(
+      CartoDBPositron,
+      CartoDBPositronNoLabels,
+      CartoDBDarkMatter,
+      CartoDBVoyager,
+      MtbMap,
+      OpenTopoMap,
+      MemoMaps,
+      Cyclosm,
+      CyclosmLite,
+      OsmFrance,
+      OpenStreetMap,
+      OpenStreetMapDe,
+      OpenStreetMapHumanitarian,
+      OpenStreetMapBlackAndWhite,
+      OpenStreetMapTerrain,
+      WikimediaMaps
+    )
+  }
 }
 
 /**
@@ -41,7 +70,7 @@ interface SlippyMapProvider {
  */
 fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
   return object : SlippyMapProvider {
-    override fun url(tileIndex: TileIndex, zoom: Int): String {
+    override fun url(tileIndex: TileIndex, zoom: Int): Url {
       return get().url(tileIndex, zoom)
     }
 
@@ -58,14 +87,14 @@ fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
 data object OpenStreetMap : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+    return Url("https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -79,18 +108,18 @@ data object OpenStreetMap : SlippyMapProvider {
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
 data object OpenStreetMapDe : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 3) {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+    return Url("https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
-  override val legalNotice: String? = "© OpenStreetMap contributors"
+  override val legalNotice: String = "© OpenStreetMap contributors"
 
 }
 
@@ -101,13 +130,13 @@ data object OpenStreetMapDe : SlippyMapProvider {
  * [HumanitarianMap](https://wiki.openstreetmap.org/wiki/Humanitarian_map_style)
  */
 data object OpenStreetMapHumanitarian : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 2) {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 2) {
       0 -> "a"
       1 -> "b"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return Url("https://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -122,9 +151,10 @@ data object OpenStreetMapHumanitarian : SlippyMapProvider {
  *
  * [Policies](https://operations.osmfoundation.org/policies/tiles/)
  */
+@Deprecated("Does not work anymore")
 data object OpenStreetMapGrayscale : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    return "https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url("https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -138,15 +168,15 @@ data object OpenStreetMapGrayscale : SlippyMapProvider {
  * [Stamen](http://maps.stamen.com/#toner/12/37.7706/-122.3782)
  */
 data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return Url("http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -162,15 +192,15 @@ data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
  * Does only support zoom levels up to 16!
  */
 data object OpenStreetMapTerrain : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    val subDomain = when (val modulo = (abs(tileIndex.x) + abs(tileIndex.y)) % 4) {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
       0 -> "a"
       1 -> "b"
       2 -> "c"
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return "http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.x}/${tileIndex.y}.png"
+    return Url("http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -184,11 +214,154 @@ data object OpenStreetMapTerrain : SlippyMapProvider {
  * [TermsOfUse](https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use)
  */
 data object WikimediaMaps : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): String {
-    return "https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.x}/${tileIndex.y}.png"
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url("https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use
   override val legalNotice: String? = "© OpenStreetMap contributors / Wikimedia"
 
+}
+
+// https://wiki.openstreetmap.org/wiki/Raster_tile_providers
+data object Cyclosm : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+data object CyclosmLite : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm-lite/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+data object OsmFrance : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.tile.openstreetmap.fr/osmfr/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+data object MemoMaps : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url("https://tile.memomaps.de/tilegen/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+data object OpenTopoMap : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.tile.opentopomap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=MtbMap
+data object MtbMap : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url("http://tile.mtbmap.cz/mtbmap_tiles/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.Positron
+data object CartoDBPositron : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      3 -> "d"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.basemaps.cartocdn.com/light_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.PositronNoLabels
+data object CartoDBPositronNoLabels : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      3 -> "d"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.basemaps.cartocdn.com/light_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.DarkMatter
+data object CartoDBDarkMatter : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      3 -> "d"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.basemaps.cartocdn.com/dark_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.Voyager
+data object CartoDBVoyager : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
+      0 -> "a"
+      1 -> "b"
+      2 -> "c"
+      3 -> "d"
+      else -> throw IllegalStateException("fix modulo computation: $modulo")
+    }
+    return Url("https://$subDomain.basemaps.cartocdn.com/rastertiles/voyager/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "TODO"
 }

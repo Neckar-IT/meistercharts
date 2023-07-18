@@ -17,8 +17,7 @@ package com.meistercharts.events
 
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
-import com.meistercharts.events.ModifierCombination
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.time.RelativeMillis
 import kotlin.contracts.InvocationKind

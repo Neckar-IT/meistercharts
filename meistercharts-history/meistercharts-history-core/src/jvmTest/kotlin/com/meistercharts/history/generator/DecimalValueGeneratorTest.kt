@@ -17,9 +17,8 @@ package com.meistercharts.history.generator
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.open.test.utils.RandomWithSeed
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 

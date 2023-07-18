@@ -1,76 +1,100 @@
-= Contains Charting related stuff
+= MeisterCharts
 
-== Modules Overview
+MeisterCharts is a versatile charting API that offers a variety of
+modules to meet different charting needs.
 
-=== artwork
+* npm package: https://www.npmjs.com/package/@meistercharts/meistercharts[www.npmjs.com/package/@meistercharts/meistercharts]
 
-Contains images and concepts
+== Example chart
 
-=== backup
+This charts shows a ``TimelineChart``.
+This Chart type is used to visualize
+data over time.
 
-Scripts related to creating backups of the releases
+image::img/timeLineChart.png[]
 
-=== data-* (api/client/server)
+== Quickstart: Installing and use Meistercharts
 
-Data server modules - and REST API model
+This is only a quick guide how to install meistercharts and use it. Methods
+to use meistercharts in other ways and more detailed are listed in the link:meistercharts-examples[] module
 
-=== demos
+=== Install from npm
 
-Platform independent code for demos
+install the meistercharts package
+----
+npm install @meistercharts/meistercharts
+----
 
-==== demosfx
+create a div container
 
-JavaFX based demos and runner
+[source,HTML]
+----
+<div id="timeLineChart"></div>
+----
 
-==== demosjs
+create your first chart and initialize it with sample data:
 
-JS based demos and runner
+[source,js]
+----
+const meisterCharts = require('@meistercharts/meistercharts/meistercharts-easy-api');
+// create a new TimeLineChart
+let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
+// create the first sample data
+chart.setUpDemo();
+----
 
-=== doc
+== For Devs
 
-Common documentation and stuff related to charting
+To build the project follow the steps described in link:how-to-build.adoc[How To Build]
 
-=== examples
+=== Modules Overview
 
-Contains examples of MeisterCharts
+Each module has a specific function in the architecture of
+MeisterCharts. Here is an overview of the different modules
+and their functions:
 
-=== history-algorithms
+==== meistercharts-examples
+
+Contains examples of MeisterCharts and shows how to use MeisterCharts with
+different package manager and
+
+* link:meistercharts-examples[]
+
+==== history-algorithms
 
 Data model and calculations related to history
 
-=== history (platform independent) - for usage with REST
+* link:meistercharts-history[]
+
+==== history (platform independent) - for usage with REST
 
 Contains history related classes - including data transfer objects and serializers for REST
 
-=== meistercharts
+==== meistercharts
 
 This project dir contains specific JS implementations for customers.
 
-=== meistercharts-algorithms (platform independent)
+==== meistercharts-algorithms (platform independent)
 
 This module contains algorithm implementations.
-All content within this module is independent from any UI framework.
+All content within this module is independent of any UI framework.
 
 This code can be compiled to JVM and JavaScript
 
 The src/test/kotlin folder contains tests that run using the JVM
 
-=== meistercharts-canvas (platform independent)
+==== meistercharts-canvas (platform independent)
 
 Contains layer implementations and canvas related stuff
 
-=== meistercharts-custom
+==== meistercharts-custom
 
 Custom charts for projects that are usually not reused.
 
-=== meistercharts-marketing
+==== meistercharts-marketing
 
 Marketing related documentation and (design) files
 
-=== meistercharts-version-info (platform independent)
+=== =meistercharts-version-info (platform independent)
 
 Contains an object that can be used to resolve the current version number
-
-=== meisterchartsfx
-
-JavaFX specific implementation for the canvas

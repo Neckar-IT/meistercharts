@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.tooltip.balloon
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api
 
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 
 /**
  * The main API for MeisterCharts.
@@ -27,7 +27,7 @@ internal constructor(
   /**
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 
   ) : MeisterChartsApi<Nothing>(meisterChart) {
 

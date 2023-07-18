@@ -16,9 +16,9 @@
 package com.meistercharts.algorithms.tile
 
 import com.meistercharts.charts.ChartId
+import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
-import it.neckar.open.annotations.Slow
 
 /**
  * Global cache for tiles.

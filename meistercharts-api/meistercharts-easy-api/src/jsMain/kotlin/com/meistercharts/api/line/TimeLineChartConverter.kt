@@ -15,11 +15,9 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.linechart.PointStyle
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.SimpleAreaBetweenLinesPainter
 import com.meistercharts.api.DataSeriesNumberFormat
 import com.meistercharts.api.PointConnectionStyle
@@ -28,6 +26,7 @@ import com.meistercharts.api.forEnumValueFromJsDouble
 import com.meistercharts.api.toColor
 import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
+import com.meistercharts.color.Color
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -40,6 +39,7 @@ import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.CirclePointPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
+import com.meistercharts.range.ValueRange
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.IntMap
 import it.neckar.open.collections.fastForEach
@@ -153,7 +153,7 @@ object TimeLineChartConverter {
    * Converts the given [Sample] into a [HistoryChunk]
    */
   fun toHistoryChunk(jsSample: Sample, historyConfiguration: HistoryConfiguration): HistoryChunk? {
-    return toHistoryChunk(arrayOf(jsSample), historyConfiguration)
+    return toHistoryChunk(jsSamples = arrayOf(jsSample), historyConfiguration = historyConfiguration)
   }
 
   /**
@@ -176,6 +176,12 @@ object TimeLineChartConverter {
         timestamp = jsSample.timestamp,
         decimalValuesProvider = { dataSeriesIndex ->
           jsSample.decimalValues?.get(dataSeriesIndex.value) ?: HistoryChunk.NoValue
+        },
+        decimalMinValuesProvider = { dataSeriesIndex ->
+          jsSample.decimalMinValues?.getOrNull(dataSeriesIndex.value) ?: HistoryChunk.NoValue
+        },
+        decimalMaxValuesProvider = { dataSeriesIndex ->
+          jsSample.decimalMaxValues?.getOrNull(dataSeriesIndex.value) ?: HistoryChunk.NoValue
         },
         enumValuesProvider = { dataSeriesIndex ->
           val jsEnumValue = jsSample.enumValues?.get(dataSeriesIndex.value)

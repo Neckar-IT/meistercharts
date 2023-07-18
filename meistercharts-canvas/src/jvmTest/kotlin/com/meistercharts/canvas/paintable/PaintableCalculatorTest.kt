@@ -17,11 +17,11 @@ package com.meistercharts.canvas.paintable
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.model.Rectangle
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.geometry.Rectangle
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

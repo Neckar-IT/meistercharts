@@ -25,6 +25,7 @@ import org.w3c.dom.Element
  *
  * Warning: IE11 does not support the ResizeObserver!
  */
+@Suppress("UnusedPrivateProperty")
 external class ResizeObserver(callback: (Array<ResizeObserverEntry>, ResizeObserver) -> Unit) {
   /**
    * Unobserves all observed Element targets of a particular observer.

@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.BinaryValueRange
 import com.meistercharts.algorithms.painter.BinaryPainter
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
+import com.meistercharts.range.BinaryValueRange
 import it.neckar.open.provider.BooleanValuesProvider
 
 /**

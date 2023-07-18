@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 
 /**
  * A DomainRelativePainter contains a [ChartCalculator].

@@ -17,7 +17,7 @@ package com.meistercharts.canvas.layout.cache
 
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachFiltered
-import it.neckar.open.collections.fastForEachReverse
+import it.neckar.open.collections.fastForEachReversed
 import it.neckar.open.collections.fastForEachWithIndex
 
 /**
@@ -129,8 +129,8 @@ abstract class AbstractObjectsCache<T>(
     values.fastForEachFiltered(predicate, callback)
   }
 
-  inline fun fastForEachReverse(callback: (value: T) -> Unit) {
-    values.fastForEachReverse(callback)
+  inline fun fastForEachReversed(callback: (value: T) -> Unit) {
+    values.fastForEachReversed(callback)
   }
 
   inline fun fastForEachWithIndex(callback: (index: Int, value: T) -> Unit) {

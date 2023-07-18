@@ -62,6 +62,12 @@ fun String.isSnapshot(): Boolean = contains("-SNAPSHOT")
 inline val Project.isOpenSource: Boolean
   get() = path.startsWith(":open:")
 
+/**
+ * Converts a gradle path (containing ":") to a file path (containing "/")
+ */
+fun String.gradlePathToFilePath(): String {
+  return this.replace(':', '/')
+}
 
 @Suppress("DEPRECATION")
 fun PublishingExtension.configureMavenReposForPublish(project: Project) {

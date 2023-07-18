@@ -16,9 +16,11 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.events.ImageLoadedEventBroker
+import com.meistercharts.js.MeisterChartClasses
 import com.meistercharts.model.Size
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.http.Url
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
 
@@ -26,10 +28,12 @@ import org.w3c.dom.HTMLImageElement
  * Loads an image from a URL (should not use caches)
  *
  */
-actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
+actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
   logger.debug { "Loading image: $url" }
 
   (document.createElement("IMG") as HTMLImageElement).apply {
+    this.classList.add(MeisterChartClasses.imageLoader)
+
     style.width = "${this.width} px"
     style.height = "${this.height} px"
 
@@ -49,7 +53,7 @@ actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
     })
 
     // set src after(!) adding the event-listener for the load-event
-    src = UrlConversion.convert(url)
+    src = UrlConversion.convert(url).value
 
     // Check if the image has been loaded already to avoid flickering.
     // Beware that 'complete' evaluates to true in IE11 for data-images.
@@ -61,6 +65,12 @@ actual fun loadImageUncached(url: String, callback: (Image) -> Unit) {
   }
 }
 
+/**
+ * Creates a new Image object from an HTMLImageElement.
+ *
+ * @receiver the HTMLImageElement from which to create the Image object
+ * @return the newly created Image object
+ */
 private fun HTMLImageElement.createImage(): Image {
   return Image(this, Size(this.naturalWidth.toDouble(), this.naturalHeight.toDouble()))
 }

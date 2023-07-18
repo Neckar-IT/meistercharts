@@ -15,12 +15,13 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.ValueRange
-import com.meistercharts.algorithms.autoScaleByZoomSupport
-import com.meistercharts.algorithms.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.axis.AxisSelection
-import com.meistercharts.algorithms.impl.BoundsProvider
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.range.ValueRange
+import com.meistercharts.zoom.autoScaleByZoomSupport
+import com.meistercharts.axis.AxisEndConfiguration
+import com.meistercharts.axis.AxisSelection
+import com.meistercharts.zoom.BoundsProvider
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ClippingLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -42,13 +43,13 @@ import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.layers.linechart.toDomainRelativeY
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.model.Insets
@@ -74,6 +75,7 @@ import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import com.meistercharts.resources.Icons
 import com.meistercharts.style.Palette
+import it.neckar.open.provider.asSizedProvider
 import kotlin.jvm.JvmOverloads
 import kotlin.math.max
 import kotlin.math.min
@@ -161,7 +163,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
         createDefaultZoomButtons(toolbarButtonFactory)
           .plus(
             toolbarButtonFactory.button(Icons::autoScale) {
-              fitValuesInY(it.chartSupport)
+              fitValuesInY(it.chartSupport, reason = UpdateReason.UserInteraction)
             }
           )
       )
@@ -218,7 +220,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }.clipped()
 
-  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(SizedProvider.forList(model.limits))) {
+  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(model.limits.asSizedProvider())) {
     orientation = Orientation.Horizontal
     fill = Color.rgba(255, 255, 255, 0.85)
     stroke = Color.white
@@ -228,7 +230,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   /**
    * Adapts the zoom level to make all y values visible
    */
-  private fun fitValuesInY(chartSupport: ChartSupport) {
+  private fun fitValuesInY(chartSupport: ChartSupport, reason: UpdateReason) {
     var max: @DomainRelative Double = -Double.MAX_VALUE
     var min: @DomainRelative Double = Double.MAX_VALUE
 
@@ -255,7 +257,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
 
     //Reset to defaults to be sure the x-axis is correct
-    chartSupport.resetZoomAndTranslationToDefaults()
+    chartSupport.resetZoomAndTranslationToDefaults(reason = reason)
 
     chartSupport.autoScaleByZoomSupport.autoScaleY(min, max, fitContentInViewportGestalt.contentViewportMargin, 0.05)
   }
@@ -301,7 +303,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fitContentInViewportGestalt.configure(meisterChartBuilder)
 
     liveEdgesLayer.delegate.configuration.valuesProvider = object : DoublesProvider {
@@ -467,7 +469,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
  */
 fun PixelValuesModel.fillWithSampleData() {
   //Initialize the held indices
-  for (heldIndex in 0..10) {
+  10.fastFor {
     heldAverageValues.add(DoubleArray(dataPointCount))
   }
 

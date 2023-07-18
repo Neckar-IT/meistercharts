@@ -16,9 +16,9 @@
 package com.meistercharts.algorithms.tile
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.devicePixelRatio
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
@@ -71,7 +71,7 @@ class DebugTileProvider(
         gc.fill(style.textColor)
 
         @px var y = 10.0
-        gc.fillText("x/y=${identifier.x}/${identifier.y}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
+        gc.fillText("x/y=${identifier.tileIndex}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
         y += rowHeight
         gc.fillText("zoom=${numberFormat.format(identifier.zoom.scaleX, paintingContext.i18nConfiguration)}/${numberFormat.format(identifier.zoom.scaleY, paintingContext.i18nConfiguration)}", 10.0, y, Direction.TopLeft, 0.0, 0.0, tileSize.width - 20.0)
         y += rowHeight

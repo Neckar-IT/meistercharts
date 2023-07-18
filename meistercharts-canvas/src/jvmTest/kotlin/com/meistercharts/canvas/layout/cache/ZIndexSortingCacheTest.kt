@@ -17,7 +17,7 @@ package com.meistercharts.canvas.layout.cache
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.ZIndex
+import com.meistercharts.model.ZIndex
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.kotlin.lang.fastFor
 import org.junit.jupiter.api.Disabled

@@ -17,12 +17,15 @@ package com.meistercharts.api
 
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.DirtyReason
-import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.canvas.timerSupport
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import com.meistercharts.model.Size
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.isCloseTo
+import it.neckar.open.unit.number.MayBeZero
 import org.w3c.dom.CustomEvent
+import org.w3c.dom.CustomEventInit
 import org.w3c.dom.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -36,7 +39,7 @@ internal constructor(
   /**
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
-  internal val meisterCharts: MeisterChartJS,
+  internal val meisterCharts: MeisterchartJS,
 ) {
 
   /**
@@ -65,15 +68,20 @@ internal constructor(
       return
     }
     previousContentAreaSize = size
-    dispatchCustomEvent("ContentAreaSizeChanged", size.toJs())
+    dispatchCustomEvent("content-area-size-changed", size.toJs())
   }
 
   /**
    * Dispatches a custom-event of type [eventType] and with detail [eventDetail]
    */
   protected fun dispatchCustomEvent(eventType: String, eventDetail: Any) {
-    val customEvent = CustomEvent("CustomEvent")
-    customEvent.initCustomEvent(type = eventType, bubbles = true, cancelable = false, detail = eventDetail)
+    val customEvent = CustomEvent(
+      type = "meistercharts:$eventType",
+      eventInitDict = CustomEventInit(detail = eventDetail, bubbles = true, cancelable = false, composed = true)
+    )
+
+    loggerCustomEvents.debug({ "Dispatching CustomEvent: $eventType" }, customEvent)
+
     meisterCharts.htmlCanvas.canvasElement.dispatchEvent(customEvent)
   }
 
@@ -106,4 +114,9 @@ internal constructor(
     get() {
       return meisterCharts.holder
     }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.MeisterChartsApi")
+    private val loggerCustomEvents: Logger = LoggerFactory.getLogger("com.meistercharts.api.MeisterChartsApi.CustomEvents")
+  }
 }

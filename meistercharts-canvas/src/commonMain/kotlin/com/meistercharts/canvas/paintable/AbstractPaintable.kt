@@ -20,18 +20,15 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LoopIndexAwarePaintingVariables
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
+import it.neckar.open.unit.number.MayBeNaN
 
 /**
  * Abstract base class for a paintable that supports layout and painting variables.
  * Paintables that have complicated calculations - especially of the bounding box - should extend this class.
  *
  */
-abstract class AbstractPaintable : Paintable {
-  /**
-   * Returns the painting variables for this paintable
-   */
-  abstract fun paintingVariables(): PaintablePaintingVariables
+abstract class AbstractPaintable : Paintable2 {
 
   /**
    * Do *not* override this method.
@@ -51,7 +48,7 @@ abstract class AbstractPaintable : Paintable {
    *
    * Therefore, usually it is *not* necessary to call [layout] manually.
    */
-  fun layout(paintingContext: LayerPaintingContext) {
+  override fun layout(paintingContext: LayerPaintingContext): @Zoomed Rectangle {
     val paintingVariables = paintingVariables()
 
     //Reset the bounding box (and all other values)
@@ -62,12 +59,14 @@ abstract class AbstractPaintable : Paintable {
     require(paintingVariables.boundingBox.isFinite()) {
       "Invalid bounding box - It is necessary to update the bounding box in [calculate]"
     }
+
+    return paintingVariables.boundingBox
   }
 
   /**
    * Calls [layout] if necessary - by checking the loop index
    */
-  fun layoutIfNecessary(paintingContext: LayerPaintingContext) {
+  override fun layoutIfNecessary(paintingContext: LayerPaintingContext) {
     if (paintingVariables().loopIndex != paintingContext.loopIndex) {
       layout(paintingContext)
     }
@@ -83,10 +82,6 @@ abstract class AbstractPaintable : Paintable {
     paintAfterLayout(paintingContext, x, y)
   }
 
-  /**
-   * Is called after the painting variables have been updated by calling [layout]
-   */
-  abstract fun paintAfterLayout(paintingContext: LayerPaintingContext, x: Double, y: Double)
 }
 
 /**
@@ -95,6 +90,8 @@ abstract class AbstractPaintable : Paintable {
 interface PaintablePaintingVariables : PaintingVariables, LoopIndexAwarePaintingVariables {
   /**
    * The current bounding box for this paintable
+   *
+   * @see Paintable.boundingBox
    */
   val boundingBox: @Zoomed Rectangle
 
@@ -107,7 +104,7 @@ interface PaintablePaintingVariables : PaintingVariables, LoopIndexAwarePainting
 /**
  * Abstract base class for [PaintablePaintingVariables]
  */
-abstract class PaintablePaintingVariablesImpl : AbstractPaintingVariables(), PaintablePaintingVariables {
+abstract class AbstractPaintablePaintingVariables : AbstractPaintingVariables(), PaintablePaintingVariables {
   /**
    * The bounding box of the complete legend
    */

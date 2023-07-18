@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.crosswire
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.Path
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
@@ -28,9 +28,9 @@ import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseEventBroker
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.observable.clear
 import it.neckar.open.unit.other.px
 

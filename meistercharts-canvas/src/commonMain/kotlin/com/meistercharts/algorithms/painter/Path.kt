@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 
 /**
  * Represents a path that can be applied to a graphics context ([com.meistercharts.canvas.CanvasRenderingContext])

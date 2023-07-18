@@ -15,12 +15,12 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.layers.slippymap.domainRelative2latitude
-import com.meistercharts.algorithms.layers.slippymap.domainRelative2longitude
+import com.meistercharts.maps.domainRelative2latitude
+import com.meistercharts.maps.domainRelative2longitude
 import com.meistercharts.algorithms.tile.CachedTileProvider
 import com.meistercharts.algorithms.tile.Tile
 import com.meistercharts.algorithms.tile.TileIdentifier
-import com.meistercharts.algorithms.tile.TileIndex
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.algorithms.tile.TileProvider
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
@@ -29,8 +29,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.clipToContentViewport
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.MapCoordinates
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.maps.MapCoordinates
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.whatsat.ResultElementType
@@ -68,8 +68,8 @@ class TilesLayer(
     override var zoom: Zoom = Zoom.default
     override var tileSize: @Zoomed Size = Size.none
 
-    override var tileIndexUpperLeft: TileIndex = TileIndex.origin
-    override var tileIndexLowerRight: TileIndex = TileIndex.origin
+    override var tileIndexUpperLeft: TileIndex = TileIndex.Origin
+    override var tileIndexLowerRight: TileIndex = TileIndex.Origin
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       val chartCalculator = paintingContext.chartCalculator
@@ -93,20 +93,19 @@ class TilesLayer(
     val gc = paintingContext.gc
     gc.clipToContentViewport(chartCalculator)
 
-    for (x in paintingVariables.tileIndexUpperLeft.x..paintingVariables.tileIndexLowerRight.x) {
-      for (y in paintingVariables.tileIndexUpperLeft.y..paintingVariables.tileIndexLowerRight.y) {
-        val tileIdentifier = TileIdentifier.of(paintingContext.chartId, x, y, paintingVariables.zoom)
-        val tile: Tile = tileProvider.getTile(tileIdentifier) ?: continue
+    TileIndex.iterateOverTileIndices(paintingVariables.tileIndexUpperLeft, paintingVariables.tileIndexLowerRight) { mainX, subX, mainY, subY ->
+      val tileIdentifier = TileIdentifier.of(paintingContext.chartId, mainX, subX, mainY, subY, paintingVariables.zoom)
+      val tile: Tile = tileProvider.getTile(tileIdentifier) ?: return@iterateOverTileIndices
 
-        gc.saved {
-          @Window val tileOrigin = chartCalculator.tileIndex2window(tileIdentifier.tileIndex, tileProvider.tileSize)
-          it.translate(snapConfiguration.snapXValue(tileOrigin.x), snapConfiguration.snapYValue(tileOrigin.y))
-          tile.paint(it, paintingContext)
-        }
+      gc.saved {
+        @Window val tileOrigin = chartCalculator.tileIndex2window(tileIdentifier.tileIndex, tileProvider.tileSize)
+        it.translate(snapConfiguration.snapXValue(tileOrigin.x), snapConfiguration.snapYValue(tileOrigin.y))
+        tile.paint(it, paintingContext)
       }
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   fun whatsAt(where: @Window Coordinates, precision: WhatsAtSupport.Precision, chartSupport: ChartSupport): List<WhatsAtResultElement<*>> {
     val chartCalculator = chartSupport.chartCalculator
 

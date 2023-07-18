@@ -15,15 +15,15 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.ArrowHead
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Distance
 import com.meistercharts.model.Size
 import com.meistercharts.resources.svg.PathPaintable
 import it.neckar.open.unit.other.px

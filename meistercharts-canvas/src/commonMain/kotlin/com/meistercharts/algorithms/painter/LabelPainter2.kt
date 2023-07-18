@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable
@@ -31,6 +31,7 @@ import com.meistercharts.canvas.layout.cache.StringsCache.Companion.Uninitialize
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
 import com.meistercharts.model.Direction
 import com.meistercharts.provider.LabelsProvider
 import it.neckar.open.kotlin.lang.asProvider
@@ -211,7 +212,7 @@ class LabelPainter2(
     private fun calculateAbsoluteMax(max: @Window Double) {
       var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReverse { label ->
+      layoutedLabelsCache.fastForEachReversed { label ->
         label.setCenterYMax(lastMinY - style.labelSpacing - label.halfHeight)
         lastMinY = label.centerYMax - label.halfHeight
       }
@@ -254,7 +255,7 @@ class LabelPainter2(
     private fun maxToMinLayout(max: @Window Double) {
       @px var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReverse { label ->
+      layoutedLabelsCache.fastForEachReversed { label ->
         //Check the max y with the last stored bottom y
         if (label.actualMaxY > lastMinY - style.labelSpacing) {
           //We are too high - move down
@@ -434,7 +435,7 @@ class LabelPainter2(
         }
 
         val textToDraw = label.text
-        val bounds = gc.paintTextBox(
+        gc.paintTextBox(
           line = textToDraw,
           anchorDirection = boxAnchor,
           anchorGapHorizontal = 0.0,

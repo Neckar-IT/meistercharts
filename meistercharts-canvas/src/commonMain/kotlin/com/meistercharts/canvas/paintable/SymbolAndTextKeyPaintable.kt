@@ -16,17 +16,17 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintTextWithPaintable
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve

@@ -15,27 +15,28 @@
  */
 package com.meistercharts.api.category
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ValueRange
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider
-import com.meistercharts.algorithms.model.Category
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategorySeriesModel
-import com.meistercharts.algorithms.model.DefaultCategorySeriesModel
-import com.meistercharts.algorithms.model.MutableSeries
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.annotations.Domain
+import com.meistercharts.api.bullet.BulletChartConfiguration
+import com.meistercharts.api.toColor
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.bullet.CategoryColorProvider
+import com.meistercharts.color.Color
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.MutableSeries
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
+import it.neckar.open.http.Url
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.DoublesProvider.Companion.forDoubles
 import it.neckar.open.provider.MultiProvider
-import it.neckar.open.i18n.TextKey
 import it.neckar.open.unit.number.MayBeNaN
-import com.meistercharts.api.bullet.BulletChartConfiguration
-import com.meistercharts.api.toColor
 import kotlin.math.max
 
 /**
@@ -137,14 +138,14 @@ object CategoryConverter {
     return jsData.categories?.map { jsCategory ->
       jsCategory.image
         ?.takeIf { it.isNotBlank() }
-        ?.let { UrlPaintable.naturalSize(it) }
+        ?.let { UrlPaintable.naturalSize(Url(it)) }
     }
   }
 
   private fun toCategoryImage(jsCategory: CategorySeriesData?): Paintable? {
     return jsCategory?.image
       ?.takeIf { it.isNotBlank() }
-      ?.let { UrlPaintable.naturalSize(it) }
+      ?.let { UrlPaintable.naturalSize(Url(it)) }
   }
 
   /**

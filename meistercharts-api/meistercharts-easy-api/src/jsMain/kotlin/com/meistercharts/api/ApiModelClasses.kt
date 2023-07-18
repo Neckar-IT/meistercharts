@@ -185,6 +185,7 @@ enum class ValueRangeScale {
 /**
  * Represents a time range
  */
+@JsExport
 external interface TimeRange {
   /**
    * The start of the time range in milliseconds since 1 January 1970 UTC
@@ -196,6 +197,27 @@ external interface TimeRange {
    */
   val end: @ms Double
 }
+
+/**
+ * Represents a history bucket descriptor
+ */
+@JsExport
+data class HistoryQueryDescriptor(
+  /**
+   * The start of the time range in milliseconds since 1 January 1970 UTC
+   */
+  val start: @ms Double,
+
+  /**
+   * The end of the time range in milliseconds since 1 January 1970 UTC
+   */
+  val end: @ms Double,
+
+  /**
+   * The duration between two data points
+   */
+  val durationBetweenSamples: @ms Double,
+)
 
 /**
  * Represents a pair of zoom for both axis
@@ -938,7 +960,7 @@ external enum class Fill {
   /**
    * The rectangle is filled with a solid color
    */
-  Solid,
+  Solid
 
   //Horizontal,
   //Vertical,
@@ -946,6 +968,20 @@ external enum class Fill {
   //BackwardDiagonal,
   //DiagonalCross
 }
+
+//New style as suggested for Kotlin 1.9 (currently not supported by our Typescript Definition File generation task)
+//sealed external class Fill {
+//  /**
+//   * The rectangle is filled with a solid color
+//   */
+//  object Solid: Fill
+//
+//  //Horizontal,
+//  //Vertical,
+//  //ForwardDiagonal,
+//  //BackwardDiagonal,
+//  //DiagonalCross
+//}
 
 
 /**

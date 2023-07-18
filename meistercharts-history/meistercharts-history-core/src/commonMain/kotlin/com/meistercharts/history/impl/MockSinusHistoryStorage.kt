@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history.impl
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
@@ -32,6 +32,14 @@ import kotlin.math.sin
 class MockSinusHistoryStorage : HistoryStorage {
   override fun get(descriptor: HistoryBucketDescriptor): HistoryBucket {
     return HistoryBucket(descriptor, createSinusChunk(descriptor))
+  }
+
+  override fun getStart(): Double {
+    return Double.NaN
+  }
+
+  override fun getEnd(): Double {
+    return Double.NaN
   }
 
   override fun onDispose(action: () -> Unit) {

@@ -15,10 +15,7 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
 import com.meistercharts.algorithms.painter.BezierCurveTo
-import com.meistercharts.algorithms.painter.CanvasPaint
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.algorithms.painter.LineTo
 import com.meistercharts.algorithms.painter.MoveTo
 import com.meistercharts.algorithms.painter.Path
@@ -29,17 +26,25 @@ import com.meistercharts.algorithms.painter.SupportsPathActions
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.Color
 import com.meistercharts.design.corporateDesign
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontMetrics
+import com.meistercharts.font.combineWith
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
+import com.meistercharts.geometry.RightTriangleType
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
-import com.meistercharts.model.Rectangle
-import com.meistercharts.model.RightTriangleType
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
-import it.neckar.open.kotlin.lang.toRadians
 import com.meistercharts.style.Shadow
+import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.other.deg
@@ -545,10 +550,15 @@ interface CanvasRenderingContext : SupportsPathActions {
   )
 
   /**
-   * Activates the shadow
+   * Activates the shadow.
+   * If null is provided, the shadow is reset
    */
-  fun shadow(shadow: Shadow = Shadow.Default) {
-    shadow(shadow.color, shadow.blurRadius, shadow.offsetX, shadow.offsetY)
+  fun shadow(shadow: Shadow? = Shadow.Default) {
+    if (shadow == null) {
+      clearShadow()
+    } else {
+      shadow(shadow.color, shadow.blurRadius, shadow.offsetX, shadow.offsetY)
+    }
   }
 
   /**
@@ -810,6 +820,13 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   fun strokeStyle(color: CanvasPaint)
 
+  var strokeStyle: String
+    @Deprecated(level = DeprecationLevel.ERROR, message = "Only setter supported")
+    get() = throw UnsupportedOperationException("Only setter supported")
+    set(value) {
+      strokeStyle(Color.web(value))
+    }
+
   /**
    * Sets the stroke style
    */
@@ -909,6 +926,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Only for debugging purposes
    */
   fun currentFillDebug(): String
+
   /**
    * Returns a string representation of the current fill
    * Only for debugging purposes
@@ -1119,4 +1137,12 @@ fun CanvasRenderingContext.forTranslationY(absoluteValueY: @Zoomed Double): @Zoo
  */
 fun CanvasRenderingContext.clipToContentViewport(chartCalculator: ChartCalculator) {
   clip(chartCalculator.contentViewportMinX(), chartCalculator.contentViewportMinY(), chartCalculator.contentViewportWidth, chartCalculator.contentViewportHeight)
+}
+
+inline fun CanvasRenderingContext.circle(@Window @px centerX: Double, @Window @px centerY: Double, @px @Zoomed radius: Double) {
+  ovalCenter(centerX, centerY, radius, radius)
+}
+
+inline fun CanvasRenderingContext.rectCenter(@px centerX: Double, @px centerY: Double, width: @MayBeNegative Double, height: @MayBeNegative Double) {
+  rect(centerX - width / 2, centerY - height / 2, width, height)
 }

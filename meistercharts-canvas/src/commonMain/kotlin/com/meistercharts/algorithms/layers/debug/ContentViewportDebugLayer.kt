@@ -15,12 +15,12 @@
  */
 package com.meistercharts.algorithms.layers.debug
 
-import com.meistercharts.algorithms.contentViewportHeight
-import com.meistercharts.algorithms.contentViewportWidth
+import com.meistercharts.state.contentViewportHeight
+import com.meistercharts.state.contentViewportWidth
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.NonOverlappingPasspartoutPaintingStrategy
 import com.meistercharts.algorithms.painter.PasspartoutPainter
 import com.meistercharts.canvas.ConfigurationDsl

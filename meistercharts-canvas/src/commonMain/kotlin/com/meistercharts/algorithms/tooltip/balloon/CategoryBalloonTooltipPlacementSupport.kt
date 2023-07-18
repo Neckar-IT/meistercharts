@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tooltip.balloon
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.algorithms.model.CategoryIndex
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.model.Orientation

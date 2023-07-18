@@ -16,17 +16,17 @@
 package com.meistercharts.algorithms.tile
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Size
-import it.neckar.open.time.nowMillis
-import it.neckar.open.formatting.dateTimeFormatWithMillis
 import com.meistercharts.style.Palette.getChartColor
-import it.neckar.open.unit.other.px
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.formatting.dateTimeFormatWithMillis
+import it.neckar.open.time.nowMillis
+import it.neckar.open.unit.other.px
 
 /**
  * Paints debug information.
@@ -39,7 +39,7 @@ class DebugTilePainter(
   override fun paint(identifier: TileIdentifier, paintingContext: LayerPaintingContext, tileSize: @Zoomed Size): TileCreationInfo {
     val gc = paintingContext.gc
 
-    gc.fill(getChartColor(identifier.x + identifier.y * 100))
+    gc.fill(getChartColor((identifier.tileIndex.xAsDouble() + identifier.tileIndex.yAsDouble() * 100).toInt()))
     gc.fillRect(0.0, 0.0, gc.width, gc.height)
 
     gc.stroke(Color.white)
@@ -59,7 +59,7 @@ class DebugTilePainter(
     gc.fill(style.textColor)
     gc.font(style.font)
     @px var y = 10.0
-    gc.fillText("x/y=${identifier.x}/${identifier.y}", 10.0, y, Direction.TopLeft)
+    gc.fillText("x/y=${identifier.tileIndex}", 10.0, y, Direction.TopLeft)
     y += rowHeight
     gc.fillText("zoom=${identifier.zoom.scaleX}/${identifier.zoom.scaleY}", 10.0, y, Direction.TopLeft)
     y += rowHeight

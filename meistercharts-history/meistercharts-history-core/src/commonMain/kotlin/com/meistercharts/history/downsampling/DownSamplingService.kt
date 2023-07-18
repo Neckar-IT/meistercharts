@@ -15,8 +15,6 @@
  */
 package com.meistercharts.history.downsampling
 
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.TimeRanges
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
@@ -24,21 +22,25 @@ import com.meistercharts.history.HistoryUpdateInfo
 import com.meistercharts.history.ObservableHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.WritableHistoryStorage
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastMap
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.unit.other.Sorted
-import it.neckar.logging.Logger
-import it.neckar.logging.LoggerFactory
-import it.neckar.logging.debug
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Updates the down sampling
+ * Updates the down sampling.
+ *
+ * One [DownSamplingService] must only be used for exactly one [historyStorage]
  */
-class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposable {
+open class DownSamplingService<HistoryStorageType>(val historyStorage: HistoryStorageType) : Disposable where HistoryStorageType : WritableHistoryStorage, HistoryStorageType : ObservableHistoryStorage {
   private val disposeSupport: DisposeSupport = DisposeSupport()
 
   override fun dispose() {
@@ -66,7 +68,7 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
     val jobs = createJobs(timeRanges, historyBucketRange)
 
     jobs.fastForEach { job ->
-      logger.debug{"Running Job $job"}
+      logger.debug { "Running Job $job" }
 
       val historyUpdateInfo: HistoryUpdateInfo
       val newHistoryBucket: HistoryBucket
@@ -116,7 +118,7 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
    * Creates down sampling jobs for the given time ranges and bucket range
    */
   fun createJobs(dirtyRanges: TimeRanges, historyBucketRange: HistoryBucketRange): @Sorted List<DownSamplingJob> {
-    logger.debug{ "Creating jobs for dirtyRanges: $dirtyRanges"}
+    logger.debug { "Creating jobs for dirtyRanges: $dirtyRanges" }
 
     return dirtyRanges.flatMap { timeRange ->
       //Compute the descriptors that contain any part of the given time range.
@@ -142,53 +144,60 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
    */
   val dirtyRangesCollector: DownSamplingDirtyRangesCollector = DownSamplingDirtyRangesCollector()
 
-  private var downSamplingScheduled = false
+  /**
+   * Set to true if down sampling has been scheduled
+   */
+  val downSamplingScheduled: Boolean
+    get() {
+      return scheduleDisposable != null
+    }
+
+  private var scheduleDisposable: Disposable? = null
 
   /**
    * Schedules the down sampling.
-   * Must only be called once!
+   * Does nothing if down sampling has already been scheduled
    */
   fun scheduleDownSampling(
-    historyStorage: ObservableHistoryStorage,
     /**
      * The duration between two down sampling calculations.
      * Down sampling is only calculated if necessary
      */
     downSamplingDelay: Duration = 500.milliseconds,
-  ) {
-    require(downSamplingScheduled.not()) {
-      "Down sampling already scheduled"
+  ): Disposable {
+    if (downSamplingScheduled) {
+      //Already running, just exit
+      return Disposable.noop
     }
 
     dirtyRangesCollector.observe(historyStorage)
-    scheduleDownSampling(dirtyRangesCollector, downSamplingDelay)
 
-    downSamplingScheduled = true
-  }
-
-  /**
-   * Schedules the downsampling using a timer.
-   */
-  fun scheduleDownSampling(
-    downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector,
-    /**
-     * The duration between two down sampling calculations.
-     * Down sampling is only calculated if necessary
-     */
-    downSamplingDelay: Duration = 500.milliseconds,
-  ) {
     it.neckar.open.time.repeat(downSamplingDelay) {
       //Check for each sampling period if there is work to do
-      calculateDownSamplingIfRequired(downSamplingDirtyRangesCollector)
-    }.also { timerId ->
-      disposeSupport.onDispose(timerId)
+      calculateDownSamplingIfRequired(dirtyRangesCollector)
+    }.also {
+      scheduleDisposable = it
+      disposeSupport.onDispose(it)
     }
+
+    return Disposable { stopDownSampling() }
   }
 
   /**
-   * Calculates down sampling for all levels where down sampling is required
+   * Stops down sampling.
+   * Does not throw an exception if down sampling has not yet been scheduled
    */
-  fun calculateDownSamplingIfRequired(
+  fun stopDownSampling() {
+    scheduleDisposable?.dispose()
+    scheduleDisposable = null
+  }
+
+  /**
+   * Calculates down sampling for all levels where down sampling is required.
+   *
+   * This method is called by the timer after [scheduleDownSampling] has been called.
+   */
+  open fun calculateDownSamplingIfRequired(
     downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector = dirtyRangesCollector,
   ) {
     SamplingPeriod.entries.fastForEach { samplingPeriod ->
@@ -208,7 +217,7 @@ class DownSamplingService(val historyStorage: WritableHistoryStorage) : Disposab
     return dirtyTimeRanges.span >= samplingPeriod.distance / 2.0
   }
 
-  companion object{
+  companion object {
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.downsampling.DownSamplingService")
   }
 }
@@ -223,7 +232,7 @@ data class DownSamplingJob(
   /**
    * What parts of the descriptor need to be refreshed
    */
-  val refreshRange: RefreshRange
+  val refreshRange: RefreshRange,
 ) {
 
   init {
@@ -282,5 +291,5 @@ data class RefreshPartially(
   /**
    * The time ranges that should be recalculated.
    */
-  val timeRanges: TimeRanges
+  val timeRanges: TimeRanges,
 ) : RefreshRange()

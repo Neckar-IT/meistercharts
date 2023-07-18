@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
+import com.meistercharts.color.Color
 import it.neckar.open.unit.other.px
 
 

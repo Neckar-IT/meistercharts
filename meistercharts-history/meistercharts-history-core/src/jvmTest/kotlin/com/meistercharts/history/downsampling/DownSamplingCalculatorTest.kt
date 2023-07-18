@@ -62,8 +62,8 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
-    calculator.addDecimalsSample(DoubleArray(7) { 7.0 })
-    calculator.addDecimalsSample(DoubleArray(7) { 9.0 })
+    calculator.addDecimalsSample(DoubleArray(7) { 7.0 }, null, null)
+    calculator.addDecimalsSample(DoubleArray(7) { 9.0 }, null, null)
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(8.0)
     assertThat(calculator.minDecimal(DecimalDataSeriesIndex(0))).isEqualTo(7.0)
@@ -129,13 +129,13 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(1))).isEqualTo(HistoryChunk.Pending)
 
-    calculator.addDecimalsSample(doubleArrayOf(Integer.MAX_VALUE.toDouble()))
+    calculator.addDecimalsSample(doubleArrayOf(Integer.MAX_VALUE.toDouble()), null, null)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(Integer.MAX_VALUE.toDouble())
 
-    calculator.addDecimalsSample(doubleArrayOf(7.0))
+    calculator.addDecimalsSample(doubleArrayOf(7.0), null, null)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo((Integer.MAX_VALUE + 7.0) / 2.0)
 
-    calculator.addDecimalsSample(doubleArrayOf(1.0))
+    calculator.addDecimalsSample(doubleArrayOf(1.0), null, null)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo((Integer.MAX_VALUE + 7.0 + 1.0) / 3.0)
   }
 
@@ -149,19 +149,19 @@ class DownSamplingCalculatorTest {
 
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(0)
-    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.NoValue, 1.0))
+    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.NoValue, 1.0), null, null)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(1)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.NoValue)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(1))).isEqualTo(1.0)
 
-    calculator.addDecimalsSample(doubleArrayOf(1.0, HistoryChunk.Pending))
+    calculator.addDecimalsSample(doubleArrayOf(1.0, HistoryChunk.Pending), null, null)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(1)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(1)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(1.0)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(1))).isEqualTo(1.0)
 
-    calculator.addDecimalsSample(doubleArrayOf(3.0, 3.0))
+    calculator.addDecimalsSample(doubleArrayOf(3.0, 3.0), null, null)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(2)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(2)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(2.0)
@@ -175,10 +175,10 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(1))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
-    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.NoValue))
+    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.NoValue), null, null)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.NoValue)
 
-    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.Pending))
+    calculator.addDecimalsSample(doubleArrayOf(HistoryChunk.Pending), null, null)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.NoValue)
   }
 
@@ -200,12 +200,12 @@ class DownSamplingCalculatorTest {
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
 
-    calculator.addDecimalsSample(DoubleArray(7) { 7.0 })
+    calculator.addDecimalsSample(DoubleArray(7) { 7.0 }, null, null)
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(7.0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(1)
 
-    calculator.addDecimalsSample(DoubleArray(7) { 9.0 })
+    calculator.addDecimalsSample(DoubleArray(7) { 9.0 }, null, null)
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(8.0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(2)
@@ -222,7 +222,7 @@ class DownSamplingCalculatorTest {
 
     assertThat(calculator.enumValue(EnumDataSeriesIndex(0))).isEnumSetPending()
 
-    calculator.addDecimalsSample(DoubleArray(7) { 7.0 })
+    calculator.addDecimalsSample(DoubleArray(7) { 7.0 }, null, null)
     calculator.addEnumSample(IntArray(2) { 0b101 })
     calculator.addReferenceEntrySample(intArrayOf(1, 3, 5), intArrayOf(7, 8, 9), intArrayOf(0b1, 0b01, 0b001))
 

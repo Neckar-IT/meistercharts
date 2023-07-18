@@ -121,7 +121,7 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
           return single(elements.first())
         }
 
-        else -> return forList(elements.toList())
+        else -> return elements.toList().asSizedProvider()
       }
     }
 
@@ -331,4 +331,11 @@ fun <T, R> SizedProvider<T>.mapped(function: (T) -> R): SizedProvider<R> {
       return function(this@mapped.valueAt(index))
     }
   }
+}
+
+/**
+ * Returns a sized provider for a list
+ */
+inline fun <E> List<E>.asSizedProvider(): SizedProvider<E> {
+  return SizedProvider.forList(this)
 }

@@ -15,7 +15,7 @@
  */
 package com.cedarsoft.style
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 
 /**
  * Flat colors

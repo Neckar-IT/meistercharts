@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#timeLineChart {
+  height: 100vh;
+  width: 100%;
+}
+

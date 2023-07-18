@@ -15,11 +15,11 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.algorithms.painter.RadialGradient
+import com.meistercharts.color.Color
+import com.meistercharts.color.RadialGradient
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.guessFontSize
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved

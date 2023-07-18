@@ -15,18 +15,17 @@
  */
 package com.meistercharts.algorithms.layers.debug
 
-import com.meistercharts.algorithms.ChartCalculator
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
-import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Direction
 import com.meistercharts.style.BoxStyle
@@ -45,10 +44,8 @@ open class ContentAreaDebugLayer(
   val style: Style = Style().also(styleConfiguration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    val layerSupport = paintingContext.layerSupport
     val calculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
-    val snapSupport = paintingContext.chartSupport.pixelSnapSupport
 
     //Outer line
     gc.lineWidth = 2.0

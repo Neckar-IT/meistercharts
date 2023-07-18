@@ -15,34 +15,34 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.TimeChartCalculator
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.axis.DistanceDays
-import com.meistercharts.algorithms.axis.DistanceHours
-import com.meistercharts.algorithms.axis.DistanceMillis
-import com.meistercharts.algorithms.axis.DistanceMinutes
-import com.meistercharts.algorithms.axis.DistanceMonths
-import com.meistercharts.algorithms.axis.DistanceSeconds
-import com.meistercharts.algorithms.axis.DistanceYears
-import com.meistercharts.algorithms.axis.GlobalTimeIndex
-import com.meistercharts.algorithms.axis.TimeTickDistance
-import com.meistercharts.algorithms.axis.valueAt
+import com.meistercharts.Meistercharts
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.CanvasStringShortener
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.currentFrameTimestamp
+import com.meistercharts.axis.DistanceDays
+import com.meistercharts.axis.DistanceHours
+import com.meistercharts.axis.DistanceMillis
+import com.meistercharts.axis.DistanceMinutes
+import com.meistercharts.axis.DistanceMonths
+import com.meistercharts.axis.DistanceSeconds
+import com.meistercharts.axis.DistanceYears
+import com.meistercharts.axis.GlobalTimeIndex
+import com.meistercharts.axis.TimeTickDistance
+import com.meistercharts.axis.TimeUnits
+import com.meistercharts.axis.valueAt
+import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity
-import com.meistercharts.time.TimeUnits
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastContains
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.DateTimeFormat
@@ -450,6 +450,7 @@ object TickDistanceAwareTickFormat : TimeAxisTickFormat {
   /**
    * Computes the [DateTimeFormat] to be used for the given timestamp
    */
+  @Suppress("UNUSED_PARAMETER")
   private fun computeDateFormat(tickDistance: TimeTickDistance): DateTimeFormat {
     throw UnsupportedOperationException("Not implemented anymore!")
     //return when (tickDistance) {
@@ -554,7 +555,7 @@ object RelativeToNowTickFormat : RelativeTickFormat {
   private val maxLengthFormattedTick: String = "-999 ${TimeUnits.Year.unit} 99 ${TimeUnits.Month.unit} 99 ${TimeUnits.Day.unit} 99 ${TimeUnits.Hour.unit} 99 ${TimeUnits.Minute.unit} 99 ${TimeUnits.Second.unit} 999 ${TimeUnits.Millisecond.unit}"
 
   override fun format(tick: Double, tickDistance: TimeTickDistance, i18nConfiguration: I18nConfiguration): String {
-    @Domain @ms val now = currentFrameTimestamp
+    @Domain @ms val now = Meistercharts.renderLoop.currentFrameTimestamp
     @Domain @ms val distance = now - tick
     @Domain @ms var distanceAbsolute = abs(distance)
     val sign = if (distance < 0) "+" else "-"

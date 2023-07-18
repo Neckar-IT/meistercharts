@@ -17,11 +17,11 @@ package com.meistercharts.api.line
 
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.category.CategoryConverter
-import com.meistercharts.api.category.applySickDefaults
+import com.meistercharts.api.category.applyEasyApiDefaults
 import com.meistercharts.api.category.applyStyle
 import com.meistercharts.api.setImagesProvider
 import com.meistercharts.charts.CategoryLineChartGestalt
-import com.meistercharts.js.MeisterChartJS
+import com.meistercharts.js.MeisterchartJS
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -30,11 +30,11 @@ import it.neckar.open.provider.MultiProvider
 @JsExport
 class LineChartSimple internal constructor(
   internal val gestalt: CategoryLineChartGestalt,
-  meisterChart: MeisterChartJS,
+  meisterChart: MeisterchartJS,
 ) : MeisterChartsApiLegacy<LineChartSimpleData, LineChartSimpleStyle>(meisterChart) {
 
   init {
-    gestalt.applySickDefaults()
+    gestalt.applyEasyApiDefaults()
   }
 
   override fun setData(jsData: LineChartSimpleData) {

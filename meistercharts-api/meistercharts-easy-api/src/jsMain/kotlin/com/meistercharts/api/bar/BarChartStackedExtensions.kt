@@ -16,7 +16,7 @@
 package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyTitleStyle
@@ -38,9 +38,9 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
 
 
 /**
- * Is called initially and applies the SICK defaults
+ * Is called initially and applies the Easy Api defaults
  */
-fun BarChartStackedGestalt.applySickDefaults() {
+fun BarChartStackedGestalt.applyEasyApiDefaults() {
   style.applyAxisTitleOnTop(40.0)
   // Enable as soon as the bar chart stacked supports value axis
   // thresholdsSupport.getHudLayer().configuration.maxWidth = MultiDoublesProvider.always(Double.NaN)
@@ -50,9 +50,7 @@ fun BarChartStackedGestalt.applySickDefaults() {
  * Applies the JS style to the bart chart gestalt style
  */
 fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
-  logger.ifDebug {
-    console.debug("BarChartStackedGestalt.applyStyle", jsStyle)
-  }
+  logger.debug("BarChartStackedGestalt.applyStyle", jsStyle)
 
   //Specific stuff for stacked
 

@@ -19,6 +19,8 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import com.meistercharts.range.ValueRange
+import com.meistercharts.range.coerceIn
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test
 

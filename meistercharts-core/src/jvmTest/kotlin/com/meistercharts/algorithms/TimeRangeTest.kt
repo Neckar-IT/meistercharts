@@ -17,6 +17,8 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.align
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test

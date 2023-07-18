@@ -15,12 +15,12 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ThresholdsLayer
 import com.meistercharts.algorithms.layers.ThresholdsLayer.ThresholdValues
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.MeisterChartsBuilderDsl
 import com.meistercharts.provider.ValueRangeProvider
 import it.neckar.open.provider.DoublesProvider
@@ -75,7 +75,7 @@ class ThresholdsGestalt(
 
   val thresholdsLayer: ThresholdsLayer = ThresholdsLayer(ThresholdsLayer.Data(this.thresholdValuesDomainRelative, configuration::thresholdLabels.delegate()))
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
       layers.addLayer(this@ThresholdsGestalt.thresholdsLayer)
     }

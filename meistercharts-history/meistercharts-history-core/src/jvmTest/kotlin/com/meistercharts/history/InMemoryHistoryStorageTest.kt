@@ -209,7 +209,7 @@ class InMemoryHistoryStorageTest {
     assertThat(storage.get(descriptor)!!.chunk.isEmpty()).isFalse()
 
     var notificationCount = 0
-    storage.observe { _, _ ->
+    storage.observe { _ ->
       ++notificationCount
     }
     storage.clear()

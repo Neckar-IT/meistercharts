@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts.config
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.charts.BarChartStackedGestalt
 
 /**

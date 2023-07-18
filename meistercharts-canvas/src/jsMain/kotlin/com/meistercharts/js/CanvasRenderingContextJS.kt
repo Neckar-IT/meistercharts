@@ -16,39 +16,41 @@
 package com.meistercharts.js
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.painter.CanvasLinearGradient
-import com.meistercharts.algorithms.painter.CanvasPaint
-import com.meistercharts.algorithms.painter.CanvasRadialGradient
-import com.meistercharts.algorithms.painter.Color
-import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.PhysicalPixel
-import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
-import com.meistercharts.canvas.CanvasStringShortener
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptor
-import com.meistercharts.canvas.FontMetrics
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.CanvasLinearGradient
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.CanvasRadialGradient
+import com.meistercharts.color.Color
+import com.meistercharts.geometry.Distance
+import com.meistercharts.geometry.Rectangle
+import com.meistercharts.js.CanvasReadBackFrequency.Frequent
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Distance
 import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Rectangle
 import com.meistercharts.model.Size
 import com.meistercharts.model.VerticalAlignment
 import com.meistercharts.model.Zoom
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.isPositiveOrZero
 import it.neckar.open.kotlin.lang.round
+import it.neckar.open.unit.number.MayBeNegative
+import it.neckar.open.unit.number.PositiveOrZero
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
-import it.neckar.logging.LoggerFactory
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.ALPHABETIC
 import org.w3c.dom.BEVEL
@@ -113,9 +115,10 @@ import kotlin.math.min
  */
 class CanvasRenderingContextJS(
   override val canvas: CanvasJS,
+  readBackFrequency: CanvasReadBackFrequency,
 ) : AbstractCanvasRenderingContext() {
 
-  val context: CanvasRenderingContext2D = canvas.canvasElement.canvasRenderingContext2D
+  val context: CanvasRenderingContext2D = canvas.canvasElement.getCanvasRenderingContext2D(readBackFrequency)
 
   init {
     applyDefaults()
@@ -748,12 +751,17 @@ private fun CanvasLineJoin.fromHtml(): LineJoin {
   }
 }
 
-
 /**
  * Returns the canvas rendering context 2D
  */
-val HTMLCanvasElement.canvasRenderingContext2D: CanvasRenderingContext2D
-  get() = getContext("2d") as? CanvasRenderingContext2D ?: throw IllegalStateException("context not found")
+fun HTMLCanvasElement.getCanvasRenderingContext2D(readBackFrequency: CanvasReadBackFrequency): CanvasRenderingContext2D {
+  val arguments: dynamic = when (readBackFrequency) {
+    CanvasReadBackFrequency.Frequent -> js("{ willReadFrequently: true }")
+    CanvasReadBackFrequency.Infrequent -> js("{}")
+  }
+
+  return getContext("2d", arguments) as? CanvasRenderingContext2D ?: throw IllegalStateException("context not found")
+}
 
 val HTMLCanvasElement.canvasRenderingContextWebGl: WebGLRenderingContext
   get() = getContext("webgl") as WebGLRenderingContext ?: throw IllegalStateException("context not found")
@@ -763,3 +771,34 @@ val HTMLCanvasElement.canvasRenderingContextWebGl: WebGLRenderingContext
  * Returns the graphics context cast to the platform implementation
  */
 fun LayerPaintingContext.native(): CanvasRenderingContextJS = gc as CanvasRenderingContextJS
+
+/**
+ * Defines how often values from the canvas are read back.
+ * This is used to optimize the rendering performance.
+ *
+ * When calling [CanvasRenderingContext2D.getImageData] (often), [Frequent] should be used.
+ */
+enum class CanvasReadBackFrequency {
+  /**
+   * The canvas is read back frequently
+   */
+  Frequent,
+
+  /**
+   * The canvas is read back infrequently
+   */
+  Infrequent,
+  ;
+
+  companion object {
+    /**
+     * Converts the canvas type to a read back frequency
+     */
+    fun CanvasType.readBackFrequency(): CanvasReadBackFrequency {
+      return when (this) {
+        CanvasType.Main, CanvasType.OffScreen -> Infrequent
+        CanvasType.ReadBack -> Frequent
+      }
+    }
+  }
+}

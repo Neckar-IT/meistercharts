@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.model.Size

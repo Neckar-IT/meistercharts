@@ -17,7 +17,7 @@ package com.meistercharts.canvas.layout.cache
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.canvas.PaintingLoopIndex
+import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test

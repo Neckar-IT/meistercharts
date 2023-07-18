@@ -15,7 +15,7 @@
  */
 package com.meistercharts.label
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 
 /**
  * Describes the data for a label.

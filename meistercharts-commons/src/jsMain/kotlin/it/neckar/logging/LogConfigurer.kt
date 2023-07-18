@@ -1,13 +1,7 @@
 package it.neckar.logging
 
 import it.neckar.logging.impl.LoggerImplJs
-import kotlinx.browser.window
 
-
-/**
- * The key for the debug root level
- */
-const val LocalStorageKey: String = "logging.rootLevel"
 
 /**
  * Configures the log levels for JS
@@ -43,23 +37,10 @@ object LogConfigurer {
 
   /**
    * Returns the effective log level.
-   * Will return the root level if no level if configured for the logger itself
+   * Will return the root level if no level is configured for the logger itself
    */
   fun getEffectiveLogLevel(logger: Logger): Level {
     return (logger as LoggerImplJs).level ?: rootLevel
-  }
-
-  /**
-   * Loads the root level from local storage
-   */
-  fun getRootLevelFromLocalStorage(): Level? {
-    val item = window.localStorage.getItem(LocalStorageKey) ?: return null
-    return try {
-      Level.valueOf(item.trim())
-    } catch (e: Exception) {
-      console.warn("Invalid value for $LocalStorageKey: $item. Expected one of ${Level.entries.joinToString(", ")}")
-      null //Fallback to null
-    }
   }
 
   /**
@@ -67,6 +48,24 @@ object LogConfigurer {
    * If no root level could be found in local storage, the provided [fallbackRootLevel] is configured
    */
   fun initializeFromLocalStorage(fallbackRootLevel: Level = Level.INFO) {
-    rootLevel = getRootLevelFromLocalStorage() ?: fallbackRootLevel
+    rootLevel = LoggerLocalStorage.readRootLevel() ?: fallbackRootLevel
+
+    LoggerLocalStorage.readLoggerLevels { loggerName: LoggerName, level: Level ->
+      setLogLevel(LoggerFactory.getLogger(loggerName), level)
+    }
+  }
+
+  /**
+   * Saves the current configuration to local storage
+   */
+  fun saveConfigurationToLocalStorage() {
+    LoggerLocalStorage.storeRootLevel(rootLevel)
+
+    LoggerFactory.cachedInstances().forEach { (loggerName, logger) ->
+      val level = getSpecificLogLevel(logger)
+      if (level != null) {
+        LoggerLocalStorage.storeLoggerLevel(loggerName, level)
+      }
+    }
   }
 }

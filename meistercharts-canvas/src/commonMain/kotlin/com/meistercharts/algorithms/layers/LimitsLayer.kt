@@ -16,10 +16,10 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.model.Orientation
-import com.meistercharts.algorithms.axis.AxisOrientationX
-import com.meistercharts.algorithms.axis.AxisOrientationY
+import com.meistercharts.axis.AxisOrientationX
+import com.meistercharts.axis.AxisOrientationY
 import com.meistercharts.algorithms.painter.RectangleAreaPainter
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl

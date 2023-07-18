@@ -18,14 +18,14 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolve
 import com.meistercharts.algorithms.layers.toolbar.ButtonPaintableProvider
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.paintable.ButtonState.Companion.disabled
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Direction
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject

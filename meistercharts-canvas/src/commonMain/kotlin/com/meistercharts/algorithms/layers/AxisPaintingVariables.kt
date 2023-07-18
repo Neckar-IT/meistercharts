@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.FontMetrics
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.model.Orientation
 import com.meistercharts.model.Side
 import com.meistercharts.model.Vicinity

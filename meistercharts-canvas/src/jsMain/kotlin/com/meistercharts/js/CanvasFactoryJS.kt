@@ -15,7 +15,7 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.algorithms.environment
+import com.meistercharts.environment
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.PhysicalPixel
 import it.neckar.open.unit.number.Positive
@@ -31,7 +31,7 @@ class CanvasFactoryJS : CanvasFactory {
   override fun createCanvas(type: CanvasType, size: @MayBeZero Size): CanvasJS {
     return CanvasJS(type)
       .also {
-        it.applySize(size)
+        it.applySize(size, "set initial size for canvas with type [$type]")
 
         it.canvasElement.style.width = "${size.width} px"
         it.canvasElement.style.height = "${size.height} px"

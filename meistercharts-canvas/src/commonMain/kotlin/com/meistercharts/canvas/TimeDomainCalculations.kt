@@ -15,9 +15,10 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.algorithms.ChartCalculator
-import com.meistercharts.algorithms.TileChartCalculator
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.tileCalculator
 import com.meistercharts.algorithms.tile.TileIdentifier
 import com.meistercharts.annotations.ContentArea
@@ -55,7 +56,7 @@ fun TileIdentifier.visibleTimeRange(
 }
 
 /**
- * Returns the time range for a domain relative range (on the x axis)
+ * Returns the time range for a domain relative range (on the x-axis)
  */
 @Deprecated("untested!")
 fun ChartCalculator.domainRelative2TimeRangeX(
@@ -114,10 +115,11 @@ fun TileChartCalculator.tileRelative2TimeX(tileRelative: @TileRelative Double, c
  * @param timeStamp : The timeStamp to scroll to
  * @param positionInWindow : The position in the window (0.0 - 1.0) where the timeStamp is being plotted
  * @param contentAreaTimeRange The time range that is visualized in the content area (0.0..1.0)
+ * @param reason the reason for the update
  */
 @Deprecated("untested!")
-fun ChartSupport.scrollToTimestamp(@ms @Domain timeStamp: Double, @pct @WindowRelative positionInWindow: Double, contentAreaTimeRange: TimeRange) {
+fun ChartSupport.scrollToTimestamp(@ms @Domain timeStamp: Double, @pct @WindowRelative positionInWindow: Double, contentAreaTimeRange: TimeRange, reason: UpdateReason) {
   val chartCalculator = zoomAndTranslationSupport.chartCalculator
   @Zoomed @px val dataPointX = chartCalculator.domainRelative2zoomedX(contentAreaTimeRange.time2relative(timeStamp))
-  zoomAndTranslationSupport.setWindowTranslationX(-dataPointX + chartCalculator.windowRelative2WindowX(positionInWindow))
+  zoomAndTranslationSupport.setWindowTranslationX(-dataPointX + chartCalculator.windowRelative2WindowX(positionInWindow), reason)
 }

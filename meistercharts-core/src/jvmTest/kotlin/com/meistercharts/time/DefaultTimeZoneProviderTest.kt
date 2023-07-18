@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.time
+package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.i18n.SystemTimeZoneProvider
 import it.neckar.open.test.utils.WithTimeZone
+import it.neckar.open.time.TimeZone
 import org.junit.jupiter.api.Test
 
 class DefaultTimeZoneProviderTest {

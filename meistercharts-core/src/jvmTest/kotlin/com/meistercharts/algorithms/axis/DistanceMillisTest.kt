@@ -17,9 +17,9 @@ package com.meistercharts.algorithms.axis
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.axis.DistanceMillis
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.time.TimeZone
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class DistanceMillisTest {

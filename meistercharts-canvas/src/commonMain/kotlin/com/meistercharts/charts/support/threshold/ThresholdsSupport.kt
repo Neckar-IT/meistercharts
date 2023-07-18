@@ -26,7 +26,7 @@ import com.meistercharts.algorithms.layers.hudLayer
 import com.meistercharts.algorithms.layers.mouseOverInteractions
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.charts.support.ValueAxisForKeyProvider
 import com.meistercharts.charts.support.ValueAxisSupport
 import it.neckar.open.collections.Cache

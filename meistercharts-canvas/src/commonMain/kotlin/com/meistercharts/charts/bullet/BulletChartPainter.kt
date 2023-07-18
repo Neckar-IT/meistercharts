@@ -15,18 +15,17 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.CategoryPainter
 import com.meistercharts.algorithms.layers.barchart.CategoryPainterPaintingVariables
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.valueAt
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.valueAt
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
-import com.meistercharts.canvas.saved
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.design.Theme
 import com.meistercharts.model.Orientation
@@ -57,6 +56,7 @@ class BulletChartPainter(
     @Zoomed
     var categorySize: Double = Double.NaN
 
+    @Suppress("UNUSED_PARAMETER")
     fun layout(paintingContext: LayerPaintingContext, categorySize: @Zoomed Double, categoryModel: CategoryModelBulletChart, categoryOrientation: Orientation) {
       this.categorySize = configuration.barSize.coerceAtLeast(configuration.currentValueIndicatorSize)
     }

@@ -19,10 +19,11 @@ import com.meistercharts.algorithms.layout.LabelLayouter
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.Color
 import com.meistercharts.label.LayoutedLabel
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets

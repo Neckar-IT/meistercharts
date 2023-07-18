@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.MouseEvent2CanvasHandler
+import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
@@ -55,6 +56,7 @@ import com.meistercharts.events.TouchEventHandler
 import com.meistercharts.events.TouchMoveEvent
 import com.meistercharts.events.TouchStartEvent
 import com.meistercharts.events.register
+import com.meistercharts.loop.PaintingLoopIndex
 import it.neckar.open.unit.si.ms
 
 /**

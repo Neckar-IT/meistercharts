@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.ResetToDefaultsOnWindowResize
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
@@ -36,9 +36,9 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.valueAt
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.valueAt
+import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.BulletChartBalloonTooltipSupport
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport
@@ -46,8 +46,8 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.FixedChartGestalt
@@ -296,7 +296,7 @@ class BulletChartGestalt constructor(
       categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
     }
 
-    configureBuilder { meisterChartBuilder: MeisterChartBuilder ->
+    configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 
       meisterChartBuilder.configure {

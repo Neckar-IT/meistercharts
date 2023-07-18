@@ -17,11 +17,16 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.impl.DefaultChartState
-import com.meistercharts.algorithms.impl.ZoomAndTranslationDefaults
-import com.meistercharts.model.Coordinates
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.ZoomAndTranslationDefaults
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Size
+import com.meistercharts.resize.KeepCenterOnWindowResize
+import com.meistercharts.resize.WindowResizeEvent
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationModifier
+import com.meistercharts.zoom.ZoomAndTranslationSupport
 import org.junit.jupiter.api.Test
 
 /**
@@ -35,7 +40,7 @@ class KeepCenterOnResizeTest {
     val smallSize = Size.of(800.0, 600.0)
     chartState.contentAreaSize = smallSize
     chartState.windowSize = smallSize
-    zoomAndPanSupport.setZoom(4.0, 7.0, Coordinates(400.0, 300.0))
+    zoomAndPanSupport.setZoom(4.0, 7.0, Coordinates(400.0, 300.0), reason = UpdateReason.Initial)
 
     assertThat(zoomAndPanSupport.chartCalculator.contentAreaRelative2domainRelativeX(0.5)).isEqualTo(0.5)
     assertThat(zoomAndPanSupport.chartCalculator.contentAreaRelative2domainRelativeY(0.5)).isEqualTo(0.5)

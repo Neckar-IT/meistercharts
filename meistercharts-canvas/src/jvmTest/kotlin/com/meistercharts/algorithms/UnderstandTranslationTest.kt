@@ -17,8 +17,9 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.AxisOrientationY
-import com.meistercharts.algorithms.impl.DefaultChartState
+import com.meistercharts.axis.AxisOrientationY
+import com.meistercharts.state.DefaultChartState
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.model.Size
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

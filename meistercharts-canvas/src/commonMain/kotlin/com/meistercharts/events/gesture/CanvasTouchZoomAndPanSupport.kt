@@ -23,8 +23,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandlerBroker
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Distance
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Distance
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.kotlin.lang.consumeUntil
@@ -106,7 +106,7 @@ class CanvasTouchZoomAndPanSupport {
     return EventConsumption.Ignored
   }
 
-  private val isSingleTouchGestureActive: Boolean
+  val isSingleTouchGestureActive: Boolean
     get() {
       return touchCoordinates.size == 1
     }
@@ -114,7 +114,7 @@ class CanvasTouchZoomAndPanSupport {
   /**
    * Returns true if currently a two touch gesture is active, false otherwise
    */
-  private val isTwoTouchGestureActive: Boolean
+  val isTwoTouchGestureActive: Boolean
     get() {
       return touchCoordinates.size == 2
     }

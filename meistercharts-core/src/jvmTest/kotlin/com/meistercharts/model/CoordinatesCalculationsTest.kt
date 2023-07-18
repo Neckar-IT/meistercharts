@@ -17,6 +17,7 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.geometry.Coordinates
 import org.junit.jupiter.api.Test
 import kotlin.math.sqrt
 

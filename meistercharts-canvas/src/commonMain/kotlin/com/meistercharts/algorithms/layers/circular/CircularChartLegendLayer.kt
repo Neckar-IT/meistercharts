@@ -19,9 +19,9 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.resolve
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextWithPaintable
@@ -29,7 +29,7 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.TransparentPaintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Anchoring
-import com.meistercharts.model.Coordinates
+import com.meistercharts.geometry.Coordinates
 import com.meistercharts.model.Corner
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets

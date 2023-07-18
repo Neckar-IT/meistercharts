@@ -61,8 +61,6 @@ operator fun String.Companion.invoke(arrays: IntArray, offset: Int = 0, size: In
 ////////////////////////////////////
 ////////////////////////////////////
 
-private val formatRegex = Regex("%([-]?\\d+)?(\\w)")
-
 fun String.splitKeep(regex: Regex): List<String> {
   val str = this
   val out = arrayListOf<String>()

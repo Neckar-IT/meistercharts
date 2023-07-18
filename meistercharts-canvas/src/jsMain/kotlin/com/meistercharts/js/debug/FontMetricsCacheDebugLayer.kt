@@ -21,8 +21,8 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.FontDescriptorFragment
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.saved
 import com.meistercharts.events.KeyCode

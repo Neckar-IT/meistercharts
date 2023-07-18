@@ -18,22 +18,23 @@ package com.meistercharts.resources
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Coordinates
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Coordinates
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.Size
+import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
 /**
  * Loads a local resource
  */
 actual class LocalResourcePaintable actual constructor(
-  val relativePath: String,
+  val relativePath: Url,
   size: @px Size?,
 
   /**
    * The alignment point for the bounding box
    */
-  val alignmentPoint: Coordinates
+  val alignmentPoint: Coordinates,
 ) : Paintable {
 
   /**

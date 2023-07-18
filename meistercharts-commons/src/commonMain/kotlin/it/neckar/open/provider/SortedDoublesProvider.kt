@@ -62,6 +62,7 @@ fun DoublesProvider.sorted(comparator: DoublesComparator = DoublesComparator.nat
  * Avoid accidental sorting of already sorted providers
  */
 @Deprecated("Do not sort again!", level = DeprecationLevel.ERROR)
+@Suppress("UNUSED_PARAMETER")
 fun SortedDoublesProvider.sorted(comparator: DoublesComparator = DoublesComparator.natural): SortedDoublesProvider {
-  throw UnsupportedOperationException("Must not be used")
+  throw UnsupportedOperationException()
 }

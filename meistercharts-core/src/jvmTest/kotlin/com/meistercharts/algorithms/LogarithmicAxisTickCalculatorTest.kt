@@ -17,7 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.axis.LogarithmicAxisTickCalculator
+import com.meistercharts.axis.LogarithmicAxisTickCalculator
 import org.junit.jupiter.api.Test
 import kotlin.math.log10
 import kotlin.math.pow

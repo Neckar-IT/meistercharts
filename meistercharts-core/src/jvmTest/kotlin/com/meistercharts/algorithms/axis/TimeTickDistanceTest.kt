@@ -17,6 +17,10 @@ package com.meistercharts.algorithms.axis
 
 import assertk.assertThat
 import assertk.assertions.*
+import com.meistercharts.axis.DistanceDays
+import com.meistercharts.axis.DistanceMillis
+import com.meistercharts.axis.DistanceMonths
+import com.meistercharts.axis.DistanceYears
 import org.junit.jupiter.api.Test
 
 class TimeTickDistanceTest {

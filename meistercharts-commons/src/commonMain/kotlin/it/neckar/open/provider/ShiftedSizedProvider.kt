@@ -25,6 +25,7 @@ class ShiftedSizedProvider<T>(
  * Returns a new instance of a sized provider that shifts the indices by the given amount
  */
 @Deprecated("Do not shift shifted providers again", level = DeprecationLevel.ERROR)
+@Suppress("UNUSED_PARAMETER")
 fun <T> ShiftedSizedProvider<T>.shiftedBy(shift: Int): ShiftedSizedProvider<T> {
-  throw UnsupportedOperationException("Do not shift shifted providers again")
+  throw UnsupportedOperationException()
 }

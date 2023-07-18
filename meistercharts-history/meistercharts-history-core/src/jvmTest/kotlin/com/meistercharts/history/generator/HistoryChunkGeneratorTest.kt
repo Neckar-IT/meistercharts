@@ -17,7 +17,7 @@ package com.meistercharts.history.generator
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.time.TimeRange
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum

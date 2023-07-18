@@ -17,8 +17,8 @@ package com.meistercharts.history.cleanup
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.TimeRanges
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor

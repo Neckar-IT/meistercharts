@@ -15,9 +15,9 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.algorithms.LinearValueRange
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.model.CategoryModel
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategoryModel
 import com.meistercharts.annotations.Domain
 
 /**

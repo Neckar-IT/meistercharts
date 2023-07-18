@@ -42,6 +42,7 @@ class DirectLinePainter(
   /**
    * Adds coordinates to the line.
    *
+   * @param gc The canvas rendering context used for drawing.
    * @param x The x coordinate of the point to be added.
    * @param y The y coordinate of the point to be added.
    */

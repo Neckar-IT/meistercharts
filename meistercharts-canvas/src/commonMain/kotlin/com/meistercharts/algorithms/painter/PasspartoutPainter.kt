@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.fillRect
+import com.meistercharts.color.Color
 import com.meistercharts.model.Direction
 import com.meistercharts.model.Insets
 

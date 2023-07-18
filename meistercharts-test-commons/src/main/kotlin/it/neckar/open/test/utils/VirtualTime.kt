@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 /**
  * Sets the time returned by nowMillis to the given fixed value.
  *
- * If there is a parameter `nowProvider: FixedNowProvider` added to the test methods, the current instance of [it.neckar.open.time.VirtualNowProvider] is assigned.
+ * If there is a parameter `nowProvider: [it.neckar.open.time.VirtualNowProvider]` added to the test methods, the current instance of [it.neckar.open.time.VirtualNowProvider] is assigned.
  *
  */
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)

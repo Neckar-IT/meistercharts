@@ -15,13 +15,13 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
-import com.meistercharts.history.impl.HistoryChunk
 import kotlinx.serialization.Serializable
 import kotlin.math.roundToInt
 
@@ -45,7 +45,7 @@ internal constructor(
   /**
    * The duration of the bucket
    */
-  val bucketRange: HistoryBucketRange
+  val bucketRange: HistoryBucketRange,
 ) {
   /**
    * The time range of the bucket (start inclusive, end exclusive)
@@ -66,6 +66,12 @@ internal constructor(
    * The end of the bucket (exclusive) - is calculated automatically using the range and the given start
    */
   val end: @Exclusive @ms Double = bucketRange.calculateEndForIndex(index)
+
+  /**
+   * Returns the sampling period of the bucket
+   */
+  inline val samplingPeriod: SamplingPeriod
+    get() = bucketRange.samplingPeriod
 
   /**
    * The duration of the bucket

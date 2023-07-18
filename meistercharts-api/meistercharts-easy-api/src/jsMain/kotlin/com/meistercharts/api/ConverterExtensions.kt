@@ -15,7 +15,6 @@
  */
 package com.meistercharts.api
 
-import com.meistercharts.algorithms.LinearValueRange
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -33,23 +32,23 @@ import com.meistercharts.algorithms.layers.barchart.LabelVisibleCondition
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
-import com.meistercharts.algorithms.model.CategoryIndex
-import com.meistercharts.algorithms.painter.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.CanvasStringShortener
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.FontSize
-import com.meistercharts.canvas.FontWeight
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.color.Color
+import com.meistercharts.history.HistoryBucketDescriptor
+import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.style.Palette
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
@@ -102,8 +101,8 @@ fun Array<Size>.toModelSizes(): List<com.meistercharts.model.Size> {
 }
 
 fun com.meistercharts.model.Size.toJs(): Size = object : Size {
-  override val width: Double = this@toJs.width
-  override val height: Double = this@toJs.height
+  override val width: Double = this@toJs.width.sanitize()
+  override val height: Double = this@toJs.height.sanitize()
 }
 
 /**
@@ -111,10 +110,10 @@ fun com.meistercharts.model.Size.toJs(): Size = object : Size {
  */
 fun Insets.toModel(): com.meistercharts.model.Insets {
   return com.meistercharts.model.Insets(
-    top ?: 0.0,
-    right ?: 0.0,
-    bottom ?: 0.0,
-    left ?: 0.0
+    top?.sanitize() ?: 0.0,
+    right?.sanitize() ?: 0.0,
+    bottom?.sanitize() ?: 0.0,
+    left?.sanitize() ?: 0.0
   )
 }
 
@@ -124,10 +123,10 @@ fun Insets.toModel(): com.meistercharts.model.Insets {
  */
 fun com.meistercharts.model.Insets.withValues(jsInsets: @px Insets): com.meistercharts.model.Insets {
   return this.copy(
-    top = jsInsets.top ?: top,
-    left = jsInsets.left ?: left,
-    right = jsInsets.right ?: right,
-    bottom = jsInsets.bottom ?: bottom,
+    top = jsInsets.top?.sanitize() ?: top,
+    left = jsInsets.left?.sanitize() ?: left,
+    right = jsInsets.right?.sanitize() ?: right,
+    bottom = jsInsets.bottom?.sanitize() ?: bottom,
   )
 }
 
@@ -138,22 +137,22 @@ fun Shadow?.toModel(): com.meistercharts.style.Shadow? {
 
   return com.meistercharts.style.Shadow(
     color = color.toColor() ?: com.meistercharts.style.Shadow.Default.color,
-    blurRadius = blurRadius ?: com.meistercharts.style.Shadow.Default.blurRadius,
-    offsetX = offsetX ?: com.meistercharts.style.Shadow.Default.offsetX,
-    offsetY = offsetY ?: com.meistercharts.style.Shadow.Default.offsetY,
+    blurRadius = blurRadius?.sanitize() ?: com.meistercharts.style.Shadow.Default.blurRadius,
+    offsetX = offsetX?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetX,
+    offsetY = offsetY?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetY,
   )
 }
 
-fun BorderRadius?.toModel(): com.meistercharts.canvas.BorderRadius? {
+fun BorderRadius?.toModel(): com.meistercharts.model.BorderRadius? {
   if (this == null) {
     return null
   }
 
-  return com.meistercharts.canvas.BorderRadius(
-    topLeft ?: 0.0,
-    topRight ?: 0.0,
-    bottomRight ?: 0.0,
-    bottomLeft ?: 0.0,
+  return com.meistercharts.model.BorderRadius(
+    topLeft?.sanitize() ?: 0.0,
+    topRight?.sanitize() ?: 0.0,
+    bottomRight?.sanitize() ?: 0.0,
+    bottomLeft?.sanitize() ?: 0.0,
   )
 }
 
@@ -163,19 +162,17 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.Conv
 /**
  * Converts this JavaScript [ValueRange] object into a model ValueRange object
  */
-fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
-  logger.ifDebug {
-    console.debug("ValueRange.toModel", this)
-  }
+fun ValueRange.toModel(): com.meistercharts.range.ValueRange {
+  logger.debug("ValueRange.toModel", this)
 
   //ensure that the client uses the correct types
-  require(start is Double) { "<$start> is not of type number but <${js("typeof start")}>" }
-  require(end is Double) { "<$end> is not not of type number <${js("typeof end")}>" }
+  val startSanitized = start.sanitize()
+  val endSanitized = end.sanitize()
 
   //'linear' is the default range scale
   return when (this.scale?.sanitize() ?: ValueRangeScale.Linear) {
-    ValueRangeScale.Linear -> com.meistercharts.algorithms.ValueRange.linear(start, end)
-    ValueRangeScale.Log10 -> com.meistercharts.algorithms.ValueRange.logarithmic(start, end)
+    ValueRangeScale.Linear -> com.meistercharts.range.ValueRange.linear(startSanitized, endSanitized)
+    ValueRangeScale.Log10 -> com.meistercharts.range.ValueRange.logarithmic(startSanitized, endSanitized)
   }
 }
 
@@ -185,7 +182,7 @@ fun ValueRange.toModel(): com.meistercharts.algorithms.ValueRange {
  * Enforces a linear value range; ignores [ValueRange.scale]
  */
 fun ValueRange.toModelLinear(): LinearValueRange {
-  return com.meistercharts.algorithms.ValueRange.linear(start, end)
+  return com.meistercharts.range.ValueRange.linear(start, end)
 }
 
 /**
@@ -228,22 +225,53 @@ fun SamplingPeriod.toModel(): com.meistercharts.history.SamplingPeriod {
   }
 }
 
+fun com.meistercharts.history.SamplingPeriod.toJs(): SamplingPeriod {
+  return when (this) {
+    com.meistercharts.history.SamplingPeriod.EveryMillisecond -> SamplingPeriod.EveryMillisecond
+    com.meistercharts.history.SamplingPeriod.EveryTenMillis -> SamplingPeriod.EveryTenMillis
+    com.meistercharts.history.SamplingPeriod.EveryHundredMillis -> SamplingPeriod.EveryHundredMillis
+    com.meistercharts.history.SamplingPeriod.EverySecond -> SamplingPeriod.EverySecond
+    com.meistercharts.history.SamplingPeriod.EveryTenSeconds -> SamplingPeriod.EveryTenSeconds
+    com.meistercharts.history.SamplingPeriod.EveryMinute -> SamplingPeriod.EveryMinute
+    com.meistercharts.history.SamplingPeriod.EveryTenMinutes -> SamplingPeriod.EveryTenMinutes
+    com.meistercharts.history.SamplingPeriod.EveryHour -> SamplingPeriod.EveryHour
+    com.meistercharts.history.SamplingPeriod.Every6Hours -> SamplingPeriod.Every6Hours
+    com.meistercharts.history.SamplingPeriod.Every24Hours -> SamplingPeriod.Every24Hours
+
+    com.meistercharts.history.SamplingPeriod.Every5Days,
+    com.meistercharts.history.SamplingPeriod.Every30Days,
+    com.meistercharts.history.SamplingPeriod.Every90Days,
+    com.meistercharts.history.SamplingPeriod.Every360Days,
+    -> throw UnsupportedOperationException("$this is not supported")
+  }
+}
+
 /**
  * Converts this JavaScript [TimeRange] object into a model TimeRange object
  */
 @Suppress("RedundantRequireNotNullCall")
-fun TimeRange.toModel(): com.meistercharts.algorithms.TimeRange {
+fun TimeRange.toModel(): com.meistercharts.time.TimeRange {
   requireNotNull(start) { "no start provided " }
   requireNotNull(end) { "no end provided " }
-  return com.meistercharts.algorithms.TimeRange(start, end)
+  return com.meistercharts.time.TimeRange(start, end)
 }
 
 /**
  * Converts a chart time range to a JS time range
  */
-fun com.meistercharts.algorithms.TimeRange.toJs() = object : TimeRange {
-  override val start: Double = this@toJs.start
-  override val end: Double = this@toJs.end
+fun com.meistercharts.time.TimeRange.toJs(): TimeRange {
+  val timeRange = js("{}") as TimeRange
+  timeRange.asDynamic().start = start
+  timeRange.asDynamic().end = end
+  return timeRange
+}
+
+fun HistoryBucketDescriptor.toHistoryQueryDescriptorJs(): HistoryQueryDescriptor {
+  return HistoryQueryDescriptor(
+    start,
+    end,
+    bucketRange.samplingPeriod.distance
+  )
 }
 
 /**
@@ -666,7 +694,7 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   )
   hudLayer.configuration.boxStylesActive = MultiProvider.forListModulo(
     //TODO remove the fallback asap
-     jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
+    jsThresholds.map { jsThreshold -> jsThreshold.labelBoxStyleActive?.toModel() ?: jsThreshold.labelBoxStyle.toModel() }
   )
 
   hudLayer.configuration.arrowHeadLength = MultiDoublesProvider.forArrayModulo(
@@ -791,7 +819,7 @@ fun String?.toColor(): Color? {
  * Converts a string to a color
  */
 fun String.toColor(): Color {
-  return Color(this.sanitize())
+  return Color.unparsed(this.sanitize())
 }
 
 /**

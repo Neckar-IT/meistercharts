@@ -17,16 +17,15 @@ package com.meistercharts.algorithms.layers.legend
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.PaintablesLayouter
-import com.meistercharts.algorithms.painter.Color
-import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.PaintablePaintingVariablesImpl
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Orientation
-import com.meistercharts.model.Rectangle
+import com.meistercharts.geometry.Rectangle
 import com.meistercharts.model.VerticalAlignment
 import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.provider.asMultiProvider
@@ -56,7 +55,7 @@ class StackedPaintablesPaintable(
   /**
    * The painting variables
    */
-  private val paintingVariables = object : PaintablePaintingVariablesImpl() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     /**
      * Calculates the layout for the paintables
      */

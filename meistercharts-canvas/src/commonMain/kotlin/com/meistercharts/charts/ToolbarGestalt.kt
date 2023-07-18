@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.layers.toolbar.resetZoomAndTranslationButton
 import com.meistercharts.algorithms.layers.toolbar.zoomInButton
 import com.meistercharts.algorithms.layers.toolbar.zoomOutButton
-import com.meistercharts.canvas.MeisterChartBuilder
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Button
 
 /**
@@ -35,7 +35,7 @@ class ToolbarGestalt(
 
   val toolbarLayer: ToolbarLayer = ToolbarLayer(data.buttons)
 
-  override fun configure(meisterChartBuilder: MeisterChartBuilder) {
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
       layers.addLayer(toolbarLayer)
     }

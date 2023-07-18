@@ -79,6 +79,7 @@ fun <T> SizedProvider<T>.sorted(comparator: Comparator<T>): SortedSizedProvider<
  * Avoid accidental sorting of already sorted providers
  */
 @Deprecated("Do not sort again!", level = DeprecationLevel.ERROR)
+@Suppress("UNUSED_PARAMETER")
 fun <T> SortedSizedProvider<T>.sorted(comparator: Comparator<T>): SortedSizedProvider<T> {
-  TODO()
+  throw UnsupportedOperationException()
 }

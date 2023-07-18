@@ -20,6 +20,7 @@ import assertk.assertions.*
 import com.meistercharts.charts.ChartId
 import com.meistercharts.model.Size
 import com.meistercharts.model.Zoom
+import com.meistercharts.tile.TileIndex
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,8 +29,8 @@ import org.junit.jupiter.api.Test
  *
  */
 class CachedTileProviderTest {
-  val chartId = ChartId(17)
-  val tileIdentifier = TileIdentifier(chartId, TileIndex.of(7, 8), Zoom.default)
+  val chartId: ChartId = ChartId(17)
+  val tileIdentifier: TileIdentifier = TileIdentifier(chartId, TileIndex.of(7, 8), Zoom.default)
 
   @BeforeEach
   internal fun setUp() {
@@ -43,14 +44,14 @@ class CachedTileProviderTest {
 
   @Test
   fun testRenew() {
-    val cachedTileProvider = CachedTileProvider(ChartId(77), DebugTileProvider(Size.PX_120))
+    val cachedTileProvider = CachedTileProvider({ ChartId(77) }, DebugTileProvider(Size.PX_120))
     val cache = GlobalTilesCache.cache
 
     assertThat(cache.size).isEqualTo(0)
 
-    val id0 = TileIdentifier(chartId, TileIndex(1, 1), Zoom.default)
-    val id1 = TileIdentifier(chartId, TileIndex(2, 1), Zoom.default)
-    val id3 = TileIdentifier(chartId, TileIndex(3, 1), Zoom.default)
+    val id0 = TileIdentifier(chartId, TileIndex.of(1, 1), Zoom.default)
+    val id1 = TileIdentifier(chartId, TileIndex.of(2, 1), Zoom.default)
+    val id3 = TileIdentifier(chartId, TileIndex.of(3, 1), Zoom.default)
 
     cachedTileProvider.getTile(id0)
     cachedTileProvider.getTile(id1)
@@ -75,7 +76,7 @@ class CachedTileProviderTest {
 
   @Test
   fun testClear() {
-    val cachedTileProvider = CachedTileProvider(ChartId(77), DebugTileProvider(Size.PX_120))
+    val cachedTileProvider = CachedTileProvider({ ChartId(77) }, DebugTileProvider(Size.PX_120))
     val cache = GlobalTilesCache.cache
 
     assertThat(cache.size).isEqualTo(0)

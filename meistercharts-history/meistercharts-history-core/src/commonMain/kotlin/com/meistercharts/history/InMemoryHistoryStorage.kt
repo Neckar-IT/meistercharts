@@ -15,16 +15,16 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.algorithms.TimeRange
+import com.meistercharts.history.cleanup.HistoryCleanupService
+import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
+import com.meistercharts.history.downsampling.DownSamplingService
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
-import com.meistercharts.history.cleanup.HistoryCleanupService
-import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
-import com.meistercharts.history.downsampling.DownSamplingService
-import com.meistercharts.history.impl.RecordingType
 
 
 /**
@@ -43,10 +43,34 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
    */
   val bookKeeping: InMemoryBookKeeping = InMemoryBookKeeping()
 
+  override fun getStart(): @ms @MayBeNaN Double {
+    val historyBucketRange = naturalSamplingPeriod.toHistoryBucketRange()
+    val descriptor = bookKeeping.earliestBound(historyBucketRange) ?: return Double.NaN
+
+    val first = get(descriptor) ?: return Double.NaN
+    if (first.isEmpty()) {
+      return Double.NaN
+    }
+
+    return first.chunk.firstTimeStamp()
+  }
+
+  override fun getEnd(): @ms @MayBeNaN Double {
+    val historyBucketRange = naturalSamplingPeriod.toHistoryBucketRange()
+    val descriptor = bookKeeping.latestBound(historyBucketRange) ?: return Double.NaN
+
+    val last = get(descriptor) ?: return Double.NaN
+    if (last.isEmpty()) {
+      return Double.NaN
+    }
+
+    return last.chunk.lastTimeStamp()
+  }
+
   /**
    * The down sampling service that can be used to calculate the down sampling ([scheduleDownSampling])
    */
-  internal val downSamplingService: DownSamplingService = DownSamplingService(this).also {
+  internal val downSamplingService: DownSamplingService<InMemoryHistoryStorage> = DownSamplingService(this).also {
     disposeSupport.onDispose(it)
   }
 
@@ -87,15 +111,17 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
    */
   fun clear() {
     // make a copy of the descriptors that are about to be removed
-    val historyBucketDescriptors = map.keys.toList()
+    val deletedHistoryBucketDescriptors = map.keys.toList()
     // clear the history before notifying the observers
     map.clear()
     bookKeeping.clear()
 
     // notify the observers
-    historyBucketDescriptors.fastForEach { descriptor ->
+    deletedHistoryBucketDescriptors.fastForEach { descriptor ->
+      val updateInfo = HistoryUpdateInfo(descriptor.bucketRange.samplingPeriod, TimeRange(descriptor.start, descriptor.end))
+
       observers.fastForEach {
-        it(descriptor, HistoryUpdateInfo(descriptor.bucketRange.samplingPeriod, TimeRange(descriptor.start, descriptor.end)))
+        it(updateInfo)
       }
     }
   }
@@ -113,7 +139,7 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
     bookKeeping.store(bucket.descriptor)
 
     observers.fastForEach {
-      it(bucket.descriptor, updateInfo)
+      it(updateInfo)
     }
   }
 
@@ -126,7 +152,7 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
 
     val historyUpdateInfo = HistoryUpdateInfo.from(descriptor)
     observers.fastForEach {
-      it(descriptor, historyUpdateInfo)
+      it(historyUpdateInfo)
     }
   }
 
@@ -140,11 +166,20 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
    * Schedules down sampling for the storage (starts a timer).
    *
    * Attention: It is necessary to dispose the history storage itself by calling [dispose] to clean up the started timer
-   *
    * Attention: It is necessary to schedule down sampling *before* any data is added to the history storage
    */
   fun scheduleDownSampling() {
-    downSamplingService.scheduleDownSampling(this)
+    downSamplingService.scheduleDownSampling()
+  }
+
+  /**
+   * Stops the [downSamplingService].
+   *
+   * ATTENTION: In most cases it is necessary to clear the history.
+   * Call [clear] after calling this method.
+   */
+  fun stopDownSampling() {
+    downSamplingService.stopDownSampling()
   }
 
   /**
@@ -194,19 +229,20 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
 }
 
 /**
- * Book keeping class for [InMemoryHistoryStorage]
+ * Bookkeeping class for [InMemoryHistoryStorage]
  */
 class InMemoryBookKeeping {
   /**
    * Returns the time range from the earliest to the latest
    */
+  @Deprecated("do not use anymore")
   fun getTimeRange(range: HistoryBucketRange): TimeRange? {
-    val start = earliestBound(range) ?: return null
-    val end = latestBound(range) ?: return null
+    val startDescriptor = earliestBound(range) ?: return null
+    val endDescriptor = latestBound(range) ?: return null
 
-    check(start.start <= end.end) { "start ${start.start.formatUtc()} is greater than end ${end.end.formatUtc()}" }
+    check(startDescriptor.start <= endDescriptor.end) { "start ${startDescriptor.start.formatUtc()} is greater than end ${endDescriptor.end.formatUtc()}" }
 
-    return TimeRange(start.start, end.end)
+    return TimeRange(startDescriptor.start, endDescriptor.end)
   }
 
   /**
@@ -235,6 +271,9 @@ class InMemoryBookKeeping {
     }
   }
 
+  /**
+   * Stores the history bucket descriptor
+   */
   fun store(descriptor: HistoryBucketDescriptor) {
     val bucketRange = descriptor.bucketRange
 

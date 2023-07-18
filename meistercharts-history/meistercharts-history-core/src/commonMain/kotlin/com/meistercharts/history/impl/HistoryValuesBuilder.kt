@@ -24,6 +24,7 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
+import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
@@ -253,7 +254,7 @@ class HistoryValuesBuilder(
    *
    * Attention: Depending on the [recordingType] [minValues] and [maxValues] must be provided or not
    */
-  fun setDecimalValuesForTimestamp(timestampIndex: TimestampIndex, decimalValues: DoubleArray, minValues: DoubleArray? = null, maxValues: DoubleArray? = null) {
+  fun setDecimalValuesForTimestamp(timestampIndex: TimestampIndex, decimalValues: @MayBeNoValueOrPending DoubleArray, minValues: @MayBeNoValueOrPending DoubleArray? = null, maxValues: @MayBeNoValueOrPending DoubleArray? = null) {
     //Verify the parameters
     when (recordingType) {
       RecordingType.Measured -> {}

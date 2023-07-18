@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.time
+package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
-import it.neckar.open.time.VirtualNowProvider
-import it.neckar.open.time.nowMillis
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.dateTimeFormatIso8601
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
 import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.time.TimeZone
+import it.neckar.open.time.TimerImplementation
+import it.neckar.open.time.VirtualNowProvider
+import it.neckar.open.time.nowMillis
+import it.neckar.open.time.nowProvider
+import it.neckar.open.time.timerImplementation
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  *
@@ -43,10 +50,10 @@ class VirtualNowProviderTest {
   fun testPlus(virtualNowProvider: VirtualNowProvider) {
     assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow)
 
-    virtualNowProvider.add(100.0)
+    virtualNowProvider.advanceBy(100.0)
     assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow + 100.0)
 
-    virtualNowProvider.add(0.0)
+    virtualNowProvider.advanceBy(0.0)
     assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow + 100.0)
   }
 }

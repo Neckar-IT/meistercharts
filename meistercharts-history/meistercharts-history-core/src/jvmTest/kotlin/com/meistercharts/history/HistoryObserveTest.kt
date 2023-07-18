@@ -29,13 +29,13 @@ class HistoryObserveTest {
   fun testIt() {
     val historyStorage = InMemoryHistoryStorage()
 
-    val updatedDescriptors = mutableListOf<HistoryBucketDescriptor>()
+    val updateInfos = mutableListOf<HistoryUpdateInfo>()
 
-    historyStorage.observe { descriptor, updateInfo ->
-      updatedDescriptors.add(descriptor)
+    historyStorage.observe { updateInfo ->
+      updateInfos.add(updateInfo)
     }
 
-    assertThat(updatedDescriptors).isEmpty()
+    assertThat(updateInfos).isEmpty()
 
     val newChunk = historyConfiguration {
       decimalDataSeries(DataSeriesId(10), TextKey.simple("dasdf"))
@@ -47,6 +47,6 @@ class HistoryObserveTest {
     historyStorage.naturalSamplingPeriod = SamplingPeriod.EveryHour
     historyStorage.storeWithoutCache(newChunk, SamplingPeriod.EveryHour)
 
-    assertThat(updatedDescriptors).hasSize(1)
+    assertThat(updateInfos).hasSize(1)
   }
 }

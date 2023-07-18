@@ -15,7 +15,7 @@
  */
 package com.meistercharts.label
 
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative
 import it.neckar.open.unit.other.pct
 

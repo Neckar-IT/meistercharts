@@ -15,19 +15,19 @@
  */
 package com.meistercharts.algorithms.tile
 
-import com.meistercharts.algorithms.TileChartCalculator
-import com.meistercharts.algorithms.TimeRange
-import com.meistercharts.algorithms.ValueRange
+import com.meistercharts.Meistercharts
+import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.time.TimeRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.retrieve
 import com.meistercharts.algorithms.layers.tileCalculator
-import com.meistercharts.algorithms.painter.Color
+import com.meistercharts.color.Color
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Tile
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.FontDescriptorFragment
-import com.meistercharts.canvas.currentFrameTimestamp
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintingProperties
@@ -36,7 +36,6 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryStorage
-import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.history.valueAt
@@ -81,8 +80,6 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
 
     val buckets = configuration.historyStorage.query(timeRangeToPaint, renderedSamplingPeriod)
 
-    val bookKeepingTimeRange = (configuration.historyStorage as? InMemoryHistoryStorage)?.bookKeeping?.getTimeRange(renderedSamplingPeriod.toHistoryBucketRange())
-
     if (buckets.isEmpty()) {
       return TileCreationInfo(
         isEmpty = true,
@@ -91,7 +88,6 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
           visibleTimeRangeKey to visibleTimeRange,
           samplingPeriodKey to renderedSamplingPeriod,
           timeRangeToPaintKey to timeRangeToPaint,
-          historyStorageBookKeepingStateKey to bookKeepingTimeRange
         )
       )
     }
@@ -127,7 +123,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
         gc.translateToCenter()
         gc.paintTextBox(
           listOf(
-            "${identifier.x}/${identifier.y}",
+            "${identifier.tileIndex}",
             identifier.zoom.format(),
             renderedSamplingPeriod.label
           ),
@@ -162,13 +158,12 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     }
 
     return TileCreationInfo(
-      currentFrameTimestamp,
+      Meistercharts.renderLoop.currentFrameTimestamp,
       values = mapOf(
         visibleTimeRangeKey to visibleTimeRange,
         samplingPeriodKey to renderedSamplingPeriod,
         timeRangeToPaintKey to timeRangeToPaint,
-        queryResultTimeRange to TimeRange(buckets.first().start, buckets.last().end),
-        historyStorageBookKeepingStateKey to bookKeepingTimeRange
+        queryResultTimeRangeKey to TimeRange(buckets.first().start, buckets.last().end),
       )
     )
   }
@@ -219,8 +214,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     val visibleTimeRangeKey: TileCreationInfoKey<TimeRange> = TileCreationInfoKey("visibleTimeRange")
     val samplingPeriodKey: TileCreationInfoKey<SamplingPeriod> = TileCreationInfoKey("samplingPeriod")
     val timeRangeToPaintKey: TileCreationInfoKey<TimeRange> = TileCreationInfoKey("timeRangeToPaint")
-    val queryResultTimeRange: TileCreationInfoKey<TimeRange> = TileCreationInfoKey("queryResultTimeRange")
-    val historyStorageBookKeepingStateKey: TileCreationInfoKey<TimeRange> = TileCreationInfoKey("historyStorageBookKeepingState")
+    val queryResultTimeRangeKey: TileCreationInfoKey<TimeRange> = TileCreationInfoKey("queryResultTimeRange")
 
     /**
      * The reason why a tile is empty

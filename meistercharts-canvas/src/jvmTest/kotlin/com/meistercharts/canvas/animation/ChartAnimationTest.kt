@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DefaultLayerSupport
-import com.meistercharts.canvas.LayerSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.MockCanvas
 import it.neckar.open.observable.ObservableDouble
 import org.junit.jupiter.api.BeforeEach
@@ -43,20 +43,20 @@ class ChartAnimationTest {
       AnimationState.finishedIf(frameTimestamp > 10_000.0)
     }
 
-    assertThat(chartSupport.refreshListeners).containsNone(chartAnimation)
-    chartSupport.onRefresh(chartAnimation)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
+    chartSupport.onRender(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
     //Simulate an event
-    chartSupport.refresh(10_000.0)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    chartSupport.render(10_000.0, 100.0)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.refresh(20_000.0)
-    assertThat(chartSupport.refreshListenersToRemove).contains(chartAnimation)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    chartSupport.render(20_000.0, 200.0)
+    assertThat(chartSupport.renderLoopListenersToRemove).contains(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.refresh(30_000.0)
-    assertThat(chartSupport.refreshListeners).containsNone(chartAnimation)
+    chartSupport.render(30_000.0, 300.0)
+    assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
   }
 
   @Test
@@ -65,28 +65,28 @@ class ChartAnimationTest {
       AnimationState.finishedIf(frameTimestamp > 10_000.0)
     }
 
-    assertThat(chartSupport.refreshListeners).containsNone(chartAnimation)
-    assertThat(chartSupport.refreshListeners).hasSize(1)
-    chartSupport.onRefresh(chartAnimation)
-    assertThat(chartSupport.refreshListeners).hasSize(2)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).hasSize(1)
+    chartSupport.onRender(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).hasSize(2)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.refresh(10_000.0)
-    assertThat(chartSupport.refreshListeners).hasSize(2)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    chartSupport.render(10_000.0, 100.0)
+    assertThat(chartSupport.renderLoopListeners).hasSize(2)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
     chartAnimation.dispose()
 
-    assertThat(chartSupport.refreshListeners).hasSize(2)
-    assertThat(chartSupport.refreshListeners).contains(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).hasSize(2)
+    assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.refresh(20_000.0)
+    chartSupport.render(20_000.0, 200.0)
 
-    assertThat(chartSupport.refreshListenersToRemove).contains(chartAnimation)
-    chartSupport.refresh(30_000.0)
+    assertThat(chartSupport.renderLoopListenersToRemove).contains(chartAnimation)
+    chartSupport.render(30_000.0, 300.0)
 
-    assertThat(chartSupport.refreshListeners).hasSize(1)
-    assertThat(chartSupport.refreshListeners).containsNone(chartAnimation)
+    assertThat(chartSupport.renderLoopListeners).hasSize(1)
+    assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
   }
 
   @Test

@@ -76,7 +76,7 @@ class ThreadExtension @JvmOverloads constructor(
   private fun after() {
     try {
       val remainingThreads = remainingThreads
-      if (!remainingThreads.isEmpty()) {
+      if (remainingThreads.isNotEmpty()) {
         System.err.println(
           """
   --> Some threads have been left:
@@ -118,14 +118,15 @@ class ThreadExtension @JvmOverloads constructor(
         }
 
         //Wait for a little bit, sometimes the threads die off
-        for (i in 0..9) {
+        for (ignored in 0..9) {
           try {
             Thread.sleep(10)
           } catch (ignore: InterruptedException) {
+            return remainingThreads
           }
 
           //Second try
-          if (!remainingThread.isAlive) {
+          if (remainingThread.isAlive.not()) {
             iterator.remove()
             break
           }
@@ -171,7 +172,7 @@ class ThreadExtension @JvmOverloads constructor(
         isKeepAliveSocketCleaner(threadGroupName, threadName) ||
         isJava2dDisposer(threadGroupName, threadName) ||
         isKeepAliveTimer2(threadGroupName, threadName) ||
-        isAwtRelatedThread(threadGroupName, threadName) ||
+        isAwtRelatedThread(threadName) ||
         isQuantumRenderer(threadGroupName, threadName)
       ) {
         return true
@@ -198,6 +199,6 @@ private fun isKeepAliveTimer(threadGroupName: String, threadName: String) = thre
 private fun isProcessReaper(threadGroupName: String, threadName: String) = threadGroupName == "system" && threadName == "process reaper"
 private fun isKeepAliveSocketCleaner(threadGroupName: String, threadName: String) = threadGroupName == "system" && threadName == "Keep-Alive-SocketCleaner"
 private fun isJava2dDisposer(threadGroupName: String, threadName: String) = threadGroupName == "system" && threadName == "Java2D Disposer"
-private fun isAwtRelatedThread(threadGroupName: String, threadName: String) = threadName.startsWith("AWT-")
+private fun isAwtRelatedThread(threadName: String) = threadName.startsWith("AWT-")
 private fun isQuantumRenderer(threadGroupName: String, threadName: String) = threadGroupName == "main" && threadName.startsWith("QuantumRenderer")
 private fun isKeepAliveTimer2(threadGroupName: String, threadName: String) = threadGroupName == "InnocuousThreadGroup" && threadName.startsWith("Keep-Alive-Timer")

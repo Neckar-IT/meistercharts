@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
-import com.meistercharts.canvas.currentFrameTimestamp
+import com.meistercharts.Meistercharts
 import it.neckar.open.unit.si.ms
 
 /**
@@ -25,7 +25,7 @@ data class TileCreationInfo(
   /**
    * The time when the tile has been created
    */
-  val creationTime: @ms Double = currentFrameTimestamp,
+  val creationTime: @ms Double = Meistercharts.renderLoop.currentFrameTimestamp,
   /**
    * Contains true if the tile itself is empty.
    * Can be used to avoid painting of empty tiles

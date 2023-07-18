@@ -15,9 +15,20 @@ inline fun <T> KMutableProperty0<T>.getAndSet(function: (oldValue: T) -> T) {
 }
 
 /**
+ * Sets the new value and calls the onChange lambda if the value has changed.
+ * [onChange] is called after the value has been set.
+ */
+inline fun <T> KMutableProperty0<T>.setIfDifferent(newValue: T, onChange: () -> Unit) {
+  if (get() != newValue) {
+    set(newValue)
+    onChange()
+  }
+}
+
+/**
  * Toggles a boolean property
  */
 fun KMutableProperty0<Boolean>.toggle() {
-  set(!get())
+  set(get().not())
 }
 

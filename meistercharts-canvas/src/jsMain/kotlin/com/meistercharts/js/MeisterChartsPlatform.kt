@@ -15,33 +15,41 @@
  */
 package com.meistercharts.js
 
-import com.meistercharts.canvas.FontMetricsCacheAccess
-import com.meistercharts.canvas.MeisterChartBuilder
-import com.meistercharts.canvas.MeisterChartsFactoryAccess
+import com.meistercharts.Meistercharts
+import com.meistercharts.canvas.Meisterchart
+import com.meistercharts.canvas.MeisterchartBuilder
+import com.meistercharts.canvas.PlatformStateListener
 import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
 import com.meistercharts.design.CorporateDesign
 import com.meistercharts.events.FontLoadedEventBroker
+import com.meistercharts.js.external.FontFace
 import com.meistercharts.js.external.FontFaceSet
 import com.meistercharts.js.external.listenForLoadingDone
 import com.meistercharts.platform.MeisterChartsAbstractPlatform
+import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
+import it.neckar.logging.ifDebug
 import it.neckar.open.i18n.I18nConfiguration
 import kotlinx.browser.document
 import kotlinx.browser.window
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.EventListener
 import org.w3c.dom.get
 
 /**
- * Global configuration / settings object for [com.meistercharts.canvas.MeisterChart].
+ * Global configuration / settings object for [com.meistercharts.canvas.Meisterchart].
  *
- * Is referenced from [MeisterChartBuilder] and ensures that initial code is executed once
+ * Is referenced from [MeisterchartBuilder] and ensures that initial code is executed once
  */
 object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
-
   init {
     (document["fonts"]?.unsafeCast<FontFaceSet>())?.listenForLoadingDone {
+      logger.ifDebug {
+        logger.debug("${it.fontfaces.size} fonts loaded:")
+        it.fontfaces.forEach {
+          logger.debug(" - ${it.format()}")
+        }
+      }
       FontLoadedEventBroker.notifyLoaded()
     } ?: logger.warn("WARNING: document.fonts is not supported by this browser -> fonts loaded from now on may not be rendered correctly")
   }
@@ -65,16 +73,55 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   override fun initializeOnce() {
-    window.addEventListener("load", object : EventListener {
-      override fun handleEvent(event: Event) {
-        logger.debug("window.load: ${event.type}")
+    super.initializeOnce()
+
+    Meistercharts.fontMetricsCache = FontMetricsCacheJS
+    Meistercharts.meisterchartFactory = MeisterchartFactoryJS()
+
+    armRenderLoop()
+  }
+
+  /**
+   * Start the animation frame when the first chart is created and stop it when the last chart is disposed
+   */
+  private fun armRenderLoop() {
+    require(Meistercharts.platformState.hasInstances.not()) { "Already contains instances!" }
+
+    Meistercharts.platformState.onPlatformStateUpdate(object : PlatformStateListener {
+      /**
+       * ID for the current animation frame request - used to cancel the request
+       */
+      var currentRequestId: Int = 0
+
+      override fun firstInstanceCreated(meisterChart: Meisterchart) {
+        requestNextFrame()
+      }
+
+      private fun requestNextFrame() {
+        logger.trace("Requesting next frame")
+
+        currentRequestId = window.requestAnimationFrame { relativeNowInMillis ->
+          Meistercharts.renderLoop.nextLoop(relativeNowInMillis)
+
+          if (Meistercharts.platformState.hasInstances) {
+            //Request next frame - if there are instances left
+            requestNextFrame()
+          }
+        }
+      }
+
+      override fun lastInstanceDisposed() {
+        if (currentRequestId != 0) {
+          logger.debug { "Canceling current frame request $currentRequestId" }
+          window.cancelAnimationFrame(currentRequestId)
+        }
       }
     })
-
-    FontMetricsCacheAccess.fontMetricsCache = FontMetricsCacheJS
-
-    MeisterChartsFactoryAccess.factory = MeisterChartsFactoryJS()
   }
 }
 
-private val logger = LoggerFactory.getLogger("com.meistercharts.js.MeisterChartsPlatform")
+private fun FontFace.format(): String {
+  return "$family $style, $variant $weight"
+}
+
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.js.MeisterChartsPlatform")

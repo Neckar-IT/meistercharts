@@ -76,6 +76,13 @@ inline fun DoubleArrayList.fastForEachIndexed(callback: (index: Int, value: Doub
   }
 }
 
+inline fun DoubleArrayList.fastForEachIndexed(iterationOrder: IterationOrder, callback: (index: Int, value: Double) -> Unit) {
+  when (iterationOrder) {
+    IterationOrder.Ascending -> fastForEachIndexed(callback)
+    IterationOrder.Descending -> fastForEachIndexedReversed(callback)
+  }
+}
+
 inline fun DoubleArrayList.fastForEachIndexedReversed(callback: (index: Int, value: Double) -> Unit) {
   var n = lastIndex
   while (n >= 0) {

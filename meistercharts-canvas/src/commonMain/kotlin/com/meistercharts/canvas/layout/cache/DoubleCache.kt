@@ -17,6 +17,7 @@ package com.meistercharts.canvas.layout.cache
 
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.DoublePredicate
+import it.neckar.open.collections.IterationOrder
 import it.neckar.open.collections.fastAny
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
@@ -97,6 +98,10 @@ class DoubleCache : LayoutVariableWithSize {
 
   inline fun fastForEachIndexed(callback: (index: Int, value: Double) -> Unit) {
     this.values.fastForEachIndexed(callback)
+  }
+
+  inline fun fastForEachIndexed(iterationOrder: IterationOrder, callback: (index: Int, value: Double) -> Unit) {
+    this.values.fastForEachIndexed(iterationOrder, callback)
   }
 
   inline fun fastForEachIndexedReversed(callback: (index: Int, value: Double) -> Unit) {
