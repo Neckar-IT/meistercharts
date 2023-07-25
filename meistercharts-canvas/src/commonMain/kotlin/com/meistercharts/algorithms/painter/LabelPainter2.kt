@@ -212,7 +212,7 @@ class LabelPainter2(
     private fun calculateAbsoluteMax(max: @Window Double) {
       var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReverse { label ->
+      layoutedLabelsCache.fastForEachReversed { label ->
         label.setCenterYMax(lastMinY - style.labelSpacing - label.halfHeight)
         lastMinY = label.centerYMax - label.halfHeight
       }
@@ -255,7 +255,7 @@ class LabelPainter2(
     private fun maxToMinLayout(max: @Window Double) {
       @px var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReverse { label ->
+      layoutedLabelsCache.fastForEachReversed { label ->
         //Check the max y with the last stored bottom y
         if (label.actualMaxY > lastMinY - style.labelSpacing) {
           //We are too high - move down

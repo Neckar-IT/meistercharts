@@ -15,7 +15,7 @@ type the following command into your local command line terminal:
 node -v
 ----
 If you see a version number, Node.js is installed.
-To install Node.js, follow <a href="https://nodejs.org/en">this link</a>
+To install Node.js, follow https://nodejs.org/en[this link].
 
 === Add MeisterCharts to an existing Vite Project
 
@@ -41,10 +41,10 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "4.4.4"
+    "vite": "4.4.6"
   },
   "dependencies": {
-    "@meistercharts/meistercharts": "1.33.0"
+    "@meistercharts/meistercharts": "1.34.0"
   }
 }
 
@@ -110,4 +110,4 @@ After installing all dependencies you can run the following command:
 npm run dev
 ----
 
-Now you can open <a href="http://localhost:5173/"><b>http://localhost:5173</b></a>
+Now you can open **http://localhost:5173/[http://localhost:5173]**

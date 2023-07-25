@@ -142,6 +142,7 @@ fun String.escape(): String {
         out.append(Hex.encodeCharLower(c.toInt().extract(4, 4)))
         out.append(Hex.encodeCharLower(c.toInt().extract(0, 4)))
       }
+
       else -> out.append(c)
     }
   }
@@ -191,11 +192,13 @@ fun String.unescape(): String {
             n += 4
             out.append(chars.toInt(16).toChar())
           }
+
           else -> {
             out.append("\\$c2")
           }
         }
       }
+
       else -> out.append(c)
     }
   }
@@ -388,4 +391,81 @@ private val regexStartsWithLetter = "^[a-zA-Z]".toRegex()
  */
 fun List<String>.allBlank(): Boolean {
   return all { it.isBlank() }
+}
+
+/**
+ * Truncates the text to the given max characters
+ */
+fun String.truncateToLength(maxCharacters: Int, truncationSymbol: String = "…"): String? {
+  if (maxCharacters == 0) {
+    return null
+  }
+
+  if (length <= maxCharacters) {
+    //text is short enough - return the text itself
+    return this
+  }
+
+  if (truncationSymbol.length > maxCharacters) {
+    //we do not have any space for the truncation symbol - therefore return "!"
+    return "!"
+  }
+
+  if (maxCharacters < truncationSymbol.length) {
+    //shorter than truncation symbol. Therefore, we just return the text truncated
+    return take(maxCharacters)
+  }
+
+  return take(maxCharacters - truncationSymbol.length) + truncationSymbol
+}
+
+
+/**
+ * Truncates the text to the given characters. Truncates the center.
+ */
+fun String.truncateCenterToLength(maxCharacters: Int, truncationSymbol: String = "…"): String? {
+  if (maxCharacters == 0) {
+    return null
+  }
+
+  if (length <= maxCharacters) {
+    return this
+  }
+
+  if (truncationSymbol.length > maxCharacters) {
+    //we do not have any space for the truncation symbol - therefore return "!"
+    return "!"
+  }
+
+  val maxPartsLength = maxCharacters - truncationSymbol.length
+
+  //on an odd length, the first part is one longer
+  val secondPartLength = maxPartsLength / 2
+  val firstPartLength = maxCharacters - truncationSymbol.length - secondPartLength
+
+  val firstPart = take(firstPartLength)
+  val lastPart = takeLast(secondPartLength)
+
+  return firstPart + truncationSymbol + lastPart
+}
+
+/**
+ * Returns a string of the given length.
+ *
+ * This will be padded or truncated - if necessary
+ */
+fun String?.padEndMaxLength(length: Int): String? {
+  if (this == null) {
+    return "".padEnd(length)
+  }
+
+  require(length >= 0) {
+    "Invalid length: $length"
+  }
+
+  if (this.length <= length) {
+    return this.padEnd(length)
+  }
+
+  return this.truncateToLength(length) ?: throw IllegalStateException("???")
 }

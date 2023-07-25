@@ -85,15 +85,8 @@ object GlobalTilesCache {
    */
   @Slow
   fun tiles(chartId: ChartId): Collection<Tile> {
-    println("GlobalTilesCache.tiles($chartId)")
-    println("Cache size: ${cache.size}")
-
     return cache.values.filter {
-      println("tile.chartId: ${it.identifier.chartId}")
-
       it.identifier.chartId == chartId
-    }.also {
-      println("FOund ${it.size}")
     }
   }
 }

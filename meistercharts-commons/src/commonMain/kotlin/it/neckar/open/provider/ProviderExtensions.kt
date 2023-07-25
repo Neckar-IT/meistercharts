@@ -70,6 +70,14 @@ inline fun <T> SizedProvider<T>.fastForEachIndexed(callback: (index: Int, value:
   }
 }
 
+inline fun <T> SizedProvider<T>.fastForEachIndexedReversed(callback: (index: Int, value: T) -> Unit) {
+  var n = size() - 1
+  while (n >= 0) {
+    callback(n, this.valueAt(n))
+    n--
+  }
+}
+
 inline fun <T, P1> SizedProvider1<T, P1>.fastForEach(param1: P1, callback: (T) -> Unit) {
   var n = 0
   val currentSize = size(param1)

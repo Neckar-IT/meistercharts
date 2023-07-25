@@ -37,6 +37,7 @@ object Plugins {
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
 
+  @Deprecated("Use kotlinMultiPlatform instead")
   const val kotlinJs: String = "org.jetbrains.kotlin.js"
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
@@ -82,6 +83,7 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.java: PluginDependencySp
 inline val org.gradle.plugin.use.PluginDependenciesSpec.javaLibrary: PluginDependencySpec
   get() = id(Plugins.javaLibrary)
 
+@Deprecated("Use kotlinMultiPlatform instead")
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJs: PluginDependencySpec
   get() = id(Plugins.kotlinJs)
 

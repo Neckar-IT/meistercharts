@@ -60,15 +60,15 @@ class RightTriangleTypeCache : LayoutVariableWithSize {
     this.values.fastForEachIndexed(callback)
   }
 
-  inline fun fastForEachIndexedReverse(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
-    this.values.fastForEachIndexedReverse(callback)
+  inline fun fastForEachIndexedReversed(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
+    this.values.fastForEachIndexedReversed(callback)
   }
 
   inline fun fastForEach(callback: (value: RightTriangleType?) -> Unit) {
     this.values.fastForEach(callback)
   }
 
-  inline fun Array<RightTriangleType?>.fastForEachIndexedReverse(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
+  inline fun Array<RightTriangleType?>.fastForEachIndexedReversed(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
     val currentSize = size
 
     for (i in (currentSize - 1) downTo 0) {

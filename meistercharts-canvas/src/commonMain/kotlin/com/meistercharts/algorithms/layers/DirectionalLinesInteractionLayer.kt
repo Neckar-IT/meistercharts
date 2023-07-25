@@ -23,6 +23,7 @@ import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseMoveEvent
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.fastForEachIndexed
+import it.neckar.open.provider.fastForEachIndexedReversed
 import it.neckar.open.unit.number.MayBeNegative
 
 /**
@@ -55,9 +56,9 @@ class DirectionalLinesInteractionLayer(
 
       //First find the active line - one for all layers
       if (mouseLocation != null) {
-        //Iterate over all lines layers
-        configuration.directionalLinesLayers.fastForEachIndexed { layerIndex, layer ->
-          layer.paintingVariables().fastForEach { lineIndex: @DirectionalLinesLayer.LineIndex Int, startX, startY, endX, endY ->
+        //Iterate over all lines layers - in reversed order
+        configuration.directionalLinesLayers.fastForEachIndexedReversed { layerIndex, layer ->
+          layer.paintingVariables().fastForEachReversed { lineIndex: @DirectionalLinesLayer.LineIndex Int, startX, startY, endX, endY ->
             @Zoomed val distance = mouseLocation.distanceToLine(startX, startY, endX, endY)
             if (distance < bestDistance) {
               activeLayerIndex = layerIndex

@@ -19,3 +19,32 @@ fun File.replaceLeadingTilde(): File {
 
   return this
 }
+
+/**
+ * Creates a tree representation of the file system
+ */
+fun File.tree(showOwnName: Boolean = false): String = buildString {
+  return treeRecursively(showDotInsteadOfCurrentName = showOwnName.not())
+}
+
+private fun File.treeRecursively(prefix: String = "", continuation: String = "", showDotInsteadOfCurrentName: Boolean = true): String = buildString {
+  if (showDotInsteadOfCurrentName) {
+    append(".\n")
+  } else {
+    append("$prefix${this@treeRecursively.name}\n")
+  }
+
+  if (this@treeRecursively.isDirectory) {
+    val files = this@treeRecursively.listFiles()
+    files?.let {
+      it.sort()
+      it.indices.forEach { i ->
+        val isLast = i == it.size - 1
+        val newPrefix = continuation + if (isLast) "└── " else "├── "
+        val newContinuation = continuation + if (isLast) "    " else "│   "
+        append(it[i].treeRecursively(newPrefix, newContinuation, false))
+      }
+    }
+  }
+}
+

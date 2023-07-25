@@ -198,7 +198,7 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
   /**
    * Iterates over all elements
    */
-  inline fun fastForEachIndexedReverse(
+  inline fun fastForEachIndexedReversed(
     action: (
       index: Int, x: @Window Double, y: @Window Double, width: @MayBeNegative @Zoomed Double, height: @MayBeNegative @Zoomed Double
     ) -> Unit
@@ -250,7 +250,7 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
    * Only elements the given [matcher] returns true for are considered
    */
   open fun findLastIndex(locationX: Double, locationY: Double, matcher: (Int) -> Boolean = { true }): Int? {
-    fastForEachIndexedReverse { index, x, y, width: @MayBeNegative Double, height: @MayBeNegative Double ->
+    fastForEachIndexedReversed { index, x, y, width: @MayBeNegative Double, height: @MayBeNegative Double ->
       if (locationX.betweenInclusive(x, x + width)
         && locationY.betweenInclusive(y, y + height)
         && matcher(index)

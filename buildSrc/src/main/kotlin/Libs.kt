@@ -51,6 +51,8 @@ public object Libs {
     public const val jackson_module_parameter_names: String =
             "com.fasterxml.jackson.module:jackson-module-parameter-names:_"
 
+    public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
+
     public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val kotlin_csv: String = "com.github.doyaaaaaken:kotlin-csv:_"
@@ -398,6 +400,8 @@ public object Libs {
     public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
 
     public const val opencv: String = "org.openpnp:opencv:_"
+
+    public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
     public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
 

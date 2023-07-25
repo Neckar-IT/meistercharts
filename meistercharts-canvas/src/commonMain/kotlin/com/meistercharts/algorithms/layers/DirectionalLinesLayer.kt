@@ -16,18 +16,19 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layers.linechart.LineStyle
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.color.Color
 import com.meistercharts.model.Direction
 import com.meistercharts.model.HorizontalAlignment
 import com.meistercharts.model.Side
 import com.meistercharts.model.VerticalAlignment
 import com.meistercharts.model.Vicinity
+import it.neckar.open.collections.IterationOrder
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.CoordinatesProvider1
 import it.neckar.open.provider.MultiDoublesProvider
@@ -317,8 +318,11 @@ class DirectionalLinesLayer(
  * Calls the backend for all *finite* lines.
  * Lines with infinite values are skipped
  */
-inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForEach(callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit) {
-  startCoordinatesCache.fastForEachIndexed { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
+inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForEach(
+  iterationOrder: IterationOrder,
+  callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit,
+) {
+  startCoordinatesCache.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
     if (startX.isFinite().not() || startY.isFinite().not()) {
       //Skip if x or y are not finite
       return@fastForEachIndexed
@@ -334,4 +338,12 @@ inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForE
 
     callback(index, startX, startY, endX, endY)
   }
+}
+
+inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForEach(callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit) {
+  fastForEach(IterationOrder.Ascending, callback)
+}
+
+inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForEachReversed(callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit) {
+  fastForEach(IterationOrder.Descending, callback)
 }

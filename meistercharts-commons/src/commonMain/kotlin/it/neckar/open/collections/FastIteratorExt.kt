@@ -441,11 +441,7 @@ inline fun <T> Array<T>.fastForEachWithIndex(callback: (index: Int, value: T) ->
   }
 }
 
-inline fun <T> List<T>.fastForEachReverse(callback: (T) -> Unit) {
-  fastForEachReverse(size, callback)
-}
-
-inline fun <T> List<T>.fastForEachReverse(currentSize: Int, callback: (T) -> Unit) {
+inline fun <T> List<T>.fastForEachReversed(currentSize: Int, callback: (T) -> Unit) {
   var n = 0
   while (n < currentSize) {
     callback(this[currentSize - n - 1])

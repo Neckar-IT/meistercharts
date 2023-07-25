@@ -960,7 +960,7 @@ external enum class Fill {
   /**
    * The rectangle is filled with a solid color
    */
-  Solid,
+  Solid
 
   //Horizontal,
   //Vertical,
@@ -968,6 +968,20 @@ external enum class Fill {
   //BackwardDiagonal,
   //DiagonalCross
 }
+
+//New style as suggested for Kotlin 1.9 (currently not supported by our Typescript Definition File generation task)
+//sealed external class Fill {
+//  /**
+//   * The rectangle is filled with a solid color
+//   */
+//  object Solid: Fill
+//
+//  //Horizontal,
+//  //Vertical,
+//  //ForwardDiagonal,
+//  //BackwardDiagonal,
+//  //DiagonalCross
+//}
 
 
 /**
