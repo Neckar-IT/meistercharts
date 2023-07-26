@@ -181,6 +181,8 @@ public object Libs {
 
     public const val ktor_server_metrics: String = "io.ktor:ktor-server-metrics:_"
 
+  public const val ktor_server_conditional_headers: String = "io.ktor:ktor-server-conditional-headers:_"
+
     public const val ktor_server_netty: String = "io.ktor:ktor-server-netty:_"
 
     public const val ktor_server_test_host: String = "io.ktor:ktor-server-test-host:_"
