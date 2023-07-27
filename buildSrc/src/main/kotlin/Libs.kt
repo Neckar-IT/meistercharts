@@ -175,13 +175,14 @@ public object Libs {
 
     public const val ktor_server_auth_jwt: String = "io.ktor:ktor-server-auth-jwt:_"
 
+    public const val ktor_server_conditional_headers: String =
+            "io.ktor:ktor-server-conditional-headers:_"
+
     public const val ktor_server_core: String = "io.ktor:ktor-server-core:_"
 
     public const val ktor_server_locations: String = "io.ktor:ktor-server-locations:_"
 
     public const val ktor_server_metrics: String = "io.ktor:ktor-server-metrics:_"
-
-  public const val ktor_server_conditional_headers: String = "io.ktor:ktor-server-conditional-headers:_"
 
     public const val ktor_server_netty: String = "io.ktor:ktor-server-netty:_"
 
