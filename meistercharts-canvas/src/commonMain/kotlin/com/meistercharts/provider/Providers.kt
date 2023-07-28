@@ -20,7 +20,7 @@ import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.Limit
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.model.Insets
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.SizedProvider

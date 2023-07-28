@@ -39,6 +39,8 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.parseCssFontFamily
+import com.meistercharts.canvas.parseCssFontStyle
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.color.Color
@@ -61,8 +63,6 @@ import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.unit.other.px
-import parseCssFontFamily
-import parseCssFontStyle
 
 /**
  * Contains conversion related methods
@@ -71,7 +71,7 @@ import parseCssFontStyle
 /**
  * Converts this JavaScript [Size] object into a model Size object
  */
-fun Size.toModelSize(): com.meistercharts.model.Size {
+fun Size.toModelSize(): it.neckar.geometry.Size {
   require(width != null) {
     "no width provided"
   }
@@ -81,7 +81,7 @@ fun Size.toModelSize(): com.meistercharts.model.Size {
 
   width?.let { width ->
     height?.let { height ->
-      return com.meistercharts.model.Size(width, height)
+      return it.neckar.geometry.Size(width, height)
     } ?: throw IllegalArgumentException("No height provided")
 
   } ?: throw IllegalArgumentException("No width provided")
@@ -90,7 +90,7 @@ fun Size.toModelSize(): com.meistercharts.model.Size {
 /**
  * Returns an empty list, if the array is empty
  */
-fun Array<Size>.toModelSizes(): List<com.meistercharts.model.Size> {
+fun Array<Size>.toModelSizes(): List<it.neckar.geometry.Size> {
   if (this.isEmpty()) {
     return emptyList()
   }
@@ -100,7 +100,7 @@ fun Array<Size>.toModelSizes(): List<com.meistercharts.model.Size> {
   }
 }
 
-fun com.meistercharts.model.Size.toJs(): Size = object : Size {
+fun it.neckar.geometry.Size.toJs(): Size = object : Size {
   override val width: Double = this@toJs.width.sanitize()
   override val height: Double = this@toJs.height.sanitize()
 }
@@ -198,12 +198,12 @@ fun PointConnectionStyle.toModel(): Dashes? {
   }
 }
 
-fun Side.toModel(): com.meistercharts.model.Side {
+fun Side.toModel(): it.neckar.geometry.Side {
   return when (this.sanitize()) {
-    Side.Left -> com.meistercharts.model.Side.Left
-    Side.Right -> com.meistercharts.model.Side.Right
-    Side.Top -> com.meistercharts.model.Side.Top
-    Side.Bottom -> com.meistercharts.model.Side.Bottom
+    Side.Left -> it.neckar.geometry.Side.Left
+    Side.Right -> it.neckar.geometry.Side.Right
+    Side.Top -> it.neckar.geometry.Side.Top
+    Side.Bottom -> it.neckar.geometry.Side.Bottom
   }
 }
 
@@ -336,7 +336,7 @@ private fun com.meistercharts.algorithms.layers.AxisStyle.applyAxisStyle(jsStyle
   }
 
   //debug code: uncomment the following lines to check whether the custom element sets all relevant properties
-  //this.side = com.meistercharts.model.Side.Bottom
+  //this.side = it.neckar.geometry.Side.Bottom
   //this.tickLabelGap = 30.0
   //this.tickLength = 30.0
   //this.lineColor = Color.red
@@ -512,9 +512,9 @@ fun CategoryAxisLabelPainter.setMinTickLabelDistance(distance: @px Double) {
 
 fun CategoryAxisLabelPainter.setImageSize(imageSize: @px Double) {
   if (this is DefaultCategoryAxisLabelPainter) {
-    this.style.imageSize = com.meistercharts.model.Size(imageSize, imageSize)
+    this.style.imageSize = it.neckar.geometry.Size(imageSize, imageSize)
   } else if (this is GreedyCategoryAxisLabelPainter) {
-    this.style.imageSize = com.meistercharts.model.Size(imageSize, imageSize)
+    this.style.imageSize = it.neckar.geometry.Size(imageSize, imageSize)
   }
 }
 

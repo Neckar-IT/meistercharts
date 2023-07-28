@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
-import com.meistercharts.model.PolarCoordinates
+import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI

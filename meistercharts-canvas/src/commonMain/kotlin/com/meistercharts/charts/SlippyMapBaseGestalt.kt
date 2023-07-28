@@ -16,7 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
 import com.meistercharts.maps.SlippyMapCenter
 import com.meistercharts.maps.calculateSlippyMapContentAreaSize

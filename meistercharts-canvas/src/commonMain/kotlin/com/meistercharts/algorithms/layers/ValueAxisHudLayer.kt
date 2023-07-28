@@ -33,10 +33,10 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow

@@ -20,8 +20,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
 import it.neckar.open.formatting.decimalFormat2digits
 import it.neckar.open.formatting.percentageFormat2digits
 import com.meistercharts.style.BoxStyle

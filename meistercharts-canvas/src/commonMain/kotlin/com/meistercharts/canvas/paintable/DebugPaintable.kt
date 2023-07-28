@@ -18,7 +18,7 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintMark
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 
 /**
  * A paintable that can be used to diagnose paintables

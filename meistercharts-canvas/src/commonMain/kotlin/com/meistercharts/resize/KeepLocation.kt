@@ -19,7 +19,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationSupport
 

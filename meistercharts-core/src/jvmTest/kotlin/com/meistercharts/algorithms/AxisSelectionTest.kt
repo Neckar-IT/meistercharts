@@ -17,7 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import org.junit.jupiter.api.Test
 
 /**

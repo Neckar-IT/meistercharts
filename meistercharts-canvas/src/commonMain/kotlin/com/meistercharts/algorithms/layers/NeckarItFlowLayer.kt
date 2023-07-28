@@ -19,7 +19,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.design.neckarit.NeckarItFlowPaintable
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 

@@ -19,8 +19,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.style.Palette.getChartColor
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug

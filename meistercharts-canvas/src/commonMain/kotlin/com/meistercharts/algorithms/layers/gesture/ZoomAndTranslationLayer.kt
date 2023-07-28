@@ -22,7 +22,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -33,9 +33,9 @@ import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
 import com.meistercharts.events.MouseDoubleClickAction
-import com.meistercharts.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDoubleClickEvent
 import com.meistercharts.events.MouseWheelAction
-import com.meistercharts.events.MouseWheelEvent
+import it.neckar.events.MouseWheelEvent
 import com.meistercharts.events.TouchDoubleTapAction
 import com.meistercharts.events.TouchPanAction
 import com.meistercharts.events.TouchPinchAction
@@ -43,9 +43,9 @@ import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.zoom.ZoomAndTranslationSupport
 
 /**

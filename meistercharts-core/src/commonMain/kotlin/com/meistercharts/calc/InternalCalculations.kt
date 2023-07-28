@@ -15,7 +15,7 @@
  */
 package com.meistercharts.calc
 
-import com.meistercharts.axis.AxisInversionInformation
+import it.neckar.geometry.AxisInversionInformation
 import com.meistercharts.tile.MainIndex
 import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileCoordinates
@@ -26,8 +26,8 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import kotlin.math.floor

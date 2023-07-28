@@ -22,11 +22,11 @@ import com.meistercharts.algorithms.painter.PathActions
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 import kotlin.math.min

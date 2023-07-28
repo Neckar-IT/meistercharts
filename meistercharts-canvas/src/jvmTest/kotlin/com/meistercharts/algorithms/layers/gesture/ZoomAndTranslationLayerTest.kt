@@ -18,12 +18,12 @@ package com.meistercharts.algorithms.layers.gesture
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationSupport
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
-import com.meistercharts.events.ModifierCombination
+import it.neckar.events.ModifierCombination
 import org.junit.jupiter.api.Test
 
 /**

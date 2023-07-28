@@ -16,8 +16,8 @@
 package com.meistercharts.resources
 
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Size
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 

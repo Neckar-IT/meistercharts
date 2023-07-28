@@ -23,8 +23,8 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.text.CanvasStringShortener
@@ -40,10 +40,10 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.strokeRoundedRect
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Size
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Size
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
 import com.meistercharts.state.withContentAreaSize

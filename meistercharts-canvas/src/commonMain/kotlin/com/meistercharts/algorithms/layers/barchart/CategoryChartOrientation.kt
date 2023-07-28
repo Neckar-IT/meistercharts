@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layout.LayoutDirection
 
 /**

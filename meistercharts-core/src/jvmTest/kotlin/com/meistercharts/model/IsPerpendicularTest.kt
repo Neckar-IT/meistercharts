@@ -17,8 +17,8 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.isPerpendicularToLineSegment
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.isPerpendicularToLineSegment
 import org.junit.jupiter.api.Test
 import kotlin.math.sqrt
 

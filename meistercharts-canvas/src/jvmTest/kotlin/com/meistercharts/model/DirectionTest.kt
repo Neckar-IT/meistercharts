@@ -17,6 +17,7 @@ package com.meistercharts.model
 
 import assertk.assertThat
 import assertk.assertions.isSameAs
+import it.neckar.geometry.Direction
 import org.junit.jupiter.api.Test
 
 /**

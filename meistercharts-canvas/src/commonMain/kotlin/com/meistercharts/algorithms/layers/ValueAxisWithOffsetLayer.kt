@@ -25,8 +25,8 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange

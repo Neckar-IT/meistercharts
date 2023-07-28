@@ -16,7 +16,7 @@
 package com.meistercharts.whatsat
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * Contains information about stuff that is currently at a given location

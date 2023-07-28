@@ -28,9 +28,9 @@ import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseEventBroker
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Rectangle
 import it.neckar.open.observable.clear
 import it.neckar.open.unit.other.px
 

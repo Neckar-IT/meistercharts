@@ -16,10 +16,17 @@
 package com.meistercharts.events
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.px

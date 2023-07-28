@@ -18,9 +18,9 @@ package com.meistercharts.resources.svg
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.mock.MockLayerPaintingContext
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import com.meistercharts.resources.Icons
 import org.junit.jupiter.api.Test
 

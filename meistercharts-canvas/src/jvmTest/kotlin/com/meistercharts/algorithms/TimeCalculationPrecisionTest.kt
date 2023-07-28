@@ -23,7 +23,7 @@ import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.calc.TileChartCalculator
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.time.TimeRange
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.floor

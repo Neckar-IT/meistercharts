@@ -15,6 +15,14 @@
  */
 package com.meistercharts.events
 
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
+
 /**
  * Listens for key events
  *

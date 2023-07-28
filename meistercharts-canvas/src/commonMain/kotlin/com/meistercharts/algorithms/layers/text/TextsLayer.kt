@@ -22,9 +22,9 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Direction.BottomRight
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Direction.BottomRight
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.SizedProvider

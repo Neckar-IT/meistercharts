@@ -18,14 +18,14 @@ package com.meistercharts.canvas.events
 import com.meistercharts.canvas.ChartSupport
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.MouseClickEvent
-import com.meistercharts.events.MouseDoubleClickEvent
-import com.meistercharts.events.MouseDownEvent
-import com.meistercharts.events.MouseDragEvent
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
 import com.meistercharts.events.MouseEventHandler
-import com.meistercharts.events.MouseMoveEvent
-import com.meistercharts.events.MouseUpEvent
-import com.meistercharts.events.MouseWheelEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
 
 /**
  * Event handler for mouse events from a canvas

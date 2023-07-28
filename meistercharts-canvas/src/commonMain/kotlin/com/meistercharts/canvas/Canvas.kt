@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.components.NativeComponentsSupport
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.dispose.Disposable
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker

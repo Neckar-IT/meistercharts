@@ -19,7 +19,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
 import it.neckar.open.formatting.CachedNumberFormat

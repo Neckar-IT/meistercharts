@@ -32,7 +32,7 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
 import com.meistercharts.color.Color
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.provider.LabelsProvider
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider1

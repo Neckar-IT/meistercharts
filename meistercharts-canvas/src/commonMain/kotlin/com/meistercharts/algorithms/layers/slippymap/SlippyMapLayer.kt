@@ -32,14 +32,14 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.charts.ChartId
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.maps.calculateSlippyMapTileSize
 import com.meistercharts.maps.computeLatitude
 import com.meistercharts.maps.computeLongitude
 import com.meistercharts.maps.ensureSlippyMapBounds
 import com.meistercharts.maps.toSlippyMapZoom
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.deg
 import it.neckar.open.unit.other.px

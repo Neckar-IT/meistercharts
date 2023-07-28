@@ -16,7 +16,7 @@
 package com.meistercharts.tile
 
 import com.meistercharts.annotations.Tile
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * Contains a tile index to identify the tile and coordinates relative to the tile origin

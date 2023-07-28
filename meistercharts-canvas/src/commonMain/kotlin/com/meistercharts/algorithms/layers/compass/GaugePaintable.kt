@@ -21,9 +21,9 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.AbstractResizablePaintable
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.RotationDirection
-import com.meistercharts.model.Size
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.RotationDirection
+import it.neckar.geometry.Size
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
 import it.neckar.open.provider.DoubleProvider

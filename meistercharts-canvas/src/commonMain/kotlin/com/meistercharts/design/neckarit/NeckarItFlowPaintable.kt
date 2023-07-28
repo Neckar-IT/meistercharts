@@ -22,9 +22,9 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.path
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.px
 
 /**

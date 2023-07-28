@@ -21,11 +21,11 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.tooltipSupport
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
-import com.meistercharts.geometry.with
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
+import it.neckar.geometry.with
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.unit.si.ms
 

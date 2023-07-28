@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.other.Exclusive
 

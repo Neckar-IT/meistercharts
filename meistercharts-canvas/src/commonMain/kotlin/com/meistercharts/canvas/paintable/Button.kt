@@ -23,9 +23,9 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.paintable.ButtonState.Companion.disabled
 import com.meistercharts.design.Theme
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject

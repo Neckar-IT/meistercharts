@@ -51,8 +51,8 @@ import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1

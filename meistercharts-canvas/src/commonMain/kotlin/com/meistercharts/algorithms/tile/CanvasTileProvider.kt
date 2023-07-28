@@ -24,7 +24,7 @@ import com.meistercharts.canvas.CanvasFactory
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.Image
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.annotations.Slow
 import it.neckar.open.unit.si.ms

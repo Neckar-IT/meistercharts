@@ -20,7 +20,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.provider.DoublesProvider

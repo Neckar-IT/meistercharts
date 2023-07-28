@@ -17,10 +17,10 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

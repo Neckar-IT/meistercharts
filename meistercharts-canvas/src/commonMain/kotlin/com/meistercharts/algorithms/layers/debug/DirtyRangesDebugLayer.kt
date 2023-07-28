@@ -26,7 +26,7 @@ import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 

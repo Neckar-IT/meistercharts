@@ -19,10 +19,10 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Anchoring
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px

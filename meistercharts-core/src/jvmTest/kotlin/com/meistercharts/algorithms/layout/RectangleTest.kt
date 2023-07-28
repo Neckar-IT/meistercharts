@@ -17,10 +17,10 @@ package com.meistercharts.algorithms.layout
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.toRadians
 import org.junit.jupiter.api.Test
 

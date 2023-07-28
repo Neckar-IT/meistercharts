@@ -20,8 +20,8 @@ import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.environment
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex

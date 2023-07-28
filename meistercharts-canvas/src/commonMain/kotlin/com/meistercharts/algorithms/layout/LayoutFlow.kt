@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layout
 
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 
 /**
  * Describes the direction in which elements are laid out

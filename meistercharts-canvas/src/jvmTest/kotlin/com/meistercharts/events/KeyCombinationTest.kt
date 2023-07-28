@@ -17,9 +17,9 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.ModifierCombination
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyStroke
+import it.neckar.events.ModifierCombination
 import org.junit.jupiter.api.Test
 
 /**

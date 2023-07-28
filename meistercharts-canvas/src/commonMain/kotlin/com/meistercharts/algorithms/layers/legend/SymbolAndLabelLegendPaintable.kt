@@ -30,10 +30,10 @@ import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.canvas.saved
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.MultiProvider

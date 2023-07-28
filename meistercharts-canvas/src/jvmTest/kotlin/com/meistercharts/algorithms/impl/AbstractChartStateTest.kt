@@ -20,12 +20,12 @@ import assertk.assertions.*
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationSupport
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.withContentAreaSize
 import com.meistercharts.state.withTranslation
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import org.junit.jupiter.api.Test

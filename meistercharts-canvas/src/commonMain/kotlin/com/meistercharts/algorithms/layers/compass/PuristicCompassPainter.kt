@@ -27,9 +27,9 @@ import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.design.corporateDesign
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.model.PolarCoordinates
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.CachedNumberFormat

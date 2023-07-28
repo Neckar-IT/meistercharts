@@ -25,7 +25,7 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
 import com.meistercharts.label.LayoutedLabel
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
 import it.neckar.open.collections.fastForEach
 import com.meistercharts.style.BoxStyle

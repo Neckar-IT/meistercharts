@@ -20,7 +20,7 @@ import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.color.Color
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import com.meistercharts.style.Shadow
 import it.neckar.open.unit.other.px
 

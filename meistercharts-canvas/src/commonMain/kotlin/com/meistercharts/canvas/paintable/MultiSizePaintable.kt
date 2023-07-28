@@ -16,7 +16,7 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 
 /**
  * A paintable with multiple paintables

@@ -17,7 +17,7 @@ package com.meistercharts.label
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import it.neckar.open.unit.other.px
 
 /**

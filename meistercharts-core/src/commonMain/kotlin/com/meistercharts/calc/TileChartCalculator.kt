@@ -23,8 +23,8 @@ import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.TileRelative
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Size
 import com.meistercharts.state.ChartState
 import com.meistercharts.time.TimeRange
 import it.neckar.open.unit.other.px

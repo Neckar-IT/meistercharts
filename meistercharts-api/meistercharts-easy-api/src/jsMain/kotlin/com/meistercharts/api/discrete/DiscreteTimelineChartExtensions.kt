@@ -17,7 +17,7 @@ package com.meistercharts.api.discrete
 
 import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider

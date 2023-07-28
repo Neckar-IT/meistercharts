@@ -25,7 +25,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketDescriptor.Companion.MaxSupportedDescriptorsCount
 import com.meistercharts.history.InMemoryHistoryStorage
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.unit.si.ms
 import kotlin.math.max

@@ -27,9 +27,9 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.unit.other.px
 

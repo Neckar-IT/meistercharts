@@ -16,7 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.zoom.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterchartBuilder

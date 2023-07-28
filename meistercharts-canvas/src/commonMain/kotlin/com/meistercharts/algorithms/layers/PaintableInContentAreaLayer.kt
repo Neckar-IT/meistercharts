@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 
 /**
  * Paints a paintable in the content area

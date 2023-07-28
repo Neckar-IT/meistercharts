@@ -27,8 +27,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.charts.ChartId
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Test

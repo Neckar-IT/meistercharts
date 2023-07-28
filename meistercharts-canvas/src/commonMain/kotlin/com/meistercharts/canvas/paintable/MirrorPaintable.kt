@@ -15,9 +15,9 @@
  */
 package com.meistercharts.canvas.paintable
 
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 
 /**
  * Paints a paintable mirrored

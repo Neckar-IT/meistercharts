@@ -24,10 +24,10 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.provider.asSizedProvider

@@ -23,10 +23,10 @@ import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Orientation
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.provider.asMultiProvider
 import it.neckar.open.provider.asSizedProvider

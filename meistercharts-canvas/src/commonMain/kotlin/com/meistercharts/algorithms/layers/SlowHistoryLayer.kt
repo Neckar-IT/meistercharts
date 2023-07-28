@@ -24,7 +24,7 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.range.ValueRange
 import com.meistercharts.time.TimeRange
 import it.neckar.open.unit.other.ID

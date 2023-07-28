@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import com.meistercharts.geometry.RightTriangleType
+import it.neckar.geometry.RightTriangleType
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 

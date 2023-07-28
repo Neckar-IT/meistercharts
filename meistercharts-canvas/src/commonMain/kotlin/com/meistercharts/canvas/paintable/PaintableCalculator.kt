@@ -20,7 +20,7 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.PaintableArea
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import com.meistercharts.state.ChartState
 
 /**

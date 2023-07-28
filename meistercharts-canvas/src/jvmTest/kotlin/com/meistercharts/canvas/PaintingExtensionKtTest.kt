@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.model.HorizontalAlignment
+import it.neckar.geometry.HorizontalAlignment
 import org.junit.jupiter.api.Test
 
 /**

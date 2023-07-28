@@ -26,7 +26,7 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.charts.bullet.CategoryModelBulletChart
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProviderWithIndexMapping

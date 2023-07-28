@@ -16,8 +16,8 @@
 package com.meistercharts.charts
 
 import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.model.Orientation
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.zoom.delegate
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
@@ -40,7 +40,7 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.canvas.paintable.ZoomButtons
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject

@@ -15,7 +15,10 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.events.EventConsumption
+import it.neckar.events.TouchCancelEvent
+import it.neckar.events.TouchEndEvent
+import it.neckar.events.TouchMoveEvent
+import it.neckar.events.TouchStartEvent
 
 /**
  * Offers a way to register listeners for [TouchEvent]s

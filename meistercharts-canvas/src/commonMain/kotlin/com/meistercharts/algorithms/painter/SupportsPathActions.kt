@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.painter
 import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
 

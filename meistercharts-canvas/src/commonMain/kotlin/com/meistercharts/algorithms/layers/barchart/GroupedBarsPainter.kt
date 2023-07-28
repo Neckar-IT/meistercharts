@@ -25,8 +25,8 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Snapped
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.text.CanvasStringShortener
@@ -42,10 +42,10 @@ import com.meistercharts.canvas.snapPhysicalTranslation
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.VerticalAlignment
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.SeriesIndex

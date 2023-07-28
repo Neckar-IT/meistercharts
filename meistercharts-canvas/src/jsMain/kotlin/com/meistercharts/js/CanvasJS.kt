@@ -20,18 +20,21 @@ import com.meistercharts.canvas.AbstractCanvas
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
 import com.meistercharts.canvas.Image
+import com.meistercharts.canvas.noFocusBorder
+import com.meistercharts.canvas.toCss
+import com.meistercharts.canvas.unselectable
 import com.meistercharts.environment
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.MouseClickEvent
-import com.meistercharts.events.MouseDoubleClickEvent
-import com.meistercharts.events.MouseDownEvent
-import com.meistercharts.events.MouseDragEvent
-import com.meistercharts.events.MouseMoveEvent
-import com.meistercharts.events.MouseUpEvent
-import com.meistercharts.events.MouseWheelEvent
-import com.meistercharts.geometry.Coordinates
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
+import it.neckar.geometry.Coordinates
 import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import convertCancel
 import convertDown
 import convertEnd
@@ -55,7 +58,7 @@ import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.px
 import kotlinx.browser.document
-import noFocusBorder
+
 import offset
 import org.w3c.dom.AddEventListenerOptions
 import org.w3c.dom.HTMLCanvasElement
@@ -66,8 +69,6 @@ import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
 import org.w3c.dom.pointerevents.PointerEvent
 import timeStampAsDoubleWorkaround
-import toCss
-import unselectable
 
 /**
  * Provides an HTML5 canvas

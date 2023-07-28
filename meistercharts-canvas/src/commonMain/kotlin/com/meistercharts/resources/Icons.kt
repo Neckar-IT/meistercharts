@@ -17,8 +17,8 @@ package com.meistercharts.resources
 
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.resources.svg.SvgPaintableProviders
 
 /**

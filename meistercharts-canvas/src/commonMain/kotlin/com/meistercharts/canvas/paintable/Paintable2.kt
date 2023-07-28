@@ -17,7 +17,7 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.number.MayBeZero
 

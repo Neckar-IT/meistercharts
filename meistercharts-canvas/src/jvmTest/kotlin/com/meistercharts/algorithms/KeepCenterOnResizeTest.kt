@@ -19,9 +19,9 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.resize.KeepCenterOnWindowResize
 import com.meistercharts.resize.WindowResizeEvent
 import com.meistercharts.zoom.UpdateReason

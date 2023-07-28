@@ -17,8 +17,8 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.axis.AxisSelection
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Distance
 import it.neckar.open.kotlin.lang.sqrt
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test

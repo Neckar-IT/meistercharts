@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.formatting.percentageFormat2digits
 
 /**

@@ -23,7 +23,7 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import it.neckar.open.provider.CoordinatesProvider1
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoubleProvider1

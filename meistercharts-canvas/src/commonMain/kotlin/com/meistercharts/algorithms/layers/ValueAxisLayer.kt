@@ -22,9 +22,9 @@ import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.LinearValueRange

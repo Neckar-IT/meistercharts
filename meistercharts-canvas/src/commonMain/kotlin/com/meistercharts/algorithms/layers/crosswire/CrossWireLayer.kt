@@ -32,8 +32,8 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.provider.LabelsProvider
 import it.neckar.open.provider.DoublesProvider1

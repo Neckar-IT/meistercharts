@@ -19,10 +19,10 @@ import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
-import com.meistercharts.geometry.asDistance
+import it.neckar.geometry.asDistance
 import it.neckar.open.unit.other.pct
 import kotlin.reflect.KProperty0
 

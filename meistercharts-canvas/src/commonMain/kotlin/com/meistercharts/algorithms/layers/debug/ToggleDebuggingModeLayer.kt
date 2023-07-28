@@ -24,10 +24,10 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.ModifierCombination
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyStroke
+import it.neckar.events.ModifierCombination
 import it.neckar.open.kotlin.lang.toggle
 
 /**

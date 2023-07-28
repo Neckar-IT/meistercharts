@@ -22,8 +22,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.paintMark
-import com.meistercharts.model.Orientation
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Rectangle
 
 /**
  * Paints a category consisting of one or more series.

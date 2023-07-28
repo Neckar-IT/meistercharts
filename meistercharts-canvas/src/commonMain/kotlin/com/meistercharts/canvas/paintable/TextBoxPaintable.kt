@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 

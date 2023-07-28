@@ -22,8 +22,10 @@ import org.w3c.dom.Element
 
 /**
  * Removes the element from its parent.
- * This method is IE11 compatible and should be used instead of [Element.remove]
+ * Old workaround method - no longer required
  */
-fun Element.removeFromParent() {
-  parentNode?.removeChild(this)
+@Deprecated("Workaround no longer required", ReplaceWith("this.remove()"))
+inline fun Element.removeFromParent() {
+  this.remove()
+  //parentNode?.removeChild(this) //old implementation that has been used to work around IE11 issue
 }

@@ -25,13 +25,13 @@ import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.saved
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.ModifierCombination
+import com.meistercharts.canvas.size
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyStroke
+import it.neckar.events.ModifierCombination
 import com.meistercharts.js.FontMetricsCacheJS
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.unit.other.px
-import size
 
 /**
  * This layer paints the canvas of the [com.meistercharts.js.FontMetricsCacheJS]

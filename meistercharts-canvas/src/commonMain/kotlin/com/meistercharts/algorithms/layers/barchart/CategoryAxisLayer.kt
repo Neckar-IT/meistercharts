@@ -31,8 +31,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
 import com.meistercharts.provider.SizedLabelsProvider
 import it.neckar.open.provider.MultiProvider
 

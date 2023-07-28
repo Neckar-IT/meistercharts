@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.algorithms.layers.PaintingProperties
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.cache.GlobalCacheSupport
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.ZoomLevelCalculator
@@ -31,10 +31,10 @@ import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.loop.RenderLoopListener
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.resize.KeepCenterOnWindowResize
 import com.meistercharts.resize.WindowResizeBehavior
 import com.meistercharts.service.ServiceRegistry

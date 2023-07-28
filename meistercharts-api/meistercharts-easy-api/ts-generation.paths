@@ -1,6 +1,7 @@
+../../../commons/geometry/src/commonMain/kotlin/it/neckar/geometry/Orientation.kt
+
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/layout/LayoutDirection.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/layers/barchart/CategoryChartOrientation.kt
-../../meistercharts-core/src/commonMain/kotlin/com/meistercharts/model/Orientation.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/layers/linechart/PointStyle.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/painter/stripe/enums/EnumAggregationMode.kt
 ../../meistercharts-canvas/src/commonMain/kotlin/com/meistercharts/algorithms/painter/stripe/refentry/DiscreteEntryAggregationMode.kt

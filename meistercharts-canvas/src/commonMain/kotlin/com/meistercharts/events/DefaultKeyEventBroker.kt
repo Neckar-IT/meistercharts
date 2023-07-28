@@ -18,6 +18,9 @@ package com.meistercharts.events
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyTypeEvent
+import it.neckar.events.KeyUpEvent
 
 /**
  * Handles key events. Offers a way to register listeners and call them on key events

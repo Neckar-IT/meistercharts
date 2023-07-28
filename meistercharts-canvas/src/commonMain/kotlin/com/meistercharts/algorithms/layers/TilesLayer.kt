@@ -29,9 +29,9 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.clipToContentViewport
 import com.meistercharts.canvas.saved
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.maps.MapCoordinates
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.whatsat.ResultElementType
 import com.meistercharts.whatsat.WhatsAtResultElement

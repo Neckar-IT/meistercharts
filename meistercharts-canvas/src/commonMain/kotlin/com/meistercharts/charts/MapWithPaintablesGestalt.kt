@@ -34,9 +34,9 @@ import com.meistercharts.canvas.saved
 import com.meistercharts.maps.Latitude
 import com.meistercharts.maps.Longitude
 import com.meistercharts.maps.SlippyMapCenter
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.range.ValueRange
 import com.meistercharts.style.Palette

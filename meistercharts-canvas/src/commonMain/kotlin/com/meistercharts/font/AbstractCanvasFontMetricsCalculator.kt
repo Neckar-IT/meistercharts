@@ -17,7 +17,7 @@ package com.meistercharts.font
 
 import com.meistercharts.canvas.Canvas
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.unit.other.Normalized
 import it.neckar.open.unit.other.Scaled
 import it.neckar.open.unit.other.px

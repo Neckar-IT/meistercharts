@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.design.Theme
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * Fills the canvas with a background color

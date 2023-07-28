@@ -27,14 +27,14 @@ import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.MouseMoveEvent
-import com.meistercharts.events.TouchStartEvent
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyStroke
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.TouchStartEvent
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Orientation
 
 /**
  * Handles the events for the tooltip interactions

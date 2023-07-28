@@ -15,15 +15,14 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.PointerCancelEvent
-import com.meistercharts.events.PointerDownEvent
-import com.meistercharts.events.PointerEnterEvent
-import com.meistercharts.events.PointerLeaveEvent
-import com.meistercharts.events.PointerMoveEvent
-import com.meistercharts.events.PointerOutEvent
-import com.meistercharts.events.PointerOverEvent
-import com.meistercharts.events.PointerUpEvent
+import it.neckar.events.PointerCancelEvent
+import it.neckar.events.PointerDownEvent
+import it.neckar.events.PointerEnterEvent
+import it.neckar.events.PointerLeaveEvent
+import it.neckar.events.PointerMoveEvent
+import it.neckar.events.PointerOutEvent
+import it.neckar.events.PointerOverEvent
+import it.neckar.events.PointerUpEvent
 
 /**
  * Offers a way to register listeners for pointer events

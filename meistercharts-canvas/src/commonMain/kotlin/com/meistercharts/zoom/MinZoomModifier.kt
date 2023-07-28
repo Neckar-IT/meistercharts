@@ -16,9 +16,8 @@
 package com.meistercharts.zoom
 
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.provider.DoubleProvider
 

@@ -20,8 +20,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.devicePixelRatio
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import it.neckar.open.time.nowMillis
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat

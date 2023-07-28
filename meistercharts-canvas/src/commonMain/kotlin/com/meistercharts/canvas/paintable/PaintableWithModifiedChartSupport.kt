@@ -15,14 +15,14 @@
  */
 package com.meistercharts.canvas.paintable
 
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.withCurrentChartState
 import com.meistercharts.state.withAxisOrientation
 import com.meistercharts.state.withZoom
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.ChartState
 

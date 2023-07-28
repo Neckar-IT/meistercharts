@@ -22,12 +22,12 @@ import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.Insets
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.ModifierCombination
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyStroke
+import it.neckar.events.ModifierCombination
 import com.meistercharts.version.MeisterChartsVersion
 
 /**

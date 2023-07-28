@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.events.ImageLoadedEventBroker
 import com.meistercharts.js.MeisterChartClasses
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.http.Url

@@ -24,8 +24,8 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.i18n.I18nConfiguration

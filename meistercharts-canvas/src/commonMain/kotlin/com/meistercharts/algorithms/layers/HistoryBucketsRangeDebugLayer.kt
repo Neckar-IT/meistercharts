@@ -23,7 +23,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.dateTimeFormatWithMillis
 import it.neckar.open.formatting.intFormat

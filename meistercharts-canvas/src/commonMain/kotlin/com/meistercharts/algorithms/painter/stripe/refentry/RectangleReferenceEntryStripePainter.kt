@@ -31,7 +31,7 @@ import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms

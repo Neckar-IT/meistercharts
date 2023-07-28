@@ -15,8 +15,8 @@
  */
 package com.meistercharts.canvas.geometry
 
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
 import it.neckar.open.collections.maxOrElse
 import it.neckar.open.collections.minOrElse
 import kotlin.math.abs

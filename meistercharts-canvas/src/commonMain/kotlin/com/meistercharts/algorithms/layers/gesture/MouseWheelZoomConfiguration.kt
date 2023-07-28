@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.axis.AxisSelection
-import com.meistercharts.events.ModifierCombination
+import it.neckar.geometry.AxisSelection
+import it.neckar.events.ModifierCombination
 
 /**
  * Configuration for the mouse wheel zoom

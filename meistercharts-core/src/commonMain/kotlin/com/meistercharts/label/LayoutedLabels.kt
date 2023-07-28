@@ -17,7 +17,7 @@ package com.meistercharts.label
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.other.px
 

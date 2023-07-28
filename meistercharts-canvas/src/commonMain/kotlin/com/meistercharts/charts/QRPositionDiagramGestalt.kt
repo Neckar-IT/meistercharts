@@ -16,7 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.range.ValueRange
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ContentAreaLayer
 import com.meistercharts.algorithms.layers.DomainAxisMarkersLayer
@@ -35,10 +35,10 @@ import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
-import com.meistercharts.model.Size
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1

@@ -25,9 +25,9 @@ import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 import it.neckar.open.unit.other.pct

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.maps
 
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.provider.CoordinatesProvider
 
 

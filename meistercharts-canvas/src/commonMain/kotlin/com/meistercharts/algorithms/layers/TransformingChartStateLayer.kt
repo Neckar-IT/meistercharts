@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.state.withAdditionalTranslation
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.state.ChartState
 import it.neckar.open.provider.DoubleProvider
 

@@ -22,11 +22,11 @@ import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
 import com.meistercharts.style.BoxStyle

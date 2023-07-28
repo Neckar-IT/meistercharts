@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import it.neckar.open.http.Url
 
 /**

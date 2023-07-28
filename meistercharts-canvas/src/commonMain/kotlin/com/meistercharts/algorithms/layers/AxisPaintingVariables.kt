@@ -18,8 +18,8 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.font.FontMetrics
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px

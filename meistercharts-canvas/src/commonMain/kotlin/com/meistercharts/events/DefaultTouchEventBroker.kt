@@ -15,11 +15,10 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.events.TouchCancelEvent
-import com.meistercharts.events.TouchEndEvent
-import com.meistercharts.events.TouchEventBroker
-import com.meistercharts.events.TouchMoveEvent
-import com.meistercharts.events.TouchStartEvent
+import it.neckar.events.TouchCancelEvent
+import it.neckar.events.TouchEndEvent
+import it.neckar.events.TouchMoveEvent
+import it.neckar.events.TouchStartEvent
 import it.neckar.open.kotlin.lang.consumeUntil
 
 /**
