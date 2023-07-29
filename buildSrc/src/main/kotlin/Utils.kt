@@ -521,3 +521,13 @@ val Project.meisterchartsVersion: String
   get() {
     return rootProject.extra.get("meisterchartsVersion") as? String ?: throw IllegalStateException("Could not find meisterchartsVersion in extra")
   }
+
+/**
+ * Replaces unsafe characters that must not be used in docker tags
+ */
+fun String.safeForDockerTag(): String {
+  return replace('/', '_')
+    .replace(':', '_')
+    .replace('.', '_')
+    .replace(' ', '_')
+}
