@@ -9,15 +9,19 @@ import java.io.File
 /**
  * Path to jib-cli
  */
+@Deprecated("use JibCliPlugin instead")
 val Project.jibCli: File
   get() {
-    when {
+    val jibCliDir = File(tools, "jib-cli/jib-0.12.0")
+    val jibCliBinDir = File(jibCliDir, "bin").also { require(it.isDirectory) { "jib-cli bin directory <${it.absolutePath}> does not exist or is not a directory" } }
+
+    return when {
       SystemUtils.IS_OS_LINUX -> {
-        return rootProject.file("tools/jib-cli/jib-0.12.0/bin/jib")
+        File(jibCliBinDir, "jib").also { require(it.isFile) { "jib-cli binary <${it.absolutePath}> does not exist or is not a file" } }
       }
 
       SystemUtils.IS_OS_WINDOWS -> {
-        return rootProject.file("tools/jib-cli/jib-0.12.0/bin/jib.bat")
+        File(jibCliBinDir, "jib.bat").also { require(it.isFile) { "jib-cli binary <${it.absolutePath}> does not exist or is not a file" } }
       }
 
       else -> {
@@ -26,5 +30,19 @@ val Project.jibCli: File
     }
   }
 
+@Deprecated("Use the installed docker compose", level = DeprecationLevel.ERROR)
+val Project.dockerCompose: File
+  get() {
+    throw UnsupportedOperationException("Use the installed docker compose")
+  }
 
+/**
+ * Returns the tools folder
+ */
+val Project.tools: File
+  get() {
+    return rootProject.file("tools").also {
+      require(it.isDirectory) { "tools directory <${it.absolutePath}> does not exist or is not a directory" }
+    }
+  }
 

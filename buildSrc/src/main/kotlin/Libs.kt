@@ -282,8 +282,14 @@ public object Libs {
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
 
+    public const val gfm_plugin: String = "org.jetbrains.dokka:gfm-plugin:_"
+
     public const val gfm_template_processing_plugin: String =
             "org.jetbrains.dokka:gfm-template-processing-plugin:_"
+
+    public const val javadoc_plugin: String = "org.jetbrains.dokka:javadoc-plugin:_"
+
+    public const val jekyll_plugin: String = "org.jetbrains.dokka:jekyll-plugin:_"
 
     public const val jekyll_template_processing_plugin: String =
             "org.jetbrains.dokka:jekyll-template-processing-plugin:_"
@@ -346,15 +352,6 @@ public object Libs {
 
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
             "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"
-
-    public const val kotlin_deeplearning_onnx: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-onnx:_"
-
-    public const val kotlin_deeplearning_tensorflow: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:_"
-
-    public const val kotlin_deeplearning_visualization: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-visualization:_"
 
     public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
 
