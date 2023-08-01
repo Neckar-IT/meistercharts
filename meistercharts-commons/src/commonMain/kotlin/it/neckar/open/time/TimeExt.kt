@@ -25,3 +25,11 @@ fun Double.nanos2millis(): @ms Double {
   return this / 1_000_000.0
 }
 
+
+/**
+ * Formats a double value (in milliseconds) as UTC string.
+ * This method must only be used for debugging purposes.
+ *
+ * Use the `it.neckar.open.formatting.DateTimeFormatKt#formatUtc` method from the project `i18n` if possible.
+ */
+expect fun @ms Double.formatUtcForDebug(): String

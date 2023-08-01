@@ -44,10 +44,10 @@ class DownSamplingSimpleDecimalsTest {
     val childDescriptor1 = downSampledDescriptor.children()[1]
 
 
-    assertThat(childDescriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000")
-    assertThat(childDescriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000")
-    assertThat(childDescriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:01:00.000")
-    assertThat(childDescriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:02:00.000")
+    assertThat(childDescriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000Z")
+    assertThat(childDescriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000Z")
+    assertThat(childDescriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:01:00.000Z")
+    assertThat(childDescriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:02:00.000Z")
 
     val bucket0 = historyConfiguration.chunk {
       addDecimalValuesWithMinMax(timestamp = childDescriptor0.start, decimalValues = doubleArrayOf(10.0), minValues = doubleArrayOf(7.0), maxValues = doubleArrayOf(12.0))
@@ -64,17 +64,17 @@ class DownSamplingSimpleDecimalsTest {
 
     val downSampled = downSampledDescriptor.calculateDownSampled(listOf(bucket0, bucket1))
 
-    assertThat(downSampled.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000")
-    assertThat(downSampled.end.formatUtc()).isEqualTo("2020-05-21T15:10:00.000")
+    assertThat(downSampled.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000Z")
+    assertThat(downSampled.end.formatUtc()).isEqualTo("2020-05-21T15:10:00.000Z")
 
     //println(downSampled.chunk.dump())
 
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2020-05-21T15:00:00.500")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2020-05-21T15:00:00.500Z")
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo((10.0 + 20.0) / 2.0)
     assertThat(downSampled.chunk.getMin(DecimalDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(7.0)
     assertThat(downSampled.chunk.getMax(DecimalDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(21.0)
 
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(60)).formatUtc()).isEqualTo("2020-05-21T15:01:00.500")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(60)).formatUtc()).isEqualTo("2020-05-21T15:01:00.500Z")
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex.zero, TimestampIndex(60))).isEqualTo((9.5 + 20.5) / 2.0)
     assertThat(downSampled.chunk.getMin(DecimalDataSeriesIndex.zero, TimestampIndex(60))).isEqualTo(6.5)
     assertThat(downSampled.chunk.getMax(DecimalDataSeriesIndex.zero, TimestampIndex(60))).isEqualTo(21.5)

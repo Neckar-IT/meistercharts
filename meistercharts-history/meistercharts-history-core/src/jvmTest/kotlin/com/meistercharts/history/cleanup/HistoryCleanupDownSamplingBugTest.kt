@@ -50,7 +50,7 @@ class HistoryCleanupDownSamplingBugTest {
 
 
     val firstDescriptorStart = VirtualTime.defaultNow.also {
-      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002")
+      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 
     val samplingPeriod = SamplingPeriod.EveryHundredMillis
@@ -73,7 +73,7 @@ class HistoryCleanupDownSamplingBugTest {
 
     //End of the last descriptor
     val lastDescriptorEnd = descriptor.end.also {
-      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:56:00.000")
+      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:56:00.000Z")
     }
 
     //There should be 10 buckets
@@ -104,8 +104,8 @@ class HistoryCleanupDownSamplingBugTest {
       val first = it.first()
 
       assertThat(first.bucketRange).isEqualTo(HistoryBucketRange.OneMinute)
-      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:45:00.000")
-      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:46:00.000")
+      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:45:00.000Z")
+      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:46:00.000Z")
     }
 
 
@@ -117,27 +117,27 @@ class HistoryCleanupDownSamplingBugTest {
       assertThat(first.bucketRange).isEqualTo(HistoryBucketRange.TenMinutes)
       assertThat(first.samplingPeriod).isEqualTo(SamplingPeriod.EverySecond)
 
-      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:40:00.000")
-      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:50:00.000")
+      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:40:00.000Z")
+      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z")
 
-      assertThat(last.start.formatUtc()).isEqualTo("2021-03-27T21:50:00.000")
-      assertThat(last.end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000")
+      assertThat(last.start.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z")
+      assertThat(last.end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000Z")
 
       assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0))).isNaN()
 
-      assertThat(first.chunk.timeStamps[0].formatUtc()).isEqualTo("2021-03-27T21:40:00.500")
-      assertThat(first.chunk.timeStamps[1].formatUtc()).isEqualTo("2021-03-27T21:40:01.500")
+      assertThat(first.chunk.timeStamps[0].formatUtc()).isEqualTo("2021-03-27T21:40:00.500Z")
+      assertThat(first.chunk.timeStamps[1].formatUtc()).isEqualTo("2021-03-27T21:40:01.500Z")
 
       (5 * 60 + 22).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:22.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:22.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-89.5969, 0.0001)
       }
       (5 * 60 + 23).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:23.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:23.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-77.241431, 0.00001)
       }
       (5 * 60 + 24).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:24.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:24.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(6.129487, 0.00001)
       }
     }
@@ -153,7 +153,7 @@ class HistoryCleanupDownSamplingBugTest {
     cleanupService.cleanup(historyStorage, historyBucketRange, 1).let {
       assertThat(it.deletedDescriptors).hasSize(9)
     }
-    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:54:00.000")
+    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:54:00.000Z")
 
     //Just one bucket is remaining
     assertThat(historyStorage.query(firstDescriptorStart, lastDescriptorEnd, samplingPeriod)).hasSize(1)
@@ -168,20 +168,20 @@ class HistoryCleanupDownSamplingBugTest {
       val first = it.first()
 
       assertThat(first.bucketRange).isEqualTo(HistoryBucketRange.OneMinute)
-      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:54:00.000")
-      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:55:00.000")
+      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:54:00.000Z")
+      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T21:55:00.000Z")
 
       (0).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.000")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.000Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(38.2727, 0.001)
       }
       (1).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.100")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.100Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(47.3047, 0.001)
       }
 
       (5 * 10 + 4).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:05.400")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:05.400Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-47.101242, 0.001)
       }
     }
@@ -193,39 +193,39 @@ class HistoryCleanupDownSamplingBugTest {
       val first = it.first()
 
       assertThat(first.bucketRange).isEqualTo(HistoryBucketRange.TenMinutes)
-      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:50:00.000")
-      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000")
+      assertThat(first.start.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z")
+      assertThat(first.end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000Z")
 
 
       (0).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:50:00.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:50:00.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN()
       }
       (5 * 60 + 22).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:22.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:22.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN()
       }
       (5 * 60 + 23).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:23.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:23.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN()
       }
       (5 * 60 + 24).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:24.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:24.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN()
       }
 
       (60 * 4).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(71.605, 0.001)
       }
       (60 * 4 + 1).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:01.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:01.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(92.39970, 0.001)
       }
 
 
       (first.chunk.timeStampsCount - 1).let {
-        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:59:59.500")
+        assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:59:59.500Z")
         assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN()
       }
     }

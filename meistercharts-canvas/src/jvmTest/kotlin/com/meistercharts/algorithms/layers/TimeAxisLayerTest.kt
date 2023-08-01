@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test
  */
 class TimeAxisLayerTest {
   private val nowForTests: @ms Double = 1593510070000.0.also {
-    assertThat(it.formatUtc()).isEqualTo("2020-06-30T09:41:10.000")
+    assertThat(it.formatUtc()).isEqualTo("2020-06-30T09:41:10.000Z")
   }
 
   @Test
@@ -44,11 +44,11 @@ class TimeAxisLayerTest {
       TimeZone.UTC
     ).let { result ->
       assertThat(result).hasSize(5)
-      assertThat(result[0].formatUtc()).isEqualTo("2020-06-30T09:41:10.000")
-      assertThat(result[1].formatUtc()).isEqualTo("2020-06-30T09:41:10.250")
-      assertThat(result[2].formatUtc()).isEqualTo("2020-06-30T09:41:10.500")
-      assertThat(result[3].formatUtc()).isEqualTo("2020-06-30T09:41:10.750")
-      assertThat(result[4].formatUtc()).isEqualTo("2020-06-30T09:41:11.000")
+      assertThat(result[0].formatUtc()).isEqualTo("2020-06-30T09:41:10.000Z")
+      assertThat(result[1].formatUtc()).isEqualTo("2020-06-30T09:41:10.250Z")
+      assertThat(result[2].formatUtc()).isEqualTo("2020-06-30T09:41:10.500Z")
+      assertThat(result[3].formatUtc()).isEqualTo("2020-06-30T09:41:10.750Z")
+      assertThat(result[4].formatUtc()).isEqualTo("2020-06-30T09:41:11.000Z")
     }
 
 

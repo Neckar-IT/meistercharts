@@ -1072,7 +1072,7 @@ data class HistoryChunk(
    */
   fun dump(from: @ms @Inclusive Double? = null, to: @ms @Inclusive Double? = null): String {
     val indexColumnWidth = 4
-    val dateColumnWidth = 23
+    val dateColumnWidth = 24
 
     val indexAndDateColumnsWidth = indexColumnWidth + 1 + dateColumnWidth
 

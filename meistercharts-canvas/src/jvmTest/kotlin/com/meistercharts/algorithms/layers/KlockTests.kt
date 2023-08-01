@@ -57,15 +57,15 @@ class KlockTests {
     assertThat(dateTime.dayOfMonth).isEqualTo(28)
     assertThat(dateTime.hours).isEqualTo(0)
 
-    assertThat(dateTime.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000")
+    assertThat(dateTime.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000Z")
 
     val oneDay = DateTimeSpan(0, 0, 0, 1, 0, 0, 0, 0.0)
     val twentyFourHours = DateTimeSpan(0, 0, 0, 0, 24, 0, 0, 0.0)
     dateTime.plus(oneDay).let {
-      assertThat(it.unixMillis.formatUtc()).isEqualTo("2021-03-29T00:00:00.000")
+      assertThat(it.unixMillis.formatUtc()).isEqualTo("2021-03-29T00:00:00.000Z")
     }
     dateTime.plus(twentyFourHours).let {
-      assertThat(it.unixMillis.formatUtc()).isEqualTo("2021-03-29T00:00:00.000")
+      assertThat(it.unixMillis.formatUtc()).isEqualTo("2021-03-29T00:00:00.000Z")
     }
   }
 
@@ -75,7 +75,7 @@ class KlockTests {
     val twentyFourHours = DateTimeSpan(0, 0, 0, 0, 24, 0, 0, 0.0)
 
     val dateTime = DateTime(2021, Month.March, 28, 0, 0, 0, 0)
-    assertThat(dateTime.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000")
+    assertThat(dateTime.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000Z")
 
     dateTime.utc2DateTimeTz(TimeZone.Berlin).let {
       assertThat(it.format(DateFormat.FORMAT2)).isEqualTo("2021-03-28T01:00:00.000Z")
@@ -85,7 +85,7 @@ class KlockTests {
       assertThat(it.hours).isEqualTo(1)
       assertThat(it.minutes).isEqualTo(0)
       assertThat(it.offset.timeZone).isEqualTo("GMT+0100")
-      assertThat(it.utc.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000")
+      assertThat(it.utc.unixMillis.formatUtc()).isEqualTo("2021-03-28T00:00:00.000Z")
 
       it.plus(oneDay).let {
         assertThat(it.format(DateFormat.FORMAT2)).isEqualTo("2021-03-29T01:00:00.000Z")
@@ -103,7 +103,7 @@ class KlockTests {
       assertThat(it.hours).isEqualTo(0)
       assertThat(it.minutes).isEqualTo(0)
       assertThat(it.offset.timeZone).isEqualTo("GMT+0100")
-      assertThat(it.utc.unixMillis.formatUtc()).isEqualTo("2021-03-27T23:00:00.000")
+      assertThat(it.utc.unixMillis.formatUtc()).isEqualTo("2021-03-27T23:00:00.000Z")
 
       it.plus(oneDay).let {
         assertThat(it.format(DateFormat.FORMAT2)).isEqualTo("2021-03-29T00:00:00.000Z")

@@ -97,15 +97,15 @@ class DownSamplingTest {
 
   @Test
   fun testDownSamplingEnum() {
-    assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
 
     val descriptor0 = HistoryBucketDescriptor.forTimestamp(nowForTests, HistoryBucketRange.FiveSeconds)
-    assertThat(descriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:40.000")
-    assertThat(descriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
+    assertThat(descriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z")
+    assertThat(descriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z")
 
     val descriptor1 = descriptor0.next()
-    assertThat(descriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
-    assertThat(descriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:00:50.000")
+    assertThat(descriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z")
+    assertThat(descriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:00:50.000Z")
 
     val bucket0 = HistoryBucket(descriptor0, createDemoChunkOnlyEnums(descriptor0) { dataStructureIndex, timestampIndex ->
       HistoryEnumSet(demoEnumBitset(dataStructureIndex, timestampIndex))
@@ -117,9 +117,9 @@ class DownSamplingTest {
     val parentDescriptor = descriptor0.parent() ?: throw IllegalStateException()
 
     assertThat(parentDescriptor.bucketRange).isEqualTo(HistoryBucketRange.OneMinute)
-    assertThat(parentDescriptor.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000")
-    assertThat(parentDescriptor.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000")
-    assertThat(parentDescriptor.center.formatUtc()).isEqualTo("2020-05-21T15:00:30.000")
+    assertThat(parentDescriptor.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000Z")
+    assertThat(parentDescriptor.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000Z")
+    assertThat(parentDescriptor.center.formatUtc()).isEqualTo("2020-05-21T15:00:30.000Z")
 
     assertThat(parentDescriptor.bucketRange.downSamplingFactor()).isEqualTo(10)
 
@@ -162,15 +162,15 @@ class DownSamplingTest {
 
     //Verify the values
     assertThat(HistoryBucketRange.OneMinute.distance).isEqualTo(100.0) //one data point every 100 ms
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:00.050") //start + 50ms (100 ms/2)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:00.150") //start + 50ms + 100ms
-    assertThat(downSampled.chunk.lastTimeStamp().formatUtc()).isEqualTo("2020-05-21T15:00:59.950") //end - 50ms (100 ms/2)
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:00.050Z") //start + 50ms (100 ms/2)
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:00.150Z") //start + 50ms + 100ms
+    assertThat(downSampled.chunk.lastTimeStamp().formatUtc()).isEqualTo("2020-05-21T15:00:59.950Z") //end - 50ms (100 ms/2)
 
     assertThat(bucket0.bucketRange).isEqualTo(HistoryBucketRange.FiveSeconds)
-    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000") //start at full minute
-    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010") //every 10 ms
-    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:45.000") //start at full minute
-    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:45.010") //every 10 ms one value
+    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z") //start at full minute
+    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010Z") //every 10 ms
+    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z") //start at full minute
+    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:45.010Z") //every 10 ms one value
 
 
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isEnumSetPending()
@@ -180,24 +180,24 @@ class DownSamplingTest {
 
     //only the values *in the middle* are relevant, because the original chunk is in the middle
     bucket0.chunk.timestampCenter(TimestampIndex(0)).let { timestamp ->
-      assertThat(timestamp.formatUtc()).isEqualTo("2020-05-21T15:00:40.000") //the timestamp of the original bucket
+      assertThat(timestamp.formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z") //the timestamp of the original bucket
 
       downSampled.chunk.bestTimestampIndexFor(timestamp).let { index ->
         assertThat(index.found).isFalse()
         assertThat(index.nearIndex).isEqualTo(400) //0:00 -> 1:00
 
-        assertThat(downSampled.chunk.timestampCenter(TimestampIndex(index.nearIndex)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050") //the timestamp of the *center* of the slot
+        assertThat(downSampled.chunk.timestampCenter(TimestampIndex(index.nearIndex)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z") //the timestamp of the *center* of the slot
         assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(index.nearIndex))).isEqualTo(HistoryEnumSet(0b1111))
 
         //compare with original values
         assertThat(bucket0.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(0))).isEqualTo(HistoryEnumSet(0b1))
         assertThat(bucket0.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(HistoryEnumSet(0b10))
 
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(5)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(9)).formatUtc()).isEqualTo("2020-05-21T15:00:40.090")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(10)).formatUtc()).isEqualTo("2020-05-21T15:00:40.100")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(5)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(9)).formatUtc()).isEqualTo("2020-05-21T15:00:40.090Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(10)).formatUtc()).isEqualTo("2020-05-21T15:00:40.100Z")
       }
     }
 
@@ -206,26 +206,26 @@ class DownSamplingTest {
 
     //Last entry that has no value (before bucket0)
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(399))).isEnumSetPending()
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(399)).formatUtc()).isEqualTo("2020-05-21T15:00:39.950")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(399)).formatUtc()).isEqualTo("2020-05-21T15:00:39.950Z")
 
 
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(400))).isEqualTo(HistoryEnumSet(0b1111))
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(400)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(400)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z")
 
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(401))).isEqualTo(HistoryEnumSet(0b11111))
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(401)).formatUtc()).isEqualTo("2020-05-21T15:00:40.150")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(401)).formatUtc()).isEqualTo("2020-05-21T15:00:40.150Z")
 
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(448))).isEqualTo(HistoryEnumSet(0b111101111))
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(448)).formatUtc()).isEqualTo("2020-05-21T15:00:44.850")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(448)).formatUtc()).isEqualTo("2020-05-21T15:00:44.850Z")
 
     //last one containing only data from bucket0
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(449))).isEqualTo(HistoryEnumSet(0b111111111))
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(449)).formatUtc()).isEqualTo("2020-05-21T15:00:44.950")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(449)).formatUtc()).isEqualTo("2020-05-21T15:00:44.950Z")
 
 
     //first one from bucket 1
     assertThat(downSampled.chunk.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(450))).isEqualTo(HistoryEnumSet(0b1111))
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(450)).formatUtc()).isEqualTo("2020-05-21T15:00:45.050")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(450)).formatUtc()).isEqualTo("2020-05-21T15:00:45.050Z")
 
 
     //Verify the values for the other data series
@@ -243,15 +243,15 @@ class DownSamplingTest {
 
   @Test
   fun testDownSamplingDecimal() {
-    assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
 
     val descriptor0 = HistoryBucketDescriptor.forTimestamp(nowForTests, HistoryBucketRange.FiveSeconds)
-    assertThat(descriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:40.000")
-    assertThat(descriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
+    assertThat(descriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z")
+    assertThat(descriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z")
 
     val descriptor1 = descriptor0.next()
-    assertThat(descriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
-    assertThat(descriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:00:50.000")
+    assertThat(descriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z")
+    assertThat(descriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:00:50.000Z")
 
     val bucket0 = HistoryBucket(descriptor0, createDemoChunkOnlyDecimals(descriptor0) { dataSeriesIndex, timestampIndex ->
       dataSeriesIndex.value.toDouble() + timestampIndex.value
@@ -264,9 +264,9 @@ class DownSamplingTest {
     val parentDescriptor = descriptor0.parent() ?: throw IllegalStateException()
 
     assertThat(parentDescriptor.bucketRange).isEqualTo(HistoryBucketRange.OneMinute)
-    assertThat(parentDescriptor.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000")
-    assertThat(parentDescriptor.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000")
-    assertThat(parentDescriptor.center.formatUtc()).isEqualTo("2020-05-21T15:00:30.000")
+    assertThat(parentDescriptor.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000Z")
+    assertThat(parentDescriptor.end.formatUtc()).isEqualTo("2020-05-21T15:01:00.000Z")
+    assertThat(parentDescriptor.center.formatUtc()).isEqualTo("2020-05-21T15:00:30.000Z")
 
     assertThat(parentDescriptor.bucketRange.downSamplingFactor()).isEqualTo(10)
 
@@ -298,15 +298,15 @@ class DownSamplingTest {
 
     //Verify the values
     assertThat(HistoryBucketRange.OneMinute.distance).isEqualTo(100.0) //one data point every 100 ms
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:00.050") //start + 50ms (100 ms/2)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:00.150") //start + 50ms + 100ms
-    assertThat(downSampled.chunk.lastTimeStamp().formatUtc()).isEqualTo("2020-05-21T15:00:59.950") //end - 50ms (100 ms/2)
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:00.050Z") //start + 50ms (100 ms/2)
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:00.150Z") //start + 50ms + 100ms
+    assertThat(downSampled.chunk.lastTimeStamp().formatUtc()).isEqualTo("2020-05-21T15:00:59.950Z") //end - 50ms (100 ms/2)
 
     assertThat(bucket0.bucketRange).isEqualTo(HistoryBucketRange.FiveSeconds)
-    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000") //start at full minute
-    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010") //every 10 ms
-    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:45.000") //start at full minute
-    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:45.010") //every 10 ms one value
+    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z") //start at full minute
+    assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010Z") //every 10 ms
+    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:45.000Z") //start at full minute
+    assertThat(bucket1.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:45.010Z") //every 10 ms one value
 
 
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0))).isNaN()
@@ -317,13 +317,13 @@ class DownSamplingTest {
 
     //only the values *in the middle* are relevant, because the original chunk is in the middle
     bucket0.chunk.timestampCenter(TimestampIndex(0)).let { timestamp ->
-      assertThat(timestamp.formatUtc()).isEqualTo("2020-05-21T15:00:40.000") //the timestamp of the original bucket
+      assertThat(timestamp.formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z") //the timestamp of the original bucket
 
       downSampled.chunk.bestTimestampIndexFor(timestamp).let { index ->
         assertThat(index.found).isFalse()
         assertThat(index.nearIndex).isEqualTo(400) //0:00 -> 1:00
 
-        assertThat(downSampled.chunk.timestampCenter(TimestampIndex(index.nearIndex)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050") //the timestamp of the *center* of the slot
+        assertThat(downSampled.chunk.timestampCenter(TimestampIndex(index.nearIndex)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z") //the timestamp of the *center* of the slot
         assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(index.nearIndex))).isEqualTo(4.5)
 
         //compare with original values
@@ -336,11 +336,11 @@ class DownSamplingTest {
         assertThat(bucket0.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(9))).isEqualTo(9.0)
         assertThat(bucket0.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(10))).isEqualTo(10.0)
 
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(5)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(9)).formatUtc()).isEqualTo("2020-05-21T15:00:40.090")
-        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(10)).formatUtc()).isEqualTo("2020-05-21T15:00:40.100")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("2020-05-21T15:00:40.000Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("2020-05-21T15:00:40.010Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(5)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(9)).formatUtc()).isEqualTo("2020-05-21T15:00:40.090Z")
+        assertThat(bucket0.chunk.timestampCenter(TimestampIndex(10)).formatUtc()).isEqualTo("2020-05-21T15:00:40.100Z")
 
       }
     }
@@ -351,26 +351,26 @@ class DownSamplingTest {
 
     //Last entry that has no value (before bucket0)
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(399))).isNaN()
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(399)).formatUtc()).isEqualTo("2020-05-21T15:00:39.950")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(399)).formatUtc()).isEqualTo("2020-05-21T15:00:39.950Z")
 
 
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(400))).isEqualTo(4.5)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(400)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(400)).formatUtc()).isEqualTo("2020-05-21T15:00:40.050Z")
 
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(401))).isEqualTo(14.5)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(401)).formatUtc()).isEqualTo("2020-05-21T15:00:40.150")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(401)).formatUtc()).isEqualTo("2020-05-21T15:00:40.150Z")
 
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(448))).isEqualTo(484.5)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(448)).formatUtc()).isEqualTo("2020-05-21T15:00:44.850")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(448)).formatUtc()).isEqualTo("2020-05-21T15:00:44.850Z")
 
     //last one containing only data from bucket0
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(449))).isEqualTo(494.5)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(449)).formatUtc()).isEqualTo("2020-05-21T15:00:44.950")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(449)).formatUtc()).isEqualTo("2020-05-21T15:00:44.950Z")
 
 
     //first one from bucket 1
     assertThat(downSampled.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(450))).isEqualTo(4.5)
-    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(450)).formatUtc()).isEqualTo("2020-05-21T15:00:45.050")
+    assertThat(downSampled.chunk.timestampCenter(TimestampIndex(450)).formatUtc()).isEqualTo("2020-05-21T15:00:45.050Z")
 
 
     //Verify the values for the other data series

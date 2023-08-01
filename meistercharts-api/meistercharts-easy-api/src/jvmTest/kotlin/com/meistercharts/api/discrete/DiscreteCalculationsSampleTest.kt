@@ -58,13 +58,13 @@ class DiscreteCalculationsSampleTest {
     val series1 = data.series[1]
 
     assertThat(series0.entries.first().label).isEqualTo("Stumbled over switch")
-    assertThat(series0.entries.first().start.formatUtc()).isEqualTo("2023-04-04T08:56:05.461")
+    assertThat(series0.entries.first().start.formatUtc()).isEqualTo("2023-04-04T08:56:05.461Z")
 
     assertThat(series0.entries.last().label).isEqualTo("Turned switch off")
-    assertThat(series0.entries.last().end.formatUtc()).isEqualTo("2023-04-04T08:56:07.461")
+    assertThat(series0.entries.last().end.formatUtc()).isEqualTo("2023-04-04T08:56:07.461Z")
 
-    assertThat(series1.entries.first().start.formatUtc()).isEqualTo("2023-04-04T08:56:05.961")
-    assertThat(series1.entries.last().end.formatUtc()).isEqualTo("2023-04-04T08:56:07.961")
+    assertThat(series1.entries.first().start.formatUtc()).isEqualTo("2023-04-04T08:56:05.961Z")
+    assertThat(series1.entries.last().end.formatUtc()).isEqualTo("2023-04-04T08:56:07.961Z")
 
     val pair = data.toChunk(historyConfiguration {
       referenceEntryDataSeries(DataSeriesId(17), "A", HistoryEnum.Active)
@@ -95,7 +95,7 @@ class DiscreteCalculationsSampleTest {
 
     assertThat(chunk.recordingType).isEqualTo(RecordingType.Measured)
 
-    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:05.461")
-    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:07.961")
+    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:05.461Z")
+    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2023-04-04T08:56:07.961Z")
   }
 }

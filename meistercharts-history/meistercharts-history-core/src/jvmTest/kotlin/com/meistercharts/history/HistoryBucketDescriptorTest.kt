@@ -124,11 +124,11 @@ class HistoryBucketDescriptorTest {
     val timeRange = TimeRange.fromStartAndDuration(VirtualTime.defaultNow, duration)
 
     HistoryBucketDescriptor.forRange(timeRange.start, timeRange.end, HistoryBucketRange.TenMinutes).let {
-      assertThat(timeRange.start.formatUtc()).isEqualTo("2021-03-27T21:45:23.002")
-      assertThat(timeRange.end.formatUtc()).isEqualTo("2021-03-27T21:55:23.002")
+      assertThat(timeRange.start.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
+      assertThat(timeRange.end.formatUtc()).isEqualTo("2021-03-27T21:55:23.002Z")
 
-      assertThat(it.first().start.formatUtc()).isEqualTo("2021-03-27T21:40:00.000")
-      assertThat(it.last().end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000")
+      assertThat(it.first().start.formatUtc()).isEqualTo("2021-03-27T21:40:00.000Z")
+      assertThat(it.last().end.formatUtc()).isEqualTo("2021-03-27T22:00:00.000Z")
 
       assertThat(it).hasSize(2)
     }
@@ -137,19 +137,19 @@ class HistoryBucketDescriptorTest {
   @Test
   fun testIncludeExclude() {
     val millis = 1312003123123.1234864
-    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123")
+    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123Z")
 
     val descriptors = HistoryBucketDescriptor.forRange(millis, millis + 100 * 1000.0, SamplingPeriod.EveryTenMillis.toHistoryBucketRange())
     assertThat(descriptors).hasSize(21)
 
-    assertThat(descriptors.first().start).isEqualToTimeStamp("2011-07-30T05:18:40.000")
-    assertThat(descriptors.first().end).isEqualToTimeStamp("2011-07-30T05:18:45.000")
+    assertThat(descriptors.first().start).isEqualToTimeStamp("2011-07-30T05:18:40.000Z")
+    assertThat(descriptors.first().end).isEqualToTimeStamp("2011-07-30T05:18:45.000Z")
 
-    assertThat(descriptors[1].start).isEqualToTimeStamp("2011-07-30T05:18:45.000")
-    assertThat(descriptors[1].end).isEqualToTimeStamp("2011-07-30T05:18:50.000")
+    assertThat(descriptors[1].start).isEqualToTimeStamp("2011-07-30T05:18:45.000Z")
+    assertThat(descriptors[1].end).isEqualToTimeStamp("2011-07-30T05:18:50.000Z")
 
-    assertThat(descriptors.last().start).isEqualToTimeStamp("2011-07-30T05:20:20.000")
-    assertThat(descriptors.last().end).isEqualToTimeStamp("2011-07-30T05:20:25.000")
+    assertThat(descriptors.last().start).isEqualToTimeStamp("2011-07-30T05:20:20.000Z")
+    assertThat(descriptors.last().end).isEqualToTimeStamp("2011-07-30T05:20:25.000Z")
   }
 
   @Test
@@ -164,7 +164,7 @@ class HistoryBucketDescriptorTest {
   @Test
   internal fun testMillisToInstant() {
     val millis = 1312003123123.1234864
-    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123")
+    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123Z")
 
     val instant = millis2Instant(millis)
     assertThat(instant.toDoubleMillis()).isEqualTo(millis)
@@ -173,7 +173,7 @@ class HistoryBucketDescriptorTest {
   @Test
   fun testContains() {
     val millis = 1312003123123.1234864
-    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123")
+    assertThat(millis.formatUtc()).isEqualTo("2011-07-30T05:18:43.123Z")
 
     HistoryBucketRange.entries.forEach {
       val descriptor = HistoryBucketDescriptor.forTimestamp(millis, it)
@@ -285,9 +285,9 @@ class HistoryBucketDescriptorTest {
 
     val descriptor = HistoryBucketDescriptor.forTimestamp(now, HistoryBucketRange.ThirtyDays)
 
-    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
-    assertThat(descriptor.start.formatUtc()).isEqualTo("2020-05-08T00:00:00.000")
-    assertThat(descriptor.end.formatUtc()).isEqualTo("2020-06-07T00:00:00.000")
+    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
+    assertThat(descriptor.start.formatUtc()).isEqualTo("2020-05-08T00:00:00.000Z")
+    assertThat(descriptor.end.formatUtc()).isEqualTo("2020-06-07T00:00:00.000Z")
 
 
     var currentDescriptor = descriptor

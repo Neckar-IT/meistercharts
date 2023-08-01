@@ -290,10 +290,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meistercharts/meistercharts@1.33.0":
-  version "1.33.0"
-  resolved "https://registry.yarnpkg.com/@meistercharts/meistercharts/-/meistercharts-1.33.0.tgz#21bfcec9485b03ab485452d56f6618ee8e3ff6a2"
-  integrity sha512-bUIsRUZN5DszGdnV+UfeZuvbxek5tAVsNbCMCPgCXrrAPeSuylo9h5EhLC3Ys86xGG67LtE9hoxiq5uXzWxkkw==
+"@meistercharts/meistercharts@1.34.0":
+  version "1.34.0"
+  resolved "https://registry.yarnpkg.com/@meistercharts/meistercharts/-/meistercharts-1.34.0.tgz#f92013840c8a221b2cf51a9a7da45bede55fdd66"
+  integrity sha512-DKCjNBrJE1GvSMFtg9Li2DUNJYBFCOo5VaUNClYqUxyl6SmngbOh1/BIpk4Z1ORPhzFtwI7Ut2Rej5+K+5Np5g==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

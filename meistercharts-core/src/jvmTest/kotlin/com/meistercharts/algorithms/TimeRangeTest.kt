@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test
 
 internal class TimeRangeTest {
   val nowForTests: Double = 1.5900732415E12.also {
-    assertThat(it.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(it.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
   }
 
   @Test
@@ -197,36 +197,36 @@ internal class TimeRangeTest {
 
     TimeRange.compress(listOf(update0, update1)).let {
       assertThat(it).hasSize(1)
-      assertThat(it[0].start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
-      assertThat(it[0].end.formatUtc()).isEqualTo("2020-05-21T15:00:43.500")
+      assertThat(it[0].start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
+      assertThat(it[0].end.formatUtc()).isEqualTo("2020-05-21T15:00:43.500Z")
     }
   }
 
   @Test
   fun testMerge2() {
     val updateInfo1 = TimeRange(nowForTests, nowForTests + 1002).also {
-      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
-      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:42.502")
+      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
+      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:42.502Z")
     }
 
     val updateInfo2 = TimeRange(nowForTests + 500, nowForTests + 1702).also {
-      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:42.000")
-      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:43.202")
+      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:42.000Z")
+      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:43.202Z")
     }
 
     updateInfo1.merge(updateInfo2).also {
-      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
-      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:43.202")
+      assertThat(it.start.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
+      assertThat(it.end.formatUtc()).isEqualTo("2020-05-21T15:00:43.202Z")
     }
   }
 
   @Test
   fun testMerge() {
     val start0 = 1.5900732715E12
-    val start0Formatted = "2020-05-21T15:01:11.500"
+    val start0Formatted = "2020-05-21T15:01:11.500Z"
     assertThat(start0.formatUtc()).isEqualTo(start0Formatted)
     val end0 = start0 + 1000
-    val end0Formatted = "2020-05-21T15:01:12.500"
+    val end0Formatted = "2020-05-21T15:01:12.500Z"
     assertThat(end0.formatUtc()).isEqualTo(end0Formatted)
 
     val timeRange = TimeRange(start0, end0)

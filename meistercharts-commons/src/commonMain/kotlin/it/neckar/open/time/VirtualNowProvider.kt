@@ -42,7 +42,17 @@ class VirtualNowProvider(
   /**
    * The current time in millis
    */
-  var virtualNow: @ms Double = initialNow
+  var virtualNow: @ms @VirtualTime Double = initialNow
+    set(value) {
+      value.requireFinite()
+      require(value >= field) {
+        "The virtual now must not be decreased.\n" +
+          "Current value: ${field.formatUtcForDebug()}, new value: ${value.formatUtcForDebug()}. Delta: ${value - field} ms\n" +
+          "Offset between started and reference time: $offsetBetweenStartedRealTimeAndInitialNow ms."
+      }
+
+      field = value
+    }
 
   override fun nowMillis(): Double {
     return virtualNow
@@ -52,18 +62,19 @@ class VirtualNowProvider(
    * When the virtual now provider has been started (real time).
    * This value is used to calculate the offset
    */
-  val started: @ms Double = ClockNowProvider.nowMillis().requireFinite()
+  val startedRealTime: @ms @RealClockTime Double = ClockNowProvider.nowMillis().requireFinite()
 
   /**
    * The difference between started and the reference time
    */
-  val offsetBetweenStartedAndReferenceTime: @ms Double = (started - referenceTime).requireFinite()
+  val offsetBetweenStartedRealTimeAndInitialNow: @ms Double = (startedRealTime - initialNow).requireFinite()
 
   /**
    * Updates virtual now. Keeps the offset between started and reference time
    */
   fun updateVirtualNow() {
-    virtualNow = ClockNowProvider.nowMillis() - offsetBetweenStartedAndReferenceTime
+    @RealClockTime @ms val realNow = ClockNowProvider.nowMillis()
+    virtualNow = realNow - offsetBetweenStartedRealTimeAndInitialNow
   }
 
   /**
@@ -82,15 +93,6 @@ class VirtualNowProvider(
   }
 
   override fun toString(): String {
-    return "VirtualNowProvider(initialNow=${initialNow}, virtualNow=${virtualNow}, started=${started}, offsetBetweenStartedAndReferenceTime=$offsetBetweenStartedAndReferenceTime)"
+    return "VirtualNowProvider(initialNow=${initialNow.formatUtcForDebug()}, virtualNow=${virtualNow.formatUtcForDebug()}, started=${startedRealTime.formatUtcForDebug()}, offsetBetweenStartedAndReferenceTime=$offsetBetweenStartedRealTimeAndInitialNow)"
   }
-
-  companion object {
-    /**
-     * The base reference time that is the default.
-     * ATTENTION! This value will be changed without warning!
-     */
-    const val referenceTime: @ms Double = (1686042664231.0) //2023-06-06T09:11:04.231
-  }
-
 }

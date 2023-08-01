@@ -37,7 +37,7 @@ class TickDistanceBugTest {
     val ticks = DistanceSeconds(10).calculateTicks(startDate.toDoubleMillis(), endDate.toDoubleMillis(), TimeZone.Berlin, true)
 
     assertThat(ticks.size).isGreaterThan(2)
-    assertThat(ticks.first().formatUtc()).isEqualTo("2022-08-05T12:20:00.000")
+    assertThat(ticks.first().formatUtc()).isEqualTo("2022-08-05T12:20:00.000Z")
   }
 
   @Test
@@ -46,7 +46,7 @@ class TickDistanceBugTest {
     val endDate = ZonedDateTime.of(2022, 8, 5, 12, 22, 49, TimeUnit.MILLISECONDS.toNanos(349L).toInt(), ZoneOffset.UTC)
 
     val startMillis = startDate.toDoubleMillis()
-    assertThat(startMillis.formatUtc()).isEqualTo("2022-08-05T12:19:59.999")
+    assertThat(startMillis.formatUtc()).isEqualTo("2022-08-05T12:19:59.999Z")
 
     val startKlock = DateTime(startMillis).utc2DateTimeTz(TimeZone.Berlin)
     assertThat(startKlock.milliseconds).isEqualTo(0)
@@ -54,7 +54,7 @@ class TickDistanceBugTest {
 
 
     val ticks = DistanceSeconds(10).calculateTicks(startMillis, endDate.toDoubleMillis(), TimeZone.Berlin, true)
-    assertThat(ticks.first().formatUtc()).isEqualTo("2022-08-05T12:20:00.000")
+    assertThat(ticks.first().formatUtc()).isEqualTo("2022-08-05T12:20:00.000Z")
   }
 }
 

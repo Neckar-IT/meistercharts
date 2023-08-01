@@ -46,9 +46,9 @@ class HistoryBucketDescriptor2Test {
 
     val descriptor = HistoryBucketDescriptor.forTimestamp(date.toInstant().toEpochMilli().toDouble(), SamplingPeriod.Every360Days)
 
-    assertThat(descriptor.start.formatUtc()).isEqualTo("1970-01-01T00:00:00.000")
-    assertThat(descriptor.center.formatUtc()).isEqualTo("2324-11-01T00:00:00.000")
-    assertThat(descriptor.end.formatUtc()).isEqualTo("2679-09-01T00:00:00.000")
+    assertThat(descriptor.start.formatUtc()).isEqualTo("1970-01-01T00:00:00.000Z")
+    assertThat(descriptor.center.formatUtc()).isEqualTo("2324-11-01T00:00:00.000Z")
+    assertThat(descriptor.end.formatUtc()).isEqualTo("2679-09-01T00:00:00.000Z")
   }
 
   @Test

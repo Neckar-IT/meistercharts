@@ -36,7 +36,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsHundredMillis() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.HundredMillis))
     assertThat(baseFolders.size).isEqualTo(3)
@@ -54,7 +54,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsOneMinute() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.OneMinute))
     assertThat(baseFolders.size).isEqualTo(2)
@@ -69,7 +69,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsTenMinute() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.TenMinutes))
     assertThat(baseFolders.size).isEqualTo(2)
@@ -84,7 +84,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsOneHour() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.OneHour))
     assertThat(baseFolders.size).isEqualTo(2)
@@ -99,7 +99,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsSixHours() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.SixHours))
     assertThat(baseFolders.size).isEqualTo(1)
@@ -111,7 +111,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElementsOneDay() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.OneDay))
     assertThat(baseFolders.size).isEqualTo(1)
@@ -123,7 +123,7 @@ class HistoryFileStorageTest {
   @Test
   fun testElements30Days() {
     val time = 1407_060_214_313.253
-    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313")
+    assertThat(time.formatUtc()).isEqualTo("2014-08-03T10:03:34.313Z")
 
     val baseFolders: List<TimestampWithPrecision> = HistoryFileStorage.calculateBaseFolders(HistoryBucketDescriptor.forTimestamp(time, HistoryBucketRange.ThirtyDays))
     assertThat(baseFolders.size).isEqualTo(1)

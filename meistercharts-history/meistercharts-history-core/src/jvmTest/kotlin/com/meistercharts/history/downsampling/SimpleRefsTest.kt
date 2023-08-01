@@ -44,18 +44,18 @@ class SimpleRefsTest {
 
     assertThat(chunk.dump()).isEqualComparingLinesTrim(
       """
-        Start: 2020-05-21T15:00:41.500
-        End:   2020-05-21T15:00:41.500
+        Start: 2020-05-21T15:00:41.500Z
+        End:   2020-05-21T15:00:41.500Z
         Series counts:
           Decimals: 0
           Enums:    0
           RefId:    1
         RecordingType:    Measured
         ---------------------------------------
-        Indices:                     |  |                       0
-        IDs:                         |  |                      17
+        Indices:                      |  |                       0
+        IDs:                          |  |                      17
 
-           0 2020-05-21T15:00:41.500 |  |    99       0b101   (1)
+           0 2020-05-21T15:00:41.500Z |  |    99       0b101   (1)
       """.trimIndent()
     )
   }
@@ -78,19 +78,19 @@ class SimpleRefsTest {
 
       assertThat(merged.dump()).isEqualComparingLinesTrim(
         """
-          Start: 2020-05-21T15:00:41.500
-          End:   2020-05-21T15:00:41.600
+          Start: 2020-05-21T15:00:41.500Z
+          End:   2020-05-21T15:00:41.600Z
           Series counts:
             Decimals: 0
             Enums:    0
             RefId:    1
           RecordingType:    Measured
           ---------------------------------------
-          Indices:                     |  |                       0
-          IDs:                         |  |                      17
+          Indices:                      |  |                       0
+          IDs:                          |  |                      17
 
-             0 2020-05-21T15:00:41.500 |  |    99       0b101   (1)
-             1 2020-05-21T15:00:41.600 |  |   100        0b11   (1)
+             0 2020-05-21T15:00:41.500Z |  |    99       0b101   (1)
+             1 2020-05-21T15:00:41.600Z |  |   100        0b11   (1)
         """.trimIndent()
       )
     }
@@ -100,19 +100,19 @@ class SimpleRefsTest {
 
       assertThat(merged.dump()).isEqualComparingLinesTrim(
         """
-          Start: 2020-05-21T15:00:41.500
-          End:   2020-05-21T15:00:41.600
+          Start: 2020-05-21T15:00:41.500Z
+          End:   2020-05-21T15:00:41.600Z
           Series counts:
             Decimals: 0
             Enums:    0
             RefId:    1
           RecordingType:    Measured
           ---------------------------------------
-          Indices:                     |  |                       0
-          IDs:                         |  |                      17
+          Indices:                      |  |                       0
+          IDs:                          |  |                      17
 
-             0 2020-05-21T15:00:41.500 |  |    99       0b101   (1)
-             1 2020-05-21T15:00:41.600 |  |   100        0b11   (1)
+             0 2020-05-21T15:00:41.500Z |  |    99       0b101   (1)
+             1 2020-05-21T15:00:41.600Z |  |   100        0b11   (1)
         """.trimIndent()
       )
     }

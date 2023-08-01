@@ -109,8 +109,8 @@ class DownSamplingReferenceEntryCalculatorTest {
 
       println(historyChunk.dump())
 
-      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000Z")
       assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(25912)
       assertThat(historyChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(30701)
 
