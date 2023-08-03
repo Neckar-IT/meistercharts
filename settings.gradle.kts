@@ -27,6 +27,9 @@ plugins {
 rootProject.name = "meistercharts.com"
 rootProject.buildFileName = "build.gradle.kts"
 
+refreshVersions {
+  extraArtifactVersionKeyRules(file("refreshVersions-extra-rules.txt"))
+}
 
 configure<org.kordamp.gradle.plugin.insight.InsightExtension> {
   enabled.set(true)

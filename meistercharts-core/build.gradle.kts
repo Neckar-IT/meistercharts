@@ -22,6 +22,7 @@ kotlin{
     commonMain {
       dependencies {
         api(project(Projects.meistercharts_commons))
+        api(Libs.jsonassert)
 
         implementation(Libs.kotlinx_coroutines_core)
         //api(project(meistercharts_version_info))
