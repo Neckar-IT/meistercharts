@@ -159,7 +159,8 @@ class HistoryChunkGenerator(
     } else {
       @ms val deltaTime = until - lastTimestamp
       val count = deltaTime / samplingPeriod.distance
-      if (count > 10_000) {
+      logger.debug("Generating $count entries from ${lastTimestamp.formatUtc()} to ${until.formatUtc()}")
+      if (count > 100_000) {
         throw IllegalStateException("Too many timestamps to generate - $count. lastTimestamp: ${lastTimestamp.formatUtc()}, until: ${until.formatUtc()}")
       }
 

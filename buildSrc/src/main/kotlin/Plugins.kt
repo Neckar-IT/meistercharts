@@ -69,6 +69,8 @@ object Plugins {
   const val kover: String = "org.jetbrains.kotlinx.kover"
   const val analyze: String = "ca.cutterslade.analyze"
 
+  const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
+
   /**
    * Only for JavaFX 17+
    */
@@ -192,3 +194,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.javafx: PluginDependency
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependencySpec
   get() = id(Plugins.analyze)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
+  get() = id(Plugins.copyResourcesFromDependencies)

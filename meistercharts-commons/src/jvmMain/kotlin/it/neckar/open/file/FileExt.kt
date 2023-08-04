@@ -48,3 +48,10 @@ private fun File.treeRecursively(prefix: String = "", continuation: String = "",
   }
 }
 
+
+/**
+ * Returns a "file://" URL
+ */
+fun File.formatAbsolutePath(): String {
+  return toURI().toURL().toString().replace("file:/", "file:///")
+}
