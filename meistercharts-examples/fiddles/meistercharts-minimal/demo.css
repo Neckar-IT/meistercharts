@@ -1,10 +1,4 @@
-body {
-  margin: 0;
-  padding: 0;
-}
-
 #timeLineChart {
-  height: 100vh;
+  height: 95vh;
   width: 100%;
 }
-
