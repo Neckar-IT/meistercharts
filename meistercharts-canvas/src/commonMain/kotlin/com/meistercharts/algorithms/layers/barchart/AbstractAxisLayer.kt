@@ -31,6 +31,9 @@ import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.trace
 import it.neckar.open.unit.other.px
 
 /**
@@ -175,6 +178,8 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    * Paint from left to right. Always translate the gc after each segment
    */
   override fun paint(paintingContext: LayerPaintingContext) {
+    logger.trace { "${this::class} paint with side ${style.side}" }
+
     when (style.side) {
       Side.Left -> paintLeft(paintingContext)
       Side.Right -> paintRight(paintingContext)
@@ -370,4 +375,8 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    * Must be called with the graphics context translated to the *edge* of the tick value labels
    */
   abstract fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction)
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer")
+  }
 }

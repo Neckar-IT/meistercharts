@@ -348,21 +348,23 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         layers.addAboveBackground(categoriesGridLayer.visibleIf(configuration.showCategoriesGridProperty))
 
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
-        layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
+        layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
 
-        layers.addLayer(categoryAxisLayer)
         valueAxisSupport.addLayers(this)
         thresholdsSupport.addLayers(this)
 
-        layers.addLayer(categoryLinesLayer.clippedOnlyAxis())
+        layers.addLayer(categoryLinesLayer.clippedWithoutAxis())
+
+        //Depends on the layout information for categoryLinesLayer
+        layers.addLayer(categoryAxisLayer)
 
         when (configuration.toolTipType) {
           ToolTipType.CrossWire -> {
-            layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
+            layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
           }
 
           ToolTipType.Balloon -> {
-            layers.addLayer(balloonTooltipLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedOnlyAxis())
+            layers.addLayer(balloonTooltipLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
           }
         }
 
@@ -372,9 +374,9 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
   }
 
   /**
-   * Clips the layer only at the axis bounds
+   * Clips the layer - does *not* paint the axis area.
    */
-  fun <T : Layer> T.clippedOnlyAxis(): ClippingLayer<T> {
+  fun <T : Layer> T.clippedWithoutAxis(): ClippingLayer<T> {
     return this.clipped {
       /*
        * Only clip the sides where the axes are.
