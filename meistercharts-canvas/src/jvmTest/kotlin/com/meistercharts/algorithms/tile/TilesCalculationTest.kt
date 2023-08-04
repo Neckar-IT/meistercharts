@@ -21,9 +21,9 @@ import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.InternalCalculations
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.annotations.ContentArea
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.tile.TileCoordinates
 import com.meistercharts.tile.TileIndex
 import org.junit.jupiter.api.Test

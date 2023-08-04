@@ -25,14 +25,14 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.whatsAt
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.asDistance
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.asDistance
 import com.meistercharts.whatsat.WhatsAtResult
 import com.meistercharts.whatsat.WhatsAtSupport
 import it.neckar.open.collections.fastForEach
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.MouseDownEvent
+import it.neckar.events.MouseDownEvent
 
 /**
  * Layer that visualizes the results of the [com.meistercharts.whatsat.WhatsAtSupport] at a given location

@@ -58,13 +58,13 @@ class HistoryCleanupServiceTest {
 
     //There should be 10 buckets
     assertThat(historyStorage.query(start, descriptor.start, samplingPeriod)).hasSize(10)
-    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:45:00.000")
+    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:45:00.000Z")
 
     //Cleaning up all but one bucket
     cleanupService.cleanup(historyStorage, historyBucketRange, 1).let {
       assertThat(it.deletedDescriptors).hasSize(9)
     }
-    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:54:00.000")
+    assertThat(bookKeeping.earliestBound(historyBucketRange)?.start?.formatUtc()).isEqualTo("2021-03-27T21:54:00.000Z")
 
     //Just one bucket is remaining
     assertThat(historyStorage.query(start, descriptor.start, samplingPeriod)).hasSize(1)

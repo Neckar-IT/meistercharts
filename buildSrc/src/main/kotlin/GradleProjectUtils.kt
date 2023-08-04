@@ -89,6 +89,7 @@ fun ComponentIdentifier.toFileName(suffix: String = ""): String {
  * Workaround for:
  * https://youtrack.jetbrains.com/issue/KT-38230/Gradle-MPP-JS-Process-JS-resources-from-dependencies
  */
+@Deprecated("Use CopyResourcesPlugin instead")
 fun Copy.copyJSResources(configurationNames: List<String> = listOf("runtimeClasspath", "commonMainApi", "jsRuntimeClasspath")) {
   val projectDependencies = this.project.findAllProjectDependencies(configurationNames)
 
@@ -185,7 +186,7 @@ fun Copy.copyJvmResources(configurationNames: List<String> = listOf("runtimeClas
  * Returns all project dependencies (including transitive dependencies), that:
  * * have a configuration
  */
-private fun Project.findAllProjectDependencies(
+fun Project.findAllProjectDependencies(
   configurationNames: List<String>,
   foundProjects: MutableSet<Project> = mutableSetOf(),
   visitedProjects: MutableSet<Project> = mutableSetOf(),
@@ -215,7 +216,7 @@ private fun Project.findAllProjectDependencies(
 /**
  * Returns all project dependencies for the configuration
  */
-private fun Configuration.findDirectProjectDependencies(): List<Project> {
+fun Configuration.findDirectProjectDependencies(): List<Project> {
   return allDependencies
     .filterIsInstance<ProjectDependency>()
     .map { it.dependencyProject }
@@ -224,6 +225,7 @@ private fun Configuration.findDirectProjectDependencies(): List<Project> {
 /**
  * Updates the process resources task to also copy the resources from the dependencies
  */
+@Deprecated("Use CopyResourcesPlugin instead")
 fun Project.alsoCopyJsResourcesOfDependentProjects() {
   val processResourcesTask: Copy = tasks.getByName<Copy>("processResources")
 
@@ -239,6 +241,7 @@ fun Project.alsoCopyJsResourcesOfDependentProjects() {
 /**
  * Copy resources for JVM projects
  */
+@Deprecated("Use CopyResourcesPlugin instead")
 fun Project.alsoCopyJvmResourcesOfDependentProjects() {
   val processResourcesTask: Copy = tasks.getByName<Copy>("processResources")
 

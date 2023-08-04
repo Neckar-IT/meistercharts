@@ -15,7 +15,7 @@
  */
 package com.meistercharts.events.gesture
 
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import it.neckar.open.collections.EvictingQueue
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.other.px

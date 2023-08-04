@@ -15,7 +15,11 @@
  */
 package com.meistercharts.geometry
 
-import com.meistercharts.model.Direction
+
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Rectangle
 import it.neckar.open.unit.other.pct
 
 

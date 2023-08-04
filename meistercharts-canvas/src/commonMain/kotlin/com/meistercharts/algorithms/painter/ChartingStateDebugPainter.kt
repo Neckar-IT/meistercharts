@@ -16,16 +16,16 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration

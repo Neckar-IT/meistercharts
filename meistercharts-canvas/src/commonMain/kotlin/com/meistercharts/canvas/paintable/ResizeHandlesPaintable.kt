@@ -18,8 +18,8 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.resize.HandleBoundsProvider
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
 import it.neckar.open.collections.fastForEach
 
 /**

@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.environment
 import com.meistercharts.algorithms.layers.text.LinesProvider
 import com.meistercharts.algorithms.layers.text.addText
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 
 /**

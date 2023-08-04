@@ -78,7 +78,7 @@ class DownSamplingReferenceEntriesTest {
     historyStorage.downSamplingService.dirtyRangesCollector.observe(historyStorage)
 
     val start = 1777777896777.0
-    assertThat(start.formatUtc()).isEqualTo("2026-05-03T03:11:36.777")
+    assertThat(start.formatUtc()).isEqualTo("2026-05-03T03:11:36.777Z")
     val chunk = requireNotNull(chunkGenerator.forTimeRange(TimeRange.fromStartAndDuration(start, 1.hours)))
 
     assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo(start.formatUtc())
@@ -91,9 +91,9 @@ class DownSamplingReferenceEntriesTest {
     //Recorded
     historyStorage.get(HistoryBucketDescriptor.forTimestamp(start, samplingPeriod.toHistoryBucketRange())).let { bucket ->
       requireNotNull(bucket)
-      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:11:36.777")
+      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:11:36.777Z")
       assertThat(bucket.chunk.timeStampsCount).isEqualTo(233)
-      assertThat(bucket.chunk.lastTimeStamp().formatUtc()).isEqualTo("2026-05-03T03:11:59.977")
+      assertThat(bucket.chunk.lastTimeStamp().formatUtc()).isEqualTo("2026-05-03T03:11:59.977Z")
 
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.zero)).isEqualToReferenceEntryId(6175)
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(6175)
@@ -113,9 +113,9 @@ class DownSamplingReferenceEntriesTest {
     //Recorded, but later
     historyStorage.get(HistoryBucketDescriptor.forTimestamp(start + 45 * 1000, samplingPeriod.toHistoryBucketRange())).let { bucket ->
       requireNotNull(bucket)
-      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:12:00.077")
+      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:12:00.077Z")
       assertThat(bucket.chunk.timeStampsCount).isEqualTo(600)
-      assertThat(bucket.chunk.lastTimeStamp().formatUtc()).isEqualTo("2026-05-03T03:12:59.977")
+      assertThat(bucket.chunk.lastTimeStamp().formatUtc()).isEqualTo("2026-05-03T03:12:59.977Z")
 
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.zero)).isEqualToReferenceEntryId(6176)
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(6176)
@@ -142,10 +142,10 @@ class DownSamplingReferenceEntriesTest {
 
       assertThat(bucket.samplingPeriod).isEqualTo(SamplingPeriod.EverySecond)
 
-      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:10:00.500")
+      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:10:00.500Z")
       assertThat(bucket.chunk.timeStampsCount).isEqualTo(600)
-      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T03:10:00.500")
-      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T03:19:59.500")
+      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T03:10:00.500Z")
+      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T03:19:59.500Z")
 
 
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.Pending)
@@ -176,10 +176,10 @@ class DownSamplingReferenceEntriesTest {
 
       assertThat(bucket.samplingPeriod).isEqualTo(SamplingPeriod.EveryTenSeconds)
 
-      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:00:05.000")
+      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T03:00:05.000Z")
       assertThat(bucket.chunk.timeStampsCount).isEqualTo(360)
-      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T03:00:05.000")
-      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T03:59:55.000")
+      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T03:00:05.000Z")
+      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T03:59:55.000Z")
 
 
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.Pending)
@@ -208,10 +208,10 @@ class DownSamplingReferenceEntriesTest {
       }
 
       assertThat(bucket.samplingPeriod).isEqualTo(SamplingPeriod.EveryMinute)
-      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T00:00:30.000")
-      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T05:59:30.000")
+      assertThat(bucket.chunk.firstTimestamp.formatUtc()).isEqualTo("2026-05-03T00:00:30.000Z")
+      assertThat(bucket.chunk.lastTimestamp.formatUtc()).isEqualTo("2026-05-03T05:59:30.000Z")
       assertThat(bucket.chunk.timeStampsCount).isEqualTo(360)
-      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T00:00:30.000")
+      assertThat(bucket.chunk.timestampCenter(TimestampIndex.zero).formatUtc()).isEqualTo("2026-05-03T00:00:30.000Z")
 
 
       assertThat(bucket.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.Pending)
@@ -251,8 +251,8 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 
 
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(45)
@@ -282,8 +282,8 @@ class DownSamplingReferenceEntriesTest {
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000Z")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)
@@ -315,8 +315,8 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 
 
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.one)).isEqualToReferenceEntryId(17667)
@@ -348,8 +348,8 @@ class DownSamplingReferenceEntriesTest {
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000Z")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)
@@ -381,8 +381,8 @@ class DownSamplingReferenceEntriesTest {
     requireNotNull(generated)
 
     assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
-    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000") //plus 1 minute, minus the last entry
-    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900") //plus 1 minute, minus the last entry
+    assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
+    assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(34400)
     assertThat(generated.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToReferenceEntryId(34400)
@@ -420,8 +420,8 @@ class DownSamplingReferenceEntriesTest {
     assertThat(downSampled).hasSize(1) //down sampling has been calculated
 
     downSampled.first().let { bucket ->
-      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
-      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000")
+      assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+      assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:10:00.000Z")
 
       val chunk = bucket.chunk
       val timestampIndex = TimestampIndex(chunk.bestTimestampIndexFor(generated.firstTimestamp).nearIndex)

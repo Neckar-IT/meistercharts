@@ -19,7 +19,7 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.unit.number.MayBeZero
 
 /**

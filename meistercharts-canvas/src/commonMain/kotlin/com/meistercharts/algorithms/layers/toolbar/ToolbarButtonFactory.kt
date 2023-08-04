@@ -27,7 +27,7 @@ import com.meistercharts.canvas.resetOnlyZoom
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.canvas.zoomIn
 import com.meistercharts.canvas.zoomOut
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.resources.Icons
 
 /**

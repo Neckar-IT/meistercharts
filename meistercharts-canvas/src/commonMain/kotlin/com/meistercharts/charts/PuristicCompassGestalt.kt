@@ -28,10 +28,10 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.design.corporateDesign
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.model.RotationDirection
-import com.meistercharts.model.Size
+import it.neckar.geometry.RotationDirection
+import it.neckar.geometry.Size
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.provider.delegate
 import it.neckar.open.formatting.decimalFormat1digit

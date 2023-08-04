@@ -16,7 +16,7 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.canvas.mock.MockCanvasRenderingContext
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 

@@ -23,7 +23,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider

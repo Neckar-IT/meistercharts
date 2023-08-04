@@ -21,10 +21,10 @@ import com.meistercharts.algorithms.painter.ArrowHead
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.resources.svg.PathPaintable
 import it.neckar.open.unit.other.px
 

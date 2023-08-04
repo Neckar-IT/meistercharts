@@ -29,6 +29,8 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.valueAt
 import com.meistercharts.time.TimeRange
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.requireFinite
@@ -155,11 +157,22 @@ class HistoryChunkGenerator(
     if (lastTimestamp == null) {
       timestamps.add(until)
     } else {
+      @ms val deltaTime = until - lastTimestamp
+      val count = deltaTime / samplingPeriod.distance
+      logger.debug("Generating $count entries from ${lastTimestamp.formatUtc()} to ${until.formatUtc()}")
+      if (count > 100_000) {
+        throw IllegalStateException("Too many timestamps to generate - $count. lastTimestamp: ${lastTimestamp.formatUtc()}, until: ${until.formatUtc()}")
+      }
+
       @ms var timestampToAdd = lastTimestamp + samplingPeriod.distance
       timestampToAdd.requireFinite()
       while (timestampToAdd <= until) {
         timestamps.add(timestampToAdd)
         timestampToAdd += samplingPeriod.distance
+
+        require(timestamps.size < 10_0000) {
+          "Too many timestamps to generate"
+        }
       }
     }
     return generate(timestamps)
@@ -198,6 +211,8 @@ class HistoryChunkGenerator(
   }
 
   private fun generate(timestamps: List<@ms @IsFinite Double>): HistoryChunk? {
+    logger.debug("Generating chunk for ${timestamps.size} timestamps: ${timestamps.joinToString { it.formatUtc() }}")
+
     if (timestamps.isEmpty()) {
       return null
     }
@@ -228,5 +243,9 @@ class HistoryChunkGenerator(
 
     lastCreatedTimeStamp = maxOf(chunk.lastTimeStamp(), lastCreatedTimeStamp ?: Double.MIN_VALUE)
     return chunk
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.generator.HistoryChunkGenerator")
   }
 }

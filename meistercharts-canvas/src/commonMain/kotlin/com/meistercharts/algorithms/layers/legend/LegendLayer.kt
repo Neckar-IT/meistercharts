@@ -24,8 +24,8 @@ import com.meistercharts.canvas.findXWithAnchor
 import com.meistercharts.canvas.findYWithAnchor
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.delegate
 import it.neckar.open.unit.other.px

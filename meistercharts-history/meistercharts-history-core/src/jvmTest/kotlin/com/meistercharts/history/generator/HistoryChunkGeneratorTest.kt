@@ -43,7 +43,7 @@ class HistoryChunkGeneratorTest {
 
   @Test
   fun testNow() {
-    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
   }
 
   @Test
@@ -73,8 +73,8 @@ class HistoryChunkGeneratorTest {
       assertNotNull(chunk)
       assertThat(chunk.recordingType).isEqualTo(RecordingType.Measured)
       assertThat(chunk.timeStampsCount).isEqualTo(20)
-      assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:39.500")
-      assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:41.400")
+      assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:39.500Z")
+      assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("2020-05-21T15:00:41.400Z")
 
       assertThat(chunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(HistoryEnumSet.first)
 
@@ -120,7 +120,7 @@ class HistoryChunkGeneratorTest {
     )
 
     val now = 1.678716504263E12
-    assertThat(now.formatUtc()).isEqualTo("2023-03-13T14:08:24.263")
+    assertThat(now.formatUtc()).isEqualTo("2023-03-13T14:08:24.263Z")
 
     val chunk = generator.forTimeRange(TimeRange.oneMinuteUntilNow(now))
     requireNotNull(chunk)

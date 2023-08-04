@@ -18,7 +18,7 @@ package com.meistercharts.maps
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import it.neckar.open.unit.other.deg

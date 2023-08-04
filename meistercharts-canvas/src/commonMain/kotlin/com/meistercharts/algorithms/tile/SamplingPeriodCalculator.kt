@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.time.TimeRange
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.SamplingPeriod
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 

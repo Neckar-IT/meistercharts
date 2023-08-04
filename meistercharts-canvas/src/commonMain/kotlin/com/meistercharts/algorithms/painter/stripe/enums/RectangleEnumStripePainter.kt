@@ -28,7 +28,7 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 

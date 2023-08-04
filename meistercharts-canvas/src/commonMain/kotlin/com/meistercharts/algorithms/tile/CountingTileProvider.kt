@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.tile
 
 import com.meistercharts.Meistercharts
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.collections.incr
 import it.neckar.open.unit.si.ms
 

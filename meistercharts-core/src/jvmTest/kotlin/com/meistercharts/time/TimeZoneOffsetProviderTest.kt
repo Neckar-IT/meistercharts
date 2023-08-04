@@ -42,40 +42,40 @@ class TimeZoneOffsetProviderTest {
 
   @Test
   fun testTimestampAlignment() {
-    assertThat(1607864400000.0.formatUtc()).isEqualTo("2020-12-13T13:00:00.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864400000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000")
+    assertThat(1607864400000.0.formatUtc()).isEqualTo("2020-12-13T13:00:00.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864400000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000Z")
 
-    assertThat(1607864401000.0.formatUtc()).isEqualTo("2020-12-13T13:00:01.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864401000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000")
+    assertThat(1607864401000.0.formatUtc()).isEqualTo("2020-12-13T13:00:01.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864401000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000Z")
 
-    assertThat(1607865299000.0.formatUtc()).isEqualTo("2020-12-13T13:14:59.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864401000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000")
+    assertThat(1607865299000.0.formatUtc()).isEqualTo("2020-12-13T13:14:59.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607864401000.0).formatUtc()).isEqualTo("2020-12-13T13:00:00.000Z")
 
-    assertThat(1607865300000.0.formatUtc()).isEqualTo("2020-12-13T13:15:00.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865300000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000")
+    assertThat(1607865300000.0.formatUtc()).isEqualTo("2020-12-13T13:15:00.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865300000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000Z")
 
-    assertThat(1607865301000.0.formatUtc()).isEqualTo("2020-12-13T13:15:01.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865301000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000")
+    assertThat(1607865301000.0.formatUtc()).isEqualTo("2020-12-13T13:15:01.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865301000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000Z")
 
-    assertThat(1607866199000.0.formatUtc()).isEqualTo("2020-12-13T13:29:59.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865301000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000")
+    assertThat(1607866199000.0.formatUtc()).isEqualTo("2020-12-13T13:29:59.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607865301000.0).formatUtc()).isEqualTo("2020-12-13T13:15:00.000Z")
 
-    assertThat(1607866200000.0.formatUtc()).isEqualTo("2020-12-13T13:30:00.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866200000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000")
+    assertThat(1607866200000.0.formatUtc()).isEqualTo("2020-12-13T13:30:00.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866200000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000Z")
 
-    assertThat(1607866201000.0.formatUtc()).isEqualTo("2020-12-13T13:30:01.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866201000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000")
+    assertThat(1607866201000.0.formatUtc()).isEqualTo("2020-12-13T13:30:01.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866201000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000Z")
 
-    assertThat(1607867099000.0.formatUtc()).isEqualTo("2020-12-13T13:44:59.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866201000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000")
+    assertThat(1607867099000.0.formatUtc()).isEqualTo("2020-12-13T13:44:59.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607866201000.0).formatUtc()).isEqualTo("2020-12-13T13:30:00.000Z")
 
-    assertThat(1607867100000.0.formatUtc()).isEqualTo("2020-12-13T13:45:00.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867100000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000")
+    assertThat(1607867100000.0.formatUtc()).isEqualTo("2020-12-13T13:45:00.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867100000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000Z")
 
-    assertThat(1607867101000.0.formatUtc()).isEqualTo("2020-12-13T13:45:01.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867101000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000")
+    assertThat(1607867101000.0.formatUtc()).isEqualTo("2020-12-13T13:45:01.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867101000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000Z")
 
-    assertThat(1607867999000.0.formatUtc()).isEqualTo("2020-12-13T13:59:59.000")
-    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867101000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000")
+    assertThat(1607867999000.0.formatUtc()).isEqualTo("2020-12-13T13:59:59.000Z")
+    assertThat(DefaultCachedTimeZoneOffsetProvider.alignTimestampToTimeZones(1607867101000.0).formatUtc()).isEqualTo("2020-12-13T13:45:00.000Z")
   }
 }

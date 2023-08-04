@@ -23,7 +23,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoubleProvider

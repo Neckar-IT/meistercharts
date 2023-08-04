@@ -24,7 +24,7 @@ import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.SeriesIndex
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.kotlin.lang.DoublesComparator
 import it.neckar.open.provider.DoublesProvider

@@ -20,7 +20,7 @@ import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.range.ValueRange
 import com.meistercharts.zoom.autoScaleByZoomSupport
 import com.meistercharts.axis.AxisEndConfiguration
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.zoom.BoundsProvider
 import com.meistercharts.algorithms.layers.AxisStyle
 import com.meistercharts.algorithms.layers.ClippingLayer
@@ -53,8 +53,8 @@ import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.painter.NoLinePainter
@@ -68,7 +68,6 @@ import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.randomNormal
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
-import it.neckar.open.provider.SizedProvider
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble

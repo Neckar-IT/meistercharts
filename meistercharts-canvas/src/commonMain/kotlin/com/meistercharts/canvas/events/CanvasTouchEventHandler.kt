@@ -18,12 +18,12 @@ package com.meistercharts.canvas.events
 import com.meistercharts.canvas.ChartSupport
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.TouchCancelEvent
-import com.meistercharts.events.TouchEndEvent
-import com.meistercharts.events.TouchEvent
+import it.neckar.events.TouchCancelEvent
+import it.neckar.events.TouchEndEvent
+import it.neckar.events.TouchEvent
 import com.meistercharts.events.TouchEventHandler
-import com.meistercharts.events.TouchMoveEvent
-import com.meistercharts.events.TouchStartEvent
+import it.neckar.events.TouchMoveEvent
+import it.neckar.events.TouchStartEvent
 
 /**
  * Handler of [TouchEvent]s from a canvas

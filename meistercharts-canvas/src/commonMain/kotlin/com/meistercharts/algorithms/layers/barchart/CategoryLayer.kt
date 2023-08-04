@@ -32,7 +32,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 
 /**
  * A layer that paints categories horizontally or vertically - e.g. bar charts

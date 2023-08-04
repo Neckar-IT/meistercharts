@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.color.Color
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 
 /**
  * A layer that shows the paint count

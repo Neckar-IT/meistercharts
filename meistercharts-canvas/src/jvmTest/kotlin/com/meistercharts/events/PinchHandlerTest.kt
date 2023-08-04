@@ -17,9 +17,15 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.events.gesture.GestureState
 import com.meistercharts.events.gesture.PinchGestureSupport
+import it.neckar.events.Pointer
+import it.neckar.events.PointerCancelEvent
+import it.neckar.events.PointerDownEvent
+import it.neckar.events.PointerId
+import it.neckar.events.PointerMoveEvent
+import it.neckar.events.PointerUpEvent
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test

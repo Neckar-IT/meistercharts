@@ -19,7 +19,7 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.js.MeisterchartJS
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.isCloseTo

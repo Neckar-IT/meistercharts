@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layers.linechart.Dashes
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.text.TextPainter
@@ -32,12 +32,12 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.saved
 import com.meistercharts.geometry.BasePointProvider
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
-import com.meistercharts.model.HorizontalAlignment
+import it.neckar.geometry.HorizontalAlignment
 import com.meistercharts.model.Insets
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.MultiProvider

@@ -15,14 +15,14 @@
  */
 package com.meistercharts.state
 
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.unit.number.MayBeZero

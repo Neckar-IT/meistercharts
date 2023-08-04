@@ -28,7 +28,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.design.Theme
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import com.meistercharts.provider.ValueRangeProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.number.MayBeNaN

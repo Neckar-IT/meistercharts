@@ -44,7 +44,7 @@ import com.meistercharts.algorithms.tooltip.balloon.DiscreteSeriesModelBalloonTo
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
@@ -64,7 +64,7 @@ import com.meistercharts.history.atMost
 import com.meistercharts.history.indexOf
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.provider.delegate

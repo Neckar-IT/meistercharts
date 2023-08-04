@@ -27,7 +27,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px

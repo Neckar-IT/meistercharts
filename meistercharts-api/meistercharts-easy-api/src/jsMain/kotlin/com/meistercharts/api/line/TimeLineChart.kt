@@ -54,7 +54,7 @@ import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.design.Theme
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
@@ -69,7 +69,7 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.js.MeisterchartJS
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.zoom.UpdateReason
 import it.neckar.logging.Logger

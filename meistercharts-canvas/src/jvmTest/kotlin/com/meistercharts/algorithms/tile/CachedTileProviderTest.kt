@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.tile.TileIndex
 import org.junit.jupiter.api.AfterEach

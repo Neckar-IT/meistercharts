@@ -18,9 +18,9 @@ package com.meistercharts.canvas
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import com.meistercharts.events.gesture.MouseMovementSupport
 import it.neckar.open.observable.ObservableObject
 import org.junit.jupiter.api.Test

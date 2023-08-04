@@ -20,11 +20,11 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.ZoomLevelCalculator
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.MutableChartState
 import it.neckar.logging.Level

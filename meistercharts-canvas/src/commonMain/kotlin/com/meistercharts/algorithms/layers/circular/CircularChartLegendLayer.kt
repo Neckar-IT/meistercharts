@@ -29,11 +29,11 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.TransparentPaintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.model.Anchoring
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.model.Corner
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation

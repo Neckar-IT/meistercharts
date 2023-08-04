@@ -27,9 +27,9 @@ import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.font.FontDescriptor
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
 

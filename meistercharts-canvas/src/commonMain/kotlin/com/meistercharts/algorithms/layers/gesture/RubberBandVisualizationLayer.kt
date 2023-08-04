@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.strokeRectCoordinates
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * A layer that visualizers the rubber band (mouse gesture)

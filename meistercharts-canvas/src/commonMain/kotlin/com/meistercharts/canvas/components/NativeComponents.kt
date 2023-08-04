@@ -17,7 +17,7 @@ package com.meistercharts.canvas.components
 
 import it.neckar.open.annotations.Experiment
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose

@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
-import com.meistercharts.model.PolarCoordinates
+import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad

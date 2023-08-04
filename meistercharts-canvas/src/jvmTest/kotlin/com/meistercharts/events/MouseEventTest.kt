@@ -17,7 +17,15 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
 import org.junit.jupiter.api.Test
 
 /**

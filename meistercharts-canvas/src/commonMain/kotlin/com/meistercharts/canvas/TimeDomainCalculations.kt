@@ -28,7 +28,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.TileRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms

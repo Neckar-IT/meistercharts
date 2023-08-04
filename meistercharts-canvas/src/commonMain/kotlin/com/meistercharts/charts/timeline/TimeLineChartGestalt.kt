@@ -78,7 +78,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisEndConfiguration
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
@@ -133,8 +133,8 @@ import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
-import com.meistercharts.model.Size
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter

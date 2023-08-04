@@ -16,8 +16,8 @@
 package com.meistercharts.canvas.resize
 
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import it.neckar.open.unit.other.px
 
 /**

@@ -17,8 +17,8 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.algorithms.layers.tileCalculator
 import com.meistercharts.tile.TileIndex
@@ -28,9 +28,9 @@ import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.canvas.tileRelative2TimeX
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.withZoom
 import com.meistercharts.time.TimeRange

@@ -17,6 +17,7 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.geometry.Side
 import org.junit.jupiter.api.Test
 
 class SideTest {

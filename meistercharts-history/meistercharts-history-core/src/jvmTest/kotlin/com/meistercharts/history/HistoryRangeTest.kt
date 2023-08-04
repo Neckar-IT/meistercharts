@@ -33,7 +33,7 @@ class HistoryRangeTest {
 
     val descriptor = HistoryBucketDescriptor.forTimestamp(millis, HistoryBucketRange.NinetyYears)
 
-    assertThat(descriptor.start.formatUtc()).isEqualTo("1970-01-01T00:00:00.000")
-    assertThat(descriptor.end.formatUtc()).isEqualTo("2058-09-16T00:00:00.000")
+    assertThat(descriptor.start.formatUtc()).isEqualTo("1970-01-01T00:00:00.000Z")
+    assertThat(descriptor.end.formatUtc()).isEqualTo("2058-09-16T00:00:00.000Z")
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.resources.svg
 
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.svg.SVGPathParser
 
 /**

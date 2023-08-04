@@ -17,6 +17,7 @@ package com.meistercharts.model
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.geometry.PolarCoordinates
 import it.neckar.open.kotlin.lang.toRadians
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

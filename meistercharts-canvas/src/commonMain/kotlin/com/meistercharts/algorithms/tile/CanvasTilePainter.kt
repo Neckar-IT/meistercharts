@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.tile
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import kotlin.reflect.KProperty0
 
 /**

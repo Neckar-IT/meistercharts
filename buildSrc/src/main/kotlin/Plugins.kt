@@ -52,6 +52,7 @@ object Plugins {
   const val licenseFormat = "com.github.hierynomus.license"
 
   const val dependenciesReport: String = "it.neckar.dependencies-report"
+  const val jibCli: String = "it.neckar.jib-cli-plugin"
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
@@ -67,6 +68,8 @@ object Plugins {
   const val node: String = "com.github.node-gradle.node"
   const val kover: String = "org.jetbrains.kotlinx.kover"
   const val analyze: String = "ca.cutterslade.analyze"
+
+  const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
   /**
    * Only for JavaFX 17+
@@ -95,6 +98,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinMultiPlatform: Plu
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinxSerialization: PluginDependencySpec
   get() = id(Plugins.kotlinxSerialization)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.jibCli: PluginDependencySpec
+  get() = id(Plugins.jibCli)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.latestWebpack: PluginDependencySpec
   get() = id(Plugins.latestWebpack)
@@ -188,3 +194,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.javafx: PluginDependency
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependencySpec
   get() = id(Plugins.analyze)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
+  get() = id(Plugins.copyResourcesFromDependencies)

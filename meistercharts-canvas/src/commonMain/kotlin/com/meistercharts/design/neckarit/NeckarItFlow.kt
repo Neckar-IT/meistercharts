@@ -22,7 +22,7 @@ import com.meistercharts.canvas.animation.AnimationRepeatType
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 

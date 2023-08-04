@@ -15,7 +15,7 @@
  */
 package com.meistercharts.font
 
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.unit.other.px
 
 /**

@@ -26,8 +26,14 @@ abstract class BaseTimerImplementation : TimerImplementation {
   @Sorted
   private val delayCallbacks = mutableSortedListOf<DelayEntry>()
 
+  /**
+   * Contains the repeat callbacks.
+   * Attention: This list will be sorted every time something (might) have changed.
+   *
+   * The [RepeatEntry]s are mutable to avoid allocations.
+   */
   @Sorted
-  private val repeatCallbacks = mutableSortedListOf<RepeatEntry>()
+  private val repeatCallbacks = mutableListOf<RepeatEntry>()
 
   private fun handleDelayCallbacks(now: @ms Double) {
     delayCallbacks.fastForEachDelete {
@@ -52,7 +58,7 @@ abstract class BaseTimerImplementation : TimerImplementation {
       }
     }
 
-    repeatCallbacks.sort() //manual sort, because we changed the targetTime
+    repeatCallbacks.sort() //manual sort, because we have changed the targetTime
   }
 
   override fun delay(delay: Duration, callback: () -> Unit): Disposable {
@@ -76,6 +82,8 @@ abstract class BaseTimerImplementation : TimerImplementation {
 
     val entry = RepeatEntry(delayInMillis, nowMillis() + delayInMillis, callback)
     repeatCallbacks.add(entry)
+    repeatCallbacks.sort()
+
     return Disposable { repeatCallbacks.remove(entry) }
   }
 

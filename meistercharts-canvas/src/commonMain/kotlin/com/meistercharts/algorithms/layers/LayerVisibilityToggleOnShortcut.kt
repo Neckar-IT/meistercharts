@@ -21,9 +21,9 @@ import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.matches
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.matches
+import it.neckar.events.KeyStroke
 
 /**
  * layer that toggles the visibility on shortcut (Ctrl-Alt-V)

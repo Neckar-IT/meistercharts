@@ -33,7 +33,7 @@ class KlockExtensionsKtTest {
   @Test
   fun testIt() {
     val now: @ms Double = 1.5900732415E12
-    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
 
     val dateTimeTz = DateTime(now).utc2DateTimeTz(TimeZone.Berlin)
 

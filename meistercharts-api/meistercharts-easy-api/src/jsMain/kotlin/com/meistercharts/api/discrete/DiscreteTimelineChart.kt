@@ -42,8 +42,8 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.js.MeisterchartJS
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug

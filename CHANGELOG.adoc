@@ -1,6 +1,42 @@
 = MeisterCharts Release Notes
 
-== MeisterCharts 1.34.0-SNAPSHOT
+== MeisterCharts 1.34.1
+
+Release date: 2023-08-04 +
+
+=== New Features
+
+* StringShortener: Use truncateToLength from common code (performance improvement)
+* Extract KeyCode/KeyEvents to common code (improved test coverage)
+* Log messages greatly improved
+* End-to-End Tests: Added Playwright tests for several charts
+* Extract geometry module (improved test coverage)
+
+==== Virtual Time
+
+Meistercharts supports a virtual time in all charts.
+This allows for easier testing.
+
+=== Bugfixes / Improvements
+
+* Fix Category Chart: Category Axis repaint missing (#3)
+* Update dependencies
+* Remove IE11 workarounds (IE11 is no longer supported)
+* Handling of default time zone improved (default time zone is now UTC - relevant for E2E tests)
+
+
+==== Examples
+
+* Updated the links within the examples.
+
+=== Build / Tests
+
+* Improve JSON comparisons (using skyscreamer/jsonassert)
+
+
+== MeisterCharts 1.34.0
+
+Release date: 2023-07-18 +
 
 === New Features
 
@@ -28,7 +64,8 @@ There are now two downsampling modes available:
 * None
 
 When using the automatic mode, Meistercharts will automatically select the best downsampling mode for the current zoom level.
-When using the none mode, no downsampling will be applied. The user is responsible for providing the data in the correct resolution.
+When using the none mode, no downsampling will be applied.
+The user is responsible for providing the data in the correct resolution.
 
 ===== Custom Events for History Queries
 
@@ -107,7 +144,8 @@ This UUID can be used to create links to a specific demo.
 
 * Introduce cache for alpha colors
 * Improved FPS calculations
-* [TimelineChart] Tiles size has been optimized. This improves the tile recreation performance by 65%.
+* [TimelineChart] Tiles size has been optimized.
+This improves the tile recreation performance by 65%.
 * Improved precision for frame timestamps
 
 === Minor Improvements

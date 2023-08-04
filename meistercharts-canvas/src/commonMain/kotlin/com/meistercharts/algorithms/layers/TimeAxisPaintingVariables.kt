@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Domain
 import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.layout.cache.StringsCache
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms

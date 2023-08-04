@@ -50,14 +50,14 @@ class TimeAxisTickCalculatorTest {
 
 
     DistanceYears(1).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000")
+      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000Z")
     }
     DistanceYears(10).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000")
+      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000Z")
     }
 
     DistanceMonths(3).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2020-06-30T22:00:00.000")
+      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2020-06-30T22:00:00.000Z")
     }
   }
 
@@ -83,12 +83,12 @@ class TimeAxisTickCalculatorTest {
 
     //we expect a tick every day
     TimeAxisTickCalculator.calculateTickValues(start, end, 1.days.toDouble(DurationUnit.MILLISECONDS), TimeZone.UTC).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-02T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-09-03T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-09-04T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-02T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-09-03T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-09-04T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-09-20T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-09-20T00:00:00.000Z")
     }
   }
 
@@ -102,16 +102,16 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan1Day, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-05T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-09-10T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-09-15T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2001-09-20T00:00:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2001-09-25T00:00:00.000")
-      assertThat(it[6].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
-      assertThat(it[7].formatUtc()).isEqualTo("2001-10-05T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-05T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-09-10T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-09-15T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2001-09-20T00:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2001-09-25T00:00:00.000Z")
+      assertThat(it[6].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
+      assertThat(it[7].formatUtc()).isEqualTo("2001-10-05T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000Z")
     }
 
     TimeAxisTickCalculator.calculateTickValues(
@@ -119,14 +119,14 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan1Day, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-05T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-10T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-09-15T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-09-20T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2001-09-25T00:00:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-05T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-10T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-09-15T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-09-20T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2001-09-25T00:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000Z")
     }
   }
 
@@ -140,13 +140,13 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan5Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-10T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-09-20T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2001-10-10T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-10T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-09-20T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2001-10-10T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-10T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-10T00:00:00.000Z")
     }
 
     TimeAxisTickCalculator.calculateTickValues(
@@ -154,12 +154,12 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan5Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-10T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-20T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-10-10T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-10T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-20T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-10-10T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-10T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-10T00:00:00.000Z")
     }
   }
 
@@ -173,13 +173,13 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan10Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-09-15T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-10-15T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2001-11-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-09-15T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-10-15T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2001-11-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000Z")
     }
 
     TimeAxisTickCalculator.calculateTickValues(
@@ -187,12 +187,12 @@ class TimeAxisTickCalculatorTest {
       1008614294000.0, //Monday, 17. December 2001 18:38:14
       minTickDistanceGreaterThan10Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-09-15T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-10-01T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2001-10-15T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2001-11-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-09-15T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-10-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2001-10-15T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2001-11-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2001-12-15T00:00:00.000Z")
     }
   }
 
@@ -206,14 +206,14 @@ class TimeAxisTickCalculatorTest {
       1030446313000.0, //Tuesday, 27. August 2002 11:05:13
       minTickDistanceGreaterThan10Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2001-12-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2001-12-15T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-01-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-01-15T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-02-01T00:00:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2002-02-15T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2001-12-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2001-12-15T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-01-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-01-15T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-02-01T00:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2002-02-15T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-08-15T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-08-15T00:00:00.000Z")
     }
   }
 
@@ -227,12 +227,12 @@ class TimeAxisTickCalculatorTest {
       1652829239000.0, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan3Years, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("1940-01-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("1945-01-01T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("1950-01-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("1955-01-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("1940-01-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("1945-01-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("1950-01-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("1955-01-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2020-01-01T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2020-01-01T00:00:00.000Z")
     }
   }
 
@@ -266,13 +266,13 @@ class TimeAxisTickCalculatorTest {
       1652829239000.0, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan84Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-07-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2003-01-01T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2003-07-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2004-01-01T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2004-07-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-07-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2003-01-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2003-07-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2004-01-01T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2004-07-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2022-01-01T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2022-01-01T00:00:00.000Z")
     }
   }
 
@@ -310,13 +310,13 @@ class TimeAxisTickCalculatorTest {
       1652829239000.0, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan28Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2003-01-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2003-03-01T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2003-05-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2003-07-01T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2003-09-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2003-01-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2003-03-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2003-05-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2003-07-01T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2003-09-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2022-05-01T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2022-05-01T00:00:00.000Z")
     }
   }
 
@@ -330,14 +330,14 @@ class TimeAxisTickCalculatorTest {
       1652829239000.0, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan15Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2003-01-01T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2003-02-01T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2003-03-01T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2003-04-01T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2003-05-01T00:00:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2003-06-01T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2003-01-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2003-02-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2003-03-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2003-04-01T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2003-05-01T00:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2003-06-01T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2022-05-01T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2022-05-01T00:00:00.000Z")
     }
   }
 
@@ -377,12 +377,12 @@ class TimeAxisTickCalculatorTest {
       1652829239000.0, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan12Hours, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-25T00:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-26T00:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-27T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-28T00:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-25T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-26T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-27T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-28T00:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2022-05-17T00:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2022-05-17T00:00:00.000Z")
     }
   }
 
@@ -461,13 +461,13 @@ class TimeAxisTickCalculatorTest {
       1040112299000.0, //Tuesday, 17. December 2002 08:04:59
       tickDistanceGreaterThan2Hours, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T21:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-04T00:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-04T03:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-04T06:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T21:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-04T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-04T03:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-04T06:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-17T06:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-17T06:00:00.000Z")
     }
   }
 
@@ -481,15 +481,15 @@ class TimeAxisTickCalculatorTest {
       1040112299000.0, //Tuesday, 17. December 2002 08:04:59
       tickDistanceGreaterThan1Hour, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T20:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T22:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-04T00:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-04T02:00:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2002-12-04T04:00:00.000")
-      assertThat(it[6].formatUtc()).isEqualTo("2002-12-04T06:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T20:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T22:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-04T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-04T02:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2002-12-04T04:00:00.000Z")
+      assertThat(it[6].formatUtc()).isEqualTo("2002-12-04T06:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-17T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-17T08:00:00.000Z")
     }
   }
 
@@ -503,13 +503,13 @@ class TimeAxisTickCalculatorTest {
       1039334699000.0, //Sunday, 8. December 2002 08:04:59
       tickDistanceGreaterThan30Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T19:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T20:00:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T21:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T22:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T19:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T20:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T21:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T22:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000Z")
     }
   }
 
@@ -523,14 +523,14 @@ class TimeAxisTickCalculatorTest {
       1039334699000.0, //Sunday, 8. December 2002 08:04:59
       tickDistanceGreaterThan15Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:30:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T18:30:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T19:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T19:30:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T20:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T18:30:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T19:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T19:30:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T20:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000Z")
     }
   }
 
@@ -544,14 +544,14 @@ class TimeAxisTickCalculatorTest {
       1039334699000.0, //Sunday, 8. December 2002 08:04:59
       tickDistanceGreaterThan10Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:15:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:30:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:45:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:15:00.000")
-      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T18:30:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:15:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:45:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:15:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T18:30:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000Z")
     }
   }
 
@@ -565,13 +565,13 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan5Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:20:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:30:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:40:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:50:00.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:00:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:20:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:40:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:50:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:00:00.000Z")
     }
   }
 
@@ -585,12 +585,12 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan2Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:15:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:20:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:25:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:30:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:15:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:20:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:25:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:00:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:00:00.000Z")
     }
   }
 
@@ -604,12 +604,12 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan1Minute, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:14:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:16:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:18:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:14:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:16:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:18:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:00.000Z")
     }
   }
 
@@ -623,12 +623,12 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan30Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:13:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:14:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:15:00.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:13:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:14:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:15:00.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:00.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:00.000Z")
     }
   }
 
@@ -642,12 +642,12 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan20Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:30.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:13:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:13:30.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:30.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:13:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:13:30.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:30.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:30.000Z")
     }
   }
 
@@ -661,12 +661,12 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan10Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:15.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:30.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:45.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:15.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:30.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:45.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:45.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:45.000Z")
     }
   }
 
@@ -680,13 +680,13 @@ class TimeAxisTickCalculatorTest {
       1038989099000.0, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan5Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:10.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:20.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:30.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:40.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:10.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:20.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:30.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:40.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:50.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:50.000Z")
     }
   }
 
@@ -700,12 +700,12 @@ class TimeAxisTickCalculatorTest {
       1038953849000.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan3Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:05.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:10.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:05.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:10.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:25.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:25.000Z")
     }
   }
 
@@ -719,13 +719,13 @@ class TimeAxisTickCalculatorTest {
       1038953849000.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan2Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:05.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:10.000")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:15.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:05.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:10.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:15.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:25.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:25.000Z")
     }
   }
 
@@ -739,12 +739,12 @@ class TimeAxisTickCalculatorTest {
       1038953849000.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan1Second, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:56.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:58.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:00.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:02.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:56.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:58.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:02.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:28.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:28.000Z")
     }
   }
 
@@ -758,12 +758,12 @@ class TimeAxisTickCalculatorTest {
       1038953849000.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan500Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:56.000")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:57.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:58.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:56.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:57.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:58.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.000Z")
     }
   }
 
@@ -777,12 +777,12 @@ class TimeAxisTickCalculatorTest {
       1038953849333.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan250Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.500")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:56.000")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:56.500")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.500Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:56.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:56.500Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.000")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.000Z")
     }
   }
 
@@ -796,13 +796,13 @@ class TimeAxisTickCalculatorTest {
       1038953849333.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan200Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.250")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.500")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.750")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:11:56.000")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.250Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.500Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.750Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:11:56.000Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.250")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.250Z")
     }
   }
 
@@ -816,12 +816,12 @@ class TimeAxisTickCalculatorTest {
       1038953849333.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan100Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.200")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.400")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.600")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.200Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.400Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.600Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.200")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.200Z")
     }
   }
 
@@ -835,12 +835,12 @@ class TimeAxisTickCalculatorTest {
       1038953849333.0, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan50Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.100")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.200")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.300")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.100Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.200Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.300Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.300")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.300Z")
     }
   }
 
@@ -854,12 +854,12 @@ class TimeAxisTickCalculatorTest {
       1038938249333.0, //Tuesday, 3. December 2002 17:57:29
       tickDistanceGreaterThan25Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.050")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.100")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.150")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.050Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.100Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.150Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.300")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.300Z")
     }
   }
 
@@ -873,12 +873,12 @@ class TimeAxisTickCalculatorTest {
       1038938249333.0, //Tuesday, 3. December 2002 17:57:29
       tickDistanceGreaterThan20Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.025")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.050")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.075")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.025Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.050Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.075Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.325")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.325Z")
     }
   }
 
@@ -892,12 +892,12 @@ class TimeAxisTickCalculatorTest {
       1038938249333.0, //Tuesday, 3. December 2002 17:57:29
       tickDistanceGreaterThan10Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.020")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.040")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.060")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.020Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.040Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.060Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.320")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:57:29.320Z")
     }
   }
 
@@ -911,12 +911,12 @@ class TimeAxisTickCalculatorTest {
       1038935606333.0, //Tuesday, 3. December 2002 17:13:26
       tickDistanceGreaterThan5Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.010")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.020")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.030")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.010Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.020Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.030Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.330")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.330Z")
     }
   }
 
@@ -930,12 +930,12 @@ class TimeAxisTickCalculatorTest {
       1038935606333.0, //Tuesday, 3. December 2002 17:13:26
       tickDistanceGreaterThan2Milliseconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.005")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.010")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.015")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.005Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.010Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.015Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.330")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.330Z")
     }
   }
 
@@ -949,12 +949,12 @@ class TimeAxisTickCalculatorTest {
       1038935606333.0, //Tuesday, 3. December 2002 17:13:26
       tickDistanceGreaterThan1Millisecond, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.002")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.004")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.006")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:11:55.002Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:55.004Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:55.006Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.332")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:13:26.332Z")
     }
   }
 

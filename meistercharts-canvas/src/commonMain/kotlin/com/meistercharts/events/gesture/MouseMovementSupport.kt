@@ -16,8 +16,8 @@
 package com.meistercharts.events.gesture
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 

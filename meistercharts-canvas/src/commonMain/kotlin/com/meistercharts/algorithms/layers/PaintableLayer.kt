@@ -20,10 +20,10 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintableProvider
 import com.meistercharts.canvas.paintable.ResizablePaintable
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 
 
 /**

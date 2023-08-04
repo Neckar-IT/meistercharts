@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter.ValueLabelAnchorDirectionProvider.Companion.barPointsLeft
 import com.meistercharts.algorithms.layers.barchart.GroupedBarsPainter.ValueLabelAnchorDirectionProvider.Companion.barPointsUp
@@ -26,7 +26,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintMark
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 
 /**
  * Ensures that the value-label is always within the window.

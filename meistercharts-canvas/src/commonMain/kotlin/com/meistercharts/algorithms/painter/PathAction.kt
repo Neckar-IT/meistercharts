@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * Represents an action within the path

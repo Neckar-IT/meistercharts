@@ -32,7 +32,7 @@ class DownSamplingDirtyRangesCollectorTest {
 
   @BeforeEach
   fun setUp() {
-    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
+    assertThat(now.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")
   }
 
   @Test

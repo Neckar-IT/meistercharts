@@ -16,7 +16,9 @@
 package com.meistercharts.model
 
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Side
 import it.neckar.open.unit.other.px
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic

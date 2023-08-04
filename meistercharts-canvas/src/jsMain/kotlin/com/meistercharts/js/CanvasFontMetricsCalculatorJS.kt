@@ -19,9 +19,9 @@ import com.meistercharts.canvas.CanvasType
 import com.meistercharts.font.FontDescriptor
 import com.meistercharts.canvas.saved
 import com.meistercharts.font.AbstractCanvasFontMetricsCalculator
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Size
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Size
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.unit.other.Scaled

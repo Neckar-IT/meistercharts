@@ -17,7 +17,7 @@ package com.meistercharts.algorithms
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test
 

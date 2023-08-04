@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 import it.neckar.open.unit.other.px
 
 /**

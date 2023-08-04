@@ -16,8 +16,8 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.resources.Icons
 
 /**

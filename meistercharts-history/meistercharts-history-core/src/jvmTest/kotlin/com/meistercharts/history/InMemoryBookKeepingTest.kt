@@ -49,7 +49,7 @@ internal class InMemoryBookKeepingTest {
   @Test
   fun testFixBounds() {
     val timestamp = VirtualTime.defaultNow.also {
-      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002")
+      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 
     val bookKeeping = InMemoryBookKeeping()
@@ -110,7 +110,7 @@ internal class InMemoryBookKeepingTest {
   private fun addAndDownSample(historyStorage: InMemoryHistoryStorage) {
     val samplingPeriod: SamplingPeriod = SamplingPeriod.EveryHundredMillis
     val startTimestamp = VirtualTime.defaultNow.also {
-      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002")
+      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 
     val descriptor = HistoryBucketDescriptor.forTimestamp(startTimestamp, samplingPeriod)
@@ -122,7 +122,7 @@ internal class InMemoryBookKeepingTest {
     }
 
     val endTimestamp = descriptor.end.also {
-      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:46:00.000")
+      assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:46:00.000Z")
     }
 
     val downSamplingService = historyStorage.downSamplingService

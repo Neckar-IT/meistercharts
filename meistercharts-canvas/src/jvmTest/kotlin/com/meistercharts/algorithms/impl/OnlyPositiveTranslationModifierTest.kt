@@ -19,9 +19,9 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.zoom.ZoomAndTranslationModifier
-import com.meistercharts.axis.AxisOrientationY
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.Size
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Distance
+import it.neckar.geometry.Size
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.zoom.OnlyPositiveTranslationModifier
 import org.junit.jupiter.api.BeforeEach

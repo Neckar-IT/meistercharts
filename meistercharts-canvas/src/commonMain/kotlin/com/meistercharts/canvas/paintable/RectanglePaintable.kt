@@ -17,9 +17,9 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.px
 

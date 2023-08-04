@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.MeisterChartsBuilderDsl
 
 /**

@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.geometry.Bezier
 import com.meistercharts.canvas.geometry.length
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import org.junit.jupiter.api.Test
 import kotlin.math.sqrt
 

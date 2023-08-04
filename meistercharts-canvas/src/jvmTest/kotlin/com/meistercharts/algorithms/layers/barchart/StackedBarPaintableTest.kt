@@ -20,10 +20,10 @@ import assertk.assertions.*
 import assertk.assertions.support.*
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.range.ValueRange
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.DefaultChartState
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.kotlin.lang.isCloseTo

@@ -16,16 +16,16 @@
 package com.meistercharts.events.gesture
 
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.Pointer
-import com.meistercharts.events.PointerDownEvent
+import it.neckar.events.Pointer
+import it.neckar.events.PointerDownEvent
 import com.meistercharts.events.PointerEventBroker
-import com.meistercharts.events.PointerMoveEvent
-import com.meistercharts.events.PointerUpEvent
-import com.meistercharts.events.distanceDeltaAbsolute
+import it.neckar.events.PointerMoveEvent
+import it.neckar.events.PointerUpEvent
+import it.neckar.events.distanceDeltaAbsolute
 import it.neckar.open.unit.other.px
 
 /**

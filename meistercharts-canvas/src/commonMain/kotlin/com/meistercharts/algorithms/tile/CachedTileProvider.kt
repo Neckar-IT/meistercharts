@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.algorithms.tile.GlobalTilesCache.cache
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.annotations.Slow
 
 /**

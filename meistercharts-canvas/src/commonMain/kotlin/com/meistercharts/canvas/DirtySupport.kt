@@ -15,6 +15,9 @@
  */
 package com.meistercharts.canvas
 
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.trace
 import it.neckar.open.annotations.Boxed
 import kotlin.jvm.JvmInline
 
@@ -40,6 +43,8 @@ class DirtySupport {
    */
   fun markAsDirty(reason: DirtyReason) {
     dirty = true
+
+    logger.trace { "Marking as dirty because of ${reason.format()}" }
 
     dirtyReasonsBits = dirtyReasonsBits or reason
   }
@@ -73,6 +78,10 @@ class DirtySupport {
    */
   fun isDirtyBecause(reason: DirtyReason): Boolean {
     return dirtyReasonsBits.isDirtyBecause(reason)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.DirtySupport")
   }
 }
 
@@ -112,6 +121,27 @@ value class DirtyReason(val value: Int) {
 
   override fun toString(): String {
     return "DirtyReason(value=${value.toString(2)})"
+  }
+
+  /**
+   * Formats the dirty reason as a (human-readable) string
+   */
+  fun format(): String {
+    return when (this) {
+      UserInteraction -> "UserInteraction"
+      UiStateChanged -> "UiStateChanged"
+      ConfigurationChanged -> "ConfigurationChanged"
+      ChartStateChanged -> "ChartStateChanged"
+      Tooltip -> "Tooltip"
+      ResourcesLoaded -> "ResourcesLoaded"
+      DataUpdated -> "DataUpdated"
+      ActiveElementUpdated -> "ActiveElementUpdated"
+      Animation -> "Animation"
+      Visibility -> "Visibility"
+      Initial -> "Initial"
+      Unknown -> "Unknown"
+      else -> "$value"
+    }
   }
 
   companion object {

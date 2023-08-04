@@ -194,20 +194,20 @@ class HistoryChunkOnlyReferenceEntriesTest {
     val dump = chunk.dump()
     assertThat(dump).isEqualComparingLinesTrim(
       """
-        Start: 1970-01-01T00:00:01.001
-        End:   1970-01-01T00:00:01.003
+        Start: 1970-01-01T00:00:01.001Z
+        End:   1970-01-01T00:00:01.003Z
         Series counts:
           Decimals: 0
           Enums:    0
           RefId:    4
         RecordingType:    Measured
         ---------------------------------------
-        Indices:                     |  |                       0                       1                       2                       3
-        IDs:                         |  |                      10                      11                      12                      13
+        Indices:                      |  |                       0                       1                       2                       3
+        IDs:                          |  |                      10                      11                      12                      13
 
-           0 1970-01-01T00:00:01.001 |  |     1         0b1   (1)    10         0b1   (1)   100         0b1   (1)  1000         0b1   (1)
-           1 1970-01-01T00:00:01.002 |  |     2       0b101   (1)    20      0b1001   (1)   200     0b10001   (1)  2000    0b100001   (1)
-           2 1970-01-01T00:00:01.003 |  |     3     0b10001   (1)    30     0b10011   (1)   300     0b10011   (1)  3000     0b10011   (1)
+           0 1970-01-01T00:00:01.001Z |  |     1         0b1   (1)    10         0b1   (1)   100         0b1   (1)  1000         0b1   (1)
+           1 1970-01-01T00:00:01.002Z |  |     2       0b101   (1)    20      0b1001   (1)   200     0b10001   (1)  2000    0b100001   (1)
+           2 1970-01-01T00:00:01.003Z |  |     3     0b10001   (1)    30     0b10011   (1)   300     0b10011   (1)  3000     0b10011   (1)
     """.trimIndent()
     )
   }
@@ -253,35 +253,35 @@ class HistoryChunkOnlyReferenceEntriesTest {
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
 
-    assertThat(chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+    assertThat(chunk.timestampCenter(TimestampIndex(0)).formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
+    assertThat(chunk.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
 
-    assertThat(chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
-    assertThat(chunk.timestampCenter(TimestampIndex(2)).formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
-    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+    assertThat(chunk.timestampCenter(TimestampIndex(1)).formatUtc()).isEqualTo("1970-01-01T00:00:01.002Z")
+    assertThat(chunk.timestampCenter(TimestampIndex(2)).formatUtc()).isEqualTo("1970-01-01T00:00:01.003Z")
+    assertThat(chunk.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003Z")
 
     chunk.range(0.0, chunk.timestampCenter(TimestampIndex(2)))!!.let {
       //contains everything
-      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002Z")
     }
 
     chunk.range(chunk.timestampCenter(TimestampIndex(0)), 999999999999.0)!!.let {
       //contains everything
-      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003Z")
     }
 
     chunk.range(0.0, chunk.timestampCenter(TimestampIndex(1)))!!.let {
       //contains *not*
-      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
-      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.001Z")
     }
 
     chunk.range(chunk.timestampCenter(TimestampIndex(1)), 999999999999999.0)!!.let {
       //contains *not*
-      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002")
-      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003")
+      assertThat(it.firstTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.002Z")
+      assertThat(it.lastTimestamp.formatUtc()).isEqualTo("1970-01-01T00:00:01.003Z")
     }
   }
 

@@ -11,11 +11,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-/**
- * A format that does not show the time zone nor the offset
- */
-private val utcDateTimeFormat = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS")
-
 actual class DateTimeFormatIso8601 : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return DateUtils.toZonedDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).format(DateTimeFormatter.ISO_DATE_TIME)
@@ -36,7 +31,7 @@ actual class TimeFormatIso8601 : DateTimeFormat {
 
 actual class DateTimeFormatUTC : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
-    return DateUtils.toOffsetDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).withOffsetSameInstant(ZoneOffset.UTC).format(utcDateTimeFormat)
+    return DateUtils.toOffsetDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).withOffsetSameInstant(ZoneOffset.UTC).format(it.neckar.open.time.utcDateTimeFormat)
   }
 }
 

@@ -30,7 +30,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.provider.DoublesProvider
 import com.meistercharts.provider.ValueRangeProvider

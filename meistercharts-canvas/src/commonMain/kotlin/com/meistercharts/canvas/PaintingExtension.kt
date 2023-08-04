@@ -29,8 +29,8 @@ import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
 import com.meistercharts.model.*
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.floor
@@ -38,6 +38,10 @@ import it.neckar.open.kotlin.lang.ifBlank
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.isPositiveOrZero
 import com.meistercharts.style.BoxStyle
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Size
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 

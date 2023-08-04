@@ -36,8 +36,8 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.formatting.intFormat
 

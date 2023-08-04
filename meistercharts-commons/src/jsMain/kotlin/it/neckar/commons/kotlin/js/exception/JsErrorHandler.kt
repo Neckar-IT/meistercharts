@@ -80,10 +80,18 @@ class JsErrorHandlerMultiplexer(
  */
 object ConsoleJsErrorHandler : JsErrorHandler {
   override fun otherError(message: dynamic, error: Any) {
-    console.error("------------ EXCEPTION HANDLER ----------")
+    console.error("------------ EXCEPTION HANDLER - other error ----------")
     console.error("Error: <$error>", error)
     console.error("Message: <${message}>")
-    println("------------ /EXCEPTION HANDLER ----------")
+
+    if (error is Throwable) {
+      error.printStackTrace()
+    } else {
+      console.error("Error is not a throwable")
+      console.error("but of type <${error::class.simpleName}>")
+    }
+
+    console.error("------------ /EXCEPTION HANDLER ----------")
   }
 
   override fun error(throwable: Throwable) {
@@ -96,6 +104,7 @@ object ConsoleJsErrorHandler : JsErrorHandler {
       console.error("Cause.message: <${cause.message}>")
     }
 
+    console.error("Stacktrace:")
     throwable.printStackTrace()
     console.error("------------ /EXCEPTION HANDLER ----------")
   }

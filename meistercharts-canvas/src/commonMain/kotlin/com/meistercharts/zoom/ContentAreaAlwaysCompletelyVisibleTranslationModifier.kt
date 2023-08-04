@@ -16,11 +16,11 @@
 package com.meistercharts.zoom
 
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
 import it.neckar.open.unit.other.px

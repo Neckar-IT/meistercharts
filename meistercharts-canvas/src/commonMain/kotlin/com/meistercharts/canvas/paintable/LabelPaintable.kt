@@ -22,10 +22,10 @@ import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService

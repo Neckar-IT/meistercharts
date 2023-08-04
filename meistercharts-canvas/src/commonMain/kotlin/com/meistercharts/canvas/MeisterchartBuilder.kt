@@ -22,12 +22,12 @@ import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationConfigurati
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationLayer
 import com.meistercharts.algorithms.layers.gesture.addZoomAndTranslation
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.axis.AxisSelection
+import it.neckar.geometry.AxisSelection
 import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.charts.ChartGestaltConfiguration
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder

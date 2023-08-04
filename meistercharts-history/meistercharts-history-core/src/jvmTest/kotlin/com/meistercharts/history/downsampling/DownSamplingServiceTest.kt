@@ -84,13 +84,13 @@ class DownSamplingServiceTest {
       assertThat(it).hasSize(2)
 
       (it.first().refreshRange as RefreshPartially).let {
-        assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:45:23.002")
-        assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:50:00.000")
+        assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
+        assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z")
       }
 
       (it.last().refreshRange as RefreshPartially).let {
-        assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:50:00.000")
-        assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:55:23.002")
+        assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z")
+        assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:55:23.002Z")
       }
     }
   }

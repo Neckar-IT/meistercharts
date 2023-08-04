@@ -19,8 +19,8 @@ import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.design.Theme
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
 
 /**
  * Shows a background image - in the window

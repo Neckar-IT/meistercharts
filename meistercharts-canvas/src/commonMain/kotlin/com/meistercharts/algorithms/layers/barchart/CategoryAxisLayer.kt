@@ -22,18 +22,21 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.model.category.createCategoryLabelsProvider
-import com.meistercharts.model.category.valueAt
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
+import com.meistercharts.color.Color
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.createCategoryLabelsProvider
+import com.meistercharts.model.category.valueAt
 import com.meistercharts.provider.SizedLabelsProvider
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.trace
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -58,6 +61,8 @@ class CategoryAxisLayer(
      * Calculates all painting variables
      */
     override fun calculate(paintingContext: LayerPaintingContext) {
+      logger.trace("Calculate painting variables - Window size: ${paintingContext.chartState.windowSize.format()}")
+
       reset()
 
       //Do not paint anything if there is no layout
@@ -70,11 +75,15 @@ class CategoryAxisLayer(
       calculateTickLabelsMaxWidth(style)
 
       calculateLocations(paintingContext, style)
+
+      logger.trace("Finished Calculate painting variables - layout: $categoryLayout")
     }
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val categoryLayout = paintingVariables.categoryLayout
+
+    logger.trace { "Painting category axis - current category layout: $categoryLayout" }
 
     if (categoryLayout.isEmpty() || paintingVariables.axisLength == 0.0) {
       //Skip painting - no axis available
@@ -178,6 +187,8 @@ class CategoryAxisLayer(
    * @param direction in which direction lies the axis line
    */
   override fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction) {
+    logger.trace { "paintTicksWithLabelsHorizontally" }
+
     val categoryLayout: EquisizedBoxLayout = paintingVariables.categoryLayout
 
     val gc = paintingContext.gc
@@ -196,6 +207,7 @@ class CategoryAxisLayer(
 
       if (currentX < paintingVariables.axisStart || currentX > paintingVariables.axisEnd) {
         // behind passpartout
+        logger.trace { "Skipping category $categoryIndex because it is outside of the axis" }
         continue
       }
 
@@ -261,6 +273,10 @@ class CategoryAxisLayer(
      * Provides the color for each tick label; this overrides [tickLabelColor] if set.
      */
     var categoryLabelColor: MultiProvider<CategoryIndex, Color>? = null
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer")
   }
 }
 

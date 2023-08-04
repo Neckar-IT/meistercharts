@@ -55,7 +55,7 @@ class DateFormatJvmTest {
 
   @Test
   fun dateFormat() {
-    assertThat(now.formatUtc()).isEqualTo("2021-03-14T22:46:11.002")
+    assertThat(now.formatUtc()).isEqualTo("2021-03-14T22:46:11.002Z")
     assertThat(dateFormat.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.2021")
     assertThat(dateFormat.format(now, englishBerlin)).isEqualTo("Mar 14, 2021")
     assertThat(dateFormat.format(now, englishTokyo)).isEqualTo("Mar 15, 2021")
@@ -98,9 +98,9 @@ class DateFormatJvmTest {
 
   @Test
   fun dateFormatUTC() {
-    assertThat(dateTimeFormatUTC.format(now, I18nConfiguration.Germany)).isEqualTo("2021-03-14T22:46:11.002")
-    assertThat(dateTimeFormatUTC.format(now, englishBerlin)).isEqualTo("2021-03-14T22:46:11.002")
-    assertThat(dateTimeFormatUTC.format(now, englishTokyo)).isEqualTo("2021-03-14T22:46:11.002")
+    assertThat(dateTimeFormatUTC.format(now, I18nConfiguration.Germany)).isEqualTo("2021-03-14T22:46:11.002Z")
+    assertThat(dateTimeFormatUTC.format(now, englishBerlin)).isEqualTo("2021-03-14T22:46:11.002Z")
+    assertThat(dateTimeFormatUTC.format(now, englishTokyo)).isEqualTo("2021-03-14T22:46:11.002Z")
   }
 
   @Test

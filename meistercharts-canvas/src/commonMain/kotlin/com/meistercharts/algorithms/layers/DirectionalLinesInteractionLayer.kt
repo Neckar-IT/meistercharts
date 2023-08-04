@@ -20,7 +20,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.MouseMoveEvent
+import it.neckar.events.MouseMoveEvent
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.provider.fastForEachIndexedReversed

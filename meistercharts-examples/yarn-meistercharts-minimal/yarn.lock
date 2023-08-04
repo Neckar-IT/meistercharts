@@ -52,10 +52,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@meistercharts/meistercharts@^1.32.0":
-  version "1.32.0"
-  resolved "https://registry.yarnpkg.com/@meistercharts/meistercharts/-/meistercharts-1.32.0.tgz#7e408d542feb1c859f8ceacd93b721c288e0fff8"
-  integrity sha512-M0AvLdOMyPF8NJNkMcXZhkPylANaWxp1t1V6tnR/WtFmIjb6rhfSjbYa67C86qto6ELNt5gLuO4S5ylqnj4Y4Q==
+"@meistercharts/meistercharts@1.33.0":
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/@meistercharts/meistercharts/-/meistercharts-1.33.0.tgz#21bfcec9485b03ab485452d56f6618ee8e3ff6a2"
+  integrity sha512-bUIsRUZN5DszGdnV+UfeZuvbxek5tAVsNbCMCPgCXrrAPeSuylo9h5EhLC3Ys86xGG67LtE9hoxiq5uXzWxkkw==
 
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"

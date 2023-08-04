@@ -15,8 +15,10 @@
  */
 package com.meistercharts.axis
 
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.VerticalAlignment
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 
 /**
  * Describes a direction that is aware of the orientation of the axis

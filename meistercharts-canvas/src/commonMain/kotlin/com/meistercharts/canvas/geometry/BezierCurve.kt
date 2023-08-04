@@ -18,7 +18,7 @@ package com.meistercharts.canvas.geometry
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 
 /**
  * Represents a bezier curve

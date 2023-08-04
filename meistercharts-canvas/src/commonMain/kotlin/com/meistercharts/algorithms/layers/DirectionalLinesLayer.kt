@@ -23,10 +23,10 @@ import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.color.Color
-import com.meistercharts.model.Direction
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Side
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Side
+import it.neckar.geometry.VerticalAlignment
 import com.meistercharts.model.Vicinity
 import it.neckar.open.collections.IterationOrder
 import it.neckar.open.kotlin.lang.asProvider

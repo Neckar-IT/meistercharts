@@ -31,9 +31,9 @@ import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.strokeRect
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Size
 import com.meistercharts.provider.SizedLabelsProvider
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.kotlin.lang.centerIndexOf

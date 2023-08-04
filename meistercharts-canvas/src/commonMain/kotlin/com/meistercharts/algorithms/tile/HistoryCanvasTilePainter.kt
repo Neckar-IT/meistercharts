@@ -39,8 +39,8 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.history.valueAt
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.provider.TimeRangeProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.formatting.decimalFormat

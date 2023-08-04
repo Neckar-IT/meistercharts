@@ -23,7 +23,7 @@ import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.calc.TileChartCalculator
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.time.TimeRange
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.floor
@@ -126,12 +126,12 @@ class TimeCalculationPrecisionTest {
 
   @Test
   fun testMaxValues() {
-    assertThat(TimeConstants.referenceTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+    assertThat(TimeConstants.referenceTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
 
     val contentAreaTimeRange = TimeRange.oneMinuteSinceReference
 
-    assertThat(contentAreaTimeRange.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
-    assertThat(contentAreaTimeRange.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000")
+    assertThat(contentAreaTimeRange.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+    assertThat(contentAreaTimeRange.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000Z")
     assertThat(contentAreaTimeRange.delta).isEqualTo(60_000.0) //60 seconds per 1000 pixels
 
     val chartState = DefaultChartState()
@@ -154,7 +154,7 @@ class TimeCalculationPrecisionTest {
 
       assertThat(tileChartCalculator.tileOrigin2contentAreaX()).isEqualTo(0.0)
       assertThat(tileChartCalculator.origin2contentAreaRelativeX()).isEqualTo(0.0)
-      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("2024-01-01T00:00:00.000")
+      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
     }
 
     //Max
@@ -163,7 +163,7 @@ class TimeCalculationPrecisionTest {
 
       assertThat(tileChartCalculator.tileOrigin2contentAreaX()).isEqualTo(6.7637280251937E14)
       assertThat(tileChartCalculator.origin2contentAreaRelativeX()).isEqualTo(6.7637280251937E11)
-      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("+1288028-01-20T01:59:22.200")
+      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("+1288028-01-20T01:59:22.200Z")
     }
 
     //Min
@@ -172,11 +172,11 @@ class TimeCalculationPrecisionTest {
 
       assertThat(tileChartCalculator.tileOrigin2contentAreaX()).isEqualTo(-6.76372802519685E14)
       assertThat(tileChartCalculator.origin2contentAreaRelativeX()).isEqualTo(-6.76372802519685E11)
-      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("-1283981-12-12T22:00:18.896")
+      assertThat(tileChartCalculator.tileOrigin2timeX(contentAreaTimeRange).formatUtc()).isEqualTo("-1283981-12-12T22:00:18.896Z")
     }
 
-    assertThat(TileChartCalculator(chartState, TileIndex(0, 0, 0, 0), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("2024-01-01T00:00:00.000 - 2024-01-01T00:00:18.897")
-    assertThat(TileChartCalculator(chartState, TileIndex(0, 1, 0, 0), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("2024-01-01T00:00:18.897 - 2024-01-01T00:00:37.795")
+    assertThat(TileChartCalculator(chartState, TileIndex(0, 0, 0, 0), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("2024-01-01T00:00:00.000Z - 2024-01-01T00:00:18.897Z")
+    assertThat(TileChartCalculator(chartState, TileIndex(0, 1, 0, 0), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("2024-01-01T00:00:18.897Z - 2024-01-01T00:00:37.795Z")
 
 
     TileIndex(MainIndex.Max, SubIndex.Max, MainIndex.Zero, SubIndex.Zero).let { tileIndex ->
@@ -187,7 +187,7 @@ class TimeCalculationPrecisionTest {
 
     //Estimate integer duration
 
-    assertThat(TileChartCalculator(chartState, TileIndex(MainIndex.Max, SubIndex.Max, MainIndex.Zero, SubIndex.Zero), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("+1288028-01-20T01:59:22.200 - +1288028-01-20T01:59:41.096")
-    assertThat(TileChartCalculator(chartState, TileIndex(MainIndex.Min, SubIndex.Min, MainIndex.Zero, SubIndex.Zero), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("-1283981-12-12T22:00:18.896 - -1283981-12-12T22:00:37.792")
+    assertThat(TileChartCalculator(chartState, TileIndex(MainIndex.Max, SubIndex.Max, MainIndex.Zero, SubIndex.Zero), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("+1288028-01-20T01:59:22.200Z - +1288028-01-20T01:59:41.096Z")
+    assertThat(TileChartCalculator(chartState, TileIndex(MainIndex.Min, SubIndex.Min, MainIndex.Zero, SubIndex.Zero), tileSize).visibleTimeRangeXinTile(contentAreaTimeRange).format()).isEqualTo("-1283981-12-12T22:00:18.896Z - -1283981-12-12T22:00:37.792Z")
   }
 }

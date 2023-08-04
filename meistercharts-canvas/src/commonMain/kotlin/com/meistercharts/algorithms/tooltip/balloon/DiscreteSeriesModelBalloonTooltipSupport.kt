@@ -33,7 +33,7 @@ import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey

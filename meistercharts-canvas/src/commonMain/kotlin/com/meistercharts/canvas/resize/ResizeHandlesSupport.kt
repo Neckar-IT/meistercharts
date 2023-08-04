@@ -16,11 +16,11 @@
 package com.meistercharts.canvas.resize
 
 import com.meistercharts.algorithms.layers.Layer
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Distance
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.VerticalAlignment
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.unit.other.px
 
 

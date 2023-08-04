@@ -51,6 +51,8 @@ public object Libs {
     public const val jackson_module_parameter_names: String =
             "com.fasterxml.jackson.module:jackson-module-parameter-names:_"
 
+    public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
+
     public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val kotlin_csv: String = "com.github.doyaaaaaken:kotlin-csv:_"
@@ -173,6 +175,9 @@ public object Libs {
 
     public const val ktor_server_auth_jwt: String = "io.ktor:ktor-server-auth-jwt:_"
 
+    public const val ktor_server_conditional_headers: String =
+            "io.ktor:ktor-server-conditional-headers:_"
+
     public const val ktor_server_core: String = "io.ktor:ktor-server-core:_"
 
     public const val ktor_server_locations: String = "io.ktor:ktor-server-locations:_"
@@ -277,8 +282,14 @@ public object Libs {
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
 
+    public const val gfm_plugin: String = "org.jetbrains.dokka:gfm-plugin:_"
+
     public const val gfm_template_processing_plugin: String =
             "org.jetbrains.dokka:gfm-template-processing-plugin:_"
+
+    public const val javadoc_plugin: String = "org.jetbrains.dokka:javadoc-plugin:_"
+
+    public const val jekyll_plugin: String = "org.jetbrains.dokka:jekyll-plugin:_"
 
     public const val jekyll_template_processing_plugin: String =
             "org.jetbrains.dokka:jekyll-template-processing-plugin:_"
@@ -342,15 +353,6 @@ public object Libs {
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
             "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"
 
-    public const val kotlin_deeplearning_onnx: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-onnx:_"
-
-    public const val kotlin_deeplearning_tensorflow: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:_"
-
-    public const val kotlin_deeplearning_visualization: String =
-            "org.jetbrains.kotlinx:kotlin-deeplearning-visualization:_"
-
     public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
 
     public const val kotlinx_coroutines_core: String =
@@ -398,6 +400,8 @@ public object Libs {
     public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
 
     public const val opencv: String = "org.openpnp:opencv:_"
+
+    public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
     public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
 

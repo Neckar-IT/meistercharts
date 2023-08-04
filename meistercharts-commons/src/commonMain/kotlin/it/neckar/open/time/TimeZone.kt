@@ -15,7 +15,16 @@ data class TimeZone(val zoneId: String) {
   }
 
   companion object {
+    /**
+     * Represents the "unknown" timezone
+     */
+    val Unknown: TimeZone = TimeZone("Etc/Unknown")
+
+    /**
+     * Represents the UTC timezone
+     */
     val UTC: TimeZone = TimeZone("UTC")
+
     val Berlin: TimeZone = TimeZone("Europe/Berlin")
     val Paris: TimeZone = TimeZone("Europe/Paris")
     val NewYork: TimeZone = TimeZone("America/New_York")

@@ -22,7 +22,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import it.neckar.open.kotlin.lang.checkEquals
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.SizedProvider

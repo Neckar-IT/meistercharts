@@ -23,8 +23,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.strokeRect
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
 import com.meistercharts.provider.SizedLabelsProvider
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas.resize
 
-import com.meistercharts.model.Direction
+import it.neckar.geometry.Direction
 
 /**
  * The ui state of the resize by handles layer

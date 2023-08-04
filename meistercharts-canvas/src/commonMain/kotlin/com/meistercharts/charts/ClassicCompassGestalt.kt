@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.provider.delegate
 import it.neckar.open.provider.DoubleProvider

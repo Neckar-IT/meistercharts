@@ -22,7 +22,7 @@ import it.neckar.open.unit.number.Positive
 import com.meistercharts.canvas.Canvas
 import com.meistercharts.canvas.CanvasFactory
 import com.meistercharts.canvas.CanvasType
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 
 /**
  * A [CanvasFactory] that creates [Canvas] instances for Html.

@@ -22,8 +22,8 @@ import com.meistercharts.model.category.valuesAt
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
-import com.meistercharts.model.HorizontalAlignment
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
 import it.neckar.open.unit.other.px
 
 /**

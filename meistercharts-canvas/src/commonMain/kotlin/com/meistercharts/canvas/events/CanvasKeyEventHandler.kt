@@ -17,9 +17,9 @@ package com.meistercharts.canvas.events
 
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyTypeEvent
-import com.meistercharts.events.KeyUpEvent
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyTypeEvent
+import it.neckar.events.KeyUpEvent
 
 /**
  * Event handler for key events from a canvas

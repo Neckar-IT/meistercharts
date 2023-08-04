@@ -17,16 +17,12 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.events.DefaultKeyEventBroker
-import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.KeyCode
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyEvent
-import com.meistercharts.events.KeyEventHandler
-import com.meistercharts.events.KeyStroke
-import com.meistercharts.events.KeyTypeEvent
-import com.meistercharts.events.KeyUpEvent
-import com.meistercharts.events.register
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyEvent
+import it.neckar.events.KeyStroke
+import it.neckar.events.KeyTypeEvent
+import it.neckar.events.KeyUpEvent
 import org.junit.jupiter.api.Test
 
 class DefaultKeyEventBrokerTest {

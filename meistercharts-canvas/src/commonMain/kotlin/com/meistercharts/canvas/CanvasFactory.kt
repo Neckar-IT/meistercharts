@@ -18,7 +18,7 @@ package com.meistercharts.canvas
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.PhysicalPixel
 import it.neckar.open.unit.number.Positive
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 
 /**
  * Creates [Canvas] instances

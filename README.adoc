@@ -95,6 +95,6 @@ Custom charts for projects that are usually not reused.
 
 Marketing related documentation and (design) files
 
-=== =meistercharts-version-info (platform independent)
+==== meistercharts-version-info (platform independent)
 
 Contains an object that can be used to resolve the current version number

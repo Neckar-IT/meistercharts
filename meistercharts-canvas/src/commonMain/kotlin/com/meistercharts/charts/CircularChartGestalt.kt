@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.circular.CircularChartLayer
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer

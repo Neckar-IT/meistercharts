@@ -25,7 +25,7 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.canvas.strokeCross45Degrees
-import com.meistercharts.geometry.Rectangle
+import it.neckar.geometry.Rectangle
 import kotlin.math.max
 
 /**

@@ -15,8 +15,8 @@
  */
 package com.meistercharts.calc
 
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.contentViewportHeight
 import com.meistercharts.state.contentViewportWidth
 import com.meistercharts.tile.TileIndex
@@ -34,14 +34,14 @@ import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Distance
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import com.meistercharts.range.LinearValueRange
-import com.meistercharts.model.Size
 import com.meistercharts.range.ValueRange
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.ChartState
 import com.meistercharts.time.TimeRange
+import it.neckar.geometry.Size
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time

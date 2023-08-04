@@ -21,7 +21,7 @@ object BlobSupport {
    * Creates a download link and "clicks" that link to download the given blob
    */
   fun downloadBlob(blob: Blob, fileName: String) {
-    val objectURL = URL.createObjectURL(blob)
+    val objectURL = toObjectUrl(blob)
 
     val hiddenLink = document.createElement("a")
     hiddenLink.setAttribute("style", "display: none;")
@@ -40,8 +40,14 @@ object BlobSupport {
   }
 
   fun showBlobInNewWindow(blob: Blob) {
-    val objectURL = URL.createObjectURL(blob)
+    val objectURL = toObjectUrl(blob)
 
     window.open(objectURL, target = "_blank")
   }
+
+  fun toObjectUrl(blob: Blob): String = URL.createObjectURL(blob)
+}
+
+inline fun Blob.toObjectUrl(): String {
+  return BlobSupport.toObjectUrl(this)
 }

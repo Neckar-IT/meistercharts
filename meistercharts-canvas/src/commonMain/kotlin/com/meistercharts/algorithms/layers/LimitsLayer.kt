@@ -15,9 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.model.Orientation
-import com.meistercharts.axis.AxisOrientationX
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.painter.RectangleAreaPainter
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative

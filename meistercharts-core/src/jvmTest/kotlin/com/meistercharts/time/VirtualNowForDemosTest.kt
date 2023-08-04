@@ -27,7 +27,7 @@ class VirtualNowForDemosTest {
   @Test
   fun testIt() {
     @ms val fixedStart = 17788887777777.0
-    assertThat(fixedStart.formatUtc()).isEqualTo("2533-09-15T21:42:57.777")
+    assertThat(fixedStart.formatUtc()).isEqualTo("2533-09-15T21:42:57.777Z")
 
     @ms val realNow = nowMillis()
     @ms val deltaToReal = fixedStart - realNow

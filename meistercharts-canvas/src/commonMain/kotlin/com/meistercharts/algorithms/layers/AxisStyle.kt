@@ -27,8 +27,8 @@ import com.meistercharts.canvas.textService
 import com.meistercharts.design.Theme
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.BooleanProvider

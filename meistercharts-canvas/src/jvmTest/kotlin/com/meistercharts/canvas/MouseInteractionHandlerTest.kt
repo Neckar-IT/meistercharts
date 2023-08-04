@@ -17,12 +17,12 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import com.meistercharts.events.DefaultMouseEventBroker
 import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.MouseClickEvent
-import com.meistercharts.events.MouseDoubleClickEvent
-import com.meistercharts.events.MouseMoveEvent
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseMoveEvent
 import org.junit.jupiter.api.Test
 
 internal class MouseInteractionHandlerTest {

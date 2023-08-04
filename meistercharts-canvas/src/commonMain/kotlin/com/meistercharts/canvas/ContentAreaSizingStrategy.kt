@@ -21,7 +21,7 @@ import com.meistercharts.annotations.ContentArea
 import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.state.ChartState
 import it.neckar.open.collections.arrayOfNotNull
 import it.neckar.open.dispose.Disposable

@@ -26,8 +26,8 @@ import com.meistercharts.canvas.FixedContentAreaSize
 import com.meistercharts.canvas.FixedContentAreaWidth
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
-import com.meistercharts.model.Size
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
 
 fun createBuilder(): MeisterchartBuilder {

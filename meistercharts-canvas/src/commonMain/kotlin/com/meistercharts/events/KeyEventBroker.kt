@@ -15,10 +15,9 @@
  */
 package com.meistercharts.events
 
-import com.meistercharts.events.EventConsumption
-import com.meistercharts.events.KeyDownEvent
-import com.meistercharts.events.KeyTypeEvent
-import com.meistercharts.events.KeyUpEvent
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyTypeEvent
+import it.neckar.events.KeyUpEvent
 
 /**
  * Offers a way to register listeners for key events.

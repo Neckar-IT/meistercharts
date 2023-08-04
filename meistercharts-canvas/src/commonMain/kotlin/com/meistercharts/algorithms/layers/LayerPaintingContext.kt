@@ -36,7 +36,7 @@ import com.meistercharts.canvas.i18nSupport
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.textService
 import com.meistercharts.charts.ChartId
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.state.ChartState
 import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration

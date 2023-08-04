@@ -2,14 +2,14 @@ name: Meistercharts
 run-name: meistercharts Github Action 🚀
 
 # Rule: only trigger action if a push was made.
-on: [push]
+on: [ push ]
 
 env:
   BUILD_ARGS: "--info --stacktrace --parallel --no-build-cache --no-daemon --no-configuration-cache --no-watch-fs"
 
 jobs:
   # build meistercharts
-  build:
+  "meistercharts":
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -25,6 +25,7 @@ jobs:
         with:
           java-version: '19'
           distribution: adopt
+          cache: 'gradle'
 
       # Cache Gradle dependencies
       - name: "🔄 Cache Gradle dependencies"
@@ -37,3 +38,52 @@ jobs:
       # Build
       - name: "🛠️ build"
         run: ./gradlew build $BUILD_ARGS
+
+  "meistercharts-examples":
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Add here new yarn/npm project specification
+        node_project:
+          - name: 'npm-meistercharts-minimal'
+            install_cmd: 'npm install'
+            build_cmd: 'npx webpack'
+          - name: 'yarn-meistercharts-minimal'
+            install_cmd: 'yarn install'
+            build_cmd: 'yarn webpack'
+          - name: 'vite-meistercharts-minimal'
+            install_cmd: 'npm install'
+            build_cmd: 'npm run build'
+    steps:
+      # Checkout Repository
+      - name: "🔍 Checkout Code"
+        uses: actions/checkout@v3
+
+      - name: "⚙️ Use Node.js LTS"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: "🔄 Cache npm modules"
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: "🔄 Cache yarn modules"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.yarn
+            ./.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: "🛠️ build examples"
+        run: |
+          cd meistercharts-examples/${{ matrix.node_project.name }}
+          ${{ matrix.node_project.install_cmd }}
+          ${{ matrix.node_project.build_cmd }}

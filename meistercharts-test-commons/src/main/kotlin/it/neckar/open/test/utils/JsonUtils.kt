@@ -35,6 +35,10 @@ import assertk.assertions.support.*
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.kotlin.lang.padEndMaxLength
+import org.skyscreamer.jsonassert.JSONCompare
+import org.skyscreamer.jsonassert.JSONCompareMode
 import java.io.StringWriter
 import java.net.URL
 import java.nio.charset.Charset
@@ -69,6 +73,22 @@ object JsonUtils {
       val expectedTree = mapper.readTree(expected)
       val actualTree = mapper.readTree(actual).also(actualTreeModifier)
       if (expectedTree != actualTree) {
+        val compareResult = JSONCompare.compareJSON(expected, actual, JSONCompareMode.STRICT)
+        System.err.println("           Pointer               | Expected value                           -- Actual value")
+        System.err.println("---------------------------------------------------------------------------------------------------")
+
+        compareResult.fieldFailures.fastForEach {
+          System.err.println("Failure: ${it.field.padEnd(23)} | ${it.expected?.toString().padEndMaxLength(40)} -- ${it.actual?.toString().padEndMaxLength(40)}")
+        }
+
+        compareResult.fieldMissing.fastForEach {
+          System.err.println("Missing: ${it.field.padEnd(23)} | ${it.expected?.toString()?.padEndMaxLength(40)} -- ${it.actual?.toString().padEndMaxLength(40)}")
+        }
+
+        compareResult.fieldUnexpected.fastForEach {
+          System.err.println("Unexpected: ${it.field.padEnd(20)} | ${it.expected?.toString()?.padEndMaxLength(40)} -- ${it.actual?.toString().padEndMaxLength(40)}")
+        }
+
         assertThat(formatJson(expected).trim()).fail(formatJson(expected).trim(), formatJson(actual).trim())
       }
     } catch (e: JsonProcessingException) {

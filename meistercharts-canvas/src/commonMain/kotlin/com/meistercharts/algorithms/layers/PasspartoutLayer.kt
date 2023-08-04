@@ -23,7 +23,7 @@ import com.meistercharts.algorithms.painter.PasspartoutPaintingStrategy
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Side
+import it.neckar.geometry.Side
 import com.meistercharts.provider.ColorProvider
 import com.meistercharts.provider.InsetsProvider
 import it.neckar.open.unit.other.px

@@ -17,9 +17,9 @@ package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.geometry.withinSized
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.withinSized
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.unit.number.MayBeNegative
 

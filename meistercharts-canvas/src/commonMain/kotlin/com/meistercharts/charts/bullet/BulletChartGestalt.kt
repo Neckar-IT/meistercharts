@@ -61,9 +61,9 @@ import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
 import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
 import com.meistercharts.model.Insets
-import com.meistercharts.model.Orientation
-import com.meistercharts.model.Side
-import com.meistercharts.model.Size
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.provider.DoublesProvider

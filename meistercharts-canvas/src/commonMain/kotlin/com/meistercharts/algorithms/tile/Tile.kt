@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import it.neckar.open.dispose.Disposable
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.canvas.geometry
 
-import com.meistercharts.geometry.Coordinates
+import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.pct
 
 

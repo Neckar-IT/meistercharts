@@ -15,7 +15,7 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.model.Orientation
+import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.model.category.CategoryIndex
@@ -32,8 +32,8 @@ import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.strokeRect
-import com.meistercharts.model.Direction
-import com.meistercharts.model.Size
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Size
 import com.meistercharts.provider.SizedLabelsProvider
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.provider.MultiProvider

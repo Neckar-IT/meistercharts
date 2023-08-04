@@ -24,10 +24,10 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintTextWithPaintable
 import com.meistercharts.canvas.textService
-import com.meistercharts.geometry.Coordinates
-import com.meistercharts.model.Direction
-import com.meistercharts.geometry.Rectangle
-import com.meistercharts.model.Size
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
 import com.meistercharts.style.Palette

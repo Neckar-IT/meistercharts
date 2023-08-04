@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.slippymap
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.axis.AxisOrientationY
+import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.state.DefaultChartState
 import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex
@@ -41,7 +41,7 @@ import com.meistercharts.maps.tilesPerRowOrColumn
 import com.meistercharts.maps.toDomainRelativeX
 import com.meistercharts.maps.toDomainRelativeY
 import com.meistercharts.maps.toSlippyMapZoom
-import com.meistercharts.model.Size
+import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import org.junit.jupiter.api.Test
 import kotlin.math.pow

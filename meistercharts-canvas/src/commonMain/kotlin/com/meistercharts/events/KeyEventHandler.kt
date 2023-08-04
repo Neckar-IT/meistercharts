@@ -15,6 +15,10 @@
  */
 package com.meistercharts.events
 
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.KeyTypeEvent
+import it.neckar.events.KeyUpEvent
+
 /**
  * Listens for key events
  *
