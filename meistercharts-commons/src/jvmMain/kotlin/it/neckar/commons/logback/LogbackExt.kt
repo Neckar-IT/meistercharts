@@ -52,6 +52,15 @@ var org.slf4j.Logger.level: org.slf4j.event.Level
 /**
  * Conditional debug action that is only executed if debug is enabled
  */
+inline fun org.slf4j.Logger.trace(action: () -> String) {
+  if (this.isTraceEnabled) {
+    this.trace(action())
+  }
+}
+
+/**
+ * Conditional debug action that is only executed if debug is enabled
+ */
 inline fun org.slf4j.Logger.debug(action: () -> String) {
   if (this.isDebugEnabled) {
     this.debug(action())

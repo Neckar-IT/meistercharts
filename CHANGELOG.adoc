@@ -1,5 +1,39 @@
 = MeisterCharts Release Notes
 
+== MeisterCharts 1.34.1
+
+Release date: 2023-08-04 +
+
+=== New Features
+
+* StringShortener: Use truncateToLength from common code (performance improvement)
+* Extract KeyCode/KeyEvents to common code (improved test coverage)
+* Log messages greatly improved
+* End-to-End Tests: Added Playwright tests for several charts
+* Extract geometry module (improved test coverage)
+
+==== Virtual Time
+
+Meistercharts supports a virtual time in all charts.
+This allows for easier testing.
+
+=== Bugfixes / Improvements
+
+* Fix Category Chart: Category Axis repaint missing (#3)
+* Update dependencies
+* Remove IE11 workarounds (IE11 is no longer supported)
+* Handling of default time zone improved (default time zone is now UTC - relevant for E2E tests)
+
+
+==== Examples
+
+* Updated the links within the examples.
+
+=== Build / Tests
+
+* Improve JSON comparisons (using skyscreamer/jsonassert)
+
+
 == MeisterCharts 1.34.0
 
 Release date: 2023-07-18 +
