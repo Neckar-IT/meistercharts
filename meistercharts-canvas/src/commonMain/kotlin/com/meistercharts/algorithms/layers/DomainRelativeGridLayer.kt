@@ -32,21 +32,26 @@ import kotlin.jvm.JvmOverloads
  * Paints a grid for domain-relative values
  */
 class DomainRelativeGridLayer @JvmOverloads constructor(
-  /**
-   * Returns the domain relative values where grid lines will be placed
-   */
-  valuesProvider: @DomainRelative DoublesProvider = DoublesProvider.empty,
-
-  /**
-   * Provides the orientation of the grid lines.
-   *
-   * - Vertical: The grid lines are painted from top to bottom
-   * - Horizontal: The grid lines are painted from left to right
-   */
-  orientationProvider: () -> Orientation = { Orientation.Vertical },
-
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
+
+  constructor(
+    /**
+     * Returns the domain relative values where grid lines will be placed
+     */
+    valuesProvider: @DomainRelative DoublesProvider = DoublesProvider.empty,
+
+    /**
+     * Provides the orientation of the grid lines.
+     *
+     * - Vertical: The grid lines are painted from top to bottom
+     * - Horizontal: The grid lines are painted from left to right
+     */
+    orientationProvider: () -> Orientation = { Orientation.Vertical },
+
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(valuesProvider, orientationProvider), additionalConfiguration)
 
   constructor(
     orientation: Orientation,
@@ -54,8 +59,9 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
     additionalConfiguration: Configuration.() -> Unit = {},
   ) : this(valuesProvider, orientation.asProvider(), additionalConfiguration)
 
-  val configuration: Configuration = Configuration(valuesProvider, orientationProvider).also(additionalConfiguration)
-
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Background

@@ -51,6 +51,15 @@ actual class DateTimeFormatUTC : DateTimeFormat {
     //https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
     return Date(timestamp).toISOString()
   }
+
+  actual companion object {
+    /**
+     * Parses the UTC string to a timestamp
+     */
+    actual fun parse(formattedUtc: String, i18n: I18nConfiguration): Double {
+      return Date.parse(formattedUtc)
+    }
+  }
 }
 
 /**

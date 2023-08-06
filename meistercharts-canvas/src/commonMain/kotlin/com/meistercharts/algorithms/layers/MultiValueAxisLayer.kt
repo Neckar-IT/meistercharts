@@ -37,11 +37,18 @@ import it.neckar.open.provider.fastForEachIndexed
  * Use [MultipleLayersDelegatingLayer] to place the corresponding [AxisTopTopTitleLayer]
  */
 class MultiValueAxisLayer constructor(
-  valueAxesProvider: ValueAxesProvider,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration(valueAxesProvider).also(additionalConfiguration)
+  constructor(
+    valueAxesProvider: ValueAxesProvider,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(valueAxesProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content

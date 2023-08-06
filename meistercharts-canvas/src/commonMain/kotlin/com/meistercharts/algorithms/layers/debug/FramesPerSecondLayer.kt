@@ -40,15 +40,21 @@ import kotlin.math.roundToInt
  * Displays the frames painted per second.
  */
 class FramesPerSecondLayer(
-  /**
-   * The update rate in milliseconds (how much time must be passed before the label showing the FPS is updated)
-   */
-  @ms
-  val updateRate: Double = 500.0,
-  configurationConfiguration: Configuration.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration().also(configurationConfiguration)
+  constructor(
+    /**
+     * The update rate in milliseconds (how much time must be passed before the label showing the FPS is updated)
+     */
+    updateRate: @ms Double = 500.0,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(updateRate), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Notification
@@ -76,7 +82,7 @@ class FramesPerSecondLayer(
       val paintStatisticsSupport = paintingContext.layerSupport.paintStatisticsSupport
 
       //Only update the FPS every [updateRate] milliseconds
-      if (paintingContext.frameTimestamp - lastUpdatedTimestamp > updateRate) {
+      if (paintingContext.frameTimestamp - lastUpdatedTimestamp > configuration.updateRate) {
         paintedFPS = paintStatisticsSupport.paintedFPS.or0ifNaN().roundToInt()
 
         minFps = paintStatisticsSupport.minFps.or0ifNaN().roundToInt()
@@ -105,7 +111,9 @@ class FramesPerSecondLayer(
   }
 
   @ConfigurationDsl
-  open class Configuration {
+  open class Configuration(
+    var updateRate: @ms Double,
+  ) {
     var x: @px Double = 10.0
     val y: @px Double = 10.0
 

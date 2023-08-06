@@ -30,19 +30,26 @@ import it.neckar.open.unit.number.MayBeNegative
  * Handles mouse events for a single [DirectionalLinesLayer]
  */
 class DirectionalLinesInteractionLayer(
-  /**
-   * The directional layers
-   */
-  initialDirectionalLinesLayers: SizedProvider<DirectionalLinesLayer>,
-  /**
-   * The additional configuration that is applied to the configuration object
-   */
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
+  constructor(
+    /**
+     * The directional layers
+     */
+    initialDirectionalLinesLayers: SizedProvider<DirectionalLinesLayer>,
+    /**
+     * The additional configuration that is applied to the configuration object
+     */
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(initialDirectionalLinesLayers), additionalConfiguration)
+
   constructor(layer: DirectionalLinesLayer) : this(SizedProvider.single(layer))
 
-  val configuration: Configuration = Configuration(initialDirectionalLinesLayers).also(additionalConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 

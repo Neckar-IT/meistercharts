@@ -41,23 +41,31 @@ import kotlin.time.Duration.Companion.milliseconds
  *
  */
 class MouseWheelWithoutModifierMessageLayer(
-  /**
-   * If the messages is currently visible
-   */
-  messageVisible: ObservableBoolean = ObservableBoolean(),
-  /**
-   * Provides the texts
-   */
-  linesProvider: LinesProvider,
-
-  /**
-   * Additional configuration
-   */
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
-  override val type: LayerType = LayerType.Notification
+  ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration(messageVisible, linesProvider).also(additionalConfiguration)
+  constructor(
+    /**
+     * If the messages is currently visible
+     */
+    messageVisible: ObservableBoolean = ObservableBoolean(),
+    /**
+     * Provides the texts
+     */
+    linesProvider: LinesProvider,
+
+    /**
+     * Additional configuration
+     */
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(messageVisible, linesProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  override val type: LayerType = LayerType.Notification
 
   private val messagePainter = TextPainter()
 

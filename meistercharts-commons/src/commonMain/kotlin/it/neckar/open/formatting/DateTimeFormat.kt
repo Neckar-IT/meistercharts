@@ -1,9 +1,9 @@
 package it.neckar.open.formatting
 
-import it.neckar.open.time.TimeConstants
-import it.neckar.open.kotlin.lang.toIntFloor
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
+import it.neckar.open.kotlin.lang.toIntFloor
+import it.neckar.open.time.TimeConstants
 import it.neckar.open.unit.si.ms
 
 /**
@@ -98,7 +98,14 @@ expect class TimeFormatIso8601() : DateTimeFormat
 /**
  * Formats a date as a UTC date (locale independent)
  */
-expect class DateTimeFormatUTC() : DateTimeFormat
+expect class DateTimeFormatUTC() : DateTimeFormat {
+  companion object {
+    /**
+     * Parses the UTC string to a timestamp
+     */
+    fun parse(formattedUtc: String, i18n: I18nConfiguration): @ms Double
+  }
+}
 
 /**
  * A formatted date (time only)
@@ -169,6 +176,22 @@ fun @ms Double.formatUtc(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.N
     "---${this}---[$e]"
   }
 }
+
+/**
+ * Parses a UTC date - reverse for [formatUtc
+ */
+fun parseUtc(formattedUtc: String): @ms Double {
+  if (formattedUtc == "NaN") {
+    return Double.NaN
+  }
+
+  if (formattedUtc == "∞") {
+    return Double.POSITIVE_INFINITY
+  }
+
+  return DateTimeFormatUTC.parse(formattedUtc, I18nConfiguration.GermanyUTC)
+}
+
 
 /**
  * Formats this (interpreted as milliseconds) as human-readable duration

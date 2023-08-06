@@ -26,13 +26,21 @@ import it.neckar.open.provider.DoubleProvider
  */
 @Deprecated("Use TransformingChartStateLayer instead - if possible")
 class TranslationLayer(
-  /**
-   * The translated layer
-   */
-  val delegate: Layer,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
-  val configuration: Configuration = Configuration(delegate).also(additionalConfiguration)
+  ) : AbstractLayer() {
+
+  constructor(
+    /**
+     * The translated layer
+     */
+    delegate: Layer,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(delegate), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 

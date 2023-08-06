@@ -30,13 +30,20 @@ import it.neckar.open.unit.number.MayBeNegative
  * Handles interactions for a [ValueAxisHudLayer]
  */
 class ValueAxisHudInteractionLayer(
-  hudLayers: SizedProvider<ValueAxisHudLayer>,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
+  constructor(
+    hudLayers: SizedProvider<ValueAxisHudLayer>,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(hudLayers), additionalConfiguration)
+
   constructor(hudLayer: ValueAxisHudLayer) : this(SizedProvider.single(hudLayer))
 
-  val configuration: Configuration = Configuration(hudLayers).also(additionalConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 

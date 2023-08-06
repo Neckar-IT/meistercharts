@@ -61,20 +61,28 @@ typealias HudLabelsProvider = MultiProvider1<HudElementIndex, List<String>, Laye
  *
  */
 class ValueAxisHudLayer(
-  /**
-   * Provides the anchor location of the hud element.
-   * If NaN is returned, the element is not painted
-   */
-  locations: @MayBeNaN @Window CoordinatesProvider1<LayerPaintingContext>,
-
-  /**
-   * Provides the text that is painted within the HUD element
-   */
-  labels: HudLabelsProvider,
-
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
-  val configuration: Configuration = Configuration(locations, labels).also(additionalConfiguration)
+  ) : AbstractLayer() {
+
+  constructor(
+    /**
+     * Provides the anchor location of the hud element.
+     * If NaN is returned, the element is not painted
+     */
+    locations: @MayBeNaN @Window CoordinatesProvider1<LayerPaintingContext>,
+
+    /**
+     * Provides the text that is painted within the HUD element
+     */
+    labels: HudLabelsProvider,
+
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(locations, labels), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 

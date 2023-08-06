@@ -37,27 +37,33 @@ import it.neckar.open.unit.other.px
  * This layer must only be used for vertical axis
  */
 class AxisTopTopTitleLayer(
-  /**
-   * Returns the x anchor location
-   */
-  xAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
-
-  /**
-   * Returns the y anchor location
-   */
-  yAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
-
-  /**
-   * Provides the label for the axis
-   */
-  titleProvider: AxisTitleProvider,
-
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
+  ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration(
-    xAnchorLocation, yAnchorLocation, titleProvider
-  ).also(additionalConfiguration)
+  constructor(
+    /**
+     * Returns the x anchor location
+     */
+    xAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
+
+    /**
+     * Returns the y anchor location
+     */
+    yAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
+
+    /**
+     * Provides the label for the axis
+     */
+    titleProvider: AxisTitleProvider,
+
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(xAnchorLocation, yAnchorLocation, titleProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
 
   override val type: LayerType = LayerType.Content
 
