@@ -140,7 +140,7 @@ class BulletChartGestalt constructor(
   /**
    * Paints the bullets
    */
-  val categoryLayer: CategoryLayer<CategoryModelBulletChart> = CategoryLayer(CategoryLayer.Data<CategoryModelBulletChart> { categoryModel }) {
+  val categoryLayer: CategoryLayer<CategoryModelBulletChart> = CategoryLayer({ categoryModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = bulletChartPainter
 
@@ -268,7 +268,7 @@ class BulletChartGestalt constructor(
       activeCategoryIndexProvider = configuration::activeCategoryIndexOrNull,
       categorySize = {
         val layout = categoryLayer.paintingVariables().layout
-        categoryLayer.style.activeCategoryBackgroundSize(layout.boxSize)
+        categoryLayer.configuration.activeCategoryBackgroundSize(layout.boxSize)
       },
       boxLayout = {
         categoryLayer.paintingVariables().layout
@@ -290,7 +290,7 @@ class BulletChartGestalt constructor(
   init {
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       valueAxisGridLayer.configuration.passpartout = it
-      categoryAxisGridLayer.data.applyPasspartout(it)
+      categoryAxisGridLayer.configuration.applyPasspartout(it)
 
       valueAxisLayer.style.size = it[valueAxisLayer.style.side]
       categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
@@ -374,9 +374,9 @@ class BulletChartGestalt constructor(
      * Returns the active category index - or null if no category is active
      */
     var activeCategoryIndexOrNull: CategoryIndex?
-      get() = categoryLayer.style.activeCategoryIndex
+      get() = categoryLayer.configuration.activeCategoryIndex
       internal set(value) {
-        categoryLayer.style.activeCategoryIndex = value
+        categoryLayer.configuration.activeCategoryIndex = value
       }
 
     /**
@@ -477,7 +477,7 @@ class BulletChartGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyHorizontalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.HorizontalTop
+      categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
       categoryAxisLayer.style.side = Side.Left
       valueAxisLayer.style.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
@@ -488,7 +488,7 @@ class BulletChartGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyVerticalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.VerticalLeft
+      categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
       categoryAxisLayer.style.side = Side.Bottom
       valueAxisLayer.style.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
@@ -499,7 +499,7 @@ class BulletChartGestalt constructor(
      * The orientation of the chart
      */
     val orientation: CategoryChartOrientation
-      get() = categoryLayer.style.orientation
+      get() = categoryLayer.configuration.orientation
 
     var showTooltips: Boolean = true
 

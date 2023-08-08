@@ -324,7 +324,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       valuesGridLayer.configuration.passpartout = it
 
-      categoriesGridLayer.data.applyPasspartout(it)
+      categoriesGridLayer.configuration.applyPasspartout(it)
 
       valueAxisLayer.style.size = it[valueAxisLayer.style.side]
       categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]

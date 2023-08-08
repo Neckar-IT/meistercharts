@@ -29,11 +29,21 @@ import it.neckar.open.unit.si.rad
  * Layer painting an image by rotating and translating it
  */
 class PaintableTranslateRotateLayer(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    image: () -> Paintable = { RectanglePaintable(Size.PX_90, Color.bisque) },
+    x: () -> @DomainRelative Double = { 0.0 },
+    y: () -> @DomainRelative Double = { 0.0 },
+    angle: () -> @rad Double = { 0.0 },
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(image, x, y, angle), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -42,19 +52,20 @@ class PaintableTranslateRotateLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    @Window val x = chartCalculator.domainRelative2windowX(data.x())
-    @Window val y = chartCalculator.domainRelative2windowY(data.y())
+    @Window val x = chartCalculator.domainRelative2windowX(configuration.x())
+    @Window val y = chartCalculator.domainRelative2windowY(configuration.y())
 
     gc.translate(x, y)
-    gc.rotateRadians(data.angle())
-    data.image().let {
+    gc.rotateRadians(configuration.angle())
+    configuration.image().let {
       val boundingBox = it.boundingBox(paintingContext)
-      it.paintInBoundingBox(paintingContext, 0.0, 0.0, style.direction, 0.0, 0.0, boundingBox.getWidth(), boundingBox.getHeight())
+      it.paintInBoundingBox(paintingContext, 0.0, 0.0, configuration.direction, 0.0, 0.0, boundingBox.getWidth(), boundingBox.getHeight())
     }
 
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * The image to be painted
      */
@@ -73,11 +84,8 @@ class PaintableTranslateRotateLayer(
     /**
      * The rotation angle of the image in radians clockwise
      */
-    var angle: () -> @rad Double = { 0.0 }
-  )
-
-  @ConfigurationDsl
-  class Style {
+    var angle: () -> @rad Double = { 0.0 },
+  ) {
     /**
      * Direction to paint the paintable relative to the given Coordinates
      */

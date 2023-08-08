@@ -752,7 +752,7 @@ fun DomainRelativeGridLayer.Configuration.applyLinesStyle(
 /**
  * Applies the JavaScript style [jsStyle] to this [GridLayer]'s style
  */
-fun GridLayer.Data.applyLinesStyle(jsStyle: GridStyle?) {
+fun GridLayer.Configuration.applyLinesStyle(jsStyle: GridStyle?) {
   jsStyle?.lineColors?.let { gridLineColorProvider ->
     lineStyles = MultiProvider { index ->
       com.meistercharts.algorithms.layers.linechart.LineStyle(color = gridLineColorProvider.lineColor(index.toDouble()).toColor())

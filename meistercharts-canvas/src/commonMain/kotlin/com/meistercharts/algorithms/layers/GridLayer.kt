@@ -34,11 +34,11 @@ import kotlin.jvm.JvmOverloads
  * Paints a grid for zoomed values
  */
 class GridLayer @JvmOverloads constructor(
-  val data: Data,
-  dataConfiguration: Data.() -> Unit = {},
+  val configuration: Configuration,
+  dataConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
   init {
-    data.also(dataConfiguration)
+    configuration.also(dataConfiguration)
   }
 
   override val type: LayerType
@@ -49,14 +49,14 @@ class GridLayer @JvmOverloads constructor(
     val chartCalculator = paintingContext.chartCalculator
 
     //Paint all lines
-    data.valuesProvider.fastForEachIndexed(paintingContext) { index, value: @Window Double ->
-      val orientation = data.orientationProvider.valueAt(index)
+    configuration.valuesProvider.fastForEachIndexed(paintingContext) { index, value: @Window Double ->
+      val orientation = configuration.orientationProvider.valueAt(index)
 
       //Calculate the min/max values for all sides
-      @Window val minX = data.paddingLeft.valueAt(index)
-      @Window val maxX = paintingContext.width - data.paddingRight.valueAt(index)
-      @Window val minY = data.paddingTop.valueAt(index)
-      @Window val maxY = paintingContext.height - data.paddingBottom.valueAt(index)
+      @Window val minX = configuration.paddingLeft.valueAt(index)
+      @Window val maxX = paintingContext.width - configuration.paddingRight.valueAt(index)
+      @Window val minY = configuration.paddingTop.valueAt(index)
+      @Window val maxY = paintingContext.height - configuration.paddingBottom.valueAt(index)
 
       @Suppress("UnnecessaryVariable")
       when (orientation) {
@@ -68,7 +68,7 @@ class GridLayer @JvmOverloads constructor(
             return@fastForEachIndexed
           }
 
-          data.lineStyles.valueAt(index).apply(gc)
+          configuration.lineStyles.valueAt(index).apply(gc)
           gc.strokeLine(minX, locationY, maxX, locationY)
         }
 
@@ -80,14 +80,14 @@ class GridLayer @JvmOverloads constructor(
             return@fastForEachIndexed
           }
 
-          data.lineStyles.valueAt(index).apply(gc)
+          configuration.lineStyles.valueAt(index).apply(gc)
           gc.strokeLine(locationX, minY, locationX, maxY)
         }
       }
     }
   }
 
-  class Data constructor(
+  class Configuration constructor(
     /**
      * Returns the values where grid lines will be placed.
      * This is either the x or y value - depending on the orientation provided by the [orientationProvider]
@@ -138,9 +138,9 @@ class GridLayer @JvmOverloads constructor(
  * Creates a grid for a [CategoryAxisLayer]
  */
 @JvmOverloads
-fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Data.() -> Unit = {}): GridLayer {
+fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -> Unit = {}): GridLayer {
   return GridLayer(
-    GridLayer.Data(
+    GridLayer.Configuration(
       valuesProvider = object : DoublesProvider1<LayerPaintingContext> {
         override fun size(param1: LayerPaintingContext): Int {
           return layout.numberOfBoxes

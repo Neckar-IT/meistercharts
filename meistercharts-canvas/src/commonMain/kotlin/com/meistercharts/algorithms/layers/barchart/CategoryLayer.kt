@@ -38,11 +38,18 @@ import it.neckar.geometry.Orientation
  * A layer that paints categories horizontally or vertically - e.g. bar charts
  */
 class CategoryLayer<T : CategoryModel>(
-  val data: Data<T>,
-  styleConfiguration: Style<T>.() -> Unit = {},
+  val configuration: Configuration<T>,
+  additionalConfiguration: Configuration<T>.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style<T> = Style<T>().also(styleConfiguration)
+  constructor(
+    modelProvider: () -> T,
+    additionalConfiguration: Configuration<T>.() -> Unit = {},
+    ): this(Configuration(modelProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -58,19 +65,19 @@ class CategoryLayer<T : CategoryModel>(
     override var layout: EquisizedBoxLayout = EquisizedBoxLayout.empty
 
     override fun calculate(paintingContext: LayerPaintingContext) {
-      layout = style.layoutCalculator.calculateLayout(paintingContext, data.modelProvider().numberOfCategories, style.orientation)
+      layout = configuration.layoutCalculator.calculateLayout(paintingContext, configuration.modelProvider().numberOfCategories, configuration.orientation)
     }
   }
 
   override fun layout(paintingContext: LayerPaintingContext) {
     super.layout(paintingContext)
 
-    val model = data.modelProvider()
-    style.categoryPainter.layout(paintingContext, paintingVariables.layout.boxSize, model, style.orientation.categoryOrientation)
+    val model = configuration.modelProvider()
+    configuration.categoryPainter.layout(paintingContext, paintingVariables.layout.boxSize, model, configuration.orientation.categoryOrientation)
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    when (style.orientation.categoryOrientation) {
+    when (configuration.orientation.categoryOrientation) {
       Orientation.Horizontal -> paintHorizontal(paintingContext)
       Orientation.Vertical -> paintVertical(paintingContext)
     }
@@ -89,13 +96,13 @@ class CategoryLayer<T : CategoryModel>(
     val layout = paintingVariables.layout
     val chartCalculator = paintingContext.chartCalculator
 
-    val model = data.modelProvider()
+    val model = configuration.modelProvider()
 
     @Window val contentStartX = chartCalculator.contentAreaRelative2windowX(0.0)
     @Window val contentEndX = chartCalculator.contentAreaRelative2windowX(1.0)
 
 
-    style.activeCategoryIndex?.let { activeCategoryIndex ->
+    configuration.activeCategoryIndex?.let { activeCategoryIndex ->
       @Window val centerX = chartCalculator.zoomed2windowX(layout.calculateCenter(BoxIndex(activeCategoryIndex.value)))
       if (centerX < contentStartX || centerX > contentEndX) {
         //at least half of the category is hidden, so we do not paint it at all
@@ -106,12 +113,12 @@ class CategoryLayer<T : CategoryModel>(
         gc.translate(centerX, 0.0)
         //to the center of the category
         @Zoomed val categoryWidth = layout.boxSize
-        @Zoomed val backgroundWidth = style.activeCategoryBackgroundSize(categoryWidth)
+        @Zoomed val backgroundWidth = configuration.activeCategoryBackgroundSize(categoryWidth)
 
         //paint background
         @Zoomed val start = -backgroundWidth / 2.0
         @Zoomed val end = backgroundWidth / 2.0
-        gc.fill(style.activeCategoryBackground)
+        gc.fill(configuration.activeCategoryBackground)
         gc.fillRectCoordinates(start, chartCalculator.contentViewportMinY(), end, chartCalculator.contentViewportMaxY())
       }
     }
@@ -129,7 +136,7 @@ class CategoryLayer<T : CategoryModel>(
         gc.translate(centerX, 0.0)
         //to the center of the category
         val isLast = model.numberOfCategories - 1 == categoryIndexAsInt
-        style.categoryPainter.paintCategoryVertical(paintingContext, layout.boxSize, categoryIndex, isLast, model)
+        configuration.categoryPainter.paintCategoryVertical(paintingContext, layout.boxSize, categoryIndex, isLast, model)
       }
     }
 
@@ -139,7 +146,7 @@ class CategoryLayer<T : CategoryModel>(
    * Returns true if the category is highlighted (e.g. because of a mouse over)
    */
   private fun CategoryIndex.isHighlighted(): Boolean {
-    return style.activeCategoryIndex == this
+    return configuration.activeCategoryIndex == this
   }
 
   /**
@@ -155,14 +162,14 @@ class CategoryLayer<T : CategoryModel>(
     val layout = paintingVariables.layout
     val chartCalculator = paintingContext.chartCalculator
 
-    val model = data.modelProvider()
+    val model = configuration.modelProvider()
 
     @Window val contentStartY = chartCalculator.contentAreaRelative2windowY(0.0)
     @Window val contentEndY = chartCalculator.contentAreaRelative2windowY(1.0)
 
 
     //Paint the active category first
-    style.activeCategoryIndex?.let { activeCategoryIndex ->
+    configuration.activeCategoryIndex?.let { activeCategoryIndex ->
       @Window val centerY = chartCalculator.zoomed2windowY(layout.calculateCenter(BoxIndex(activeCategoryIndex.value)))
       if (centerY < contentStartY || centerY > contentEndY) {
         //at least half of the category is hidden, so we do not paint it at all
@@ -174,12 +181,12 @@ class CategoryLayer<T : CategoryModel>(
         //to the center of the category
 
         @Zoomed val categoryHeight = layout.boxSize
-        @Zoomed val backgroundHeight = style.activeCategoryBackgroundSize(categoryHeight)
+        @Zoomed val backgroundHeight = configuration.activeCategoryBackgroundSize(categoryHeight)
 
         //paint background
         @Zoomed val start = -backgroundHeight / 2.0
         @Zoomed val end = backgroundHeight / 2.0
-        gc.fill(style.activeCategoryBackground)
+        gc.fill(configuration.activeCategoryBackground)
         gc.fillRectCoordinates(chartCalculator.contentViewportMinX(), start, chartCalculator.contentViewportMaxX(), end)
       }
     }
@@ -197,12 +204,16 @@ class CategoryLayer<T : CategoryModel>(
         gc.translate(0.0, centerY)
         //to the center of the category
         val isLast = model.numberOfCategories - 1 == categoryIndexAsInt
-        style.categoryPainter.paintCategoryHorizontal(paintingContext, layout.boxSize, categoryIndex, isLast, model)
+        configuration.categoryPainter.paintCategoryHorizontal(paintingContext, layout.boxSize, categoryIndex, isLast, model)
       }
     }
   }
 
-  class Data<T : CategoryModel>(
+  /**
+   * Holds information about the appearance of this chart
+   */
+  @ConfigurationDsl
+  open class Configuration<T : CategoryModel>(
     /**
      * Provides the model to be used by this layer
      */
@@ -211,13 +222,7 @@ class CategoryLayer<T : CategoryModel>(
     constructor(categorySeriesModel: T) : this(modelProvider = {
       categorySeriesModel
     })
-  }
 
-  /**
-   * Holds information about the appearance of this chart
-   */
-  @ConfigurationDsl
-  open class Style<T : CategoryModel> {
     /**
      * Provides the layout
      */

@@ -140,7 +140,7 @@ class BarChartGroupedGestalt constructor(
   /**
    * The layer that paints the bars
    */
-  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer(CategoryLayer.Data<CategorySeriesModel> { configuration.categorySeriesModel }) {
+  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ configuration.categorySeriesModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = groupedBarsPainter
 
@@ -179,9 +179,9 @@ class BarChartGroupedGestalt constructor(
    * Returns the active category index - or null if no category is active
    */
   var activeCategoryIndexOrNull: CategoryIndex?
-    get() = categoryLayer.style.activeCategoryIndex
+    get() = categoryLayer.configuration.activeCategoryIndex
     private set(value) {
-      categoryLayer.style.activeCategoryIndex = value
+      categoryLayer.configuration.activeCategoryIndex = value
     }
 
   /**
@@ -281,7 +281,7 @@ class BarChartGroupedGestalt constructor(
       @ContentArea val centerOfCategory = layout.calculateCenter(BoxIndex(categoryIndex.value))
       @Window val center = paintingContext.chartCalculator.contentArea2windowX(centerOfCategory)
 
-      val backgroundSize = categoryLayer.style.activeCategoryBackgroundSize(layout.boxSize)
+      val backgroundSize = categoryLayer.configuration.activeCategoryBackgroundSize(layout.boxSize)
 
       val leftSide = center - backgroundSize / 2.0
       val rightSide = center + backgroundSize / 2.0
@@ -331,7 +331,7 @@ class BarChartGroupedGestalt constructor(
       activeCategoryIndexProvider = ::activeCategoryIndexOrNull,
       categorySize = {
         val layout = categoryLayer.paintingVariables().layout
-        categoryLayer.style.activeCategoryBackgroundSize(layout.boxSize)
+        categoryLayer.configuration.activeCategoryBackgroundSize(layout.boxSize)
       },
       boxLayout = { categoryLayer.paintingVariables().layout }
     ),
@@ -593,7 +593,7 @@ class BarChartGroupedGestalt constructor(
      * The orientation of the chart
      */
     val orientation: CategoryChartOrientation
-      get() = categoryLayer.style.orientation
+      get() = categoryLayer.configuration.orientation
 
     /**
      * Whether to show tooltips (using the cross wire)
@@ -634,7 +634,7 @@ class BarChartGroupedGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyHorizontalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.HorizontalTop
+      categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
       categoryAxisLayer.style.side = Side.Left
       valueAxisLayer.style.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
@@ -646,7 +646,7 @@ class BarChartGroupedGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyVerticalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.VerticalLeft
+      categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
       categoryAxisLayer.style.side = Side.Bottom
       valueAxisLayer.style.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)

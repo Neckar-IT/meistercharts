@@ -34,9 +34,9 @@ import it.neckar.open.unit.si.ms
  *
  */
 class TooltipLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration().also(configuration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -86,7 +86,7 @@ class TooltipLayer(
   }
 
   @ConfigurationDsl
-  open class Style {
+  open class Configuration {
     /**
      * The style for the box
      */

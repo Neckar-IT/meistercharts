@@ -170,8 +170,8 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }
 
-  val lineChartLayer: ClippingLayer<LineChartLayer> = LineChartLayer(LineChartLayer.Data(domainRelativeModel)) {
-    pointPainters = object : MultiProvider<LinesChartModelIndex, PointPainter> {
+  val lineChartLayer: ClippingLayer<LineChartLayer> = LineChartLayer(LineChartLayer.Configuration(domainRelativeModel)).apply {
+    configuration.pointPainters = object : MultiProvider<LinesChartModelIndex, PointPainter> {
       val pointStylePainter = PointStylePainter(PointStyle.Dot, snapXValues = true, snapYValues = true)
 
       override fun valueAt(index: Int): PointPainter {
@@ -184,7 +184,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
       }
     }
 
-    linePainters = object : MultiProvider<LinesChartModelIndex, LinePainter> {
+    configuration.linePainters = object : MultiProvider<LinesChartModelIndex, LinePainter> {
       val directLinePainter = DirectLinePainter(snapXValues = true, snapYValues = true)
       override fun valueAt(index: Int): LinePainter {
         if (!style.showLines) {
@@ -194,7 +194,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
       }
     }
 
-    lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
+    configuration.lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
       override fun valueAt(index: Int): LineStyle {
         if (!style.showLines) {
           return LineStyle.Continuous // don't care

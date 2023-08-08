@@ -76,11 +76,11 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.minBarDistance?.let {
-    (this.categoryLayer.style.layoutCalculator as DefaultCategoryLayouter).style.minCategorySize = it
+    (this.categoryLayer.configuration.layoutCalculator as DefaultCategoryLayouter).style.minCategorySize = it
   }
 
   jsStyle.maxBarDistance?.let {
-    (this.categoryLayer.style.layoutCalculator as DefaultCategoryLayouter).style.maxCategorySize = it
+    (this.categoryLayer.configuration.layoutCalculator as DefaultCategoryLayouter).style.maxCategorySize = it
   }
 
   jsStyle.segmentColors?.let { colorCodes ->

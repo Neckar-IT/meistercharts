@@ -117,7 +117,7 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     this.configuration.showValuesGrid = it
   }
 
-  this.categoryAxisGridLayer.data.applyLinesStyle(jsConfiguration.categoriesGridStyle)
+  this.categoryAxisGridLayer.configuration.applyLinesStyle(jsConfiguration.categoriesGridStyle)
   jsConfiguration.categoriesGridStyle?.visible?.let {
     this.configuration.showCategoryGrid = it
   }
@@ -212,7 +212,7 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     }
   }
   jsConfiguration.activeCategoryBackgroundColor.toColor()?.let {
-    this.categoryLayer.style.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it
   }
 
   jsConfiguration.overflowIndicatorStyle?.let {

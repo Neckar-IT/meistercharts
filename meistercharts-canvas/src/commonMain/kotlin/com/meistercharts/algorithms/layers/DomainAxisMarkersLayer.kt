@@ -24,11 +24,18 @@ import com.meistercharts.provider.CoordinatesProvider
  * Marks a coordinate on the domain axises by painting lines
  */
 class DomainAxisMarkersLayer(
-  private val coordinatesProvider: CoordinatesProvider,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    coordinatesProvider: CoordinatesProvider,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(coordinatesProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -37,22 +44,24 @@ class DomainAxisMarkersLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    val coordinates = coordinatesProvider()
+    val coordinates = configuration.coordinatesProvider()
 
     val x = chartCalculator.domainRelative2windowX(coordinates.x)
     val y = chartCalculator.domainRelative2windowY(coordinates.y)
 
-    gc.stroke(style.lineColor)
+    gc.stroke(configuration.lineColor)
     gc.strokeLine(x, y, chartCalculator.contentAreaRelative2windowX(0.0), y)
     gc.strokeLine(x, y, x, chartCalculator.contentAreaRelative2windowY(1.0))
 
-    if (style.paintMarker) {
+    if (configuration.paintMarker) {
       gc.strokeCross(x, y, 15.0)
     }
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    val coordinatesProvider: CoordinatesProvider
+  ) {
     /**
      * Color for the current position lines
      */

@@ -218,7 +218,7 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
   }
 
   jsStyle.activeGroupBackgroundColor.toColor()?.let {
-    this.categoryLayer.style.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it
   }
 
   jsStyle.overflowIndicatorStyle?.let {

@@ -51,7 +51,7 @@ import kotlin.jvm.JvmOverloads
 
 class QRPositionDiagramGestalt @JvmOverloads constructor(
   val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  styleConfiguration: Style.() -> Unit = {},
 ) : ChartGestalt {
 
   val style: Style = Style().also(styleConfiguration)
@@ -89,12 +89,10 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
   }
 
   val paintableTranslateRotateLayer: PaintableTranslateRotateLayer = PaintableTranslateRotateLayer(
-    PaintableTranslateRotateLayer.Data(
-      image = { style.image },
-      x = { data.xDomainRelative },
-      y = { data.yDomainRelative },
-      angle = { data.angle }
-    )
+    image = { style.image },
+    x = { data.xDomainRelative },
+    y = { data.yDomainRelative },
+    angle = { data.angle }
   )
 
   val domainAxisMarkersLayer: DomainAxisMarkersLayer = DomainAxisMarkersLayer({ Coordinates(data.valueRangeX.toDomainRelative(data.x), data.valueRangeY.toDomainRelative(data.y)) })

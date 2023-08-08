@@ -37,7 +37,7 @@ class BalloonTooltipLayer(
 ) : AbstractLayer() {
 
   init {
-    configuration.also(additionalConfiguration)
+    configuration.additionalConfiguration()
   }
 
   override val type: LayerType = LayerType.Notification

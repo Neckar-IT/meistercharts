@@ -95,7 +95,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   /**
    * The layer that paints the bars
    */
-  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer(CategoryLayer.Data<CategorySeriesModel> { data.categorySeriesModel }) {
+  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ data.categorySeriesModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = stackedBarsPainter
     layoutCalculator = DefaultCategoryLayouter {
@@ -305,14 +305,14 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * The orientation of the chart
      */
     val orientation: CategoryChartOrientation
-      get() = categoryLayer.style.orientation
+      get() = categoryLayer.configuration.orientation
 
     /**
      * Changes the chart orientation to horizontal
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyHorizontalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.HorizontalTop
+      categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
       categoryAxisLayer.style.side = Side.Left
       valueAxisLayer.style.side = Side.Bottom
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Horizontal)
@@ -324,7 +324,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyVerticalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.VerticalLeft
+      categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
       categoryAxisLayer.style.side = Side.Bottom
       valueAxisLayer.style.side = Side.Left
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Vertical)

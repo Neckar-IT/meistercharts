@@ -92,7 +92,7 @@ class MapGestalt(
    * see https://www.openstreetmap.org/copyright/en
    * TODO add a Link-Layer
    */
-  val legalNoticeLayer: TextLayer = TextLayer({ _, _ -> listOf(slippyMapLayer.data.slippyMapProvider.legalNotice.orEmpty()) }) {
+  val legalNoticeLayer: TextLayer = TextLayer({ _, _ -> listOf(slippyMapLayer.configuration.slippyMapProvider.legalNotice.orEmpty()) }) {
     textColor = Color.gray
     font = FontDescriptorFragment(10.0)
     anchorDirection = Direction.BottomLeft
@@ -101,7 +101,7 @@ class MapGestalt(
 
   init {
     data.slippyMapProviderProperty.consumeImmediately {
-      slippyMapLayer.data.slippyMapProvider = it
+      slippyMapLayer.configuration.slippyMapProvider = it
       slippyMapLayer.tileProvider.clear()
     }
   }

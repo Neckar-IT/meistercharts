@@ -34,38 +34,41 @@ import it.neckar.open.provider.fastForEachIndexed
  * Shows a text on the canvas
  */
 class TextsLayer(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  /**
-   * The style
-   */
-  val style: Style = Style().apply(styleConfiguration)
+  constructor(
+    /**
+     * Provides the texts that are painted
+     */
+    texts: SizedProvider<String> = SizedProvider.forValues("one", "two", "three"),
+    /**
+     * Provides the location for each label
+     */
+    locationProvider: MultiProvider<TextIndex, @Window Coordinates> = MultiProvider { Coordinates((it + 1) * 100.0, (it + 1) * 200.0) },
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(texts, locationProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override var type: LayerType = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.font(style.font)
-    gc.fill(style.textColor)
+    gc.font(configuration.font)
+    gc.fill(configuration.textColor)
 
-    data.texts.fastForEachIndexed { index, value ->
-      @Window val location = data.locationProvider.valueAt(index)
-      gc.fillText(value, location.x, location.y, style.anchorDirection, style.anchorGapHorizontal, style.anchorGapVertical, style.maxWidth, style.maxHeight)
+    configuration.texts.fastForEachIndexed { index, value ->
+      @Window val location = configuration.locationProvider.valueAt(index)
+      gc.fillText(
+        value, location.x, location.y, configuration.anchorDirection, configuration.anchorGapHorizontal,
+        configuration.anchorGapVertical, configuration.maxWidth, configuration.maxHeight
+      )
     }
   }
-
-  class Data(
-    /**
-     * Provides the texts that are painted
-     */
-    var texts: SizedProvider<String> = SizedProvider.forValues("one", "two", "three"),
-    /**
-     * Provides the location for each label
-     */
-    var locationProvider: MultiProvider<TextIndex, @Window Coordinates> = MultiProvider { Coordinates((it + 1) * 100.0, (it + 1) * 200.0) },
-  )
 
   @MustBeDocumented
   @Retention(AnnotationRetention.SOURCE)
@@ -76,7 +79,16 @@ class TextsLayer(
    * Style configuration for the text layer
    */
   @ConfigurationDsl
-  open class Style {
+  open class Configuration(
+    /**
+     * Provides the texts that are painted
+     */
+    var texts: SizedProvider<String> = SizedProvider.forValues("one", "two", "three"),
+    /**
+     * Provides the location for each label
+     */
+    var locationProvider: MultiProvider<TextIndex, @Window Coordinates> = MultiProvider { Coordinates((it + 1) * 100.0, (it + 1) * 200.0) },
+  ) {
     /**
      * The color of the text
      */

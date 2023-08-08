@@ -27,27 +27,53 @@ import it.neckar.geometry.Coordinates
  * A layer that visualizers the rubber band (mouse gesture)
  */
 class RubberBandVisualizationLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  val style: Style = Style().also(styleConfiguration)
+
+  constructor(
+    /**
+     * The start location of the rubber band
+     */
+    startLocation: () -> Coordinates?,
+
+    /**
+     * The current location of the rubber band
+     */
+    currentLocation: () -> Coordinates?,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(startLocation, currentLocation), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Notification
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    val startLocation = data.startLocation() ?: return
-    val currentLocation = data.currentLocation() ?: return
+    val startLocation = configuration.startLocation() ?: return
+    val currentLocation = configuration.currentLocation() ?: return
 
     val gc = paintingContext.gc
 
-    gc.stroke(style.stroke)
-    gc.fill(style.fill)
+    gc.stroke(configuration.stroke)
+    gc.fill(configuration.fill)
 
     gc.fillRectCoordinates(startLocation, currentLocation)
     gc.strokeRectCoordinates(startLocation, currentLocation)
   }
 
-  class Style {
+  class Configuration(
+    /**
+     * The start location of the rubber band
+     */
+    val startLocation: () -> Coordinates?,
+
+    /**
+     * The current location of the rubber band
+     */
+    val currentLocation: () -> Coordinates?
+  ) {
     /**
      * The stroke of the rubber band
      */
@@ -58,16 +84,4 @@ class RubberBandVisualizationLayer(
      */
     var fill: Color = Color.rgba(255, 165, 0, 0.5)
   }
-
-  class Data(
-    /**
-     * The start location of the rubber band
-     */
-    val startLocation: () -> Coordinates?,
-
-    /**
-     * The current location of the rubber band
-     */
-    val currentLocation: () -> Coordinates?
-  )
 }

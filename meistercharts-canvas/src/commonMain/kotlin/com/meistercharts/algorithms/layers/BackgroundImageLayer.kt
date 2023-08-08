@@ -26,18 +26,18 @@ import it.neckar.geometry.Direction
  * Shows a background image - in the window
  */
 class BackgroundImageLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(configuration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.fill(style.background)
+    gc.fill(configuration.background)
     gc.fillRect(gc.boundingBox)
 
-    style.backgroundImage?.let {
+    configuration.backgroundImage?.let {
       val imageSize = it.boundingBox(paintingContext).size
       val boundingBoxSize = gc.canvasSize.containWithAspectRatio(imageSize.aspectRatio)
 
@@ -45,7 +45,7 @@ class BackgroundImageLayer(
     }
   }
 
-  class Style {
+  class Configuration {
     /**
      * The color to be used as background
      */

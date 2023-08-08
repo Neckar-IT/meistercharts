@@ -101,7 +101,7 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     this.configuration.showValuesGrid = it
   }
 
-  this.categoriesGridLayer.data.applyLinesStyle(jsStyle.categoriesGridStyle)
+  this.categoriesGridLayer.configuration.applyLinesStyle(jsStyle.categoriesGridStyle)
   jsStyle.categoriesGridStyle?.visible?.let {
     this.configuration.showCategoriesGrid = it
   }

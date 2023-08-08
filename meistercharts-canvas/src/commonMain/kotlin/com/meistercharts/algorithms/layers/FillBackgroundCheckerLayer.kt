@@ -24,11 +24,13 @@ import it.neckar.open.kotlin.lang.toIntCeil
  * Fills the canvas with a background checker pattern
  */
 class FillBackgroundCheckerLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
+
+
   override val type: LayerType = LayerType.Background
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration().also(configuration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
@@ -47,7 +49,7 @@ class FillBackgroundCheckerLayer(
     }
   }
 
-  class Style {
+  class Configuration {
     /**
      * The color to be used as background
      */

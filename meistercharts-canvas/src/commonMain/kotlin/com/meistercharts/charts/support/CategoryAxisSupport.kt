@@ -165,7 +165,7 @@ inline fun CategoryAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinl
  * Creates a category axis support for this (single) category layer
  */
 fun CategoryLayer<*>.createCategoryAxisSupport(
-  labelsProvider: SizedLabelsProvider = data.modelProvider().createCategoryLabelsProvider(),
+  labelsProvider: SizedLabelsProvider = configuration.modelProvider().createCategoryLabelsProvider(),
   additionalConfiguration: CategoryAxisSupport<Unit>.Configuration.() -> Unit = {},
 ): CategoryAxisSupport<Unit> {
   return CategoryAxisSupport.single(
