@@ -24,22 +24,22 @@ import com.meistercharts.resources.Icons
  * Shows a loading icon if a resource is missing
  */
 class ShowLoadingIconOnResourceMissingLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Notification
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
 
   override fun paint(paintingContext: LayerPaintingContext) {
     if (!paintingContext.missingResources.isEmpty()) {
       val gc = paintingContext.gc
       gc.clear()
-      style.icon.paintInBoundingBox(paintingContext, gc.centerX, gc.centerY, Direction.Center)
+      configuration.icon.paintInBoundingBox(paintingContext, gc.centerX, gc.centerY, Direction.Center)
     }
   }
 
-  class Style {
+  class Configuration {
     /**
      * The icon that is painted
      */
@@ -50,7 +50,7 @@ class ShowLoadingIconOnResourceMissingLayer(
 /**
  * Adds a layer that paints an icon if resources are missing
  */
-fun Layers.addShowLoadingOnMissingResources(styleConfiguration: ShowLoadingIconOnResourceMissingLayer.Style.() -> Unit = {}): ShowLoadingIconOnResourceMissingLayer {
+fun Layers.addShowLoadingOnMissingResources(styleConfiguration: ShowLoadingIconOnResourceMissingLayer.Configuration.() -> Unit = {}): ShowLoadingIconOnResourceMissingLayer {
   return ShowLoadingIconOnResourceMissingLayer(styleConfiguration).also {
     addLayer(it)
   }

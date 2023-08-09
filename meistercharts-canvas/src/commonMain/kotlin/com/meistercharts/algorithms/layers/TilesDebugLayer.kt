@@ -49,16 +49,19 @@ class TilesDebugLayer(
   /**
    * Returns the tile provider
    */
-  val tileProviderProvider: (layers: Layers) -> TileProvider?,
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
-  constructor(tilesLayer: TilesLayer) : this({
-    tilesLayer.tileProvider
-  })
+  constructor(
+    tilesLayer: TilesLayer,
+    additionalConfiguration: Configuration.() -> Unit = {},
+    ) : this(Configuration { tilesLayer.tileProvider }, additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
-
-  val style: Style = Style().also(styleConfiguration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
@@ -66,7 +69,7 @@ class TilesDebugLayer(
 
     gc.fillText("Global Tiles Cache size: ${GlobalTilesCache.size}", 0.0, 0.0, Direction.TopLeft)
 
-    val tileProvider = tileProviderProvider(paintingContext.chartSupport.layerSupport.layers) ?: return
+    val tileProvider = configuration.tileProviderProvider(paintingContext.chartSupport.layerSupport.layers) ?: return
     val cachedTileProvider = tileProvider as? CachedTileProvider
 
 
@@ -94,11 +97,11 @@ class TilesDebugLayer(
 
       @Window val tileRect = Rectangle(x, y, width, height)
 
-      gc.stroke(style.tileBorderColor)
+      gc.stroke(configuration.tileBorderColor)
       gc.strokeRect(tileRect)
 
-      if (style.showTileIndex) {
-        gc.fill(style.tileIndexTextColor)
+      if (configuration.showTileIndex) {
+        gc.fill(configuration.tileIndexTextColor)
         gc.fillText(tileIdentifier.tileIndex.format(), tileRect.centerX, tileRect.centerY, Direction.Center)
       }
 
@@ -172,7 +175,9 @@ class TilesDebugLayer(
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    val tileProviderProvider: (layers: Layers) -> TileProvider?,
+    ) {
     /**
      * The color to be used for the border of a tile
      */
@@ -194,7 +199,7 @@ class TilesDebugLayer(
      * Returns a tiles debug layer that automatically returns the first tiles layer that has been added
      */
     fun automatic(): TilesDebugLayer {
-      return TilesDebugLayer({ it.byType<TilesLayer>()?.tileProvider })
+      return TilesDebugLayer(Configuration { it.byType<TilesLayer>()?.tileProvider })
     }
   }
 }

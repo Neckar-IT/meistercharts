@@ -209,13 +209,12 @@ class BarChartGroupedGestalt constructor(
    * Shows a cross wire for vertical bars - paints a single tooltip-like label for every bar at the right height
    */
   val crossWireLayerVertical: CrossWireLayer = CrossWireLayer(
-    CrossWireLayer.Data(
-      valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
+    valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
 
-        private val paintingVariables = object : PaintingVariables {
-          val locations = @MayBeNaN DoubleCache()
+      private val paintingVariables = object : PaintingVariables {
+        val locations = @MayBeNaN DoubleCache()
 
-          override fun calculate(paintingContext: LayerPaintingContext) {
+        override fun calculate(paintingContext: LayerPaintingContext) {
             val chartCalculator = paintingContext.chartCalculator
 
             val categoryIndex = activeCategoryIndexOrNull
@@ -257,7 +256,7 @@ class BarChartGroupedGestalt constructor(
           @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
           return style.crossWireValueLabelFormat.format(value)
         }
-      })
+      }
   ) {
     //The active category is visualized by the category layer
     showCrossWireLine = false
@@ -613,7 +612,7 @@ class BarChartGroupedGestalt constructor(
      */
     var crossWireLabelBoxStyles: CategoryModelBoxStylesProvider = CategoryModelBoxStylesProvider { _, seriesIndex ->
       BoxStyle(
-        fill = Theme.chartColors().valueAt(seriesIndex.value), borderColor = Color.white, borderWidth = 2.0, padding = CrossWireLayer.Style.DefaultLabelBoxPadding,
+        fill = Theme.chartColors().valueAt(seriesIndex.value), borderColor = Color.white, borderWidth = 2.0, padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
         shadow = Shadow.LightDrop
       )

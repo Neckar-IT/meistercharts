@@ -296,7 +296,7 @@ fun CategoryLayer<*>.createAxisLayer(
 /**
  * Creates a category axis layer that uses the layout of this [CategoryLinesLayer]
  */
-fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = data.categorySeriesModel.createCategoryLabelsProvider(), styleConfiguration: CategoryAxisLayer.Style.() -> Unit = {}): CategoryAxisLayer {
+fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = configuration.categorySeriesModel.createCategoryLabelsProvider(), styleConfiguration: CategoryAxisLayer.Style.() -> Unit = {}): CategoryAxisLayer {
   return CategoryAxisLayer(CategoryAxisLayer.Data(labelsProvider) { paintingVariables().layout }) {
     styleConfiguration()
   }

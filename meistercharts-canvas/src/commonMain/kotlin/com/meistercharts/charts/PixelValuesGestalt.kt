@@ -219,7 +219,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }.clipped()
 
-  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(model.limits.asSizedProvider())) {
+  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(model.limits.asSizedProvider()) {
     orientation = Orientation.Horizontal
     fill = Color.rgba(255, 255, 255, 0.85)
     stroke = Color.white
@@ -293,12 +293,12 @@ class PixelValuesGestalt @JvmOverloads constructor(
       horizontalGridLayer.configuration.passpartout = withoutTop
       verticalGridLayer.configuration.passpartout = withoutTop
 
-      clippedZeroLinesLayer.style.insets = { contentInsets }
-      limitsLayer.style.insets = { contentInsets }
-      lineChartLayer.style.insets = { contentInsets }
-      liveEdgesLayer.style.insets = { contentInsets }
-      detectedEdgesLayer.style.insets = { contentInsets }
-      teachEdgesLayer.style.insets = { contentInsets }
+      clippedZeroLinesLayer.configuration.insets = { contentInsets }
+      limitsLayer.configuration.insets = { contentInsets }
+      lineChartLayer.configuration.insets = { contentInsets }
+      liveEdgesLayer.configuration.insets = { contentInsets }
+      detectedEdgesLayer.configuration.insets = { contentInsets }
+      teachEdgesLayer.configuration.insets = { contentInsets }
     }
   }
 

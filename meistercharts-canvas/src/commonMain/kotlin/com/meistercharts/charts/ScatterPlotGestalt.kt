@@ -129,7 +129,7 @@ class ScatterPlotGestalt(
      */
     //TODO i18n
     val valueAxisCaptionY: String = "Demo Data Y",
-  ) : ScatterPlotLayer.Data(xValues, yValues, valueRangeX, valueRangeY) {
+  ) : ScatterPlotLayer.Configuration(xValues, yValues, valueRangeX, valueRangeY) {
   }
 
   @ConfigurationDsl

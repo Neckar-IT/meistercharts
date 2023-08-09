@@ -25,10 +25,10 @@ import it.neckar.open.unit.other.px
  * Strokes lines around the content are
  */
 class ContentAreaLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -37,18 +37,18 @@ class ContentAreaLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.lineWidth = style.lineWidth
+    gc.lineWidth = configuration.lineWidth
 
     contentAreaPainter
       .also {
-        it.stroke = style.color
-        it.sidesToPaint = style.sidesToPaint
+        it.stroke = configuration.color
+        it.sidesToPaint = configuration.sidesToPaint
       }
       .paint(gc, paintingContext.chartCalculator)
   }
 
   @ConfigurationDsl
-  open class Style {
+  open class Configuration {
     /**
      * The color for the lines
      */

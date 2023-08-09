@@ -606,7 +606,7 @@ fun com.meistercharts.api.NumberFormat.toNumberFormat(): CachedNumberFormat {
   }.cached()
 }
 
-fun CrossWireLayer.Style.applyCrossWireStyle(jsStyle: CrossWireStyle?) {
+fun CrossWireLayer.Configuration.applyCrossWireStyle(jsStyle: CrossWireStyle?) {
   if (jsStyle == null) {
     return
   }

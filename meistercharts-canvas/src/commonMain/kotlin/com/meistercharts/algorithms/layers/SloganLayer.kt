@@ -38,12 +38,20 @@ import kotlin.math.max
  * Displays a slogan
  */
 class SloganLayer(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  override val type: LayerType = LayerType.Content
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    sloganProvider: (textService: TextService, i18nConfiguration: I18nConfiguration) -> String = { _, _ -> "Data brought to life" },
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(sloganProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  override val type: LayerType = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
@@ -51,34 +59,34 @@ class SloganLayer(
     val textService = paintingContext.chartSupport.textService
     val i18nConfiguration = paintingContext.chartSupport.i18nConfiguration
 
-    val sloganText = data.sloganProvider(textService, i18nConfiguration)
+    val sloganText = configuration.sloganProvider(textService, i18nConfiguration)
     if (sloganText.isEmpty()) {
       return
     }
 
-    gc.font(style.sloganFont)
+    gc.font(configuration.sloganFont)
 
     var textSize: Size = gc.calculateTextSize(sloganText)
-    if (style.keepSloganInBounds) {
-      val maxTextSize = Size(gc.width * style.maxPercentage, gc.height * style.maxPercentage)
+    if (configuration.keepSloganInBounds) {
+      val maxTextSize = Size(gc.width * configuration.maxPercentage, gc.height * configuration.maxPercentage)
 
       //Calculate the max font size
       textSize = gc.guessFontSize(sloganText, maxTextSize, FontSize.XXS) ?: return
     }
 
     //glow effect
-    val glowWidth = textSize.width * style.glowScaleX
-    val glowHeight = textSize.height * style.glowScaleY
+    val glowWidth = textSize.width * configuration.glowScaleX
+    val glowHeight = textSize.height * configuration.glowScaleY
 
     //Calculate the optimal translate y
-    @px val optimalTranslateY = gc.height / 2.0 + style.sloganOffsetY
+    @px val optimalTranslateY = gc.height / 2.0 + configuration.sloganOffsetY
     val minTranslateY = gc.getFontMetrics().accentLine / 2.0
 
     gc.translate(gc.width / 2.0, max(optimalTranslateY, minTranslateY))
 
     gc.saved {
       //move to the Y center of the text
-      when (style.anchorDirection.verticalAlignment) {
+      when (configuration.anchorDirection.verticalAlignment) {
         VerticalAlignment.Top -> gc.translate(0.0, textSize.height / 2.0)
         VerticalAlignment.Baseline -> gc.translate(0.0, gc.getFontMetrics().pLine - textSize.height / 2.0)
         VerticalAlignment.Bottom -> gc.translate(0.0, -textSize.height / 2.0)
@@ -87,7 +95,7 @@ class SloganLayer(
       }
 
       gc.fill(
-        style.glowGradient
+        configuration.glowGradient
           .toCanvasPaint(0.0, 0.0, glowWidth / 2.0, glowHeight / 2.0)
       )
 
@@ -98,15 +106,13 @@ class SloganLayer(
       gc.fillRect(-glowWidth / 2.0, -scaledHeight / 2.0, glowWidth, scaledHeight)
     }
 
-    gc.fill(style.foreground)
-    gc.fillText(sloganText, 0.0, 0.0, style.anchorDirection)
+    gc.fill(configuration.foreground)
+    gc.fillText(sloganText, 0.0, 0.0, configuration.anchorDirection)
   }
 
-  class Data(
+  class Configuration(
     var sloganProvider: (textService: TextService, i18nConfiguration: I18nConfiguration) -> String = { _, _ -> "Data brought to life" }
-  )
-
-  class Style {
+  ) {
     /**
      * The anchor direction
      */

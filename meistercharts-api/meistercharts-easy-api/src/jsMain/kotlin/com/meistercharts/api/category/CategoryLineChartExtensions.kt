@@ -107,12 +107,12 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
   }
 
   jsStyle.lineStyles?.let { jsLineStyles: Array<LineChartLineStyle?> ->
-    this.categoryLinesLayer.style.pointPainters = LineChartSimpleConverter.toPointPainters(jsLineStyles)
-    this.categoryLinesLayer.style.linePainters = LineChartSimpleConverter.toLinePainters(jsLineStyles)
-    this.categoryLinesLayer.style.lineStyles = LineChartSimpleConverter.toLineStyles(jsLineStyles)
+    this.categoryLinesLayer.configuration.pointPainters = LineChartSimpleConverter.toPointPainters(jsLineStyles)
+    this.categoryLinesLayer.configuration.linePainters = LineChartSimpleConverter.toLinePainters(jsLineStyles)
+    this.categoryLinesLayer.configuration.lineStyles = LineChartSimpleConverter.toLineStyles(jsLineStyles)
 
-    LineChartSimpleConverter.toLinePainters(categoryLinesLayer.style.linePainters, jsLineStyles).let {
-      this.categoryLinesLayer.style.linePainters = it
+    LineChartSimpleConverter.toLinePainters(categoryLinesLayer.configuration.linePainters, jsLineStyles).let {
+      this.categoryLinesLayer.configuration.linePainters = it
     }
   }
 
@@ -120,7 +120,7 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     this.configuration.showTooltip = it
   }
 
-  this.crossWireLineLayer.style.applyCrossWireStyle(jsStyle.tooltipWireStyle)
+  this.crossWireLineLayer.configuration.applyCrossWireStyle(jsStyle.tooltipWireStyle)
 
   jsStyle.tooltipStyle?.let { jsTooltipStyle ->
     jsTooltipStyle.tooltipFormat?.toNumberFormat()?.let {

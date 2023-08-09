@@ -136,7 +136,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     gapSize = DoubleProvider { configuration.categoryGap }
   }
 
-  val categoryLinesLayer: CategoryLinesLayer = CategoryLinesLayer(CategoryLinesLayer.Data(configuration::filteredCategorySeriesModel.delegate())) {
+  val categoryLinesLayer: CategoryLinesLayer = CategoryLinesLayer(configuration::filteredCategorySeriesModel.delegate()) {
     layoutCalculator = defaultCategoryLayouter
   }
 
@@ -147,8 +147,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     orientation = { Orientation.Horizontal },
     layoutProvider = { categoryLinesLayer.paintingVariables().layout },
     selectionSink = { newCategoryIndex, chartSupport: ChartSupport ->
-      if (categoryLinesLayer.style.activeCategoryIndex != newCategoryIndex) {
-        categoryLinesLayer.style.activeCategoryIndex = newCategoryIndex
+      if (categoryLinesLayer.configuration.activeCategoryIndex != newCategoryIndex) {
+        categoryLinesLayer.configuration.activeCategoryIndex = newCategoryIndex
         chartSupport.markAsDirty(DirtyReason.ActiveElementUpdated)
       }
     })
@@ -157,7 +157,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    * Only paints the background layer
    */
   val crossWireLineLayer: CrossWireLayer = CrossWireLayer.onlyWire { paintingContext: LayerPaintingContext ->
-    val activeCategoryIndex = categoryLinesLayer.style.activeCategoryIndex ?: throw IllegalStateException("no active category available")
+    val activeCategoryIndex = categoryLinesLayer.configuration.activeCategoryIndex ?: throw IllegalStateException("no active category available")
     @ContentArea val center = categoryLinesLayer.paintingVariables().layout.calculateCenter(BoxIndex(activeCategoryIndex.value))
     paintingContext.chartCalculator.contentArea2windowX(center)
   }
@@ -166,73 +166,63 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    * The cross wire layer that is used to display the values at the current mouse location
    */
   val crossWireLabelsLayer: CrossWireLayer = CrossWireLayer(
-    data = CrossWireLayer.Data(
-      valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
+    valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
 
-        private val paintingVariables = object : PaintingVariables {
-          val locations = @MayBeNaN DoubleCache()
+      private val paintingVariables = object : PaintingVariables {
+        val locations = @MayBeNaN DoubleCache()
 
-          override fun calculate(paintingContext: LayerPaintingContext) {
-            val chartCalculator = paintingContext.chartCalculator
+        override fun calculate(paintingContext: LayerPaintingContext) {
+          val chartCalculator = paintingContext.chartCalculator
 
-            val categoryIndex = categoryLinesLayer.style.activeCategoryIndex
+          val categoryIndex = categoryLinesLayer.configuration.activeCategoryIndex
 
-            if (categoryIndex == null) {
-              locations.prepare(0)
-              return
-            }
-
-            val categoryModel = configuration.filteredCategorySeriesModel
-
-            locations.prepare(categoryModel.numberOfSeries)
-
-            categoryModel.numberOfSeries.fastFor { seriesIndexAsInt ->
-              val seriesIndex = SeriesIndex(seriesIndexAsInt)
-              @MayBeNaN @Domain val value = categoryModel.valueAt(categoryIndex, seriesIndex)
-              @MayBeNaN @DomainRelative val relativeValue = configuration.valueRange.toDomainRelative(value)
-
-              locations[seriesIndexAsInt] = chartCalculator.domainRelative2windowY(relativeValue)
-            }
+          if (categoryIndex == null) {
+            locations.prepare(0)
+            return
           }
-        }
 
-        override fun size(): Int {
-          return paintingVariables.locations.size
-        }
-
-        override fun layout(wireLocation: Double, paintingContext: LayerPaintingContext) {
-          paintingVariables.calculate(paintingContext)
-        }
-
-        override fun locationAt(index: Int): @Window @MayBeNaN Double {
-          return paintingVariables.locations[index]
-        }
-
-        override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-          val categoryIndex = categoryLinesLayer.style.activeCategoryIndex ?: throw IllegalArgumentException("No category index found")
           val categoryModel = configuration.filteredCategorySeriesModel
 
-          @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
+          locations.prepare(categoryModel.numberOfSeries)
 
-          return configuration.crossWireValueLabelFormat.format(value)
+          categoryModel.numberOfSeries.fastFor { seriesIndexAsInt ->
+            val seriesIndex = SeriesIndex(seriesIndexAsInt)
+            @MayBeNaN @Domain val value = categoryModel.valueAt(categoryIndex, seriesIndex)
+            @MayBeNaN @DomainRelative val relativeValue = configuration.valueRange.toDomainRelative(value)
+
+            locations[seriesIndexAsInt] = chartCalculator.domainRelative2windowY(relativeValue)
+          }
         }
-      },
-    )
-  ) {
-    wireWidth = 2.0
+      }
 
-    //Hide the cross wire line - the line is painted by crossWireLayerBackground
-    showCrossWireLine = false
-    locationX = crossWireLineLayer.style.locationX
-  }
+      override fun size(): Int = paintingVariables.locations.size
+
+      override fun layout(wireLocation: Double, paintingContext: LayerPaintingContext) {
+        paintingVariables.calculate(paintingContext)
+      }
+
+      override fun locationAt(index: Int): @Window @MayBeNaN Double = paintingVariables.locations[index]
+
+      override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
+        val categoryIndex = categoryLinesLayer.configuration.activeCategoryIndex ?: throw IllegalArgumentException("No category index found")
+        val categoryModel = configuration.filteredCategorySeriesModel
+
+        @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
+
+        return configuration.crossWireValueLabelFormat.format(value)
+      }
+    },
+    additionalConfiguration = {}
+  )
+
 
   /**
    * Returns the active category index - or null if no category is active
    */
   var activeCategoryIndexOrNull: CategoryIndex?
-    get() = categoryLinesLayer.style.activeCategoryIndex
+    get() = categoryLinesLayer.configuration.activeCategoryIndex
     private set(value) {
-      categoryLinesLayer.style.activeCategoryIndex = value
+      categoryLinesLayer.configuration.activeCategoryIndex = value
     }
 
   /**
@@ -247,12 +237,12 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     CategoryBalloonTooltipPlacementSupport(
       orientation = { Orientation.Horizontal },
       activeCategoryIndexProvider = ::activeCategoryIndexOrNull,
-      categorySize = { crossWireLineLayer.style.wireWidth },
+      categorySize = { crossWireLineLayer.configuration.wireWidth },
       boxLayout = { categoryLinesLayer.paintingVariables().layout }
     ),
     { configuration.filteredCategorySeriesModel },
     valueFormat = { configuration.balloonTooltipValueLabelFormat },
-    colors = categoryLinesLayer.style::lineStyles.delegate().mapped { it.color }
+    colors = categoryLinesLayer.configuration::lineStyles.delegate().mapped { it.color }
   )
 
 
@@ -331,7 +321,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     }
 
     configuration.valueRangeProperty.consumeImmediately {
-      categoryLinesLayer.style.valueRange = it
+      categoryLinesLayer.configuration.valueRange = it
     }
 
     configuration.numberFormatProperty.consumeImmediately {
@@ -348,7 +338,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         layers.addAboveBackground(categoriesGridLayer.visibleIf(configuration.showCategoriesGridProperty))
 
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
-        layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
+        layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.configuration.activeCategoryIndex != null }.clippedWithoutAxis())
 
         valueAxisSupport.addLayers(this)
         thresholdsSupport.addLayers(this)
@@ -360,11 +350,11 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
         when (configuration.toolTipType) {
           ToolTipType.CrossWire -> {
-            layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
+            layers.addLayer(crossWireLabelsLayer.visibleIf { categoryLinesLayer.configuration.activeCategoryIndex != null }.clippedWithoutAxis())
           }
 
           ToolTipType.Balloon -> {
-            layers.addLayer(balloonTooltipLayer.visibleIf { categoryLinesLayer.style.activeCategoryIndex != null }.clippedWithoutAxis())
+            layers.addLayer(balloonTooltipLayer.visibleIf { categoryLinesLayer.configuration.activeCategoryIndex != null }.clippedWithoutAxis())
           }
         }
 

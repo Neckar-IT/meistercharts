@@ -34,11 +34,18 @@ import kotlin.jvm.JvmOverloads
  *
  */
 class LimitsLayer @JvmOverloads constructor(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    limitsProvider: LimitsProvider,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(limitsProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -47,13 +54,13 @@ class LimitsLayer @JvmOverloads constructor(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     areaPainter.apply {
-      fill = style.fill
-      borderColor = style.stroke
-      borderWidth = style.strokeWidth
+      fill = configuration.fill
+      borderColor = configuration.stroke
+      borderWidth = configuration.strokeWidth
     }
 
-    data.limitsProvider.fastForEach {
-      when (style.orientation) {
+    configuration.limitsProvider.fastForEach {
+      when (configuration.orientation) {
         Orientation.Vertical -> {
           paintVertical(paintingContext, it, areaPainter)
         }
@@ -146,15 +153,13 @@ class LimitsLayer @JvmOverloads constructor(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides the limits
      */
     val limitsProvider: LimitsProvider
-  )
-
-  @ConfigurationDsl
-  open class Style {
+  ) {
     /**
      * The color for the lines
      */

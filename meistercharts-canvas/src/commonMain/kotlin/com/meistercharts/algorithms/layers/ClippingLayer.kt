@@ -30,15 +30,22 @@ typealias InsetsProvider = (paintingContext: LayerPaintingContext) -> @Window In
  * Clips a layer from the outside
  */
 class ClippingLayer<T : Layer>(
-  delegate: T,
-  styleConfiguration: Style.() -> Unit = {}
-) : DelegatingLayer<T>(delegate) {
+  val configuration: Configuration<T>,
+  additionalConfiguration: Configuration<T>.() -> Unit = {}
+) : DelegatingLayer<T>(configuration.delegate) {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    delegate: T,
+    additionalConfiguration: Configuration<T>.() -> Unit = {}
+  ): this(Configuration(delegate), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    val insets = style.insets(paintingContext)
+    val insets = configuration.insets(paintingContext)
     gc.clip(insets.left, insets.top, gc.width - insets.offsetWidth, gc.height - insets.offsetHeight)
     super.paint(paintingContext)
   }
@@ -47,7 +54,9 @@ class ClippingLayer<T : Layer>(
     get() = "ClippingLayer{${delegate.description}}"
 
   @ConfigurationDsl
-  class Style {
+  class Configuration<T: Layer>(
+    var delegate: T,
+    ) {
     /**
      * The insets
      */

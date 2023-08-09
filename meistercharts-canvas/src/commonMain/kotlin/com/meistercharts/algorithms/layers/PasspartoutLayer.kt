@@ -35,12 +35,12 @@ import it.neckar.open.unit.other.px
  * A passpartout paints *over* an area. Therefore, it does not work with transparent areas
  */
 class PasspartoutLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
   val painter: PasspartoutPainter = PasspartoutPainter()
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -48,15 +48,15 @@ class PasspartoutLayer(
   override fun paint(paintingContext: LayerPaintingContext) {
     painter.paintPasspartout(
       paintingContext,
-      style.color(),
-      style.margin(),
-      style.insets(),
-      style.strategy,
+      configuration.color(),
+      configuration.margin(),
+      configuration.insets(),
+      configuration.strategy,
     )
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration {
     var strategy: PasspartoutPaintingStrategy = OverlappingPasspartoutPaintingStrategy
 
     /**
@@ -97,20 +97,20 @@ fun Layers.addPasspartout(@px @Zoomed insets: Insets, color: Color): Passpartout
  * Binds this style's insets to the size stored by [axisStyle].
  * Also binds this style's margin to the margin stored by [axisStyle].
  */
-fun PasspartoutLayer.Style.bind(axisStyle: AxisStyle) {
+fun PasspartoutLayer.Configuration.bind(axisStyle: AxisStyle) {
   insets = {
     when (axisStyle.side) {
-      Side.Left   -> Insets.onlyLeft(axisStyle.size)
-      Side.Right  -> Insets.onlyRight(axisStyle.size)
-      Side.Top    -> Insets.onlyTop(axisStyle.size)
+      Side.Left -> Insets.onlyLeft(axisStyle.size)
+      Side.Right -> Insets.onlyRight(axisStyle.size)
+      Side.Top -> Insets.onlyTop(axisStyle.size)
       Side.Bottom -> Insets.onlyBottom(axisStyle.size)
     }
   }
   margin = {
     when (axisStyle.side) {
-      Side.Left   -> Insets.onlyLeft(axisStyle.margin.left)
-      Side.Right  -> Insets.onlyRight(axisStyle.margin.right)
-      Side.Top    -> Insets.onlyTop(axisStyle.margin.top)
+      Side.Left -> Insets.onlyLeft(axisStyle.margin.left)
+      Side.Right -> Insets.onlyRight(axisStyle.margin.right)
+      Side.Top -> Insets.onlyTop(axisStyle.margin.top)
       Side.Bottom -> Insets.onlyBottom(axisStyle.margin.bottom)
     }
   }

@@ -48,11 +48,18 @@ import it.neckar.open.provider.MultiProvider
  * Category chart that uses lines to visualize the categories
  */
 class CategoryLinesLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    categorySeriesModel: CategorySeriesModel,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(categorySeriesModel), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -68,7 +75,7 @@ class CategoryLinesLayer(
     override var layout: EquisizedBoxLayout = EquisizedBoxLayout.empty
 
     override fun calculate(paintingContext: LayerPaintingContext) {
-      layout = style.layoutCalculator.calculateLayout(paintingContext, data.categorySeriesModel.numberOfCategories, style.orientation)
+      layout = configuration.layoutCalculator.calculateLayout(paintingContext, configuration.categorySeriesModel.numberOfCategories, configuration.orientation)
     }
   }
 
@@ -101,14 +108,14 @@ class CategoryLinesLayer(
           val categoryIndex = CategoryIndex(foundSegmentIndex.value)
 
           //Find the exact point
-          data.categorySeriesModel.numberOfSeries.fastFor { seriesIndexAsInt ->
+          configuration.categorySeriesModel.numberOfSeries.fastFor { seriesIndexAsInt ->
             val seriesIndex = SeriesIndex(seriesIndexAsInt)
-            @Domain val valueForPoint = data.categorySeriesModel.valueAt(categoryIndex, seriesIndex)
+            @Domain val valueForPoint = configuration.categorySeriesModel.valueAt(categoryIndex, seriesIndex)
             if (valueForPoint.isNaN()) {
               return@fastFor
             }
 
-            @Window val y = chartCalculator.domain2windowY(valueForPoint, style.valueRange)
+            @Window val y = chartCalculator.domain2windowY(valueForPoint, configuration.valueRange)
 
             add(
               WhatsAtResultElement(
@@ -134,12 +141,12 @@ class CategoryLinesLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    for (seriesIndexAsInt in 0 until data.categorySeriesModel.numberOfSeries) {
+    for (seriesIndexAsInt in 0 until configuration.categorySeriesModel.numberOfSeries) {
       val seriesIndex = SeriesIndex(seriesIndexAsInt)
 
-      val linePainter = style.linePainters.valueAt(seriesIndex)
+      val linePainter = configuration.linePainters.valueAt(seriesIndex)
       gc.saved {
-        style.lineStyles.valueAt(seriesIndexAsInt).apply(gc)
+        configuration.lineStyles.valueAt(seriesIndexAsInt).apply(gc)
         linePainter.begin(gc)
         foreachCategory(chartCalculator, seriesIndex) { centerX, y, categoryIndex, value ->
           if (centerX.isFinite() && y.isFinite()) {
@@ -159,10 +166,10 @@ class CategoryLinesLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    for (seriesIndexAsInt in 0 until data.categorySeriesModel.numberOfSeries) {
+    for (seriesIndexAsInt in 0 until configuration.categorySeriesModel.numberOfSeries) {
       val seriesIndex = SeriesIndex(seriesIndexAsInt)
 
-      style.pointPainters.valueAt(seriesIndex)?.let { categoryPointPainter ->
+      configuration.pointPainters.valueAt(seriesIndex)?.let { categoryPointPainter ->
         foreachCategory(chartCalculator, seriesIndex) { centerX, y, categoryIndex, value ->
           if (centerX.isFinite() && y.isFinite()) {
             gc.saved {
@@ -180,30 +187,28 @@ class CategoryLinesLayer(
     callback: (centerX: @Window Double, y: @Window Double, categoryIndex: CategoryIndex, value: @Domain Double) -> Unit,
   ) {
     val layout = paintingVariables.layout
-    for (categoryIndexAsInt in 0 until data.categorySeriesModel.numberOfCategories) {
+    for (categoryIndexAsInt in 0 until configuration.categorySeriesModel.numberOfCategories) {
       //Translate to the start of the content area
       @Window val centerX = chartCalculator.zoomed2windowX(layout.calculateCenter(BoxIndex(categoryIndexAsInt)))
 
       val categoryIndex = CategoryIndex(categoryIndexAsInt)
-      @Domain val value = data.categorySeriesModel.valueAt(categoryIndex, seriesIndex)
+      @Domain val value = configuration.categorySeriesModel.valueAt(categoryIndex, seriesIndex)
       if (value.isNaN()) {
         continue
       }
 
-      @Window val y = chartCalculator.domainRelative2windowY(this.style.valueRange.toDomainRelative(value))
+      @Window val y = chartCalculator.domainRelative2windowY(this.configuration.valueRange.toDomainRelative(value))
       callback(centerX, y, categoryIndex, value)
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * The model
      */
     var categorySeriesModel: CategorySeriesModel,
-  )
-
-  @ConfigurationDsl
-  open class Style {
+  ) {
     /**
      * Provides the layout
      */

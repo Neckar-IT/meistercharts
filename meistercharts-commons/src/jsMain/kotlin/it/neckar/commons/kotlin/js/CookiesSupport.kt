@@ -17,8 +17,8 @@ object CookiesSupport {
   }
 
   /** Creates a new Cookie with the given name and value. If a cookie with the same name already exists, the value of the cookie is updated */
-  fun setCookie(cookieName: String, cookieValue: String, path: String = "/") {
-    document.cookie = "$cookieName=$cookieValue;path=$path"
+  fun setCookie(cookieName: String, cookieValue: String, path: String = "/", sameSite: SameSite = SameSite.Lax) {
+    document.cookie = "$cookieName=$cookieValue;path=$path;SameSite=${sameSite.name}"
   }
 
   fun deleteAllCookiesForKey(cookieName: String) {
@@ -28,6 +28,24 @@ object CookiesSupport {
       val value = splitToken[1].trim()
       if (key == cookieName) document.cookie = "$cookieName=$value;max-age=-1"
     }
+  }
+
+  /** Contains all possible values for the SameSite attribute. If None is chosen the 'Secure' attribute must be used as well.
+   * Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value*/
+  enum class SameSite {
+    /**
+     *  means that the browser sends the cookie with both cross-site and same-site requests. The Secure attribute must also be set when setting this value, like so SameSite=None; Secure. If Secure is missing an error will be logged:
+     * */
+    None,
+
+    /**
+     * Means that the cookie is not sent on cross-site requests, such as on requests to load images or frames, but is sent when a user is navigating to the origin site from an external site (for example, when following a link). This is the default behavior if the SameSite attribute is not specified. */
+    Lax,
+
+    /**
+     * Means that the browser sends the cookie only for same-site requests, that is, requests originating from the same site that set the cookie. If a request originates from a different domain or scheme (even with the same domain), no cookies with the SameSite=Strict attribute are sent.
+     * */
+    Strict
   }
 
 }

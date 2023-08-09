@@ -778,13 +778,12 @@ class TimeLineChartGestalt
    * The cross wire layer for the decimal values
    */
   val crossWireLayerDecimalValues: CrossWireLayer = CrossWireLayer(
-    CrossWireLayer.Data(
-      valueLabelsProvider = crossWireDecimalValuesLabelsProvider,
-      currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
-        val chartCalculator = paintingContext.chartCalculator
-        val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-        style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
-      })
+    valueLabelsProvider = crossWireDecimalValuesLabelsProvider,
+    currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
+      val chartCalculator = paintingContext.chartCalculator
+      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
+      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+    }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
     wireWidth = 1.0
@@ -804,6 +803,7 @@ class TimeLineChartGestalt
       crossWireDecimalValuesLabelsProvider.labelTextColorCache[labelIndex]
     }
   }
+
 
   /**
    * Required as field to be able to access the painting properties
@@ -967,14 +967,12 @@ class TimeLineChartGestalt
    * Cross wire layer for the enum values
    */
   val crossWireLayerEnumValues: CrossWireLayer = CrossWireLayer(
-    CrossWireLayer.Data(
-      valueLabelsProvider = crossWireEnumValuesLabelsProvider,
-      currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
-        val chartCalculator = paintingContext.chartCalculator
-        val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-        style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
-      },
-    )
+    valueLabelsProvider = crossWireEnumValuesLabelsProvider,
+    currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
+      val chartCalculator = paintingContext.chartCalculator
+      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
+      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+    }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
     wireWidth = 1.0
@@ -993,7 +991,6 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { index: @LabelIndex Int ->
-      //The provided box style
       crossWireEnumValuesLabelsProvider.boxStylesCache[index]
     }
 
@@ -1473,7 +1470,7 @@ class TimeLineChartGestalt
      * The cross wire label styles - for the cross wire for decimal values
      */
     var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider {
-      BoxStyle(fill = Theme.chartColors().valueAt(it), borderColor = Color.white, padding = CrossWireLayer.Style.DefaultLabelBoxPadding, radii = BorderRadius.all2, shadow = Shadow.LightDrop)
+      BoxStyle(fill = Theme.chartColors().valueAt(it), borderColor = Color.white, padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding, radii = BorderRadius.all2, shadow = Shadow.LightDrop)
     }
 
     /**
@@ -1508,7 +1505,7 @@ class TimeLineChartGestalt
       BoxStyle(
         fill = null, //use color for current value
         borderColor = Color.white,
-        padding = CrossWireLayer.Style.DefaultLabelBoxPadding,
+        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
         shadow = Shadow.LightDrop
       )

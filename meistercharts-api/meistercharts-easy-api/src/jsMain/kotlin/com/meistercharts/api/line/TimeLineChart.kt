@@ -257,8 +257,8 @@ class TimeLineChart internal constructor(
       gestalt.timeLineChartGestalt.style.crossWirePositionX = it
     }
 
-    gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
-    gestalt.timeLineChartGestalt.crossWireLayerEnumValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.configuration.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerEnumValues.configuration.applyCrossWireStyle(jsStyle.crossWireStyle)
 
     markAsDirty()
   }
@@ -267,8 +267,8 @@ class TimeLineChart internal constructor(
     logger.debug("TimeLineChartGestalt.applyStyle", jsStyle)
 
     jsStyle.crossWireFont?.toFontDescriptorFragment()?.let {
-      crossWireLayerDecimalValues.style.applyCrossWireFont(it)
-      crossWireLayerEnumValues.style.applyCrossWireFont(it)
+      crossWireLayerDecimalValues.configuration.applyCrossWireFont(it)
+      crossWireLayerEnumValues.configuration.applyCrossWireFont(it)
     }
 
     jsStyle.crossWireDecimalsFormat?.let {

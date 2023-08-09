@@ -54,9 +54,7 @@ class BinaryGestalt(
   }
 
   val binaryLayer: BinaryLayer = BinaryLayer(
-    BinaryLayer.Data(
-      valuesProvider = data::valuesProvider.delegate()
-    )
+    valuesProvider = data::valuesProvider.delegate()
   )
 
   init {

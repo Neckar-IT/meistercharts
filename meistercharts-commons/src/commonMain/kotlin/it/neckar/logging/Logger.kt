@@ -45,6 +45,8 @@ expect interface Logger {
    */
   fun debug(msg: String?)
 
+  fun debug(msg: String?, t: Throwable?)
+
   /**
    * Is the logger instance enabled for the INFO level?
    *
@@ -73,6 +75,8 @@ expect interface Logger {
    */
   fun warn(msg: String?)
 
+  fun warn(msg: String?, t: Throwable?)
+
   /**
    * Is the logger instance enabled for the ERROR level?
    *
@@ -87,6 +91,8 @@ expect interface Logger {
    * @param msg the message string to be logged
    */
   fun error(msg: String?)
+
+  fun error(msg: String?, t: Throwable?)
 }
 
 /**

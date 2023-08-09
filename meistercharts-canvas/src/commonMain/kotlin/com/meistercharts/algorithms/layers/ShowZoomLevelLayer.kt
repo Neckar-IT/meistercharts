@@ -32,10 +32,10 @@ import com.meistercharts.style.BoxStyle
  *
  */
 class ShowZoomLevelLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  private val style: Style = Style().also(styleConfiguration)
+  private val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -47,16 +47,16 @@ class ShowZoomLevelLayer(
     gc.translate(gc.width, 0.0)
     //to top right corner
 
-    gc.font(style.font)
-    gc.paintTextBox(text, Direction.TopRight, 5.0, 5.0, style.boxStyle, style.textColor, 150.0)
+    gc.font(configuration.font)
+    gc.paintTextBox(text, Direction.TopRight, 5.0, 5.0, configuration.boxStyle, configuration.textColor, 150.0)
   }
 
   /**
    * Returns the zoom as formatted string
    */
   private fun Zoom.getZoomFormatted(i18nConfiguration: I18nConfiguration): String {
-    val formattedZoomX = style.decimalFormat.format(scaleX, i18nConfiguration)
-    val formattedZoomY = style.decimalFormat.format(scaleY, i18nConfiguration)
+    val formattedZoomX = configuration.decimalFormat.format(scaleX, i18nConfiguration)
+    val formattedZoomY = configuration.decimalFormat.format(scaleY, i18nConfiguration)
     return "X: $formattedZoomX / Y: $formattedZoomY"
   }
 
@@ -64,7 +64,7 @@ class ShowZoomLevelLayer(
    * The style configuration for a [ShowZoomLevelLayer]
    */
   @ConfigurationDsl
-  open class Style {
+  open class Configuration {
     /**
      * The style for the box (background fill + border stroke + insets)
      */
