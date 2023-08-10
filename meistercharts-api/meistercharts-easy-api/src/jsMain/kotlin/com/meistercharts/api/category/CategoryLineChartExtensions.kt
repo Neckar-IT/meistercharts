@@ -79,16 +79,16 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
     }
   }
 
-  this.categoryAxisLayer.style.applyCategoryAxisStyle(jsStyle.categoryAxisStyle)
+  this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsStyle.categoryAxisStyle)
   jsStyle.categoryAxisStyle?.axisSize?.let {
-    this.contentViewportMargin = this.contentViewportMargin.withSide(categoryAxisLayer.style.side, it)
+    this.contentViewportMargin = this.contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
   }
 
   //Thresholds

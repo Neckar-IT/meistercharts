@@ -85,11 +85,11 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
   }
 
   jsConfiguration.discreteAxisStyle?.let { jsDiscreteAxisStyle: DiscreteAxisStyle ->
-    categoryAxisLayer.style.applyDiscreteAxisStyle(jsDiscreteAxisStyle)
+    categoryAxisLayer.axisConfiguration.applyDiscreteAxisStyle(jsDiscreteAxisStyle)
   }
 
   jsConfiguration.timeAxisStyle?.let { jsTimeAxisStyle ->
-    timeAxisLayer.style.applyTimeAxisStyle(jsTimeAxisStyle)
+    timeAxisLayer.axisConfiguration.applyTimeAxisStyle(jsTimeAxisStyle)
     //Recalculate the viewport margin - the time axis size might have changed
     recalculateContentViewportMargin()
   }

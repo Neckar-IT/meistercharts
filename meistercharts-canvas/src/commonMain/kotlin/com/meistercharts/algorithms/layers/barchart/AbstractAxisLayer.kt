@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.AxisPaintingVariables
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolveTitle
 import com.meistercharts.color.Color
@@ -44,14 +44,14 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
   abstract override fun paintingVariables(): AxisPaintingVariables
 
-  abstract val style: AxisStyle
+  abstract val axisConfiguration: AxisConfiguration
 
   /**
    * Translates the graphics context to the axis origin - including the title (using the painting properties)
    */
   fun CanvasRenderingContext.translateToAxisTitleOrigin() {
     val gc = this.canvas.gc
-    when (style.side) {
+    when (axisConfiguration.side) {
       Side.Right, Side.Left -> gc.translate(paintingVariables().axisTitleLocation, 0.0)
       Side.Top, Side.Bottom -> gc.translate(0.0, paintingVariables().axisTitleLocation)
     }
@@ -62,7 +62,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    */
   fun CanvasRenderingContext.translateToAxisLineOrigin() {
     val gc = this.canvas.gc
-    when (style.side) {
+    when (axisConfiguration.side) {
       Side.Right, Side.Left -> gc.translate(paintingVariables().axisLineLocation, 0.0)
       Side.Top, Side.Bottom -> gc.translate(0.0, paintingVariables().axisLineLocation)
     }
@@ -73,7 +73,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    */
   fun CanvasRenderingContext.translateToAxisInnerOrigin() {
     val gc = this.canvas.gc
-    when (style.side) {
+    when (axisConfiguration.side) {
       Side.Right, Side.Left -> gc.translate(paintingVariables().axisContentLocation, 0.0)
       Side.Top, Side.Bottom -> gc.translate(0.0, paintingVariables().axisContentLocation)
     }
@@ -84,7 +84,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    * Paints the title
    */
   fun paintTitle(paintingContext: LayerPaintingContext) {
-    val titleText = style.resolveTitle(paintingContext) ?: return
+    val titleText = axisConfiguration.resolveTitle(paintingContext) ?: return
     paintTitleAtCenter(titleText, paintingContext)
   }
 
@@ -99,13 +99,13 @@ abstract class AbstractAxisLayer : AbstractLayer() {
       gc.paintLocation(label = "axisTitleOrigin", color = Color.brown)
     }
 
-    gc.font(style.titleFont)
-    gc.fillStyle(style.titleColor())
+    gc.font(axisConfiguration.titleFont)
+    gc.fillStyle(axisConfiguration.titleColor())
 
     @Window val axisCenter = paintingVariables().axisCenter
     @Zoomed val maxTextWidth = paintingVariables().axisLength
 
-    when (style.side) {
+    when (axisConfiguration.side) {
       Side.Left -> {
         gc.translate(0.0, axisCenter)
         debugAxisCenterLocation(paintingContext, gc)
@@ -148,7 +148,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    * Paints the axis - respects the paint range from the style
    */
   fun paintAxisLine(paintingContext: LayerPaintingContext) {
-    if (style.axisLineWidth == 0.0) {
+    if (axisConfiguration.axisLineWidth == 0.0) {
       return
     }
 
@@ -159,10 +159,10 @@ abstract class AbstractAxisLayer : AbstractLayer() {
       gc.paintLocation(label = "axisLineOrigin", color = Color.cadetblue)
     }
 
-    gc.strokeStyle(style.lineColor())
-    gc.lineWidth = style.axisLineWidth
+    gc.strokeStyle(axisConfiguration.lineColor())
+    gc.lineWidth = axisConfiguration.axisLineWidth
 
-    when (style.orientation) {
+    when (axisConfiguration.orientation) {
       Orientation.Vertical ->
         gc.strokeLine(0.0, paintingVariables().axisStart, 0.0, paintingVariables().axisEnd)
 
@@ -178,9 +178,9 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    * Paint from left to right. Always translate the gc after each segment
    */
   override fun paint(paintingContext: LayerPaintingContext) {
-    logger.trace { "${this::class} paint with side ${style.side}" }
+    logger.trace { "${this::class} paint with side ${axisConfiguration.side}" }
 
-    when (style.side) {
+    when (axisConfiguration.side) {
       Side.Left -> paintLeft(paintingContext)
       Side.Right -> paintRight(paintingContext)
       Side.Top -> paintTop(paintingContext)
@@ -212,21 +212,21 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
 
     //Paint depending on the tick orientation
-    when (style.tickOrientation) {
+    when (axisConfiguration.tickOrientation) {
       Vicinity.Outside -> {
-        gc.translate(0.0, -style.size + paintingVariables().spaceForTitleIncludingGap + style.axisLineWidth / 2.0)
+        gc.translate(0.0, -axisConfiguration.size + paintingVariables().spaceForTitleIncludingGap + axisConfiguration.axisLineWidth / 2.0)
         //to the center of the axis
-        gc.translate(0.0, style.axisLineWidth / 2.0 + style.tickLength + style.tickLabelGap)
+        gc.translate(0.0, axisConfiguration.axisLineWidth / 2.0 + axisConfiguration.tickLength + axisConfiguration.tickLabelGap)
         //to text top
         paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
       }
 
       Vicinity.Inside -> {
-        gc.translate(0.0, -style.axisLineWidth / 2.0)
+        gc.translate(0.0, -axisConfiguration.axisLineWidth / 2.0)
         //to the *center* of the axis
-        gc.translate(0.0, -style.axisLineWidth / 2.0)
+        gc.translate(0.0, -axisConfiguration.axisLineWidth / 2.0)
         //to the top side of the axis
-        gc.translate(0.0, -style.tickLabelGap - style.tickLength)
+        gc.translate(0.0, -axisConfiguration.tickLabelGap - axisConfiguration.tickLength)
         //to text bottom
         paintTicksWithLabelsHorizontally(paintingContext, Direction.BottomCenter)
       }
@@ -251,21 +251,21 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
 
     //Paint depending on the tick orientation
-    when (style.tickOrientation) {
+    when (axisConfiguration.tickOrientation) {
       Vicinity.Outside -> {
-        gc.translate(0.0, style.size - paintingVariables().spaceForTitleIncludingGap - style.axisLineWidth / 2.0)
+        gc.translate(0.0, axisConfiguration.size - paintingVariables().spaceForTitleIncludingGap - axisConfiguration.axisLineWidth / 2.0)
         //to the center of the axis
-        gc.translate(0.0, -style.axisLineWidth / 2.0 - style.tickLength - style.tickLabelGap)
+        gc.translate(0.0, -axisConfiguration.axisLineWidth / 2.0 - axisConfiguration.tickLength - axisConfiguration.tickLabelGap)
         //to text bottom
         paintTicksWithLabelsHorizontally(paintingContext, Direction.BottomCenter)
       }
 
       Vicinity.Inside -> {
-        gc.translate(0.0, style.axisLineWidth / 2.0)
+        gc.translate(0.0, axisConfiguration.axisLineWidth / 2.0)
         //to the *center* of the axis
-        gc.translate(0.0, style.axisLineWidth / 2.0)
+        gc.translate(0.0, axisConfiguration.axisLineWidth / 2.0)
         //to the bottom side of the axis
-        gc.translate(0.0, style.tickLabelGap + style.tickLength)
+        gc.translate(0.0, axisConfiguration.tickLabelGap + axisConfiguration.tickLength)
         //to text top
         paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
       }
@@ -292,7 +292,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
 
     //Paint depending on the tick orientation
-    when (style.tickOrientation) {
+    when (axisConfiguration.tickOrientation) {
       Vicinity.Outside -> {
         gc.translate(paintingVariables().tickValueLabelMaxWidth, 0.0)
         //to the right side of the tick value labels
@@ -300,7 +300,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
       }
 
       Vicinity.Inside -> {
-        gc.translate(style.axisLineWidth + style.tickLabelGap + style.tickLength, 0.0)
+        gc.translate(axisConfiguration.axisLineWidth + axisConfiguration.tickLabelGap + axisConfiguration.tickLength, 0.0)
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterLeft)
       }
     }
@@ -327,21 +327,21 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
 
     //Paint depending on the tick orientation
-    when (style.tickOrientation) {
+    when (axisConfiguration.tickOrientation) {
       Vicinity.Outside -> {
         @px val maxTickValueWidth = paintingVariables().tickValueLabelMaxWidth
         gc.translate(-maxTickValueWidth, 0.0)
         //to the left side of the tick value labels
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterLeft)
-        gc.translate(-style.tickLabelGap - style.tickLength - style.axisLineWidth / 2.0, 0.0)
+        gc.translate(-axisConfiguration.tickLabelGap - axisConfiguration.tickLength - axisConfiguration.axisLineWidth / 2.0, 0.0)
       }
 
       Vicinity.Inside -> {
-        gc.translate(-style.axisLineWidth / 2.0, 0.0)
+        gc.translate(-axisConfiguration.axisLineWidth / 2.0, 0.0)
         //to the *center* of the axis
-        gc.translate(-style.axisLineWidth / 2.0, 0.0)
+        gc.translate(-axisConfiguration.axisLineWidth / 2.0, 0.0)
         //to the left side of the axis
-        gc.translate(-style.tickLabelGap - style.tickLength, 0.0)
+        gc.translate(-axisConfiguration.tickLabelGap - axisConfiguration.tickLength, 0.0)
         //to the right side of the label
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterRight)
       }
@@ -349,17 +349,17 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   }
 
   private fun fillBackground(paintingContext: LayerPaintingContext, side: Side) {
-    style.background.invoke()?.let { background ->
+    axisConfiguration.background.invoke()?.let { background ->
       val gc = paintingContext.gc
 
       gc.fill(background)
       val paintingProperties = paintingVariables()
 
       when (side) {
-        Side.Left -> gc.fillRect(paintingProperties.axisTitleLocation, paintingProperties.axisStart, style.size, paintingProperties.axisLength)
-        Side.Right -> gc.fillRect(paintingProperties.axisTitleLocation, paintingProperties.axisStart, -style.size, paintingProperties.axisLength)
-        Side.Top -> gc.fillRect(paintingProperties.axisStart, paintingProperties.axisTitleLocation, paintingProperties.axisLength, style.size)
-        Side.Bottom -> gc.fillRect(paintingProperties.axisStart, paintingProperties.axisTitleLocation, paintingProperties.axisLength, -style.size)
+        Side.Left -> gc.fillRect(paintingProperties.axisTitleLocation, paintingProperties.axisStart, axisConfiguration.size, paintingProperties.axisLength)
+        Side.Right -> gc.fillRect(paintingProperties.axisTitleLocation, paintingProperties.axisStart, -axisConfiguration.size, paintingProperties.axisLength)
+        Side.Top -> gc.fillRect(paintingProperties.axisStart, paintingProperties.axisTitleLocation, paintingProperties.axisLength, axisConfiguration.size)
+        Side.Bottom -> gc.fillRect(paintingProperties.axisStart, paintingProperties.axisTitleLocation, paintingProperties.axisLength, -axisConfiguration.size)
       }
     }
   }

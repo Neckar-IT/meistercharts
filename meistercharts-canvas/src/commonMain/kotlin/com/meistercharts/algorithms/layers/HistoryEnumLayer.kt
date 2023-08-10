@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.painter.stripe.enums.EnumStripePainter
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryConfiguration
@@ -82,6 +83,7 @@ class HistoryEnumLayer(
     //do nothing
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Where the history is stored

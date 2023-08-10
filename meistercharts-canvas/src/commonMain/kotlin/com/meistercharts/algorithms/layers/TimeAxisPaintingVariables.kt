@@ -133,7 +133,7 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
 
   fun calculateDomainStartEndValues(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     val chartCalculator = paintingContext.chartCalculator
 

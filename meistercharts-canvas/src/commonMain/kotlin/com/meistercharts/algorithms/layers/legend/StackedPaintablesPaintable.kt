@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers.legend
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.PaintablesLayouter
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintable.AbstractPaintable
@@ -89,6 +90,7 @@ class StackedPaintablesPaintable(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Provides the elements of the legend

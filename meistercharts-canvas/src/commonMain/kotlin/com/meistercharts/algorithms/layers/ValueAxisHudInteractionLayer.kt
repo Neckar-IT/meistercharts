@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
@@ -91,6 +92,7 @@ class ValueAxisHudInteractionLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(var hudLayers: SizedProvider<ValueAxisHudLayer>) {
     /**
      * Is called whenever the active element might have updated.

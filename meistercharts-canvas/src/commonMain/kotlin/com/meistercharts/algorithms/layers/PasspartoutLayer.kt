@@ -97,7 +97,7 @@ fun Layers.addPasspartout(@px @Zoomed insets: Insets, color: Color): Passpartout
  * Binds this style's insets to the size stored by [axisStyle].
  * Also binds this style's margin to the margin stored by [axisStyle].
  */
-fun PasspartoutLayer.Configuration.bind(axisStyle: AxisStyle) {
+fun PasspartoutLayer.Configuration.bind(axisStyle: AxisConfiguration) {
   insets = {
     when (axisStyle.side) {
       Side.Left -> Insets.onlyLeft(axisStyle.size)

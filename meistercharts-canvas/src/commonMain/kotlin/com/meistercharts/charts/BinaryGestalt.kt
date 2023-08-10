@@ -17,7 +17,7 @@ package com.meistercharts.charts
 
 import com.meistercharts.range.BinaryValueRange
 import com.meistercharts.axis.AxisEndConfiguration
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.BinaryLayer
 import com.meistercharts.algorithms.layers.BinaryTicksProvider
 import com.meistercharts.algorithms.layers.ValueAxisLayer
@@ -47,7 +47,7 @@ class BinaryGestalt(
 
   val valueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { BinaryValueRange })) {
     titleProvider = { _, _ -> "Binary [Boolean]" } //TODO extract(?)
-    paintRange = AxisStyle.PaintRange.ContentArea
+    paintRange = AxisConfiguration.PaintRange.ContentArea
     tickOrientation = Vicinity.Outside
     axisEndConfiguration = AxisEndConfiguration.Exact
     ticks = BinaryTicksProvider
@@ -60,7 +60,7 @@ class BinaryGestalt(
   init {
     style.marginProperty.consumeImmediately {
       withContentViewportGestalt.contentViewportMargin = it
-      valueAxisLayer.style.size = it.left
+      valueAxisLayer.axisConfiguration.size = it.left
     }
   }
 

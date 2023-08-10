@@ -16,7 +16,7 @@
 package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.layers.AbstractLayer
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
@@ -312,7 +312,7 @@ class TimeLineChartGestalt
         AxisTitleLocation.AtTop -> 80.0
       }
       tickOrientation = Vicinity.Inside
-      paintRange = AxisStyle.PaintRange.Continuous
+      paintRange = AxisConfiguration.PaintRange.Continuous
 
       ticksFormat = decimalFormat2digits //Apply the default
       titleProvider = { textService, i18nConfiguration -> data.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
@@ -499,7 +499,7 @@ class TimeLineChartGestalt
     //titleProvider = "Enums".asProvider2() //title is necessary to align the layout with the value axis
     tickOrientation = Vicinity.Outside
     axisEndConfiguration = AxisEndConfiguration.Default
-    paintRange = AxisStyle.PaintRange.ContentArea
+    paintRange = AxisConfiguration.PaintRange.ContentArea
     background = {
       style.valueAxesBackground
     }
@@ -533,7 +533,7 @@ class TimeLineChartGestalt
     override fun paint(paintingContext: LayerPaintingContext) {
       //Paint horizontal line
       val gc = paintingContext.gc
-      gc.stroke(enumCategoryAxisLayer.style.lineColor())
+      gc.stroke(enumCategoryAxisLayer.axisConfiguration.lineColor())
       val y = gc.height - viewportSupport.decimalsAreaViewportMarginBottom()
       gc.strokeLine(0.0, y, gc.width, y)
     }
@@ -584,7 +584,7 @@ class TimeLineChartGestalt
      */
     fun enumsAreaViewportMarginBottom(): @Zoomed Double {
       return if (style.showTimeAxis) {
-        style.timeAxisSize + timeAxisLayer.style.margin.bottom
+        style.timeAxisSize + timeAxisLayer.axisConfiguration.margin.bottom
       } else {
         0.0
       }
@@ -1052,7 +1052,7 @@ class TimeLineChartGestalt
     }
 
     style.timeAxisSizeProperty.consumeImmediately {
-      timeAxisLayer.style.size = it
+      timeAxisLayer.axisConfiguration.size = it
       //updateValueAxisLayers()
     }
 
@@ -1069,7 +1069,7 @@ class TimeLineChartGestalt
     //Apply the configuration again - when it is updated
     style.valueAxisStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachAxisLayer { decimalDataSeriesIndex, valueAxisLayer ->
-        configuration(valueAxisLayer.style, decimalDataSeriesIndex)
+        configuration(valueAxisLayer.axisConfiguration, decimalDataSeriesIndex)
       }
     }
 

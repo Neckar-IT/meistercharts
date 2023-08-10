@@ -43,7 +43,7 @@ class LineChartSimple internal constructor(
     }
 
     CategoryConverter.toCategoryImages(jsData)?.let { images ->
-      gestalt.categoryAxisLayer.style.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
+      gestalt.categoryAxisLayer.axisConfiguration.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
     }
 
     markAsDirty()

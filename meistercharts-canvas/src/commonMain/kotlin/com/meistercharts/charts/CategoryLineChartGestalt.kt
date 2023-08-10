@@ -17,7 +17,7 @@ package com.meistercharts.charts
 
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.CategoryLinesLayer
@@ -212,7 +212,13 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
         return configuration.crossWireValueLabelFormat.format(value)
       }
     },
-    additionalConfiguration = {}
+    additionalConfiguration = {
+      wireWidth = 2.0
+
+      //Hide the cross wire line - the line is painted by crossWireLayerBackground
+      showCrossWireLine = false
+      locationX = crossWireLineLayer.configuration.locationX
+    }
   )
 
 
@@ -258,7 +264,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
   ) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
-      paintRange = AxisStyle.PaintRange.ContentArea
+      paintRange = AxisConfiguration.PaintRange.ContentArea
       ticksFormat = defaultNumberFormat
     }
   }
@@ -316,8 +322,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
       categoriesGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.style.size = it[valueAxisLayer.style.side]
-      categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
+      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
+      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
     }
 
     configuration.valueRangeProperty.consumeImmediately {
@@ -325,7 +331,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     }
 
     configuration.numberFormatProperty.consumeImmediately {
-      valueAxisLayer.style.ticksFormat = it
+      valueAxisLayer.axisConfiguration.ticksFormat = it
     }
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
@@ -372,8 +378,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
        * Only clip the sides where the axes are.
        * We must not clip the other sides (e.g. for labels)
        */
-      val categoryAxisSide = categoryAxisLayer.style.side
-      val valueAxisSide = valueAxisLayer.style.side
+      val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
+      val valueAxisSide = valueAxisLayer.axisConfiguration.side
 
       contentViewportMargin.only(categoryAxisSide, valueAxisSide)
     }
@@ -527,9 +533,9 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
     //Update the value axis layer
     if (valueRange is LinearValueRange) {
-      valueAxisLayer.style.applyLinearScale()
+      valueAxisLayer.axisConfiguration.applyLinearScale()
     } else {
-      valueAxisLayer.style.applyLogarithmicScale()
+      valueAxisLayer.axisConfiguration.applyLogarithmicScale()
     }
   }
 
@@ -537,16 +543,16 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    * Sets the given font for all tick labels of all axes
    */
   fun applyAxisTickFont(font: FontDescriptorFragment) {
-    categoryAxisLayer.style.tickFont = font
-    valueAxisLayer.style.tickFont = font
+    categoryAxisLayer.axisConfiguration.tickFont = font
+    valueAxisLayer.axisConfiguration.tickFont = font
   }
 
   /**
    * Sets the given font for all titles of all axes
    */
   fun applyAxisTitleFont(font: FontDescriptorFragment) {
-    categoryAxisLayer.style.titleFont = font
-    valueAxisLayer.style.titleFont = font
+    categoryAxisLayer.axisConfiguration.titleFont = font
+    valueAxisLayer.axisConfiguration.titleFont = font
   }
 
 

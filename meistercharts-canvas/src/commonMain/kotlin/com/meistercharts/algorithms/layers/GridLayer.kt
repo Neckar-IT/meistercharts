@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiDoublesProvider
@@ -87,7 +88,8 @@ class GridLayer @JvmOverloads constructor(
     }
   }
 
-  class Configuration constructor(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * Returns the values where grid lines will be placed.
      * This is either the x or y value - depending on the orientation provided by the [orientationProvider]
@@ -150,7 +152,7 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
           val zoomedValue = layout.calculateCenter(BoxIndex(index)) ?: 0.0
 
           //Switch based on the orientation of the *value axis*!
-          return when (style.orientation) {
+          return when (axisConfiguration.orientation) {
             Orientation.Vertical -> {
               //Axis line: From top to bottom --> grid horizontal
               param1.chartCalculator.zoomed2windowY(zoomedValue)
@@ -163,7 +165,7 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
           }
         }
       },
-      orientationProvider = MultiProvider { style.orientation.opposite() }
+      orientationProvider = MultiProvider { axisConfiguration.orientation.opposite() }
     ),
     dataConfiguration = dataConfiguration
   )

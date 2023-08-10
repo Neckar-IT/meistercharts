@@ -17,7 +17,7 @@ package com.meistercharts.charts
 
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.ConstantTicksProvider
@@ -142,7 +142,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   val valueAxisSupport: ValueAxisSupport<Unit> = ValueAxisSupport.single({ style.valueRange }) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
-      paintRange = AxisStyle.PaintRange.ContentArea
+      paintRange = AxisConfiguration.PaintRange.ContentArea
       ticksFormat = BarChartGroupedGestalt.defaultNumberFormat
       side = Side.Left
 
@@ -181,8 +181,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it
 
-      valueAxisLayer.style.size = it[valueAxisLayer.style.side]
-      categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
+      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
+      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
     }
 
 
@@ -201,8 +201,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
          * Only clip the sides where the axes are.
          * We must not clip the other sides (e.g. for labels)
          */
-        val categoryAxisSide = categoryAxisLayer.style.side
-        val valueAxisSide = valueAxisLayer.style.side
+        val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
+        val valueAxisSide = valueAxisLayer.axisConfiguration.side
 
         it.chartState.contentViewportMargin.only(categoryAxisSide, valueAxisSide)
       })
@@ -255,11 +255,11 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Makes the value axis visible
      */
     fun applyValueAxisVisible() {
-      valueAxisLayer.style.showAxisLine()
-      valueAxisLayer.style.showTicks()
-      valueAxisLayer.style.ticks = TickProvider.linear
+      valueAxisLayer.axisConfiguration.showAxisLine()
+      valueAxisLayer.axisConfiguration.showTicks()
+      valueAxisLayer.axisConfiguration.ticks = TickProvider.linear
 
-      when (valueAxisLayer.style.side) {
+      when (valueAxisLayer.axisConfiguration.side) {
         Side.Left -> fixedChartGestalt.setMarginLeft(75.0)
         Side.Right -> fixedChartGestalt.setMarginRight(75.0)
         Side.Top -> fixedChartGestalt.setMarginTop(40.0)
@@ -271,16 +271,16 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.tickFont = font
-      valueAxisLayer.style.tickFont = font
+      categoryAxisLayer.axisConfiguration.tickFont = font
+      valueAxisLayer.axisConfiguration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.titleFont = font
-      valueAxisLayer.style.titleFont = font
+      categoryAxisLayer.axisConfiguration.titleFont = font
+      valueAxisLayer.axisConfiguration.titleFont = font
     }
 
     /**
@@ -313,8 +313,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyHorizontalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.style.side = Side.Left
-      valueAxisLayer.style.side = Side.Bottom
+      categoryAxisLayer.axisConfiguration.side = Side.Left
+      valueAxisLayer.axisConfiguration.side = Side.Bottom
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Horizontal)
       contentViewportMargin = Insets.of(10.0, 10.0, 25.0, 80.0)
     }
@@ -325,8 +325,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyVerticalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.style.side = Side.Bottom
-      valueAxisLayer.style.side = Side.Left
+      categoryAxisLayer.axisConfiguration.side = Side.Bottom
+      valueAxisLayer.axisConfiguration.side = Side.Left
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Vertical)
       contentViewportMargin = Insets.of(10.0, 10.0, 40.0, 30.0)
     }
@@ -337,7 +337,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyValueRange(valueRange: LinearValueRange) {
       this.valueRange = valueRange
-      valueAxisLayer.style.applyLinearScale()
+      valueAxisLayer.axisConfiguration.applyLinearScale()
       stackedBarsPainter.stackedBarPaintable.data.valueRange = valueRange
     }
 

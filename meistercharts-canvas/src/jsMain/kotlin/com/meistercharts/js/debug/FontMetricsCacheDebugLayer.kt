@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.Image
@@ -37,12 +38,16 @@ import it.neckar.open.unit.other.px
  * This layer paints the canvas of the [com.meistercharts.js.FontMetricsCacheJS]
  */
 class FontMetricsCacheDebugLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
   override val type: LayerType
     get() = LayerType.Content
-
-  val style: Style = Style().also(styleConfiguration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
@@ -66,7 +71,7 @@ class FontMetricsCacheDebugLayer(
       gc.strokeLine(0.0, baseLineY, canvas.width.toDouble(), baseLineY)
     }
 
-    val font = style.font.withDefaultValues()
+    val font = configuration.font.withDefaultValues()
     val fontMetrics = FontMetricsCacheJS.get(font)
 
     gc.fill(Color.darkgray)
@@ -79,7 +84,8 @@ class FontMetricsCacheDebugLayer(
     gc.fillText("totalHeight: ${fontMetrics.totalHeight}", 10.0, 190.0, Direction.TopLeft)
   }
 
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * The font to retrieve font metrics for
      */

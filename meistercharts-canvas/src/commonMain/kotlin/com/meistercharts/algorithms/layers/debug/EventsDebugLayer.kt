@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.text.TextPainter
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.LineSpacing
@@ -65,7 +66,7 @@ import com.meistercharts.style.BoxStyle
  * Paints debug information about events
  */
 class EventsDebugLayer(
-  val data: Data = Data()
+  val configuration: Configuration = Configuration()
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Notification
   override val description: String = "Paints debug information about events"
@@ -84,7 +85,7 @@ class EventsDebugLayer(
   override val mouseEventHandler: CanvasMouseEventHandler = object : CanvasMouseEventHandler {
 
     private fun processMouseEvent(event: MouseEvent, chartSupport: ChartSupport): EventConsumption {
-      if (data.mouseEventFilter(event)) {
+      if (configuration.mouseEventFilter(event)) {
         chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
@@ -123,7 +124,7 @@ class EventsDebugLayer(
   override val keyEventHandler: CanvasKeyEventHandler = object : CanvasKeyEventHandler {
 
     private fun processKeyEvent(event: KeyEvent, chartSupport: ChartSupport): EventConsumption {
-      if (data.keyEventFilter(event)) {
+      if (configuration.keyEventFilter(event)) {
         chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event")
       }
@@ -146,7 +147,7 @@ class EventsDebugLayer(
   override val pointerEventHandler: CanvasPointerEventHandler = object : CanvasPointerEventHandler {
 
     private fun processPointerEvent(event: PointerEvent, chartSupport: ChartSupport): EventConsumption {
-      if (data.pointerEventFilter(event)) {
+      if (configuration.pointerEventFilter(event)) {
         chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
@@ -189,7 +190,7 @@ class EventsDebugLayer(
   override val touchEventHandler: CanvasTouchEventHandler = object : CanvasTouchEventHandler {
 
     private fun processTouchEvent(event: TouchEvent, chartSupport: ChartSupport): EventConsumption {
-      if (data.touchEventFilter(event)) {
+      if (configuration.touchEventFilter(event)) {
         chartSupport.markAsDirty(DirtyReason.UserInteraction)
         eventDescriptionQueue.add("${event.timestamp.formatAsInt()} $event ${event.modifierCombination.description()}")
       }
@@ -233,7 +234,8 @@ class EventsDebugLayer(
     )
   }
 
-  class Data {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * Determines which mouse events should be processed (true) or not (false).
      *

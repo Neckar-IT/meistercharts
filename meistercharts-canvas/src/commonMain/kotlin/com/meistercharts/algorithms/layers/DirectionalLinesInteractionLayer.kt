@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
@@ -87,6 +88,7 @@ class DirectionalLinesInteractionLayer(
     //noop
   }
 
+  @ConfigurationDsl
   class Configuration(var directionalLinesLayers: SizedProvider<DirectionalLinesLayer>) {
     /**
      * Is called whenever the active line might have updated.

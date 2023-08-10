@@ -74,7 +74,7 @@ class TimeAxisLayer(
   styleConfiguration: Style.() -> Unit = {},
 ) : AbstractAxisLayer() {
 
-  override val style: Style = Style().apply {
+  override val axisConfiguration: Style = Style().apply {
     side = Side.Bottom
   }.also(styleConfiguration)
 
@@ -100,16 +100,16 @@ class TimeAxisLayer(
       contentAreaTimeRange = data.contentAreaTimeRange
 
       //TODO!!!! fix me somehow!
-      calculateTickFontMetrics(paintingContext, style)
-      calculateTitle(paintingContext, style)
+      calculateTickFontMetrics(paintingContext, axisConfiguration)
+      calculateTitle(paintingContext, axisConfiguration)
 
-      calculateAxisStartEnd(paintingContext, style)
-      calculateDomainStartEndValues(paintingContext, style)
+      calculateAxisStartEnd(paintingContext, axisConfiguration)
+      calculateDomainStartEndValues(paintingContext, axisConfiguration)
 
-      calculateTickLabelsMaxWidth(style)
-      calculateLocations(paintingContext, style)
+      calculateTickLabelsMaxWidth(axisConfiguration)
+      calculateLocations(paintingContext, axisConfiguration)
 
-      calculateTickValues(paintingContext, style)
+      calculateTickValues(paintingContext, axisConfiguration)
     }
 
     /**
@@ -132,7 +132,7 @@ class TimeAxisLayer(
       //which in turn requires to know how many ticks are there. So either we need to compute
       //the layout at least twice or we simplify matters by assuming that a tick label is
       //about 100 pixels wide.
-      val guessedTickCount = paintingContext.width / (100.0 * this@TimeAxisLayer.style.tickLabelWidthFactor)
+      val guessedTickCount = paintingContext.width / (100.0 * this@TimeAxisLayer.axisConfiguration.tickLabelWidthFactor)
 
       @ms val guessedIdealTickDistance = (endTimestamp - startTimestamp) / guessedTickCount
 
@@ -204,10 +204,10 @@ class TimeAxisLayer(
 
     val gc = paintingContext.gc
     gc.saved {
-      gc.fillStyle(style.tickLabelColor())
-      gc.strokeStyle(style.lineColor())
-      gc.lineWidth = style.tickLineWidth
-      gc.font(style.tickFont)
+      gc.fillStyle(axisConfiguration.tickLabelColor())
+      gc.strokeStyle(axisConfiguration.lineColor())
+      gc.lineWidth = axisConfiguration.tickLineWidth
+      gc.font(axisConfiguration.tickFont)
 
       //Save the total height
       paintingVariables.spaceForTickLabels = gc.getFontMetrics().totalHeight
@@ -220,10 +220,10 @@ class TimeAxisLayer(
         @Window val currentX = timeChartCalculator.time2windowX(tickValue)
 
         //The tick
-        if (style.tickLength > 0.0 && style.tickLineWidth > 0.0) {
+        if (axisConfiguration.tickLength > 0.0 && axisConfiguration.tickLineWidth > 0.0) {
           when (textAnchor) {
-            Direction.BottomCenter -> gc.strokeLine(currentX, style.tickLabelGap + style.tickLength, currentX, style.tickLabelGap)
-            Direction.TopCenter -> gc.strokeLine(currentX, -style.tickLabelGap, currentX, -style.tickLabelGap - style.tickLength)
+            Direction.BottomCenter -> gc.strokeLine(currentX, axisConfiguration.tickLabelGap + axisConfiguration.tickLength, currentX, axisConfiguration.tickLabelGap)
+            Direction.TopCenter -> gc.strokeLine(currentX, -axisConfiguration.tickLabelGap, currentX, -axisConfiguration.tickLabelGap - axisConfiguration.tickLength)
             else -> throw IllegalArgumentException("Unsupported anchor direction: $textAnchor")
           }
         }
@@ -237,7 +237,7 @@ class TimeAxisLayer(
     }
 
     //Offset area
-    gc.translate(0.0, paintingVariables.spaceForTickLabels + style.offsetAreaTickLabelGap)
+    gc.translate(0.0, paintingVariables.spaceForTickLabels + axisConfiguration.offsetAreaTickLabelGap)
     //to the top of the offset area
     timeChartCalculator.paintOffsetAreaHorizontal(paintingContext)
   }
@@ -285,8 +285,8 @@ class TimeAxisLayer(
 
         //Paint the background
         val estimatedIndex = paintingVariables.offsetTickDistance.calculateEstimatedIndex(tickValue, timeZone)
-        gc.fill(style.offsetAreaFills.valueAt(estimatedIndex))
-        gc.fillRectCoordinates(minX, 0.0, maxX, style.offsetAreaSize)
+        gc.fill(axisConfiguration.offsetAreaFills.valueAt(estimatedIndex))
+        gc.fillRectCoordinates(minX, 0.0, maxX, axisConfiguration.offsetAreaSize)
 
         @Zoomed val availableWidth = maxX - minX
 
@@ -297,10 +297,10 @@ class TimeAxisLayer(
         if (availableWidth > textWidth) {
           //We have enough space for the label, paint at center
           @Window val textCenter = minX + (maxX - minX) / 2.0
-          gc.font(style.offsetTickFont)
-          gc.fill(style.offsetTickLabelColor)
+          gc.font(axisConfiguration.offsetTickFont)
+          gc.fill(axisConfiguration.offsetTickLabelColor)
           val snappedX = paintingContext.snapConfiguration.snapXValue(textCenter)
-          gc.fillText(formatted, snappedX, style.offsetAreaSize / 2.0, Direction.Center)
+          gc.fillText(formatted, snappedX, axisConfiguration.offsetAreaSize / 2.0, Direction.Center)
         }
       }
 
@@ -311,13 +311,13 @@ class TimeAxisLayer(
 
         if (tickLocationX >= paintingVariables.axisStart && tickLocationX <= paintingVariables.axisEnd) {
           //paint the tick itself - if visible
-          gc.lineWidth = style.tickLineWidth
-          gc.stroke(style.lineColor())
+          gc.lineWidth = axisConfiguration.tickLineWidth
+          gc.stroke(axisConfiguration.lineColor())
           gc.strokeLine(
             tickLocationX,
-            style.offsetAreaSize,
+            axisConfiguration.offsetAreaSize,
             tickLocationX,
-            -style.offsetAreaTickLabelGap - style.tickLength - style.tickLabelGap - style.axisLineWidth - paintingVariables.spaceForTickLabels
+            -axisConfiguration.offsetAreaTickLabelGap - axisConfiguration.tickLength - axisConfiguration.tickLabelGap - axisConfiguration.axisLineWidth - paintingVariables.spaceForTickLabels
           )
         }
       }
@@ -328,13 +328,13 @@ class TimeAxisLayer(
       @ms val millis = paintingVariables.offsetTickDomainValues.lastOr(paintingVariables.startTimestamp)
 
       //Paint the background
-      gc.fill(style.offsetAreaFills.valueAt(paintingVariables.offsetTickDistance.calculateEstimatedIndex(millis, timeZone)))
-      gc.fillRectCoordinates(paintingVariables.axisStart, 0.0, paintingVariables.axisEnd, style.offsetAreaSize)
+      gc.fill(axisConfiguration.offsetAreaFills.valueAt(paintingVariables.offsetTickDistance.calculateEstimatedIndex(millis, timeZone)))
+      gc.fillRectCoordinates(paintingVariables.axisStart, 0.0, paintingVariables.axisEnd, axisConfiguration.offsetAreaSize)
 
       val x = gc.width / 2.0
-      gc.font(style.offsetTickFont)
-      gc.fill(style.offsetTickLabelColor)
-      gc.fillText(paintingVariables.offsetTickDistance.formatAsOffset(millis, paintingContext.i18nConfiguration), x, style.offsetAreaSize / 2.0, Direction.Center)
+      gc.font(axisConfiguration.offsetTickFont)
+      gc.fill(axisConfiguration.offsetTickLabelColor)
+      gc.fillText(paintingVariables.offsetTickDistance.formatAsOffset(millis, paintingContext.i18nConfiguration), x, axisConfiguration.offsetAreaSize / 2.0, Direction.Center)
     }
   }
 
@@ -342,9 +342,9 @@ class TimeAxisLayer(
    * Returns the max width for the tick value labels depending on the side of the axis
    */
   private fun calculateTickValueLabelWidth(): @px Double {
-    return when (style.side) {
+    return when (axisConfiguration.side) {
       Side.Bottom -> paintingVariables.tickValueLabelMaxWidth
-      else -> throw UnsupportedOperationException("${style.side} is not supported yet")
+      else -> throw UnsupportedOperationException("${axisConfiguration.side} is not supported yet")
     }
   }
 
@@ -363,7 +363,7 @@ class TimeAxisLayer(
   /**
    * Style object for the time axis
    */
-  class Style : AxisStyle() {
+  class Style : AxisConfiguration() {
 
     init {
       //Ensure tick orientation outside

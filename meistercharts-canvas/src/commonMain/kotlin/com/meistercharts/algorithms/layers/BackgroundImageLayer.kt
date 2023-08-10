@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
@@ -26,11 +27,14 @@ import it.neckar.geometry.Direction
  * Shows a background image - in the window
  */
 class BackgroundImageLayer(
-  configuration: Configuration.() -> Unit = {}
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
-  val configuration: Configuration = Configuration().also(configuration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
@@ -45,6 +49,7 @@ class BackgroundImageLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The color to be used as background

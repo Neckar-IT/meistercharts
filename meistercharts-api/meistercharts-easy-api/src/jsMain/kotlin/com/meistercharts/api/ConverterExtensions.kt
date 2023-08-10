@@ -330,7 +330,7 @@ fun FontStyle.toFontDescriptorFragment(): FontDescriptorFragment {
   return descriptorFragment
 }
 
-private fun com.meistercharts.algorithms.layers.AxisStyle.applyAxisStyle(jsStyle: AxisStyle?) {
+private fun com.meistercharts.algorithms.layers.AxisConfiguration.applyAxisStyle(jsStyle: AxisStyle?) {
   if (jsStyle == null) {
     return
   }

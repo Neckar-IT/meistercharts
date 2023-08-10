@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -66,6 +67,7 @@ class CircularChartLayer(
     }
   }
 
+  @ConfigurationDsl
   open class Configuration(
     /**
      * Provides values for circular chart segments.

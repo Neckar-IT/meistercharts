@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
@@ -53,6 +54,7 @@ class NeckarItFlowLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The gap between the center of the canvas to the top side of the paintable

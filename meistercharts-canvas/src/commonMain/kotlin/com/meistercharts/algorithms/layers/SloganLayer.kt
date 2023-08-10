@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.color.Color
 import com.meistercharts.color.RadialGradient
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.guessFontSize
@@ -110,6 +111,7 @@ class SloganLayer(
     gc.fillText(sloganText, 0.0, 0.0, configuration.anchorDirection)
   }
 
+  @ConfigurationDsl
   class Configuration(
     var sloganProvider: (textService: TextService, i18nConfiguration: I18nConfiguration) -> String = { _, _ -> "Data brought to life" }
   ) {

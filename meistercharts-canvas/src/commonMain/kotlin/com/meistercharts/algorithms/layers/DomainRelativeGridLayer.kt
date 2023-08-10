@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Orientation
 import it.neckar.open.kotlin.lang.asProvider
@@ -109,6 +110,7 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Returns the domain relative values where grid lines will be placed
@@ -157,7 +159,7 @@ fun ValueAxisLayer.createGrid(styleConfiguration: DomainRelativeGridLayer.Config
       return data.valueRangeProvider().toDomainRelative(tickDomainValues[index])
     }
   }, orientationProvider = {
-    style.orientation.opposite()
+    axisConfiguration.orientation.opposite()
   }, additionalConfiguration = styleConfiguration
   )
 }

@@ -36,12 +36,12 @@ import it.neckar.open.unit.other.px
  * Shows some debug markers for the content area
  */
 open class ContentAreaDebugLayer(
-  styleConfiguration: Style.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
   override val type: LayerType
     get() = LayerType.Content
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val calculator = paintingContext.chartCalculator
@@ -49,22 +49,22 @@ open class ContentAreaDebugLayer(
 
     //Outer line
     gc.lineWidth = 2.0
-    gc.strokeStyle(style.line0pct)
+    gc.strokeStyle(configuration.line0pct)
     strokeRect(gc, calculator, 0.0, 0.0)
 
     //5px inner line
     gc.lineWidth = 1.0
-    gc.strokeStyle(style.line5px)
+    gc.strokeStyle(configuration.line5px)
     strokeRect(gc, calculator, 0.0, 5.5)
 
     //10% inner line
     gc.lineWidth = 1.0
-    gc.strokeStyle(style.line10pct)
+    gc.strokeStyle(configuration.line10pct)
     strokeRect(gc, calculator, 0.1, 0.0)
 
     //25% inner line
     gc.lineWidth = 1.0
-    gc.strokeStyle(style.line25pct)
+    gc.strokeStyle(configuration.line25pct)
     strokeRect(gc, calculator, 0.25, 0.0)
 
 
@@ -75,7 +75,7 @@ open class ContentAreaDebugLayer(
     @Window @px val x1 = calculator.contentAreaRelative2windowX(1.0)
     @Window @px val y1 = calculator.contentAreaRelative2windowY(1.0)
 
-    gc.strokeStyle(style.diagonals)
+    gc.strokeStyle(configuration.diagonals)
     gc.strokeLine(x0, y0, x1, y1)
     gc.strokeLine(x0, y1, x1, y0)
 
@@ -94,11 +94,11 @@ open class ContentAreaDebugLayer(
     if (x0 > gc.width || x1 < 0.0) {
       gc.setLineDash(2.0, 3.0)
       //Paint y lines
-      gc.strokeStyle(style.line0pct)
+      gc.strokeStyle(configuration.line0pct)
       gc.strokeLine(0.0, y0, gc.width, y0)
       gc.strokeLine(0.0, y1, gc.width, y1)
 
-      gc.strokeStyle(style.line5px)
+      gc.strokeStyle(configuration.line5px)
       gc.strokeLine(0.0, y0 + 5.0, gc.width, y0 + 5.0)
       gc.strokeLine(0.0, y1 - 5.0, gc.width, y1 - 5.0)
     }
@@ -107,11 +107,11 @@ open class ContentAreaDebugLayer(
       gc.setLineDash(2.0, 3.0)
 
       //Paint x lines
-      gc.strokeStyle(style.line0pct)
+      gc.strokeStyle(configuration.line0pct)
       gc.strokeLine(x0, 0.0, x0, gc.height)
       gc.strokeLine(x1, 0.0, x1, gc.height)
 
-      gc.strokeStyle(style.line5px)
+      gc.strokeStyle(configuration.line5px)
       gc.strokeLine(x0 + 5.0, 0.0, x0 + 5.0, gc.height)
       gc.strokeLine(x1 - 5.0, 0.0, x1 - 5.0, gc.height)
     }
@@ -130,7 +130,7 @@ open class ContentAreaDebugLayer(
 
 
   @ConfigurationDsl
-  class Style {
+  class Configuration {
     /**
      * Sets all lines to the given color
      */

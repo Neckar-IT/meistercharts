@@ -36,7 +36,7 @@ import it.neckar.open.unit.si.ms
 class TooltipLayer(
   configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  val style: Configuration = Configuration().also(configuration)
+  val configuration: Configuration = Configuration().also(configuration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -78,7 +78,7 @@ class TooltipLayer(
       )
 
       gc.translate(mousePosition.x, mousePosition.y)
-      gc.paintTextBox(tooltipContent.lines, Direction.BottomLeft, 3.0, 3.0, style.boxStyle, style.textColor, gc.width)
+      gc.paintTextBox(tooltipContent.lines, Direction.BottomLeft, 3.0, 3.0, configuration.boxStyle, configuration.textColor, gc.width)
 
     } else {
       lastVisibleTooltipInfo = null

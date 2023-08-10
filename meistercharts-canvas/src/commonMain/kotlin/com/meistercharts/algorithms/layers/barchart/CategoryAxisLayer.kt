@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.AxisPaintingVariables
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.CategoryLinesLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
@@ -46,7 +46,7 @@ class CategoryAxisLayer(
   val data: Data,
   styleConfiguration: Style.() -> Unit = {},
 ) : AbstractAxisLayer() {
-  override val style: Style = Style().also(styleConfiguration)
+  override val axisConfiguration: Style = Style().also(styleConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -68,13 +68,13 @@ class CategoryAxisLayer(
       //Do not paint anything if there is no layout
       categoryLayout = (data.layoutProvider() ?: return)
 
-      calculateTickFontMetrics(paintingContext, style)
-      calculateTitle(paintingContext, style)
-      calculateAxisStartEnd(paintingContext, style)
+      calculateTickFontMetrics(paintingContext, axisConfiguration)
+      calculateTitle(paintingContext, axisConfiguration)
+      calculateAxisStartEnd(paintingContext, axisConfiguration)
 
-      calculateTickLabelsMaxWidth(style)
+      calculateTickLabelsMaxWidth(axisConfiguration)
 
-      calculateLocations(paintingContext, style)
+      calculateLocations(paintingContext, axisConfiguration)
 
       logger.trace("Finished Calculate painting variables - layout: $categoryLayout")
     }
@@ -90,7 +90,7 @@ class CategoryAxisLayer(
       return
     }
 
-    style.axisLabelPainter.layout(categoryLayout, this.data.labelsProvider, this.style.labelVisibleCondition)
+    axisConfiguration.axisLabelPainter.layout(categoryLayout, this.data.labelsProvider, this.axisConfiguration.labelVisibleCondition)
     super.paint(paintingContext)
   }
 
@@ -124,10 +124,10 @@ class CategoryAxisLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    gc.font(style.tickFont)
-    gc.lineWidth = style.tickLineWidth
-    gc.strokeStyle(style.lineColor()) //for the ticks
-    gc.fillStyle(style.tickLabelColor()) //for the labels
+    gc.font(axisConfiguration.tickFont)
+    gc.lineWidth = axisConfiguration.tickLineWidth
+    gc.strokeStyle(axisConfiguration.lineColor()) //for the ticks
+    gc.fillStyle(axisConfiguration.tickLabelColor()) //for the labels
 
     for (categoryIndexAsInt in 0 until data.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
       val categoryIndex = CategoryIndex(categoryIndexAsInt)
@@ -139,28 +139,28 @@ class CategoryAxisLayer(
         continue
       }
 
-      style.categoryLabelColor?.let {
+      axisConfiguration.categoryLabelColor?.let {
         gc.fillStyle(it.valueAt(categoryIndex))
       }
 
       // the tick
-      if (style.tickLength > 0.0 && style.tickLineWidth > 0.0) {
+      if (axisConfiguration.tickLength > 0.0 && axisConfiguration.tickLineWidth > 0.0) {
         when (direction) {
-          Direction.CenterLeft -> gc.strokeLine(-style.tickLabelGap - style.tickLength, currentY, -style.tickLabelGap, currentY)
-          Direction.CenterRight -> gc.strokeLine(style.tickLabelGap, currentY, style.tickLabelGap + style.tickLength, currentY)
+          Direction.CenterLeft -> gc.strokeLine(-axisConfiguration.tickLabelGap - axisConfiguration.tickLength, currentY, -axisConfiguration.tickLabelGap, currentY)
+          Direction.CenterRight -> gc.strokeLine(axisConfiguration.tickLabelGap, currentY, axisConfiguration.tickLabelGap + axisConfiguration.tickLength, currentY)
           else -> throw IllegalArgumentException("Unsupported direction: $direction")
         }
       }
 
       //Calculate the label that is shown
-      val label: String? = if (style.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
+      val label: String? = if (axisConfiguration.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
         data.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
       } else {
         null
       }
 
       paintingContext.gc.saved {
-        style.axisLabelPainter.paint(
+        axisConfiguration.axisLabelPainter.paint(
           paintingContext = paintingContext,
           x = 0.0,
           y = currentY,
@@ -195,10 +195,10 @@ class CategoryAxisLayer(
     val chartSupport = paintingContext.chartSupport
     val chartCalculator = paintingContext.chartCalculator
 
-    gc.font(style.tickFont)
-    gc.lineWidth = style.tickLineWidth
-    gc.strokeStyle(style.lineColor()) //for the ticks
-    gc.fillStyle(style.tickLabelColor()) //for the labels
+    gc.font(axisConfiguration.tickFont)
+    gc.lineWidth = axisConfiguration.tickLineWidth
+    gc.strokeStyle(axisConfiguration.lineColor()) //for the ticks
+    gc.fillStyle(axisConfiguration.tickLabelColor()) //for the labels
 
     for (categoryIndexAsInt in 0 until data.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
       val categoryIndex: CategoryIndex = CategoryIndex(categoryIndexAsInt)
@@ -211,32 +211,32 @@ class CategoryAxisLayer(
         continue
       }
 
-      style.categoryLabelColor?.let {
+      axisConfiguration.categoryLabelColor?.let {
         gc.fillStyle(it.valueAt(categoryIndex))
       }
 
       // the tick
-      if (style.tickLength > 0.0 && style.tickLineWidth > 0.0) {
+      if (axisConfiguration.tickLength > 0.0 && axisConfiguration.tickLineWidth > 0.0) {
         when (direction) {
-          Direction.BottomCenter -> gc.strokeLine(currentX, style.tickLabelGap + style.tickLength, currentX, style.tickLabelGap)
-          Direction.TopCenter -> gc.strokeLine(currentX, -style.tickLabelGap, currentX, -style.tickLabelGap - style.tickLength)
+          Direction.BottomCenter -> gc.strokeLine(currentX, axisConfiguration.tickLabelGap + axisConfiguration.tickLength, currentX, axisConfiguration.tickLabelGap)
+          Direction.TopCenter -> gc.strokeLine(currentX, -axisConfiguration.tickLabelGap, currentX, -axisConfiguration.tickLabelGap - axisConfiguration.tickLength)
           else -> throw IllegalArgumentException("Unsupported direction: $direction")
         }
       }
 
-      val label: String? = if (style.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
+      val label: String? = if (axisConfiguration.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
         data.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
       } else {
         null
       }
 
       paintingContext.gc.saved {
-        style.axisLabelPainter.paint(
+        axisConfiguration.axisLabelPainter.paint(
           paintingContext = paintingContext,
           x = currentX,
           y = 0.0,
           width = categoryLayout.boxSize,
-          height = style.size - style.axisLineWidth - style.tickLength - style.tickLabelGap - paintingVariables.spaceForTitleIncludingGap,
+          height = axisConfiguration.size - axisConfiguration.axisLineWidth - axisConfiguration.tickLength - axisConfiguration.tickLabelGap - paintingVariables.spaceForTitleIncludingGap,
           tickDirection = direction,
           label = label,
           categoryIndex = categoryIndex,
@@ -258,7 +258,7 @@ class CategoryAxisLayer(
     var layoutProvider: () -> EquisizedBoxLayout?,
   )
 
-  open class Style : AxisStyle() {
+  open class Style : AxisConfiguration() {
     /**
      * The painter that is used to paint the axis
      */

@@ -24,7 +24,7 @@ import it.neckar.open.i18n.TextService
  * Returns the title from the axis style.
  * Returns null if there is no title or the title is blank
  */
-fun AxisStyle.resolveTitle(paintingContext: LayerPaintingContext): String? {
+fun AxisConfiguration.resolveTitle(paintingContext: LayerPaintingContext): String? {
   return resolveTitle(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
 }
 
@@ -32,7 +32,7 @@ fun AxisStyle.resolveTitle(paintingContext: LayerPaintingContext): String? {
  * Returns the title from the axis style.
  * Returns null if there is no title or the title is blank
  */
-fun AxisStyle.resolveTitle(textService: TextService, i18nConfiguration: I18nConfiguration): String? {
+fun AxisConfiguration.resolveTitle(textService: TextService, i18nConfiguration: I18nConfiguration): String? {
   if (titleVisible().not()) {
     return null
   }

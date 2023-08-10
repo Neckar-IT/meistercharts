@@ -18,7 +18,7 @@ package com.meistercharts.charts.bullet
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import com.meistercharts.range.ValueRange
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
@@ -208,7 +208,7 @@ class BulletChartGestalt constructor(
   ) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
-      paintRange = AxisStyle.PaintRange.ContentArea
+      paintRange = AxisConfiguration.PaintRange.ContentArea
       side = Side.Left
       ticks = ticks.withMaxNumberOfTicks(10)
     }
@@ -292,8 +292,8 @@ class BulletChartGestalt constructor(
       valueAxisGridLayer.configuration.passpartout = it
       categoryAxisGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.style.size = it[valueAxisLayer.style.side]
-      categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
+      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
+      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
     }
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
@@ -316,8 +316,8 @@ class BulletChartGestalt constructor(
            * Only clip the sides where the axes are.
            * We must not clip the other sides (e.g. for labels)
            */
-          val categoryAxisSide = categoryAxisLayer.style.side
-          val valueAxisSide = valueAxisLayer.style.side
+          val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
+          val valueAxisSide = valueAxisLayer.axisConfiguration.side
           // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
           val thresholdSide = if (configuration.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
@@ -448,9 +448,9 @@ class BulletChartGestalt constructor(
 
       //Update the value axis layer
       if (valueRange is LinearValueRange) {
-        valueAxisLayer.style.applyLinearScale()
+        valueAxisLayer.axisConfiguration.applyLinearScale()
       } else {
-        valueAxisLayer.style.applyLogarithmicScale()
+        valueAxisLayer.axisConfiguration.applyLogarithmicScale()
       }
     }
 
@@ -458,16 +458,16 @@ class BulletChartGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.tickFont = font
-      valueAxisLayer.style.tickFont = font
+      categoryAxisLayer.axisConfiguration.tickFont = font
+      valueAxisLayer.axisConfiguration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.titleFont = font
-      valueAxisLayer.style.titleFont = font
+      categoryAxisLayer.axisConfiguration.titleFont = font
+      valueAxisLayer.axisConfiguration.titleFont = font
     }
 
     var balloonTooltipValueLabelFormat: CachedNumberFormat = decimalFormat
@@ -478,8 +478,8 @@ class BulletChartGestalt constructor(
      */
     fun applyHorizontalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.style.side = Side.Left
-      valueAxisLayer.style.side = Side.Bottom
+      categoryAxisLayer.axisConfiguration.side = Side.Left
+      valueAxisLayer.axisConfiguration.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
     }
 
@@ -489,8 +489,8 @@ class BulletChartGestalt constructor(
      */
     fun applyVerticalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.style.side = Side.Bottom
-      valueAxisLayer.style.side = Side.Left
+      categoryAxisLayer.axisConfiguration.side = Side.Bottom
+      valueAxisLayer.axisConfiguration.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
     }
 

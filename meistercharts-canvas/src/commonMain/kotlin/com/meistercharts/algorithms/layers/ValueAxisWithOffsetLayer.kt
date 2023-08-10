@@ -63,7 +63,7 @@ class ValueAxisWithOffsetLayer(
     },
   )
 
-  override val style: Style = Style().also(styleConfiguration)
+  override val axisConfiguration: Style = Style().also(styleConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -80,27 +80,27 @@ class ValueAxisWithOffsetLayer(
 
       contentAreaValueRange = data.valueRangeProvider()
 
-      calculateTickFontMetrics(paintingContext, style)
+      calculateTickFontMetrics(paintingContext, axisConfiguration)
 
 
-      calculateEstimatedTickFormatMaxLength(paintingContext, style)
-      calculateTitle(paintingContext, style)
+      calculateEstimatedTickFormatMaxLength(paintingContext, axisConfiguration)
+      calculateTitle(paintingContext, axisConfiguration)
 
-      calculateAxisStartEnd(paintingContext, style)
+      calculateAxisStartEnd(paintingContext, axisConfiguration)
 
-      calculateDomainStartEndValues(paintingContext, style)
+      calculateDomainStartEndValues(paintingContext, axisConfiguration)
 
-      calculateTickLabelsMaxWidth(style)
-      calculateLocations(paintingContext, style)
+      calculateTickLabelsMaxWidth(axisConfiguration)
+      calculateLocations(paintingContext, axisConfiguration)
 
-      storeTicks(calculateTickValues(paintingContext), paintingContext, style)
+      storeTicks(calculateTickValues(paintingContext), paintingContext, axisConfiguration)
     }
 
     /**
      * Calculate the tick values that are painted
      */
     private fun calculateTickValues(paintingContext: LayerPaintingContext): @Domain DoubleArray {
-      return when (style.orientation) {
+      return when (axisConfiguration.orientation) {
         Orientation.Vertical -> calculateTickValuesValueRangeVertically(fontHeight = tickFontMetrics.totalHeight)
         Orientation.Horizontal -> calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth = estimatedTickFormatMaxLength)
       }
@@ -143,7 +143,7 @@ class ValueAxisWithOffsetLayer(
 
   private fun ChartCalculator.paintLeft(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.translate(style.margin.left, 0.0)
+    gc.translate(axisConfiguration.margin.left, 0.0)
     //apply the margin
 
     //Paint the title (if there is one and remember the width that is required for the title + gap)
@@ -156,26 +156,26 @@ class ValueAxisWithOffsetLayer(
     paintOffsetAreaVertical(paintingContext)
 
     //Paint depending on the tick orientation
-    when (style.tickOrientation) {
+    when (axisConfiguration.tickOrientation) {
       Vicinity.Outside -> {
-        @px val maxTickValueWidth = calculateTickValueLabelWidth() - style.tickLength - style.tickLabelGap
+        @px val maxTickValueWidth = calculateTickValueLabelWidth() - axisConfiguration.tickLength - axisConfiguration.tickLabelGap
         gc.translate(maxTickValueWidth, 0.0)
         //to the right side of the tick value labels
         paintTicksWithLabelsVertically(paintingContext, maxTickValueWidth, Direction.CenterRight)
-        gc.translate(style.tickLabelGap + style.tickLength + style.axisLineWidth / 2.0, 0.0)
+        gc.translate(axisConfiguration.tickLabelGap + axisConfiguration.tickLength + axisConfiguration.axisLineWidth / 2.0, 0.0)
         //to the center of the axis
         paintAxis(gc)
       }
 
       Vicinity.Inside -> {
-        gc.translate(style.offsetAreaSize, 0.0)
+        gc.translate(axisConfiguration.offsetAreaSize, 0.0)
         //to the right of the offset area
-        gc.translate(style.axisLineWidth / 2.0, 0.0)
+        gc.translate(axisConfiguration.axisLineWidth / 2.0, 0.0)
         //to the *center* of the axis
         paintAxis(gc)
-        gc.translate(style.axisLineWidth / 2.0, 0.0)
+        gc.translate(axisConfiguration.axisLineWidth / 2.0, 0.0)
         //to the right side of the axis
-        gc.translate(style.tickLabelGap + style.tickLength, 0.0)
+        gc.translate(axisConfiguration.tickLabelGap + axisConfiguration.tickLength, 0.0)
         //to the left side of the label
         paintTicksWithLabelsVertically(paintingContext, calculateTickValueLabelWidth(), Direction.CenterLeft)
       }
@@ -186,14 +186,14 @@ class ValueAxisWithOffsetLayer(
    * Returns the max width for the tick value labels depending on the side of the axis
    */
   private fun calculateTickValueLabelWidth(): Double {
-    return style.size - paintingVariables.spaceForTitleIncludingGap
+    return axisConfiguration.size - paintingVariables.spaceForTitleIncludingGap
   }
 
   /**
    * Calculate the tick values that are painted
    */
   private fun ChartCalculator.calculateTickValues(paintingContext: LayerPaintingContext): @Domain DoubleArray {
-    return when (style.orientation) {
+    return when (axisConfiguration.orientation) {
       Orientation.Vertical -> calculateTickValuesValueRangeVertically(paintingContext, paintingVariables.tickFontMetrics.totalHeight)
       Orientation.Horizontal -> throw UnsupportedOperationException("Not yet implemented for horizontal")
     }
@@ -227,13 +227,13 @@ class ValueAxisWithOffsetLayer(
 
     var maxTickCount = (relevantHeight / (fontHeight * 2.0) + 0.5).roundToInt()
 
-    var newTicks = style.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, style.axisEndConfiguration)
+    var newTicks = axisConfiguration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, axisConfiguration.axisEndConfiguration)
     calculateOffsetTickValuesVertically(newTicks)
 
     //If there are least 3 different offsets, consider recalculating the ticks should the offsets not fit inside their areas
     if (paintingVariables.offsetTicks.size >= 3) {
       val gc = paintingContext.gc
-      gc.font(style.offsetTickFont)
+      gc.font(axisConfiguration.offsetTickFont)
 
       val relevantUpperOffsetStepDomain = domain2windowY(paintingVariables.offsetTicks[1], valueRange)
       val relevantLowerOffsetStepDomain = domain2windowY(paintingVariables.offsetTicks[2], valueRange)
@@ -247,7 +247,7 @@ class ValueAxisWithOffsetLayer(
       //If the longest offset label does not fit into the offsetStepHeight, recalculate
       if (offsetLabelHeight >= offsetStepHeight) {
         maxTickCount = (relevantHeight / offsetLabelHeight).roundToInt()
-        newTicks = style.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, style.axisEndConfiguration)
+        newTicks = axisConfiguration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, axisConfiguration.axisEndConfiguration)
         calculateOffsetTickValuesVertically(newTicks)
       }
     }
@@ -257,9 +257,9 @@ class ValueAxisWithOffsetLayer(
 
   private fun calculateOffsetTickValuesVertically(newTicks: @Domain DoubleArray) {
     with(paintingVariables) {
-      deltaMagnitude = if (startDomainValue == endDomainValue) 1 - style.spaceForDigits else (startDomainValue - endDomainValue).abs().findMagnitude()
-      fractionDigits = (1 - deltaMagnitude).coerceIn(0, style.spaceForDigits - 1)
-      integerDigits = style.spaceForDigits - fractionDigits
+      deltaMagnitude = if (startDomainValue == endDomainValue) 1 - axisConfiguration.spaceForDigits else (startDomainValue - endDomainValue).abs().findMagnitude()
+      fractionDigits = (1 - deltaMagnitude).coerceIn(0, axisConfiguration.spaceForDigits - 1)
+      integerDigits = axisConfiguration.spaceForDigits - fractionDigits
 
       val newOffsetTicks = newTicks.fastMapDouble { tick ->
         OffsetTickCalculator.offsetForNumber(tick, integerDigits).let {
@@ -292,10 +292,10 @@ class ValueAxisWithOffsetLayer(
   private fun ChartCalculator.paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, @px maxTickValueLabelWidth: Double, tickLabelsAnchorDirection: Direction) {
     val gc = paintingContext.gc
 
-    gc.fillStyle(style.tickLabelColor())
-    gc.strokeStyle(style.lineColor())
-    gc.font(style.tickFont)
-    gc.lineWidth = style.tickLineWidth
+    gc.fillStyle(axisConfiguration.tickLabelColor())
+    gc.strokeStyle(axisConfiguration.lineColor())
+    gc.font(axisConfiguration.tickFont)
+    gc.lineWidth = axisConfiguration.tickLineWidth
 
     val valueRange = data.valueRangeProvider()
 
@@ -324,13 +324,13 @@ class ValueAxisWithOffsetLayer(
    * Paints the axis - respects the paint range from the style
    */
   private fun paintAxis(gc: CanvasRenderingContext) {
-    gc.strokeStyle(style.lineColor())
+    gc.strokeStyle(axisConfiguration.lineColor())
 
-    if (style.axisLineWidth == 0.0) {
+    if (axisConfiguration.axisLineWidth == 0.0) {
       return
     }
 
-    gc.lineWidth = style.axisLineWidth
+    gc.lineWidth = axisConfiguration.axisLineWidth
     gc.strokeLine(0.0, paintingVariables.axisStart, 0.0, paintingVariables.axisEnd)
   }
 

@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.toIntCeil
 
@@ -24,31 +25,34 @@ import it.neckar.open.kotlin.lang.toIntCeil
  * Fills the canvas with a background checker pattern
  */
 class FillBackgroundCheckerLayer(
-  configuration: Configuration.() -> Unit = {}
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Background
-
-  val style: Configuration = Configuration().also(configuration)
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
-    val cols = (gc.width / style.segmentWith).toIntCeil()
-    val rows = (gc.height / style.segmentHeight).toIntCeil()
+    val cols = (gc.width / configuration.segmentWith).toIntCeil()
+    val rows = (gc.height / configuration.segmentHeight).toIntCeil()
 
     cols.fastFor { col ->
       rows.fastFor { row ->
         gc.fill(
-          if ((col + row) % 2 == 0) style.background0 else style.background1
+          if ((col + row) % 2 == 0) configuration.background0 else configuration.background1
         )
 
-        gc.fillRect(col * style.segmentWith, row * style.segmentHeight, style.segmentWith, style.segmentHeight)
+        gc.fillRect(col * configuration.segmentWith, row * configuration.segmentHeight, configuration.segmentWith, configuration.segmentHeight)
       }
     }
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The color to be used as background

@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import it.neckar.open.provider.DoubleProvider
 
@@ -56,6 +57,7 @@ class TranslationLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * The translated layer

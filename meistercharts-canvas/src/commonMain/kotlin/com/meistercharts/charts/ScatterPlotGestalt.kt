@@ -16,7 +16,7 @@
 package com.meistercharts.charts
 
 import com.meistercharts.range.ValueRange
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
@@ -61,7 +61,7 @@ class ScatterPlotGestalt(
   ) {
     titleProvider = { _, _ -> data.valueAxisCaptionX }
     tickOrientation = Vicinity.Outside
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Bottom
   }
 
@@ -72,7 +72,7 @@ class ScatterPlotGestalt(
   ) {
     titleProvider = { _, _ -> data.valueAxisCaptionY }
     tickOrientation = Vicinity.Outside
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Left
   }
 
@@ -89,8 +89,8 @@ class ScatterPlotGestalt(
     style.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.style.size = it.bottom
-      valueAxisYLayer.style.size = it.left
+      valueAxisXLayer.axisConfiguration.size = it.bottom
+      valueAxisYLayer.axisConfiguration.size = it.left
 
       gridXLayer.configuration.passpartout = it
       gridYLayer.configuration.passpartout = it

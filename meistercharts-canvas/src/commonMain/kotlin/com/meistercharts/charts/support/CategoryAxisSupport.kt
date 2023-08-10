@@ -56,7 +56,7 @@ class CategoryAxisSupport<Key>(
           configuration.layoutProvider(key)
         })
     ).also { layer ->
-      configuration.axisConfiguration(layer.style, key, layer, preferredAxisTitleLocation)
+      configuration.axisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
     }
   }
 
@@ -92,7 +92,7 @@ class CategoryAxisSupport<Key>(
         field = value
         //Apply the new configuration to existing
         axisLayersCache.forEach { key, layer ->
-          value.invoke(layer.style, key, layer, preferredAxisTitleLocation)
+          value.invoke(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
         }
       }
 

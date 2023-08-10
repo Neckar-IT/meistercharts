@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
@@ -39,6 +40,7 @@ class ShowLoadingIconOnResourceMissingLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The icon that is painted
