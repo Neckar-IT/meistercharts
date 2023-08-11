@@ -50,11 +50,10 @@ class CategoryAxisSupport<Key>(
 
   override fun createAxisLayer(key: Key): CategoryAxisLayer {
     return CategoryAxisLayer(
-      CategoryAxisLayer.Data(
-        labelsProvider = configuration.labelsProvider.invoke(key),
-        layoutProvider = {
-          configuration.layoutProvider(key)
-        })
+      labelsProvider = configuration.labelsProvider.invoke(key),
+      layoutProvider = {
+        configuration.layoutProvider(key)
+      }
     ).also { layer ->
       configuration.axisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
     }
@@ -146,7 +145,7 @@ class CategoryAxisSupport<Key>(
   }
 }
 
-typealias CategoryAxisConfiguration<Key> = CategoryAxisLayer.Style.(Key, axis: CategoryAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
+typealias CategoryAxisConfiguration<Key> = CategoryAxisLayer.Configuration.(Key, axis: CategoryAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
 
 
 inline fun CategoryAxisSupport<Unit>.getTopTitleLayer(): AxisTopTopTitleLayer {

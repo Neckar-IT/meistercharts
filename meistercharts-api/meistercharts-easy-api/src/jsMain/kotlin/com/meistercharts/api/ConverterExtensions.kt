@@ -393,7 +393,7 @@ private fun com.meistercharts.algorithms.layers.AxisConfiguration.applyAxisStyle
 /**
  * Applies the JS style to the time axis
  */
-fun TimeAxisLayer.Style.applyTimeAxisStyle(jsStyle: TimeAxisStyle?) {
+fun TimeAxisLayer.Configuration.applyTimeAxisStyle(jsStyle: TimeAxisStyle?) {
   applyAxisStyle(jsStyle)
 
   //The offset should use the same font as the tick labels
@@ -423,7 +423,7 @@ fun TimeAxisLayer.Style.applyTimeAxisStyle(jsStyle: TimeAxisStyle?) {
  *
  * The title-location will always be set to the top of the axis.
  */
-fun CategoryAxisLayer.Style.applyCategoryAxisStyle(jsStyle: CategoryAxisStyle?) {
+fun CategoryAxisLayer.Configuration.applyCategoryAxisStyle(jsStyle: CategoryAxisStyle?) {
   if (jsStyle == null) {
     return
   }
@@ -622,7 +622,7 @@ fun CrossWireLayer.Configuration.applyCrossWireStyle(jsStyle: CrossWireStyle?) {
 /**
  * Applies the axis style
  */
-fun CategoryAxisLayer.Style.applyEnumAxisStyle(jsStyle: EnumAxisStyle?) {
+fun CategoryAxisLayer.Configuration.applyEnumAxisStyle(jsStyle: EnumAxisStyle?) {
   applyAxisStyle(jsStyle)
 
   if (jsStyle == null) {
@@ -636,7 +636,7 @@ fun CategoryAxisLayer.Style.applyEnumAxisStyle(jsStyle: EnumAxisStyle?) {
   }
 }
 
-fun CategoryAxisLayer.Style.applyDiscreteAxisStyle(jsStyle: DiscreteAxisStyle?) {
+fun CategoryAxisLayer.Configuration.applyDiscreteAxisStyle(jsStyle: DiscreteAxisStyle?) {
   applyAxisStyle(jsStyle)
 
   if (jsStyle == null) {

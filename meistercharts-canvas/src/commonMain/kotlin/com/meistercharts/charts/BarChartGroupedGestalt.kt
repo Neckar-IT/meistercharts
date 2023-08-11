@@ -419,7 +419,7 @@ class BarChartGroupedGestalt constructor(
   init {
     style.applyValueLabelsInWindowRespectingAxis()
 
-    categoryAxisLayer.data.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
+    categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
 
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it

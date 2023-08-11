@@ -24,6 +24,7 @@ import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
@@ -43,10 +44,21 @@ import it.neckar.open.provider.MultiProvider
  * Paints the category axis
  */
 class CategoryAxisLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractAxisLayer() {
-  override val axisConfiguration: Style = Style().also(styleConfiguration)
+
+  constructor(
+    labelsProvider: SizedLabelsProvider,
+    layoutProvider: () -> EquisizedBoxLayout?,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(labelsProvider, layoutProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  override val axisConfiguration: Configuration = configuration
 
   override val type: LayerType
     get() = LayerType.Content
@@ -66,7 +78,7 @@ class CategoryAxisLayer(
       reset()
 
       //Do not paint anything if there is no layout
-      categoryLayout = (data.layoutProvider() ?: return)
+      categoryLayout = (configuration.layoutProvider() ?: return)
 
       calculateTickFontMetrics(paintingContext, axisConfiguration)
       calculateTitle(paintingContext, axisConfiguration)
@@ -90,7 +102,7 @@ class CategoryAxisLayer(
       return
     }
 
-    axisConfiguration.axisLabelPainter.layout(categoryLayout, this.data.labelsProvider, this.axisConfiguration.labelVisibleCondition)
+    axisConfiguration.axisLabelPainter.layout(categoryLayout, this.configuration.labelsProvider, this.axisConfiguration.labelVisibleCondition)
     super.paint(paintingContext)
   }
 
@@ -129,7 +141,7 @@ class CategoryAxisLayer(
     gc.strokeStyle(axisConfiguration.lineColor()) //for the ticks
     gc.fillStyle(axisConfiguration.tickLabelColor()) //for the labels
 
-    for (categoryIndexAsInt in 0 until data.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
+    for (categoryIndexAsInt in 0 until configuration.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
       val categoryIndex = CategoryIndex(categoryIndexAsInt)
 
       @Window val currentY = chartCalculator.zoomed2windowY(categoryLayout.calculateCenter(BoxIndex(categoryIndexAsInt)))
@@ -154,7 +166,7 @@ class CategoryAxisLayer(
 
       //Calculate the label that is shown
       val label: String? = if (axisConfiguration.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
-        data.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
+        configuration.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
       } else {
         null
       }
@@ -200,7 +212,7 @@ class CategoryAxisLayer(
     gc.strokeStyle(axisConfiguration.lineColor()) //for the ticks
     gc.fillStyle(axisConfiguration.tickLabelColor()) //for the labels
 
-    for (categoryIndexAsInt in 0 until data.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
+    for (categoryIndexAsInt in 0 until configuration.labelsProvider.size(chartSupport.textService, chartSupport.i18nConfiguration)) {
       val categoryIndex: CategoryIndex = CategoryIndex(categoryIndexAsInt)
 
       @Window val currentX = chartCalculator.zoomed2windowX(categoryLayout.calculateCenter(BoxIndex(categoryIndexAsInt)))
@@ -225,7 +237,7 @@ class CategoryAxisLayer(
       }
 
       val label: String? = if (axisConfiguration.labelVisibleCondition.isLabelVisible(categoryIndex, categoryLayout.numberOfBoxes, categoryLayout.boxSize)) {
-        data.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
+        configuration.labelsProvider.valueAt(categoryIndex.value, paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
       } else {
         null
       }
@@ -246,7 +258,8 @@ class CategoryAxisLayer(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides the labels - for each category
      */
@@ -256,9 +269,7 @@ class CategoryAxisLayer(
      * Returns the layout of the segment
      */
     var layoutProvider: () -> EquisizedBoxLayout?,
-  )
-
-  open class Style : AxisConfiguration() {
+  ) : AxisConfiguration() {
     /**
      * The painter that is used to paint the axis
      */
@@ -285,9 +296,9 @@ class CategoryAxisLayer(
  */
 fun CategoryLayer<*>.createAxisLayer(
   labelsProvider: SizedLabelsProvider = configuration.modelProvider().createCategoryLabelsProvider(),
-  styleConfiguration: CategoryAxisLayer.Style.() -> Unit = {},
+  styleConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {},
 ): CategoryAxisLayer {
-  return CategoryAxisLayer(CategoryAxisLayer.Data(labelsProvider) { paintingVariables().layout }) {
+  return CategoryAxisLayer(labelsProvider, { paintingVariables().layout }) {
     styleConfiguration()
   }
 }
@@ -296,8 +307,8 @@ fun CategoryLayer<*>.createAxisLayer(
 /**
  * Creates a category axis layer that uses the layout of this [CategoryLinesLayer]
  */
-fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = configuration.categorySeriesModel.createCategoryLabelsProvider(), styleConfiguration: CategoryAxisLayer.Style.() -> Unit = {}): CategoryAxisLayer {
-  return CategoryAxisLayer(CategoryAxisLayer.Data(labelsProvider) { paintingVariables().layout }) {
+fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = configuration.categorySeriesModel.createCategoryLabelsProvider(), styleConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {}): CategoryAxisLayer {
+  return CategoryAxisLayer(labelsProvider, { paintingVariables().layout }) {
     styleConfiguration()
   }
 }

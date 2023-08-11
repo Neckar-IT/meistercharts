@@ -176,7 +176,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   }
 
   init {
-    categoryAxisLayer.data.labelsProvider = data::categorySeriesModel.createCategoryLabelsProvider()
+    categoryAxisLayer.configuration.labelsProvider = data::categorySeriesModel.createCategoryLabelsProvider()
 
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it

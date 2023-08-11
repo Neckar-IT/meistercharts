@@ -66,17 +66,26 @@ import kotlin.math.min
 
 /**
  * Paints a time axis at the bottom of the canvas
- * @property data - contains the timeRange the time range to be displayed at 100% zoom and with no translation
- * @param styleConfiguration the style configuration that is applied
+ * @property configuration - contains the timeRange the time range to be displayed at 100% zoom and with no translation
+ * @param additionalConfiguration the style configuration that is applied
  */
 class TimeAxisLayer(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractAxisLayer() {
 
-  override val axisConfiguration: Style = Style().apply {
+  constructor(
+    contentAreaTimeRange: TimeRange = TimeRange.oneMinuteSinceReference,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(contentAreaTimeRange), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  override val axisConfiguration: Configuration = configuration.apply {
     side = Side.Bottom
-  }.also(styleConfiguration)
+  }.also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -97,7 +106,7 @@ class TimeAxisLayer(
     override fun calculate(paintingContext: LayerPaintingContext) {
       reset()
 
-      contentAreaTimeRange = data.contentAreaTimeRange
+      contentAreaTimeRange = configuration.contentAreaTimeRange
 
       //TODO!!!! fix me somehow!
       calculateTickFontMetrics(paintingContext, axisConfiguration)
@@ -115,7 +124,7 @@ class TimeAxisLayer(
     /**
      * Calculate the tick values that are painted
      */
-    private fun calculateTickValues(paintingContext: LayerPaintingContext, style: Style) {
+    private fun calculateTickValues(paintingContext: LayerPaintingContext, style: Configuration) {
       return when (style.orientation) {
         Orientation.Vertical -> throw UnsupportedOperationException("Only implemented for horizontal orientation at the moment!")
         Orientation.Horizontal -> calculateTickValuesValueRangeHorizontally(paintingContext, style)
@@ -125,7 +134,7 @@ class TimeAxisLayer(
     /**
      * Calculates the tick values
      */
-    private fun calculateTickValuesValueRangeHorizontally(paintingContext: LayerPaintingContext, style: Style) {
+    private fun calculateTickValuesValueRangeHorizontally(paintingContext: LayerPaintingContext, style: Configuration) {
       //Note: in order to know how many formatted ticks may be displayed along this axis
       //we need to know the text length of one formatted tick. However, to compute the
       //text length of one formatted tick we need to know the distance between two ticks
@@ -353,17 +362,15 @@ class TimeAxisLayer(
     Relative
   }
 
-  class Data(
+  /**
+   * Style object for the time axis
+   */
+  class Configuration(
     /**
      * The time range that is spans the content area
      */
     var contentAreaTimeRange: TimeRange = TimeRange.oneMinuteSinceReference,
-  )
-
-  /**
-   * Style object for the time axis
-   */
-  class Style : AxisConfiguration() {
+  ) : AxisConfiguration() {
 
     init {
       //Ensure tick orientation outside
@@ -578,8 +585,8 @@ object RelativeToNowTickFormat : RelativeTickFormat {
 /**
  * Adds a time axis layer
  */
-fun Layers.addTimeAxis(contentAreaTimeRange: TimeRange, styleConfiguration: TimeAxisLayer.Style.() -> Unit = {}): TimeAxisLayer {
-  return TimeAxisLayer(TimeAxisLayer.Data(contentAreaTimeRange), styleConfiguration).also {
+fun Layers.addTimeAxis(contentAreaTimeRange: TimeRange, styleConfiguration: TimeAxisLayer.Configuration.() -> Unit = {}): TimeAxisLayer {
+  return TimeAxisLayer(TimeAxisLayer.Configuration(contentAreaTimeRange), styleConfiguration).also {
     addLayer(it)
   }
 }

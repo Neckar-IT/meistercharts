@@ -478,22 +478,20 @@ class TimeLineChartGestalt
    * ATTENTION: This layer only works with *visible* sizes/providers.
    */
   val enumCategoryAxisLayer: CategoryAxisLayer = CategoryAxisLayer(
-    CategoryAxisLayer.Data(
-      labelsProvider = object : SizedLabelsProvider {
-        override fun size(param1: TextService, param2: I18nConfiguration): Int {
-          return historyEnumLayer.visibleIndices.size()
-        }
-
-        override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-          val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.style.actualVisibleEnumSeriesIndices.valueAt(index)
-          val labelTextKey = this@TimeLineChartGestalt.style.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
-          return labelTextKey.resolve(textService, i18nConfiguration)
-        }
-      },
-      layoutProvider = {
-        historyEnumLayer.paintingVariables().stripesLayout
+    labelsProvider = object : SizedLabelsProvider {
+      override fun size(param1: TextService, param2: I18nConfiguration): Int {
+        return historyEnumLayer.visibleIndices.size()
       }
-    ),
+
+      override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
+        val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.style.actualVisibleEnumSeriesIndices.valueAt(index)
+        val labelTextKey = this@TimeLineChartGestalt.style.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
+        return labelTextKey.resolve(textService, i18nConfiguration)
+      }
+    },
+    layoutProvider = {
+      historyEnumLayer.paintingVariables().stripesLayout
+    }
   ) {
     side = Side.Left
     //titleProvider = "Enums".asProvider2() //title is necessary to align the layout with the value axis
@@ -1031,7 +1029,7 @@ class TimeLineChartGestalt
     }
 
     style.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
-      timeAxisLayer.data.contentAreaTimeRange = newContentAreaTimeRange
+      timeAxisLayer.configuration.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
     }
 
