@@ -27,7 +27,7 @@ import it.neckar.open.unit.other.px
 class HistoryUpdatesVisualizationLayer(val contentAreaTimeRange: TimeRange) : AbstractLayer() {
   override val type: LayerType = LayerType.Notification
 
-  val style: Style = Style()
+  val configuration: Configuration = Configuration()
 
   var lastUpdateInfo: HistoryUpdateInfo? = null
 
@@ -40,14 +40,14 @@ class HistoryUpdatesVisualizationLayer(val contentAreaTimeRange: TimeRange) : Ab
         val startX = chartCalculator.time2windowX(it.start, contentAreaTimeRange)
         val endX = chartCalculator.time2windowX(it.end, contentAreaTimeRange)
 
-        gc.fill(style.fillColor)
-        gc.fillRect(startX, 0.0, (endX - startX).coerceAtLeast(style.minimumWidth), gc.height)
+        gc.fill(configuration.fillColor)
+        gc.fillRect(startX, 0.0, (endX - startX).coerceAtLeast(configuration.minimumWidth), gc.height)
       }
     }
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration {
     /**
      * The minimum width that is visualized
      */

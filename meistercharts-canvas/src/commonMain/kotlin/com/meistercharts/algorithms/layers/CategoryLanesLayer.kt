@@ -35,11 +35,18 @@ import it.neckar.open.provider.MultiProvider
  * Paints a swim lane for each category
  */
 class CategoryLanesLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    valuesProvider: @Domain DoublesProvider,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(valuesProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -51,7 +58,7 @@ class CategoryLanesLayer(
 
   override fun layout(paintingContext: LayerPaintingContext) {
     super.layout(paintingContext)
-    layout = style.layoutCalculator.calculateLayout(paintingContext, data.valuesProvider.size(), style.orientation)
+    layout = configuration.layoutCalculator.calculateLayout(paintingContext, configuration.valuesProvider.size(), configuration.orientation)
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
@@ -61,51 +68,49 @@ class CategoryLanesLayer(
     val chartCalculator = paintingContext.chartCalculator
 
     with(chartCalculator) {
-      for (index in 0 until data.valuesProvider.size()) {
+      for (index in 0 until configuration.valuesProvider.size()) {
         @Window val centerX = zoomed2windowX(layout.calculateCenter(BoxIndex(index)))
 
         val lowerY = domainRelative2windowY(0.0)
         val upperY = domainRelative2windowY(1.0)
 
         //Fill
-        style.fill.valueAt(index)?.let {
+        configuration.fill.valueAt(index)?.let {
           gc.fill(it.toCanvasPaint(0.0, lowerY, 0.0, upperY))
-          gc.fillRoundedRect(centerX - layout.boxSize / 2.0, lowerY, layout.boxSize, upperY - lowerY, style.borderRadius)
+          gc.fillRoundedRect(centerX - layout.boxSize / 2.0, lowerY, layout.boxSize, upperY - lowerY, configuration.borderRadius)
         }
 
         //Stroke
-        style.stroke.valueAt(index).let {
+        configuration.stroke.valueAt(index).let {
           gc.stroke(it.toCanvasPaint(0.0, lowerY, 0.0, upperY))
           gc.lineWidth = 1.0
-          gc.strokeRoundedRect(centerX - layout.boxSize / 2.0, lowerY, layout.boxSize, upperY - lowerY, style.borderRadius)
+          gc.strokeRoundedRect(centerX - layout.boxSize / 2.0, lowerY, layout.boxSize, upperY - lowerY, configuration.borderRadius)
         }
 
         //The (optional) center line
-        style.centerLineStroke.valueAt(index)?.let {
+        configuration.centerLineStroke.valueAt(index)?.let {
           gc.stroke(it)
 
-          @Domain val domainValue = data.valuesProvider.valueAt(index)
+          @Domain val domainValue = configuration.valuesProvider.valueAt(index)
 
 
-          val valueY = domainRelative2windowY(style.valueRange.toDomainRelative(domainValue))
+          val valueY = domainRelative2windowY(configuration.valueRange.toDomainRelative(domainValue))
           gc.strokeLine(centerX, lowerY, centerX, valueY)
         }
       }
     }
   }
 
-  class Data(
-    /**
-     * Provides the domain values to be shown (one value belongs to one [CategoryIndex])
-     */
-    var valuesProvider: @Domain DoublesProvider,
-  )
-
   /**
    * Style for the category lanes layer
    */
   @ConfigurationDsl
-  open class Style {
+  open class Configuration(
+    /**
+     * Provides the domain values to be shown (one value belongs to one [CategoryIndex])
+     */
+    var valuesProvider: @Domain DoublesProvider,
+  ) {
     /**
      * Provides the layout
      */

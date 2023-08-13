@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStripePainter
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryStorage
@@ -86,6 +87,7 @@ class HistoryReferenceEntryLayer(
     return null
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Where the history is stored

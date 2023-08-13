@@ -37,11 +37,18 @@ import it.neckar.open.provider.fastForEachIndexed
  * Use [MultipleLayersDelegatingLayer] to place the corresponding [AxisTopTopTitleLayer]
  */
 class MultiValueAxisLayer constructor(
-  valueAxesProvider: ValueAxesProvider,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration(valueAxesProvider).also(additionalConfiguration)
+  constructor(
+    valueAxesProvider: ValueAxesProvider,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(valueAxesProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -88,10 +95,10 @@ class MultiValueAxisLayer constructor(
       var currentX = 0.0
 
       configuration.valueAxesProvider.fastForEachIndexed { index, valueAxisLayer ->
-        checkEquals(valueAxisLayer.style.side, Side.Left) { "only left side is supported" }
+        checkEquals(valueAxisLayer.axisConfiguration.side, Side.Left) { "only left side is supported" }
 
         //Is there enough room left for this axis?
-        if (currentX + valueAxisLayer.style.size > availableWidth) {
+        if (currentX + valueAxisLayer.axisConfiguration.size > availableWidth) {
           //Not enough room, stop adding axes
           return
         }
@@ -101,14 +108,14 @@ class MultiValueAxisLayer constructor(
         locationsX[index] = currentX //Remember the location
 
         //Update the margin accordingly
-        valueAxisLayer.style.margin = valueAxisLayer.style.margin.withLeft(currentX)
+        valueAxisLayer.axisConfiguration.margin = valueAxisLayer.axisConfiguration.margin.withLeft(currentX)
         //Calculate the layout for the current value axis layer
         paintingContext.gc.saved {
           valueAxisLayer.layout(paintingContext)
         }
 
         //Update the variables for the next axis
-        currentX += valueAxisLayer.style.size
+        currentX += valueAxisLayer.axisConfiguration.size
         totalWidth = currentX
         currentX += configuration.valueAxesGap
       }

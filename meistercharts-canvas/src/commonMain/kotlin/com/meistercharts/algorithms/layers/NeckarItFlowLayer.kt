@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
@@ -27,11 +28,11 @@ import it.neckar.open.unit.other.px
  * Paints the Neckar IT 'flow'
  */
 class NeckarItFlowLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Content
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration().also(configuration)
 
   override
   fun paint(paintingContext: LayerPaintingContext) {
@@ -53,7 +54,8 @@ class NeckarItFlowLayer(
     }
   }
 
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * The gap between the center of the canvas to the top side of the paintable
      */

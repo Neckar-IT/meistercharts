@@ -19,7 +19,6 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
-import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.Style
 import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.LabelPainter2
 import com.meistercharts.algorithms.painter.LabelPlacement
@@ -50,41 +49,49 @@ import it.neckar.open.unit.other.px
  *
  * If the cross wire line shall be painted in the background use this solution:
  * - two cross wire layers
- * - one in the background. Call [Style.applyShowOnlyCrossWireLine] for this one
- * - one in the content area. Set [Style.showCrossWireLine] to false
+ * - one in the background. Call [Configuration.applyShowOnlyCrossWireLine] for this one
+ * - one in the content area. Set [Configuration.showCrossWireLine] to false
  */
 class CrossWireLayer(
-  val data: Data,
+  val configuration: Configuration,
+  additionalConfiguration: Configuration .() -> Unit = {},
   /**
    * Can be configured to background (if necessary)
    */
-  override val type: LayerType = LayerType.Content,
-  styleConfiguration: Style .() -> Unit = {},
+  override val type: LayerType = LayerType.Content
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    valueLabelsProvider: ValueLabelsProvider,
+    currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String = { _, _ -> TODO("not implemented yet") },
+    additionalConfiguration: Configuration .() -> Unit = {},
+  ) : this(Configuration(valueLabelsProvider, currentLocationLabelTextProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   /**
    * The label painter that paints the value-labels (including layout)
    */
   val valueLabelPainter: LabelPainter2 = LabelPainter2(true, true) {
-    font = { style.valueLabelFont }
-    showLineToValueBox = { style.showLineToValueBox }
+    font = { configuration.valueLabelFont }
+    showLineToValueBox = { configuration.showLineToValueBox }
   }
 
   private val valueLabelLocations: @Window DoublesProvider1<LayerPaintingContext> = object : DoublesProvider1<LayerPaintingContext> {
     override fun valueAt(index: Int, param1: LayerPaintingContext): Double {
-      return data.valueLabelsProvider.locationAt(index)
+      return configuration.valueLabelsProvider.locationAt(index)
     }
 
     override fun size(param1: LayerPaintingContext): Int {
-      return data.valueLabelsProvider.size()
+      return configuration.valueLabelsProvider.size()
     }
   }
 
   private val valueLabelTexts: LabelsProvider<LabelIndex> = object : LabelsProvider<LabelIndex> {
     override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String {
-      return data.valueLabelsProvider.labelAt(index, param1, param2)
+      return configuration.valueLabelsProvider.labelAt(index, param1, param2)
     }
   }
 
@@ -103,14 +110,14 @@ class CrossWireLayer(
     var currentLocationLabelText: String = ""
 
     override fun calculate(paintingContext: LayerPaintingContext) {
-      wireLocation = style.locationX(paintingContext)
+      wireLocation = configuration.locationX(paintingContext)
 
-      if (style.showValueLabels) {
-        valueLabelPlacement = style.valueLabelPlacementStrategy(wireLocation, paintingContext)
+      if (configuration.showValueLabels) {
+        valueLabelPlacement = configuration.valueLabelPlacementStrategy(wireLocation, paintingContext)
       }
 
-      currentLocationLabelText = if (style.showCurrentLocationLabel) {
-        data.currentLocationLabelTextProvider(paintingContext, wireLocation)
+      currentLocationLabelText = if (configuration.showCurrentLocationLabel) {
+        configuration.currentLocationLabelTextProvider(paintingContext, wireLocation)
       } else {
         ""
       }
@@ -120,16 +127,16 @@ class CrossWireLayer(
   override fun layout(paintingContext: LayerPaintingContext) {
     super.layout(paintingContext)
 
-    if (style.showValueLabels) {
-      data.valueLabelsProvider.layout(paintingVariables.wireLocation, paintingContext)
+    if (configuration.showValueLabels) {
+      configuration.valueLabelsProvider.layout(paintingVariables.wireLocation, paintingContext)
 
       valueLabelPainter.layout(
         paintingContext,
         labelLocations = valueLabelLocations,
         labelTexts = valueLabelTexts,
-        labelBoxStyles = style.valueLabelBoxStyle,
-        min = style.valueLabelsStart(paintingContext),
-        max = style.valueLabelsEnd(paintingContext),
+        labelBoxStyles = configuration.valueLabelBoxStyle,
+        min = configuration.valueLabelsStart(paintingContext),
+        max = configuration.valueLabelsEnd(paintingContext),
       )
     }
   }
@@ -142,36 +149,36 @@ class CrossWireLayer(
     gc.translate(paintingVariables.wireLocation, 0.0)
 
     //Paint the wire
-    if (style.showCrossWireLine) {
-      gc.stroke(style.wireColor)
-      gc.lineWidth = style.wireWidth
+    if (configuration.showCrossWireLine) {
+      gc.stroke(configuration.wireColor)
+      gc.lineWidth = configuration.wireWidth
       gc.strokeLine(0.0, chartCalculator.contentViewportMinY(), 0.0, chartCalculator.contentViewportMaxY())
     }
 
-    if (style.showCurrentLocationLabel) {
+    if (configuration.showCurrentLocationLabel) {
       gc.saved {
 
         //Paint the location-label first!
         val currentLocationLabelText = paintingVariables.currentLocationLabelText
 
-        gc.font(style.currentLocationLabelFont)
+        gc.font(configuration.currentLocationLabelFont)
 
-        style.currentLocationLabelAnchorPoint(paintingContext).let { anchorPointTranslation ->
+        configuration.currentLocationLabelAnchorPoint(paintingContext).let { anchorPointTranslation ->
           gc.translate(anchorPointTranslation.x, anchorPointTranslation.y)
         }
 
         gc.paintTextBox(
-          currentLocationLabelText, style.currentLocationLabelAnchorDirection, 0.0, 0.0, style.currentLocationLabelBoxStyle, style.currentLocationLabelTextColor
+          currentLocationLabelText, configuration.currentLocationLabelAnchorDirection, 0.0, 0.0, configuration.currentLocationLabelBoxStyle, configuration.currentLocationLabelTextColor
         )
       }
     }
 
     //Paint the value-labels - if necessary
-    if (style.showValueLabels) {
+    if (configuration.showValueLabels) {
       valueLabelPainter.paintLabels(
         paintingContext = paintingContext,
-        labelBoxStyles = style.valueLabelBoxStyle,
-        labelTextColors = style.valueLabelTextColor,
+        labelBoxStyles = configuration.valueLabelBoxStyle,
+        labelTextColors = configuration.valueLabelTextColor,
         placement = paintingVariables.valueLabelPlacement
       )
     }
@@ -217,7 +224,11 @@ class CrossWireLayer(
     }
   }
 
-  class Data(
+  /**
+   * The style configuration for the cross wire layer
+   */
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides all information for the value-labels (provides [LabelIndex])
      */
@@ -227,13 +238,7 @@ class CrossWireLayer(
      * Provides the label for the current location
      */
     var currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String = { _, _ -> TODO("not implemented yet") },
-  )
-
-  /**
-   * The style configuration for the cross wire layer
-   */
-  @ConfigurationDsl
-  open class Style {
+  ) {
     /**
      * The location of the cross wire itself
      */
@@ -367,7 +372,7 @@ class CrossWireLayer(
      * Can be used to place in the background
      */
     fun onlyWire(locationX: (paintingContext: LayerPaintingContext) -> @Window Double): CrossWireLayer {
-      return CrossWireLayer(Data(ValueLabelsProvider.Empty)) {
+      return CrossWireLayer(ValueLabelsProvider.Empty) {
         this.locationX = locationX
         this.applyShowOnlyCrossWireLine()
       }

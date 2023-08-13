@@ -38,12 +38,19 @@ import it.neckar.open.unit.other.px
  * Adds support for moving the cross wire
  */
 class MovableCrossWireLayer(
-  val mouseCursorSupport: MouseCursorSupport,
-  val mouseEvents: MouseEventBroker,
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    mouseCursorSupport: MouseCursorSupport,
+    mouseEvents: MouseEventBroker,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(mouseCursorSupport, mouseEvents), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -51,9 +58,9 @@ class MovableCrossWireLayer(
   /**
    * The cursor property for the cross wire
    */
-  private val cursorProperty = mouseCursorSupport.cursorProperty(this).also {
+  private val cursorProperty = configuration.mouseCursorSupport.cursorProperty(this).also {
     disposeSupport.onDispose {
-      mouseCursorSupport.clearProperty(this)
+      configuration.mouseCursorSupport.clearProperty(this)
     }
   }
 
@@ -77,14 +84,14 @@ class MovableCrossWireLayer(
     val gc = paintingContext.gc
 
     //Move to x center of wire, bottom of the window
-    @Window @px val wireLocation = paintingContext.chartCalculator.windowRelative2WindowX(style.locationX())
+    @Window @px val wireLocation = paintingContext.chartCalculator.windowRelative2WindowX(configuration.locationX())
 
-    lastMarkerTopTranslation = Distance(wireLocation, gc.height - MarkerPath.totalHeight - style.paddingBottom)
+    lastMarkerTopTranslation = Distance(wireLocation, gc.height - MarkerPath.totalHeight - configuration.paddingBottom)
       .also {
         gc.translate(it)
       }
 
-    gc.fill(style.markerFill)
+    gc.fill(configuration.markerFill)
     gc.fill(MarkerPath.path)
   }
 
@@ -113,6 +120,29 @@ class MovableCrossWireLayer(
     }
 
     return EventConsumption.Ignored
+  }
+
+  @ConfigurationDsl
+  open class Configuration(
+    val mouseCursorSupport: MouseCursorSupport,
+    val mouseEvents: MouseEventBroker,
+  ) {
+    /**
+     * The location of the cross wire
+     */
+    var locationX: () -> @WindowRelative Double = { 0.75 }
+
+
+    /**
+     * The fill of the marker at the bottom
+     */
+    var markerFill: Color = Color.gray
+
+    /**
+     * The padding at the bottom
+     */
+    @px
+    var paddingBottom: Double = 0.0
   }
 
   /**
@@ -145,9 +175,9 @@ class MovableCrossWireLayer(
 fun CrossWireLayer.movable(
   mouseCursorSupport: MouseCursorSupport,
   mouseEvents: MouseEventBroker,
-  styleConfiguration: MovableCrossWireLayer.Style.() -> Unit = {},
+  configuration: MovableCrossWireLayer.Configuration.() -> Unit = {},
 ): MovableCrossWireLayer {
-  return MovableCrossWireLayer(mouseCursorSupport, mouseEvents, styleConfiguration)
+  return MovableCrossWireLayer(mouseCursorSupport, mouseEvents, configuration)
 }
 
 /**

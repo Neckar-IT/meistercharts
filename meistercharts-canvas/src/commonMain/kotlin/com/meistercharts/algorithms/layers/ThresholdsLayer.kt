@@ -55,11 +55,26 @@ import kotlin.jvm.JvmOverloads
  */
 @Deprecated("Do no use anymore. Use ThresholdsSupport with new layers instead")
 class ThresholdsLayer @JvmOverloads constructor(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    /**
+     * Provides the threshold values
+     */
+    thresholdValues: @DomainRelative DoublesProvider,
+
+    /**
+     * Provides the threshold labels
+     */
+    thresholdLabels: MultiProvider<ThresholdValues, List<String>>,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(thresholdValues, thresholdLabels), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -67,13 +82,13 @@ class ThresholdsLayer @JvmOverloads constructor(
   private val linePainter = DirectLinePainter(snapXValues = true, snapYValues = true)
   private val textPainter = TextPainter()
   private val textBoxSizeAdjustment: ((textBox: @px Rectangle, gc: CanvasRenderingContext) -> Size) = { textBox, gc ->
-    if (style.orientation != Orientation.Vertical || style.anchorDirection.horizontalAlignment != HorizontalAlignment.Left) {
+    if (configuration.orientation != Orientation.Vertical || configuration.anchorDirection.horizontalAlignment != HorizontalAlignment.Left) {
       // TODO
       textBox.size
     } else {
       // The right border is drawn half to the left and half to the right of the right side
       // of the text box. Hence, we must only take half the border-width into account.
-      val boxStyle = style.boxStyle()
+      val boxStyle = configuration.boxStyle()
       val halfBorderWidth = boxStyle.borderWidth / 2.0
       val borderOffset = (boxStyle.borderColor?.let { halfBorderWidth } ?: 0.0)
       val boxRight = gc.translationX + textBox.getX() + textBox.getWidth() + borderOffset
@@ -87,7 +102,7 @@ class ThresholdsLayer @JvmOverloads constructor(
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    if (data.thresholdValues.isEmpty()) {
+    if (configuration.thresholdValues.isEmpty()) {
       return
     }
 
@@ -95,16 +110,16 @@ class ThresholdsLayer @JvmOverloads constructor(
 
     if (DebugFeature.ShowBounds.enabled(paintingContext)) {
       gc.fill(Color.color(1.0, 0.7, 0.4, 0.5))
-      gc.fillRect(0.0, 0.0, style.passpartout.left, gc.height)
-      gc.fillRect(gc.width - style.passpartout.right, 0.0, style.passpartout.right, gc.height)
-      gc.fillRect(0.0, 0.0, gc.width, style.passpartout.top)
-      gc.fillRect(0.0, gc.height - style.passpartout.bottom, gc.width, style.passpartout.bottom)
+      gc.fillRect(0.0, 0.0, configuration.passpartout.left, gc.height)
+      gc.fillRect(gc.width - configuration.passpartout.right, 0.0, configuration.passpartout.right, gc.height)
+      gc.fillRect(0.0, 0.0, gc.width, configuration.passpartout.top)
+      gc.fillRect(0.0, gc.height - configuration.passpartout.bottom, gc.width, configuration.passpartout.bottom)
     }
 
-    data.thresholdValues.fastForEachIndexed { index, threshold ->
+    configuration.thresholdValues.fastForEachIndexed { index, threshold ->
       require(threshold.isFinite()) { "Threshold is not finite <$threshold>" }
 
-      val lineStyle = style.lineStyles.valueAt(index)
+      val lineStyle = configuration.lineStyles.valueAt(index)
       val halfLineWidth = lineStyle.lineWidth * 0.5
 
       val thresholdLineXStart: @Window Double
@@ -112,10 +127,10 @@ class ThresholdsLayer @JvmOverloads constructor(
       val thresholdLineYStart: @Window Double
       val thresholdLineYEnd: @Window Double
 
-      when (style.orientation) {
+      when (configuration.orientation) {
         Orientation.Vertical -> {
-          thresholdLineXStart = style.passpartout.left + halfLineWidth
-          thresholdLineXEnd = gc.width - style.passpartout.right - halfLineWidth
+          thresholdLineXStart = configuration.passpartout.left + halfLineWidth
+          thresholdLineXEnd = gc.width - configuration.passpartout.right - halfLineWidth
           thresholdLineYStart = paintingContext.chartCalculator.domainRelative2windowY(threshold)
           thresholdLineYEnd = thresholdLineYStart
         }
@@ -123,8 +138,8 @@ class ThresholdsLayer @JvmOverloads constructor(
         Orientation.Horizontal -> {
           thresholdLineXStart = paintingContext.chartCalculator.domainRelative2windowX(threshold)
           thresholdLineXEnd = thresholdLineXStart
-          thresholdLineYStart = style.passpartout.top + halfLineWidth
-          thresholdLineYEnd = gc.height - style.passpartout.bottom - halfLineWidth
+          thresholdLineYStart = configuration.passpartout.top + halfLineWidth
+          thresholdLineYEnd = gc.height - configuration.passpartout.bottom - halfLineWidth
         }
       }
 
@@ -136,7 +151,7 @@ class ThresholdsLayer @JvmOverloads constructor(
         linePainter.paint(gc)
       }
 
-      if (style.showThresholdLabel) {
+      if (configuration.showThresholdLabel) {
         val lineBoundingBox = Rectangle.withLTRB(
           thresholdLineXStart - halfLineWidth,
           thresholdLineYStart - halfLineWidth,
@@ -162,17 +177,17 @@ class ThresholdsLayer @JvmOverloads constructor(
      */
     lineBoundingBox: Rectangle,
   ) {
-    if (data.thresholdValues.size() <= index) {
+    if (configuration.thresholdValues.size() <= index) {
       return
     }
-    val labels = data.thresholdLabels.valueAt(index)
+    val labels = configuration.thresholdLabels.valueAt(index)
     if (labels.isEmpty()) {
       return
     }
     val gc = paintingContext.gc
-    gc.font(style.font)
+    gc.font(configuration.font)
     gc.saved {
-      val anchorPoint = style.anchorPointProvider.calculateBasePoint(lineBoundingBox)
+      val anchorPoint = configuration.anchorPointProvider.calculateBasePoint(lineBoundingBox)
       gc.translate(anchorPoint.x, anchorPoint.y)
 
       if (DebugFeature.ShowBounds.enabled(paintingContext)) {
@@ -182,29 +197,17 @@ class ThresholdsLayer @JvmOverloads constructor(
       textPainter.paintText(
         gc,
         labels,
-        style.textColor,
-        style.boxStyle(),
-        style.lineSpacing,
-        style.horizontalAlignment,
-        style.anchorDirection,
-        style.anchorGapHorizontal,
-        style.anchorGapVertical,
+        configuration.textColor,
+        configuration.boxStyle(),
+        configuration.lineSpacing,
+        configuration.horizontalAlignment,
+        configuration.anchorDirection,
+        configuration.anchorGapHorizontal,
+        configuration.anchorGapVertical,
         textBoxSizeAdjustment = textBoxSizeAdjustment
       )
     }
   }
-
-  class Data(
-    /**
-     * Provides the threshold values
-     */
-    val thresholdValues: @DomainRelative DoublesProvider,
-
-    /**
-     * Provides the threshold labels
-     */
-    val thresholdLabels: MultiProvider<ThresholdValues, List<String>>,
-  )
 
   /**
    * Marker annotation for the multi provider indices.
@@ -217,7 +220,17 @@ class ThresholdsLayer @JvmOverloads constructor(
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    /**
+     * Provides the threshold values
+     */
+    val thresholdValues: @DomainRelative DoublesProvider,
+
+    /**
+     * Provides the threshold labels
+     */
+    val thresholdLabels: MultiProvider<ThresholdValues, List<String>>,
+  ) {
     /**
      * The orientation of this layer:
      *  * [Orientation.Vertical]: the thresholds are drawn horizontally

@@ -48,7 +48,7 @@ class CircularChartGestalt(
 
   val style: Style = Style().also(styleConfiguration)
 
-  val layer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Data(data::relativeValuesProvider.delegate())) {
+  val layer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(data::relativeValuesProvider.delegate())) {
   }
 
   val legendLayer: CircularChartLegendLayer = CircularChartLegendLayer(data::absoluteValuesProvider.delegate()) {
@@ -57,11 +57,11 @@ class CircularChartGestalt(
 
   init {
     style.colorsProviderProperty.consumeImmediately {
-      layer.style.segmentsColorProvider = it
+      layer.configuration.segmentsColorProvider = it
     }
 
-    legendLayer.style.segmentsLabelProvider = createDefaultLabelProvider()
-    legendLayer.style.segmentsImageProvider = createDefaultImageProvider(style::colorsProvider.delegate())
+    legendLayer.configuration.segmentsLabelProvider = createDefaultLabelProvider()
+    legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(style::colorsProvider.delegate())
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

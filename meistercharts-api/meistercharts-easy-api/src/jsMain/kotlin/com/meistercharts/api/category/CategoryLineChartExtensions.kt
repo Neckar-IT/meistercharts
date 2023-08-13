@@ -79,16 +79,16 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
     }
   }
 
-  this.categoryAxisLayer.style.applyCategoryAxisStyle(jsStyle.categoryAxisStyle)
+  this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsStyle.categoryAxisStyle)
   jsStyle.categoryAxisStyle?.axisSize?.let {
-    this.contentViewportMargin = this.contentViewportMargin.withSide(categoryAxisLayer.style.side, it)
+    this.contentViewportMargin = this.contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
   }
 
   //Thresholds
@@ -101,18 +101,18 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     this.configuration.showValuesGrid = it
   }
 
-  this.categoriesGridLayer.data.applyLinesStyle(jsStyle.categoriesGridStyle)
+  this.categoriesGridLayer.configuration.applyLinesStyle(jsStyle.categoriesGridStyle)
   jsStyle.categoriesGridStyle?.visible?.let {
     this.configuration.showCategoriesGrid = it
   }
 
   jsStyle.lineStyles?.let { jsLineStyles: Array<LineChartLineStyle?> ->
-    this.categoryLinesLayer.style.pointPainters = LineChartSimpleConverter.toPointPainters(jsLineStyles)
-    this.categoryLinesLayer.style.linePainters = LineChartSimpleConverter.toLinePainters(jsLineStyles)
-    this.categoryLinesLayer.style.lineStyles = LineChartSimpleConverter.toLineStyles(jsLineStyles)
+    this.categoryLinesLayer.configuration.pointPainters = LineChartSimpleConverter.toPointPainters(jsLineStyles)
+    this.categoryLinesLayer.configuration.linePainters = LineChartSimpleConverter.toLinePainters(jsLineStyles)
+    this.categoryLinesLayer.configuration.lineStyles = LineChartSimpleConverter.toLineStyles(jsLineStyles)
 
-    LineChartSimpleConverter.toLinePainters(categoryLinesLayer.style.linePainters, jsLineStyles).let {
-      this.categoryLinesLayer.style.linePainters = it
+    LineChartSimpleConverter.toLinePainters(categoryLinesLayer.configuration.linePainters, jsLineStyles).let {
+      this.categoryLinesLayer.configuration.linePainters = it
     }
   }
 
@@ -120,7 +120,7 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     this.configuration.showTooltip = it
   }
 
-  this.crossWireLineLayer.style.applyCrossWireStyle(jsStyle.tooltipWireStyle)
+  this.crossWireLineLayer.configuration.applyCrossWireStyle(jsStyle.tooltipWireStyle)
 
   jsStyle.tooltipStyle?.let { jsTooltipStyle ->
     jsTooltipStyle.tooltipFormat?.toNumberFormat()?.let {

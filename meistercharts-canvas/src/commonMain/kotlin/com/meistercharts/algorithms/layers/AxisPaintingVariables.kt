@@ -196,7 +196,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    */
   fun calculateTickFontMetrics(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     paintingContext.gc.font(style.tickFont)
     tickFontMetrics = paintingContext.gc.getFontMetrics()
@@ -207,7 +207,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    */
   fun calculateTitle(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     //TODO check orientation!
     //Calculate the space for the title
@@ -227,7 +227,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    */
   fun calculateAxisStartEnd(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     //Calculate start/end of the axis
     val chartCalculator = paintingContext.chartCalculator
@@ -239,12 +239,12 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
       // |
       Orientation.Vertical -> {
         when (style.paintRange) {
-          AxisStyle.PaintRange.ContentArea -> {
+          AxisConfiguration.PaintRange.ContentArea -> {
             axisStart = chartCalculator.contentAreaRelative2windowYInViewport(0.0)
             axisEnd = chartCalculator.contentAreaRelative2windowYInViewport(1.0)
           }
 
-          AxisStyle.PaintRange.Continuous -> {
+          AxisConfiguration.PaintRange.Continuous -> {
             axisStart = chartCalculator.contentViewportMinY()
             axisEnd = chartCalculator.contentViewportMaxY()
           }
@@ -254,12 +254,12 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
       // ------
       Orientation.Horizontal ->
         when (style.paintRange) {
-          AxisStyle.PaintRange.ContentArea -> {
+          AxisConfiguration.PaintRange.ContentArea -> {
             axisStart = chartCalculator.contentAreaRelative2windowXInViewport(0.0)
             axisEnd = chartCalculator.contentAreaRelative2windowXInViewport(1.0)
           }
 
-          AxisStyle.PaintRange.Continuous -> {
+          AxisConfiguration.PaintRange.Continuous -> {
             axisStart = chartCalculator.contentViewportMinX()
             axisEnd = chartCalculator.contentViewportMaxX()
           }
@@ -280,7 +280,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    * - currently unlimited
    */
   fun calculateTickLabelsMaxWidth(
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     //Calculate the max width for the tick value label
     tickValueLabelMaxWidth = when (style.orientation) {
@@ -302,7 +302,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates the tick label width for vertical axis
    */
-  protected open fun calculateTickLabelsMaxWidthVertical(style: AxisStyle): @Zoomed Double {
+  protected open fun calculateTickLabelsMaxWidthVertical(style: AxisConfiguration): @Zoomed Double {
     return (style.size
       - style.axisLineWidth
       - style.tickLength
@@ -315,7 +315,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    */
   fun calculateLocations(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     when (style.side) {
       Side.Left -> {

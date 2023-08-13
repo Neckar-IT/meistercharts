@@ -49,10 +49,10 @@ class CircularChart internal constructor(
     valuesProvider.addAll(CircularChartConverter.toValues(jsData))
 
     CircularChartConverter.toSegmentsColorProvider(jsData).apply {
-      gestalt.layer.style.segmentsColorProvider = this
+      gestalt.layer.configuration.segmentsColorProvider = this
     }
-    gestalt.legendLayer.style.segmentsImageProvider = CircularChartConverter.toSegmentsImageProvider(jsData)
-    gestalt.legendLayer.style.segmentsLabelProvider = CircularChartConverter.toSegmentsLabelProvider(jsData)
+    gestalt.legendLayer.configuration.segmentsImageProvider = CircularChartConverter.toSegmentsImageProvider(jsData)
+    gestalt.legendLayer.configuration.segmentsLabelProvider = CircularChartConverter.toSegmentsLabelProvider(jsData)
 
     markAsDirty()
   }
@@ -66,41 +66,41 @@ class CircularChart internal constructor(
 
 private fun CircularChartGestalt.applyStyle(jsStyle: CircularChartStyle) {
   jsStyle.maxDiameter?.let {
-    this.layer.style.maxDiameter = it
+    this.layer.configuration.maxDiameter = it
   }
 
   jsStyle.outerCircleWidth?.let {
-    this.layer.style.outerCircleWidth = it
+    this.layer.configuration.outerCircleWidth = it
   }
 
   jsStyle.outerCircleValueGap?.let {
-    this.layer.style.outerCircleValueGapPixels(it)
+    this.layer.configuration.outerCircleValueGapPixels(it)
   }
 
   jsStyle.innerCircleWidth?.let {
-    this.layer.style.innerCircleWidth = it
+    this.layer.configuration.innerCircleWidth = it
   }
 
   jsStyle.gapInnerOuter?.let {
-    this.layer.style.gapInnerOuter = it
+    this.layer.configuration.gapInnerOuter = it
   }
 
   jsStyle.innerCircleColor?.let {
-    this.layer.style.innerCircleColor = Color.web(it)
+    this.layer.configuration.innerCircleColor = Color.web(it)
   }
 
   jsStyle.legend?.let { circularChartLegendStyle ->
     circularChartLegendStyle.showCaption?.let {
-      this.legendLayer.style.showCaption = it
+      this.legendLayer.configuration.showCaption = it
     }
     circularChartLegendStyle.fontColor?.let {
-      this.legendLayer.style.fontColor = Color.web(it)
+      this.legendLayer.configuration.fontColor = Color.web(it)
     }
     circularChartLegendStyle.fontSize?.let {
-      this.legendLayer.style.font = this.legendLayer.style.font.combineWith(FontDescriptorFragment(it))
+      this.legendLayer.configuration.font = this.legendLayer.configuration.font.combineWith(FontDescriptorFragment(it))
     }
     circularChartLegendStyle.iconSize?.let {
-      this.legendLayer.style.paintableSize = it.toModelSize()
+      this.legendLayer.configuration.paintableSize = it.toModelSize()
     }
   }
 }

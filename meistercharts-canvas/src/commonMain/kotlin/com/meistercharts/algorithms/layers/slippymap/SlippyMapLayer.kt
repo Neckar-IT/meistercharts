@@ -50,18 +50,19 @@ import kotlin.jvm.JvmOverloads
  *
  */
 class SlippyMapLayer @JvmOverloads constructor(
-  val chartId: ChartId,
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
   constructor(
     chartId: ChartId,
     slippyMapProvider: SlippyMapProvider,
-    styleConfiguration: Style.() -> Unit = {}
-  ) : this(chartId, Data(slippyMapProvider), styleConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(chartId, slippyMapProvider), additionalConfiguration)
 
-  val style: Style = Style().also(styleConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -69,7 +70,7 @@ class SlippyMapLayer @JvmOverloads constructor(
   // TODO use a slippy-map optimized cache. Such a cache should know that x and y always lie within 0 to 2^zoom - 1.
   // Furthermore there are 2^zoom x 2^zoom tiles at a certain zoom level. If we know which zoom level to target we
   // could choose a better cache size.
-  val tileProvider: CachedTileProvider = MapTileProvider(data::slippyMapProvider.delegate(), style).cached(chartId)
+  val tileProvider: CachedTileProvider = MapTileProvider(configuration.slippyMapProvider, configuration).cached(configuration.chartId)
 
   /**
    * The tiles layer that itself paints the tiles
@@ -95,15 +96,11 @@ class SlippyMapLayer @JvmOverloads constructor(
     tilesLayer.paint(paintingContext)
   }
 
-  class Data(
-    var slippyMapProvider: SlippyMapProvider
-  )
-
-  /**
-   * Style for the [SlippyMapLayer]
-   */
   @ConfigurationDsl
-  open class Style {
+  open class Configuration(
+    val chartId: ChartId,
+    var slippyMapProvider: SlippyMapProvider,
+  ) {
     /**
      * Whether the values for latitude and longitude are painted on each tile
      */
@@ -128,7 +125,7 @@ class SlippyMapLayer @JvmOverloads constructor(
 
 private class MapTileProvider(
   private val slippyMapProvider: SlippyMapProvider,
-  private val style: SlippyMapLayer.Style
+  private val configuration: SlippyMapLayer.Configuration,
 ) : TileProvider {
 
   override val tileSize: Size
@@ -156,22 +153,22 @@ private class MapTileProvider(
         gc.font(FontDescriptorFragment(10.0))
 
         @px var y = 0.0
-        if (style.showTileIndex) {
+        if (configuration.showTileIndex) {
           gc.fillText("${slippyMapTileIndex.subX} / ${slippyMapTileIndex.subY}", 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0
         }
-        if (style.showTileCoordinates) {
+        if (configuration.showTileCoordinates) {
           @deg val latitude = computeLatitude(slippyMapTileIndex.subY, slippyMapZoom)
           @deg val longitude = computeLongitude(slippyMapTileIndex.subX, slippyMapZoom)
 
           gc.fillText("$latitude° / $longitude°", 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0
         }
-        if (style.showTileUrl) {
+        if (configuration.showTileUrl) {
           gc.fillText(url.value, 0.0, y, Direction.TopLeft, 5.0, 5.0)
           y += 14.0
         }
-        if (style.showTileBorder) {
+        if (configuration.showTileBorder) {
           gc.lineWidth = 1.0
           gc.stroke(Palette.defaultGray)
           gc.strokeRect(0.0, 0.0, tileSize.width, tileSize.height)
@@ -184,8 +181,8 @@ private class MapTileProvider(
 /**
  * Adds a background layer of the given color
  */
-fun Layers.addSlippyMap(slippyMapProvider: SlippyMapProvider, styleConfiguration: SlippyMapLayer.Style.() -> Unit = {}): SlippyMapLayer {
-  val slippyMapLayer = SlippyMapLayer(chartId, SlippyMapLayer.Data(slippyMapProvider), styleConfiguration)
+fun Layers.addSlippyMap(slippyMapProvider: SlippyMapProvider, configuration: SlippyMapLayer.Configuration.() -> Unit = {}): SlippyMapLayer {
+  val slippyMapLayer = SlippyMapLayer(SlippyMapLayer.Configuration(chartId, slippyMapProvider), configuration)
   addLayer(slippyMapLayer)
   return slippyMapLayer
 }

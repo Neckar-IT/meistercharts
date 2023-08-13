@@ -30,12 +30,16 @@ import com.meistercharts.model.Insets
  * Shows some debug markers for the content viewport
  */
 open class ContentViewportDebugLayer(
-  styleConfiguration: Configuration.() -> Unit = {},
+  val configuration: Configuration = Configuration(),
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
   override val type: LayerType
     get() = LayerType.Content
-
-  val configuration: Configuration = Configuration().also(styleConfiguration)
 
   val passpartoutPainter: PasspartoutPainter = PasspartoutPainter()
 

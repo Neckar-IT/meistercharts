@@ -34,11 +34,19 @@ import it.neckar.open.collections.fastForEachIndexed
  * Paint the dirty ranges
  */
 class DirtyRangesDebugLayer(
-  val downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector,
-  val contentAreaTimeRange: TimeRange,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  val style: Style = Style().also(styleConfiguration)
+
+  constructor(
+    downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector,
+    contentAreaTimeRange: TimeRange,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(downSamplingDirtyRangesCollector, contentAreaTimeRange), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Notification
 
@@ -46,42 +54,45 @@ class DirtyRangesDebugLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    val visibleTimeRange = chartCalculator.visibleTimeRangeXinWindow(contentAreaTimeRange)
+    val visibleTimeRange = chartCalculator.visibleTimeRangeXinWindow(configuration.contentAreaTimeRange)
 
 
     SamplingPeriod.entries
       .fastForEachIndexed { index, period ->
-        val dirtyTimeRanges = downSamplingDirtyRangesCollector[period]
+        val dirtyTimeRanges = configuration.downSamplingDirtyRangesCollector[period]
 
-        @Window val y = style.insetsTop + index * style.barHeight
+        @Window val y = configuration.insetsTop + index * configuration.barHeight
 
         dirtyTimeRanges?.timeRanges?.fastForEach { dirtyTimeRange ->
           if (!visibleTimeRange.isOverlapping(dirtyTimeRange)) {
             return@fastForEach
           }
 
-          @Window val start = chartCalculator.time2windowX(dirtyTimeRange.start, contentAreaTimeRange)
-          @Window val end = chartCalculator.time2windowX(dirtyTimeRange.end, contentAreaTimeRange)
+          @Window val start = chartCalculator.time2windowX(dirtyTimeRange.start, configuration.contentAreaTimeRange)
+          @Window val end = chartCalculator.time2windowX(dirtyTimeRange.end, configuration.contentAreaTimeRange)
           @Zoomed val width = end - start
 
-          gc.fill(style.barColor)
-          gc.fillRect(start, y, width, style.barHeight)
+          gc.fill(configuration.barColor)
+          gc.fillRect(start, y, width, configuration.barHeight)
           gc.stroke(Color.orange)
-          gc.strokeRect(start, y, width, style.barHeight, StrokeLocation.Inside)
+          gc.strokeRect(start, y, width, configuration.barHeight, StrokeLocation.Inside)
         }
 
         //paint the lane border
         gc.stroke(Color.silver)
-        gc.strokeRect(0.0, y, gc.width, style.barHeight)
+        gc.strokeRect(0.0, y, gc.width, configuration.barHeight)
 
-        gc.fill(style.barLabelColor)
-        gc.fillText(period.label, 0.0, y + style.barHeight / 2.0, Direction.CenterLeft)
+        gc.fill(configuration.barLabelColor)
+        gc.fillText(period.label, 0.0, y + configuration.barHeight / 2.0, Direction.CenterLeft)
       }
   }
 
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    val downSamplingDirtyRangesCollector: DownSamplingDirtyRangesCollector,
+    val contentAreaTimeRange: TimeRange,
+  ) {
     var insetsTop: @Zoomed Double = 50.0
 
     /**

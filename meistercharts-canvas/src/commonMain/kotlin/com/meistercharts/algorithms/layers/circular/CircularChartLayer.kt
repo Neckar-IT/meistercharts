@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -29,22 +30,24 @@ import kotlin.math.min
  * A circular chart layer
  */
 class CircularChartLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
   constructor(
     valuesProvider: @pct DoublesProvider,
-    styleConfiguration: Style.() -> Unit = {}
-  ) : this(Data(valuesProvider), styleConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ) : this(Configuration(valuesProvider), additionalConfiguration)
 
-  val style: Style = Style().also(styleConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    val circularChartPaintable = CircularChartPaintable(data.valuesProvider, style)
+    val circularChartPaintable = CircularChartPaintable(configuration.valuesProvider, configuration)
 
     with(paintingContext.chartCalculator) {
       //The center of the domain relative area
@@ -54,7 +57,7 @@ class CircularChartLayer(
       @Zoomed val outerRadius = contentAreaRelative2zoomed(0.5, 0.5)
         .let {
           //take the smaller size
-          min(it.width, it.height).coerceAtMost(style.maxDiameter / 2.0)
+          min(it.width, it.height).coerceAtMost(configuration.maxDiameter / 2.0)
         }
 
       //Paint the donut using a painter
@@ -64,15 +67,14 @@ class CircularChartLayer(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides values for circular chart segments.
      * The values are provided in percentage. The sum of the values must not be greater than 1.0
      */
     val valuesProvider: @pct DoublesProvider
-  )
-
-  open class Style : CircularChartPaintable.Style() {
+  ): CircularChartPaintable.Style() {
     /**
      * The maximum size of the circle (outer width)
      */

@@ -55,7 +55,7 @@ operator fun AxisTitleProvider.invoke(chartSupport: ChartSupport): String? {
  * The style configuration for an axis
  */
 @ConfigurationDsl
-open class AxisStyle {
+open class AxisConfiguration {
   /**
    * The range that is painted
    */

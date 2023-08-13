@@ -19,6 +19,7 @@ import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor

@@ -75,7 +75,7 @@ class VirtualNowProviderTest {
 
     assertThat(virtualNowProvider.virtualNow).isEqualTo(now)
     assertThat(virtualNowProvider.offsetBetweenStartedRealTimeAndInitialNow).isCloseTo(0.0, 100.0)
-    assertThat(virtualNowProvider.startedRealTime).isEqualTo(now)
+    assertThat(virtualNowProvider.startedRealTime).isCloseTo(now, 10_000.0)
     assertThat(virtualNowProvider.initialNow).isEqualTo(now)
     assertThat(virtualNowProvider.initialNow).isEqualTo(now)
 

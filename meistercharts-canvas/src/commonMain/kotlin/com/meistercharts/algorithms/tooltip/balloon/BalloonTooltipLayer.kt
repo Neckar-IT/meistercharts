@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -37,7 +38,7 @@ class BalloonTooltipLayer(
 ) : AbstractLayer() {
 
   init {
-    configuration.also(additionalConfiguration)
+    configuration.additionalConfiguration()
   }
 
   override val type: LayerType = LayerType.Notification
@@ -95,6 +96,7 @@ class BalloonTooltipLayer(
   @Target(AnnotationTarget.TYPE)
   annotation class TooltipIndex
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Provides the coordinates for the balloon tooltip

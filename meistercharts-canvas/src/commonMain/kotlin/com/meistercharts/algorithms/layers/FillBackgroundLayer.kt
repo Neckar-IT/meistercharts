@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.design.Theme
@@ -24,11 +25,11 @@ import it.neckar.geometry.Coordinates
  * Fills the canvas with a background color
  */
 class FillBackgroundLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(configuration)
 
   constructor(backgroundColor: Color) : this({
     this.background = backgroundColor
@@ -36,13 +37,14 @@ class FillBackgroundLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.fill(style.background)
+    gc.fill(configuration.background)
     gc.fillRect(gc.boundingBox)
 
-    style.backgroundImage?.paint(paintingContext, Coordinates.origin)
+    configuration.backgroundImage?.paint(paintingContext, Coordinates.origin)
   }
 
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * The color to be used as background
      */

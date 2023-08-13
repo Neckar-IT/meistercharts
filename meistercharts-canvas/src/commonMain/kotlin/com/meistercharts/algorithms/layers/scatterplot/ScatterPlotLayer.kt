@@ -34,11 +34,21 @@ import it.neckar.open.provider.fastForEachIndexed
  * The layer painting the scatter plot
  */
 class ScatterPlotLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  addtionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    xValues: @Domain DoublesProvider,
+    yValues: @Domain DoublesProvider,
+    valueRangeXProvider: ValueRangeProvider,
+    valueRangeYProvider: ValueRangeProvider,
+    addtionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(xValues, yValues, valueRangeXProvider, valueRangeYProvider), addtionalConfiguration)
+
+  init {
+    configuration.addtionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
@@ -47,20 +57,21 @@ class ScatterPlotLayer(
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
 
-    val valueRangeX = data.valueRangeXProvider()
-    val valueRangeY = data.valueRangeYProvider()
+    val valueRangeX = configuration.valueRangeXProvider()
+    val valueRangeY = configuration.valueRangeYProvider()
 
-    data.xValues.fastForEachIndexed { index, xValue: @Domain Double ->
-      val yValue: @Domain Double = data.yValues.valueAt(index)
+    configuration.xValues.fastForEachIndexed { index, xValue: @Domain Double ->
+      val yValue: @Domain Double = configuration.yValues.valueAt(index)
 
       val x = chartCalculator.domain2windowX(xValue, valueRangeX)
       val y = chartCalculator.domain2windowY(yValue, valueRangeY)
 
-      style.pointPainter.paintPoint(gc, x, y)
+      configuration.pointPainter.paintPoint(gc, x, y)
     }
   }
 
-  open class Data(
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides the x values.
      * Must be of same size as [yValues]
@@ -80,10 +91,7 @@ class ScatterPlotLayer(
      * Provides the value range for the y axis
      */
     val valueRangeYProvider: ValueRangeProvider
-  )
-
-  @ConfigurationDsl
-  class Style {
+  ) {
     /**
      * The point painter that is used to point the paints
      */

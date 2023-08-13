@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.util.Date
 
 
 /**
@@ -29,3 +30,13 @@ val utcDateTimeFormat: DateTimeFormatter = DateTimeFormatterBuilder()
   .appendPattern("SSS")
   .appendLiteral('Z')
   .toFormatter()
+
+
+/**
+ * Converts an instant to a java.util.Date.
+ *
+ * Use only if (really, really) necessary.
+ */
+fun Instant.toDate(): Date {
+  return Date(this.toEpochMilli())
+}

@@ -48,6 +48,15 @@ actual interface Logger {
    */
   actual fun debug(msg: String?)
 
+  actual fun debug(msg: String?, t: Throwable?)
+
+  /**
+   * Debug the message with the object
+   */
+  fun debug(message: String, objectDebug: Any?)
+
+  fun debug(messageProvider: () -> String, objectDebug: Any?)
+
   /**
    * Is the logger instance enabled for the INFO level?
    *
@@ -76,6 +85,8 @@ actual interface Logger {
    */
   actual fun warn(msg: String?)
 
+  actual fun warn(msg: String?, t: Throwable?)
+
   /**
    * Is the logger instance enabled for the ERROR level?
    *
@@ -91,16 +102,10 @@ actual interface Logger {
    */
   actual fun error(msg: String?)
 
-  /**
-   * Debug the message with the object
-   */
-  fun debug(message: String, objectDebug: Any?)
-
-  fun debug(messageProvider: () -> String, objectDebug: Any?)
+  actual fun error(msg: String?, t: Throwable?)
 
 
   fun isEnabledForLevel(level: Level): Boolean
-
 }
 
 actual fun Logger.isEnabledForLevel(level: Level): Boolean {

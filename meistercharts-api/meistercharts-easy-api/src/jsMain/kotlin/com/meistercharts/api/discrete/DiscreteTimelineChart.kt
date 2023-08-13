@@ -188,7 +188,7 @@ class DiscreteTimelineChart internal constructor(
           @Zoomed val endZoomed = calculator.domainRelative2zoomedX(endRelative)
 
           val min = -endZoomed + windowWidth - 20.0
-          val max = (-startZoomed + 20.0 + gestalt.categoryAxisLayer.style.size).coerceAtLeast(min)
+          val max = (-startZoomed + 20.0 + gestalt.categoryAxisLayer.axisConfiguration.size).coerceAtLeast(min)
 
           return translation.coerceXWithin(min, max)
         }

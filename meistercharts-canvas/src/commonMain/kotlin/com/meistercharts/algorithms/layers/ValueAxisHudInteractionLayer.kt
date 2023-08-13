@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
@@ -30,13 +31,20 @@ import it.neckar.open.unit.number.MayBeNegative
  * Handles interactions for a [ValueAxisHudLayer]
  */
 class ValueAxisHudInteractionLayer(
-  hudLayers: SizedProvider<ValueAxisHudLayer>,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
+  constructor(
+    hudLayers: SizedProvider<ValueAxisHudLayer>,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(hudLayers), additionalConfiguration)
+
   constructor(hudLayer: ValueAxisHudLayer) : this(SizedProvider.single(hudLayer))
 
-  val configuration: Configuration = Configuration(hudLayers).also(additionalConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 
@@ -84,6 +92,7 @@ class ValueAxisHudInteractionLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(var hudLayers: SizedProvider<ValueAxisHudLayer>) {
     /**
      * Is called whenever the active element might have updated.

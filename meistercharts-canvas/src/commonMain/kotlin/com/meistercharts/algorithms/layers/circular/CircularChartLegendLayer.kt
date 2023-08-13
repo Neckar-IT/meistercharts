@@ -49,41 +49,43 @@ import it.neckar.open.unit.other.px
  * Shows the circular chart legend.
  */
 class CircularChartLegendLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
   constructor(
     valuesProvider: @Domain DoublesProvider,
-    styleConfiguration: Style.() -> Unit = {}
-  ) : this(Data(valuesProvider), styleConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ) : this(Configuration(valuesProvider), additionalConfiguration)
 
-  val style: Style = Style().also(styleConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    if (data.valuesProvider.isEmpty()) {
+    if (configuration.valuesProvider.isEmpty()) {
       return
     }
 
     //iterate over at most 4 elements
-    data.valuesProvider.fastForEachIndexed(4) { circleSegmentIndex, value ->
+    configuration.valuesProvider.fastForEachIndexed(4) { circleSegmentIndex, value ->
       val corner = Corner.get(circleSegmentIndex)
 
-      val paintable = style.segmentsImageProvider.valueAt(circleSegmentIndex) ?: TransparentPaintable(style.paintableSize)
+      val paintable = configuration.segmentsImageProvider.valueAt(circleSegmentIndex) ?: TransparentPaintable(configuration.paintableSize)
 
       //The anchor point where the values are painted
       val anchor = corner.getAnchor(gc.canvasSize)
 
-      gc.font(style.font)
-      gc.fill(style.fontColor)
+      gc.font(configuration.font)
+      gc.fill(configuration.fontColor)
       gc.saved {
-        val valueFormatted = style.valueFormat.format(value)
-        val captionToPaint = if (style.showCaption) {
-          ((style.segmentsLabelProvider.valueAt(circleSegmentIndex)?.resolve(paintingContext) ?: "-") + ": ") + valueFormatted
+        val valueFormatted = configuration.valueFormat.format(value)
+        val captionToPaint = if (configuration.showCaption) {
+          ((configuration.segmentsLabelProvider.valueAt(circleSegmentIndex)?.resolve(paintingContext) ?: "-") + ": ") + valueFormatted
         } else {
           valueFormatted
         }
@@ -101,10 +103,10 @@ class CircularChartLegendLayer(
    */
   private fun Corner.getAnchor(@px areaSize: Size): Anchoring {
     val location = when (this) {
-      Corner.TopLeft     -> Coordinates(style.padding.left, style.padding.top)
-      Corner.TopRight    -> Coordinates(areaSize.width - style.padding.right, style.padding.top)
-      Corner.BottomLeft  -> Coordinates(style.padding.left, areaSize.height - style.padding.bottom)
-      Corner.BottomRight -> Coordinates(areaSize.width - style.padding.right, areaSize.height - style.padding.bottom)
+      Corner.TopLeft     -> Coordinates(configuration.padding.left, configuration.padding.top)
+      Corner.TopRight    -> Coordinates(areaSize.width - configuration.padding.right, configuration.padding.top)
+      Corner.BottomLeft  -> Coordinates(configuration.padding.left, areaSize.height - configuration.padding.bottom)
+      Corner.BottomRight -> Coordinates(areaSize.width - configuration.padding.right, areaSize.height - configuration.padding.bottom)
     }
 
     val direction = when (this) {
@@ -122,12 +124,10 @@ class CircularChartLegendLayer(
     )
   }
 
-  class Data(
-    val valuesProvider: @Domain DoublesProvider
-  )
-
   @ConfigurationDsl
-  open class Style {
+  open class Configuration(
+    val valuesProvider: @Domain DoublesProvider
+  ) {
     var padding: Insets = Insets.of(20.0)
 
     var font: FontDescriptorFragment = FontDescriptorFragment.empty

@@ -49,14 +49,19 @@ import it.neckar.open.unit.other.px
  * Shows a text as layer in the center of the canvas
  */
 class TextLayer(
-  lines: LinesProvider,
-  styleConfiguration: Configuration.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
-  /**
-   * The style
-   */
-  val configuration: Configuration = Configuration(lines).apply(styleConfiguration)
+  constructor(
+    lines: LinesProvider,
+    additionalConfiguration: Configuration.() -> Unit = {},
+
+  ): this(Configuration(lines), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override var type: LayerType = LayerType.Content
 

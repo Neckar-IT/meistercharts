@@ -85,23 +85,23 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
   ////////////////////////////////////////////////////
   jsConfiguration.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      this.contentViewportMargin = this.contentViewportMargin.withSide(valueAxisLayer.style.side, it)
+      this.contentViewportMargin = this.contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
     }
   }
 
   jsConfiguration.categoryAxisStyle?.let { jsValueAxisStyle ->
     this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.style.applyCategoryAxisStyle(jsValueAxisStyle)
+    this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
     }
   }
   CategoryConverter.toCategoryImages(jsConfiguration)?.let { images ->
-    this.categoryAxisLayer.style.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
+    this.categoryAxisLayer.axisConfiguration.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
   }
 
   jsConfiguration.categories?.toCategoryNames()?.let {
@@ -117,7 +117,7 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     this.configuration.showValuesGrid = it
   }
 
-  this.categoryAxisGridLayer.data.applyLinesStyle(jsConfiguration.categoriesGridStyle)
+  this.categoryAxisGridLayer.configuration.applyLinesStyle(jsConfiguration.categoriesGridStyle)
   jsConfiguration.categoriesGridStyle?.visible?.let {
     this.configuration.showCategoryGrid = it
   }
@@ -212,7 +212,7 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     }
   }
   jsConfiguration.activeCategoryBackgroundColor.toColor()?.let {
-    this.categoryLayer.style.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it
   }
 
   jsConfiguration.overflowIndicatorStyle?.let {

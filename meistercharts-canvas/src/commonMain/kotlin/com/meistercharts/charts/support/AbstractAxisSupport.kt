@@ -52,7 +52,7 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
   fun getAxisLayer(key: Key): AxisLayer {
     return axisLayersCache.getOrStore(key) {
       createAxisLayer(key).also { layer ->
-        layer.style.titleVisible = BooleanProvider { isTitleAtTopComputed(key).not() }
+        layer.axisConfiguration.titleVisible = BooleanProvider { isTitleAtTopComputed(key).not() }
       }
     }
   }
@@ -101,7 +101,7 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
         AxisTitleLocation.AtValueAxis
       }
 
-      getAxisLayer(key).style.side.isLeftOrRight() -> {
+      getAxisLayer(key).axisConfiguration.side.isLeftOrRight() -> {
         AxisTitleLocation.AtTop
       }
 
@@ -146,21 +146,21 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
    */
   fun calculateContentViewportMarginTop(key: Key, chartSupport: ChartSupport): @px Double {
     val axisLayer = getAxisLayer(key)
-    if (axisLayer.style.side.isTopOrBottom()) {
+    if (axisLayer.axisConfiguration.side.isTopOrBottom()) {
       //No margin required if the layer is at the top or bottom
       return 0.0
     }
 
     //We know the layer is placed at left or right
-    if (axisLayer.style.hasNonBlankTitle(chartSupport).not()) {
+    if (axisLayer.axisConfiguration.hasNonBlankTitle(chartSupport).not()) {
       //No title is set
-      return axisLayer.style.calculatePreferredViewportMarginTop()
+      return axisLayer.axisConfiguration.calculatePreferredViewportMarginTop()
     }
 
     return when (getComputedAxisTitleLocation(key)) {
       AxisTitleLocation.AtValueAxis -> {
         //the title is painted at the axis itself. We need enough space for the ticks
-        axisLayer.style.calculatePreferredViewportMarginTop()
+        axisLayer.axisConfiguration.calculatePreferredViewportMarginTop()
       }
 
       AxisTitleLocation.AtTop -> {

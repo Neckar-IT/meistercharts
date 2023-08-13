@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
@@ -165,7 +166,7 @@ class DirectionalLinesLayer(
     }
   }
 
-
+  @ConfigurationDsl
   class Configuration(
 
     /**
@@ -236,7 +237,7 @@ class DirectionalLinesLayer(
           locations = hudLayerPaintingProperties.coordinatesCache.asCoordinatesProvider().as1(),
           directions = MultiProvider.invoke {
             //The anchor direction of the hud
-            when (valueAxisLayer.style.side) {
+            when (valueAxisLayer.axisConfiguration.side) {
               Side.Left -> Direction.CenterRight
               Side.Right -> Direction.CenterLeft
               Side.Top -> Direction.BottomCenter
@@ -248,7 +249,7 @@ class DirectionalLinesLayer(
         lineStyles = MultiProvider.always(LineStyle.SmallDashes)
 
         anchorGapHorizontal = MultiDoublesProvider { index ->
-          when (valueAxisLayer.style.tickOrientation) {
+          when (valueAxisLayer.axisConfiguration.tickOrientation) {
             //the line starts at the end of the arrow head
             Vicinity.Inside -> hudLayer.configuration.arrowHeadLength.valueAt(index)
             //The line starts at the tip of the arrow head
@@ -257,7 +258,7 @@ class DirectionalLinesLayer(
         }
 
         anchorGapVertical = MultiDoublesProvider { index ->
-          when (valueAxisLayer.style.tickOrientation) {
+          when (valueAxisLayer.axisConfiguration.tickOrientation) {
             //the line starts at the end of the arrow head
             Vicinity.Inside -> hudLayer.configuration.arrowHeadLength.valueAt(index)
             //The line starts at the tip of the arrow head

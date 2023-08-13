@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
@@ -30,19 +31,26 @@ import it.neckar.open.unit.number.MayBeNegative
  * Handles mouse events for a single [DirectionalLinesLayer]
  */
 class DirectionalLinesInteractionLayer(
-  /**
-   * The directional layers
-   */
-  initialDirectionalLinesLayers: SizedProvider<DirectionalLinesLayer>,
-  /**
-   * The additional configuration that is applied to the configuration object
-   */
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
+  constructor(
+    /**
+     * The directional layers
+     */
+    initialDirectionalLinesLayers: SizedProvider<DirectionalLinesLayer>,
+    /**
+     * The additional configuration that is applied to the configuration object
+     */
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(initialDirectionalLinesLayers), additionalConfiguration)
+
   constructor(layer: DirectionalLinesLayer) : this(SizedProvider.single(layer))
 
-  val configuration: Configuration = Configuration(initialDirectionalLinesLayers).also(additionalConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 
@@ -80,6 +88,7 @@ class DirectionalLinesInteractionLayer(
     //noop
   }
 
+  @ConfigurationDsl
   class Configuration(var directionalLinesLayers: SizedProvider<DirectionalLinesLayer>) {
     /**
      * Is called whenever the active line might have updated.

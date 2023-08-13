@@ -29,10 +29,8 @@ import com.meistercharts.api.withValues
 import com.meistercharts.charts.BarChartStackedGestalt
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartStackedExtensions")
 
@@ -76,11 +74,11 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.minBarDistance?.let {
-    (this.categoryLayer.style.layoutCalculator as DefaultCategoryLayouter).style.minCategorySize = it
+    (this.categoryLayer.configuration.layoutCalculator as DefaultCategoryLayouter).style.minCategorySize = it
   }
 
   jsStyle.maxBarDistance?.let {
-    (this.categoryLayer.style.layoutCalculator as DefaultCategoryLayouter).style.maxCategorySize = it
+    (this.categoryLayer.configuration.layoutCalculator as DefaultCategoryLayouter).style.maxCategorySize = it
   }
 
   jsStyle.segmentColors?.let { colorCodes ->
@@ -105,19 +103,19 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
 
   jsStyle.categoryAxisStyle?.let { jsValueAxisStyle ->
     this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.style.applyCategoryAxisStyle(jsValueAxisStyle)
+    this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
     }
   }
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
     }
   }
 

@@ -50,13 +50,12 @@ class CategoryAxisSupport<Key>(
 
   override fun createAxisLayer(key: Key): CategoryAxisLayer {
     return CategoryAxisLayer(
-      CategoryAxisLayer.Data(
-        labelsProvider = configuration.labelsProvider.invoke(key),
-        layoutProvider = {
-          configuration.layoutProvider(key)
-        })
+      labelsProvider = configuration.labelsProvider.invoke(key),
+      layoutProvider = {
+        configuration.layoutProvider(key)
+      }
     ).also { layer ->
-      configuration.axisConfiguration(layer.style, key, layer, preferredAxisTitleLocation)
+      configuration.axisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
     }
   }
 
@@ -92,7 +91,7 @@ class CategoryAxisSupport<Key>(
         field = value
         //Apply the new configuration to existing
         axisLayersCache.forEach { key, layer ->
-          value.invoke(layer.style, key, layer, preferredAxisTitleLocation)
+          value.invoke(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
         }
       }
 
@@ -146,7 +145,7 @@ class CategoryAxisSupport<Key>(
   }
 }
 
-typealias CategoryAxisConfiguration<Key> = CategoryAxisLayer.Style.(Key, axis: CategoryAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
+typealias CategoryAxisConfiguration<Key> = CategoryAxisLayer.Configuration.(Key, axis: CategoryAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
 
 
 inline fun CategoryAxisSupport<Unit>.getTopTitleLayer(): AxisTopTopTitleLayer {
@@ -165,7 +164,7 @@ inline fun CategoryAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinl
  * Creates a category axis support for this (single) category layer
  */
 fun CategoryLayer<*>.createCategoryAxisSupport(
-  labelsProvider: SizedLabelsProvider = data.modelProvider().createCategoryLabelsProvider(),
+  labelsProvider: SizedLabelsProvider = configuration.modelProvider().createCategoryLabelsProvider(),
   additionalConfiguration: CategoryAxisSupport<Unit>.Configuration.() -> Unit = {},
 ): CategoryAxisSupport<Unit> {
   return CategoryAxisSupport.single(

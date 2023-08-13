@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -45,7 +46,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
 
   override val type: LayerType = LayerType.Content
 
-  val style: Style = Style()
+  val configuration: Configuration = Configuration()
 
   /**
    * Contains the current ui state
@@ -196,7 +197,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
 
     handleBounds.ensureSize(Direction.cornersAndSides.size)
 
-    val handleDiameter = style.handleDiameter
+    val handleDiameter = configuration.handleDiameter
 
     //
     // Attention! The order matters! Must be the same order as in [toIndex()] below
@@ -255,7 +256,8 @@ class ResizeByHandlesLayer : AbstractLayer() {
     resizeHandlesPaintable.paint(paintingContext)
   }
 
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * The size (diameter) of one handle
      */

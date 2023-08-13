@@ -25,10 +25,10 @@ import it.neckar.open.unit.other.px
  * Paints (endless lines) at zero
  */
 class ZeroLinesLayer(
-  styleConfiguration: Style.() -> Unit = {}
+  configuration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration().also(configuration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -51,7 +51,7 @@ class ZeroLinesLayer(
   }
 
   @ConfigurationDsl
-  open class Style {
+  open class Configuration {
     /**
      * The color for the lines
      */

@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers.legend
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.paintTextBox
@@ -110,6 +111,7 @@ class VerticallyStackedLabelsPaintable(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * The labels that are shown on the right side of the legend.

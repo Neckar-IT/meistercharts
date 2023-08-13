@@ -23,6 +23,7 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
@@ -99,6 +100,7 @@ class TooltipInteractionLayer<T>(
     // Noop
   }
 
+  @ConfigurationDsl
   class Configuration<T>(
     /**
      * Is called for new tooltip locations

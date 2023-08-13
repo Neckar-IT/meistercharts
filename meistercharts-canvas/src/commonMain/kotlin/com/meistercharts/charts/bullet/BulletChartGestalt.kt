@@ -18,7 +18,7 @@ package com.meistercharts.charts.bullet
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import com.meistercharts.range.ValueRange
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
@@ -140,7 +140,7 @@ class BulletChartGestalt constructor(
   /**
    * Paints the bullets
    */
-  val categoryLayer: CategoryLayer<CategoryModelBulletChart> = CategoryLayer(CategoryLayer.Data<CategoryModelBulletChart> { categoryModel }) {
+  val categoryLayer: CategoryLayer<CategoryModelBulletChart> = CategoryLayer({ categoryModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = bulletChartPainter
 
@@ -208,7 +208,7 @@ class BulletChartGestalt constructor(
   ) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
-      paintRange = AxisStyle.PaintRange.ContentArea
+      paintRange = AxisConfiguration.PaintRange.ContentArea
       side = Side.Left
       ticks = ticks.withMaxNumberOfTicks(10)
     }
@@ -268,7 +268,7 @@ class BulletChartGestalt constructor(
       activeCategoryIndexProvider = configuration::activeCategoryIndexOrNull,
       categorySize = {
         val layout = categoryLayer.paintingVariables().layout
-        categoryLayer.style.activeCategoryBackgroundSize(layout.boxSize)
+        categoryLayer.configuration.activeCategoryBackgroundSize(layout.boxSize)
       },
       boxLayout = {
         categoryLayer.paintingVariables().layout
@@ -290,10 +290,10 @@ class BulletChartGestalt constructor(
   init {
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       valueAxisGridLayer.configuration.passpartout = it
-      categoryAxisGridLayer.data.applyPasspartout(it)
+      categoryAxisGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.style.size = it[valueAxisLayer.style.side]
-      categoryAxisLayer.style.size = it[categoryAxisLayer.style.side]
+      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
+      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
     }
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
@@ -316,8 +316,8 @@ class BulletChartGestalt constructor(
            * Only clip the sides where the axes are.
            * We must not clip the other sides (e.g. for labels)
            */
-          val categoryAxisSide = categoryAxisLayer.style.side
-          val valueAxisSide = valueAxisLayer.style.side
+          val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
+          val valueAxisSide = valueAxisLayer.axisConfiguration.side
           // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
           val thresholdSide = if (configuration.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
@@ -374,9 +374,9 @@ class BulletChartGestalt constructor(
      * Returns the active category index - or null if no category is active
      */
     var activeCategoryIndexOrNull: CategoryIndex?
-      get() = categoryLayer.style.activeCategoryIndex
+      get() = categoryLayer.configuration.activeCategoryIndex
       internal set(value) {
-        categoryLayer.style.activeCategoryIndex = value
+        categoryLayer.configuration.activeCategoryIndex = value
       }
 
     /**
@@ -448,9 +448,9 @@ class BulletChartGestalt constructor(
 
       //Update the value axis layer
       if (valueRange is LinearValueRange) {
-        valueAxisLayer.style.applyLinearScale()
+        valueAxisLayer.axisConfiguration.applyLinearScale()
       } else {
-        valueAxisLayer.style.applyLogarithmicScale()
+        valueAxisLayer.axisConfiguration.applyLogarithmicScale()
       }
     }
 
@@ -458,16 +458,16 @@ class BulletChartGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.tickFont = font
-      valueAxisLayer.style.tickFont = font
+      categoryAxisLayer.axisConfiguration.tickFont = font
+      valueAxisLayer.axisConfiguration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.style.titleFont = font
-      valueAxisLayer.style.titleFont = font
+      categoryAxisLayer.axisConfiguration.titleFont = font
+      valueAxisLayer.axisConfiguration.titleFont = font
     }
 
     var balloonTooltipValueLabelFormat: CachedNumberFormat = decimalFormat
@@ -477,9 +477,9 @@ class BulletChartGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyHorizontalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.style.side = Side.Left
-      valueAxisLayer.style.side = Side.Bottom
+      categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
+      categoryAxisLayer.axisConfiguration.side = Side.Left
+      valueAxisLayer.axisConfiguration.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
     }
 
@@ -488,9 +488,9 @@ class BulletChartGestalt constructor(
      * This method modifies multiple layers and properties to match the new orientation
      */
     fun applyVerticalConfiguration() {
-      categoryLayer.style.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.style.side = Side.Bottom
-      valueAxisLayer.style.side = Side.Left
+      categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
+      categoryAxisLayer.axisConfiguration.side = Side.Bottom
+      valueAxisLayer.axisConfiguration.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
     }
 
@@ -499,7 +499,7 @@ class BulletChartGestalt constructor(
      * The orientation of the chart
      */
     val orientation: CategoryChartOrientation
-      get() = categoryLayer.style.orientation
+      get() = categoryLayer.configuration.orientation
 
     var showTooltips: Boolean = true
 

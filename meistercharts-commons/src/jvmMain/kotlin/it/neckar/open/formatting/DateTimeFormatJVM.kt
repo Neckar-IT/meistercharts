@@ -5,11 +5,13 @@ import it.neckar.open.i18n.convert
 import it.neckar.open.kotlin.lang.SpecialChars
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.time.DateUtils
+import it.neckar.open.time.toDoubleMillis
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.time.temporal.TemporalQueries
 
 actual class DateTimeFormatIso8601 : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
@@ -32,6 +34,21 @@ actual class TimeFormatIso8601 : DateTimeFormat {
 actual class DateTimeFormatUTC : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return DateUtils.toOffsetDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).withOffsetSameInstant(ZoneOffset.UTC).format(it.neckar.open.time.utcDateTimeFormat)
+  }
+
+  actual companion object {
+    /**
+     * Parses the UTC string to a timestamp
+     */
+    actual fun parse(formattedUtc: String, i18n: I18nConfiguration): Double {
+      it.neckar.open.time.utcDateTimeFormat.parse(formattedUtc).let {
+        val date = it.query(TemporalQueries.localDate())
+        val time = it.query(TemporalQueries.localTime())
+
+        val instant = ZonedDateTime.of(date, time, ZoneOffset.UTC).toInstant()
+        return instant.toDoubleMillis()
+      }
+    }
   }
 }
 

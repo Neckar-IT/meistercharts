@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintMark
@@ -37,27 +38,33 @@ import it.neckar.open.unit.other.px
  * This layer must only be used for vertical axis
  */
 class AxisTopTopTitleLayer(
-  /**
-   * Returns the x anchor location
-   */
-  xAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
-
-  /**
-   * Returns the y anchor location
-   */
-  yAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
-
-  /**
-   * Provides the label for the axis
-   */
-  titleProvider: AxisTitleProvider,
-
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
+  ) : AbstractLayer() {
 
-  val configuration: Configuration = Configuration(
-    xAnchorLocation, yAnchorLocation, titleProvider
-  ).also(additionalConfiguration)
+  constructor(
+    /**
+     * Returns the x anchor location
+     */
+    xAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
+
+    /**
+     * Returns the y anchor location
+     */
+    yAnchorLocation: @Window DoubleProvider1<LayerPaintingContext>,
+
+    /**
+     * Provides the label for the axis
+     */
+    titleProvider: AxisTitleProvider,
+
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(xAnchorLocation, yAnchorLocation, titleProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
+
 
   override val type: LayerType = LayerType.Content
 
@@ -102,6 +109,7 @@ class AxisTopTopTitleLayer(
     )
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Returns the x anchor location
@@ -157,10 +165,10 @@ class AxisTopTopTitleLayer(
         },
 
         yAnchorLocation = {
-          when (axisLayer.style.paintRange) {
-            AxisStyle.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
+          when (axisLayer.axisConfiguration.paintRange) {
+            AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
-            AxisStyle.PaintRange.Continuous -> {
+            AxisConfiguration.PaintRange.Continuous -> {
               //Paint in the content viewport
               it.chartCalculator.contentViewportMinY()
             }
@@ -168,12 +176,12 @@ class AxisTopTopTitleLayer(
         },
 
         titleProvider = { textService, i18nConfiguration ->
-          axisLayer.style.titleProvider?.invoke(textService, i18nConfiguration)
+          axisLayer.axisConfiguration.titleProvider?.invoke(textService, i18nConfiguration)
         }
       ) {
-        titleMaxWidth = DoubleProvider { axisLayer.style.size }
+        titleMaxWidth = DoubleProvider { axisLayer.axisConfiguration.size }
         anchorDirection = {
-          when (axisLayer.style.tickOrientation) {
+          when (axisLayer.axisConfiguration.tickOrientation) {
             Vicinity.Inside -> Direction.BottomLeft
             Vicinity.Outside -> Direction.BottomRight
           }
@@ -190,10 +198,10 @@ class AxisTopTopTitleLayer(
         },
 
         yAnchorLocation = {
-          when (axisLayer.style.paintRange) {
-            AxisStyle.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
+          when (axisLayer.axisConfiguration.paintRange) {
+            AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
-            AxisStyle.PaintRange.Continuous -> {
+            AxisConfiguration.PaintRange.Continuous -> {
               //Paint in the content viewport
               it.chartCalculator.contentViewportMinY()
             }
@@ -201,12 +209,12 @@ class AxisTopTopTitleLayer(
         },
 
         titleProvider = { textService, i18nConfiguration ->
-          axisLayer.style.titleProvider?.invoke(textService, i18nConfiguration)
+          axisLayer.axisConfiguration.titleProvider?.invoke(textService, i18nConfiguration)
         }
       ) {
-        titleMaxWidth = DoubleProvider { axisLayer.style.size }
+        titleMaxWidth = DoubleProvider { axisLayer.axisConfiguration.size }
         anchorDirection = {
-          when (axisLayer.style.tickOrientation) {
+          when (axisLayer.axisConfiguration.tickOrientation) {
             Vicinity.Inside -> Direction.BottomLeft
             Vicinity.Outside -> Direction.BottomRight
           }

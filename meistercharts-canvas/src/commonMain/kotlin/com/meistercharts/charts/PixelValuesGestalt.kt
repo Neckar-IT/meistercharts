@@ -22,7 +22,7 @@ import com.meistercharts.zoom.autoScaleByZoomSupport
 import com.meistercharts.axis.AxisEndConfiguration
 import it.neckar.geometry.AxisSelection
 import com.meistercharts.zoom.BoundsProvider
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.ClippingLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.Limit
@@ -112,7 +112,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     tickOrientation = Vicinity.Outside
     ticksFormat = intFormat
     axisLineWidth = 2.0
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
   }.also {
     it.data.valueRangeProvider = {
       style.yValueAxisValueRangeOverride ?: style.yValueRange
@@ -126,7 +126,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     side = Side.Bottom
     tickOrientation = Vicinity.Outside
     axisLineWidth = 2.0
-    paintRange = AxisStyle.PaintRange.ContentArea
+    paintRange = AxisConfiguration.PaintRange.ContentArea
     axisEndConfiguration = AxisEndConfiguration.Exact
     ticksFormat = intFormat
   }.also {
@@ -170,8 +170,8 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }
 
-  val lineChartLayer: ClippingLayer<LineChartLayer> = LineChartLayer(LineChartLayer.Data(domainRelativeModel)) {
-    pointPainters = object : MultiProvider<LinesChartModelIndex, PointPainter> {
+  val lineChartLayer: ClippingLayer<LineChartLayer> = LineChartLayer(LineChartLayer.Configuration(domainRelativeModel)).apply {
+    configuration.pointPainters = object : MultiProvider<LinesChartModelIndex, PointPainter> {
       val pointStylePainter = PointStylePainter(PointStyle.Dot, snapXValues = true, snapYValues = true)
 
       override fun valueAt(index: Int): PointPainter {
@@ -184,7 +184,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
       }
     }
 
-    linePainters = object : MultiProvider<LinesChartModelIndex, LinePainter> {
+    configuration.linePainters = object : MultiProvider<LinesChartModelIndex, LinePainter> {
       val directLinePainter = DirectLinePainter(snapXValues = true, snapYValues = true)
       override fun valueAt(index: Int): LinePainter {
         if (!style.showLines) {
@@ -194,7 +194,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
       }
     }
 
-    lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
+    configuration.lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
       override fun valueAt(index: Int): LineStyle {
         if (!style.showLines) {
           return LineStyle.Continuous // don't care
@@ -219,7 +219,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
   }.clipped()
 
-  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(LimitsLayer.Data(model.limits.asSizedProvider())) {
+  val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(model.limits.asSizedProvider()) {
     orientation = Orientation.Horizontal
     fill = Color.rgba(255, 255, 255, 0.85)
     stroke = Color.white
@@ -279,7 +279,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   init {
     style.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
 
-    yValueAxisLayer.style.apply {
+    yValueAxisLayer.axisConfiguration.apply {
     }
 
     fitContentInViewportGestalt.contentViewportMargin = Insets.of(20.0, 20.0, 60.0, 75.0)
@@ -287,18 +287,18 @@ class PixelValuesGestalt @JvmOverloads constructor(
       val withoutTop = it.withTop(0.0)
       val contentInsets = it.withTop(0.0).withRight(0.0)
 
-      yValueAxisLayer.style.size = it.left
-      xValueAxisLayer.style.size = it.bottom
+      yValueAxisLayer.axisConfiguration.size = it.left
+      xValueAxisLayer.axisConfiguration.size = it.bottom
 
       horizontalGridLayer.configuration.passpartout = withoutTop
       verticalGridLayer.configuration.passpartout = withoutTop
 
-      clippedZeroLinesLayer.style.insets = { contentInsets }
-      limitsLayer.style.insets = { contentInsets }
-      lineChartLayer.style.insets = { contentInsets }
-      liveEdgesLayer.style.insets = { contentInsets }
-      detectedEdgesLayer.style.insets = { contentInsets }
-      teachEdgesLayer.style.insets = { contentInsets }
+      clippedZeroLinesLayer.configuration.insets = { contentInsets }
+      limitsLayer.configuration.insets = { contentInsets }
+      lineChartLayer.configuration.insets = { contentInsets }
+      liveEdgesLayer.configuration.insets = { contentInsets }
+      detectedEdgesLayer.configuration.insets = { contentInsets }
+      teachEdgesLayer.configuration.insets = { contentInsets }
     }
   }
 

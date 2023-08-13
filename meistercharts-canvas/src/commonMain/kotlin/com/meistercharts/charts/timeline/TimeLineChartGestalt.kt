@@ -16,7 +16,7 @@
 package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.layers.AbstractLayer
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
@@ -312,7 +312,7 @@ class TimeLineChartGestalt
         AxisTitleLocation.AtTop -> 80.0
       }
       tickOrientation = Vicinity.Inside
-      paintRange = AxisStyle.PaintRange.Continuous
+      paintRange = AxisConfiguration.PaintRange.Continuous
 
       ticksFormat = decimalFormat2digits //Apply the default
       titleProvider = { textService, i18nConfiguration -> data.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
@@ -478,28 +478,26 @@ class TimeLineChartGestalt
    * ATTENTION: This layer only works with *visible* sizes/providers.
    */
   val enumCategoryAxisLayer: CategoryAxisLayer = CategoryAxisLayer(
-    CategoryAxisLayer.Data(
-      labelsProvider = object : SizedLabelsProvider {
-        override fun size(param1: TextService, param2: I18nConfiguration): Int {
-          return historyEnumLayer.visibleIndices.size()
-        }
-
-        override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-          val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.style.actualVisibleEnumSeriesIndices.valueAt(index)
-          val labelTextKey = this@TimeLineChartGestalt.style.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
-          return labelTextKey.resolve(textService, i18nConfiguration)
-        }
-      },
-      layoutProvider = {
-        historyEnumLayer.paintingVariables().stripesLayout
+    labelsProvider = object : SizedLabelsProvider {
+      override fun size(param1: TextService, param2: I18nConfiguration): Int {
+        return historyEnumLayer.visibleIndices.size()
       }
-    ),
+
+      override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
+        val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.style.actualVisibleEnumSeriesIndices.valueAt(index)
+        val labelTextKey = this@TimeLineChartGestalt.style.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
+        return labelTextKey.resolve(textService, i18nConfiguration)
+      }
+    },
+    layoutProvider = {
+      historyEnumLayer.paintingVariables().stripesLayout
+    }
   ) {
     side = Side.Left
     //titleProvider = "Enums".asProvider2() //title is necessary to align the layout with the value axis
     tickOrientation = Vicinity.Outside
     axisEndConfiguration = AxisEndConfiguration.Default
-    paintRange = AxisStyle.PaintRange.ContentArea
+    paintRange = AxisConfiguration.PaintRange.ContentArea
     background = {
       style.valueAxesBackground
     }
@@ -533,7 +531,7 @@ class TimeLineChartGestalt
     override fun paint(paintingContext: LayerPaintingContext) {
       //Paint horizontal line
       val gc = paintingContext.gc
-      gc.stroke(enumCategoryAxisLayer.style.lineColor())
+      gc.stroke(enumCategoryAxisLayer.axisConfiguration.lineColor())
       val y = gc.height - viewportSupport.decimalsAreaViewportMarginBottom()
       gc.strokeLine(0.0, y, gc.width, y)
     }
@@ -584,7 +582,7 @@ class TimeLineChartGestalt
      */
     fun enumsAreaViewportMarginBottom(): @Zoomed Double {
       return if (style.showTimeAxis) {
-        style.timeAxisSize + timeAxisLayer.style.margin.bottom
+        style.timeAxisSize + timeAxisLayer.axisConfiguration.margin.bottom
       } else {
         0.0
       }
@@ -778,13 +776,12 @@ class TimeLineChartGestalt
    * The cross wire layer for the decimal values
    */
   val crossWireLayerDecimalValues: CrossWireLayer = CrossWireLayer(
-    CrossWireLayer.Data(
-      valueLabelsProvider = crossWireDecimalValuesLabelsProvider,
-      currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
-        val chartCalculator = paintingContext.chartCalculator
-        val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-        style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
-      })
+    valueLabelsProvider = crossWireDecimalValuesLabelsProvider,
+    currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
+      val chartCalculator = paintingContext.chartCalculator
+      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
+      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+    }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
     wireWidth = 1.0
@@ -804,6 +801,7 @@ class TimeLineChartGestalt
       crossWireDecimalValuesLabelsProvider.labelTextColorCache[labelIndex]
     }
   }
+
 
   /**
    * Required as field to be able to access the painting properties
@@ -967,14 +965,12 @@ class TimeLineChartGestalt
    * Cross wire layer for the enum values
    */
   val crossWireLayerEnumValues: CrossWireLayer = CrossWireLayer(
-    CrossWireLayer.Data(
-      valueLabelsProvider = crossWireEnumValuesLabelsProvider,
-      currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
-        val chartCalculator = paintingContext.chartCalculator
-        val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-        style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
-      },
-    )
+    valueLabelsProvider = crossWireEnumValuesLabelsProvider,
+    currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
+      val chartCalculator = paintingContext.chartCalculator
+      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
+      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+    }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
     wireWidth = 1.0
@@ -993,7 +989,6 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { index: @LabelIndex Int ->
-      //The provided box style
       crossWireEnumValuesLabelsProvider.boxStylesCache[index]
     }
 
@@ -1034,7 +1029,7 @@ class TimeLineChartGestalt
     }
 
     style.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
-      timeAxisLayer.data.contentAreaTimeRange = newContentAreaTimeRange
+      timeAxisLayer.configuration.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
     }
 
@@ -1055,7 +1050,7 @@ class TimeLineChartGestalt
     }
 
     style.timeAxisSizeProperty.consumeImmediately {
-      timeAxisLayer.style.size = it
+      timeAxisLayer.axisConfiguration.size = it
       //updateValueAxisLayers()
     }
 
@@ -1072,7 +1067,7 @@ class TimeLineChartGestalt
     //Apply the configuration again - when it is updated
     style.valueAxisStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachAxisLayer { decimalDataSeriesIndex, valueAxisLayer ->
-        configuration(valueAxisLayer.style, decimalDataSeriesIndex)
+        configuration(valueAxisLayer.axisConfiguration, decimalDataSeriesIndex)
       }
     }
 
@@ -1473,7 +1468,7 @@ class TimeLineChartGestalt
      * The cross wire label styles - for the cross wire for decimal values
      */
     var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider {
-      BoxStyle(fill = Theme.chartColors().valueAt(it), borderColor = Color.white, padding = CrossWireLayer.Style.DefaultLabelBoxPadding, radii = BorderRadius.all2, shadow = Shadow.LightDrop)
+      BoxStyle(fill = Theme.chartColors().valueAt(it), borderColor = Color.white, padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding, radii = BorderRadius.all2, shadow = Shadow.LightDrop)
     }
 
     /**
@@ -1508,7 +1503,7 @@ class TimeLineChartGestalt
       BoxStyle(
         fill = null, //use color for current value
         borderColor = Color.white,
-        padding = CrossWireLayer.Style.DefaultLabelBoxPadding,
+        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
         shadow = Shadow.LightDrop
       )

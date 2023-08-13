@@ -21,6 +21,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.ZIndex
 import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.LineSpacing
@@ -61,20 +62,28 @@ typealias HudLabelsProvider = MultiProvider1<HudElementIndex, List<String>, Laye
  *
  */
 class ValueAxisHudLayer(
-  /**
-   * Provides the anchor location of the hud element.
-   * If NaN is returned, the element is not painted
-   */
-  locations: @MayBeNaN @Window CoordinatesProvider1<LayerPaintingContext>,
-
-  /**
-   * Provides the text that is painted within the HUD element
-   */
-  labels: HudLabelsProvider,
-
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
-  val configuration: Configuration = Configuration(locations, labels).also(additionalConfiguration)
+  ) : AbstractLayer() {
+
+  constructor(
+    /**
+     * Provides the anchor location of the hud element.
+     * If NaN is returned, the element is not painted
+     */
+    locations: @MayBeNaN @Window CoordinatesProvider1<LayerPaintingContext>,
+
+    /**
+     * Provides the text that is painted within the HUD element
+     */
+    labels: HudLabelsProvider,
+
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(locations, labels), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 
@@ -201,6 +210,7 @@ class ValueAxisHudLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * Provides the anchor location of the hud element.
@@ -348,12 +358,12 @@ fun ValueAxisLayer.hudLayer(
       override fun xAt(index: Int, param1: LayerPaintingContext): @Window Double {
         val chartCalculator = param1.chartCalculator
 
-        return when (style.orientation) {
+        return when (axisConfiguration.orientation) {
           Orientation.Vertical -> paintingVariables().axisLineLocation
           Orientation.Horizontal -> {
             @DomainRelative val domainRelative = data.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
 
-            if (style.paintRange == AxisStyle.PaintRange.ContentArea) {
+            if (axisConfiguration.paintRange == AxisConfiguration.PaintRange.ContentArea) {
               if (ChartCalculator.inContentArea(domainRelative).not()) {
                 //Not within content area
                 return Double.NaN
@@ -369,11 +379,11 @@ fun ValueAxisLayer.hudLayer(
       override fun yAt(index: Int, param1: LayerPaintingContext): @Window Double {
         val chartCalculator = param1.chartCalculator
 
-        return when (style.orientation) {
+        return when (axisConfiguration.orientation) {
           Orientation.Vertical -> {
             @DomainRelative val domainRelative = data.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
 
-            if (style.paintRange == AxisStyle.PaintRange.ContentArea) {
+            if (axisConfiguration.paintRange == AxisConfiguration.PaintRange.ContentArea) {
               if (ChartCalculator.inContentArea(domainRelative).not()) {
                 //Not within content area
                 return Double.NaN
@@ -389,13 +399,13 @@ fun ValueAxisLayer.hudLayer(
       }
     }, labels = { index, _ ->
       val value = domainValues.valueAt(index)
-      listOf(style.ticksFormat.format(value))
+      listOf(axisConfiguration.ticksFormat.format(value))
     }
   ) {
     anchorDirections = MultiProvider {
-      val tickOrientation = style.tickOrientation
+      val tickOrientation = axisConfiguration.tickOrientation
 
-      when (style.side) {
+      when (axisConfiguration.side) {
         Side.Left -> when (tickOrientation) {
           Vicinity.Inside -> Direction.CenterLeft
           Vicinity.Outside -> Direction.CenterRight
@@ -419,7 +429,7 @@ fun ValueAxisLayer.hudLayer(
     }
 
     maxWidth = MultiDoublesProvider {
-      when (style.side) {
+      when (axisConfiguration.side) {
         Side.Left,
         Side.Right,
         -> {
@@ -427,7 +437,7 @@ fun ValueAxisLayer.hudLayer(
           // - width of axis lines
           // - arrow size
           // - box insets
-          style.size - style.axisLineWidth - arrowHeadLength.valueAt(it) - boxStyles.valueAt(it).padding.offsetWidth
+          axisConfiguration.size - axisConfiguration.axisLineWidth - arrowHeadLength.valueAt(it) - boxStyles.valueAt(it).padding.offsetWidth
         }
 
         Side.Top,

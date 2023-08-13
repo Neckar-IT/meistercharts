@@ -66,6 +66,12 @@ class LoggerImplJs private constructor(
     }
   }
 
+  override fun debug(msg: String?, t: Throwable?) {
+    if (isDebugEnabled()) {
+      console.debug("[$shortenedLoggerName] ${t?.message}", t)
+    }
+  }
+
   override fun isInfoEnabled(): Boolean {
     return Level.INFO.isEnabled(getEffectiveLogLevel())
   }
@@ -86,8 +92,20 @@ class LoggerImplJs private constructor(
     }
   }
 
+  override fun warn(msg: String?, t: Throwable?) {
+    if (isWarnEnabled()) {
+      console.debug("[$shortenedLoggerName] ${t?.message}", t)
+    }
+  }
+
   override fun isErrorEnabled(): Boolean {
     return Level.ERROR.isEnabled(getEffectiveLogLevel())
+  }
+
+  override fun error(msg: String?, t: Throwable?) {
+    if (isErrorEnabled()) {
+      console.debug("[$shortenedLoggerName] ${t?.message}", t)
+    }
   }
 
   /**

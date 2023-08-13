@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts.refs
 
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
 import com.meistercharts.algorithms.layers.TimeAxisLayer
@@ -167,29 +167,27 @@ class DiscreteTimelineChartGestalt(
    * ATTENTION: This layer only works with *visible* sizes/providers.
    */
   val categoryAxisLayer: CategoryAxisLayer = CategoryAxisLayer(
-    CategoryAxisLayer.Data(
-      labelsProvider = object : SizedLabelsProvider {
-        override fun size(param1: TextService, param2: I18nConfiguration): Int {
-          return configuration.actualVisibleReferenceEntrySeriesIndices.size()
-        }
-
-        override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String {
-          val dataSeriesIndex: ReferenceEntryDataSeriesIndex = configuration.actualVisibleReferenceEntrySeriesIndices.valueAt(index)
-          val labelTextKey = configuration.referenceEntryCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
-          return labelTextKey.resolve(param1, param2)
-        }
-      },
-      layoutProvider = {
-        historyReferenceEntryLayer.paintingVariables().stripesLayout
+    labelsProvider = object : SizedLabelsProvider {
+      override fun size(param1: TextService, param2: I18nConfiguration): Int {
+        return configuration.actualVisibleReferenceEntrySeriesIndices.size()
       }
-    ),
+
+      override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String {
+        val dataSeriesIndex: ReferenceEntryDataSeriesIndex = configuration.actualVisibleReferenceEntrySeriesIndices.valueAt(index)
+        val labelTextKey = configuration.referenceEntryCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
+        return labelTextKey.resolve(param1, param2)
+      }
+    },
+    layoutProvider = {
+      historyReferenceEntryLayer.paintingVariables().stripesLayout
+    }
   ) {
     side = Side.Left
 
     size = 130.0
 
     tickOrientation = Vicinity.Outside
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
     background = { Color.web("rgba(255,255,255,0.5)") }
     axisLabelPainter = DefaultCategoryAxisLabelPainter {
       wrapMode = LabelWrapMode.IfNecessary
@@ -314,7 +312,7 @@ class DiscreteTimelineChartGestalt(
    */
   private fun viewportMarginBottom(): @Zoomed Double {
     return if (configuration.showTimeAxis) {
-      timeAxisLayer.style.size + timeAxisLayer.style.margin.bottom
+      timeAxisLayer.axisConfiguration.size + timeAxisLayer.axisConfiguration.margin.bottom
     } else {
       0.0
     }
@@ -388,7 +386,7 @@ class DiscreteTimelineChartGestalt(
 
       configuration.contentAreaTimeRangeProperty.consumeImmediately {
         chartSupport.translateOverTime.contentAreaTimeRangeX = it
-        timeAxisLayer.data.contentAreaTimeRange = it
+        timeAxisLayer.configuration.contentAreaTimeRange = it
         chartSupportOrNull()?.zoomAndTranslationSupport?.resetToDefaults(axisSelection = AxisSelection.X, reason = UpdateReason.ConfigurationUpdate)
       }
       chartSupport.rootChartState.windowSizeProperty.consumeImmediately {

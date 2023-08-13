@@ -346,7 +346,7 @@ fun Layers.addZoomAndTranslation(
     addLayer(this)
 
     //add the rubber band visualization layer
-    val rubberBandVisualizationLayer = RubberBandVisualizationLayer(RubberBandVisualizationLayer.Data({ rubberBandStartLocation }, { rubberBandCurrentLocation }))
+    val rubberBandVisualizationLayer = RubberBandVisualizationLayer(RubberBandVisualizationLayer.Configuration({ rubberBandStartLocation }, { rubberBandCurrentLocation }))
     addLayer(rubberBandVisualizationLayer)
   }
 }

@@ -34,17 +34,24 @@ import it.neckar.open.provider.MultiProviderIndexContextAnnotation
  * A layer that displays lines
  */
 open class LineChartLayer(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    model: LinesChartModel,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(model), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType
     get() = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    data.model.linesCount.fastFor { lineIndex ->
+    configuration.model.linesCount.fastFor { lineIndex ->
       paintLine(paintingContext, lineIndex)
     }
   }
@@ -54,7 +61,7 @@ open class LineChartLayer(
    */
   private fun paintLine(paintingContext: LayerPaintingContext, lineIndex: Int) {
     //Skip all empty lines
-    val dataPointCount = data.model.pointsCount(lineIndex)
+    val dataPointCount = configuration.model.pointsCount(lineIndex)
     if (dataPointCount <= 0) {
       return
     }
@@ -62,14 +69,14 @@ open class LineChartLayer(
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
-    style.lineStyles.valueAt(lineIndex).apply(gc)
+    configuration.lineStyles.valueAt(lineIndex).apply(gc)
 
-    val linePainter = style.linePainters.valueAt(lineIndex)
+    val linePainter = configuration.linePainters.valueAt(lineIndex)
 
     linePainter.begin(gc)
     dataPointCount.fastFor { pointIndex ->
-      @Window val x = chartCalculator.domainRelative2windowX(data.model.valueX(lineIndex, pointIndex))
-      @Window val y = chartCalculator.domainRelative2windowY(data.model.valueY(lineIndex, pointIndex))
+      @Window val x = chartCalculator.domainRelative2windowX(configuration.model.valueX(lineIndex, pointIndex))
+      @Window val y = chartCalculator.domainRelative2windowY(configuration.model.valueY(lineIndex, pointIndex))
       linePainter.addCoordinates(gc, x, y)
     }
 
@@ -83,22 +90,20 @@ open class LineChartLayer(
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
-    val pointPainter = style.pointPainters.valueAt(lineIndex)
+    val pointPainter = configuration.pointPainters.valueAt(lineIndex)
 
     dataPointCount.fastFor { pointIndex ->
-      @Window val x = chartCalculator.domainRelative2windowX(data.model.valueX(lineIndex, pointIndex))
-      @Window val y = chartCalculator.domainRelative2windowY(data.model.valueY(lineIndex, pointIndex))
+      @Window val x = chartCalculator.domainRelative2windowX(configuration.model.valueX(lineIndex, pointIndex))
+      @Window val y = chartCalculator.domainRelative2windowY(configuration.model.valueY(lineIndex, pointIndex))
 
       pointPainter.paintPoint(gc, x, y)
     }
   }
 
-  class Data(
-    var model: LinesChartModel
-  )
-
   @ConfigurationDsl
-  open class Style {
+  open class Configuration(
+    var model: LinesChartModel
+  ) {
     /**
      * Provides the point painters for the given line index
      */
@@ -120,7 +125,7 @@ open class LineChartLayer(
  * Adds a [LineChartLayer] with the given [model]
  */
 fun Layers.addLineChart(model: LinesChartModel): LineChartLayer {
-  val layer = LineChartLayer(LineChartLayer.Data(model))
+  val layer = LineChartLayer(LineChartLayer.Configuration(model))
   addLayer(layer)
   return layer
 }

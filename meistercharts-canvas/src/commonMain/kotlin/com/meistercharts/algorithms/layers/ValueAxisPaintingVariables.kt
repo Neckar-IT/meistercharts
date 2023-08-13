@@ -130,7 +130,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    */
   fun calculateEstimatedTickFormatMaxLength(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     //Calculate the max length of/for the tick labels. We assume that the first (for negative values) or the last one (for positive values) is probably the largest value.
     //Also ensure that we have at least 6 characters if a broken tick format is provided.
@@ -156,7 +156,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    */
   fun calculateDomainStartEndValues(
     paintingContext: LayerPaintingContext,
-    style: AxisStyle,
+    style: AxisConfiguration,
   ) {
     val chartCalculator = paintingContext.chartCalculator
 

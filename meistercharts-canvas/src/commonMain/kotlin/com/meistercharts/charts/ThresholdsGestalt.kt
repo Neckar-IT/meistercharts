@@ -73,7 +73,7 @@ class ThresholdsGestalt(
     }
   }
 
-  val thresholdsLayer: ThresholdsLayer = ThresholdsLayer(ThresholdsLayer.Data(this.thresholdValuesDomainRelative, configuration::thresholdLabels.delegate()))
+  val thresholdsLayer: ThresholdsLayer = ThresholdsLayer(this.thresholdValuesDomainRelative, configuration::thresholdLabels.delegate())
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
@@ -102,7 +102,7 @@ class ThresholdsGestalt(
      * This method modifies the threshold layer to match the new orientation
      */
     fun applyHorizontalConfiguration() {
-      thresholdsLayer.style.applyHorizontalConfiguration()
+      thresholdsLayer.configuration.applyHorizontalConfiguration()
     }
 
     /**
@@ -110,7 +110,7 @@ class ThresholdsGestalt(
      * This method modifies the threshold layer to match the new orientation
      */
     fun applyVerticalConfiguration() {
-      thresholdsLayer.style.applyVerticalConfiguration()
+      thresholdsLayer.configuration.applyVerticalConfiguration()
     }
   }
 }

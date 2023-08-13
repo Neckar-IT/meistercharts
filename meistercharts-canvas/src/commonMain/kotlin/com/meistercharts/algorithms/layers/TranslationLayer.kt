@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import it.neckar.open.provider.DoubleProvider
 
@@ -26,13 +27,21 @@ import it.neckar.open.provider.DoubleProvider
  */
 @Deprecated("Use TransformingChartStateLayer instead - if possible")
 class TranslationLayer(
-  /**
-   * The translated layer
-   */
-  val delegate: Layer,
+  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : AbstractLayer() {
-  val configuration: Configuration = Configuration(delegate).also(additionalConfiguration)
+  ) : AbstractLayer() {
+
+  constructor(
+    /**
+     * The translated layer
+     */
+    delegate: Layer,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ): this(Configuration(delegate), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   override val type: LayerType = LayerType.Content
 
@@ -48,6 +57,7 @@ class TranslationLayer(
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     /**
      * The translated layer

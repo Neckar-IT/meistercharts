@@ -40,10 +40,8 @@ import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.commons.kotlin.js.debug
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.logging.ifDebug
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartGroupedExtensions")
 
@@ -94,19 +92,19 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
     }
   }
 
   jsStyle.categoryAxisStyle?.let { jsValueAxisStyle ->
     this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.style.applyCategoryAxisStyle(jsValueAxisStyle)
+    this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.style.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
     }
   }
 
@@ -218,7 +216,7 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
   }
 
   jsStyle.activeGroupBackgroundColor.toColor()?.let {
-    this.categoryLayer.style.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it
   }
 
   jsStyle.overflowIndicatorStyle?.let {

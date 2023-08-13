@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.ValueAxisLayer
@@ -257,8 +257,8 @@ class TimeLineChart internal constructor(
       gestalt.timeLineChartGestalt.style.crossWirePositionX = it
     }
 
-    gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
-    gestalt.timeLineChartGestalt.crossWireLayerEnumValues.style.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.configuration.applyCrossWireStyle(jsStyle.crossWireStyle)
+    gestalt.timeLineChartGestalt.crossWireLayerEnumValues.configuration.applyCrossWireStyle(jsStyle.crossWireStyle)
 
     markAsDirty()
   }
@@ -267,8 +267,8 @@ class TimeLineChart internal constructor(
     logger.debug("TimeLineChartGestalt.applyStyle", jsStyle)
 
     jsStyle.crossWireFont?.toFontDescriptorFragment()?.let {
-      crossWireLayerDecimalValues.style.applyCrossWireFont(it)
-      crossWireLayerEnumValues.style.applyCrossWireFont(it)
+      crossWireLayerDecimalValues.configuration.applyCrossWireFont(it)
+      crossWireLayerEnumValues.configuration.applyCrossWireFont(it)
     }
 
     jsStyle.crossWireDecimalsFormat?.let {
@@ -332,26 +332,26 @@ class TimeLineChart internal constructor(
         val topTitleLayer = this.getValueAxisTopTitleLayer(DecimalDataSeriesIndex(index))
 
         //Call this method *before* applying the (more specific) properties from the jsDecimalDataSeriesStyle
-        valueAxisLayer.style.applyValueAxisStyle(jsValueAxisStyle)
+        valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
         topTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
 
         jsDecimalDataSeriesStyle.valueAxisTitle?.let { jsTitle ->
-          valueAxisLayer.style.setTitle(jsTitle)
+          valueAxisLayer.axisConfiguration.setTitle(jsTitle)
         }
 
         //Overwrites the default ticks format that might have been applied by applyValueAxisStyle
         jsDecimalDataSeriesStyle.ticksFormat?.toNumberFormat()?.let {
-          valueAxisLayer.style.ticksFormat = it
+          valueAxisLayer.axisConfiguration.ticksFormat = it
         }
       }
     }
 
     jsStyle.enumAxisStyle?.let { jsEnumAxisStyle ->
-      enumCategoryAxisLayer.style.applyEnumAxisStyle(jsEnumAxisStyle)
+      enumCategoryAxisLayer.axisConfiguration.applyEnumAxisStyle(jsEnumAxisStyle)
     }
 
     jsStyle.timeAxisStyle?.let { jsTimeAxisStyle ->
-      this.timeAxisLayer.style.applyTimeAxisStyle(jsTimeAxisStyle)
+      this.timeAxisLayer.axisConfiguration.applyTimeAxisStyle(jsTimeAxisStyle)
 
       //Apply the size of the axis at the gestalt, too.
       //This is necessary to update clipping etc.
@@ -632,7 +632,7 @@ class TimeLineChart internal constructor(
 private fun ValueAxisLayer.Style.applyTimeLineChartStyle() {
   side = Side.Left
   tickOrientation = Vicinity.Outside
-  paintRange = AxisStyle.PaintRange.Continuous
+  paintRange = AxisConfiguration.PaintRange.Continuous
 }
 
 /**

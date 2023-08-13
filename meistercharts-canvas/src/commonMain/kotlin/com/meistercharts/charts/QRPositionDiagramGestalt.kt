@@ -17,7 +17,7 @@ package com.meistercharts.charts
 
 import com.meistercharts.range.ValueRange
 import it.neckar.geometry.AxisOrientationY
-import com.meistercharts.algorithms.layers.AxisStyle
+import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.ContentAreaLayer
 import com.meistercharts.algorithms.layers.DomainAxisMarkersLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -51,7 +51,7 @@ import kotlin.jvm.JvmOverloads
 
 class QRPositionDiagramGestalt @JvmOverloads constructor(
   val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  styleConfiguration: Style.() -> Unit = {},
 ) : ChartGestalt {
 
   val style: Style = Style().also(styleConfiguration)
@@ -61,7 +61,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
   val valueAxisXLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { data.valueRangeX })) {
     titleProvider = { _, _ -> data.xAxisCaption }
     tickOrientation = Vicinity.Outside
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Bottom
     titleColor = Color.black.asProvider()
     lineColor = Color.black.asProvider()
@@ -76,7 +76,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
   val valueAxisYLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { data.valueRangeY })) {
     titleProvider = { _, _ -> data.yAxisCaption }
     tickOrientation = Vicinity.Outside
-    paintRange = AxisStyle.PaintRange.Continuous
+    paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Left
     titleColor = Color.black.asProvider()
     lineColor = Color.black.asProvider()
@@ -89,12 +89,10 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
   }
 
   val paintableTranslateRotateLayer: PaintableTranslateRotateLayer = PaintableTranslateRotateLayer(
-    PaintableTranslateRotateLayer.Data(
-      image = { style.image },
-      x = { data.xDomainRelative },
-      y = { data.yDomainRelative },
-      angle = { data.angle }
-    )
+    image = { style.image },
+    x = { data.xDomainRelative },
+    y = { data.yDomainRelative },
+    angle = { data.angle }
   )
 
   val domainAxisMarkersLayer: DomainAxisMarkersLayer = DomainAxisMarkersLayer({ Coordinates(data.valueRangeX.toDomainRelative(data.x), data.valueRangeY.toDomainRelative(data.y)) })
@@ -103,10 +101,10 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     style.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.style.size = it.bottom
+      valueAxisXLayer.axisConfiguration.size = it.bottom
       gridLayerX.configuration.passpartout = it
 
-      valueAxisYLayer.style.size = it.left
+      valueAxisYLayer.axisConfiguration.size = it.left
 
       gridLayerY.configuration.passpartout = it
     }
