@@ -18,4 +18,7 @@ value class Url(val value: String) {
   override fun toString(): String {
     return value
   }
+
+  //Required for extension methods
+  companion object
 }
