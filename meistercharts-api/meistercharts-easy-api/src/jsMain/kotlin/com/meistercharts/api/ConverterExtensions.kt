@@ -532,7 +532,7 @@ fun CategoryAxisLabelPainter.setImagesProvider(imagesProvider: MultiProvider<Cat
  * The title-location will always be set to the top of the axis and
  * the tick-labels will always be truncated with an ellipsis.
  */
-fun ValueAxisLayer.Style.applyValueAxisStyle(jsStyle: ValueAxisStyle?) {
+fun ValueAxisLayer.Configuration.applyValueAxisStyle(jsStyle: ValueAxisStyle?) {
   if (jsStyle == null) {
     return
   }

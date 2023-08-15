@@ -17,9 +17,9 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.linear
 import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
-import com.meistercharts.algorithms.layers.ValueAxisLayer.Style
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import it.neckar.geometry.Direction
@@ -44,27 +44,27 @@ import kotlin.math.roundToInt
  * - inside (towards the content - right/top of the axis line)
  * - outside (between the title and the axis line)
  *
- * The [Style.size] is especially important for [Vicinity.Inside]: In this case the [Style.size] describes the *distance* between
+ * The [Configuration.size] is especially important for [Vicinity.Inside]: In this case the [Configuration.size] describes the *distance* between
  * the outer side and the axis line.
  * This can be very useful when placing the axis on the edge of the content area.
  *
- * Attention: The margin is added to the outside of the value axis. Therefore, the position of the axis can be calculated as follows: [Style.margin] + [Style.size]
+ * Attention: The margin is added to the outside of the value axis. Therefore, the position of the axis can be calculated as follows: [Configuration.margin] + [Configuration.size]
  */
 class ValueAxisLayer
 /**
  * Consider using the factory methods [logarithmic] / [linear]
  */
 @JvmOverloads constructor(
-  val data: Data,
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractAxisLayer() {
 
   /**
    * Consider using the factory methods [logarithmic] / [linear]
    */
   @JvmOverloads
-  constructor(title: String, valueRange: ValueRange, styleConfiguration: Style.() -> Unit = {}) : this(
-    Data(
+  constructor(title: String, valueRange: ValueRange, styleConfiguration: Configuration.() -> Unit = {}) : this(
+    Configuration(
       valueRangeProvider = { valueRange }
     ),
     {
@@ -73,7 +73,11 @@ class ValueAxisLayer
     },
   )
 
-  override val axisConfiguration: Style = Style().also(styleConfiguration)
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  override val axisConfiguration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
@@ -90,7 +94,7 @@ class ValueAxisLayer
     override fun calculate(paintingContext: LayerPaintingContext) {
       reset()
 
-      contentAreaValueRange = data.valueRangeProvider()
+      contentAreaValueRange = configuration.valueRangeProvider()
 
       calculateTickFontMetrics(paintingContext, axisConfiguration)
 
@@ -132,7 +136,7 @@ class ValueAxisLayer
     gc.font(axisConfiguration.tickFont)
     gc.lineWidth = axisConfiguration.tickLineWidth
 
-    val valueRange = data.valueRangeProvider()
+    val valueRange = configuration.valueRangeProvider()
 
     paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
       @px val currentY = chartCalculator.domain2windowY(tickValue, valueRange)
@@ -173,7 +177,7 @@ class ValueAxisLayer
     gc.lineWidth = axisConfiguration.tickLineWidth
     gc.font(axisConfiguration.tickFont)
 
-    val valueRange = data.valueRangeProvider()
+    val valueRange = configuration.valueRangeProvider()
 
     paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
       @px val currentX = chartCalculator.domain2windowX(tickValue, valueRange)
@@ -250,7 +254,7 @@ class ValueAxisLayer
     /**
      * Creates a linear value axis
      */
-    fun linear(title: String, valueRange: LinearValueRange, styleConfiguration: Style.() -> Unit = {}): ValueAxisLayer {
+    fun linear(title: String, valueRange: LinearValueRange, styleConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
         //Configure the ticks for linear
         applyLinearScale()
@@ -261,7 +265,7 @@ class ValueAxisLayer
     /**
      * Creates a logarithmic value axis
      */
-    fun logarithmic(title: String, valueRange: LogarithmicValueRange, styleConfiguration: Style.() -> Unit = {}): ValueAxisLayer {
+    fun logarithmic(title: String, valueRange: LogarithmicValueRange, styleConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
         //Configure the ticks for logarithmic
         applyLogarithmicScale()
@@ -270,17 +274,16 @@ class ValueAxisLayer
     }
   }
 
-  open class Data(
+  /**
+   * The style for the value axis
+   */
+  @ConfigurationDsl
+  open class Configuration(
     /**
      * Provides the value range for the axis
      */
     var valueRangeProvider: ValueRangeProvider = { ValueRange.default }
-  )
-
-  /**
-   * The style for the value axis
-   */
-  open class Style : AxisConfiguration() {
+  ) : AxisConfiguration() {
     /**
      * Provider that returns the ticks
      */

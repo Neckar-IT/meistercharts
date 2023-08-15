@@ -463,7 +463,7 @@ class ValueAxisWithOffsetLayer(
     var valueRangeProvider: ValueRangeProvider = { ValueRange.default },
   )
 
-  open class Style : ValueAxisLayer.Style() {
+  open class Style : ValueAxisLayer.Configuration() {
     /**
      * The size of the offset area
      */

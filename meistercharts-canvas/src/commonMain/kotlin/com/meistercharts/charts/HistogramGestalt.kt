@@ -43,7 +43,7 @@ class HistogramGestalt(
    */
   toolTipType: ToolTipType = ToolTipType.Balloon,
 
-  styleConfiguration: BarChartGroupedGestalt.Style.() -> Unit = {},
+  styleConfiguration: BarChartGroupedGestalt.Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
   val barChartGroupedGestalt: BarChartGroupedGestalt = BarChartGroupedGestalt(categorySeriesModel, toolTipType, styleConfiguration).also {
@@ -118,7 +118,7 @@ class HistogramGestalt(
   /**
    * Returns the style of the bar chart grouped gestalt
    */
-  val style: BarChartGroupedGestalt.Style
+  val style: BarChartGroupedGestalt.Configuration
     get() {
       return barChartGroupedGestalt.style
     }

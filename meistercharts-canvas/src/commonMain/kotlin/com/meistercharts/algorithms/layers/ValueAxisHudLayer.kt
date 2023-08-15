@@ -361,7 +361,7 @@ fun ValueAxisLayer.hudLayer(
         return when (axisConfiguration.orientation) {
           Orientation.Vertical -> paintingVariables().axisLineLocation
           Orientation.Horizontal -> {
-            @DomainRelative val domainRelative = data.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
+            @DomainRelative val domainRelative = configuration.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
 
             if (axisConfiguration.paintRange == AxisConfiguration.PaintRange.ContentArea) {
               if (ChartCalculator.inContentArea(domainRelative).not()) {
@@ -381,7 +381,7 @@ fun ValueAxisLayer.hudLayer(
 
         return when (axisConfiguration.orientation) {
           Orientation.Vertical -> {
-            @DomainRelative val domainRelative = data.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
+            @DomainRelative val domainRelative = configuration.valueRangeProvider().toDomainRelative(domainValues.valueAt(index))
 
             if (axisConfiguration.paintRange == AxisConfiguration.PaintRange.ContentArea) {
               if (ChartCalculator.inContentArea(domainRelative).not()) {

@@ -37,15 +37,18 @@ import it.neckar.open.observable.ObservableObject
  */
 @Deprecated("probably no longer required")
 class BinaryGestalt(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    valuesProvider: BooleanValuesProvider = createSampleValuesProvider(),
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(valuesProvider), additionalConfiguration)
 
   val withContentViewportGestalt: FitContentInViewportGestalt = FitContentInViewportGestalt()
 
-  val valueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { BinaryValueRange })) {
+  val valueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Configuration(valueRangeProvider = { BinaryValueRange })) {
     titleProvider = { _, _ -> "Binary [Boolean]" } //TODO extract(?)
     paintRange = AxisConfiguration.PaintRange.ContentArea
     tickOrientation = Vicinity.Outside
@@ -54,11 +57,12 @@ class BinaryGestalt(
   }
 
   val binaryLayer: BinaryLayer = BinaryLayer(
-    valuesProvider = data::valuesProvider.delegate()
+    valuesProvider = configuration::valuesProvider.delegate()
   )
 
   init {
-    style.marginProperty.consumeImmediately {
+    configuration.additionalConfiguration()
+    configuration.marginProperty.consumeImmediately {
       withContentViewportGestalt.contentViewportMargin = it
       valueAxisLayer.axisConfiguration.size = it.left
     }
@@ -76,12 +80,10 @@ class BinaryGestalt(
     }
   }
 
-  class Data(
-    var valuesProvider: BooleanValuesProvider = createSampleValuesProvider()
-  )
-
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    var valuesProvider: BooleanValuesProvider = createSampleValuesProvider(),
+  ) {
     val marginProperty: @Zoomed ObservableObject<Insets> = (ObservableObject(Insets.of(30.0, 30.0, 50.0, 80.0)))
     var margin: Insets by marginProperty
   }

@@ -62,7 +62,6 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
@@ -111,21 +110,17 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    *
    * The number of categories does not matter.
    */
-  categorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
 
   /**
    * The tooltip type
    */
-  toolTipType: ToolTipType = ToolTipType.CrossWire,
+  initialToolTipType: ToolTipType = ToolTipType.CrossWire,
 
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
 
-  val configuration: Configuration = Configuration(categorySeriesModel, toolTipType)
-
-  init {
-    this.configuration.also(additionalConfiguration)
-  }
+  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
 
   val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt(Insets.of(10.0, 80.0, 40.0, 75.0))
   var contentViewportMargin: @Zoomed Insets by fixedChartGestalt::contentViewportMargin
@@ -409,24 +404,24 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
      */
     val filteredCategorySeriesModel: CategorySeriesModel = object : CategorySeriesModel {
       override val numberOfCategories: Int
-        get() = configuration.categorySeriesModel.numberOfCategories
+        get() = categorySeriesModel.numberOfCategories
 
       override val numberOfSeries: Int
-        get() = configuration.categorySeriesModel.numberOfSeries
+        get() = categorySeriesModel.numberOfSeries
 
       override fun valueAt(categoryIndex: CategoryIndex, seriesIndex: SeriesIndex): @Domain @MayBeNaN Double {
-        return if (isVisible(seriesIndex)) configuration.categorySeriesModel.valueAt(categoryIndex, seriesIndex) else Double.NaN
+        return if (isVisible(seriesIndex)) categorySeriesModel.valueAt(categoryIndex, seriesIndex) else Double.NaN
       }
 
       override fun categoryNameAt(categoryIndex: CategoryIndex, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-        return configuration.categorySeriesModel.categoryNameAt(categoryIndex, textService, i18nConfiguration)
+        return categorySeriesModel.categoryNameAt(categoryIndex, textService, i18nConfiguration)
       }
     }
 
     /**
      * Returns true if the given series is visible
      */
-    fun isVisible(seriesIndex: SeriesIndex): Boolean = configuration.lineIsVisible.valueAt(seriesIndex.value)
+    fun isVisible(seriesIndex: SeriesIndex): Boolean = lineIsVisible.valueAt(seriesIndex.value)
 
 
     /**

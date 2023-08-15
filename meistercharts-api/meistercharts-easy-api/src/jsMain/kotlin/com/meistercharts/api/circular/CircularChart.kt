@@ -36,7 +36,7 @@ class CircularChart internal constructor(
 ) : MeisterChartsApiLegacy<CircularChartData, CircularChartStyle>(meisterChart) {
 
   init {
-    require(gestalt.data.absoluteValuesProvider is MutableDoublesProvider) { "please provide a mutable model" }
+    require(gestalt.configuration.absoluteValuesProvider is MutableDoublesProvider) { "please provide a mutable model" }
     gestalt.applyEasyApiDefaults()
   }
 
@@ -44,7 +44,7 @@ class CircularChart internal constructor(
    * Sets and replaces the data of the circular chart model
    */
   override fun setData(jsData: CircularChartData) {
-    val valuesProvider = gestalt.data.absoluteValuesProvider as MutableDoublesProvider
+    val valuesProvider = gestalt.configuration.absoluteValuesProvider as MutableDoublesProvider
     valuesProvider.clear()
     valuesProvider.addAll(CircularChartConverter.toValues(jsData))
 

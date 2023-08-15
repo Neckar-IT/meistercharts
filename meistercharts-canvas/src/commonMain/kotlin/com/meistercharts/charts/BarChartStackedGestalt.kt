@@ -66,17 +66,16 @@ import kotlin.jvm.JvmOverloads
  */
 class BarChartStackedGestalt @JvmOverloads constructor(
   /**
-   * The data to be displayed
+   * The current category model for the stacked bar chart
    */
-  val data: Data = Data(categorySeriesModel = createDefaultCategoryModel()),
-
-  styleConfiguration: BarChartStackedGestalt.Style.() -> Unit = {},
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  additionalConfiguration: BarChartStackedGestalt.Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
 
   /**
    * The style to be used
    */
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration(initialCategorySeriesModel).also(additionalConfiguration)
 
   /**
    * Delegate the configures the chart to have a fixed zoom and translation
@@ -95,7 +94,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   /**
    * The layer that paints the bars
    */
-  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ data.categorySeriesModel }) {
+  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ configuration.categorySeriesModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = stackedBarsPainter
     layoutCalculator = DefaultCategoryLayouter {
@@ -139,7 +138,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   /**
    * The value layer is *hidden* - only used to paint the 0 at the corresponding grid line
    */
-  val valueAxisSupport: ValueAxisSupport<Unit> = ValueAxisSupport.single({ style.valueRange }) {
+  val valueAxisSupport: ValueAxisSupport<Unit> = ValueAxisSupport.single({ configuration.valueRange }) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
       paintRange = AxisConfiguration.PaintRange.ContentArea
@@ -172,11 +171,11 @@ class BarChartStackedGestalt @JvmOverloads constructor(
    * The layer that paints the line at the domain-value 0
    */
   val gridLayer: DomainRelativeGridLayer = valueAxisLayer.createGrid {
-    lineStyles = { value: @DomainRelative Double -> style.gridLineStyles(style.valueRange.toDomain(value)) }
+    lineStyles = { value: @DomainRelative Double -> configuration.gridLineStyles(configuration.valueRange.toDomain(value)) }
   }
 
   init {
-    categoryAxisLayer.configuration.labelsProvider = data::categorySeriesModel.createCategoryLabelsProvider()
+    categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
 
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it
@@ -195,7 +194,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
 
       valueAxisSupport.addLayers(this, Unit)
 
-      layers.addAboveBackground(gridLayer.visibleIf(style.showGridProperty))
+      layers.addAboveBackground(gridLayer.visibleIf(configuration.showGridProperty))
       layers.addLayer(categoryLayer.clipped {
         /*
          * Only clip the sides where the axes are.
@@ -211,15 +210,13 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     }
   }
 
-  open class Data(
+  @ConfigurationDsl
+  open inner class Configuration(
     /**
      * The current category model for the stacked bar chart
      */
     var categorySeriesModel: CategorySeriesModel,
-  )
-
-  @ConfigurationDsl
-  open inner class Style {
+  ) {
     /**
      * The value range of the bar chart
      */

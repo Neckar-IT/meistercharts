@@ -23,7 +23,7 @@ import com.meistercharts.charts.BarChartStackedGestalt
  */
 class HorizontalBarConfig {
   fun apply(gestalt: BarChartStackedGestalt) {
-    gestalt.style.applyHorizontalConfiguration()
+    gestalt.configuration.applyHorizontalConfiguration()
     gestalt.stackedBarsPainter.stackedBarPaintable.style.backgroundColor = Color.gray
   }
 

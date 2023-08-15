@@ -104,7 +104,7 @@ fun valueAxisOnContentAreaBounds() {
 
     layers.addLayer(contentLayer.clipped(passpartoutMargin)) //<3>
 
-    layers.addLayer(ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { ValueRange.linear(0.0, 123.0) })) {
+    layers.addLayer(ValueAxisLayer(ValueAxisLayer.Configuration(valueRangeProvider = { ValueRange.linear(0.0, 123.0) })) {
       titleProvider = { _, _ -> "The Value Axis [m²/h]" }
       side = Side.Left  //Other side work exactly the same
       tickOrientation = Vicinity.Outside //<4>

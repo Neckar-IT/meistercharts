@@ -44,7 +44,7 @@ class BarChartStacked internal constructor(
    */
   override fun setData(jsData: BarChartData) {
     CategoryConverter.toCategoryModel(jsData)?.let {
-      gestalt.data.categorySeriesModel = it
+      gestalt.configuration.categorySeriesModel = it
     }
 
     CategoryConverter.toCategoryImages(jsData)?.let { images ->

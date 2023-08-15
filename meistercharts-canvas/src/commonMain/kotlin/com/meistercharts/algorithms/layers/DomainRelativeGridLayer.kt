@@ -156,7 +156,7 @@ fun ValueAxisLayer.createGrid(styleConfiguration: DomainRelativeGridLayer.Config
     }
 
     override fun valueAt(index: Int): @DomainRelative Double {
-      return data.valueRangeProvider().toDomainRelative(tickDomainValues[index])
+      return configuration.valueRangeProvider().toDomainRelative(tickDomainValues[index])
     }
   }, orientationProvider = {
     axisConfiguration.orientation.opposite()

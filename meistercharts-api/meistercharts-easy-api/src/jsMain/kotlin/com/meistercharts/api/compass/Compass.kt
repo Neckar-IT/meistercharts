@@ -35,7 +35,7 @@ class Compass internal constructor(
   }
 
   override fun setData(jsData: CompassData) {
-    gestalt.data.currentValueProvider = DoubleProvider { jsData.currentValue ?: 0.0 }
+    gestalt.configuration.currentValueProvider = DoubleProvider { jsData.currentValue ?: 0.0 }
     gestalt.subValueLayer.configuration.linesProvider = { _, _ ->
       listOf(
         jsData.labelLatitude.orEmpty(),

@@ -29,9 +29,13 @@ import com.meistercharts.canvas.ConfigurationDsl
  * Configuration for a slogan above the Neckar IT 'flow'
  */
 class NeckarITSloganWithFlowGestalt(
-  val data: Data = Data(),
-  val style: Style = Style()
+  val configuration: Configuration = Configuration(),
+  val additionalConfiguration: Configuration.() -> Unit = {}
 ) : ChartGestalt {
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   val sloganLayer: SloganLayer = SloganLayer {
     keepSloganInBounds = true
@@ -63,12 +67,8 @@ class NeckarITSloganWithFlowGestalt(
     }
   }
 
-  open class Data {
-    // TODO
-  }
-
   @ConfigurationDsl
-  open class Style {
+  open class Configuration {
     // TODO
   }
 }

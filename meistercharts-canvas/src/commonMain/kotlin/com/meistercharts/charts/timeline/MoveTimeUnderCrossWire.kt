@@ -58,8 +58,8 @@ class MoveTimeUnderCrossWire(
      * Creates a new [MoveTimeUnderCrossWire] instance for the [TimeLineChartGestalt]
      */
     fun create(timeLineChartGestalt: TimeLineChartGestalt): MoveTimeUnderCrossWire {
-      val youngestTimeProvider = YoungestTimeProvider(timeLineChartGestalt.data.historyStorage)
-      return MoveTimeUnderCrossWire(youngestTimeProvider, timeLineChartGestalt.style::contentAreaTimeRange, timeLineChartGestalt.style::crossWirePositionX)
+      val youngestTimeProvider = YoungestTimeProvider(timeLineChartGestalt.configuration.historyStorage)
+      return MoveTimeUnderCrossWire(youngestTimeProvider, timeLineChartGestalt.configuration::contentAreaTimeRange, timeLineChartGestalt.configuration::crossWirePositionX)
     }
   }
 }

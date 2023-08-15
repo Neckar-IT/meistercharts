@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.ThresholdsLayer
 import com.meistercharts.algorithms.layers.ThresholdsLayer.ThresholdValues
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.MeisterChartsBuilderDsl
 import com.meistercharts.provider.ValueRangeProvider
@@ -52,12 +53,12 @@ class ThresholdsGestalt(
    */
   valueRangeProvider: ValueRangeProvider = { ValueRange.default },
 
-  styleConfiguration: Configuration.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
   val configuration: Configuration = Configuration(
     thresholdValues, thresholdLabels, valueRangeProvider
-  ).also(styleConfiguration)
+  ).also(additionalConfiguration)
 
   /**
    * Converts the threshold values to domain relative values
@@ -81,6 +82,7 @@ class ThresholdsGestalt(
     }
   }
 
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * Provides the threshold values

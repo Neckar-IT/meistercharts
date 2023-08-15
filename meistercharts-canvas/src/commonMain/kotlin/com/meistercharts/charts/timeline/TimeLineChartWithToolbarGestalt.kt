@@ -49,7 +49,7 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
 
   val style: Style = Style().also(styleConfiguration)
 
-  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(TimeLineChartGestalt.Data(historyStorage))
+  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(initialHistoryStorage = historyStorage)
 
   val scrollWithoutModifierHintLayer: HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> = MouseWheelWithoutModifierMessageLayer.create()
 

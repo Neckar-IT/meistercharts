@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.layers.toolbar.resetZoomAndTranslationButton
 import com.meistercharts.algorithms.layers.toolbar.zoomInButton
 import com.meistercharts.algorithms.layers.toolbar.zoomOutButton
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Button
 
@@ -27,13 +28,20 @@ import com.meistercharts.canvas.paintable.Button
  * Offers a predefined and configured toolbar
  */
 class ToolbarGestalt(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    buttons: List<Button> = createDefaultZoomButtons(),
+    additionalConfiguration: Configuration.() -> Unit = {},
+    ): this(Configuration(buttons), additionalConfiguration)
 
-  val toolbarLayer: ToolbarLayer = ToolbarLayer(data.buttons)
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  val toolbarLayer: ToolbarLayer = ToolbarLayer(configuration.buttons)
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     meisterChartBuilder.configure {
@@ -41,12 +49,10 @@ class ToolbarGestalt(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     val buttons: List<Button> = createDefaultZoomButtons(),
   )
-
-  class Style {
-  }
 }
 
 

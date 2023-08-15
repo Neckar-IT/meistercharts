@@ -113,7 +113,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   fun storeTicks(
     tickValues: @Domain DoubleArray,
     paintingContext: LayerPaintingContext,
-    style: ValueAxisLayer.Style,
+    style: ValueAxisLayer.Configuration,
   ) {
     tickDomainValues.ensureSize(tickValues.size)
     ticksFormatted.ensureSize(tickValues.size)

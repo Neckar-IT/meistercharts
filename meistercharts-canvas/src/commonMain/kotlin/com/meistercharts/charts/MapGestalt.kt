@@ -50,31 +50,33 @@ import it.neckar.open.observable.ObservableObject
  *
  */
 class MapGestalt(
-  val chartId: ChartId,
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    chartId: ChartId,
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(chartId), additionalConfiguration)
 
-  val slippyMapLayer: SlippyMapLayer = SlippyMapLayer(chartId, OpenStreetMapDe) {
+  val slippyMapLayer: SlippyMapLayer = SlippyMapLayer(configuration.chartId, OpenStreetMapDe) {
   }
 
   val zoomInToolbarButton: Button = Button({ paintingContext, state, width, height ->
     val gc = paintingContext.gc
 
     gc.lineWidth = toolbarButtonSymbolLineWidth
-    gc.fill(style.toolbarButtonBackgroundProvider(state))
-    gc.stroke(style.toolbarButtonForegroundProvider(state))
+    gc.fill(configuration.toolbarButtonBackgroundProvider(state))
+    gc.stroke(configuration.toolbarButtonForegroundProvider(state))
 
     ZoomButtons.paintZoomIn(gc, toolbarButtonSymbolSize, width, height)
   }, toolbarButtonWidth, toolbarButtonHeight)
 
   val zoomOutToolbarButton: Button = Button({ paintingContext, state, width, height ->
     val gc = paintingContext.gc
-    gc.fill(style.toolbarButtonBackgroundProvider(state))
+    gc.fill(configuration.toolbarButtonBackgroundProvider(state))
     gc.fillRect(0.0, 0.0, width, height)
-    gc.stroke(style.toolbarButtonForegroundProvider(state))
+    gc.stroke(configuration.toolbarButtonForegroundProvider(state))
     gc.lineWidth = toolbarButtonSymbolLineWidth
 
     ZoomButtons.paintZoomOut(gc, toolbarButtonSymbolSize, width, height)
@@ -100,7 +102,9 @@ class MapGestalt(
   }
 
   init {
-    data.slippyMapProviderProperty.consumeImmediately {
+    configuration.additionalConfiguration()
+
+    configuration.slippyMapProviderProperty.consumeImmediately {
       slippyMapLayer.configuration.slippyMapProvider = it
       slippyMapLayer.tileProvider.clear()
     }
@@ -111,7 +115,7 @@ class MapGestalt(
 
       SlippyMapBaseGestalt().configure(meisterChartBuilder)
 
-      zoomAndTranslationDefaults(data::slippyMapCenter.delegate())
+      zoomAndTranslationDefaults(configuration::slippyMapCenter.delegate())
 
       configure {
         zoomInToolbarButton.action {
@@ -124,15 +128,18 @@ class MapGestalt(
 
         layers.addClearBackground()
         layers.addLayer(slippyMapLayer)
-        layers.addLayer(legalNoticeLayer.visibleIf(style.showCopyrightMarkerProperty))
-        layers.addLayer(toolbarLayer.visibleIf(style.showToolbarProperty))
+        layers.addLayer(legalNoticeLayer.visibleIf(configuration.showCopyrightMarkerProperty))
+        layers.addLayer(toolbarLayer.visibleIf(configuration.showToolbarProperty))
 
         layers.addMouseWheelWithoutModifierHint(listOf(MouseWheelWithoutModifierMessageLayer.textKeyUseCtrlZoom))
       }
     }
   }
 
-  class Data {
+  @ConfigurationDsl
+  class Configuration(
+    val chartId: ChartId
+    ) {
     /**
      * The center that is used when resetting the zoom
      */
@@ -147,10 +154,7 @@ class MapGestalt(
      * Provides the slippy map
      */
     var slippyMapProvider: SlippyMapProvider by slippyMapProviderProperty
-  }
 
-  @ConfigurationDsl
-  class Style {
     /**
      * If set to true the copy right marker is shown at the bottom left
      */

@@ -109,16 +109,16 @@ class BarChartGroupedGestalt constructor(
   /**
    * The current category model for the stacked bar chart
    */
-  categorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
   /**
    * The tooltip type
    */
-  toolTipType: ToolTipType = ToolTipType.Balloon,
-  styleConfiguration: Style.() -> Unit = {},
+  initialToolTipType: ToolTipType = ToolTipType.Balloon,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
-  val configuration: Configuration = Configuration(categorySeriesModel, toolTipType)
+  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType)
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
 
   /**
    * Delegate the configures the chart to have a fixed zoom and translation
@@ -473,7 +473,9 @@ class BarChartGroupedGestalt constructor(
     }
   }
 
-  inner class Configuration(
+  //Note that all default values are chosen in regard to a vertical chart orientation.
+  @ConfigurationDsl
+  open inner class Configuration(
     /**
      * The current category model for the stacked bar chart
      */
@@ -483,7 +485,6 @@ class BarChartGroupedGestalt constructor(
      */
     val toolTipType: ToolTipType,
   ) {
-
     /**
      * Applies the balloon tooltip size
      */
@@ -500,11 +501,7 @@ class BarChartGroupedGestalt constructor(
      * Provides the threshold labels
      */
     var thresholdLabels: HudLabelsProvider = MultiProvider1 { index, _ -> listOf(decimalFormat.format(thresholdValues.valueAt(index))) }
-  }
 
-  //Note that all default values are chosen in regard to a vertical chart orientation.
-  @ConfigurationDsl
-  open inner class Style {
     /**
      * The margin for the active category background
      */

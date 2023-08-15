@@ -49,7 +49,6 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
-import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.FixedChartGestalt
 import com.meistercharts.charts.support.CategoryAxisSupport
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
@@ -88,9 +87,9 @@ class BulletChartGestalt constructor(
    *
    * Returns NaN if no value is available
    */
-  currentValues: @Domain @MayBeNaN DoublesProvider = createDefaultCurrentValues(),
+  initialCurrentValues: @Domain @MayBeNaN DoublesProvider = createDefaultCurrentValues(),
 
-  areaValueRanges: @Domain @MayBeNaN MultiProvider<CategoryIndex, LinearValueRange> = createDefaultValueRangeValues(),
+  initialAreaValueRanges: @Domain @MayBeNaN MultiProvider<CategoryIndex, LinearValueRange> = createDefaultValueRangeValues(),
 
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
@@ -98,7 +97,7 @@ class BulletChartGestalt constructor(
   /**
    * The configuration for this gestalt
    */
-  val configuration: Configuration = Configuration(currentValues, areaValueRanges)
+  val configuration: Configuration = Configuration(initialCurrentValues, initialAreaValueRanges)
     .also(additionalConfiguration)
 
   private val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt(Insets.of(10.0, 75.0, 40.0, 90.0))

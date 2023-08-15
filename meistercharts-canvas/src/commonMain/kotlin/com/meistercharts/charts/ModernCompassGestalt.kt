@@ -47,10 +47,19 @@ import kotlin.math.PI
  * A modern compass
  */
 class ModernCompassGestalt(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : ChartGestalt {
-  val style: Style = Style().also(styleConfiguration)
+
+  constructor(
+    currentValueProvider: @deg DoubleProvider = 0.0.asDoubleProvider(),
+    valueRangeProvider: ValueRangeProvider = ValueRange.degrees.asProvider(),
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(currentValueProvider, valueRangeProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt()
 
@@ -63,8 +72,8 @@ class ModernCompassGestalt(
   }
 
   val gaugePaintable: GaugePaintable = GaugePaintable(
-    data::valueRangeProvider.delegate(),
-    data::currentValueProvider.delegate(),
+    configuration::valueRangeProvider.delegate(),
+    configuration::currentValueProvider.delegate(),
     Size(100.0, 100.0)
   ) {
     basePainter = modernCompassPainter
@@ -80,7 +89,7 @@ class ModernCompassGestalt(
   }
 
   val valueLayer: TextLayer = TextLayer({ _, i18nConfiguration ->
-    val value = data.currentValueProvider()
+    val value = configuration.currentValueProvider()
     listOf("${decimalFormat.format(value, i18nConfiguration)}°")
   }) {
     font = FontDescriptorFragment(size = FontSize(50.0))
@@ -96,7 +105,7 @@ class ModernCompassGestalt(
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {
-    style.marginProperty.consumeImmediately {
+    configuration.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
       resizablePaintableLayer.insets = it
     }
@@ -113,16 +122,14 @@ class ModernCompassGestalt(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * Provides the current value of the compass
      */
     var currentValueProvider: @deg DoubleProvider = 0.0.asDoubleProvider(),
     var valueRangeProvider: ValueRangeProvider = ValueRange.degrees.asProvider(),
-  )
-
-  @ConfigurationDsl
-  class Style {
+  ) {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(0.0))
 
     /**
