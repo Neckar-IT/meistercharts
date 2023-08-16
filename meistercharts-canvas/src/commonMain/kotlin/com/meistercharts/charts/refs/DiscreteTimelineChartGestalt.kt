@@ -312,7 +312,7 @@ class DiscreteTimelineChartGestalt(
    */
   private fun viewportMarginBottom(): @Zoomed Double {
     return if (configuration.showTimeAxis) {
-      timeAxisLayer.axisConfiguration.size + timeAxisLayer.axisConfiguration.margin.bottom
+      timeAxisLayer.configuration.size + timeAxisLayer.configuration.margin.bottom
     } else {
       0.0
     }

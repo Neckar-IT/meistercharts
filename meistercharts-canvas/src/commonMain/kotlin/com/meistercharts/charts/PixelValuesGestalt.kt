@@ -279,7 +279,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   init {
     style.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
 
-    yValueAxisLayer.axisConfiguration.apply {
+    yValueAxisLayer.configuration.apply {
     }
 
     fitContentInViewportGestalt.contentViewportMargin = Insets.of(20.0, 20.0, 60.0, 75.0)
@@ -287,8 +287,8 @@ class PixelValuesGestalt @JvmOverloads constructor(
       val withoutTop = it.withTop(0.0)
       val contentInsets = it.withTop(0.0).withRight(0.0)
 
-      yValueAxisLayer.axisConfiguration.size = it.left
-      xValueAxisLayer.axisConfiguration.size = it.bottom
+      yValueAxisLayer.configuration.size = it.left
+      xValueAxisLayer.configuration.size = it.bottom
 
       horizontalGridLayer.configuration.passpartout = withoutTop
       verticalGridLayer.configuration.passpartout = withoutTop

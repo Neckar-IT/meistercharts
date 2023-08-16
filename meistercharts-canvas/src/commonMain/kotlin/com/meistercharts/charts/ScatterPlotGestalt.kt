@@ -99,8 +99,8 @@ class ScatterPlotGestalt(
     configuration.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.axisConfiguration.size = it.bottom
-      valueAxisYLayer.axisConfiguration.size = it.left
+      valueAxisXLayer.configuration.size = it.bottom
+      valueAxisYLayer.configuration.size = it.left
 
       gridXLayer.configuration.passpartout = it
       gridYLayer.configuration.passpartout = it

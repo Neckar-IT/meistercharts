@@ -64,7 +64,7 @@ class BinaryGestalt(
     configuration.additionalConfiguration()
     configuration.marginProperty.consumeImmediately {
       withContentViewportGestalt.contentViewportMargin = it
-      valueAxisLayer.axisConfiguration.size = it.left
+      valueAxisLayer.configuration.size = it.left
     }
   }
 

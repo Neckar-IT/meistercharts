@@ -15,7 +15,6 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.algorithms.layers.ValueAxisWithOffsetLayer.Style
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.layout.cache.DoubleCache
 

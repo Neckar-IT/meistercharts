@@ -159,7 +159,7 @@ fun ValueAxisLayer.createGrid(styleConfiguration: DomainRelativeGridLayer.Config
       return configuration.valueRangeProvider().toDomainRelative(tickDomainValues[index])
     }
   }, orientationProvider = {
-    axisConfiguration.orientation.opposite()
+    configuration.orientation.opposite()
   }, additionalConfiguration = styleConfiguration
   )
 }

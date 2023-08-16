@@ -103,10 +103,10 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     configuration.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.axisConfiguration.size = it.bottom
+      valueAxisXLayer.configuration.size = it.bottom
       gridLayerX.configuration.passpartout = it
 
-      valueAxisYLayer.axisConfiguration.size = it.left
+      valueAxisYLayer.configuration.size = it.left
 
       gridLayerY.configuration.passpartout = it
     }

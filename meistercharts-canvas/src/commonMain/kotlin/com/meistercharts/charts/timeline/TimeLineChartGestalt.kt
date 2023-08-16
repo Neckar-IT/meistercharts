@@ -536,7 +536,7 @@ class TimeLineChartGestalt
     override fun paint(paintingContext: LayerPaintingContext) {
       //Paint horizontal line
       val gc = paintingContext.gc
-      gc.stroke(enumCategoryAxisLayer.axisConfiguration.lineColor())
+      gc.stroke(enumCategoryAxisLayer.configuration.lineColor())
       val y = gc.height - viewportSupport.decimalsAreaViewportMarginBottom()
       gc.strokeLine(0.0, y, gc.width, y)
     }
@@ -587,7 +587,7 @@ class TimeLineChartGestalt
      */
     fun enumsAreaViewportMarginBottom(): @Zoomed Double {
       return if (configuration.showTimeAxis) {
-        configuration.timeAxisSize + timeAxisLayer.axisConfiguration.margin.bottom
+        configuration.timeAxisSize + timeAxisLayer.configuration.margin.bottom
       } else {
         0.0
       }
@@ -1055,7 +1055,7 @@ class TimeLineChartGestalt
     }
 
     configuration.timeAxisSizeProperty.consumeImmediately {
-      timeAxisLayer.axisConfiguration.size = it
+      timeAxisLayer.configuration.size = it
       //updateValueAxisLayers()
     }
 
@@ -1072,7 +1072,7 @@ class TimeLineChartGestalt
     //Apply the configuration again - when it is updated
     configuration.valueAxisStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachAxisLayer { decimalDataSeriesIndex, valueAxisLayer ->
-        configuration(valueAxisLayer.axisConfiguration, decimalDataSeriesIndex)
+        configuration(valueAxisLayer.configuration, decimalDataSeriesIndex)
       }
     }
 

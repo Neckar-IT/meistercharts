@@ -332,26 +332,26 @@ class TimeLineChart internal constructor(
         val topTitleLayer = this.getValueAxisTopTitleLayer(DecimalDataSeriesIndex(index))
 
         //Call this method *before* applying the (more specific) properties from the jsDecimalDataSeriesStyle
-        valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
+        valueAxisLayer.configuration.applyValueAxisStyle(jsValueAxisStyle)
         topTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
 
         jsDecimalDataSeriesStyle.valueAxisTitle?.let { jsTitle ->
-          valueAxisLayer.axisConfiguration.setTitle(jsTitle)
+          valueAxisLayer.configuration.setTitle(jsTitle)
         }
 
         //Overwrites the default ticks format that might have been applied by applyValueAxisStyle
         jsDecimalDataSeriesStyle.ticksFormat?.toNumberFormat()?.let {
-          valueAxisLayer.axisConfiguration.ticksFormat = it
+          valueAxisLayer.configuration.ticksFormat = it
         }
       }
     }
 
     jsStyle.enumAxisStyle?.let { jsEnumAxisStyle ->
-      enumCategoryAxisLayer.axisConfiguration.applyEnumAxisStyle(jsEnumAxisStyle)
+      enumCategoryAxisLayer.configuration.applyEnumAxisStyle(jsEnumAxisStyle)
     }
 
     jsStyle.timeAxisStyle?.let { jsTimeAxisStyle ->
-      this.timeAxisLayer.axisConfiguration.applyTimeAxisStyle(jsTimeAxisStyle)
+      this.timeAxisLayer.configuration.applyTimeAxisStyle(jsTimeAxisStyle)
 
       //Apply the size of the axis at the gestalt, too.
       //This is necessary to update clipping etc.

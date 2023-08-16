@@ -55,7 +55,7 @@ class ValueAxisLayer
  * Consider using the factory methods [logarithmic] / [linear]
  */
 @JvmOverloads constructor(
-  val configuration: Configuration,
+  override val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractAxisLayer() {
 
@@ -77,8 +77,6 @@ class ValueAxisLayer
     configuration.additionalConfiguration()
   }
 
-  override val axisConfiguration: Configuration = Configuration().also(additionalConfiguration)
-
   override val type: LayerType
     get() = LayerType.Content
 
@@ -96,25 +94,25 @@ class ValueAxisLayer
 
       contentAreaValueRange = configuration.valueRangeProvider()
 
-      calculateTickFontMetrics(paintingContext, axisConfiguration)
+      calculateTickFontMetrics(paintingContext, configuration)
 
-      calculateEstimatedTickFormatMaxLength(paintingContext, axisConfiguration)
-      calculateTitle(paintingContext, axisConfiguration)
+      calculateEstimatedTickFormatMaxLength(paintingContext, configuration)
+      calculateTitle(paintingContext, configuration)
 
-      calculateAxisStartEnd(paintingContext, axisConfiguration)
-      calculateDomainStartEndValues(paintingContext, axisConfiguration)
+      calculateAxisStartEnd(paintingContext, configuration)
+      calculateDomainStartEndValues(paintingContext, configuration)
 
-      calculateTickLabelsMaxWidth(axisConfiguration)
-      calculateLocations(paintingContext, axisConfiguration)
+      calculateTickLabelsMaxWidth(configuration)
+      calculateLocations(paintingContext, configuration)
 
-      storeTicks(calculateTickValues(paintingContext), paintingContext, axisConfiguration)
+      storeTicks(calculateTickValues(paintingContext), paintingContext, configuration)
     }
 
     /**
      * Calculate the tick values that are painted
      */
     private fun calculateTickValues(paintingContext: LayerPaintingContext): @Domain DoubleArray {
-      return when (axisConfiguration.orientation) {
+      return when (configuration.orientation) {
         Orientation.Vertical -> calculateTickValuesValueRangeVertically(fontHeight = tickFontMetrics.totalHeight)
         Orientation.Horizontal -> calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth = estimatedTickFormatMaxLength)
       }
@@ -131,10 +129,10 @@ class ValueAxisLayer
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
-    gc.fillStyle(axisConfiguration.tickLabelColor())
-    gc.strokeStyle(axisConfiguration.lineColor())
-    gc.font(axisConfiguration.tickFont)
-    gc.lineWidth = axisConfiguration.tickLineWidth
+    gc.fillStyle(configuration.tickLabelColor())
+    gc.strokeStyle(configuration.lineColor())
+    gc.font(configuration.tickFont)
+    gc.lineWidth = configuration.tickLineWidth
 
     val valueRange = configuration.valueRangeProvider()
 
@@ -142,10 +140,10 @@ class ValueAxisLayer
       @px val currentY = chartCalculator.domain2windowY(tickValue, valueRange)
 
       //The tick line
-      if (axisConfiguration.tickLength > 0.0 && axisConfiguration.tickLineWidth > 0.0) {
+      if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
         when (direction) {
-          Direction.CenterLeft -> gc.strokeLine(-axisConfiguration.tickLabelGap - axisConfiguration.tickLength, currentY, -axisConfiguration.tickLabelGap, currentY)
-          Direction.CenterRight -> gc.strokeLine(axisConfiguration.tickLabelGap, currentY, axisConfiguration.tickLabelGap + axisConfiguration.tickLength, currentY)
+          Direction.CenterLeft -> gc.strokeLine(-configuration.tickLabelGap - configuration.tickLength, currentY, -configuration.tickLabelGap, currentY)
+          Direction.CenterRight -> gc.strokeLine(configuration.tickLabelGap, currentY, configuration.tickLabelGap + configuration.tickLength, currentY)
           else -> throw IllegalArgumentException("Unsupported anchor direction: $direction")
         }
       }
@@ -162,7 +160,7 @@ class ValueAxisLayer
           gapVertical = 0.0,
           maxWidth = paintingVariables.tickValueLabelMaxWidth,
           maxHeight = null, //do not limit the max height for now. Should be kept inside the window(?)
-          stringShortener = axisConfiguration.valueLabelStringShortener
+          stringShortener = configuration.valueLabelStringShortener
         )
       }
     }
@@ -172,10 +170,10 @@ class ValueAxisLayer
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
-    gc.fillStyle(axisConfiguration.tickLabelColor())
-    gc.strokeStyle(axisConfiguration.lineColor())
-    gc.lineWidth = axisConfiguration.tickLineWidth
-    gc.font(axisConfiguration.tickFont)
+    gc.fillStyle(configuration.tickLabelColor())
+    gc.strokeStyle(configuration.lineColor())
+    gc.lineWidth = configuration.tickLineWidth
+    gc.font(configuration.tickFont)
 
     val valueRange = configuration.valueRangeProvider()
 
@@ -183,10 +181,10 @@ class ValueAxisLayer
       @px val currentX = chartCalculator.domain2windowX(tickValue, valueRange)
 
       //The tick line
-      if (axisConfiguration.tickLength > 0.0 && axisConfiguration.tickLineWidth > 0.0) {
+      if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
         when (direction) {
-          Direction.BottomCenter -> gc.strokeLine(currentX, axisConfiguration.tickLabelGap + axisConfiguration.tickLength, currentX, axisConfiguration.tickLabelGap)
-          Direction.TopCenter -> gc.strokeLine(currentX, -axisConfiguration.tickLabelGap, currentX, -axisConfiguration.tickLabelGap - axisConfiguration.tickLength)
+          Direction.BottomCenter -> gc.strokeLine(currentX, configuration.tickLabelGap + configuration.tickLength, currentX, configuration.tickLabelGap)
+          Direction.TopCenter -> gc.strokeLine(currentX, -configuration.tickLabelGap, currentX, -configuration.tickLabelGap - configuration.tickLength)
           else -> throw IllegalArgumentException("Unsupported anchor direction: $direction")
         }
       }
@@ -218,7 +216,7 @@ class ValueAxisLayer
           gapHorizontal = 0.0,
           gapVertical = 0.0,
           maxWidth = labelMaxWidth,
-          stringShortener = axisConfiguration.valueLabelStringShortener
+          stringShortener = configuration.valueLabelStringShortener
         )
       }
     }
@@ -234,7 +232,7 @@ class ValueAxisLayer
     }
 
     val maxTickCount = (paintingVariables.axisLength / (fontHeight * 2.0) + 0.5).roundToInt()
-    return axisConfiguration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, axisConfiguration.axisEndConfiguration)
+    return configuration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
   }
 
   /**
@@ -247,7 +245,7 @@ class ValueAxisLayer
     }
 
     val maxTickCount = (paintingVariables.axisLength / maxFormattedLabelWidth + 0.5).roundToInt()
-    return axisConfiguration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, axisConfiguration.axisEndConfiguration)
+    return configuration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
   }
 
   companion object {
@@ -282,7 +280,7 @@ class ValueAxisLayer
     /**
      * Provides the value range for the axis
      */
-    var valueRangeProvider: ValueRangeProvider = { ValueRange.default }
+    open var valueRangeProvider: ValueRangeProvider = { ValueRange.default }
   ) : AxisConfiguration() {
     /**
      * Provider that returns the ticks

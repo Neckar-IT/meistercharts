@@ -165,7 +165,7 @@ class AxisTopTopTitleLayer(
         },
 
         yAnchorLocation = {
-          when (axisLayer.axisConfiguration.paintRange) {
+          when (axisLayer.configuration.paintRange) {
             AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
             AxisConfiguration.PaintRange.Continuous -> {
@@ -176,12 +176,12 @@ class AxisTopTopTitleLayer(
         },
 
         titleProvider = { textService, i18nConfiguration ->
-          axisLayer.axisConfiguration.titleProvider?.invoke(textService, i18nConfiguration)
+          axisLayer.configuration.titleProvider?.invoke(textService, i18nConfiguration)
         }
       ) {
-        titleMaxWidth = DoubleProvider { axisLayer.axisConfiguration.size }
+        titleMaxWidth = DoubleProvider { axisLayer.configuration.size }
         anchorDirection = {
-          when (axisLayer.axisConfiguration.tickOrientation) {
+          when (axisLayer.configuration.tickOrientation) {
             Vicinity.Inside -> Direction.BottomLeft
             Vicinity.Outside -> Direction.BottomRight
           }
@@ -198,7 +198,7 @@ class AxisTopTopTitleLayer(
         },
 
         yAnchorLocation = {
-          when (axisLayer.axisConfiguration.paintRange) {
+          when (axisLayer.configuration.paintRange) {
             AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
             AxisConfiguration.PaintRange.Continuous -> {
@@ -209,12 +209,12 @@ class AxisTopTopTitleLayer(
         },
 
         titleProvider = { textService, i18nConfiguration ->
-          axisLayer.axisConfiguration.titleProvider?.invoke(textService, i18nConfiguration)
+          axisLayer.configuration.titleProvider?.invoke(textService, i18nConfiguration)
         }
       ) {
-        titleMaxWidth = DoubleProvider { axisLayer.axisConfiguration.size }
+        titleMaxWidth = DoubleProvider { axisLayer.configuration.size }
         anchorDirection = {
-          when (axisLayer.axisConfiguration.tickOrientation) {
+          when (axisLayer.configuration.tickOrientation) {
             Vicinity.Inside -> Direction.BottomLeft
             Vicinity.Outside -> Direction.BottomRight
           }

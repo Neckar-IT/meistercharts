@@ -74,7 +74,7 @@ class HistogramGestalt(
     }
 
     //usually there are many, many values - therefore the greedy category axis label painter is better suited
-    barChartGroupedGestalt.categoryAxisLayer.axisConfiguration.axisLabelPainter = GreedyCategoryAxisLabelPainter()
+    barChartGroupedGestalt.categoryAxisLayer.configuration.axisLabelPainter = GreedyCategoryAxisLabelPainter()
 
     //Disable the overflow indicator painter - not enough room
     barChartGroupedGestalt.groupedBarsPainter.configuration.overflowIndicatorPainter = null

@@ -43,7 +43,7 @@ class ValueAxisSupport<Key>(
 
   override fun createAxisLayer(key: Key): ValueAxisLayer {
     return ValueAxisLayer(ValueAxisLayer.Configuration { configuration.valueRangeProvider(key) }).also { layer ->
-      configuration.valueAxisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+      configuration.valueAxisConfiguration(layer.configuration, key, layer, preferredAxisTitleLocation)
     }
   }
 
@@ -101,7 +101,7 @@ class ValueAxisSupport<Key>(
         field = value
         //Apply the new configuration to existing
         axisLayersCache.forEach { key, layer ->
-          value.invoke(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+          value.invoke(layer.configuration, key, layer, preferredAxisTitleLocation)
         }
       }
 

@@ -291,8 +291,8 @@ class BulletChartGestalt constructor(
       valueAxisGridLayer.configuration.passpartout = it
       categoryAxisGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
-      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
+      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
     }
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
@@ -315,8 +315,8 @@ class BulletChartGestalt constructor(
            * Only clip the sides where the axes are.
            * We must not clip the other sides (e.g. for labels)
            */
-          val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
-          val valueAxisSide = valueAxisLayer.axisConfiguration.side
+          val categoryAxisSide = categoryAxisLayer.configuration.side
+          val valueAxisSide = valueAxisLayer.configuration.side
           // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
           val thresholdSide = if (configuration.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
@@ -447,9 +447,9 @@ class BulletChartGestalt constructor(
 
       //Update the value axis layer
       if (valueRange is LinearValueRange) {
-        valueAxisLayer.axisConfiguration.applyLinearScale()
+        valueAxisLayer.configuration.applyLinearScale()
       } else {
-        valueAxisLayer.axisConfiguration.applyLogarithmicScale()
+        valueAxisLayer.configuration.applyLogarithmicScale()
       }
     }
 
@@ -457,16 +457,16 @@ class BulletChartGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.tickFont = font
-      valueAxisLayer.axisConfiguration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font
+      valueAxisLayer.configuration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.titleFont = font
-      valueAxisLayer.axisConfiguration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font
+      valueAxisLayer.configuration.titleFont = font
     }
 
     var balloonTooltipValueLabelFormat: CachedNumberFormat = decimalFormat
@@ -477,8 +477,8 @@ class BulletChartGestalt constructor(
      */
     fun applyHorizontalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.axisConfiguration.side = Side.Left
-      valueAxisLayer.axisConfiguration.side = Side.Bottom
+      categoryAxisLayer.configuration.side = Side.Left
+      valueAxisLayer.configuration.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
     }
 
@@ -488,8 +488,8 @@ class BulletChartGestalt constructor(
      */
     fun applyVerticalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.axisConfiguration.side = Side.Bottom
-      valueAxisLayer.axisConfiguration.side = Side.Left
+      categoryAxisLayer.configuration.side = Side.Bottom
+      valueAxisLayer.configuration.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
     }
 
