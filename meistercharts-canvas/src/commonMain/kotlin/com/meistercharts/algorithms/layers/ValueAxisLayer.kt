@@ -63,13 +63,13 @@ class ValueAxisLayer
    * Consider using the factory methods [logarithmic] / [linear]
    */
   @JvmOverloads
-  constructor(title: String, valueRange: ValueRange, styleConfiguration: Configuration.() -> Unit = {}) : this(
+  constructor(title: String, valueRange: ValueRange, additionalConfiguration: Configuration.() -> Unit = {}) : this(
     Configuration(
       valueRangeProvider = { valueRange }
     ),
     {
       titleProvider = { _, _ -> title }
-      styleConfiguration()
+      additionalConfiguration()
     },
   )
 

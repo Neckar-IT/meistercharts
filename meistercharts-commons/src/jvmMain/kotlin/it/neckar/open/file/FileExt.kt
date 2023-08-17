@@ -55,3 +55,8 @@ private fun File.treeRecursively(prefix: String = "", continuation: String = "",
 fun File.formatAbsolutePath(): String {
   return toURI().toURL().toString().replace("file:/", "file:///")
 }
+
+fun File.requireIsFile(): File {
+  require(this.isFile){"File <${this.absolutePath}> is not a File"}
+  return this
+}
