@@ -61,6 +61,69 @@ inline fun <T> SizedProvider<T>.fastForEach(callback: (T) -> Unit) {
   }
 }
 
+/**
+ * Returns the max value - but always at least [fallbackValue].
+ *
+ * If the provider is empty the [fallbackValue] is returned
+ */
+inline fun <T> SizedProvider<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
+  val currentSize = size()
+  if (currentSize == 0) {
+    return fallbackValue
+  }
+
+  var max = - Double.MAX_VALUE
+  var n = 0
+  while (n < currentSize) {
+    max = callback(this.valueAt(n)).coerceAtLeast(max)
+    n++
+  }
+
+  return max
+}
+
+
+/**
+ * Returns the min value - but always at least [fallbackValue].
+ *
+ * If the provider is empty the [fallbackValue] is returned
+ */
+inline fun <T> SizedProvider<T>.fastMinBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
+  val currentSize = size()
+  if (currentSize == 0) {
+    return fallbackValue
+  }
+
+  var min = Double.MAX_VALUE
+  var n = 0
+  while (n < currentSize) {
+    min = callback(this.valueAt(n)).coerceAtMost(min)
+    n++
+  }
+
+  return min
+}
+
+
+inline fun <T> SizedProvider<T>.fastSumBy(callback: (value: T) -> Double): Double {
+  val currentSize = size()
+  if (currentSize == 0) {
+    return 0.0
+  }
+
+  var sum = 0.0
+  var n = 0
+  while (n < currentSize) {
+    sum += callback(this.valueAt(n))
+    n++
+  }
+
+  return sum
+}
+
+
+
+
 inline fun <T> SizedProvider<T>.fastForEachIndexed(callback: (index: Int, value: T) -> Unit) {
   var n = 0
   val currentSize = size()
