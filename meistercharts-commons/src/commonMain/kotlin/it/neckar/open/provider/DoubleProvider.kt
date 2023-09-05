@@ -1,5 +1,6 @@
 package it.neckar.open.provider
 
+import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.unit.si.ms
 import kotlin.reflect.KProperty0
 
@@ -10,7 +11,7 @@ fun interface DoubleProvider {
   /**
    * Provides the double
    */
-  operator fun invoke(): Double
+  operator fun invoke(): @NotBoxed Double
 
   companion object {
     /**

@@ -1,5 +1,6 @@
 package it.neckar.open.provider
 
+import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.collections.getModulo
 
 /**
@@ -15,7 +16,7 @@ fun interface MultiDoublesProvider<in IndexContext> {
    *
    * Please use extension methods with the correct type instead (if possible)
    */
-  fun valueAt(index: Int): Double
+  fun valueAt(index: Int): @NotBoxed Double
 
   companion object {
     /**

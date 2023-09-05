@@ -1,5 +1,7 @@
 package it.neckar.open.provider
 
+import it.neckar.open.annotations.NotBoxed
+
 /**
  * Provides coordinates.
  * Works like the [SizedProvider] but returns double values for each x and y.
@@ -17,11 +19,11 @@ interface CoordinatesProvider1<in P1> : HasSize1<P1>, MultiCoordinatesProvider1<
         return 0
       }
 
-      override fun xAt(index: Int, param1: Any): Double {
+      override fun xAt(index: Int, param1: Any): @NotBoxed Double {
         throw UnsupportedOperationException()
       }
 
-      override fun yAt(index: Int, param1: Any): Double {
+      override fun yAt(index: Int, param1: Any): @NotBoxed Double {
         throw UnsupportedOperationException()
       }
     }

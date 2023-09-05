@@ -75,6 +75,10 @@ object Plugins {
    * Only for JavaFX 17+
    */
   const val javafx: String = "org.openjfx.javafxplugin"
+
+
+  const val ksp: String = "com.google.devtools.ksp"
+  const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
 }
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
@@ -197,3 +201,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependenc
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
   get() = id(Plugins.copyResourcesFromDependencies)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpec
+  get() = id(Plugins.ksp)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDependencySpec
+  get() = id(Plugins.kspBoxing)

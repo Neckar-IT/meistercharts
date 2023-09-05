@@ -15,6 +15,7 @@
  */
 package com.meistercharts.animation
 
+import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.unit.other.pct
 import kotlin.math.PI
 import kotlin.math.pow
@@ -33,7 +34,7 @@ fun interface Easing {
    *
    * The values for linear must be in the range from 0.0 to 1.0.
    */
-  operator fun invoke(linear: @pct Double): @pct Double
+  operator fun invoke(linear: @pct @NotBoxed Double): @pct @NotBoxed Double
 
 
   companion object {
@@ -42,7 +43,7 @@ fun interface Easing {
      */
     const val bounce10: Double = 1.7015401988668
 
-    fun cubic(function: (t: Double, b: Double, c: Double, d: Double) -> Double): Easing {
+    fun cubic(function: (t: @NotBoxed Double, b: @NotBoxed Double, c: @NotBoxed Double, d: @NotBoxed Double) -> @NotBoxed Double): Easing {
       return Easing { function(it, 0.0, 1.0, 1.0) }
     }
 
@@ -60,7 +61,7 @@ fun interface Easing {
         }
       }
 
-    operator fun invoke(function: (Double) -> Double): Easing = Easing { linear -> function(linear) }
+    operator fun invoke(function: (@NotBoxed Double) -> @NotBoxed Double): Easing = Easing { linear -> function(linear) }
 
 
     val inElastic: Easing = Easing {

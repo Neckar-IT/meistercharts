@@ -1,5 +1,7 @@
 package it.neckar.open.provider
 
+import it.neckar.open.annotations.NotBoxed
+
 /**
  * Provides coordinates - as one x and one y double.
  *
@@ -13,14 +15,14 @@ interface MultiCoordinatesProvider<in IndexContext> {
    *
    * Please use extension methods with the correct type instead (if possible)
    */
-  fun xAt(index: Int): Double
+  fun xAt(index: Int): @NotBoxed Double
 
   /**
    * Retrieves the y-value at the given [index].
    *
    * Please use extension methods with the correct type instead (if possible)
    */
-  fun yAt(index: Int): Double
+  fun yAt(index: Int): @NotBoxed Double
 
   companion object {
     /**
@@ -28,11 +30,11 @@ interface MultiCoordinatesProvider<in IndexContext> {
      */
     fun <IndexContext> always(x: Double, y: Double): MultiCoordinatesProvider<IndexContext> {
       return object : MultiCoordinatesProvider<IndexContext> {
-        override fun xAt(index: Int): Double {
+        override fun xAt(index: Int): @NotBoxed Double {
           return x
         }
 
-        override fun yAt(index: Int): Double {
+        override fun yAt(index: Int): @NotBoxed Double {
           return y
         }
       }

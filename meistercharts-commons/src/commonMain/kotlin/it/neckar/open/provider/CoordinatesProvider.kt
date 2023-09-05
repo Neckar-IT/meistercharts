@@ -1,6 +1,7 @@
 package it.neckar.open.provider
 
 import com.meistercharts.annotations.Window
+import it.neckar.open.annotations.NotBoxed
 
 /**
  * Provides coordinates.
@@ -22,11 +23,11 @@ interface CoordinatesProvider : HasSize, MultiCoordinatesProvider<SizedProviderI
         return this@CoordinatesProvider.size()
       }
 
-      override fun xAt(index: Int, param1: Any): Double {
+      override fun xAt(index: Int, param1: Any): @NotBoxed Double {
         return this@CoordinatesProvider.xAt(index)
       }
 
-      override fun yAt(index: Int, param1: Any): Double {
+      override fun yAt(index: Int, param1: Any): @NotBoxed Double {
         return this@CoordinatesProvider.yAt(index)
       }
     }
@@ -39,11 +40,11 @@ interface CoordinatesProvider : HasSize, MultiCoordinatesProvider<SizedProviderI
     val empty: CoordinatesProvider = object : CoordinatesProvider {
       override fun size(): Int = 0
 
-      override fun xAt(index: Int): Double {
+      override fun xAt(index: Int): @NotBoxed Double {
         throw UnsupportedOperationException("Must not be called")
       }
 
-      override fun yAt(index: Int): Double {
+      override fun yAt(index: Int): @NotBoxed Double {
         throw UnsupportedOperationException("Must not be called")
       }
     }
@@ -57,11 +58,11 @@ interface CoordinatesProvider : HasSize, MultiCoordinatesProvider<SizedProviderI
           return size
         }
 
-        override fun xAt(index: Int): Double {
+        override fun xAt(index: Int): @NotBoxed Double {
           return provider.xAt(index)
         }
 
-        override fun yAt(index: Int): Double {
+        override fun yAt(index: Int): @NotBoxed Double {
           return provider.yAt(index)
         }
       }
