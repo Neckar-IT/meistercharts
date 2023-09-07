@@ -24,6 +24,11 @@ interface JsErrorHandler {
    */
   fun otherError(message: dynamic, error: Any)
 
+  /**
+   * Is called for null errors - that are not of type throwable
+   */
+  fun nullError(message: dynamic)
+
 
   companion object {
     /**
@@ -35,9 +40,10 @@ interface JsErrorHandler {
 
         when (error) {
           null -> {
-            console.error("null error received")
+           /* console.error("null error received")
             console.error(message)
-            console.error("@$source:$lineno $colno")
+            console.error("@$source:$lineno $colno")*/
+            errorHandler.nullError(message)
           }
 
           is Throwable -> {
@@ -62,6 +68,12 @@ class JsErrorHandlerMultiplexer(
     require(delegates.isNotEmpty()) { "At least one delegate required" }
   }
 
+  override fun nullError(message: dynamic) {
+    delegates.fastForEach {
+      it.nullError(message)
+    }
+  }
+
   override fun error(throwable: Throwable) {
     delegates.fastForEach {
       it.error(throwable)
@@ -79,6 +91,13 @@ class JsErrorHandlerMultiplexer(
  * Console JS error handler
  */
 object ConsoleJsErrorHandler : JsErrorHandler {
+  override fun nullError(message: dynamic) {
+    console.error("------------ EXCEPTION HANDLER - null error ----------")
+    console.error("Error-Message: <${message}>")
+
+    console.error("------------ /EXCEPTION HANDLER ----------")
+  }
+
   override fun otherError(message: dynamic, error: Any) {
     console.error("------------ EXCEPTION HANDLER - other error ----------")
     console.error("Error: <$error>", error)
