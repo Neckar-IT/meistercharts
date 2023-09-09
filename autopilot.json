@@ -5,7 +5,7 @@
   "buildSrc/**",
   "gradle/**",
   "img/**",
-  "meistercharts-examples/**",
+  "meistercharts-examples/**"
 ]
 
 }
