@@ -1,0 +1,11 @@
+{
+
+"ignore": [
+  ".github/**",
+  "buildSrc/**",
+  "gradle/**",
+  "img/**",
+  "meistercharts-examples/**",
+]
+
+}
