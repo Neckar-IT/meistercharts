@@ -6,7 +6,9 @@
   "gradle/**",
   "img/**",
   "meistercharts-examples/**",
-  "meistercharts-history/**"
+  "meistercharts-history/**",
+  "**/*test/**"
+  
 ]
 
 }
