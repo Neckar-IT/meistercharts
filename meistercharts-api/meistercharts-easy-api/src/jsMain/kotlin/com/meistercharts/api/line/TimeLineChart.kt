@@ -16,9 +16,9 @@
 package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.AxisConfiguration
-import com.meistercharts.algorithms.layers.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf

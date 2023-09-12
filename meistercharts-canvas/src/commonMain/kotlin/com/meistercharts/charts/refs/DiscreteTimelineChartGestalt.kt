@@ -18,7 +18,7 @@ package com.meistercharts.charts.refs
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
-import com.meistercharts.algorithms.layers.TimeAxisLayer
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
@@ -86,7 +86,7 @@ import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.provider.MultiProvider
-import it.neckar.open.time.TimeConstants
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.Positive

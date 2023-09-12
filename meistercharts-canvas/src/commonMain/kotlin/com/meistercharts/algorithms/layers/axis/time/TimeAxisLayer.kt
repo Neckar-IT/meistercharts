@@ -13,36 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers
+package com.meistercharts.algorithms.layers.axis.time
 
 import com.meistercharts.Meistercharts
+import com.meistercharts.algorithms.layers.AxisConfiguration
+import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
+import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.axis.DistanceDays
-import com.meistercharts.axis.DistanceHours
-import com.meistercharts.axis.DistanceMillis
-import com.meistercharts.axis.DistanceMinutes
-import com.meistercharts.axis.DistanceMonths
-import com.meistercharts.axis.DistanceSeconds
-import com.meistercharts.axis.DistanceYears
-import com.meistercharts.axis.GlobalTimeIndex
-import com.meistercharts.axis.TimeTickDistance
-import com.meistercharts.axis.TimeUnits
-import com.meistercharts.axis.valueAt
+import com.meistercharts.axis.time.DistanceDays
+import com.meistercharts.axis.time.DistanceHours
+import com.meistercharts.axis.time.DistanceMillis
+import com.meistercharts.axis.time.DistanceMinutes
+import com.meistercharts.axis.time.DistanceMonths
+import com.meistercharts.axis.time.DistanceSeconds
+import com.meistercharts.axis.time.DistanceYears
+import com.meistercharts.axis.time.GlobalTimeIndex
+import com.meistercharts.axis.time.TimeTickDistance
+import com.meistercharts.axis.time.TimeUnits
+import com.meistercharts.axis.time.valueAt
 import com.meistercharts.calc.TimeChartCalculator
-import com.meistercharts.canvas.text.CanvasStringShortener
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.model.Vicinity
+import com.meistercharts.time.TimeRange
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
-import com.meistercharts.model.Vicinity
-import com.meistercharts.time.TimeRange
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastContains
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.DateTimeFormat
@@ -54,7 +61,6 @@ import it.neckar.open.formatting.yearFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.provider.MultiProvider
-import it.neckar.open.time.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.Positive
 import it.neckar.open.unit.other.px
@@ -145,9 +151,10 @@ class TimeAxisLayer(
 
       if (guessedIdealTickDistance == 0.0) {
         //zoomed in way too far!
-        offsetTickDistance = DistanceMillis(1.0)
+        offsetTickDistance = DistanceMillis.smallest
         offsetTickDomainValues.reset()
 
+        tickDistance =  DistanceMillis.smallest
         tickDomainValues.reset()
         ticksFormatted.reset()
         return
@@ -160,10 +167,10 @@ class TimeAxisLayer(
 
       //The distance between the offset ticks
       offsetTickDistance = TimeTickDistance.forOffsets(endTimestamp - startTimestamp)
-      val offsetTicks = offsetTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone, false)
+      val offsetTicks = offsetTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
-      offsetTickDomainValues.ensureSize(offsetTicks.size)
-      offsetTicksFormatted.ensureSize(offsetTicks.size)
+      offsetTickDomainValues.prepare(offsetTicks.size)
+      offsetTicksFormatted.prepare(offsetTicks.size)
       offsetTicks.fastForEachIndexed { index, value ->
         offsetTickDomainValues[index] = value
         offsetTicksFormatted[index] = offsetTickDistance.formatAsOffset(value, paintingContext.i18nConfiguration)
@@ -175,7 +182,7 @@ class TimeAxisLayer(
       val smallestPossibleTickDistance = offsetTickDistance.smallestPossibleTickDistance()
       val timeTickDistance: TimeTickDistance = TimeTickDistance.forTicks(minTickDistance).coerceAtLeast(smallestPossibleTickDistance)
 
-      val allTicks: @Time @ms DoubleArray = timeTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone, true)
+      val allTicks: @ms DoubleArrayList = timeTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
 
       val formatter = when (style.timestampsMode) {
@@ -183,13 +190,13 @@ class TimeAxisLayer(
         TimestampsMode.Relative -> style.relativeTimestampsTickFormat
       }
 
-      tickDomainValues.ensureSize(allTicks.size)
-      ticksFormatted.ensureSize(allTicks.size)
+      tickDomainValues.prepare(allTicks.size)
+      ticksFormatted.prepare(allTicks.size)
 
       allTicks.fastForEachIndexed { index, value ->
         if (offsetTicks.fastContains(value)) {
           tickDomainValues[index] = Double.NaN
-          ticksFormatted[index] = "-" //no value shall be painted
+          ticksFormatted[index] = "-" //no value shall be painted, there is an offset tick already
         } else {
           tickDomainValues[index] = value
           ticksFormatted[index] = formatter.format(value, timeTickDistance, paintingContext.i18nConfiguration)
@@ -331,8 +338,10 @@ class TimeAxisLayer(
     } else {
       //We do not have any tick visible
 
-      // Paint the last tick in the middle of the window
-      @ms val millis = paintingVariables.offsetTickDomainValues.lastOr(paintingVariables.startTimestamp)
+      // Paint the last tick *before* the window in the middle of the window
+      @ms val millis = paintingVariables.offsetTickDomainValues.lastOr(paintingVariables.startTimestamp) {
+        it < paintingVariables.startTimestamp
+      }
 
       //Paint the background
       gc.fill(configuration.offsetAreaFills.valueAt(paintingVariables.offsetTickDistance.calculateEstimatedIndex(millis, timeZone)))

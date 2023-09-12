@@ -15,7 +15,7 @@
  */
 package com.meistercharts.time
 
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import java.time.Instant
 import java.time.ZoneId
 

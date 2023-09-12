@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers
+package com.meistercharts.algorithms.layers.axis
 
+import com.meistercharts.algorithms.layers.AbstractLayer
+import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative

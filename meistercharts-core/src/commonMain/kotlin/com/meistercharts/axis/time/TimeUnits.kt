@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.axis
+package com.meistercharts.axis.time
 
 import it.neckar.open.unit.si.ms
 
@@ -32,16 +32,18 @@ enum class TimeUnits(@ms val span: Double, val unit: String) {
   Year(365 * Day.span, "y");
 
   companion object {
-    fun getTimeUnitsAscending(): List<TimeUnits> = entries
+    val timeUnitsAscending: List<TimeUnits>
+      get() = entries
 
-    fun getTimeUnitsDescending(): List<TimeUnits> = entries.reversed()
+    val timeUnitsDescending: List<TimeUnits>
+      get() = entries.reversed()
 
     /**
      * Get the largest [TimeUnits] whose span is the same ore less than [span].
      * Returns the largest [TimeUnits] if there is no [TimeUnits] whose span is the same or less than [span].
      */
     fun sameOrLessThan(@ms span: Double): TimeUnits {
-      val timeUnits = getTimeUnitsDescending()
+      val timeUnits = timeUnitsDescending
       for (timeUnit in timeUnits) {
         if (timeUnit.span <= span) {
           return timeUnit
@@ -55,7 +57,7 @@ enum class TimeUnits(@ms val span: Double, val unit: String) {
      * Returns the smallest [TimeUnits] if there is no [TimeUnits] whose span is the same or greater than [span].
      */
     fun sameOrGreaterThan(@ms span: Double): TimeUnits {
-      val timeUnits = getTimeUnitsAscending()
+      val timeUnits = timeUnitsAscending
       for (timeUnit in timeUnits) {
         if (timeUnit.span >= span) {
           return timeUnit

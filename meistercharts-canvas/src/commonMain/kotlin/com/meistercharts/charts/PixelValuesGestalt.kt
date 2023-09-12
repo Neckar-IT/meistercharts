@@ -29,7 +29,7 @@ import com.meistercharts.algorithms.layers.Limit
 import com.meistercharts.algorithms.layers.LimitsLayer
 import com.meistercharts.algorithms.layers.LowerLimit
 import com.meistercharts.algorithms.layers.UpperLimit
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.ZeroLinesLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.clipped

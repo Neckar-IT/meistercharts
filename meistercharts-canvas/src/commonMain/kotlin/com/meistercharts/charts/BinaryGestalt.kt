@@ -19,8 +19,8 @@ import com.meistercharts.range.BinaryValueRange
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.BinaryLayer
-import com.meistercharts.algorithms.layers.BinaryTicksProvider
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.BinaryTicksProvider
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.annotations.Zoomed

@@ -42,7 +42,7 @@ import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms

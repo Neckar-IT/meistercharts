@@ -15,6 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed

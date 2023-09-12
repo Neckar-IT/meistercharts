@@ -19,9 +19,9 @@ import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.Layers.PaintingOrder
-import com.meistercharts.algorithms.layers.MultiValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.range.ValueRange
 import it.neckar.open.provider.asSizedProvider

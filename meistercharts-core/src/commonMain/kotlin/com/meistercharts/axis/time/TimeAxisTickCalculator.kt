@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.axis
+package com.meistercharts.axis.time
 
 import com.meistercharts.time.klockGreatestSupportedTimestamp
 import com.meistercharts.time.klockSmallestSupportedTimestamp
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
 
@@ -49,7 +50,7 @@ object TimeAxisTickCalculator {
      * The time zone
      */
     timeZone: TimeZone = TimeZone.UTC
-  ): @ms DoubleArray {
+  ): @ms DoubleArrayList {
     require(startTimestamp >= klockSmallestSupportedTimestamp) { "start timestamp must be greater than or equal to ${klockSmallestSupportedTimestamp.formatUtc()} but was ${startTimestamp.formatUtc()}" }
     require(startTimestamp <= klockGreatestSupportedTimestamp) { "start timestamp must be less than or equal to ${klockGreatestSupportedTimestamp.formatUtc()} but was ${startTimestamp.formatUtc()}" }
     require(endTimestamp >= klockSmallestSupportedTimestamp) { "end timestamp must be greater than or equal to ${klockSmallestSupportedTimestamp.formatUtc()} but was ${endTimestamp.formatUtc()}" }
@@ -58,6 +59,6 @@ object TimeAxisTickCalculator {
     require(startTimestamp <= endTimestamp) { "start <$startTimestamp> (${startTimestamp.formatUtc()} must be less than or equal to end <$endTimestamp> (${endTimestamp.formatUtc()}" }
 
     val timeTickDistance: TimeTickDistance = TimeTickDistance.forTicks(minTickDistance)
-    return timeTickDistance.calculateTicks(startTimestamp, endTimestamp, timeZone, true)
+    return timeTickDistance.calculateTicks(startTimestamp, endTimestamp, timeZone)
   }
 }

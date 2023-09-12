@@ -17,7 +17,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import it.neckar.open.formatting.*
 import it.neckar.open.i18n.Locale
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import kotlin.js.Date
 import kotlin.test.Ignore
 import kotlin.test.Test

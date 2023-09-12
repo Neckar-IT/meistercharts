@@ -27,7 +27,7 @@ import it.neckar.geometry.Size
 import com.meistercharts.time.TimeRange
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.floor
-import it.neckar.open.time.TimeConstants
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Disabled

@@ -118,6 +118,7 @@ public object Libs {
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
 
+  @Deprecated("Do not use anymore!")
     public const val klock: String = "com.soywiz.korlibs.klock:klock:_"
 
     public const val okhttp: String = "com.squareup.okhttp3:okhttp:_"

@@ -6,7 +6,9 @@ import it.neckar.open.unit.si.s
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.chrono.ChronoZonedDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Returns the double millis from the instant
@@ -67,3 +69,6 @@ val OffsetDateTime.millis: Int
   }
 
 
+fun ZonedDateTime.toISOString(): String {
+  return DateTimeFormatter.ISO_DATE_TIME.format(this)
+}

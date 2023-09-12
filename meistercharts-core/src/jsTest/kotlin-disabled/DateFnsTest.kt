@@ -16,7 +16,7 @@
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.meistercharts.algorithms.time.timeZoneOffsetProvider
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.si.ms
 import kotlin.js.Date
 import kotlin.test.Test

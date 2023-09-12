@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers
+package com.meistercharts.algorithms.layers.axis.time
 
+import com.meistercharts.algorithms.layers.AxisConfiguration
+import com.meistercharts.algorithms.layers.AxisPaintingVariables
+import com.meistercharts.algorithms.layers.AxisPaintingVariablesImpl
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.time.TimeRange
-import com.meistercharts.axis.DistanceYears
-import com.meistercharts.axis.TimeTickDistance
+import com.meistercharts.axis.time.DistanceYears
+import com.meistercharts.axis.time.TimeTickDistance
 import com.meistercharts.annotations.Domain
+import com.meistercharts.axis.time.DistanceMillis
 import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.layout.cache.StringsCache
@@ -52,6 +57,11 @@ interface TimeAxisPaintingVariables : AxisPaintingVariables {
    * The distance between the offset ticks
    */
   val offsetTickDistance: TimeTickDistance
+
+  /**
+   * The distance between the ticks (*not* the offset)
+   */
+  val tickDistance: TimeTickDistance
 
   /**
    * The domain values for the offset ticks
@@ -105,6 +115,11 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
    */
   override var offsetTickDistance: TimeTickDistance = DistanceYears.OneYear
 
+  /**
+   * The distance between the ticks (*not* the offset)
+   */
+  override var tickDistance: TimeTickDistance = DistanceYears.OneYear
+
 
   override var tickDomainValues: @MayBeNaN @ms @Domain DoubleCache = DoubleCache()
 
@@ -121,6 +136,8 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
     offsetTickDomainValues.reset()
     offsetTicksFormatted.reset()
     offsetTickDistance = DistanceYears.OneYear
+
+    tickDistance = DistanceMillis.smallest
 
     tickDomainValues.reset()
     ticksFormatted.reset()

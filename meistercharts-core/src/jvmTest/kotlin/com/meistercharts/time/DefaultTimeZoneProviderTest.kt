@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import it.neckar.open.i18n.SystemTimeZoneProvider
 import it.neckar.open.test.utils.WithTimeZone
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import org.junit.jupiter.api.Test
 
 class DefaultTimeZoneProviderTest {

@@ -25,7 +25,7 @@ import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.time.ClockNowProvider
 import it.neckar.open.time.RealClockTime
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.time.VirtualNowProvider
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms

@@ -19,7 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.time.DefaultTimeZoneOffsetProvider
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.DurationUnit

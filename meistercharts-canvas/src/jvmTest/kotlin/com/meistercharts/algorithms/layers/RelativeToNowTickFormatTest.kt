@@ -18,7 +18,8 @@ package com.meistercharts.algorithms.layers
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.Meistercharts
-import com.meistercharts.axis.DistanceDays
+import com.meistercharts.algorithms.layers.axis.time.RelativeToNowTickFormat
+import com.meistercharts.axis.time.DistanceDays
 import it.neckar.open.i18n.I18nConfiguration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,6 +33,6 @@ class RelativeToNowTickFormatTest {
 
   @Test
   fun testRelativeFormat() {
-    assertThat(RelativeToNowTickFormat.format(10.0, DistanceDays(7), I18nConfiguration.Germany)).isEqualTo("-0 y 0 M 0 d 0 h 0 min 0 s 113 ms")
+    assertThat(RelativeToNowTickFormat.format(10.0, DistanceDays(DistanceDays.TicksPerMonth.Every5Days), I18nConfiguration.Germany)).isEqualTo("-0 y 0 M 0 d 0 h 0 min 0 s 113 ms")
   }
 }

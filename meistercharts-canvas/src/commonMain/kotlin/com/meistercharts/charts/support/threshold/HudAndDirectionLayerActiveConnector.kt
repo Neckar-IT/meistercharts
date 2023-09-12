@@ -17,9 +17,9 @@ package com.meistercharts.charts.support.threshold
 
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
-import com.meistercharts.algorithms.layers.HudElementIndex
-import com.meistercharts.algorithms.layers.ValueAxisHudInteractionLayer
-import com.meistercharts.algorithms.layers.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudInteractionLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import it.neckar.open.provider.SizedProvider

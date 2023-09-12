@@ -46,6 +46,15 @@ inline fun IntArray.fastForEachIndexed(callback: (index: Int, value: Int) -> Uni
   }
 }
 
+inline fun IntArray.fastForEachReversed(callback: (Int) -> Unit) {
+  val currentSize = size
+  var n = currentSize - 1
+  while (n >= 0) {
+    callback(this[n])
+    n--
+  }
+}
+
 inline fun BooleanArray.fastForEach(callback: (value: Boolean) -> Unit) {
   var n = 0
   val currentSize = size

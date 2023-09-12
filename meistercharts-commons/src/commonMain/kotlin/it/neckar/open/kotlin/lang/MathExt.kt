@@ -606,3 +606,33 @@ fun Double.findMagnitudeCeil(): Int {
 fun Double.findMagnitudeValueCeil(): Double {
   return 10.0.pow(this.findMagnitudeCeil())
 }
+
+/**
+ * Rounds down the int value to a multiple of [base]
+ */
+fun Int.roundDownToBase(base: Int): Int {
+  require(base != 0) {
+    "base must not be 0"
+  }
+  return when {
+    this % base == 0 -> {
+      this
+    }
+    this >= 0 -> {
+      this / base * base
+    }
+    else -> {
+      (this / base - 1) * base
+    }
+  }
+}
+
+/**
+ * Rounds down the int value to a multiple of [base]
+ */
+fun Double.roundDownToBase(base: Double): Double {
+  require(base != 0.0) {
+    "base must not be 0.0"
+  }
+  return (this / base).floor() * base
+}

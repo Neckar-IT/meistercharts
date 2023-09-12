@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.layers.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
 

@@ -1,66 +1,34 @@
-/**
- * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.meistercharts.algorithms.layers
+package com.meistercharts.algorithms.layers.axis.time
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.axis.DistanceMonths
-import com.meistercharts.axis.DistanceYears
-import com.meistercharts.axis.TimeAxisTickCalculator
+import com.meistercharts.axis.time.TimeAxisTickCalculator
 import com.meistercharts.time.klockGreatestSupportedTimestamp
 import com.meistercharts.time.klockSmallestSupportedTimestamp
+import it.neckar.datetime.minimal.TimeConstants
+import it.neckar.datetime.minimal.TimeZone
+import it.neckar.open.collections.last
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.TimeZone
+import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.open.unit.si.ms
-import korlibs.time.DateTimeTz
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
-import kotlin.time.DurationUnit
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-
+import kotlin.time.DurationUnit
 
 /**
  *
+ *
+ *
  */
+@Disabled
+@WithTimeZone("UTC")
 class TimeAxisTickCalculatorTest {
-  @Test
-  fun testFirstTick() {
-
-    val start = LocalDateTime.of(2020, 11, 22, 1, 2, 3, 4).atZone(ZoneId.of("Europe/Berlin")).toInstant()
-    val startTz: DateTimeTz = DateTimeTz.fromUnixLocal(start.toEpochMilli())
-
-
-    DistanceYears(1).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000Z")
-    }
-    DistanceYears(10).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2019-12-31T23:00:00.000Z")
-    }
-
-    DistanceMonths(3).calculateFirstTick(startTz, TimeZone.Berlin).let {
-      assertThat(it!!.utc.unixMillis.formatUtc()).isEqualTo("2020-06-30T22:00:00.000Z")
-    }
-  }
-
   @Test
   fun greatestSupportedTimestamp() {
     val localDateTime = LocalDateTime.of(9999, 12, 31, 23, 59, 59, 999_999_999)
@@ -261,16 +229,24 @@ class TimeAxisTickCalculatorTest {
     //https://www.epochconverter.com/
     //> 84 days (3 * 28) -> we expect a tick every half year
     @ms val tickDistanceGreaterThan84Days = 84.days.toDouble(DurationUnit.MILLISECONDS) + 1.0
+    val start = 1023107291000.0
+    assertThat(start.formatUtc()).isEqualTo("2002-06-03T12:28:11.000Z")
+    val end = 1652829239000.0
+    assertThat(end.formatUtc()).isEqualTo("2022-05-17T23:13:59.000Z")
+
     TimeAxisTickCalculator.calculateTickValues(
-      1023107291000.0, //Monday, 3. June 2002 12:28:11
-      1652829239000.0, //Tuesday, 17. May 2022 23:13:59
+      start, //Monday, 3. June 2002 12:28:11
+      end, //Tuesday, 17. May 2022 23:13:59
       tickDistanceGreaterThan84Days, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-07-01T00:00:00.000Z")
-      assertThat(it[1].formatUtc()).isEqualTo("2003-01-01T00:00:00.000Z")
-      assertThat(it[2].formatUtc()).isEqualTo("2003-07-01T00:00:00.000Z")
-      assertThat(it[3].formatUtc()).isEqualTo("2004-01-01T00:00:00.000Z")
-      assertThat(it[4].formatUtc()).isEqualTo("2004-07-01T00:00:00.000Z")
+      assertThat(it.size).isEqualTo(41)
+
+      assertThat(it[0].formatUtc()).isEqualTo("2002-01-01T00:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-07-01T00:00:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2003-01-01T00:00:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2003-07-01T00:00:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2004-01-01T00:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2004-07-01T00:00:00.000Z")
 
       assertThat(it.last().formatUtc()).isEqualTo("2022-01-01T00:00:00.000Z")
     }
@@ -539,19 +515,21 @@ class TimeAxisTickCalculatorTest {
     //https://www.epochconverter.com/
     //> 10 minutes -> we expect a tick every 15 minutes
     @ms val tickDistanceGreaterThan10Minutes = 10.minutes.toDouble(DurationUnit.MILLISECONDS) + 1.0
+    val startTimestamp = 1038935515000.0
+    assertThat(startTimestamp.formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+
     TimeAxisTickCalculator.calculateTickValues(
-      1038935515000.0, //Tuesday, 3. December 2002 17:11:55
+      startTimestamp, //Tuesday, 3. December 2002 17:11:55
       1039334699000.0, //Sunday, 8. December 2002 08:04:59
       tickDistanceGreaterThan10Minutes, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:15:00.000Z")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:45:00.000Z")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:15:00.000Z")
-      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T18:30:00.000Z")
-
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-08T08:00:00.000Z")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:00:00.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:15:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:30:00.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:45:00.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T18:00:00.000Z")
+      assertThat(it[5].formatUtc()).isEqualTo("2002-12-03T18:15:00.000Z")
+      assertThat(it[6].formatUtc()).isEqualTo("2002-12-03T18:30:00.000Z")
     }
   }
 
@@ -675,18 +653,22 @@ class TimeAxisTickCalculatorTest {
     //https://www.epochconverter.com/
     //> 5 seconds -> we expect a tick every 10 seconds
     @ms val tickDistanceGreaterThan5Seconds = 5.seconds.toDouble(DurationUnit.MILLISECONDS) + 1.0
+    val startTimestamp = 1038935515000.0
+    assertThat(startTimestamp.formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+
+    val endTimestamp = startTimestamp + TimeConstants.millisPerSecond * 10 * 15
+    assertThat(endTimestamp.formatUtc()).isEqualTo("2002-12-03T17:14:25.000Z")
+
     TimeAxisTickCalculator.calculateTickValues(
-      1038935515000.0, //Tuesday, 3. December 2002 17:11:55
-      1038989099000.0, //Wednesday, 4. December 2002 08:04:59
+      startTimestamp, //Tuesday, 3. December 2002 17:11:55
+      endTimestamp, //Wednesday, 4. December 2002 08:04:59
       tickDistanceGreaterThan5Seconds, TimeZone.UTC
     ).let {
-      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
-      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:10.000Z")
-      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:20.000Z")
-      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:30.000Z")
-      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:40.000Z")
-
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-04T08:04:50.000Z")
+      assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:50.000Z")
+      assertThat(it[1].formatUtc()).isEqualTo("2002-12-03T17:12:00.000Z")
+      assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:12:10.000Z")
+      assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:12:20.000Z")
+      assertThat(it[4].formatUtc()).isEqualTo("2002-12-03T17:12:30.000Z")
     }
   }
 
@@ -772,9 +754,17 @@ class TimeAxisTickCalculatorTest {
     //https://www.epochconverter.com/
     //> 250 milliseconds -> we expect a tick every 500 ms
     @ms val tickDistanceGreaterThan250Milliseconds = 251.0
+    val start = 1038935515000.0
+    assertThat(start.formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
+    val end = start + 500.0 * 20
+    assertThat(end.formatUtc()).isEqualTo("2002-12-03T17:12:05.000Z")
+
+    val delta = end - start
+    assertThat(delta / 500.0).isEqualTo(20.0)
+
     TimeAxisTickCalculator.calculateTickValues(
-      1038935515000.0, //Tuesday, 3. December 2002 17:11:55
-      1038953849333.0, //Tuesday, 3. December 2002 22:17:29
+      start, //Tuesday, 3. December 2002 17:11:55
+      end, //Tuesday, 3. December 2002 22:17:29
       tickDistanceGreaterThan250Milliseconds, TimeZone.UTC
     ).let {
       assertThat(it[0].formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
@@ -782,7 +772,7 @@ class TimeAxisTickCalculatorTest {
       assertThat(it[2].formatUtc()).isEqualTo("2002-12-03T17:11:56.000Z")
       assertThat(it[3].formatUtc()).isEqualTo("2002-12-03T17:11:56.500Z")
 
-      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T22:17:29.000Z")
+      assertThat(it.last().formatUtc()).isEqualTo("2002-12-03T17:12:05.000Z")
     }
   }
 

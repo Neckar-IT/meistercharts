@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative

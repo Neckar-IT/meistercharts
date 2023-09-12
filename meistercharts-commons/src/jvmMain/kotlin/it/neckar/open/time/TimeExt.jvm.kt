@@ -12,6 +12,14 @@ import java.util.Date
  * This method must only be used for debugging purposes.
  */
 actual fun Double.formatUtcForDebug(): String {
+  if (this.isNaN()) {
+    return "NaN"
+  }
+
+  if (this.isInfinite()) {
+    return "∞"
+  }
+
   return Instant.ofEpochMilli(this.toLong()).atOffset(ZoneOffset.UTC).format(utcDateTimeFormat)
 }
 

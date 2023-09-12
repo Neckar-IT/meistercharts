@@ -37,7 +37,7 @@ import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.RandomWithSeed
-import it.neckar.open.time.TimeConstants
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours

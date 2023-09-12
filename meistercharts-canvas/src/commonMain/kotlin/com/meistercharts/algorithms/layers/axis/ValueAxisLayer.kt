@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.layers
+package com.meistercharts.algorithms.layers.axis
 
-import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.linear
-import com.meistercharts.algorithms.layers.ValueAxisLayer.Companion.logarithmic
+import com.meistercharts.algorithms.layers.AxisConfiguration
+import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer.Companion.linear
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer.Companion.logarithmic
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ConfigurationDsl

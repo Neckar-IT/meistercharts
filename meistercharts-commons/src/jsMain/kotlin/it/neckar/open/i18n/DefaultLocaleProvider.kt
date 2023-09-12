@@ -5,7 +5,7 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.logging.ifDebug
 import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import kotlinx.browser.window
 import org.w3c.dom.Navigator
 

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.canvas.slider
 
+import it.neckar.datetime.minimal.Year
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -22,7 +23,6 @@ import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.other.pct
-import korlibs.time.Year
 import kotlin.jvm.JvmInline
 
 /**
@@ -51,7 +51,7 @@ class YearSlider(
         return 0
       }
 
-      return years.last() - years.first()
+      return (years.last() - years.first()).value
     }
 
 
@@ -88,7 +88,7 @@ class YearSlider(
 
     val firstYear = years.first()
 
-    val deltaToFirstYear = year - firstYear
+    val deltaToFirstYear = (year - firstYear).value
     return 1.0 / yearsDelta * deltaToFirstYear
   }
 
@@ -124,7 +124,7 @@ class YearSlider(
 
     ticksLabels = MultiProvider { index ->
       val year = years.valueAt(index)
-      year.year.toString()
+      year.toString()
     }
 
     additionalSliderConfiguration()
