@@ -160,3 +160,13 @@ fun DoubleArrayList.removeAll(predicate: (Double) -> Boolean) {
     }
   }
 }
+
+fun DoubleArrayList.fastContains(value: Double): Boolean {
+  this.fastForEach {
+    if (it == value) {
+      return true
+    }
+  }
+
+  return false
+}

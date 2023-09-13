@@ -18,9 +18,9 @@ package com.meistercharts.js
 import com.meistercharts.Meistercharts
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.Meisterchart
 import com.meistercharts.canvas.devicePixelRatioSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.events.ImageLoadedEventBroker
 import it.neckar.open.unit.si.ms
@@ -37,7 +37,10 @@ class MeisterchartJS(
 ) : Meisterchart {
 
   /**
-   * The holder of the chart
+   * The holder of the chart.
+   *
+   * The holder contains the canvas and the native components.
+   * It should be added to the DOM.
    */
   val holder: HTMLDivElement = (document.createElement("DIV") as HTMLDivElement).also {
     it.appendChild(htmlCanvas.canvasElement)
@@ -89,6 +92,10 @@ class MeisterchartJS(
   init {
     //Ensure the configuration is loaded/configured
     MeisterChartsPlatform.init()
+
+    //set the instance
+    @Suppress("DEPRECATION")
+    chartSupport.setMeisterchartInstance(this)
 
     ImageLoadedEventBroker.onLoaded {
       //repaint when an image becomes available

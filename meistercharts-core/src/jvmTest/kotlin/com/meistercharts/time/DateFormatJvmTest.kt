@@ -32,7 +32,7 @@ import it.neckar.open.formatting.yearMonthFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
 import it.neckar.open.kotlin.lang.SpecialChars
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import org.junit.jupiter.api.Test
 
 /**

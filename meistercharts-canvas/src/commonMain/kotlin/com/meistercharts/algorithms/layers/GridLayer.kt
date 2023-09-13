@@ -152,7 +152,7 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
           val zoomedValue = layout.calculateCenter(BoxIndex(index)) ?: 0.0
 
           //Switch based on the orientation of the *value axis*!
-          return when (axisConfiguration.orientation) {
+          return when (configuration.orientation) {
             Orientation.Vertical -> {
               //Axis line: From top to bottom --> grid horizontal
               param1.chartCalculator.zoomed2windowY(zoomedValue)
@@ -165,7 +165,7 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
           }
         }
       },
-      orientationProvider = MultiProvider { axisConfiguration.orientation.opposite() }
+      orientationProvider = MultiProvider { configuration.orientation.opposite() }
     ),
     dataConfiguration = dataConfiguration
   )

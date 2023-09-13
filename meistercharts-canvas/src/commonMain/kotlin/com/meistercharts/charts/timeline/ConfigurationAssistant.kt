@@ -166,11 +166,11 @@ class ConfigurationAssistant(
       "applyToGestalt: $calculator"
     }
 
-    gestalt.data.minimumSamplingPeriod = calculator.recordingSamplingPeriod
+    gestalt.configuration.minimumSamplingPeriod = calculator.recordingSamplingPeriod
     gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(calculator.minDistanceBetweenSamples).withMinimum(calculator.recordingSamplingPeriod)
     //gestalt.historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MaxDistanceSamplingPeriodCalculator(maxDistanceBetweenDataPoints).withMinimum(recordingSamplingPeriod)
-    gestalt.style.contentAreaDuration = calculator.contentAreaDuration
-    gestalt.data.historyGapCalculator = DefaultHistoryGapCalculator(calculator.gapFactor)
+    gestalt.configuration.contentAreaDuration = calculator.contentAreaDuration
+    gestalt.configuration.historyGapCalculator = DefaultHistoryGapCalculator(calculator.gapFactor)
 
     gestalt.chartSupport().let {
       it.zoomAndTranslationSupport.zoomAndTranslationDefaults = createZoomAndTranslationDefaults(gestalt)

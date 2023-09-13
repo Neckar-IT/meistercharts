@@ -115,6 +115,13 @@ data class Rectangle(
     }
 
     /**
+     * Returns a rectangle created from centered X/Y coordinates
+     */
+    fun fromCenter(centerX: Double, centerY: Double, width: Double, height: Double): Rectangle {
+      return Rectangle(centerX - width / 2.0, centerY - height / 2.0, width, height)
+    }
+
+    /**
      * Returns a rectangle that has its origin centered with the given width/height
      */
     fun centered(width: Double, height: Double): Rectangle {

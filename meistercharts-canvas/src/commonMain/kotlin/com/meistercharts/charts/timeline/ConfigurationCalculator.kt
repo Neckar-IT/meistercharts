@@ -97,7 +97,7 @@ class ConfigurationCalculator(
       }
     }
 
-    val historyStorage = gestalt.data.historyStorage
+    val historyStorage = gestalt.configuration.historyStorage
 
     return DoubleProvider {
       @MayBeNaN @ms val start = historyStorage.getStart()

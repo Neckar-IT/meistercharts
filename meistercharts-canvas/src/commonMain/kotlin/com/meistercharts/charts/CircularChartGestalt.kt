@@ -42,26 +42,31 @@ import it.neckar.open.unit.other.pct
  * Configuration for a simple circular chart
  */
 class CircularChartGestalt(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    absoluteValuesProvider: @Domain DoublesProvider = createDefaultValuesProvider(),
+    relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative(),
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(absoluteValuesProvider, relativeValuesProvider), additionalConfiguration)
 
-  val layer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(data::relativeValuesProvider.delegate())) {
+  val layer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(configuration::relativeValuesProvider.delegate())) {
   }
 
-  val legendLayer: CircularChartLegendLayer = CircularChartLegendLayer(data::absoluteValuesProvider.delegate()) {
+  val legendLayer: CircularChartLegendLayer = CircularChartLegendLayer(configuration::absoluteValuesProvider.delegate()) {
     font = FontDescriptorFragment(16.0)
   }
 
   init {
-    style.colorsProviderProperty.consumeImmediately {
+    configuration.additionalConfiguration()
+    configuration.colorsProviderProperty.consumeImmediately {
       layer.configuration.segmentsColorProvider = it
     }
 
     legendLayer.configuration.segmentsLabelProvider = createDefaultLabelProvider()
-    legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(style::colorsProvider.delegate())
+    legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(configuration::colorsProvider.delegate())
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {
@@ -80,7 +85,8 @@ class CircularChartGestalt(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * Provides values for circular chart segments.
      * The values are provided in percentage. The sum of the values must not be greater than 1.0
@@ -90,11 +96,8 @@ class CircularChartGestalt(
     /**
      * Provides the *relative* values that are used to calculate the size of the segments
      */
-    var relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative()
-  )
-
-  @ConfigurationDsl
-  class Style {
+    var relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative(),
+  ) {
     val colorsProviderProperty: ObservableObject<MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color>> = ObservableObject(createDefaultColorsProvider())
     var colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by colorsProviderProperty
   }

@@ -1,7 +1,6 @@
 package it.neckar.open.i18n
 
-import it.neckar.open.time.TimeZone
-
+import it.neckar.datetime.minimal.TimeZone
 /**
  * Contains the configuration for I18n
  */

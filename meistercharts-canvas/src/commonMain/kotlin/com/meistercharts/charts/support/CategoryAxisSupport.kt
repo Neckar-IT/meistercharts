@@ -18,7 +18,7 @@ package com.meistercharts.charts.support
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.Layers
-import com.meistercharts.algorithms.layers.MultiValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -55,7 +55,7 @@ class CategoryAxisSupport<Key>(
         configuration.layoutProvider(key)
       }
     ).also { layer ->
-      configuration.axisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+      configuration.axisConfiguration(layer.configuration, key, layer, preferredAxisTitleLocation)
     }
   }
 
@@ -91,7 +91,7 @@ class CategoryAxisSupport<Key>(
         field = value
         //Apply the new configuration to existing
         axisLayersCache.forEach { key, layer ->
-          value.invoke(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+          value.invoke(layer.configuration, key, layer, preferredAxisTitleLocation)
         }
       }
 

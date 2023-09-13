@@ -15,7 +15,7 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.layers.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
 
@@ -23,7 +23,7 @@ import com.meistercharts.history.DecimalDataSeriesIndex
  * Applies the default configuration for Easy API
  */
 fun TimeLineChartGestalt.applyEasyApiDefaults() {
-  this.style.applyValueAxisTitleOnTop()
+  this.configuration.applyValueAxisTitleOnTop()
   thresholdsSupport.configuration.hudLayerConfiguration = { _: DecimalDataSeriesIndex, _: ValueAxisHudLayer ->
   }
 }

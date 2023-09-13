@@ -18,7 +18,7 @@ package com.meistercharts.charts
 import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
@@ -44,33 +44,41 @@ import it.neckar.open.observable.ObservableObject
  * A scatter plot that paints values with x/y values
  */
 class ScatterPlotGestalt(
-  val data: Data = createDefaultData(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    xValues: @Domain DoublesProvider,
+    yValues: @Domain DoublesProvider,
+    valueRangeX: ValueRangeProvider,
+    valueRangeY: ValueRangeProvider,
+    valueAxisCaptionX: String = "Demo Data X",
+    valueAxisCaptionY: String = "Demo Data Y",
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(xValues, yValues, valueRangeX, valueRangeY, valueAxisCaptionX, valueAxisCaptionY), additionalConfiguration)
 
   val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt(
     Insets(50.0, 50.0, 50.0, 70.0)
   )
 
   val valueAxisXLayer: ValueAxisLayer = ValueAxisLayer(
-    ValueAxisLayer.Data(
-      valueRangeProvider = data.valueRangeXProvider
+    ValueAxisLayer.Configuration(
+      valueRangeProvider = configuration.valueRangeXProvider
     )
   ) {
-    titleProvider = { _, _ -> data.valueAxisCaptionX }
+    titleProvider = { _, _ -> configuration.valueAxisCaptionX }
     tickOrientation = Vicinity.Outside
     paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Bottom
   }
 
   val valueAxisYLayer: ValueAxisLayer = ValueAxisLayer(
-    ValueAxisLayer.Data(
-      valueRangeProvider = data.valueRangeYProvider
+    ValueAxisLayer.Configuration(
+      valueRangeProvider = configuration.valueRangeYProvider
     )
   ) {
-    titleProvider = { _, _ -> data.valueAxisCaptionY }
+    titleProvider = { _, _ -> configuration.valueAxisCaptionY }
     tickOrientation = Vicinity.Outside
     paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Left
@@ -83,14 +91,16 @@ class ScatterPlotGestalt(
     lineStyles = LineStyle(color = Color.lightgray, lineWidth = 0.5).asProvider1()
   }
 
-  val scatterPlotLayer: ScatterPlotLayer = ScatterPlotLayer(data)
+  val scatterPlotLayer: ScatterPlotLayer = ScatterPlotLayer(configuration)
 
   init {
-    style.marginProperty.consumeImmediately {
+    configuration.additionalConfiguration()
+
+    configuration.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.axisConfiguration.size = it.bottom
-      valueAxisYLayer.axisConfiguration.size = it.left
+      valueAxisXLayer.configuration.size = it.bottom
+      valueAxisYLayer.configuration.size = it.left
 
       gridXLayer.configuration.passpartout = it
       gridYLayer.configuration.passpartout = it
@@ -113,7 +123,8 @@ class ScatterPlotGestalt(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     xValues: @Domain DoublesProvider,
     yValues: @Domain DoublesProvider,
     valueRangeX: ValueRangeProvider,
@@ -130,10 +141,6 @@ class ScatterPlotGestalt(
     //TODO i18n
     val valueAxisCaptionY: String = "Demo Data Y",
   ) : ScatterPlotLayer.Configuration(xValues, yValues, valueRangeX, valueRangeY) {
-  }
-
-  @ConfigurationDsl
-  class Style {
     /**
      * The margin of the chart
      */
@@ -144,8 +151,8 @@ class ScatterPlotGestalt(
   companion object {
     fun createDefaultData(
       valueRangeX: ValueRange = ValueRange.linear(0.0, 100.0),
-      valueRangeY: ValueRange = ValueRange.linear(0.0, 100.0)
-    ): Data {
+      valueRangeY: ValueRange = ValueRange.linear(0.0, 100.0),
+    ): Configuration {
       val xValues = DoubleArrayList()
       val yValues = DoubleArrayList()
 
@@ -160,7 +167,7 @@ class ScatterPlotGestalt(
         }
       }
 
-      return Data(
+      return Configuration(
         DoublesProvider.forValues(*xValues.data),
         DoublesProvider.forValues(*yValues.data),
         {

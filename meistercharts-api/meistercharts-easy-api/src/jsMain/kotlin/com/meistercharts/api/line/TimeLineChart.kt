@@ -16,9 +16,9 @@
 package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.AxisConfiguration
-import com.meistercharts.algorithms.layers.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
 import com.meistercharts.algorithms.layers.visibleIf
@@ -122,7 +122,7 @@ class TimeLineChart internal constructor(
    * Notifies the observers about a time range change - if the time range has changed
    */
   private fun notifyVisibleTimeRangeChangedIfNecessary() {
-    val currentVisibleTimeRange = meisterCharts.chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.style.contentAreaTimeRange)
+    val currentVisibleTimeRange = meisterCharts.chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.configuration.contentAreaTimeRange)
     if (currentVisibleTimeRange == previousVisibleTimeRange) {
       return
     }
@@ -155,13 +155,13 @@ class TimeLineChart internal constructor(
     meisterCharts.chartSupport.rootChartState.zoomProperty.consume {
       scheduleTimeRangeChangedNotification()
     }
-    gestalt.timeLineChartGestalt.style.contentAreaTimeRangeProperty.consume {
+    gestalt.timeLineChartGestalt.configuration.contentAreaTimeRangeProperty.consume {
       scheduleTimeRangeChangedNotification()
     }
 
     //If the history configuration changes we need to clear the history because
     //managing different configurations in a single history is not supported yet.
-    gestalt.timeLineChartGestalt.data.historyConfigurationProperty.consume {
+    gestalt.timeLineChartGestalt.configuration.historyConfigurationProperty.consume {
       clearHistory()
     }
 
@@ -174,7 +174,7 @@ class TimeLineChart internal constructor(
     })
 
     //Apply the defaults for all axis styles
-    gestalt.timeLineChartGestalt.style.valueAxisStyleConfiguration = { style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex ->
+    gestalt.timeLineChartGestalt.configuration.valueAxisStyleConfiguration = { style: ValueAxisLayer.Configuration, dataSeriesIndex: DecimalDataSeriesIndex ->
       style.applyTimeLineChartStyle()
     }
 
@@ -248,13 +248,13 @@ class TimeLineChart internal constructor(
     }
 
     jsStyle.visibleTimeRange?.toModel()?.let {
-      @DomainRelative val startDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.start)
-      @DomainRelative val endDateRelative = gestalt.timeLineChartGestalt.style.contentAreaTimeRange.time2relative(it.end)
+      @DomainRelative val startDateRelative = gestalt.timeLineChartGestalt.configuration.contentAreaTimeRange.time2relative(it.start)
+      @DomainRelative val endDateRelative = gestalt.timeLineChartGestalt.configuration.contentAreaTimeRange.time2relative(it.end)
       meisterCharts.chartSupport.zoomAndTranslationSupport.fitX(startDateRelative, endDateRelative, reason = UpdateReason.ApiCall)
     }
 
     jsStyle.crossWirePosition?.let {
-      gestalt.timeLineChartGestalt.style.crossWirePositionX = it
+      gestalt.timeLineChartGestalt.configuration.crossWirePositionX = it
     }
 
     gestalt.timeLineChartGestalt.crossWireLayerDecimalValues.configuration.applyCrossWireStyle(jsStyle.crossWireStyle)
@@ -272,29 +272,29 @@ class TimeLineChart internal constructor(
     }
 
     jsStyle.crossWireDecimalsFormat?.let {
-      this.style.crossWireDecimalFormat = TimeLineChartConverter.toCrossWireFormat(it)
+      this.configuration.crossWireDecimalFormat = TimeLineChartConverter.toCrossWireFormat(it)
     }
 
     jsStyle.crossWireDecimalsLabelTextColor?.toColor()?.let {
-      this.style.crossWireDecimalsLabelTextColors = MultiProvider.always(it)
+      this.configuration.crossWireDecimalsLabelTextColors = MultiProvider.always(it)
     }
 
     jsStyle.crossWireDecimalsLabelBoxStyles?.let { jsBoxStyles ->
-      this.style.crossWireDecimalsLabelBoxStyles = toBoxStyles(jsBoxStyles)
-      this.style.crossWireDecimalsLabelTextColors = toColors(jsBoxStyles)
+      this.configuration.crossWireDecimalsLabelBoxStyles = toBoxStyles(jsBoxStyles)
+      this.configuration.crossWireDecimalsLabelTextColors = toColors(jsBoxStyles)
     }
 
     jsStyle.crossWireEnumsLabelBoxStyles?.let { jsBoxStyles ->
-      this.style.crossWireEnumsLabelBoxStyles = toBoxStyles(jsBoxStyles)
-      this.style.crossWireEnumsLabelTextColors = toColors(jsBoxStyles)
+      this.configuration.crossWireEnumsLabelBoxStyles = toBoxStyles(jsBoxStyles)
+      this.configuration.crossWireEnumsLabelTextColors = toColors(jsBoxStyles)
     }
 
     jsStyle.visibleLines?.let { jsVisibleLines ->
       if (jsVisibleLines.size == 1 && jsVisibleLines[0] == -1) { //check for magic "-1" value
-        this.style.showAllDecimalSeries()
+        this.configuration.showAllDecimalSeries()
       } else {
         val map = jsVisibleLines.map { DecimalDataSeriesIndex(it) }
-        this.style.requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.forList(map.toList())
+        this.configuration.requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.forList(map.toList())
       }
     }
 
@@ -302,23 +302,23 @@ class TimeLineChart internal constructor(
       if (jsVisibleValueAxes.size == 1 && jsVisibleValueAxes[0] == -1) {
         //Special handling: "-1" results in all value axis visible
         val styleConfigurationsSize = jsStyle.decimalDataSeriesStyles?.size ?: 0
-        this.style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { max(styleConfigurationsSize, this.data.historyConfiguration.decimalDataSeriesCount) }
+        this.configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { max(styleConfigurationsSize, this.configuration.historyConfiguration.decimalDataSeriesCount) }
       } else {
-        this.style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.forList(jsVisibleValueAxes.toList().map { DecimalDataSeriesIndex(it) })
+        this.configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.forList(jsVisibleValueAxes.toList().map { DecimalDataSeriesIndex(it) })
       }
     }
 
     jsStyle.visibleEnumStripes?.let { jsVisibleEnumStripes ->
       if (jsVisibleEnumStripes.size == 1 && jsVisibleEnumStripes[0] == -1) { //check for magic "-1" value
-        this.style.showAllEnumSeries()
+        this.configuration.showAllEnumSeries()
       } else {
         val map = jsVisibleEnumStripes.map { EnumDataSeriesIndex(it) }
-        this.style.requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.forList(map.toList())
+        this.configuration.requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.forList(map.toList())
       }
     }
 
     jsStyle.valueAxesBackground?.toColor()?.let {
-      this.style.valueAxesBackground = it
+      this.configuration.valueAxesBackground = it
     }
 
     jsStyle.valueAxesGap?.let {
@@ -332,38 +332,38 @@ class TimeLineChart internal constructor(
         val topTitleLayer = this.getValueAxisTopTitleLayer(DecimalDataSeriesIndex(index))
 
         //Call this method *before* applying the (more specific) properties from the jsDecimalDataSeriesStyle
-        valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
+        valueAxisLayer.configuration.applyValueAxisStyle(jsValueAxisStyle)
         topTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
 
         jsDecimalDataSeriesStyle.valueAxisTitle?.let { jsTitle ->
-          valueAxisLayer.axisConfiguration.setTitle(jsTitle)
+          valueAxisLayer.configuration.setTitle(jsTitle)
         }
 
         //Overwrites the default ticks format that might have been applied by applyValueAxisStyle
         jsDecimalDataSeriesStyle.ticksFormat?.toNumberFormat()?.let {
-          valueAxisLayer.axisConfiguration.ticksFormat = it
+          valueAxisLayer.configuration.ticksFormat = it
         }
       }
     }
 
     jsStyle.enumAxisStyle?.let { jsEnumAxisStyle ->
-      enumCategoryAxisLayer.axisConfiguration.applyEnumAxisStyle(jsEnumAxisStyle)
+      enumCategoryAxisLayer.configuration.applyEnumAxisStyle(jsEnumAxisStyle)
     }
 
     jsStyle.timeAxisStyle?.let { jsTimeAxisStyle ->
-      this.timeAxisLayer.axisConfiguration.applyTimeAxisStyle(jsTimeAxisStyle)
+      this.timeAxisLayer.configuration.applyTimeAxisStyle(jsTimeAxisStyle)
 
       //Apply the size of the axis at the gestalt, too.
       //This is necessary to update clipping etc.
       jsTimeAxisStyle.axisSize?.let {
-        this.style.timeAxisSize = it
+        this.configuration.timeAxisSize = it
       }
     }
 
     jsStyle.decimalDataSeriesStyles?.let { jsDecimalDataSeriesStyles: Array<DecimalDataSeriesStyle> ->
-      this.style.lineValueRanges = TimeLineChartConverter.toValueRangeProvider(jsDecimalDataSeriesStyles)
+      this.configuration.lineValueRanges = TimeLineChartConverter.toValueRangeProvider(jsDecimalDataSeriesStyles)
 
-      this.data.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
+      this.configuration.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
         override fun size(param1: DecimalDataSeriesIndex): @HudElementIndex Int {
           val jsDataSeriesStyle: DecimalDataSeriesStyle = jsDecimalDataSeriesStyles.getOrNull(param1.value) ?: return 0
           return jsDataSeriesStyle.thresholds?.size ?: 0
@@ -377,7 +377,7 @@ class TimeLineChart internal constructor(
         }
       }
 
-      this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
+      this.configuration.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
         override fun valueAt(index: @HudElementIndex Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
           val jsDataSeriesStyle = jsDecimalDataSeriesStyles.getOrNull(param1.value)
           val threshold = jsDataSeriesStyle?.thresholds?.getOrNull(index)
@@ -399,11 +399,11 @@ class TimeLineChart internal constructor(
     }
 
     jsStyle.lineStyles?.let { jsLineStyles ->
-      this.style.lineStyles = TimeLineChartConverter.toLineStyles(jsLineStyles)
+      this.configuration.lineStyles = TimeLineChartConverter.toLineStyles(jsLineStyles)
 
-      this.style.pointPainters = TimeLineChartConverter.toPointPainters(jsLineStyles)
-      this.style.minMaxAreaPainters = TimeLineChartConverter.toMinMaxAreaPainters(jsLineStyles)
-      this.style.minMaxAreaColors = TimeLineChartConverter.toMinMaxAreaColors(jsLineStyles)
+      this.configuration.pointPainters = TimeLineChartConverter.toPointPainters(jsLineStyles)
+      this.configuration.minMaxAreaPainters = TimeLineChartConverter.toMinMaxAreaPainters(jsLineStyles)
+      this.configuration.minMaxAreaColors = TimeLineChartConverter.toMinMaxAreaColors(jsLineStyles)
 
 
       val atLeastOneLineWithDots: Boolean = jsLineStyles.any { it.pointType?.sanitize() == PointType.Dot }
@@ -457,7 +457,7 @@ class TimeLineChart internal constructor(
     //calculate the viewport top margin based on the visible axis
     var max = 0.0
 
-    style.actualVisibleValueAxesIndices.fastForEach { decimalSeriesIndex ->
+    configuration.actualVisibleValueAxesIndices.fastForEach { decimalSeriesIndex ->
       val topForThisKey = valueAxisSupport.calculateContentViewportMarginTop(decimalSeriesIndex, chartSupport())
       max = max.coerceAtLeast(topForThisKey)
     }
@@ -481,7 +481,7 @@ class TimeLineChart internal constructor(
   @JsName("getVisibleTimeRange")
   fun getVisibleTimeRange(): TimeRange {
     return with(meisterCharts.chartSupport) {
-      chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.style.contentAreaTimeRange).toJs()
+      chartCalculator.visibleTimeRangeXinWindow(gestalt.timeLineChartGestalt.configuration.contentAreaTimeRange).toJs()
     }
   }
 
@@ -494,7 +494,7 @@ class TimeLineChart internal constructor(
     jsDecimalDataSeries: Array<DecimalDataSeries>,
     jsEnumDataSeries: Array<EnumDataSeries>,
   ) {
-    gestalt.timeLineChartGestalt.data.historyConfiguration = TimeLineChartConverter.toHistoryConfiguration(jsDecimalDataSeries, jsEnumDataSeries)
+    gestalt.timeLineChartGestalt.configuration.historyConfiguration = TimeLineChartConverter.toHistoryConfiguration(jsDecimalDataSeries, jsEnumDataSeries)
   }
 
   /**
@@ -503,7 +503,7 @@ class TimeLineChart internal constructor(
   @Suppress("unused")
   @JsName("addSample")
   fun addSample(jsSample: Sample) {
-    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
+    val historyConfiguration = gestalt.timeLineChartGestalt.configuration.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSample, historyConfiguration)?.let {
       historyStorageCache.scheduleForStore(it, historyStorage.naturalSamplingPeriod)
     }
@@ -522,7 +522,7 @@ class TimeLineChart internal constructor(
 
     loggerSamples.debug("addSamples", jsSamples)
 
-    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
+    val historyConfiguration = gestalt.timeLineChartGestalt.configuration.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
       historyStorageCache.scheduleForStore(it, historyStorage.naturalSamplingPeriod)
     }
@@ -544,7 +544,7 @@ class TimeLineChart internal constructor(
 
     val samplingPeriod = SamplingPeriod.withMaxDistance(durationBetweenSamples)
 
-    val historyConfiguration = gestalt.timeLineChartGestalt.data.historyConfiguration
+    val historyConfiguration = gestalt.timeLineChartGestalt.configuration.historyConfiguration
     TimeLineChartConverter.toHistoryChunk(jsSamples, historyConfiguration)?.let {
       historyStorageCache.scheduleForStore(it, samplingPeriod)
     }
@@ -629,7 +629,7 @@ class TimeLineChart internal constructor(
 /**
  * Applies the default style for the timeline chart style
  */
-private fun ValueAxisLayer.Style.applyTimeLineChartStyle() {
+private fun ValueAxisLayer.Configuration.applyTimeLineChartStyle() {
   side = Side.Left
   tickOrientation = Vicinity.Outside
   paintRange = AxisConfiguration.PaintRange.Continuous

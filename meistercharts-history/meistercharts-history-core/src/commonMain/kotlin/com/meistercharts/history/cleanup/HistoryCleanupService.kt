@@ -15,13 +15,13 @@
  */
 package com.meistercharts.history.cleanup
 
-import com.meistercharts.history.InMemoryHistoryStorage
-import it.neckar.open.kotlin.lang.toIntCeil
-import it.neckar.open.dispose.Disposable
-import it.neckar.open.dispose.DisposeSupport
-import it.neckar.open.unit.si.ms
 import com.meistercharts.history.DeletionReport
 import com.meistercharts.history.HistoryBucketRange
+import com.meistercharts.history.InMemoryHistoryStorage
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.kotlin.lang.toIntCeil
+import it.neckar.open.unit.si.ms
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
@@ -129,7 +129,9 @@ data class MaxHistorySizeConfiguration(
      * This method returns at least 2.
      */
     fun forDuration(guaranteedDuration: @ms Double, historyBucketRange: HistoryBucketRange): MaxHistorySizeConfiguration {
-      val bucketsCount = (guaranteedDuration / historyBucketRange.duration).toIntCeil().coerceAtLeast(2)
+      val exactNumber = (guaranteedDuration / historyBucketRange.duration).toIntCeil() //the exact number of buckets that are needed to hold the given duration
+      //We must add one additional bucket for this edge case: Current is at the start of new bucket (which is not yet filled)
+      val bucketsCount = (exactNumber + 1).coerceAtLeast(2)
       return MaxHistorySizeConfiguration(bucketsCount)
     }
   }

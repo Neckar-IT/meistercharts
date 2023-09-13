@@ -16,13 +16,13 @@
 package com.meistercharts.model.category
 
 import com.meistercharts.annotations.Domain
+import it.neckar.datetime.minimal.Year
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
-import korlibs.time.Year
 
 /**
  * A simple immutable implementation of [CategorySeriesModel]. The Categories are filtered to always show the first and last category. Supports only one series.
@@ -34,7 +34,7 @@ data class FilteredCategorySeriesModel(
   val year2Price: Map<Year, Double>
 ) : CategorySeriesModel {
 
-  val categories: List<Category> = buildList { year2Price.keys.forEach { year -> add(Category(TextKey(year.year.toString()))) } }
+  val categories: List<Category> = buildList { year2Price.keys.forEach { year -> add(Category(TextKey(year.value.toString()))) } }
   val values: List<Double> = buildList { year2Price.values.forEach { value -> add(value) } }
 
   val series: List<Series> = listOf(DefaultSeries(seriesName, values))

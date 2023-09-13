@@ -20,7 +20,7 @@ import com.meistercharts.annotations.TimeRelative
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.setLast
-import it.neckar.open.time.TimeConstants
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.other.Inclusive

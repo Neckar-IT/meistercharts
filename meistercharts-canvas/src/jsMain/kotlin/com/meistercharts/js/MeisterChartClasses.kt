@@ -30,6 +30,11 @@ object MeisterChartClasses {
   const val holder: String = "meistercharts"
 
   /**
+   * Class name for the script tag that contains the configuration (JSON).
+   */
+  const val config: String = "meistercharts-config"
+
+  /**
    * Used for image loader elements
    */
   const val imageLoader: String = "meistercharts-image-loader"

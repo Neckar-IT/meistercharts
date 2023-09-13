@@ -3,7 +3,7 @@ package it.neckar.open.http
 import kotlin.jvm.JvmInline
 
 /**
- * Represents a URL
+ * Represents a URL (relative or absolute)
  */
 @JvmInline
 value class Url(val value: String) {
@@ -19,6 +19,12 @@ value class Url(val value: String) {
     return value
   }
 
+  operator fun plus(relativePath: String): Url {
+    return Url(value + relativePath)
+  }
+
   //Required for extension methods
-  companion object
+  companion object {
+    val root: Url = Url("/")
+  }
 }

@@ -23,11 +23,11 @@ import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
-import com.meistercharts.algorithms.layers.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
@@ -44,7 +44,7 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
+import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.model.category.Category
 import com.meistercharts.model.category.CategoryIndex
@@ -109,16 +109,16 @@ class BarChartGroupedGestalt constructor(
   /**
    * The current category model for the stacked bar chart
    */
-  categorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
   /**
    * The tooltip type
    */
-  toolTipType: ToolTipType = ToolTipType.Balloon,
-  styleConfiguration: Style.() -> Unit = {},
+  initialToolTipType: ToolTipType = ToolTipType.Balloon,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
-  val configuration: Configuration = Configuration(categorySeriesModel, toolTipType)
+  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType)
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
 
   /**
    * Delegate the configures the chart to have a fixed zoom and translation
@@ -424,8 +424,8 @@ class BarChartGroupedGestalt constructor(
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it
 
-      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
-      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
+      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
     }
 
     configureBuilder { meisterChartBuilder ->
@@ -446,8 +446,8 @@ class BarChartGroupedGestalt constructor(
          * Only clip the sides where the axes are.
          * We must not clip the other sides (e.g. for labels)
          */
-        val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
-        val valueAxisSide = valueAxisLayer.axisConfiguration.side
+        val categoryAxisSide = categoryAxisLayer.configuration.side
+        val valueAxisSide = valueAxisLayer.configuration.side
         // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
         val thresholdSide = if (style.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
@@ -473,7 +473,9 @@ class BarChartGroupedGestalt constructor(
     }
   }
 
-  inner class Configuration(
+  //Note that all default values are chosen in regard to a vertical chart orientation.
+  @ConfigurationDsl
+  open inner class Configuration(
     /**
      * The current category model for the stacked bar chart
      */
@@ -483,7 +485,6 @@ class BarChartGroupedGestalt constructor(
      */
     val toolTipType: ToolTipType,
   ) {
-
     /**
      * Applies the balloon tooltip size
      */
@@ -500,11 +501,7 @@ class BarChartGroupedGestalt constructor(
      * Provides the threshold labels
      */
     var thresholdLabels: HudLabelsProvider = MultiProvider1 { index, _ -> listOf(decimalFormat.format(thresholdValues.valueAt(index))) }
-  }
 
-  //Note that all default values are chosen in regard to a vertical chart orientation.
-  @ConfigurationDsl
-  open inner class Style {
     /**
      * The margin for the active category background
      */
@@ -544,9 +541,9 @@ class BarChartGroupedGestalt constructor(
 
       //Update the value axis layer
       if (valueRange is LinearValueRange) {
-        valueAxisLayer.axisConfiguration.applyLinearScale()
+        valueAxisLayer.configuration.applyLinearScale()
       } else {
-        valueAxisLayer.axisConfiguration.applyLogarithmicScale()
+        valueAxisLayer.configuration.applyLogarithmicScale()
       }
     }
 
@@ -554,16 +551,16 @@ class BarChartGroupedGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.tickFont = font
-      valueAxisLayer.axisConfiguration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font
+      valueAxisLayer.configuration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.titleFont = font
-      valueAxisLayer.axisConfiguration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font
+      valueAxisLayer.configuration.titleFont = font
     }
 
     /**
@@ -634,8 +631,8 @@ class BarChartGroupedGestalt constructor(
      */
     fun applyHorizontalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.axisConfiguration.side = Side.Left
-      valueAxisLayer.axisConfiguration.side = Side.Bottom
+      categoryAxisLayer.configuration.side = Side.Left
+      valueAxisLayer.configuration.side = Side.Bottom
       contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
       fixedChartGestalt.contentViewportMargin = Insets.of(40.0, 20.0, 40.0, 75.0)
     }
@@ -646,8 +643,8 @@ class BarChartGroupedGestalt constructor(
      */
     fun applyVerticalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.axisConfiguration.side = Side.Bottom
-      valueAxisLayer.axisConfiguration.side = Side.Left
+      categoryAxisLayer.configuration.side = Side.Bottom
+      valueAxisLayer.configuration.side = Side.Left
       contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
       fixedChartGestalt.contentViewportMargin = Insets.of(10.0, 80.0, 40.0, 75.0)
     }
@@ -687,8 +684,8 @@ class BarChartGroupedGestalt constructor(
      * * the window on the other two sides
      */
     fun applyValueLabelsInWindowRespectingAxis() {
-      val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
-      val valueAxisSide = valueAxisLayer.axisConfiguration.side
+      val categoryAxisSide = categoryAxisLayer.configuration.side
+      val valueAxisSide = valueAxisLayer.configuration.side
 
       groupedBarsPainter.configuration.apply {
         valueLabelBoxProvider = object : BoxProvider1<ChartCalculator> {

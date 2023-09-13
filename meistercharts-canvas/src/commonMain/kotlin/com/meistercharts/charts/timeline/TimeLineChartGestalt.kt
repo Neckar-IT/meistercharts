@@ -22,19 +22,19 @@ import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
-import com.meistercharts.algorithms.layers.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers.PaintingOrder
-import com.meistercharts.algorithms.layers.MultiValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.TilesLayer
-import com.meistercharts.algorithms.layers.TimeAxisLayer
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TransformingChartStateLayer
-import com.meistercharts.algorithms.layers.ValueAxisHudInteractionLayer
-import com.meistercharts.algorithms.layers.ValueAxisHudLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudInteractionLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addTilesDebugLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
@@ -182,7 +182,7 @@ import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
-import it.neckar.open.time.TimeConstants
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
@@ -196,7 +196,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Callback for value axis styles
  */
-typealias ValueAxisStyleConfiguration = (style: ValueAxisLayer.Style, dataSeriesIndex: DecimalDataSeriesIndex) -> Unit
+typealias ValueAxisStyleConfiguration = (style: ValueAxisLayer.Configuration, dataSeriesIndex: DecimalDataSeriesIndex) -> Unit
 typealias ValueAxisTopTitleStyleConfiguration = (style: AxisTopTopTitleLayer.Configuration, dataSeriesIndex: DecimalDataSeriesIndex) -> Unit
 
 /**
@@ -211,13 +211,18 @@ typealias ValueAxisTopTitleStyleConfiguration = (style: AxisTopTopTitleLayer.Con
 class TimeLineChartGestalt
 @JvmOverloads constructor(
   /**
-   * The data
+   * The history storage this chart is based on
    */
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {},
+  initialHistoryStorage: HistoryStorage = InMemoryHistoryStorage(),
+
+  /**
+   * The history configuration for the gestalt
+   */
+  initialHistoryConfiguration: HistoryConfiguration = HistoryConfiguration.empty,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt(), ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration(initialHistoryStorage, initialHistoryConfiguration).also(additionalConfiguration)
 
   /**
    * Configures the refresh rate of the chart
@@ -233,11 +238,11 @@ class TimeLineChartGestalt
    * Is used to calculate the history render properties
    */
   val historyRenderPropertiesCalculatorLayer: HistoryRenderPropertiesCalculatorLayer = HistoryRenderPropertiesCalculatorLayer(
-    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(1.0).withMinimum { data.minimumSamplingPeriod },
+    samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(1.0).withMinimum { configuration.minimumSamplingPeriod },
     historyGapCalculator = { renderedSamplingPeriod ->
-      data.historyGapCalculator.calculateMinGapDistance(renderedSamplingPeriod)
+      configuration.historyGapCalculator.calculateMinGapDistance(renderedSamplingPeriod)
     },
-    contentAreaTimeRange = { style.contentAreaTimeRange }
+    contentAreaTimeRange = { configuration.contentAreaTimeRange }
   )
 
   /**
@@ -251,18 +256,18 @@ class TimeLineChartGestalt
   private fun createAverageHistoryCanvasTilePainter(): AverageMinMaxHistoryCanvasTilePainter {
     return AverageMinMaxHistoryCanvasTilePainter(
       AverageMinMaxHistoryCanvasTilePainter.Configuration(
-        historyStorage = data.historyStorage,
-        contentAreaTimeRange = { style.contentAreaTimeRange },
-        valueRanges = style::lineValueRanges.delegate(),
-        visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
+        historyStorage = configuration.historyStorage,
+        contentAreaTimeRange = { configuration.contentAreaTimeRange },
+        valueRanges = configuration::lineValueRanges.delegate(),
+        visibleDecimalSeriesIndices = { configuration.actualVisibleDecimalSeriesIndices },
 
-        averageLineStyles = style::lineStyles.delegate(),
+        averageLineStyles = configuration::lineStyles.delegate(),
 
         averageLinePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
-        pointPainters = style::pointPainters.delegate(),
+        pointPainters = configuration::pointPainters.delegate(),
 
-        minMaxAreaPainters = style::minMaxAreaPainters.delegate(),
-        minMaxAreaColors = style::minMaxAreaColors.delegate(),
+        minMaxAreaPainters = configuration::minMaxAreaPainters.delegate(),
+        minMaxAreaColors = configuration::minMaxAreaColors.delegate(),
       )
     )
   }
@@ -273,7 +278,7 @@ class TimeLineChartGestalt
   @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
   fun configureForCandle() {
     tilePainter = createCandleHistoryCanvasTilePainter()
-    historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { data.minimumSamplingPeriod }
+    historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { configuration.minimumSamplingPeriod }
   }
 
   /**
@@ -281,11 +286,11 @@ class TimeLineChartGestalt
    */
   fun createCandleHistoryCanvasTilePainter(): HistoryCanvasTilePainter = CandleHistoryCanvasTilePainter(
     CandleHistoryCanvasTilePainter.Configuration(
-      historyStorage = data.historyStorage,
-      contentAreaTimeRange = { style.contentAreaTimeRange },
-      valueRanges = style::lineValueRanges.delegate(),
-      visibleDecimalSeriesIndices = { style.actualVisibleDecimalSeriesIndices },
-      lineStyles = style::lineStyles.delegate(),
+      historyStorage = configuration.historyStorage,
+      contentAreaTimeRange = { configuration.contentAreaTimeRange },
+      valueRanges = configuration::lineValueRanges.delegate(),
+      visibleDecimalSeriesIndices = { configuration.actualVisibleDecimalSeriesIndices },
+      lineStyles = configuration::lineStyles.delegate(),
       linePainters = MultiProvider.always(DirectLinePainter(snapXValues = false, snapYValues = false)),
     )
   )
@@ -304,7 +309,7 @@ class TimeLineChartGestalt
     viewportSupport.calculateDecimalsAreaChartState(chartState)
   }
 
-  val valueAxisSupport: ValueAxisSupport<DecimalDataSeriesIndex> = ValueAxisSupport(valueRangeProvider = { dataSeriesIndex -> style.lineValueRanges.valueAt(dataSeriesIndex) }) {
+  val valueAxisSupport: ValueAxisSupport<DecimalDataSeriesIndex> = ValueAxisSupport(valueRangeProvider = { dataSeriesIndex -> configuration.lineValueRanges.valueAt(dataSeriesIndex) }) {
     this.valueAxisConfiguration = { dataSeriesIndex, _, valueAxisTitleLocation ->
       side = Side.Left
       size = when (valueAxisTitleLocation) {
@@ -315,20 +320,20 @@ class TimeLineChartGestalt
       paintRange = AxisConfiguration.PaintRange.Continuous
 
       ticksFormat = decimalFormat2digits //Apply the default
-      titleProvider = { textService, i18nConfiguration -> data.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
+      titleProvider = { textService, i18nConfiguration -> configuration.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
 
-      val colorProvider = { style.lineStyles.valueAt(dataSeriesIndex.value).color }
+      val colorProvider = { configuration.lineStyles.valueAt(dataSeriesIndex.value).color }
       lineColor = colorProvider
       tickLabelColor = colorProvider
       titleColor = colorProvider
 
       //Apply the callback from the style
-      style.valueAxisStyleConfiguration.invoke(this, dataSeriesIndex)
+      configuration.valueAxisStyleConfiguration.invoke(this, dataSeriesIndex)
     }
 
     this.topTitleLayerConfiguration = { dataSeriesIndex: DecimalDataSeriesIndex, layer: AxisTopTopTitleLayer ->
       //Apply the callback from the style
-      style.valueAxisTopTitleStyleConfiguration.invoke(this, dataSeriesIndex)
+      configuration.valueAxisTopTitleStyleConfiguration.invoke(this, dataSeriesIndex)
     }
   }
 
@@ -350,11 +355,11 @@ class TimeLineChartGestalt
    * Configures the thresholds
    */
   val thresholdsSupport: ThresholdsSupport<DecimalDataSeriesIndex> = valueAxisSupport.thresholdsSupport(
-    thresholdValueProvider = data::thresholdValueProvider.delegate(),
-    thresholdLabelProvider = data::thresholdLabelProvider.delegate(),
+    thresholdValueProvider = configuration::thresholdValueProvider.delegate(),
+    thresholdLabelProvider = configuration::thresholdLabelProvider.delegate(),
   ) {
     hudLayerConfiguration = { decimalDataSeriesIndex: DecimalDataSeriesIndex, axis: ValueAxisHudLayer ->
-      val color = style.lineStyles.valueAt(decimalDataSeriesIndex).color
+      val color = configuration.lineStyles.valueAt(decimalDataSeriesIndex).color
       axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5))
       axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop))
       axis.configuration.textColors = MultiProvider.always(color)
@@ -380,7 +385,7 @@ class TimeLineChartGestalt
      * The index represents the nth visible data series
      */
     override fun valueAt(index: Int): ValueAxisHudLayer {
-      val decimalDataSeriesIndex = style.actualVisibleValueAxesIndices.valueAt(index)
+      val decimalDataSeriesIndex = configuration.actualVisibleValueAxesIndices.valueAt(index)
       return getHudLayer(decimalDataSeriesIndex)
     }
   })
@@ -404,7 +409,7 @@ class TimeLineChartGestalt
      * The index represents the nth visible data series
      */
     override fun valueAt(index: Int): DirectionalLinesLayer {
-      val decimalDataSeriesIndex = style.actualVisibleValueAxesIndices.valueAt(index)
+      val decimalDataSeriesIndex = configuration.actualVisibleValueAxesIndices.valueAt(index)
       return getThresholdLinesLayer(decimalDataSeriesIndex)
     }
   })
@@ -412,7 +417,7 @@ class TimeLineChartGestalt
   val thresholdInteractionLayers: Pair<DirectionalLinesInteractionLayer, ValueAxisHudInteractionLayer> = ThresholdsSupport.createInteractionLayers(thresholdLinesLayersDelegate.delegates, hudLayersDelegate.delegates).interactionLayers
 
   private fun visibleValueAxisCount(): Int {
-    return style.actualVisibleValueAxesIndices.size()
+    return configuration.actualVisibleValueAxesIndices.size()
   }
 
   /**
@@ -425,14 +430,14 @@ class TimeLineChartGestalt
       }
 
       override fun valueAt(index: Int): ValueAxisLayer {
-        val decimalDataSeriesIndex = style.actualVisibleValueAxesIndices.valueAt(index)
+        val decimalDataSeriesIndex = configuration.actualVisibleValueAxesIndices.valueAt(index)
         return getValueAxisLayer(decimalDataSeriesIndex)
       }
     },
   ) {
     valueAxesGap = 10.0
     valueAxesMaxWidthPercentage = 1.0
-    background = { style.valueAxesBackground }
+    background = { configuration.valueAxesBackground }
   }
 
   /**
@@ -444,7 +449,7 @@ class TimeLineChartGestalt
     }
 
     override fun valueAt(index: Int): AxisTopTopTitleLayer {
-      val decimalDataSeriesIndex = style.actualVisibleValueAxesIndices.valueAt(index)
+      val decimalDataSeriesIndex = configuration.actualVisibleValueAxesIndices.valueAt(index)
       return valueAxisSupport.getTopTitleLayer(decimalDataSeriesIndex)
     }
   })
@@ -454,11 +459,11 @@ class TimeLineChartGestalt
    */
   val historyEnumLayer: HistoryEnumLayer = HistoryEnumLayer(
     HistoryEnumLayer.Configuration(
-      historyStorage = data.historyStorage,
-      historyConfiguration = { data.historyConfiguration },
-      requestedVisibleIndices = style::actualVisibleEnumSeriesIndices.delegate(),
+      historyStorage = configuration.historyStorage,
+      historyConfiguration = { configuration.historyConfiguration },
+      requestedVisibleIndices = configuration::actualVisibleEnumSeriesIndices.delegate(),
       contentAreaTimeRange = {
-        style.contentAreaTimeRange
+        configuration.contentAreaTimeRange
       },
     )
   ) {
@@ -484,8 +489,8 @@ class TimeLineChartGestalt
       }
 
       override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-        val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.style.actualVisibleEnumSeriesIndices.valueAt(index)
-        val labelTextKey = this@TimeLineChartGestalt.style.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
+        val dataSeriesIndex: EnumDataSeriesIndex = this@TimeLineChartGestalt.configuration.actualVisibleEnumSeriesIndices.valueAt(index)
+        val labelTextKey = this@TimeLineChartGestalt.configuration.enumCategoryAxisLabelProvider.valueAt(dataSeriesIndex)
         return labelTextKey.resolve(textService, i18nConfiguration)
       }
     },
@@ -499,7 +504,7 @@ class TimeLineChartGestalt
     axisEndConfiguration = AxisEndConfiguration.Default
     paintRange = AxisConfiguration.PaintRange.ContentArea
     background = {
-      style.valueAxesBackground
+      configuration.valueAxesBackground
     }
     axisLabelPainter = DefaultCategoryAxisLabelPainter {
       wrapMode = LabelWrapMode.IfNecessary
@@ -531,7 +536,7 @@ class TimeLineChartGestalt
     override fun paint(paintingContext: LayerPaintingContext) {
       //Paint horizontal line
       val gc = paintingContext.gc
-      gc.stroke(enumCategoryAxisLayer.axisConfiguration.lineColor())
+      gc.stroke(enumCategoryAxisLayer.configuration.lineColor())
       val y = gc.height - viewportSupport.decimalsAreaViewportMarginBottom()
       gc.strokeLine(0.0, y, gc.width, y)
     }
@@ -581,8 +586,8 @@ class TimeLineChartGestalt
      * Calculates the enums area bottom insets
      */
     fun enumsAreaViewportMarginBottom(): @Zoomed Double {
-      return if (style.showTimeAxis) {
-        style.timeAxisSize + timeAxisLayer.axisConfiguration.margin.bottom
+      return if (configuration.showTimeAxis) {
+        configuration.timeAxisSize + timeAxisLayer.configuration.margin.bottom
       } else {
         0.0
       }
@@ -642,14 +647,14 @@ class TimeLineChartGestalt
    * The returned value depends on the available and visible enum series
    */
   private fun totalHeightRequiredForEnumsLayer(): @Zoomed Double {
-    val visibleEnumsCount = style.actualVisibleEnumSeriesIndices.size()
+    val visibleEnumsCount = configuration.actualVisibleEnumSeriesIndices.size()
     @Zoomed val netEnumLayerHeight = historyEnumLayer.configuration.calculateTotalHeight(visibleEnumsCount)
     if (netEnumLayerHeight == 0.0) {
       //Do not add the gap if the enum layer is not visible
       return 0.0
     }
 
-    return netEnumLayerHeight + style.enumLayerInsets.offsetHeight
+    return netEnumLayerHeight + configuration.enumLayerInsets.offsetHeight
   }
 
   /**
@@ -685,7 +690,7 @@ class TimeLineChartGestalt
     val labelTextColorCache = ObjectsCache<Color>(Color.pink)
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
-      val visibleLinesCount = style.actualVisibleDecimalSeriesIndices.size()
+      val visibleLinesCount = configuration.actualVisibleDecimalSeriesIndices.size()
       prepare(visibleLinesCount)
 
       //The labels should show the value of the visible lines at the cross wire position x.
@@ -696,7 +701,7 @@ class TimeLineChartGestalt
 
       val chartSupport = paintingContext.chartSupport
       val chartCalculator = chartSupport.chartCalculator
-      val timeChartCalculator = chartSupport.timeChartCalculator(style.contentAreaTimeRange)
+      val timeChartCalculator = chartSupport.timeChartCalculator(configuration.contentAreaTimeRange)
 
 
       //retrieve the history buckets for the timestamp at the cross wire position
@@ -716,7 +721,7 @@ class TimeLineChartGestalt
 
       //TODO add some kind of caching(?)
       //Use the same sampling period as the tiles visualize, to ensure the cross wire labels have the same values as the painted lines
-      val historyBuckets = data.historyStorage.query(start, end, samplingPeriod)
+      val historyBuckets = configuration.historyStorage.query(start, end, samplingPeriod)
       if (historyBuckets.isEmpty()) {
         return clearLabels()
       }
@@ -725,22 +730,22 @@ class TimeLineChartGestalt
       val searchResult = historyBuckets.search(end, AndBefore(minGapSize)) ?: return clearLabels()
 
 
-      val historyConfiguration = data.historyConfiguration
+      val historyConfiguration = configuration.historyConfiguration
 
       //Calculate the y location
-      style.actualVisibleDecimalSeriesIndices.fastForEachIndexed { index, dataSeriesIndex ->
+      configuration.actualVisibleDecimalSeriesIndices.fastForEachIndexed { index, dataSeriesIndex ->
         //Find the value for this at the given location
         @Domain val valueAtCrossWire = searchResult.chunk.getDecimalValue(dataSeriesIndex, searchResult.timeStampIndex)
         domainValuesCache[index] = valueAtCrossWire
 
-        @DomainRelative val relativeValueAtCrossWire = style.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
+        @DomainRelative val relativeValueAtCrossWire = configuration.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
         locationsYCache[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
 
-        labelsCache[index] = style.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
+        labelsCache[index] = configuration.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
 
         //Update the formats
-        boxStylesCache[index] = style.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
-        labelTextColorCache[index] = style.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex)
+        boxStylesCache[index] = configuration.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
+        labelTextColorCache[index] = configuration.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex)
       }
     }
 
@@ -779,8 +784,8 @@ class TimeLineChartGestalt
     valueLabelsProvider = crossWireDecimalValuesLabelsProvider,
     currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
       val chartCalculator = paintingContext.chartCalculator
-      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+      val time = chartCalculator.window2timeX(crossWireLocation, configuration.contentAreaTimeRange)
+      configuration.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
     }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
@@ -791,7 +796,7 @@ class TimeLineChartGestalt
     valueLabelsEnd = { it.height - viewportSupport.decimalsAreaViewportMarginBottom() } //keep the labels within the decimals area
 
     locationX = {
-      it.chartCalculator.windowRelative2WindowX(style.crossWirePositionX)
+      it.chartCalculator.windowRelative2WindowX(configuration.crossWirePositionX)
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
@@ -863,7 +868,7 @@ class TimeLineChartGestalt
       val chartSupport = paintingContext.chartSupport
       val textService = paintingContext.chartSupport.textService
       val i18nConfiguration = paintingContext.chartSupport.i18nConfiguration
-      val timeChartCalculator = chartSupport.timeChartCalculator(style.contentAreaTimeRange)
+      val timeChartCalculator = chartSupport.timeChartCalculator(configuration.contentAreaTimeRange)
 
       @Time @ms val timeStampUnderCrossWire = timeChartCalculator.window2timeX(wireLocation)
 
@@ -871,7 +876,7 @@ class TimeLineChartGestalt
       windowHeight = paintingContext.height
       enumAreaViewportMarginTop = viewportSupport.enumAreaViewportMarginTop(windowHeight)
 
-      prepare(style.actualVisibleEnumSeriesIndices.size()) //prepare for the max number
+      prepare(configuration.actualVisibleEnumSeriesIndices.size()) //prepare for the max number
 
       //The max time until a value is interpreted as gap
       //TODO different gap for cross wire and lines
@@ -887,7 +892,7 @@ class TimeLineChartGestalt
 
       //TODO add some kind of caching(?)
       //Use the same sampling period as the tiles visualize, to ensure the cross wire labels have the same values as the painted lines
-      val historyBuckets = data.historyStorage.query(start, end, samplingPeriod)
+      val historyBuckets = configuration.historyStorage.query(start, end, samplingPeriod)
       if (historyBuckets.isEmpty()) {
         return clearLabels()
       }
@@ -895,13 +900,13 @@ class TimeLineChartGestalt
       //We have to find the best time stamp / value for end.
       val searchResult = historyBuckets.search(end, AndBefore(minGapSize)) ?: return clearLabels()
 
-      val historyConfiguration = data.historyConfiguration
+      val historyConfiguration = configuration.historyConfiguration
       //endregion
 
       val historyEnumPaintingProperties = historyEnumLayer.paintingVariables()
       val layout = historyEnumPaintingProperties.stripesLayout
 
-      style.actualVisibleEnumSeriesIndices.fastForEachIndexed(maxSize = data.historyConfiguration.enumDataSeriesCount) { visibleSeriesIndex, dataSeriesIndex ->
+      configuration.actualVisibleEnumSeriesIndices.fastForEachIndexed(maxSize = configuration.historyConfiguration.enumDataSeriesCount) { visibleSeriesIndex, dataSeriesIndex ->
         //Find the value for this at the given location
         @MayBeNoValueOrPending val valueAtCrossWire: HistoryEnumSet = searchResult.chunk.getEnumValue(dataSeriesIndex, searchResult.timeStampIndex)
         if (valueAtCrossWire.isNoValue() || valueAtCrossWire.isPending()) {
@@ -922,11 +927,11 @@ class TimeLineChartGestalt
         labelsCache[visibleSeriesIndex] = firstValue.key.resolve(textService, i18nConfiguration)
 
         //Update the formats
-        boxStylesCache[visibleSeriesIndex] = style.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex).withFillIfNull {
+        boxStylesCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex).withFillIfNull {
           guessFillColor(dataSeriesIndex, firstSetOrdinal, historyEnum)
         }
 
-        labelTextColorCache[visibleSeriesIndex] = style.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
+        labelTextColorCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
       }
     }
 
@@ -968,8 +973,8 @@ class TimeLineChartGestalt
     valueLabelsProvider = crossWireEnumValuesLabelsProvider,
     currentLocationLabelTextProvider = { paintingContext: LayerPaintingContext, crossWireLocation: @Window Double ->
       val chartCalculator = paintingContext.chartCalculator
-      val time = chartCalculator.window2timeX(crossWireLocation, style.contentAreaTimeRange)
-      style.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
+      val time = chartCalculator.window2timeX(crossWireLocation, configuration.contentAreaTimeRange)
+      configuration.currentPositionLabelFormat.format(time, paintingContext.i18nConfiguration)
     }
   ) {
     valueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { 150.0 }
@@ -978,7 +983,7 @@ class TimeLineChartGestalt
     showCurrentLocationLabel = false
 
     locationX = {
-      it.chartCalculator.windowRelative2WindowX(style.crossWirePositionX)
+      it.chartCalculator.windowRelative2WindowX(configuration.crossWirePositionX)
     }
 
     valueLabelsStart = {
@@ -1001,7 +1006,7 @@ class TimeLineChartGestalt
    * Sets the insets of the TranslateOverTimeService in accordance with the position of the cross wire along the x-axis
    */
   private fun updateTranslateOverTime(chartSupport: ChartSupport) {
-    @Zoomed val insetsRight = chartSupport.currentChartState.windowSize.width * (1.0 - style.crossWirePositionX)
+    @Zoomed val insetsRight = chartSupport.currentChartState.windowSize.width * (1.0 - configuration.crossWirePositionX)
     chartSupport.translateOverTime.insets = Insets.onlyRight(insetsRight)
   }
 
@@ -1023,55 +1028,55 @@ class TimeLineChartGestalt
   var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
 
   init {
-    data.minimumSamplingPeriodProperty.consumeImmediately {
+    configuration.minimumSamplingPeriodProperty.consumeImmediately {
       //adjust the content area in order to display about 600 samples
-      style.applyMinimumSamplingPeriod(it)
+      configuration.applyMinimumSamplingPeriod(it)
     }
 
-    style.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
+    configuration.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
       timeAxisLayer.configuration.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
     }
 
-    style.requestedVisibleDecimalSeriesIndicesProperty.consume {
+    configuration.requestedVisibleDecimalSeriesIndicesProperty.consume {
       tileProvider.clear()
     }
 
-    style.lineStylesProperty.consumeImmediately {
+    configuration.lineStylesProperty.consumeImmediately {
       tileProvider.clear()
     }
 
-    style.pointPaintersProperty.consumeImmediately {
+    configuration.pointPaintersProperty.consumeImmediately {
       tileProvider.clear()
     }
 
-    style.requestedVisibleValueAxesIndicesProperty.consumeImmediately {
+    configuration.requestedVisibleValueAxesIndicesProperty.consumeImmediately {
       //updateValueAxisLayers()
     }
 
-    style.timeAxisSizeProperty.consumeImmediately {
-      timeAxisLayer.axisConfiguration.size = it
+    configuration.timeAxisSizeProperty.consumeImmediately {
+      timeAxisLayer.configuration.size = it
       //updateValueAxisLayers()
     }
 
-    style.showTimeAxisProperty.consumeImmediately {
+    configuration.showTimeAxisProperty.consumeImmediately {
       //The margins used for the value axes depends on the visibility of the time axis
       //TODO
       //updateValueAxisLayers()
     }
 
-    data.historyGapCalculatorProperty.consume {
+    configuration.historyGapCalculatorProperty.consume {
       tileProvider.clear()
     }
 
     //Apply the configuration again - when it is updated
-    style.valueAxisStyleConfigurationProperty.consume { configuration ->
+    configuration.valueAxisStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachAxisLayer { decimalDataSeriesIndex, valueAxisLayer ->
-        configuration(valueAxisLayer.axisConfiguration, decimalDataSeriesIndex)
+        configuration(valueAxisLayer.configuration, decimalDataSeriesIndex)
       }
     }
 
-    style.valueAxisTopTitleStyleConfigurationProperty.consume { configuration ->
+    configuration.valueAxisTopTitleStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachTopTitleLayer { decimalDataSeriesIndex, layer ->
         configuration(layer.configuration, decimalDataSeriesIndex)
       }
@@ -1108,7 +1113,7 @@ class TimeLineChartGestalt
           chartSupport.rootChartState.windowSizeProperty.consumeImmediately {
             updateTranslateOverTime(chartSupport)
           }
-          style.crossWirePositionXProperty.consumeImmediately {
+          configuration.crossWirePositionXProperty.consumeImmediately {
             updateTranslateOverTime(chartSupport)
           }
 
@@ -1122,12 +1127,12 @@ class TimeLineChartGestalt
             tileProvider.clear()
           }
 
-          style.contentAreaTimeRangeProperty.consumeImmediately {
+          configuration.contentAreaTimeRangeProperty.consumeImmediately {
             chartSupport.translateOverTime.contentAreaTimeRangeX = it
             chartSupport.zoomAndTranslationSupport.resetToDefaults(axisSelection = AxisSelection.X, reason = UpdateReason.ConfigurationUpdate)
           }
 
-          style.lineValueRangesProperty.consume {
+          configuration.lineValueRangesProperty.consume {
             tileProvider.clear()
           }
 
@@ -1135,7 +1140,7 @@ class TimeLineChartGestalt
           // client that uses the gestalt. However, this automatic set-up might be useful
           // for every client.
           val tileInvalidator: HistoryTileInvalidator = DefaultHistoryTileInvalidator()
-          (data.historyStorage as? ObservableHistoryStorage)?.observe { updateInfo ->
+          (configuration.historyStorage as? ObservableHistoryStorage)?.observe { updateInfo ->
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {
@@ -1171,16 +1176,16 @@ class TimeLineChartGestalt
             totalHeightRequiredForEnumsLayer() > 0.0
           })
 
-          layers.addLayer(timeAxisLayer.visibleIf(style.showTimeAxisProperty))
+          layers.addLayer(timeAxisLayer.visibleIf(configuration.showTimeAxisProperty))
           layers.addLayer(crossWireLayerDecimalValues.clipped {
             //Do not paint behind the enum layer
             viewportSupport.decimalsAreaViewportClipMargin()
-          }.visibleIf(style.showCrossWireProperty))
+          }.visibleIf(configuration.showCrossWireProperty))
 
           layers.addLayer(crossWireLayerEnumValues.clipped {
             //Do not paint behind the decimals and timeline layer
             viewportSupport.enumsAreaViewportMargin(it.height)
-          }.visibleIf(style.showCrossWireProperty))
+          }.visibleIf(configuration.showCrossWireProperty))
 
           layers.addTilesDebugLayer(chartSupport.debug)
 
@@ -1190,7 +1195,8 @@ class TimeLineChartGestalt
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  inner class Configuration(
     /**
      * The history storage this chart is based on
      */
@@ -1236,10 +1242,7 @@ class TimeLineChartGestalt
      * The parameter identifies the decimal data series. The index corresponds to [HudElementIndex] - depending on the size of [thresholdValueProvider]
      */
     var thresholdLabelProvider: @Domain MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> = MultiProvider2.empty()
-  }
 
-  @ConfigurationDsl
-  inner class Style {
     /**
      * Value axis style configuration - is called when a new value axis is instantiated
      */
@@ -1256,7 +1259,7 @@ class TimeLineChartGestalt
       val dataSeriesIndex = EnumDataSeriesIndex(dataSeriesIndexAsInt)
 
       //The default implementation returns the display name from the history configuration
-      data.historyConfiguration.enumConfiguration.getDisplayName(dataSeriesIndex)
+      configuration.historyConfiguration.enumConfiguration.getDisplayName(dataSeriesIndex)
     }
 
     /**
@@ -1359,7 +1362,7 @@ class TimeLineChartGestalt
      * Respects the current decimal data series count.
      */
     val actualVisibleValueAxesIndices: DecimalDataSeriesIndexProvider = ::requestedVisibleValueAxesIndices.atMost {
-      data.historyConfiguration.decimalDataSeriesCount
+      configuration.historyConfiguration.decimalDataSeriesCount
     }
 
     /**
@@ -1385,14 +1388,14 @@ class TimeLineChartGestalt
      * The actual visible decimal series indices - respects the current history configuration
      */
     val actualVisibleDecimalSeriesIndices: DecimalDataSeriesIndexProvider = ::requestedVisibleDecimalSeriesIndices.atMost {
-      data.historyConfiguration.decimalDataSeriesCount
+      configuration.historyConfiguration.decimalDataSeriesCount
     }
 
     /**
      * Shows all lines even if the history configuration changes later on.
      */
     fun showAllDecimalSeries() {
-      requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { data.historyConfiguration.decimalDataSeriesCount }
+      requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { configuration.historyConfiguration.decimalDataSeriesCount }
     }
 
     /**
@@ -1409,21 +1412,21 @@ class TimeLineChartGestalt
       get
 
     val actualVisibleEnumSeriesIndices: EnumDataSeriesIndexProvider = ::requestVisibleEnumSeriesIndices.atMost {
-      data.historyConfiguration.enumDataSeriesCount
+      configuration.historyConfiguration.enumDataSeriesCount
     }
 
     /**
      * Shows all stripes - even if the history configuration is changed later
      */
     fun showAllEnumSeries() {
-      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { data.historyConfiguration.enumDataSeriesCount }
+      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { configuration.historyConfiguration.enumDataSeriesCount }
     }
 
     /**
      * Shows at most the given number of enum series
      */
     fun showEnumSeriesAtMost(maxCount: Int) {
-      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { maxCount.coerceAtMost(data.historyConfiguration.enumDataSeriesCount) }
+      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { maxCount.coerceAtMost(configuration.historyConfiguration.enumDataSeriesCount) }
     }
 
     /**
@@ -1485,7 +1488,7 @@ class TimeLineChartGestalt
       val dataSeriesIndex = DecimalDataSeriesIndex(index)
 
       decimalFormat().appendUnit {
-        data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+        configuration.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
       }
     }
 
@@ -1538,7 +1541,7 @@ class TimeLineChartGestalt
 fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disposable {
   val samplingPeriod = SamplingPeriod.EveryHundredMillis
 
-  style.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
+  configuration.valueAxisStyleConfiguration = { style, dataSeriesIndex ->
     style.size = 120.0
     style.ticksFormat = when (dataSeriesIndex.value) {
       2 -> decimalFormat1digit
@@ -1546,12 +1549,12 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
       else -> intFormat
     }
   }
-  style.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
+  configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { 3 }
 
   //Avoid gaps for the cross wire - when adding only
-  data.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
+  configuration.historyGapCalculator = DefaultHistoryGapCalculator(10.0)
 
-  data.historyConfiguration = historyConfiguration {
+  configuration.historyConfiguration = historyConfiguration {
     decimalDataSeries(DataSeriesId(17), TextKey.simple("Mass Flow Rate [kg/h]"), HistoryUnit("kg/h"))
     decimalDataSeries(DataSeriesId(23), TextKey.simple("Flow Velocity [m/s]"), HistoryUnit("m/s"))
     decimalDataSeries(DataSeriesId(56), TextKey.simple("Volume [m³]"), HistoryUnit("m³"))
@@ -1562,8 +1565,8 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     enumDataSeries(DataSeriesId(1003), TextKey.simple("Heating"), HistoryEnum.createSimple("Compliance State", listOf("On", "Off", "Unknown")))
   }
 
-  style.crossWireDecimalFormat = SizedProvider.of(4) { dataSeriesIndex ->
-    val unit = data.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name ?: ""
+  configuration.crossWireDecimalFormat = SizedProvider.of(4) { dataSeriesIndex ->
+    val unit = configuration.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name ?: ""
     when (dataSeriesIndex) {
       2 -> decimalFormat1digit.appendUnit(unit).cached()
       3 -> decimalFormat2digits.appendUnit(unit).cached()
@@ -1571,10 +1574,10 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     }
   }
 
-  style.crossWireDecimalFormat = MultiProvider.cached { index ->
+  configuration.crossWireDecimalFormat = MultiProvider.cached { index ->
     val dataSeriesIndex = DecimalDataSeriesIndex(index)
     val unitProvider = {
-      data.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
+      configuration.historyConfiguration.decimalConfiguration.getUnit(dataSeriesIndex).name
     }
 
     when (index) {
@@ -1584,7 +1587,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     }
   }
 
-  style.lineValueRanges = MultiProvider.forListModulo(
+  configuration.lineValueRanges = MultiProvider.forListModulo(
     listOf(
       ValueRange.linear(0.0, 1000.0),
       ValueRange.linear(-120.0, 300.0),
@@ -1607,9 +1610,9 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     Easing.inOutBack,
   )
 
-  val decimalValueGenerators = data.historyConfiguration.decimalDataSeriesCount.fastMap { decimalDataSeriesIndex ->
+  val decimalValueGenerators = configuration.historyConfiguration.decimalDataSeriesCount.fastMap { decimalDataSeriesIndex ->
     TimeBasedValueGeneratorBuilder {
-      val dataSeriesValueRange = style.lineValueRanges.valueAt(decimalDataSeriesIndex) as LinearValueRange
+      val dataSeriesValueRange = configuration.lineValueRanges.valueAt(decimalDataSeriesIndex) as LinearValueRange
       startValue = dataSeriesValueRange.center() + (random.nextDouble() - 0.5).coerceAtMost(0.2).coerceAtLeast(-0.2) * dataSeriesValueRange.delta
       minDeviation = dataSeriesValueRange.delta * (0.025 * (decimalDataSeriesIndex + 1)).coerceAtMost(0.25)
       maxDeviation = (dataSeriesValueRange.delta * (0.05 * (decimalDataSeriesIndex + 1)).coerceAtMost(0.25)).coerceAtLeast(minDeviation * 1.001)
@@ -1625,7 +1628,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     EnumValueGenerator.weighted(listOf(0.49, 0.5, 0.01), 7.seconds),
   )
 
-  val referenceEntryGenerators: List<ReferenceEntryGenerator> = data.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
+  val referenceEntryGenerators: List<ReferenceEntryGenerator> = configuration.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
     ReferenceEntryGenerator.random()
   }
 
@@ -1634,7 +1637,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     decimalValueGenerators = decimalValueGenerators,
     enumValueGenerators = enumValueGenerators,
     referenceEntryGenerators = referenceEntryGenerators,
-    historyConfiguration = data.historyConfiguration
+    historyConfiguration = configuration.historyConfiguration
   )
 
   val addSamplesDisposable = it.neckar.open.time.repeat(100.milliseconds) {
@@ -1645,7 +1648,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     onDispose(it)
   }
 
-  this.data.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
+  this.configuration.thresholdValueProvider = object : DoublesProvider1<DecimalDataSeriesIndex> {
     override fun size(param1: DecimalDataSeriesIndex): Int {
       return when (param1.value) {
         0 -> 2
@@ -1663,11 +1666,11 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     }
   }
 
-  this.data.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
+  this.configuration.thresholdLabelProvider = object : MultiProvider2<HudElementIndex, List<String>, DecimalDataSeriesIndex, LayerPaintingContext> {
     override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List<String> {
       return when (param1.value) {
-        0 -> listOf("${if (index == 0) "Min" else "Max"} ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
-        1 -> listOf("Target ${data.thresholdValueProvider.valueAt(index, param1).format(0)}")
+        0 -> listOf("${if (index == 0) "Min" else "Max"} ${configuration.thresholdValueProvider.valueAt(index, param1).format(0)}")
+        1 -> listOf("Target ${configuration.thresholdValueProvider.valueAt(index, param1).format(0)}")
         else -> emptyList()
       }
     }

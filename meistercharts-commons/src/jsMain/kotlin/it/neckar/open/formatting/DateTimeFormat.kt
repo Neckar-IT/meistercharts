@@ -3,7 +3,7 @@ package it.neckar.open.formatting
 import it.neckar.open.collections.cache
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.number.PositiveOrZero
 import kotlin.js.Date
 
@@ -156,7 +156,10 @@ actual class SecondMillisFormat actual constructor() : DateTimeFormat {
 
 private val localeOptionsCache = cache<TimeZone, Date.LocaleOptions>("localeOptionsCache", 10)
 
-private fun localeOptions(timeZone: TimeZone, additionalConfig: Date.LocaleOptions.() -> Unit = {}): Date.LocaleOptions {
+/**
+ * Creates a locale options object for the provided time zone
+ */
+fun localeOptions(timeZone: TimeZone, additionalConfig: Date.LocaleOptions.() -> Unit = {}): Date.LocaleOptions {
   return localeOptionsCache.getOrStore(timeZone) {
     dateLocaleOptions {
       this.timeZone = timeZone.zoneId

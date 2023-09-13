@@ -22,6 +22,7 @@ import it.neckar.open.collections.fastAny
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.fastForEachIndexedReversed
+import it.neckar.open.collections.fastForEachReversed
 import it.neckar.open.collections.last
 import it.neckar.open.collections.lastIndex
 import it.neckar.open.provider.MultiDoublesProvider
@@ -76,12 +77,32 @@ class DoubleCache : LayoutVariableWithSize {
     return if (index >= 0 && index <= values.lastIndex) get(index) else defaultValue.valueAt(index)
   }
 
+  /**
+   * Returns the last value or the given fallback if the cache is empty
+   */
   fun lastOr(fallback: Double): Double {
     if (values.isEmpty()) {
       return fallback
     }
 
     return values.last()
+  }
+
+  /**
+   * Returns the last element that matches the provided filter or the given [fallback] if no element matches the given
+   */
+  inline fun lastOr(fallback: Double, filter: (Double) -> Boolean): Double {
+    if (values.isEmpty()) {
+      return fallback
+    }
+
+    values.fastForEachReversed {
+      if (filter(it)) {
+        return it
+      }
+    }
+
+    return fallback
   }
 
   inline fun lastOrNaN(): Double {

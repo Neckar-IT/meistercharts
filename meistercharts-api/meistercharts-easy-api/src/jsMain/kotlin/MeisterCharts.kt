@@ -133,7 +133,7 @@ fun createBarChartGroupedFromElement(
 fun createBarChartGrouped(): BarChartGrouped {
   // The builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("BarChartGrouped")
-  val gestalt = BarChartGroupedGestalt(toolTipType = ToolTipType.Balloon).apply {
+  val gestalt = BarChartGroupedGestalt(initialToolTipType = ToolTipType.Balloon).apply {
     configure(meisterChartBuilder)
   }
 
@@ -376,7 +376,7 @@ fun createLineChartSimpleFromElement(
 fun createLineChartSimple(): LineChartSimple {
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("LineChartSimple")
-  val gestalt = CategoryLineChartGestalt(toolTipType = ToolTipType.Balloon).apply {
+  val gestalt = CategoryLineChartGestalt(initialToolTipType = ToolTipType.Balloon).apply {
     configure(meisterChartBuilder)
   }
 

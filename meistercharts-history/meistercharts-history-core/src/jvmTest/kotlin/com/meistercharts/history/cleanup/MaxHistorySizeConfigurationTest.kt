@@ -18,12 +18,28 @@ package com.meistercharts.history.cleanup
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.HistoryBucketRange
+import com.meistercharts.history.SamplingPeriod
 import org.junit.jupiter.api.Test
+import java.util.concurrent.TimeUnit
 
 /**
  *
  */
 class MaxHistorySizeConfigurationTest {
+  @Test
+  fun testBugReport() {
+    assertThat(TimeUnit.SECONDS.toHours(86_400)).isEqualTo(24)
+    val duration = 86_400 * 1000.0
+
+    assertThat(SamplingPeriod.EveryMinute.toHistoryBucketRange()).isEqualTo(HistoryBucketRange.SixHours)
+    assertThat(MaxHistorySizeConfiguration.forDuration(duration, SamplingPeriod.EveryMinute.toHistoryBucketRange()).keptBucketsCount).isEqualTo(5) //one more
+  }
+
+  @Test
+  fun testDurationVerySmall() {
+    assertThat(MaxHistorySizeConfiguration.forDuration(86_400.0, HistoryBucketRange.OneMinute).keptBucketsCount).isEqualTo(3)
+  }
+
   @Test
   fun testIt() {
     MaxHistorySizeConfiguration(17).let {
@@ -39,9 +55,9 @@ class MaxHistorySizeConfigurationTest {
     }
 
     MaxHistorySizeConfiguration.forDuration(60 * 60 * 1000.0 - 7.0, HistoryBucketRange.OneMinute).let {
-      assertThat(it.keptBucketsCount).isEqualTo(60)
-      assertThat(it.getGuaranteedDuration(HistoryBucketRange.OneMinute)).isEqualTo(60 * 60 * 1000.0)
-      assertThat(it.getGuaranteedTimeStampsCount(HistoryBucketRange.OneMinute)).isEqualTo(36_000)
+      assertThat(it.keptBucketsCount).isEqualTo(61)
+      assertThat(it.getGuaranteedDuration(HistoryBucketRange.OneMinute)).isEqualTo(60 * 61 * 1000.0)
+      assertThat(it.getGuaranteedTimeStampsCount(HistoryBucketRange.OneMinute)).isEqualTo(36_600)
     }
   }
 }

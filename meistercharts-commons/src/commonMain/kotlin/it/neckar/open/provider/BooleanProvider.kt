@@ -1,5 +1,7 @@
 package it.neckar.open.provider
 
+import it.neckar.open.annotations.NotBoxed
+
 /**
  * Provides a *single* boolean - to avoid boxing
  */
@@ -7,7 +9,7 @@ fun interface BooleanProvider {
   /**
    * Provides the boolean value
    */
-  operator fun invoke(): Boolean
+  operator fun invoke(): @NotBoxed Boolean
 
   companion object {
     /**

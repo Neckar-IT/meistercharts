@@ -2,7 +2,7 @@ package it.neckar.open.i18n
 
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 
 /**
  * Provides the default timeZone

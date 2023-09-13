@@ -85,23 +85,23 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
   ////////////////////////////////////////////////////
   jsConfiguration.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.configuration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      this.contentViewportMargin = this.contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
+      this.contentViewportMargin = this.contentViewportMargin.withSide(valueAxisLayer.configuration.side, it)
     }
   }
 
   jsConfiguration.categoryAxisStyle?.let { jsValueAxisStyle ->
     this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsValueAxisStyle)
+    this.categoryAxisLayer.configuration.applyCategoryAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.configuration.side, it)
     }
   }
   CategoryConverter.toCategoryImages(jsConfiguration)?.let { images ->
-    this.categoryAxisLayer.axisConfiguration.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
+    this.categoryAxisLayer.configuration.axisLabelPainter.setImagesProvider(MultiProvider.forListOrNull(images))
   }
 
   jsConfiguration.categories?.toCategoryNames()?.let {

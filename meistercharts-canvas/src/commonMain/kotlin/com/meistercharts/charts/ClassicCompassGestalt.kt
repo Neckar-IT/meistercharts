@@ -37,16 +37,25 @@ import it.neckar.open.unit.other.deg
 import kotlin.math.PI
 
 class ClassicCompassGestalt(
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {}
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : ChartGestalt {
-  val style: Style = Style().also(styleConfiguration)
+
+  constructor(
+    valueRangeProvider: ValueRangeProvider = ValueRange.default.asProvider(),
+    currentValueProvider: @deg DoubleProvider = 10.0.asDoubleProvider(),
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(valueRangeProvider, currentValueProvider), additionalConfiguration)
+
+  init {
+    configuration.additionalConfiguration()
+  }
 
   val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt()
 
   val gaugePaintable: GaugePaintable = GaugePaintable(
-    data::valueRangeProvider.delegate(),
-    data::currentValueProvider.delegate(),
+    configuration::valueRangeProvider.delegate(),
+    configuration::currentValueProvider.delegate(),
     Size(100.0, 100.0)
   ) {
     basePainter = CompassBasePainter()
@@ -61,7 +70,7 @@ class ClassicCompassGestalt(
   }
 
   init {
-    style.marginProperty.consumeImmediately {
+    configuration.marginProperty.consumeImmediately {
       fixedChartGestalt.contentViewportMargin = it
       gaugePaintableLayer.insets = it
     }
@@ -79,7 +88,8 @@ class ClassicCompassGestalt(
     }
   }
 
-  class Data(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * Returns the value range
      */
@@ -88,10 +98,7 @@ class ClassicCompassGestalt(
      * Returns the current value
      */
     val currentValueProvider: @deg DoubleProvider = 10.0.asDoubleProvider(),
-  )
-
-  @ConfigurationDsl
-  class Style {
+  ) {
     val marginProperty: ObservableObject<Insets> = ObservableObject(Insets.of(50.0, 50.0, 50.0, 50.0))
 
     /**

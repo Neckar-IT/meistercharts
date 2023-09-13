@@ -16,7 +16,7 @@
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.time.DefaultTimeZoneOffsetProvider
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import kotlin.test.Test
 
 /**

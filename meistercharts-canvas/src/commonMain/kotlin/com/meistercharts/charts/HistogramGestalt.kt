@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -43,7 +43,7 @@ class HistogramGestalt(
    */
   toolTipType: ToolTipType = ToolTipType.Balloon,
 
-  styleConfiguration: BarChartGroupedGestalt.Style.() -> Unit = {},
+  styleConfiguration: BarChartGroupedGestalt.Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
   val barChartGroupedGestalt: BarChartGroupedGestalt = BarChartGroupedGestalt(categorySeriesModel, toolTipType, styleConfiguration).also {
@@ -74,7 +74,7 @@ class HistogramGestalt(
     }
 
     //usually there are many, many values - therefore the greedy category axis label painter is better suited
-    barChartGroupedGestalt.categoryAxisLayer.axisConfiguration.axisLabelPainter = GreedyCategoryAxisLabelPainter()
+    barChartGroupedGestalt.categoryAxisLayer.configuration.axisLabelPainter = GreedyCategoryAxisLabelPainter()
 
     //Disable the overflow indicator painter - not enough room
     barChartGroupedGestalt.groupedBarsPainter.configuration.overflowIndicatorPainter = null
@@ -118,7 +118,7 @@ class HistogramGestalt(
   /**
    * Returns the style of the bar chart grouped gestalt
    */
-  val style: BarChartGroupedGestalt.Style
+  val style: BarChartGroupedGestalt.Configuration
     get() {
       return barChartGroupedGestalt.style
     }

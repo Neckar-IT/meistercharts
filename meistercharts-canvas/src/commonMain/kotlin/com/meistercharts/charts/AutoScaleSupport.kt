@@ -79,13 +79,13 @@ class AutoScaleSupport(
     checkWindow: Duration = 500.milliseconds,
   ) {
     //Listen to changes to the history
-    val observableHistoryStorage = gestalt.data.historyStorage as ObservableHistoryStorage
+    val observableHistoryStorage = gestalt.configuration.historyStorage as ObservableHistoryStorage
     observableHistoryStorage.observe { _ ->
       dirty = true
     }
 
     //Listen to changes to the visible area
-    gestalt.style.contentAreaTimeRangeProperty.consume {
+    gestalt.configuration.contentAreaTimeRangeProperty.consume {
       dirty = true
     }
 
@@ -109,15 +109,15 @@ class AutoScaleSupport(
   ) {
     val currentSamplingPeriod = chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod) ?: return
 
-    val visibleTimeRange = chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.style.contentAreaTimeRange)
+    val visibleTimeRange = chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.configuration.contentAreaTimeRange)
 
     //Contains the updated value ranges. The position of the value range corresponds to the index of the data series index
     val updatedValueRanges = createUpdatedValueRanges(visibleTimeRange, currentSamplingPeriod, dataSeriesIndices)
 
-    val oldProvider = gestalt.style.lineValueRanges
+    val oldProvider = gestalt.configuration.lineValueRanges
 
     if (containsChanges(updatedValueRanges, oldProvider)) {
-      gestalt.style.lineValueRanges = MultiProvider.invoke {
+      gestalt.configuration.lineValueRanges = MultiProvider.invoke {
         updatedValueRanges[DecimalDataSeriesIndex(it)] ?: this.defaultValueRanges.valueAt(it)
       }
     }
@@ -149,7 +149,7 @@ class AutoScaleSupport(
     currentSamplingPeriod: SamplingPeriod,
     dataSeriesIndices: List<DecimalDataSeriesIndex>,
   ): Map<DecimalDataSeriesIndex, LinearValueRange> {
-    val minMaxValues = gestalt.data.historyStorage.queryMinMax(visibleTimeRange, currentSamplingPeriod, dataSeriesIndices)
+    val minMaxValues = gestalt.configuration.historyStorage.queryMinMax(visibleTimeRange, currentSamplingPeriod, dataSeriesIndices)
 
     return dataSeriesIndices.fastMapNotNull { dataSeriesIndex ->
       val min = minMaxValues.min(dataSeriesIndex)

@@ -19,9 +19,9 @@ import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.Layers.PaintingOrder
-import com.meistercharts.algorithms.layers.MultiValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.range.ValueRange
 import it.neckar.open.provider.asSizedProvider
@@ -42,8 +42,8 @@ class ValueAxisSupport<Key>(
 ) : AbstractAxisSupport<Key, ValueAxisLayer>(), ValueAxisForKeyProvider<Key> {
 
   override fun createAxisLayer(key: Key): ValueAxisLayer {
-    return ValueAxisLayer(ValueAxisLayer.Data { configuration.valueRangeProvider(key) }).also { layer ->
-      configuration.valueAxisConfiguration(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+    return ValueAxisLayer(ValueAxisLayer.Configuration { configuration.valueRangeProvider(key) }).also { layer ->
+      configuration.valueAxisConfiguration(layer.configuration, key, layer, preferredAxisTitleLocation)
     }
   }
 
@@ -101,7 +101,7 @@ class ValueAxisSupport<Key>(
         field = value
         //Apply the new configuration to existing
         axisLayersCache.forEach { key, layer ->
-          value.invoke(layer.axisConfiguration, key, layer, preferredAxisTitleLocation)
+          value.invoke(layer.configuration, key, layer, preferredAxisTitleLocation)
         }
       }
 
@@ -157,7 +157,7 @@ class ValueAxisSupport<Key>(
   }
 }
 
-typealias ValueAxisConfiguration<Key> = ValueAxisLayer.Style.(Key, axis: ValueAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
+typealias ValueAxisConfiguration<Key> = ValueAxisLayer.Configuration.(Key, axis: ValueAxisLayer, axisTitleLocation: AxisTitleLocation) -> Unit
 
 
 inline fun ValueAxisSupport<Unit>.getTopTitleLayer(): AxisTopTopTitleLayer {

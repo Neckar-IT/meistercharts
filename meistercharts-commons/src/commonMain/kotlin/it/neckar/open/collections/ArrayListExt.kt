@@ -91,3 +91,14 @@ fun FloatArrayList.rotated(offset: Int): FloatArrayList = FloatArrayList(this.si
 fun DoubleArrayList.rotated(offset: Int): DoubleArrayList = DoubleArrayList(this.size).also {
   for (n in 0 until this.size) it.add(this.getCyclic(n - offset))
 }
+
+/**
+ * Removes elements from the list until the max size has been reached
+ */
+fun DoubleArrayList.deleteFromStartUntilMaxSize(maxSize: Int) {
+  require(maxSize >= 0) { "Invalid max size: $maxSize" }
+
+  while (this.size > maxSize) {
+    removeAt(0)
+  }
+}

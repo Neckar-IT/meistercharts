@@ -1,11 +1,13 @@
 package it.neckar.open.formatting
 
+import it.neckar.datetime.minimal.toZoneId
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.convert
 import it.neckar.open.kotlin.lang.SpecialChars
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.time.DateUtils
 import it.neckar.open.time.toDoubleMillis
+import it.neckar.open.unit.si.ms
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -88,7 +90,14 @@ actual class DateTimeFormatShort : DateTimeFormat {
 }
 
 actual class DateTimeFormatWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  override fun format(timestamp: @ms Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+    if (timestamp.isNaN()) {
+      return "NaN"
+    }
+
+    if (timestamp.isInfinite()) {
+      return "∞"
+    }
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateUtils.createDateTimeMillisFormat(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }

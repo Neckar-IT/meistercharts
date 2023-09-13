@@ -18,9 +18,11 @@ package com.meistercharts.charts.timeline
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.SamplingPeriod
-import korlibs.time.DateTime
+import it.neckar.open.time.toDoubleMillis
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -187,7 +189,7 @@ class ConfigurationAssistantTest {
     //TODO: window width? (target screen size?)
     val assistant = defaultAssistant
     assistant.showLiveData() //always be at now()
-    assistant.setFixedCrossWireDate(DateTime(2023, 3, 5, 7, 8, 9).unixMillisDouble)
+    assistant.setFixedCrossWireDate(ZonedDateTime.of(2023, 3, 5, 7, 8, 9, 0, ZoneId.of("Europe/Berlin")).toDoubleMillis())
     val calculator = assistant.calculator
 
     assertThat(calculator.minDistanceBetweenSamples).isEqualTo(2.0)

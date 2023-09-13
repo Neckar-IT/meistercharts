@@ -87,6 +87,17 @@ public object Libs {
 
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
 
+    public const val com_google_devtools_ksp_gradle_plugin: String =
+            "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:_"
+
+    public const val symbol_processing: String = "com.google.devtools.ksp:symbol-processing:_"
+
+    public const val symbol_processing_api: String =
+            "com.google.devtools.ksp:symbol-processing-api:_"
+
+    public const val symbol_processing_cmdline: String =
+            "com.google.devtools.ksp:symbol-processing-cmdline:_"
+
     public const val guava: String = "com.google.guava:guava:_"
 
     public const val guice_multibindings: String =
@@ -106,8 +117,6 @@ public object Libs {
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
-
-    public const val klock: String = "com.soywiz.korlibs.klock:klock:_"
 
     public const val okhttp: String = "com.squareup.okhttp3:okhttp:_"
 
@@ -366,6 +375,8 @@ public object Libs {
 
     public const val kotlinx_coroutines_test: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:_"
+
+    public const val kotlinx_datetime: String = "org.jetbrains.kotlinx:kotlinx-datetime:_"
 
     public const val kotlinx_html: String = "org.jetbrains.kotlinx:kotlinx-html:_"
 

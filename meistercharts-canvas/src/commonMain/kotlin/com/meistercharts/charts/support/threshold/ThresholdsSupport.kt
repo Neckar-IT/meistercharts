@@ -16,13 +16,14 @@
 package com.meistercharts.charts.support.threshold
 
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
-import com.meistercharts.algorithms.layers.HudElementIndex
-import com.meistercharts.algorithms.layers.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
-import com.meistercharts.algorithms.layers.ValueAxisHudLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
-import com.meistercharts.algorithms.layers.hudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.hudLayer
+import com.meistercharts.algorithms.layers.axis.mouseOverInteractions
 import com.meistercharts.algorithms.layers.mouseOverInteractions
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.Domain

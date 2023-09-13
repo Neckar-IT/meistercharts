@@ -17,7 +17,6 @@ package com.meistercharts.canvas
 
 import com.meistercharts.algorithms.layers.PaintingProperties
 import com.meistercharts.annotations.DomainRelative
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.cache.GlobalCacheSupport
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.ZoomLevelCalculator
@@ -31,10 +30,8 @@ import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
-import it.neckar.geometry.Coordinates
 import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.loop.RenderLoopListener
-import it.neckar.geometry.Direction
 import com.meistercharts.resize.KeepCenterOnWindowResize
 import com.meistercharts.resize.WindowResizeBehavior
 import com.meistercharts.service.ServiceRegistry
@@ -47,6 +44,9 @@ import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationSupport
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.trace
@@ -156,6 +156,24 @@ class ChartSupport(
    * The root chart state - as configured for the chart itself
    */
   val rootChartState: MutableChartState = DefaultChartState()
+
+  /**
+   * The instance to meisterchart this chart support belongs to.
+   *
+   * Attention: Should only be used in very few cases.
+   */
+  lateinit var meisterchart: Meisterchart
+    private set
+
+  /**
+   * Sets the meisterchart instance.
+   *
+   * ATTENTION: Internal API - do not use
+   */
+  @Deprecated("Internal API - do not use")
+  fun setMeisterchartInstance(meisterchart: Meisterchart) {
+    this.meisterchart = meisterchart
+  }
 
   /**
    * The current chartState.

@@ -17,7 +17,7 @@ package com.meistercharts.charts.timeline
 
 import com.meistercharts.algorithms.layers.HideAfterTimeoutLayer
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
@@ -30,7 +30,6 @@ import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.ChartGestalt
-import com.meistercharts.charts.ChartId
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.resources.Icons
@@ -49,7 +48,7 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
 
   val style: Style = Style().also(styleConfiguration)
 
-  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(TimeLineChartGestalt.Data(historyStorage))
+  val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(initialHistoryStorage = historyStorage)
 
   val scrollWithoutModifierHintLayer: HideAfterTimeoutLayer<MouseWheelWithoutModifierMessageLayer> = MouseWheelWithoutModifierMessageLayer.create()
 

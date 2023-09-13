@@ -53,15 +53,21 @@ import it.neckar.open.provider.fastForEach
  * Gestalt for map with paintables on it
  */
 class MapWithPaintablesGestalt(
-  val chartId: ChartId,
-  val data: Data = Data(),
-  styleConfiguration: Style.() -> Unit = {},
+  val configuration: Configuration,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  constructor(
+    chartId: ChartId,
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(chartId), additionalConfiguration)
 
-  val mapGestalt: MapGestalt = MapGestalt(chartId = chartId).apply {
-    data.slippyMapCenter = createDefaultMapCenter()
+  init {
+    configuration.additionalConfiguration()
+  }
+
+  val mapGestalt: MapGestalt = MapGestalt(chartId = configuration.chartId).apply {
+    configuration.slippyMapCenter = createDefaultMapCenter()
   }
 
   private val paintablesLayer = PaintablesLayer()
@@ -79,18 +85,19 @@ class MapWithPaintablesGestalt(
 
     meisterChartBuilder.configure {
       layers.addLayer(paintablesLayer)
-      layers.addLayer(legendLayer.visibleIf(style.showLegendProperty))
+      layers.addLayer(legendLayer.visibleIf(configuration.showLegendProperty))
 
       layers.addVersionNumberHidden()
     }
   }
 
-  class Data {
-    var paintables: SizedProvider1<PaintableOnSlippyMap<*>, Zoom> = createDefaultPaintables()
-  }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    val chartId: ChartId,
+  ) {
+    var paintables: SizedProvider1<PaintableOnSlippyMap<*>, Zoom> = createDefaultPaintables()
+
     /**
      * Whether to show the legend or not
      */
@@ -268,7 +275,7 @@ class MapWithPaintablesGestalt(
       get() = LayerType.Content
 
     override fun paint(paintingContext: LayerPaintingContext) {
-      data.paintables.fastForEach(paintingContext.chartState.zoom) { bar ->
+      configuration.paintables.fastForEach(paintingContext.chartState.zoom) { bar ->
         paintingContext.gc.saved {
           bar.paint(paintingContext)
         }

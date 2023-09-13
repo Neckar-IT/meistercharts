@@ -46,6 +46,15 @@ inline fun IntArray.fastForEachIndexed(callback: (index: Int, value: Int) -> Uni
   }
 }
 
+inline fun IntArray.fastForEachReversed(callback: (Int) -> Unit) {
+  val currentSize = size
+  var n = currentSize - 1
+  while (n >= 0) {
+    callback(this[n])
+    n--
+  }
+}
+
 inline fun BooleanArray.fastForEach(callback: (value: Boolean) -> Unit) {
   var n = 0
   val currentSize = size
@@ -463,17 +472,17 @@ inline fun <T> ArrayList<T>.fastIterateRemove(callback: (T) -> Boolean): ArrayLi
 }
 
 /**
- * Returns the max value - but always at least [minimumValue].
+ * Returns the max value - but always at least [fallbackValue].
  *
- * If the list is empty the [minimumValue] is returned
+ * If the list is empty the [fallbackValue] is returned
  */
-inline fun <T> List<T>.fastMaxBy(minimumValue: Double, callback: (value: T) -> Double): Double {
+inline fun <T> List<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size
   if (currentSize == 0) {
-    return minimumValue
+    return fallbackValue
   }
 
-  var max = minimumValue
+  var max = - Double.MAX_VALUE
   var n = 0
   while (n < currentSize) {
     max = callback(this[n++]).coerceAtLeast(max)
@@ -483,17 +492,17 @@ inline fun <T> List<T>.fastMaxBy(minimumValue: Double, callback: (value: T) -> D
 }
 
 /**
- * Returns the max value - but always at least [minimumValue].
+ * Returns the max value - but always at least [fallbackValue].
  *
- * If the list is empty the [minimumValue] is returned
+ * If the list is empty the [fallbackValue] is returned
  */
-inline fun <T> Array<T>.fastMaxBy(minimumValue: Double, callback: (value: T) -> Double): Double {
+inline fun <T> Array<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size
   if (currentSize == 0) {
-    return minimumValue
+    return fallbackValue
   }
 
-  var max = minimumValue
+  var max = - Double.MAX_VALUE
   var n = 0
   while (n < currentSize) {
     max = callback(this[n++]).coerceAtLeast(max)

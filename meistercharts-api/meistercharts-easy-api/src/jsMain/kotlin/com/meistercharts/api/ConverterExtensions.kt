@@ -16,14 +16,14 @@
 package com.meistercharts.api
 
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
-import com.meistercharts.algorithms.layers.ConstantTicksProvider
+import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.GridLayer
-import com.meistercharts.algorithms.layers.HudElementIndex
-import com.meistercharts.algorithms.layers.HudLabelsProvider
-import com.meistercharts.algorithms.layers.TickProvider
-import com.meistercharts.algorithms.layers.TimeAxisLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.TickProvider
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLabelPainter
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
@@ -31,7 +31,7 @@ import com.meistercharts.algorithms.layers.barchart.GreedyCategoryAxisLabelPaint
 import com.meistercharts.algorithms.layers.barchart.LabelVisibleCondition
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.linechart.Dashes
-import com.meistercharts.algorithms.layers.withMaxNumberOfTicks
+import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.text.CanvasStringShortener
@@ -532,7 +532,7 @@ fun CategoryAxisLabelPainter.setImagesProvider(imagesProvider: MultiProvider<Cat
  * The title-location will always be set to the top of the axis and
  * the tick-labels will always be truncated with an ellipsis.
  */
-fun ValueAxisLayer.Style.applyValueAxisStyle(jsStyle: ValueAxisStyle?) {
+fun ValueAxisLayer.Configuration.applyValueAxisStyle(jsStyle: ValueAxisStyle?) {
   if (jsStyle == null) {
     return
   }

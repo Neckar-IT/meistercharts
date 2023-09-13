@@ -2,7 +2,9 @@ package it.neckar.open.provider
 
 import it.neckar.open.annotations.Boxed
 import it.neckar.open.annotations.CreatesObjects
+import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.annotations.Slow
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.kotlin.lang.Double2Double
 import it.neckar.open.kotlin.lang.DoubleMapFunction
 import it.neckar.open.kotlin.lang.fastFor
@@ -19,7 +21,8 @@ import kotlin.reflect.KProperty0
  * This class is an optimization that should be used to avoid boxing of double values.
  */
 interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
-  operator fun get(index: Int): Double {
+  @NotBoxed
+  operator fun get(index: Int): @NotBoxed Double {
     return valueAt(index)
   }
 
@@ -36,7 +39,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
   /**
    * Returns the value at the given index or the fallback value if the index is >= size
    */
-  fun getOrElse(index: Int, fallbackValue: Double): Double {
+  fun getOrElse(index: Int, fallbackValue: @NotBoxed Double): @NotBoxed Double {
     if (index >= size()) {
       return fallbackValue
     }
@@ -48,7 +51,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
    *
    * Returns 0.0 if there are no values.
    */
-  fun sum(): Double {
+  fun sum(): @NotBoxed Double {
     var sum = 0.0
     for (index in 0 until size()) {
       sum += valueAt(index)
@@ -60,7 +63,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
    * Returns the max value.
    * Throws a NoSuchElementException if [size] == 0
    */
-  fun max(): Double {
+  fun max(): @NotBoxed Double {
     val currentSize = size()
     if (currentSize == 0) {
       throw NoSuchElementException("Can not return max value")
@@ -89,7 +92,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
     val empty: DoublesProvider = object : DoublesProvider {
       override fun size(): Int = 0
 
-      override fun valueAt(index: Int): Double {
+      override fun valueAt(index: Int): @NotBoxed Double {
         throw UnsupportedOperationException("Must not be called")
       }
     }
@@ -98,7 +101,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
      * Creates a new [DoublesProvider] that returns the given values
      */
     @JvmStatic
-    fun forValues(values: @Boxed List<Double>): DefaultDoublesProvider {
+    fun forValues(values: @Boxed List<@Boxed Double>): DefaultDoublesProvider {
       return DefaultDoublesProvider(values)
     }
 
@@ -106,8 +109,8 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
      * Creates a new provider for a mutable list
      */
     @JvmStatic
-    fun forMutableList(values: @Boxed MutableList<Double>): MutableDoublesProvider {
-      return MutableDoublesProvider(values)
+    fun forMutableList(values: MutableList<@Boxed Double>): MutableDoublesProvider {
+      return MutableDoublesProvider().also { it.addAll(values) }
     }
 
     @JvmStatic
@@ -116,12 +119,12 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
     }
 
     @JvmStatic
-    inline fun forValues(vararg values: Double): DoublesProvider {
+    inline fun forValues(vararg values: @NotBoxed Double): DoublesProvider {
       return forDoubles(*values)
     }
 
     @JvmStatic
-    fun forDoubles(vararg values: Double): DoublesProvider {
+    fun forDoubles(vararg values: @NotBoxed Double): DoublesProvider {
       return DefaultDoublesProvider(values)
     }
 
@@ -165,38 +168,49 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
  *
  * @see MutableDoublesProvider
  */
-class DefaultDoublesProvider(private val values: DoubleArray) : DoublesProvider {
-  constructor(values: List<Double>) : this(values.toDoubleArray())
+class DefaultDoublesProvider(private val values: @NotBoxed DoubleArray) : DoublesProvider {
+  constructor(values: List<@Boxed Double>) : this(values.toDoubleArray())
 
   override fun size(): Int = values.size
 
-  override fun valueAt(index: Int): Double {
+  override fun valueAt(index: Int): @NotBoxed Double {
     return values[index]
   }
 }
 
 /**
- * An implementation of [DoublesProvider] that is mutable
- *
+ * An implementation of [DoublesProvider] that is mutable.
  * @see DefaultDoublesProvider
  */
-class MutableDoublesProvider(val values: @Boxed MutableList<Double> = mutableListOf()) : DoublesProvider {
+class MutableDoublesProvider(val values: @NotBoxed DoubleArrayList = DoubleArrayList()) : DoublesProvider {
   override fun size(): Int = values.size
 
-  override fun valueAt(index: Int): Double {
+  override fun valueAt(index: Int): @NotBoxed Double {
     return values[index]
   }
 
-  fun addAll(elements: Collection<Double>) {
-    values.addAll(elements)
+  fun addAll(elements: DoubleArrayList) {
+    values.add(elements)
+  }
+
+  @Boxed
+  fun addAll(elements: Collection<@Boxed Double>) {
+    values.add(elements)
   }
 
   /**
    * Replaces all existing entries
    */
-  fun setAll(elements: Collection<Double>) {
+  @Boxed
+  fun setAll(elements: Collection<@Boxed Double>) {
     values.clear()
-    values.addAll(elements)
+    values.add(elements)
+  }
+
+  @Boxed
+  fun setAll(elements: @NotBoxed DoubleArrayList) {
+    values.clear()
+    values.add(elements)
   }
 
   fun clear() {
@@ -213,14 +227,14 @@ class MutableDoublesProvider(val values: @Boxed MutableList<Double> = mutableLis
  *
  * @see DefaultDoublesProvider
  */
-class ListBasedDoublesProvider(var values: @Boxed List<Double>) : DoublesProvider {
+class ListBasedDoublesProvider(var values: List<@Boxed Double>) : DoublesProvider {
   override fun size(): Int = values.size
 
-  override fun valueAt(index: Int): Double {
+  override fun valueAt(index: Int): @NotBoxed Double {
     return values[index]
   }
 
-  fun update(updatedList: List<Double>) {
+  fun update(updatedList: List<@Boxed Double>) {
     this.values = updatedList
   }
 }
@@ -243,7 +257,7 @@ fun DoublesProvider.toRelative(): @Slow @pct DoublesProvider {
 class ToRelativeValuesProvider(val delegate: DoublesProvider) : DoublesProvider {
   override fun size(): Int = delegate.size()
 
-  override fun valueAt(index: Int): Double {
+  override fun valueAt(index: Int): @Boxed Double {
     return 1.0 / delegate.sum() * delegate.valueAt(index)
   }
 }
@@ -256,21 +270,7 @@ fun KProperty0<DoublesProvider>.delegate(): DoublesProvider {
     override fun size(): Int = get().size()
 
     override
-    fun valueAt(index: Int): Double {
-      return get().valueAt(index)
-    }
-  }
-}
-
-
-/**
- * Returns a delegate that uses the current value of this property to delegate all calls.
- */
-fun KProperty0<BooleanValuesProvider>.delegate(): BooleanValuesProvider {
-  return object : BooleanValuesProvider {
-    override fun size(): Int = get().size()
-
-    override fun valueAt(index: Int): Boolean {
+    fun valueAt(index: Int): @Boxed Double {
       return get().valueAt(index)
     }
   }
@@ -290,7 +290,7 @@ fun DoublesProvider.mapped(mapFunction: Double2Double): DoublesProvider {
       return this@mapped.size()
     }
 
-    override fun valueAt(index: Int): Double {
+    override fun valueAt(index: Int): @Boxed Double {
       val value = this@mapped.valueAt(index)
       return mapFunction(value)
     }

@@ -15,7 +15,7 @@
  */
 package com.meistercharts.charts.support
 
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 
 /**
  * Provides a value axis for a key

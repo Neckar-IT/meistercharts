@@ -19,7 +19,7 @@ import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import com.meistercharts.range.ValueRange
 import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.algorithms.layers.EmptyLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.canvas.BindContentAreaSize2ContentViewport
 import com.meistercharts.canvas.FixedContentAreaSize
@@ -104,7 +104,7 @@ fun valueAxisOnContentAreaBounds() {
 
     layers.addLayer(contentLayer.clipped(passpartoutMargin)) //<3>
 
-    layers.addLayer(ValueAxisLayer(ValueAxisLayer.Data(valueRangeProvider = { ValueRange.linear(0.0, 123.0) })) {
+    layers.addLayer(ValueAxisLayer(ValueAxisLayer.Configuration(valueRangeProvider = { ValueRange.linear(0.0, 123.0) })) {
       titleProvider = { _, _ -> "The Value Axis [m²/h]" }
       side = Side.Left  //Other side work exactly the same
       tickOrientation = Vicinity.Outside //<4>

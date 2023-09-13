@@ -15,6 +15,7 @@
  */
 package com.meistercharts.charts
 
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.RoundingStrategy
 import com.meistercharts.canvas.TargetRefreshRate
@@ -44,6 +45,7 @@ class ChartRefreshGestalt(
     }
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The target refresh rate for the repaints

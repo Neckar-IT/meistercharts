@@ -12,9 +12,21 @@ object CookiesSupport {
    * Searches the cookies for the given name and returns the value of the specified cookie if the cookie is present. Throws exception if the cookie is not present.
    */
   fun getCookieValue(cookieName: CookieName): String {
-    document.cookie.split(';').fastForEach { token ->
-      val splitToken = token.split("=")
-      if (splitToken.size != 2) throw IllegalStateException("Cookie $token is invalid")
+    return findCookieValue(document.cookie, cookieName) ?: throw IllegalStateException("No cookie for [$cookieName] was found")
+  }
+
+  fun findCookieValue(cookieName: CookieName): String? {
+    return findCookieValue(document.cookie, cookieName)
+  }
+
+  /**
+   * Parses the document cookies string
+   */
+  internal fun findCookieValue(cookiesFromDocument: String, cookieName: CookieName): String? {
+    cookiesFromDocument.split(';').filter { it.isNotBlank() }
+      .fastForEach { cookieValue ->
+        val splitToken = cookieValue.split("=")
+        if (splitToken.size != 2) throw IllegalStateException("Cookie [$cookieValue] is invalid")
 
       val key = splitToken[0].trim()
       if (key == cookieName.value) {
@@ -22,7 +34,7 @@ object CookiesSupport {
       }
     }
 
-    throw IllegalStateException("No cookie for $cookieName was found")
+    return null
   }
 
   /**

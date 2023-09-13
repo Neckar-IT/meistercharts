@@ -18,7 +18,7 @@ package com.meistercharts.time
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.kotlin.lang.floor
-import it.neckar.open.time.TimeZone
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit

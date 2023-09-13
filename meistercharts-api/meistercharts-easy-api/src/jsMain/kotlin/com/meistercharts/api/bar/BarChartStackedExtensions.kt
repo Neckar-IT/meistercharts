@@ -39,7 +39,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
  * Is called initially and applies the Easy Api defaults
  */
 fun BarChartStackedGestalt.applyEasyApiDefaults() {
-  style.applyAxisTitleOnTop(40.0)
+  configuration.applyAxisTitleOnTop(40.0)
   // Enable as soon as the bar chart stacked supports value axis
   // thresholdsSupport.getHudLayer().configuration.maxWidth = MultiDoublesProvider.always(Double.NaN)
 }
@@ -56,17 +56,17 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   //because a change in the orientation triggers a reset of the layout.
   jsStyle.horizontal?.let {
     if (it) {
-      this.style.applyHorizontalConfiguration() //resets the content area margins!
+      this.configuration.applyHorizontalConfiguration() //resets the content area margins!
     } else {
-      this.style.applyVerticalConfiguration() //resets the content area margins!
+      this.configuration.applyVerticalConfiguration() //resets the content area margins!
     }
 
     //ensure that there is some space, the content are top is potentially overridden by a property later
-    style.applyAxisTitleOnTop(40.0)
+    configuration.applyAxisTitleOnTop(40.0)
   }
 
   jsStyle.valueRange?.toModelLinear()?.let {
-    this.style.applyValueRange(it)
+    this.configuration.applyValueRange(it)
   }
 
   jsStyle.barWidth?.let {
@@ -103,29 +103,29 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
 
   jsStyle.categoryAxisStyle?.let { jsValueAxisStyle ->
     this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.axisConfiguration.applyCategoryAxisStyle(jsValueAxisStyle)
+    this.categoryAxisLayer.configuration.applyCategoryAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.axisConfiguration.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.configuration.side, it)
     }
   }
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
     this.valueAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.valueAxisLayer.axisConfiguration.applyValueAxisStyle(jsValueAxisStyle)
+    this.valueAxisLayer.configuration.applyValueAxisStyle(jsValueAxisStyle)
 
     jsValueAxisStyle.axisSize?.let {
-      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.axisConfiguration.side, it)
+      contentViewportMargin = contentViewportMargin.withSide(valueAxisLayer.configuration.side, it)
     }
   }
 
-  this.gridLayer.configuration.applyLinesStyle(jsStyle.gridStyle) { this.style.valueRange }
+  this.gridLayer.configuration.applyLinesStyle(jsStyle.gridStyle) { this.configuration.valueRange }
   jsStyle.gridStyle?.visible?.let {
-    this.style.showGrid = it
+    this.configuration.showGrid = it
   }
 
   jsStyle.valueLabelFont?.toFontDescriptorFragment()?.let {
-    this.style.applyValueLabelFont(it)
+    this.configuration.applyValueLabelFont(it)
   }
 
   jsStyle.valueLabelColor?.toColor()?.let {

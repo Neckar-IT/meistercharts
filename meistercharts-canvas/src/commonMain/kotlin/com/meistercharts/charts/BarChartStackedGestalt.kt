@@ -20,11 +20,11 @@ import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
-import com.meistercharts.algorithms.layers.ConstantTicksProvider
+import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
-import com.meistercharts.algorithms.layers.TickProvider
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.TickProvider
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
@@ -66,17 +66,16 @@ import kotlin.jvm.JvmOverloads
  */
 class BarChartStackedGestalt @JvmOverloads constructor(
   /**
-   * The data to be displayed
+   * The current category model for the stacked bar chart
    */
-  val data: Data = Data(categorySeriesModel = createDefaultCategoryModel()),
-
-  styleConfiguration: BarChartStackedGestalt.Style.() -> Unit = {},
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  additionalConfiguration: BarChartStackedGestalt.Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
 
   /**
    * The style to be used
    */
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration(initialCategorySeriesModel).also(additionalConfiguration)
 
   /**
    * Delegate the configures the chart to have a fixed zoom and translation
@@ -95,7 +94,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   /**
    * The layer that paints the bars
    */
-  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ data.categorySeriesModel }) {
+  val categoryLayer: CategoryLayer<CategorySeriesModel> = CategoryLayer({ configuration.categorySeriesModel }) {
     orientation = CategoryChartOrientation.VerticalLeft
     categoryPainter = stackedBarsPainter
     layoutCalculator = DefaultCategoryLayouter {
@@ -139,7 +138,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
   /**
    * The value layer is *hidden* - only used to paint the 0 at the corresponding grid line
    */
-  val valueAxisSupport: ValueAxisSupport<Unit> = ValueAxisSupport.single({ style.valueRange }) {
+  val valueAxisSupport: ValueAxisSupport<Unit> = ValueAxisSupport.single({ configuration.valueRange }) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
       paintRange = AxisConfiguration.PaintRange.ContentArea
@@ -172,17 +171,17 @@ class BarChartStackedGestalt @JvmOverloads constructor(
    * The layer that paints the line at the domain-value 0
    */
   val gridLayer: DomainRelativeGridLayer = valueAxisLayer.createGrid {
-    lineStyles = { value: @DomainRelative Double -> style.gridLineStyles(style.valueRange.toDomain(value)) }
+    lineStyles = { value: @DomainRelative Double -> configuration.gridLineStyles(configuration.valueRange.toDomain(value)) }
   }
 
   init {
-    categoryAxisLayer.configuration.labelsProvider = data::categorySeriesModel.createCategoryLabelsProvider()
+    categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
 
     fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
       gridLayer.configuration.passpartout = it
 
-      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
-      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
+      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
     }
 
 
@@ -195,14 +194,14 @@ class BarChartStackedGestalt @JvmOverloads constructor(
 
       valueAxisSupport.addLayers(this, Unit)
 
-      layers.addAboveBackground(gridLayer.visibleIf(style.showGridProperty))
+      layers.addAboveBackground(gridLayer.visibleIf(configuration.showGridProperty))
       layers.addLayer(categoryLayer.clipped {
         /*
          * Only clip the sides where the axes are.
          * We must not clip the other sides (e.g. for labels)
          */
-        val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
-        val valueAxisSide = valueAxisLayer.axisConfiguration.side
+        val categoryAxisSide = categoryAxisLayer.configuration.side
+        val valueAxisSide = valueAxisLayer.configuration.side
 
         it.chartState.contentViewportMargin.only(categoryAxisSide, valueAxisSide)
       })
@@ -211,15 +210,13 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     }
   }
 
-  open class Data(
+  @ConfigurationDsl
+  open inner class Configuration(
     /**
      * The current category model for the stacked bar chart
      */
     var categorySeriesModel: CategorySeriesModel,
-  )
-
-  @ConfigurationDsl
-  open inner class Style {
+  ) {
     /**
      * The value range of the bar chart
      */
@@ -255,11 +252,11 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Makes the value axis visible
      */
     fun applyValueAxisVisible() {
-      valueAxisLayer.axisConfiguration.showAxisLine()
-      valueAxisLayer.axisConfiguration.showTicks()
-      valueAxisLayer.axisConfiguration.ticks = TickProvider.linear
+      valueAxisLayer.configuration.showAxisLine()
+      valueAxisLayer.configuration.showTicks()
+      valueAxisLayer.configuration.ticks = TickProvider.linear
 
-      when (valueAxisLayer.axisConfiguration.side) {
+      when (valueAxisLayer.configuration.side) {
         Side.Left -> fixedChartGestalt.setMarginLeft(75.0)
         Side.Right -> fixedChartGestalt.setMarginRight(75.0)
         Side.Top -> fixedChartGestalt.setMarginTop(40.0)
@@ -271,16 +268,16 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.tickFont = font
-      valueAxisLayer.axisConfiguration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font
+      valueAxisLayer.configuration.tickFont = font
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.axisConfiguration.titleFont = font
-      valueAxisLayer.axisConfiguration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font
+      valueAxisLayer.configuration.titleFont = font
     }
 
     /**
@@ -313,8 +310,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyHorizontalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
-      categoryAxisLayer.axisConfiguration.side = Side.Left
-      valueAxisLayer.axisConfiguration.side = Side.Bottom
+      categoryAxisLayer.configuration.side = Side.Left
+      valueAxisLayer.configuration.side = Side.Bottom
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Horizontal)
       contentViewportMargin = Insets.of(10.0, 10.0, 25.0, 80.0)
     }
@@ -325,8 +322,8 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyVerticalConfiguration() {
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
-      categoryAxisLayer.axisConfiguration.side = Side.Bottom
-      valueAxisLayer.axisConfiguration.side = Side.Left
+      categoryAxisLayer.configuration.side = Side.Bottom
+      valueAxisLayer.configuration.side = Side.Left
       stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Vertical)
       contentViewportMargin = Insets.of(10.0, 10.0, 40.0, 30.0)
     }
@@ -337,7 +334,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     fun applyValueRange(valueRange: LinearValueRange) {
       this.valueRange = valueRange
-      valueAxisLayer.axisConfiguration.applyLinearScale()
+      valueAxisLayer.configuration.applyLinearScale()
       stackedBarsPainter.stackedBarPaintable.data.valueRange = valueRange
     }
 

@@ -29,7 +29,7 @@ import com.meistercharts.algorithms.layers.Limit
 import com.meistercharts.algorithms.layers.LimitsLayer
 import com.meistercharts.algorithms.layers.LowerLimit
 import com.meistercharts.algorithms.layers.UpperLimit
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.ZeroLinesLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.clipped
@@ -84,37 +84,37 @@ import kotlin.math.sqrt
  * Visualizes the raw pixel values
  */
 class PixelValuesGestalt @JvmOverloads constructor(
-  val data: Data = Data(PixelValuesModel().also {
+  val configuration: Configuration = Configuration(PixelValuesModel().also {
     it.fillWithSampleData()
   }),
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : ChartGestalt {
 
   /**
    * Field for the getter
    */
   val model: PixelValuesModel
-    get() = data.domainModel
+    get() = configuration.domainModel
 
   /**
    * The model that returns @DomainRelative values
    */
-  val domainRelativeModel: @DomainRelative LinesChartModel = data.domainModel.toDomainRelativeY { style.yValueRange }
+  val domainRelativeModel: @DomainRelative LinesChartModel = configuration.domainModel.toDomainRelativeY { style.yValueRange }
 
-  val style: Style = Style().also(styleConfiguration)
+  val style: Configuration = Configuration(configuration.domainModel).also(additionalConfiguration)
 
   val fitContentInViewportGestalt: FitContentInViewportGestalt = FitContentInViewportGestalt()
 
   /**
    * The y-axis
    */
-  val yValueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data()) {
+  val yValueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Configuration()) {
     tickOrientation = Vicinity.Outside
     ticksFormat = intFormat
     axisLineWidth = 2.0
     paintRange = AxisConfiguration.PaintRange.Continuous
   }.also {
-    it.data.valueRangeProvider = {
+    it.configuration.valueRangeProvider = {
       style.yValueAxisValueRangeOverride ?: style.yValueRange
     }
   }
@@ -122,7 +122,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   /**
    * The x axis
    */
-  val xValueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Data()) {
+  val xValueAxisLayer: ValueAxisLayer = ValueAxisLayer(ValueAxisLayer.Configuration()) {
     side = Side.Bottom
     tickOrientation = Vicinity.Outside
     axisLineWidth = 2.0
@@ -130,7 +130,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     axisEndConfiguration = AxisEndConfiguration.Exact
     ticksFormat = intFormat
   }.also {
-    it.data.valueRangeProvider = {
+    it.configuration.valueRangeProvider = {
       style.xValueRange
     }
   }
@@ -158,7 +158,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     val toolbarButtonFactory = ToolbarButtonFactory()
 
     ToolbarGestalt(
-      ToolbarGestalt.Data(
+      ToolbarGestalt.Configuration(
         createDefaultZoomButtons(toolbarButtonFactory)
           .plus(
             toolbarButtonFactory.button(Icons::autoScale) {
@@ -279,7 +279,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   init {
     style.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
 
-    yValueAxisLayer.axisConfiguration.apply {
+    yValueAxisLayer.configuration.apply {
     }
 
     fitContentInViewportGestalt.contentViewportMargin = Insets.of(20.0, 20.0, 60.0, 75.0)
@@ -287,8 +287,8 @@ class PixelValuesGestalt @JvmOverloads constructor(
       val withoutTop = it.withTop(0.0)
       val contentInsets = it.withTop(0.0).withRight(0.0)
 
-      yValueAxisLayer.axisConfiguration.size = it.left
-      xValueAxisLayer.axisConfiguration.size = it.bottom
+      yValueAxisLayer.configuration.size = it.left
+      xValueAxisLayer.configuration.size = it.bottom
 
       horizontalGridLayer.configuration.passpartout = withoutTop
       verticalGridLayer.configuration.passpartout = withoutTop
@@ -383,7 +383,13 @@ class PixelValuesGestalt @JvmOverloads constructor(
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration(
+    /**
+     * The model.
+     * Y-Axis in @Domain. X-Axis in @DomainRelative
+     */
+    var domainModel: PixelValuesModel
+  ) {
     var minColor: Color = Color.web("#3f51b5")
     var averageColor: Color = Color.web("#2196f3")
     var maxColor: Color = Color.web("#009688")
@@ -450,16 +456,6 @@ class PixelValuesGestalt @JvmOverloads constructor(
      */
     val maxYValueTopProperty: @Domain ObservableDouble = ObservableDouble(65_500.0)
     var maxYValueTop: @Domain Double by maxYValueTopProperty
-  }
-
-
-  class Data(
-    /**
-     * The model.
-     * Y-Axis in @Domain. X-Axis in @DomainRelative
-     */
-    var domainModel: PixelValuesModel
-  ) {
   }
 }
 

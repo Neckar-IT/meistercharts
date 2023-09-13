@@ -23,6 +23,9 @@ import it.neckar.open.dispose.OnDispose
  * The(!) MeisterChart interface
  */
 interface Meisterchart : Disposable, OnDispose {
+  /**
+   * The [ChartSupport] for this chart
+   */
   val chartSupport: ChartSupport
 
   /**
@@ -31,6 +34,9 @@ interface Meisterchart : Disposable, OnDispose {
    */
   val description: String
 
+  /**
+   * Helper method that returns the [LayerSupport] of the chart
+   */
   val layerSupport: LayerSupport
     get() {
       return chartSupport.layerSupport

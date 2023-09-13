@@ -25,12 +25,12 @@ import com.meistercharts.algorithms.layers.ClippingLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.GridLayer
-import com.meistercharts.algorithms.layers.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
-import com.meistercharts.algorithms.layers.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.createAxisLayer
@@ -62,7 +62,6 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.charts.BarChartGroupedGestalt.Style
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
@@ -111,21 +110,17 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    *
    * The number of categories does not matter.
    */
-  categorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
+  initialCategorySeriesModel: CategorySeriesModel = createDefaultCategoryModel(),
 
   /**
    * The tooltip type
    */
-  toolTipType: ToolTipType = ToolTipType.CrossWire,
+  initialToolTipType: ToolTipType = ToolTipType.CrossWire,
 
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
 
-  val configuration: Configuration = Configuration(categorySeriesModel, toolTipType)
-
-  init {
-    this.configuration.also(additionalConfiguration)
-  }
+  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
 
   val fixedChartGestalt: FixedChartGestalt = FixedChartGestalt(Insets.of(10.0, 80.0, 40.0, 75.0))
   var contentViewportMargin: @Zoomed Insets by fixedChartGestalt::contentViewportMargin
@@ -322,8 +317,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
       categoriesGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.axisConfiguration.size = it[valueAxisLayer.axisConfiguration.side]
-      categoryAxisLayer.axisConfiguration.size = it[categoryAxisLayer.axisConfiguration.side]
+      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
     }
 
     configuration.valueRangeProperty.consumeImmediately {
@@ -331,7 +326,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     }
 
     configuration.numberFormatProperty.consumeImmediately {
-      valueAxisLayer.axisConfiguration.ticksFormat = it
+      valueAxisLayer.configuration.ticksFormat = it
     }
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
@@ -378,8 +373,8 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
        * Only clip the sides where the axes are.
        * We must not clip the other sides (e.g. for labels)
        */
-      val categoryAxisSide = categoryAxisLayer.axisConfiguration.side
-      val valueAxisSide = valueAxisLayer.axisConfiguration.side
+      val categoryAxisSide = categoryAxisLayer.configuration.side
+      val valueAxisSide = valueAxisLayer.configuration.side
 
       contentViewportMargin.only(categoryAxisSide, valueAxisSide)
     }
@@ -409,24 +404,24 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
      */
     val filteredCategorySeriesModel: CategorySeriesModel = object : CategorySeriesModel {
       override val numberOfCategories: Int
-        get() = configuration.categorySeriesModel.numberOfCategories
+        get() = categorySeriesModel.numberOfCategories
 
       override val numberOfSeries: Int
-        get() = configuration.categorySeriesModel.numberOfSeries
+        get() = categorySeriesModel.numberOfSeries
 
       override fun valueAt(categoryIndex: CategoryIndex, seriesIndex: SeriesIndex): @Domain @MayBeNaN Double {
-        return if (isVisible(seriesIndex)) configuration.categorySeriesModel.valueAt(categoryIndex, seriesIndex) else Double.NaN
+        return if (isVisible(seriesIndex)) categorySeriesModel.valueAt(categoryIndex, seriesIndex) else Double.NaN
       }
 
       override fun categoryNameAt(categoryIndex: CategoryIndex, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-        return configuration.categorySeriesModel.categoryNameAt(categoryIndex, textService, i18nConfiguration)
+        return categorySeriesModel.categoryNameAt(categoryIndex, textService, i18nConfiguration)
       }
     }
 
     /**
      * Returns true if the given series is visible
      */
-    fun isVisible(seriesIndex: SeriesIndex): Boolean = configuration.lineIsVisible.valueAt(seriesIndex.value)
+    fun isVisible(seriesIndex: SeriesIndex): Boolean = lineIsVisible.valueAt(seriesIndex.value)
 
 
     /**
@@ -533,9 +528,9 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
     //Update the value axis layer
     if (valueRange is LinearValueRange) {
-      valueAxisLayer.axisConfiguration.applyLinearScale()
+      valueAxisLayer.configuration.applyLinearScale()
     } else {
-      valueAxisLayer.axisConfiguration.applyLogarithmicScale()
+      valueAxisLayer.configuration.applyLogarithmicScale()
     }
   }
 
@@ -543,16 +538,16 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    * Sets the given font for all tick labels of all axes
    */
   fun applyAxisTickFont(font: FontDescriptorFragment) {
-    categoryAxisLayer.axisConfiguration.tickFont = font
-    valueAxisLayer.axisConfiguration.tickFont = font
+    categoryAxisLayer.configuration.tickFont = font
+    valueAxisLayer.configuration.tickFont = font
   }
 
   /**
    * Sets the given font for all titles of all axes
    */
   fun applyAxisTitleFont(font: FontDescriptorFragment) {
-    categoryAxisLayer.axisConfiguration.titleFont = font
-    valueAxisLayer.axisConfiguration.titleFont = font
+    categoryAxisLayer.configuration.titleFont = font
+    valueAxisLayer.configuration.titleFont = font
   }
 
 
