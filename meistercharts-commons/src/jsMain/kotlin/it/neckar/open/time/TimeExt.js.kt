@@ -15,5 +15,9 @@ actual fun Double.formatUtcForDebug(): String {
     return "∞"
   }
 
-  return Date(this).toISOString()
+  return try {
+    Date(this).toISOString()
+  } catch (e: Throwable) {
+    "---${this}---[$e]"
+  }
 }

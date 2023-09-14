@@ -1,9 +1,9 @@
 package it.neckar.open.formatting
 
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.toIntFloor
-import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.unit.si.ms
 
 /**
@@ -103,7 +103,7 @@ expect class DateTimeFormatUTC() : DateTimeFormat {
     /**
      * Parses the UTC string to a timestamp
      */
-    fun parse(formattedUtc: String, i18n: I18nConfiguration): @ms Double
+    fun parse(formattedUtc: String): @ms Double
   }
 }
 
@@ -170,11 +170,7 @@ fun @ms Double.formatUtc(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.N
     return "∞"
   }
 
-  return try {
-    dateTimeFormatUTC.format(this, I18nConfiguration.GermanyUTC, whitespaceConfig)
-  } catch (e: Throwable) {
-    "---${this}---[$e]"
-  }
+  return dateTimeFormatUTC.format(this, I18nConfiguration.GermanyUTC, whitespaceConfig)
 }
 
 /**
@@ -189,7 +185,7 @@ fun parseUtc(formattedUtc: String): @ms Double {
     return Double.POSITIVE_INFINITY
   }
 
-  return DateTimeFormatUTC.parse(formattedUtc, I18nConfiguration.GermanyUTC)
+  return DateTimeFormatUTC.parse(formattedUtc)
 }
 
 

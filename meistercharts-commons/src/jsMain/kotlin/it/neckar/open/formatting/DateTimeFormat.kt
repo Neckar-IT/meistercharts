@@ -56,7 +56,7 @@ actual class DateTimeFormatUTC : DateTimeFormat {
     /**
      * Parses the UTC string to a timestamp
      */
-    actual fun parse(formattedUtc: String, i18n: I18nConfiguration): Double {
+    actual fun parse(formattedUtc: String): Double {
       return Date.parse(formattedUtc)
     }
   }

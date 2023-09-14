@@ -20,7 +20,11 @@ actual fun Double.formatUtcForDebug(): String {
     return "∞"
   }
 
-  return Instant.ofEpochMilli(this.toLong()).atOffset(ZoneOffset.UTC).format(utcDateTimeFormat)
+  return try {
+    Instant.ofEpochMilli(this.toLong()).atOffset(ZoneOffset.UTC).format(utcDateTimeFormat)
+  } catch (e: Throwable) {
+    "---${this}---[$e]"
+  }
 }
 
 /**

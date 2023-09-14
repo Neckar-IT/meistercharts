@@ -35,14 +35,14 @@ actual class TimeFormatIso8601 : DateTimeFormat {
 
 actual class DateTimeFormatUTC : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
-    return DateUtils.toOffsetDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).withOffsetSameInstant(ZoneOffset.UTC).format(it.neckar.open.time.utcDateTimeFormat)
+    return DateUtils.toOffsetDateTime(timestamp.toLong(), ZoneOffset.UTC).format(it.neckar.open.time.utcDateTimeFormat)
   }
 
   actual companion object {
     /**
      * Parses the UTC string to a timestamp
      */
-    actual fun parse(formattedUtc: String, i18n: I18nConfiguration): Double {
+    actual fun parse(formattedUtc: String): Double {
       it.neckar.open.time.utcDateTimeFormat.parse(formattedUtc).let {
         val date = it.query(TemporalQueries.localDate())
         val time = it.query(TemporalQueries.localTime())
