@@ -1,11 +1,17 @@
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.TestOnly
+import it.neckar.open.async.PlatformReadWriteLock
+import it.neckar.open.async.read
+import it.neckar.open.async.write
 import it.neckar.open.unit.si.K
 import kotlin.jvm.JvmOverloads
 
 
 /**
- * Wraps a [CacheMap] and provides additional features like hit counter or other custom methods
+ * Wraps a [CacheMap] and provides additional features like hit counter or other custom methods.
+ *
+ * Depending on the platform, the cache is synchronized by [lock].
  */
 class Cache<K, V>
 @Deprecated("use cache() method instead to allow use for better logging", level = DeprecationLevel.WARNING)
@@ -22,39 +28,71 @@ class Cache<K, V>
    */
   val map: CacheMap<K, V> = CacheMap(maxSize, free)
 
+  val lock = PlatformReadWriteLock()
+
   val maxSize: Int
     get() {
-      return map.maxSize
+      lock.read {
+        return map.maxSize
+      }
     }
 
   fun updateMaxSize(newMaxSize: Int) {
-    map.updateMaxSize(newMaxSize)
+    lock.write {
+      map.updateMaxSize(newMaxSize)
+    }
   }
 
   val size: Int
-    get() = map.size
+    get() {
+      lock.read {
+        return map.size
+      }
+    }
 
+  /**
+   * Does not work well in multi threading environments
+   */
+  @TestOnly
   val keys: Set<K>
     get() {
-      return map.keys
+      lock.read {
+        return map.keys
+      }
     }
 
   /**
    * Returns all values
    */
+  @TestOnly
   val values: Collection<V>
     get() {
-      return map.values
+      lock.read {
+        return map.values
+      }
     }
 
   /**
+   * Returns the filtered values
+   */
+  fun filteredValues(predicate: (V) -> Boolean): List<V> {
+    lock.read {
+      return map.values.filter(predicate)
+    }
+  }
+
+  /**
    * Counts the number of cache hits
+   *
+   * ATTENTION: This field is not synchronized - since it is only used as estimation.
    */
   var cacheHitCounter: Int = 0
     private set
 
   /**
    * Do *NOT* use directly
+   *
+   * ATTENTION: This field is not synchronized - since it is only used as estimation.
    */
   var cacheMissCounter: Int = 0
 
@@ -62,34 +100,40 @@ class Cache<K, V>
    * Removes all elements the predicate returns true for
    */
   fun removeIf(predicate: (K) -> Boolean) {
-    val iterator = map.iterator()
+    lock.write {
+      val iterator = map.iterator()
 
-    while (iterator.hasNext()) {
-      val entry = iterator.next()
+      while (iterator.hasNext()) {
+        val entry = iterator.next()
 
-      if (predicate(entry.key)) {
-        iterator.remove()
+        if (predicate(entry.key)) {
+          iterator.remove()
+        }
       }
     }
   }
 
   operator fun get(key: K): V? {
-    val result = map[key]
-    if (result != null) {
-      cacheHitCounter++
+    lock.read {
+      val result = map[key]
+      if (result != null) {
+        cacheHitCounter++
+      }
+      return result
     }
-    return result
   }
 
-  operator fun set(key: K, value: V) {
-    map[key] = value
+  inline operator fun set(key: K, value: V) {
+    store(key, value)
   }
 
   /**
    * Stores a new value in the cache. Returns the old value - if there has been one
    */
   fun store(key: K, value: V): V? {
-    return map.put(key, value)
+    lock.write {
+      return map.put(key, value)
+    }
   }
 
   /**
@@ -99,9 +143,17 @@ class Cache<K, V>
    * Note that the operation is not guaranteed to be atomic.
    */
   inline fun getOrStore(key: K, provider: () -> V): V {
-    return map.getOrPut(key) {
-      cacheMissCounter++
-      provider()
+    //First check without write lock
+    val found = get(key)
+    if (found != null) {
+      return found
+    }
+
+    lock.write {
+      return map.getOrPut(key) {
+        cacheMissCounter++
+        provider()
+      }
     }
   }
 
@@ -109,34 +161,48 @@ class Cache<K, V>
    * Clears the cache
    */
   fun clear() {
-    map.clear()
+    lock.write {
+      map.clear()
+    }
   }
 
   fun remove(k: K): V? {
-    return map.remove(k)
+    lock.write {
+      return map.remove(k)
+    }
   }
 
   operator fun contains(k: K): Boolean {
-    return map.contains(k)
+    lock.read {
+      return map.contains(k)
+    }
   }
 
   override fun toString(): String {
-    return map.toString()
+    lock.read {
+      return map.toString()
+    }
   }
 
   /**
    * Marks the entry with the given [key] as new
    */
   fun markAsNew(key: K) {
-    map.markAsNew(key)
+    lock.write {
+      map.markAsNew(key)
+    }
   }
 
   /**
-   * Calls the callback for each entry
+   * Calls the callback for each entry.
+   *
+   * ATTENTION: Only holds a read lock!
    */
   fun forEach(callback: (K, V) -> Unit) {
-    map.forEach { entry ->
-      callback(entry.key, entry.value)
+    lock.read {
+      map.forEach { entry ->
+        callback(entry.key, entry.value)
+      }
     }
   }
 }

@@ -49,6 +49,7 @@ object KotlinSettings {
     add("-Xinline-classes") //Enable inline classes
     add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design)
     add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
+    add("-Xexpect-actual-classes") //Ignore warnings for expect/actual classes (https://youtrack.jetbrains.com/issue/KT-61573/Emit-the-compilation-warning-on-expect-actual-classes.-The-warning-must-mention-that-expect-actual-classes-are-in-Beta)
   }
 
   /**
