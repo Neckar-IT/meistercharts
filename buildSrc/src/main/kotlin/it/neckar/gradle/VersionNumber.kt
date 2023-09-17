@@ -2,6 +2,7 @@ package it.neckar.gradle
 
 import com.google.common.base.Objects
 import com.google.common.collect.Ordering
+import java.util.Locale
 
 class VersionNumber private constructor(val major: Int, val minor: Int, val micro: Int, val patch: Int, val qualifier: String?, private val scheme: AbstractScheme) : Comparable<VersionNumber> {
   constructor(major: Int, minor: Int, micro: Int, qualifier: String?) : this(major, minor, micro, 0, qualifier, DEFAULT_SCHEME) {}
@@ -43,7 +44,7 @@ class VersionNumber private constructor(val major: Int, val minor: Int, val micr
   }
 
   private fun toLowerCase(string: String?): String? {
-    return string?.toLowerCase()
+    return string?.lowercase()
   }
 
   /**

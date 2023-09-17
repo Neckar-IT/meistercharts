@@ -1,5 +1,6 @@
 import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
+import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
@@ -20,8 +21,11 @@ import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackDevtool
 import java.io.File
 import java.io.FileFilter
 import java.io.FileNotFoundException
@@ -338,22 +342,40 @@ fun JavaCompiler.toolsJarPath(): File {
  * Configures the Kotlin config
  */
 fun Project.configureKotlin() {
+  //Ensure that this is only called once for each project
+  require(project.extra.has("kotlinConfigured").not()) {
+    "Kotlin already configured for project ${project.path}. Do *not* call configureKotlin() multiple times"
+  }
+  project.extra["kotlinConfigured"] = true
+
+  //JS projects are no longer supported
+  require(extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>() == null) {
+    "Must not contain KotlinJsProjectExtension. Use multiplatform instead"
+  }
+
   //for common
   extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
 
   //For JVM projects
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyKotlinConfiguration()
+  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration()
 
-  //For JS projects
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>()?.applyKotlinConfiguration()
-
-  //Opt in to experimental annotations - syntax for multi-platform projects
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyKotlinConfiguration()
+  //For Multiplatform projects (JS and JVM)
+  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration()
 
   //Configure the version numbers
   configureNodeJsRootExtension()
 }
 
+/**
+ * Returns true if this is a multiplatform project
+ */
+fun Project.isMultiplatform(): Boolean {
+  return extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>() != null
+}
+
+/**
+ * Configures the node and webpack CLI version to use the version provided by the refreshVersions plugin
+ */
 fun Project.configureNodeJsRootExtension() {
   afterEvaluate {
     rootProject.extensions.findByType(NodeJsRootExtension::class)?.apply {
@@ -407,18 +429,65 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
     }
 
     languageSettings.progressiveMode = true
-    languageSettings.languageVersion = KotlinSettings.languageVersion
-    languageSettings.apiVersion = KotlinSettings.apiVersion
+    languageSettings.languageVersion = KotlinSettings.languageVersionAsString
+    languageSettings.apiVersion = KotlinSettings.apiVersionAsString
   }
+}
+
+/**
+ * Applies the kotlin configuration to the JVM target
+ */
+fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration() {
+  compilerOptions {
+    languageVersion.set(KotlinSettings.languageVersion)
+    apiVersion.set(KotlinSettings.apiVersion)
+    progressiveMode.set(true)
+    optIn.set(KotlinSettings.optInExperimentalAnnotations)
+  }
+
+  applyKotlinConfiguration()
+}
+
+/**
+ * Applies the (default) configuration for multiplatform projects.
+ * Registers both JVM and JS projects
+ */
+fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
+  //Add an JVM configuration
+  jvm {
+  }
+
+  //Add the JS configuration
+  js {
+    binaries.executable()
+
+    browser {
+      configureJsKarma()
+
+      commonWebpackConfig(Action {
+        devtool = WebpackDevtool.SOURCE_MAP
+
+        cssSupport {
+          enabled.set(true) //enable CSS support for all tasks (https://kotlinlang.org/docs/js-project-setup.html#building-executables)
+        }
+      })
+
+      webpackTask(Action {
+        sourceMaps = true
+      })
+    }
+  }
+
+  applyKotlinConfiguration()
 }
 
 /**
  * Configures JS test runner using karma
  */
 fun org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl.configureJsKarma() {
-  testTask {
+  testTask(Action {
     configureJsKarma()
-  }
+  })
 }
 
 /**

@@ -32,9 +32,7 @@ class GenerateTypeScriptDefinitionsPlugin : Plugin<Project> {
   override fun apply(project: Project) {
     val extension = project.extensions.create<GenerateTypeScriptDefinitionsExtension>(EXTENSION_NAME).apply {
       //Sets the default configuration
-      typeScriptDefinitionFile.convention {
-        project.buildDir.resolve("index.d.ts")
-      }
+      typeScriptDefinitionFile.convention(project.layout.buildDirectory.file("index.d.ts"))
     }
 
     val task = project.task<GenerateTypeScriptDefinitionsTask>(TASK_NAME) {

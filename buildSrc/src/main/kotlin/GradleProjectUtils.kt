@@ -85,57 +85,10 @@ fun ComponentIdentifier.toFileName(suffix: String = ""): String {
 }
 
 /**
- * Copies the resources files for a project.
- * Workaround for:
- * https://youtrack.jetbrains.com/issue/KT-38230/Gradle-MPP-JS-Process-JS-resources-from-dependencies
- */
-@Deprecated("Use CopyResourcesPlugin instead")
-fun Copy.copyJSResources(configurationNames: List<String> = listOf("runtimeClasspath", "commonMainApi", "jsRuntimeClasspath")) {
-  val projectDependencies = this.project.findAllProjectDependencies(configurationNames)
-
-  fun Copy.addCopyRef(dependency: Project) {
-    dependency.pluginManager.withPlugin(Plugins.kotlinMultiPlatform) {
-      dependency.tasks.getByName("jsProcessResources").let { task ->
-        val sourceDir = (task as Copy).destinationDir
-        inputs.files(sourceDir)
-        dependsOn(task)
-        from(sourceDir)
-      }
-    }
-    dependency.pluginManager.withPlugin(Plugins.kotlinJs) {
-      dependency.tasks.getByName("processResources").let { task ->
-        val sourceDir = (task as Copy).destinationDir
-        inputs.files(sourceDir)
-        dependsOn(task)
-        from(sourceDir)
-      }
-    }
-  }
-
-  projectDependencies.forEach { dependency ->
-    when {
-      dependency.state.executed -> {
-        addCopyRef(dependency)
-      }
-
-      else -> {
-        dependency.afterEvaluate {
-          addCopyRef(dependency)
-        }
-      }
-    }
-  }
-}
-
-/**
  * Returns true if this project is a kotlin multiplatform project.
  */
 fun Project.hasKotlinMultiplatformPlugin(): Boolean {
   return hasPlugin(Plugins.kotlinMultiPlatform)
-}
-
-fun Project.hasKotlinJsPlugin(): Boolean {
-  return hasPlugin(Plugins.kotlinJs)
 }
 
 fun Project.hasPlugin(kotlinMultiPlatform: String): Boolean {
@@ -151,14 +104,6 @@ fun Copy.copyJvmResources(configurationNames: List<String> = listOf("runtimeClas
   fun Copy.addCopyRef(dependency: Project) {
     dependency.pluginManager.withPlugin(Plugins.kotlinMultiPlatform) {
       dependency.tasks.getByName("jvmProcessResources").let { task ->
-        val sourceDir = (task as Copy).destinationDir
-        inputs.files(sourceDir)
-        dependsOn(task)
-        from(sourceDir)
-      }
-    }
-    dependency.pluginManager.withPlugin(Plugins.kotlinJs) {
-      dependency.tasks.getByName("processResources").let { task ->
         val sourceDir = (task as Copy).destinationDir
         inputs.files(sourceDir)
         dependsOn(task)
@@ -220,22 +165,6 @@ fun Configuration.findDirectProjectDependencies(): List<Project> {
   return allDependencies
     .filterIsInstance<ProjectDependency>()
     .map { it.dependencyProject }
-}
-
-/**
- * Updates the process resources task to also copy the resources from the dependencies
- */
-@Deprecated("Use CopyResourcesPlugin instead")
-fun Project.alsoCopyJsResourcesOfDependentProjects() {
-  val processResourcesTask: Copy = tasks.getByName<Copy>("processResources")
-
-  val copyResourcesFromDeps = tasks.create("copyResourcesFromDeps", Copy::class.java) {
-    copyJSResources()
-    destinationDir = processResourcesTask.destinationDir
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE //necessary since we depend on other JS projects which already have copied all resources
-  }
-
-  processResourcesTask.dependsOn(copyResourcesFromDeps)
 }
 
 /**

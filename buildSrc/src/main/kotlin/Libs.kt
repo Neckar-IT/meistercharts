@@ -319,6 +319,7 @@ public object Libs {
     public const val kotlin_react: String = "org.jetbrains.kotlin-wrappers:kotlin-react"
 
     public const val kotlin_react_dom: String = "org.jetbrains.kotlin-wrappers:kotlin-react-dom"
+    public const val kotlin_react_legacy: String = "org.jetbrains.kotlin-wrappers:kotlin-react-legacy"
 
     public const val kotlin_react_redux: String = "org.jetbrains.kotlin-wrappers:kotlin-react-redux"
 

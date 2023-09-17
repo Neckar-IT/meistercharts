@@ -3,7 +3,6 @@
 package it.neckar.gradle.npmbundle
 import child
 import com.google.common.io.Files
-import hasKotlinJsPlugin
 import hasKotlinMultiplatformPlugin
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
@@ -142,12 +141,8 @@ class NpmBundlePlugin : Plugin<Project> {
           dependsOn("jsBrowserDevelopmentWebpack")
         }
 
-        project.hasKotlinJsPlugin() -> {
-          dependsOn("browserDevelopmentWebpack")
-        }
-
         else -> {
-          throw IllegalStateException("Attention! no Multiplatform or JS plugin") //This may be correct, if necessary remove this statement
+          throw IllegalStateException("Attention! no Multiplatform plugin found") //This may be correct, if necessary remove this statement
         }
       }
 

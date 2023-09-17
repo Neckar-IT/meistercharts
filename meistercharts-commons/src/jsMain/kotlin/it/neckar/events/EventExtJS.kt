@@ -37,7 +37,6 @@ import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
-import it.neckar.logging.LoggerFactory
 import org.w3c.dom.DOMRect
 import org.w3c.dom.Touch
 import org.w3c.dom.TouchList
@@ -45,9 +44,6 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.pointerevents.PointerEvent
-
-private val logger = LoggerFactory.getLogger("com.meistercharts.js.ChartingUtilsJS")
-
 
 /**
  * Returns the timeStampAsDoubleWorkaround - workaround for issue https://youtrack.jetbrains.com/issue/KT-44194
