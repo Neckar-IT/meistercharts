@@ -554,10 +554,14 @@ class DistanceHours(val distanceInHours: Int) : TimeTickDistance {
     return distanceInHours * TimeConstants.millisPerHour
   }
 
-  override fun calculateTicksInternal(start: Double, end: Double, timeZone: TimeZone): DoubleArrayList {
+  override fun calculateTicksInternal(start: @Inclusive @ms Double, end: @Inclusive @ms Double, timeZone: TimeZone): DoubleArrayList {
     val startLocalDateTimeExact = LocalDateTime.fromMillisCurrentTimeZone(start, timeZone)
 
-    val startLocalDateTime = startLocalDateTimeExact.atStartOfHour()
+    //The local hour of day
+    val hoursOfDay = startLocalDateTimeExact.hour
+    val startHour = hoursOfDay.roundDownToBase(distanceInHours)
+
+    val startLocalDateTime = startLocalDateTimeExact.atStartOfHour(startHour)
     @ms val startMillis = startLocalDateTime.toMillis(timeZone)
 
     require(startMillis <= start) {
