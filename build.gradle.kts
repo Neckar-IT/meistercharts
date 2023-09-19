@@ -6,6 +6,13 @@ plugins {
   id("org.jetbrains.kotlin.plugin.serialization") version "_" apply false
 }
 
+//Prepare the extra variables
+
+//These variables can be used in projects. They are defined as extension vals on Project in buildSrc/src/main/kotlin/Utils.kt
+val inIde: Boolean by extra(System.getProperty("idea.version") != null)
+val ciInformation: GitlabCiInformation by extra(GitlabCiInformation.create())
+
+
 //The current build date
 val buildDate: String by extra { Instant.now().toString() }
 //The build day
@@ -103,8 +110,8 @@ println("Java Vendor: ${System.getProperty("java.vendor")}")
 
 if (branch == "main") {
   //Never allow a non-development version on main
-  if (!meisterchartsVersion.isSnapshot()) {
-    throw InvalidUserDataException("Invalid meisterchart version set. Was <$meisterchartsVersion but must be a -SNAPSHOT version on master branch!")
+  if (meisterchartsVersion.isSnapshot().not()) {
+    throw InvalidUserDataException("Invalid meisterchart version set. Was <$meisterchartsVersion but must be a -SNAPSHOT version on main branch!")
   }
 }
 

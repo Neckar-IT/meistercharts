@@ -5,19 +5,12 @@ plugins {
   kotlinxSerialization
 }
 
-kotlin{
-  js {
-    browser {
-      testTask {
-        useKarma {
-          useChromeHeadlessNoSandbox()
-        }
-      }
 
-    }
-  }
-  jvm()
+configureKotlin()
+configureToolchainJava17LTS()
 
+
+kotlin {
   sourceSets {
     commonMain {
       dependencies {
@@ -28,7 +21,6 @@ kotlin{
         //api(project(meistercharts_version_info))
         api(KotlinX.serialization.core)
         api(Libs.jsonassert)
-        api(Libs.klock)
       }
     }
 
@@ -100,10 +92,8 @@ kotlin{
       dependencies {
         implementation(Libs.kotlin_test)
         implementation(Libs.assertk_js)
+        implementation(KotlinX.html)
       }
     }
   }
 }
-
-configureKotlin()
-configureToolchainJava17LTS()

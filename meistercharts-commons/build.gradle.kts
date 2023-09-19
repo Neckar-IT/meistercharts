@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackDevtool
+
 description = """Meistercharts - Commons"""
 
 plugins {
@@ -61,31 +63,18 @@ val createVersionConstantsTasks: Task = task("createVersionConstants") {
   }
 }
 
+configureKotlin()
+configureToolchainJava17LTS()
+
 kotlin {
-  js {
-    browser {
-      testTask {
-        useKarma {
-          useChromeHeadlessNoSandbox()
-        }
-      }
-    }
-  }
-  jvm()
-
   sourceSets {
-    val versionInformationSources by creating {
-      kotlin.srcDir(createVersionConstantsTasks)
-    }
-
     val commonMain by getting {
-      dependsOn(versionInformationSources)
+      kotlin.srcDir(createVersionConstantsTasks)
 
       dependencies {
         implementation(Libs.kotlinx_coroutines_core)
         api(KotlinX.serialization.core)
         api(KotlinX.serialization.json)
-        api(Libs.klock)
       }
     }
 
@@ -145,6 +134,3 @@ kotlin {
     }
   }
 }
-
-configureKotlin()
-configureToolchainJava17LTS()
