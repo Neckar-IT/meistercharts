@@ -15,15 +15,15 @@
  */
 package com.meistercharts.algorithms.layers
 
-import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
 import com.meistercharts.model.Insets
+import it.neckar.geometry.Orientation
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -47,7 +47,6 @@ class GridLayer @JvmOverloads constructor(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    val chartCalculator = paintingContext.chartCalculator
 
     //Paint all lines
     configuration.valuesProvider.fastForEachIndexed(paintingContext) { index, value: @Window Double ->
@@ -59,7 +58,6 @@ class GridLayer @JvmOverloads constructor(
       @Window val minY = configuration.paddingTop.valueAt(index)
       @Window val maxY = paintingContext.height - configuration.paddingBottom.valueAt(index)
 
-      @Suppress("UnnecessaryVariable")
       when (orientation) {
         //Lines painted from left to right
         Orientation.Horizontal -> {

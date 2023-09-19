@@ -13,7 +13,7 @@ interface ReadOnlyObservableDouble : ReadOnlyObservableObject<Double> {
   /**
    * Creates a binding that compares the value of this to the given value
    */
-  fun isEqualTo(compareWith: Double): ReadOnlyObservableObject<out Boolean> {
+  fun isEqualTo(compareWith: Double): ReadOnlyObservableObject<Boolean> {
     val intermediateObservable = ObservableBoolean(this.value == compareWith)
 
     consume { newValue ->

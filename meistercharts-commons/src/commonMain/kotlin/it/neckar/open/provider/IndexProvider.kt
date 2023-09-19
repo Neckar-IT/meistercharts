@@ -8,7 +8,8 @@ import kotlin.jvm.JvmStatic
  * ATTENTION: It is necessary to copy this interface for value classes - to avoid boxing
  * This is just a template class - do *NOT* use
  */
-@Deprecated("use copies that use the value classes instead")
+@Suppress("DEPRECATION")
+@Deprecated("Create a copy of this class that use the value classes instead")
 interface IndexProvider : HasSize {
   /**
    * Retrieves the index at the given [index].

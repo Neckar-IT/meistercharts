@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "1.8.21"
+val kotlinVersion: String = "1.9.10"
 
 plugins {
   `kotlin-dsl`
@@ -65,23 +65,6 @@ gradlePlugin {
       id = "it.neckar.npm-bundle"
       implementationClass = "it.neckar.gradle.npmbundle.NpmBundlePlugin"
     }
-  }
-}
-
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
-  kotlinOptions {
-    freeCompilerArgs = listOf("-opt-in=kotlin.ExperimentalStdlibApi")
-    languageVersion = kotlinVersion //Does not work
-    apiVersion = kotlinVersion
-  }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile>().all {
-  kotlinOptions {
-    freeCompilerArgs = listOf("-opt-in=kotlin.ExperimentalStdlibApi")
-    languageVersion = kotlinVersion //Does not work
-    apiVersion = kotlinVersion
   }
 }
 

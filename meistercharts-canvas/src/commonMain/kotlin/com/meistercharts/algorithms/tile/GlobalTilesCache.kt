@@ -85,8 +85,6 @@ object GlobalTilesCache {
    */
   @Slow
   fun tiles(chartId: ChartId): Collection<Tile> {
-    return cache.values.filter {
-      it.identifier.chartId == chartId
-    }
+    return cache.filteredValues { it.identifier.chartId == chartId }
   }
 }

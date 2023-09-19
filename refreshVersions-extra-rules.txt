@@ -51,3 +51,6 @@ net.bis5.mattermost4j:mattermost*
 
 org.jetbrains.kotlinx:kotlin-deeplearning*
                       ^^^^^^^^^^^^^^^^^^^
+
+com.google.devtools.ksp:*
+^^^^^^^^^^^^^^^^^^^^^^^

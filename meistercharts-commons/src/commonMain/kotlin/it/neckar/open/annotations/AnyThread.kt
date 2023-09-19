@@ -36,6 +36,7 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
  * Methods annotated with this annotation can be called from any thread (UI thread or not).
  * They return fast.
  */
+@Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.CONSTRUCTOR)

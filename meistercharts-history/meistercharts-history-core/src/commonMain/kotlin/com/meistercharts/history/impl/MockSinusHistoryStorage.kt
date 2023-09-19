@@ -66,6 +66,7 @@ fun createSinusChunk(descriptor: HistoryBucketDescriptor): HistoryChunk {
     decimalDataSeries(DataSeriesId(12), TextKey("val3", "Value 3"), HistoryUnit.None)
   }.chunk(timestampsCount) { timestampIndex ->
     @ms val timestamp = descriptor.start + distance * timestampIndex.value
+    @Suppress("DEPRECATION")
     addDecimalValues(
       timestamp, (sin(timestamp / 1_000.0) * 100), (sin(timestamp / 10_000.0) * 95 + 10), (sin(timestamp / 100_000.0) * 90 + 20)
     )

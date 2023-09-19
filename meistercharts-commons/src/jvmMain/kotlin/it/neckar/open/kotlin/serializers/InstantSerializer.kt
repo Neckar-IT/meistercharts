@@ -1,7 +1,6 @@
 package it.neckar.open.kotlin.serializers
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -15,8 +14,8 @@ import java.time.Instant
 object InstantSerializer : KSerializer<Instant> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, obj: Instant) {
-    encoder.encodeString(obj.toString())
+  override fun serialize(encoder: Encoder, value: Instant) {
+    encoder.encodeString(value.toString())
   }
 
   override fun deserialize(decoder: Decoder): Instant {

@@ -100,9 +100,7 @@ fun <T : Layer> T.clippedToContentArea(sides: SidesSelection = SidesSelection.al
 fun <T : Layer> T.clippedToContentViewport(sides: SidesSelection = SidesSelection.all): ClippingLayer<T> {
   return ClippingLayer(this) {
     this.insets = {
-      val gc = it.gc
       val chartSupport = it.chartSupport
-
       chartSupport.rootChartState.contentViewportMargin.only(sides)
     }
   }

@@ -19,7 +19,6 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
@@ -60,12 +59,18 @@ internal constructor(
    * The start of the bucket (inclusive).
    * The start date has been placed on "even" ranges depending on the bucket range
    */
-  val start: @Inclusive @ms Double = bucketRange.calculateStartForIndex(index)
+  val start: @Inclusive @ms Double
+    get() {
+      return bucketRange.calculateStartForIndex(index)
+    }
 
   /**
    * The end of the bucket (exclusive) - is calculated automatically using the range and the given start
    */
-  val end: @Exclusive @ms Double = bucketRange.calculateEndForIndex(index)
+  val end: @ms @Inclusive Double
+    get() {
+      return bucketRange.calculateEndForIndex(index)
+    }
 
   /**
    * Returns the sampling period of the bucket

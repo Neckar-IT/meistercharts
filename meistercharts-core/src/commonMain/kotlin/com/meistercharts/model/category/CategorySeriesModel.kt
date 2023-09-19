@@ -90,6 +90,7 @@ fun CategoryModel.createCategoryLabelsProvider(): SizedLabelsProvider {
 
     }
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
       return categoryNameAt(CategoryIndex(index), textService, i18nConfiguration)
     }
@@ -105,6 +106,7 @@ fun KProperty0<CategorySeriesModel>.createCategoryLabelsProvider(): SizedLabelsP
       return get().numberOfCategories
     }
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
       return get().categoryNameAt(CategoryIndex(index), textService, i18nConfiguration)
     }

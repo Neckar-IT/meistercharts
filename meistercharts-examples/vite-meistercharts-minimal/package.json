@@ -12,6 +12,6 @@
     "vite": "4.4.9"
   },
   "dependencies": {
-    "@meistercharts/meistercharts": "1.35.0"
+    "@meistercharts/meistercharts": "1.36.0"
   }
 }

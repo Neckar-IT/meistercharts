@@ -118,8 +118,6 @@ class ValueAxisHudLayer(
     override val zOrder = ZIndexSortingCache()
 
     override fun calculate(paintingContext: LayerPaintingContext) {
-      val chartSupport = paintingContext.chartSupport
-
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
       //Prepare the caches
@@ -145,7 +143,6 @@ class ValueAxisHudLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    val chartCalculator = paintingContext.chartCalculator
 
     paintingVariables.zOrder.fastForEach { value ->
       @HudElementIndex val index = value.index

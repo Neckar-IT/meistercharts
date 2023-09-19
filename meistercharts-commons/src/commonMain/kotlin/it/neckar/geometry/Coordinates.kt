@@ -215,7 +215,7 @@ data class Coordinates(
     return distanceTo(target.x, target.y)
   }
 
-  inline fun distanceToPoint(target: Coordinates): Double {
+  fun distanceToPoint(target: Coordinates): Double {
     return distanceTo(target)
   }
 

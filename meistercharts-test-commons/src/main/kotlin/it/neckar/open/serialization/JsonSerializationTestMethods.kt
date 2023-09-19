@@ -19,7 +19,7 @@ inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T
 /**
  * Tests the round trip. If the [expectedJsonProvider] provides null, the resulting JSON will not be checked
  */
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), serializersModule: SerializersModule = EmptySerializersModule(), expectedJsonProvider: () -> String?) {
+inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), serializersModule: SerializersModule = EmptySerializersModule(), expectedJsonProvider: () -> String?): T {
   val encoder: Json = Json {
     this.serializersModule = serializersModule
     prettyPrint = true
@@ -32,11 +32,14 @@ inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T
   return roundTrip(objectToSerialize, serializer, encoder, expectedJsonProvider)
 }
 
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJson: String?) {
+inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJson: String?): T {
   return roundTrip(objectToSerialize, serializer, encoder) { expectedJson }
 }
 
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJsonProvider: () -> String?) {
+/**
+ * Returns the deserialize object
+ */
+inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJsonProvider: () -> String?): T {
   val json = encoder.encodeToString(serializer, objectToSerialize)
 
   //println("JSON length: ${json.toByteArray().size}")
@@ -47,6 +50,8 @@ inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T
 
   val deserialized = encoder.decodeFromString(serializer, json)
   assertThat(deserialized).isEqualTo(objectToSerialize)
+
+  return deserialized
 }
 
 /**

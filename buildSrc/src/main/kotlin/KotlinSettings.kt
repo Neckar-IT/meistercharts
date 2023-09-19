@@ -1,9 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 /**
  * Kotlin settings
  */
 object KotlinSettings {
-  const val languageVersion: String = "1.9"
-  const val apiVersion: String = "1.9"
+  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+  val languageVersionAsString: String = languageVersion.version
+
+  val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+  val apiVersionAsString: String = apiVersion.version
 
   @Deprecated("The JVM Target version depends on the JDK. Do not use this constant!", level = DeprecationLevel.ERROR)
   const val jvmTarget: String = "1.8"
@@ -18,11 +23,11 @@ object KotlinSettings {
     "kotlin.contracts.ExperimentalContracts", //allows the definition of contracts (e.g. how often a lambda is called in a method)
     "kotlin.experimental.ExperimentalTypeInference", //type inference
     "kotlin.js.ExperimentalJsExport", //required for @JsExport
-    "kotlin.ExperimentalMultiplatform", //Multi platform
-    "kotlinx.serialization.ExperimentalSerializationApi", //Seems to work only with free compiler args
+    "kotlin.ExperimentalMultiplatform", //Multi-platform
+    // "kotlinx.serialization.ExperimentalSerializationApi", //Seems to work only with free compiler args
 
-    "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines stuff
-    "kotlinx.coroutines.FlowPreview", //Coroutines stuff
+    //"kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines stuff
+    //"kotlinx.coroutines.FlowPreview", //Coroutines stuff
     "kotlin.ExperimentalUnsignedTypes", //Unsigned Types
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib
@@ -48,7 +53,8 @@ object KotlinSettings {
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
     add("-Xinline-classes") //Enable inline classes
     add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design)
-    add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
+    //Stable since 1.9
+    //add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
   }
 
   /**

@@ -38,7 +38,7 @@ fun interface EnumValueGenerator {
      * Returns the constant value
      */
     fun always(always: HistoryEnumSet): EnumValueGenerator {
-      return EnumValueGenerator { timestamp, enum ->
+      return EnumValueGenerator { _, _ ->
         always
       }
     }

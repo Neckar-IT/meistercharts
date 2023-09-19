@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package it.neckar.open.provider
 
 import kotlin.jvm.JvmStatic
@@ -313,6 +315,7 @@ annotation class SizedProviderIndex
  * Casts a sized provider to a multi provider
  */
 inline fun <IndexContext, T> SizedProvider<T>.asMultiProvider(): MultiProvider<IndexContext, T> {
+  @Suppress("UNCHECKED_CAST")
   return this as MultiProvider<IndexContext, T>
 }
 

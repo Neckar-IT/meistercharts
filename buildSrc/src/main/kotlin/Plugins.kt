@@ -21,7 +21,6 @@ object Plugins {
   const val intellij: String = "org.jetbrains.intellij"
 
   const val kotlinxSerialization: String = "org.jetbrains.kotlin.plugin.serialization"
-  const val latestWebpack: String = "com.github.turansky.kfc.latest-webpack"
 
   const val download: String = "de.undercouch.download"
 
@@ -37,8 +36,6 @@ object Plugins {
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
 
-  @Deprecated("Use kotlinMultiPlatform instead")
-  const val kotlinJs: String = "org.jetbrains.kotlin.js"
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
   const val jacoco: String = "org.gradle.jacoco"
@@ -90,10 +87,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.java: PluginDependencySp
 inline val org.gradle.plugin.use.PluginDependenciesSpec.javaLibrary: PluginDependencySpec
   get() = id(Plugins.javaLibrary)
 
-@Deprecated("Use kotlinMultiPlatform instead")
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJs: PluginDependencySpec
-  get() = id(Plugins.kotlinJs)
-
 inline val org.gradle.plugin.use.PluginDependenciesSpec.dokka: PluginDependencySpec
   get() = id(Plugins.dokka)
 
@@ -105,9 +98,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinxSerialization: Pl
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.jibCli: PluginDependencySpec
   get() = id(Plugins.jibCli)
-
-inline val org.gradle.plugin.use.PluginDependenciesSpec.latestWebpack: PluginDependencySpec
-  get() = id(Plugins.latestWebpack)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.shadow: PluginDependencySpec
   get() = id(Plugins.shadow)

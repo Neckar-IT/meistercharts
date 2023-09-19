@@ -254,7 +254,7 @@ data class HistoryValues(
   /**
    * Returns the [ReferenceEntryData] for the provided [dataSeriesIndex] and [id]
    */
-  fun getReferenceEntryData(dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
+  fun getReferenceEntryData(@Suppress("UNUSED_PARAMETER") dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
     return referenceEntryHistoryValues.getData(id)
   }
 

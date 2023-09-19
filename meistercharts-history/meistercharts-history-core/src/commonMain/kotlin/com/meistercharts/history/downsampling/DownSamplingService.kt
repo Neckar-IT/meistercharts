@@ -92,6 +92,7 @@ open class DownSamplingService<HistoryStorageType>(val historyStorage: HistorySt
         }
 
         is RefreshPartially -> {
+          @Suppress("UNUSED_VARIABLE")
           val original = historyStorage.get(job.descriptor)
 
           //TODO FIX ME! Use optimized calculation!

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.meistercharts.history
 
 import it.neckar.open.provider.HasSize
-import it.neckar.open.provider.IndexProvider
 import it.neckar.open.provider.IntProvider
 import it.neckar.open.provider.MultiProvider
 import kotlin.jvm.JvmInline
@@ -38,7 +39,7 @@ value class EnumDataSeriesIndex(override val value: Int) : DataSeriesIndex {
 }
 
 /**
- * This is a copy of [IndexProvider] - to avoid unnecessary boxing
+ * This is a copy of [it.neckar.open.provider.IndexProvider] - to avoid unnecessary boxing
  */
 interface EnumDataSeriesIndexProvider : DataSeriesIndexProvider<EnumDataSeriesIndex>, HasSize {
   /**

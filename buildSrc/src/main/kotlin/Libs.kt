@@ -77,9 +77,6 @@ public object Libs {
 
     public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
 
-    public const val com_github_turansky_kfc_latest_webpack_gradle_plugin: String =
-            "com.github.turansky.kfc.latest-webpack:com.github.turansky.kfc.latest-webpack.gradle.plugin:_"
-
     public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
 
     public const val com_google_cloud_tools_jib_gradle_plugin: String =
@@ -335,12 +332,15 @@ public object Libs {
     public const val org_jetbrains_kotlin_plugin_serialization_gradle_plugin: String =
             "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:_"
 
+    public const val kotlin_dom_api_compat: String = "org.jetbrains.kotlin:kotlin-dom-api-compat:_"
+
     public const val kotlin_reflect: String = "org.jetbrains.kotlin:kotlin-reflect:_"
 
     public const val kotlin_scripting_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:_"
 
-    public const val kotlin_serialization: String = "org.jetbrains.kotlin:kotlin-serialization:_"
+    public const val kotlin_serialization_compiler_plugin_embeddable: String =
+            "org.jetbrains.kotlin:kotlin-serialization-compiler-plugin-embeddable:_"
 
     public const val kotlin_stdlib_common: String = "org.jetbrains.kotlin:kotlin-stdlib-common:_"
 
@@ -356,6 +356,8 @@ public object Libs {
     public const val kotlin_test_common: String = "org.jetbrains.kotlin:kotlin-test-common:_"
 
     public const val kotlin_test_js: String = "org.jetbrains.kotlin:kotlin-test-js:_"
+
+    public const val kotlin_test_js_runner: String = "org.jetbrains.kotlin:kotlin-test-js-runner"
 
     public const val kotlin_test_junit: String = "org.jetbrains.kotlin:kotlin-test-junit:_"
 

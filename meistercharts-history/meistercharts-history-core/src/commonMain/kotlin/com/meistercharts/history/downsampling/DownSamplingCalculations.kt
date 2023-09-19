@@ -272,15 +272,15 @@ fun DoubleArray.calculateMeanValues(numberToCombine: Int): DoubleArray {
   val results = DoubleArray(count)
   for (segmentIndex in 0 until count) {
     var sum = 0.0
-    var count = 0 //to ensure the average is calculated correctly on segments that are not full
+    var currentCount = 0 //to ensure the average is calculated correctly on segments that are not full
 
     val baseIndexForSegment = segmentIndex * numberToCombine
     for (i in baseIndexForSegment until min(baseIndexForSegment + numberToCombine, size)) {
       sum += this[i]
-      count++
+      currentCount++
     }
 
-    results[segmentIndex] = sum / count
+    results[segmentIndex] = sum / currentCount
   }
 
   return results
@@ -376,17 +376,17 @@ fun DoubleArray.combineStandardDeviations(numberToCombine: Int): DoubleArray {
 
   for (segmentIndex in 0 until count) {
     var sum = 0.0
-    var count = 0
+    var currentCount = 0
 
     val baseIndexForSegment = segmentIndex * numberToCombine
     for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
       val stdDeviationToCombine = this[i]
 
       sum += stdDeviationToCombine * stdDeviationToCombine
-      count++
+      currentCount++
     }
 
-    results[segmentIndex] = sqrt(sum / count)
+    results[segmentIndex] = sqrt(sum / currentCount)
   }
 
   return results

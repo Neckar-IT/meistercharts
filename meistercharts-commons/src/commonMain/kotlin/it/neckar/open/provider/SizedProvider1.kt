@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package it.neckar.open.provider
 
 /**
@@ -114,6 +116,7 @@ fun <T, R, P1> SizedProvider1<T, P1>.mapped(function: (T) -> R): SizedProvider1<
  * Casts this to a multi provider 1
  */
 fun <IndexContext, T, P1> SizedProvider1<T, P1>.asMultiProvider1(): MultiProvider1<IndexContext, T, P1> {
+  @Suppress("UNCHECKED_CAST")
   return this as MultiProvider1<IndexContext, T, P1>
 }
 

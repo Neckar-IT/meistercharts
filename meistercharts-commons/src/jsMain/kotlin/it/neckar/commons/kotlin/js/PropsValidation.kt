@@ -18,8 +18,10 @@ inline fun <reified T : Any> KProperty0<T>.safeGet(): T {
  * you can't really check nullable types to not be null
  * but for symmetrical reasons this method exists
  * @return the value of the nullable property
+ *
+ * Attention: For external interfaces use custom methods instead (e.g. for `StateInstance` use `safeGetOptional()` defined in kotlin-react project)
  **/
-inline fun <reified T : Any?> KProperty0<T>.safeGet(): T? {
+inline fun <T : Any?> KProperty0<T>.safeGet(): T? {
   return this.get()
 }
 

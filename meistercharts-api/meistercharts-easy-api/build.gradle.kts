@@ -11,32 +11,10 @@ plugins {
   npmBundle
 }
 
+configureKotlin()
+configureToolchainJava17LTS()
+
 kotlin {
-  js {
-    binaries.executable()
-
-    browser {
-      testTask {
-        useKarma {
-          useChromeHeadlessNoSandbox()
-        }
-      }
-
-      webpackTask {
-        sourceMaps = true
-      }
-
-      commonWebpackConfig {
-        //Use inline source-maps to enable the look-up when meistercharts becomes bundled later on
-        devtool = WebpackDevtool.SOURCE_MAP
-
-        //To get good stack traces run
-        // - npmBundleDevelopment
-      }
-    }
-  }
-  jvm()
-
   sourceSets {
     commonMain {
       dependencies {
@@ -47,7 +25,6 @@ kotlin {
         implementation(Libs.kotlinx_coroutines_core)
         //api(project(meistercharts_version_info))
         api(KotlinX.serialization.core)
-        api(Libs.klock)
       }
     }
 
@@ -121,10 +98,6 @@ kotlin {
     }
   }
 }
-
-configureKotlin()
-configureToolchainJava17LTS()
-
 
 /**
  * Generate type script definitions for the Kotlin public API

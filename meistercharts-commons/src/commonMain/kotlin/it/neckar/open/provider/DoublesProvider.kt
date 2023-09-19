@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package it.neckar.open.provider
 
 import it.neckar.open.annotations.Boxed

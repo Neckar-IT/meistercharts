@@ -66,16 +66,22 @@ class HistoryBucketDescriptorTest {
 
   @Test
   fun name() {
-    roundTrip(HistoryBucketDescriptor(44.0, HistoryBucketRange.OneMinute)){
+    val bucketDescriptor = HistoryBucketDescriptor(44.0, HistoryBucketRange.OneMinute)
+    assertThat(bucketDescriptor.index).isEqualTo(44.0)
+    assertThat(bucketDescriptor.start).isEqualTo(2640000.0)
+    assertThat(bucketDescriptor.end).isEqualTo(2700000.0)
+
+    val deserialized = roundTrip(bucketDescriptor){
       """
         {
           "index" : 44.0,
-          "bucketRange" : "OneMinute",
-          "start" : 2640000.0,
-          "end" : 2700000.0
+          "bucketRange" : "OneMinute"
         }
       """.trimIndent()
     }
+
+    assertThat(deserialized.start).isEqualTo(2640000.0)
+    assertThat(deserialized.end).isEqualTo(2700000.0)
   }
 
   @Test

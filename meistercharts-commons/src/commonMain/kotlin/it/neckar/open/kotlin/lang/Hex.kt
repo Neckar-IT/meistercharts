@@ -2,14 +2,14 @@ package it.neckar.open.kotlin.lang
 
 object Hex {
   private const val DIGITS = "0123456789ABCDEF"
-  val DIGITS_UPPER: String = DIGITS.toUpperCase()
-  val DIGITS_LOWER: String = DIGITS.toLowerCase()
+  val DIGITS_UPPER: String = DIGITS.uppercase()
+  val DIGITS_LOWER: String = DIGITS.lowercase()
 
   fun decodeChar(c: Char): Int = when (c) {
     in '0'..'9' -> c - '0'
     in 'a'..'f' -> c - 'a' + 10
     in 'A'..'F' -> c - 'A' + 10
-    else        -> -1
+    else -> -1
   }
 
   fun encodeCharLower(v: Int): Char = DIGITS_LOWER[v]

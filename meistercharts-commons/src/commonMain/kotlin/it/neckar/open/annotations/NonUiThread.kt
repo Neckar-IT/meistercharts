@@ -35,6 +35,7 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 /**
  * Annotated methods/classes must only be called from background/non-ui threads
  */
+@Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.CLASS)

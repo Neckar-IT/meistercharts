@@ -18,8 +18,6 @@ package com.meistercharts.algorithms.layers.axis.time
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.axis.time.TimeAxisTickCalculator
-import com.meistercharts.time.klockGreatestSupportedTimestamp
-import com.meistercharts.time.klockSmallestSupportedTimestamp
 import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.collections.last
@@ -28,8 +26,6 @@ import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -44,20 +40,6 @@ import kotlin.time.DurationUnit
 @Disabled
 @WithTimeZone("UTC")
 class TimeAxisTickCalculatorTest {
-  @Test
-  fun greatestSupportedTimestamp() {
-    val localDateTime = LocalDateTime.of(9999, 12, 31, 23, 59, 59, 999_999_999)
-    val millis = localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000.0 + 999;
-    assertThat(klockGreatestSupportedTimestamp).isEqualTo(millis)
-  }
-
-  @Test
-  fun smallestSupportedTimestamp() {
-    val localDateTime = LocalDateTime.of(1, 1, 1, 0, 0, 0, 0)
-    val millis = localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000.0;
-    assertThat(klockSmallestSupportedTimestamp).isEqualTo(millis)
-  }
-
   @Test
   fun testTickDistance1Day() {
     //https://www.epochconverter.com/
