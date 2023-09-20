@@ -63,6 +63,7 @@ fun SizedProvider2.Companion.forTextKeys(values: List<TextKey>): SizedLabelsProv
       return values.size
     }
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
       return values[index].resolve(textService, i18nConfiguration)
     }

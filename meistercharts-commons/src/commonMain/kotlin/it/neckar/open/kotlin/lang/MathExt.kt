@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package it.neckar.open.kotlin.lang
 
 import it.neckar.open.unit.other.Inclusive

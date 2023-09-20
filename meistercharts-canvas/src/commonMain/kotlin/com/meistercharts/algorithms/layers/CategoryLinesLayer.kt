@@ -82,7 +82,7 @@ class CategoryLinesLayer(
   override fun initialize(paintingContext: LayerPaintingContext) {
     super.initialize(paintingContext)
 
-    paintingContext.chartSupport.whatsAt.registerResolverAsFirst { where, precision, chartSupport ->
+    paintingContext.chartSupport.whatsAt.registerResolverAsFirst { where, _, chartSupport ->
       val chartCalculator = chartSupport.chartCalculator
 
       @ContentArea val contentAreaX = chartCalculator.window2contentAreaX(where.x)

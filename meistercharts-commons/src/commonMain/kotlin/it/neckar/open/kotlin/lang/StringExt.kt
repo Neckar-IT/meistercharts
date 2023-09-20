@@ -139,8 +139,8 @@ fun String.escape(): String {
       '\t' -> out.append("\\t")
       in '\u0000'..'\u001f' -> {
         out.append("\\x")
-        out.append(Hex.encodeCharLower(c.toInt().extract(4, 4)))
-        out.append(Hex.encodeCharLower(c.toInt().extract(0, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(4, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(0, 4)))
       }
 
       else -> out.append(c)
@@ -163,10 +163,10 @@ fun String.uescape(): String {
         out.append(c)
       } else {
         out.append("\\u")
-        out.append(Hex.encodeCharLower(c.toInt().extract(12, 4)))
-        out.append(Hex.encodeCharLower(c.toInt().extract(8, 4)))
-        out.append(Hex.encodeCharLower(c.toInt().extract(4, 4)))
-        out.append(Hex.encodeCharLower(c.toInt().extract(0, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(12, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(8, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(4, 4)))
+        out.append(Hex.encodeCharLower(c.code.extract(0, 4)))
       }
     }
   }

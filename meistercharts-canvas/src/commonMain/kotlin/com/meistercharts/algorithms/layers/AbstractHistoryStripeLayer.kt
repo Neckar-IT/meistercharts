@@ -15,18 +15,17 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.time.TimeRange
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.StripePainter
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.Color
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.DataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
@@ -35,6 +34,7 @@ import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.atMost
+import com.meistercharts.history.fastForEach
 import com.meistercharts.history.fastForEachIndexed
 import com.meistercharts.history.find
 import com.meistercharts.history.impl.HistoryChunk
@@ -42,6 +42,7 @@ import com.meistercharts.history.impl.timestampEnd
 import com.meistercharts.history.impl.timestampStart
 import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.provider.MultiProvider
@@ -168,7 +169,7 @@ abstract class AbstractHistoryStripeLayer<
       }
 
       //Calculate the layout for the stripes
-      visibleIndices.fastForEachIndexed { visibleIndexAsInt, visibleDataSeriesIndex ->
+      visibleIndices.fastForEach { visibleDataSeriesIndex ->
         val stripePainter: StripePainterType = configuration.stripePainters.valueAt(visibleDataSeriesIndex)
         val isActiveDataSeries = configuration.activeDataSeriesIndex == visibleDataSeriesIndex
 
@@ -180,10 +181,10 @@ abstract class AbstractHistoryStripeLayer<
 
         stripePainter.layoutBegin(paintingContext, stripesLayout.boxSize, visibleDataSeriesIndex, historyConfiguration)
 
-        historyBuckets.fastForEach { bucket ->
+        historyBuckets.fastForEach historyBucketForEach@{ bucket ->
           val chunk = bucket.chunk
           if (chunk.isEmpty()) {
-            return@fastForEach
+            return@historyBucketForEach
           }
 
           for (timestampIndexAsInt in 0 until chunk.timeStampsCount) {

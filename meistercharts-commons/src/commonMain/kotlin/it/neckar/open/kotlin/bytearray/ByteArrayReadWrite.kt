@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package it.neckar.open.kotlin.bytearray
 
 import it.neckar.open.kotlin.lang.extractByte
@@ -116,14 +118,14 @@ fun ByteArray.writeBytes(o: Int, bytes: ByteArray) = arraycopy(bytes, 0, this, o
 
 private inline fun wa(o: Int, elementSize: Int, size: Int, write: (p: Int, n: Int) -> Unit) = run { for (n in 0 until size) write(o + n * elementSize, n) }
 
-fun ByteArray.writeArrayLE(o: Int, array: CharArray) = wa(o, 2, array.size) { p, n -> write16LE(p, array[n].toInt()) }
+fun ByteArray.writeArrayLE(o: Int, array: CharArray) = wa(o, 2, array.size) { p, n -> write16LE(p, array[n].code) }
 fun ByteArray.writeArrayLE(o: Int, array: ShortArray) = wa(o, 2, array.size) { p, n -> write16LE(p, array[n].toInt()) }
 fun ByteArray.writeArrayLE(o: Int, array: IntArray) = wa(o, 4, array.size) { p, n -> write32LE(p, array[n]) }
 fun ByteArray.writeArrayLE(o: Int, array: LongArray) = wa(o, 8, array.size) { p, n -> write64LE(p, array[n]) }
 fun ByteArray.writeArrayLE(o: Int, array: FloatArray) = wa(o, 4, array.size) { p, n -> writeF32LE(p, array[n]) }
 fun ByteArray.writeArrayLE(o: Int, array: DoubleArray) = wa(o, 8, array.size) { p, n -> writeF64LE(p, array[n]) }
 
-fun ByteArray.writeArrayBE(o: Int, array: CharArray) = wa(o, 2, array.size) { p, n -> write16BE(p, array[n].toInt()) }
+fun ByteArray.writeArrayBE(o: Int, array: CharArray) = wa(o, 2, array.size) { p, n -> write16BE(p, array[n].code) }
 fun ByteArray.writeArrayBE(o: Int, array: ShortArray) = wa(o, 2, array.size) { p, n -> write16BE(p, array[n].toInt()) }
 fun ByteArray.writeArrayBE(o: Int, array: IntArray) = wa(o, 4, array.size) { p, n -> write32BE(p, array[n]) }
 fun ByteArray.writeArrayBE(o: Int, array: LongArray) = wa(o, 8, array.size) { p, n -> write64BE(p, array[n]) }

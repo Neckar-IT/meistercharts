@@ -23,8 +23,6 @@ import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.createSinusChunk
-import com.meistercharts.history.impl.io.SerializableHistoryBucketDescriptor
-import com.meistercharts.history.impl.io.toSerializable
 import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -37,14 +35,10 @@ class HistoryStorageSerializerTest {
   @Test
   fun testSerializeDescriptor() {
     val descriptor = HistoryBucketDescriptor.forTimestamp(100000.0, SamplingPeriod.EveryTenMillis)
-    val serializableDescriptor: SerializableHistoryBucketDescriptor = descriptor.toSerializable()
-
-    val string = createPrettyJsonFormat().encodeToString(SerializableHistoryBucketDescriptor.serializer(), serializableDescriptor)
 
     //language=JSON
     roundTrip(
-      serializableDescriptor,
-      SerializableHistoryBucketDescriptor.serializer()
+      descriptor,
     ) {
       //language=JSON
       """

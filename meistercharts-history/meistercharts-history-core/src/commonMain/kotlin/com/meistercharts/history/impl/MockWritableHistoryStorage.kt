@@ -69,6 +69,7 @@ class MockWritableHistoryStorage(val fileStorage: WritableHistoryStorage? = null
 
     return historyConfiguration.chunk(timestampsCount) { timestampIndex ->
       @ms val timestamp = descriptor.start + distance * timestampIndex.value
+      @Suppress("DEPRECATION")
       addDecimalValues(
         timestamp = timestamp, (sin(timestamp / 1_000.0) * 110), (sin(timestamp / 10_300.0) * 92 + 10), (sin(timestamp / 100_000.0) * 91 + 20)
         //timestamp = timestamp, (timestamp % 1000).toDouble()

@@ -29,6 +29,7 @@ value class GlobalTimeIndex(val value: Int){
   }
 }
 
+@Suppress("NOTHING_TO_INLINE")
 inline fun <T> MultiProvider<GlobalTimeIndex, T>.valueAt(index: GlobalTimeIndex): T {
   return this.valueAt(index.value)
 }

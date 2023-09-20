@@ -16,8 +16,9 @@
 package com.meistercharts.whatsat
 
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.tile.TileIndex
 import com.meistercharts.maps.MapCoordinates
+import com.meistercharts.tile.TileIndex
+import it.neckar.open.annotations.TestOnly
 
 /**
  * Identifies a type for a result element.
@@ -36,7 +37,7 @@ data class ResultElementType<T> private constructor(val type: String) {
     /**
      * Defines a point of interest.
      */
-    @Deprecated("Currently only used in tests. Maybe introduce a real POI object later")
+    @TestOnly("Currently only used in tests. Maybe introduce a real POI object later")
     val pointOfInterest: ResultElementType<String> = ResultElementType(type = "POI")
 
     val mapCoordinates: ResultElementType<MapCoordinates> = ResultElementType("mapCoordinates")

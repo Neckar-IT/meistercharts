@@ -6,4 +6,4 @@ package it.neckar.open.annotations
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
-annotation class TestOnly
+annotation class TestOnly(val value: String = "")

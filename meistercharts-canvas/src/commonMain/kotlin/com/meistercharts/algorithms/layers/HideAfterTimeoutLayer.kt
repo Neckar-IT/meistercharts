@@ -25,6 +25,7 @@ import kotlin.time.Duration
  * A layer that is only shown for a given time
  *
  */
+@Deprecated("Uses deprecated layer itself")
 class HideAfterTimeoutLayer<T : Layer>(
   delegate: LayerVisibilityAdapterWithState<T>,
   @ms val duration: Duration,

@@ -34,7 +34,6 @@ package it.neckar.open.annotations.meta
  * Used to mark annotations that describe threads
  *
  */
-@Deprecated("unused")
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)

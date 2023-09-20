@@ -76,6 +76,7 @@ object LinearAxisTickCalculator {
     val tickDistance = if (deltaRounded == 0.0) {
       10.0.pow(-maxDecimalPlaces)
     } else {
+      @Suppress("DEPRECATION")
       calculateTickDistance(delta, deltaRounded, maxTickCount, intermediateValuesMode)
     }.coerceAtLeast(minTickDistance)
     val tickBase = calculateTickBase(lowerRounded, tickDistance)

@@ -78,8 +78,6 @@ class AxisTopTopTitleLayer(
     var x: Double = Double.NaN
 
     override fun calculate(paintingContext: LayerPaintingContext) {
-      val chartCalculator = paintingContext.chartCalculator
-
       y = configuration.yAnchorLocation(paintingContext)
       x = configuration.xAnchorLocation(paintingContext)
     }

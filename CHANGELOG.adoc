@@ -1,5 +1,32 @@
 = MeisterCharts Release Notes
 
+== 1.37.0
+
+Release date: 2023-09-19
+
+=== Features
+
+* improved build scripts and performance
+* Playwright End2End tests for most of the charts
+
+=== Bugfixes
+
+* Fix edge case in timeline axis where rounding of hours was wrong.
+
+=== Improvements
+
+* Serialization of HistoryBuckets simplified
+  ** Start/End of Buckets calculated on the fly
+* Removed a lot of old code that has been replaced with new layers
+* Improved code style: Removed a lot of warnings
+
+==== Build
+
+* Update to Kotlin 1.9.0
+* Update to Gradle 8.3
+* Improved synchronization of source code to GitHub
+* Simplified configuration of Gradle build
+
 == 1.36.0
 
 Release date: 2023-09-13

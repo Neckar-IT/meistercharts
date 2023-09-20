@@ -42,7 +42,6 @@ import it.neckar.open.collections.mapInt
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.unit.number.IsFinite
-import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -98,10 +97,13 @@ class HistoryChunkBuilder(
 
     val currentTimestampIndex = nextTimestampIndex
     nextTimestampIndex++
+    @Suppress("DEPRECATION")
     setEnumValues(currentTimestampIndex, timestamp, enumValues, enumOrdinalsMostTime)
   }
 
+  @Deprecated("Use addValues instead")
   fun addEnumValues(timestamp: @ms Double, vararg enumValues: @HistoryEnumSetInt Int) {
+    @Suppress("DEPRECATION")
     addEnumValues(timestamp, enumValues, null)
   }
 

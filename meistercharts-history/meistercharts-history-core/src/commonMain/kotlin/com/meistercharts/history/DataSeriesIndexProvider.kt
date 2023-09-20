@@ -83,7 +83,7 @@ open class DelegatingDataSeriesIndexProvider<out DataSeriesIndexType : DataSerie
  *
  * ATTENTION: "i" is very different to the provided index
  */
-inline fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataSeriesIndexType>.fastForEachIndexed(callback: (i: Int, value: DataSeriesIndexType) -> Unit) {
+inline fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataSeriesIndexType>.fastForEachIndexed(callback: (index: Int, value: DataSeriesIndexType) -> Unit) {
   val currentSize = size()
   fastForEachIndexed(currentSize, callback)
 }
@@ -91,7 +91,7 @@ inline fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataS
 /**
  * Iterates over the provided indices - but with the provided max size
  */
-inline fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataSeriesIndexType>.fastForEachIndexed(maxSize: Int, callback: (i: Int, value: DataSeriesIndexType) -> Unit) {
+inline fun <DataSeriesIndexType : DataSeriesIndex> DataSeriesIndexProvider<DataSeriesIndexType>.fastForEachIndexed(maxSize: Int, callback: (index: Int, value: DataSeriesIndexType) -> Unit) {
   val size = size().coerceAtMost(maxSize)
 
   var n = 0

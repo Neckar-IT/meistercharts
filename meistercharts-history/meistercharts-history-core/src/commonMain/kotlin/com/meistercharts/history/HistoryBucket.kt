@@ -25,6 +25,7 @@ import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
+import kotlinx.serialization.Serializable
 import kotlin.contracts.contract
 
 /**
@@ -39,6 +40,7 @@ import kotlin.contracts.contract
  * * [HistoryChunk] contains the [HistoryConfiguration], the [HistoryValues] *and* the timestamps.
  * * [com.meistercharts.history.HistoryBucket] contains a [HistoryChunk] and a [com.meistercharts.history.HistoryBucketDescriptor]. Is placed on "event" borders!
  */
+@Serializable
 data class HistoryBucket(
   /**
    * The descriptor of the bucket

@@ -23,11 +23,11 @@ object KotlinSettings {
     "kotlin.contracts.ExperimentalContracts", //allows the definition of contracts (e.g. how often a lambda is called in a method)
     "kotlin.experimental.ExperimentalTypeInference", //type inference
     "kotlin.js.ExperimentalJsExport", //required for @JsExport
-    "kotlin.ExperimentalMultiplatform", //Multi platform
-    "kotlinx.serialization.ExperimentalSerializationApi", //Seems to work only with free compiler args
+    "kotlin.ExperimentalMultiplatform", //Multi-platform
+    // "kotlinx.serialization.ExperimentalSerializationApi", //Seems to work only with free compiler args
 
-    "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines stuff
-    "kotlinx.coroutines.FlowPreview", //Coroutines stuff
+    //"kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines stuff
+    //"kotlinx.coroutines.FlowPreview", //Coroutines stuff
     "kotlin.ExperimentalUnsignedTypes", //Unsigned Types
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib

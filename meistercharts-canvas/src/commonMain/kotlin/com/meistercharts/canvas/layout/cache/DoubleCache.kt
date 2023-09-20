@@ -137,7 +137,7 @@ class DoubleCache : LayoutVariableWithSize {
     return values.data.contentToString()
   }
 
-  inline fun fastAny(predicate: DoublePredicate): Boolean {
+  fun fastAny(predicate: DoublePredicate): Boolean {
     return values.fastAny(predicate)
   }
 }

@@ -27,8 +27,6 @@ import com.meistercharts.history.ObservableHistoryStorage
 import com.meistercharts.history.WritableHistoryStorage
 import com.meistercharts.history.downsampling.DownSamplingService
 import com.meistercharts.history.historyConfiguration
-import com.meistercharts.history.impl.io.SerializableHistoryBucket
-import com.meistercharts.history.impl.io.toSerializable
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -166,7 +164,7 @@ class FileHistoryStorage(
     if (file.exists().not()) return null
     val fileContent = file.readText()
 
-    return json.decodeFromString<SerializableHistoryBucket>(fileContent).toHistoryBucket()
+    return json.decodeFromString<HistoryBucket>(fileContent)
   }
 
   override fun get(descriptors: List<HistoryBucketDescriptor>): List<HistoryBucket> {
@@ -183,10 +181,7 @@ class FileHistoryStorage(
     parentFile.mkdirs()
     val file = File(parentFile, getFileName(descriptor))
 
-
-    val serializableHistoryBucket = bucket.toSerializable()
-
-    file.writeTextWithRename(json.encodeToString(serializableHistoryBucket))
+    file.writeTextWithRename(json.encodeToString(bucket))
 
     historyBucketUpdates.add(bucket)
 
