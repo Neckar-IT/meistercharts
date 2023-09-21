@@ -91,10 +91,8 @@ class ZoomAndTranslationSupportTest {
     val zoomAndPanSupport = ZoomAndTranslationSupport(chartState, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation)
 
     zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
-    assertThat {
-      assertThat(chartState.zoomX).isEqualTo(4.0)
-      assertThat(chartState.zoomY).isEqualTo(5.0)
-    }
+    assertThat(chartState.zoomX).isEqualTo(4.0)
+    assertThat(chartState.zoomY).isEqualTo(5.0)
 
     zoomAndPanSupport.fitX(0.0, 1.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)
@@ -124,11 +122,8 @@ class ZoomAndTranslationSupportTest {
     val chartCalculator = zoomAndPanSupport.chartCalculator
 
     zoomAndPanSupport.setZoom(4.0, 5.0, reason = UpdateReason.UserInteraction)
-    assertThat {
-      assertThat(chartState.zoomX).isEqualTo(4.0)
-      assertThat(chartState.zoomY).isEqualTo(5.0)
-    }
-
+    assertThat(chartState.zoomX).isEqualTo(4.0)
+    assertThat(chartState.zoomY).isEqualTo(5.0)
 
     zoomAndPanSupport.fitX(1.0, 0.0, reason = UpdateReason.UserInteraction)
     assertThat(chartState.zoomX).isEqualTo(1.0)

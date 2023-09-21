@@ -42,9 +42,9 @@ class InterpolateKtTest {
     assertThat(10.0.relativeDistanceBetween(80.0, 100.0)).isEqualTo(-3.5)
 
 
-    assertThat {
+    assertFailure {
       40.0.relativeDistanceBetween(40.0, 40.0)
-    }.isFailure()
+    }
   }
 
   @Test

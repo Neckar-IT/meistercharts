@@ -30,9 +30,9 @@ class SamplingPeriodTest {
 
   @Test
   fun testGetForDistance() {
-    assertThat {
+    assertFailure {
       SamplingPeriod.getForDistance(2.0)
-    }.isFailure()
+    }
 
     assertThat(SamplingPeriod.getForDistance(10.0)).isEqualTo(SamplingPeriod.EveryTenMillis)
     assertThat(SamplingPeriod.getForDistance(100.0)).isEqualTo(SamplingPeriod.EveryHundredMillis)

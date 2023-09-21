@@ -68,9 +68,9 @@ class CacheTest {
 
   @Test
   fun testZeroCheck() {
-    assertThat {
+    assertFailure {
       val cache = Cache<Int, String>(0)
       cache[7] = "asdf"
-    }.isFailure()
+    }
   }
 }
