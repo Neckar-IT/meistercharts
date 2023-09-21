@@ -109,6 +109,8 @@ public object Libs {
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
 
+    public const val itext: String = "com.lowagie:itext:_"
+
     public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
@@ -284,7 +286,8 @@ public object Libs {
     public const val all_modules_page_plugin: String =
             "org.jetbrains.dokka:all-modules-page-plugin:_"
 
-    public const val dokka_analysis: String = "org.jetbrains.dokka:dokka-analysis:_"
+    public const val analysis_kotlin_descriptors: String =
+            "org.jetbrains.dokka:analysis-kotlin-descriptors:_"
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
 
@@ -405,12 +408,6 @@ public object Libs {
 
     public const val org_openjfx_javafxplugin_gradle_plugin: String =
             "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"
-
-    public const val javafx_base: String = "org.openjfx:javafx-base:_"
-
-    public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
-
-    public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
 
     public const val opencv: String = "org.openpnp:opencv:_"
 

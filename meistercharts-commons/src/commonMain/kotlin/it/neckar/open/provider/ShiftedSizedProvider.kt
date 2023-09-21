@@ -1,5 +1,6 @@
 package it.neckar.open.provider
 
+import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.impl.IndexMappingSupport
 
 /**
@@ -13,7 +14,7 @@ class ShiftedSizedProvider<T>(
 ) : AbstractMappedSizedProvider<T>(delegate) {
 
   override fun IndexMappingSupport.StoreIndex.fillIndexMapping(delegateSize: Int): Int {
-    (0 until delegateSize).forEach { originalIndex ->
+    delegateSize.fastFor { originalIndex ->
       val shiftedIndex = (originalIndex + shift) % delegateSize
       this.storeMapping(originalIndex, shiftedIndex)
     }
