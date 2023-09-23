@@ -17,3 +17,12 @@ fun Url.Companion.fromURL(url: URL): Url {
 fun Url.Companion.fromFile(file: File): Url {
   return fromURL(file.toURI().toURL())
 }
+
+/**
+ * Converts a file to a URL
+ */
+fun File.toUrl(): Url {
+  //Java creates URIs with only a single "/"
+  val asciiString = toURI().toASCIIString().replace("file:/", "file:///")
+  return Url(asciiString)
+}

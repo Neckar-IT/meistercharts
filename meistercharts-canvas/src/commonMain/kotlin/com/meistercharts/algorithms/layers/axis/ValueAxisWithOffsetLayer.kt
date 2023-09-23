@@ -454,11 +454,11 @@ class ValueAxisWithOffsetLayer(
   }
 
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {
-    TODO("Not yet implemented")
+    TODO("Not yet implemented: paintTicksWithLabelsVertically")
   }
 
   override fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction) {
-    TODO("Not yet implemented")
+    TODO("Not yet implemented: paintTicksWithLabelsHorizontally")
   }
 
   @ConfigurationDsl

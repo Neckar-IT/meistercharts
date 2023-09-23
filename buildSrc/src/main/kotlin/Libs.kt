@@ -9,7 +9,7 @@ import kotlin.String
  *     $ ./gradlew refreshVersions
  * And edit the file `versions.properties`
  *
- * See https://github.com/jmfayard/refreshVersions
+ * See https://github.com/Splitties/refreshVersions
  */
 public object Libs {
     public const val aopalliance: String = "aopalliance:aopalliance:_"
@@ -108,8 +108,6 @@ public object Libs {
             "com.javagen.schema-gen:com.javagen.schema-gen.gradle.plugin:_"
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
-
-    public const val itext: String = "com.lowagie:itext:_"
 
     public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
@@ -377,6 +375,9 @@ public object Libs {
 
     public const val kotlinx_coroutines_jdk8: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:_"
+
+    public const val kotlinx_coroutines_jdk9: String =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:_"
 
     public const val kotlinx_coroutines_test: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:_"
