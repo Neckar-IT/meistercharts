@@ -32,7 +32,9 @@ import it.neckar.open.formatting.timeFormatWithMillis
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.unit.si.ms
-import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import assertk.*
+import assertk.assertions.*
+
 import java.io.File
 import java.util.Locale
 

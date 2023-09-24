@@ -15,8 +15,10 @@
  */
 package com.meistercharts.algorithms.layout
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.jupiter.api.Test
+import assertk.*
+import assertk.assertions.*
+
 
 class LayouterTest {
   @Test

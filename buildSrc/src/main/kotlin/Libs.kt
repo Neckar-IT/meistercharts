@@ -257,10 +257,6 @@ public object Libs {
     public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
 
-    public const val assertj_core: String = "org.assertj:assertj-core:_"
-
-    public const val assertj_guava: String = "org.assertj:assertj-guava:_"
-
     public const val awaitility: String = "org.awaitility:awaitility:_"
 
     public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"

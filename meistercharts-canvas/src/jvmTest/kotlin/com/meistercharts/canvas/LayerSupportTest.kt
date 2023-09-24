@@ -30,7 +30,10 @@ import com.meistercharts.charts.ChartId
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
-import org.assertj.core.data.Offset
+import assertk.*
+import assertk.assertions.*
+import com.meistercharts.zoom.Offset
+
 import org.junit.jupiter.api.Test
 
 class LayerSupportTest {
@@ -149,7 +152,6 @@ class LayerSupportTest {
 
     assertThat(chartState.windowTranslation.x).isEqualTo(1000 / 10.0 / 2 * expectedDefaultZoom.scaleX)
     //Should be centered (again)
-    Offset.offset(0.01)
     assertThat(chartState.windowTranslation.y).isCloseTo(720 / 10.0 / 2 * expectedDefaultZoom.scaleY, 0.000111111111111111)
     //Should be centered (again)
   }

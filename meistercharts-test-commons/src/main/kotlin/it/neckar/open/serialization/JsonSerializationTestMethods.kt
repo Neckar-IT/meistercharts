@@ -1,5 +1,7 @@
 package it.neckar.open.serialization
 
+import assertk.*
+import assertk.assertions.*
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -7,19 +9,35 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
-import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+
 
 /**
  * Tests serialization round trip
  */
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T>, serializersModule: SerializersModule = EmptySerializersModule(), expectedJson: String?) {
-  roundTrip(objectToSerialize, serializer, serializersModule) { expectedJson }
+inline fun <reified T> roundTrip(
+  objectToSerialize: T,
+  serializer: KSerializer<T>,
+  serializersModule: SerializersModule = EmptySerializersModule(),
+  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
+    assertThat(deserialized).isEqualTo(objectToSerialize)
+  },
+  expectedJson: String?,
+) {
+  roundTrip(objectToSerialize, serializer, serializersModule, comparisonCheck) { expectedJson }
 }
 
 /**
  * Tests the round trip. If the [expectedJsonProvider] provides null, the resulting JSON will not be checked
  */
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), serializersModule: SerializersModule = EmptySerializersModule(), expectedJsonProvider: () -> String?): T {
+inline fun <reified T> roundTrip(
+  objectToSerialize: T,
+  serializer: KSerializer<T> = serializer(),
+  serializersModule: SerializersModule = EmptySerializersModule(),
+  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
+    assertThat(deserialized).isEqualTo(objectToSerialize)
+  },
+  expectedJsonProvider: () -> String?,
+): T {
   val encoder: Json = Json {
     this.serializersModule = serializersModule
     prettyPrint = true
@@ -29,17 +47,36 @@ inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T
     encodeDefaults = true
   }
 
-  return roundTrip(objectToSerialize, serializer, encoder, expectedJsonProvider)
+  return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck, expectedJsonProvider)
 }
 
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJson: String?): T {
-  return roundTrip(objectToSerialize, serializer, encoder) { expectedJson }
+inline fun <reified T> roundTrip(
+  objectToSerialize: T,
+  serializer: KSerializer<T> = serializer(),
+  encoder: Json,
+  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
+    assertThat(deserialized).isEqualTo(objectToSerialize)
+  },
+  expectedJson: String?,
+): T {
+  return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck) { expectedJson }
 }
 
 /**
  * Returns the deserialize object
  */
-inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T> = serializer(), encoder: Json, expectedJsonProvider: () -> String?): T {
+inline fun <reified T> roundTrip(
+  objectToSerialize: T,
+  serializer: KSerializer<T> = serializer(),
+  encoder: Json,
+  /**
+   * Comparison check that is called. Should throw an exception
+   */
+  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
+    assertThat(deserialized).isEqualTo(objectToSerialize)
+  },
+  expectedJsonProvider: () -> String?,
+): T {
   val json = encoder.encodeToString(serializer, objectToSerialize)
 
   //println("JSON length: ${json.toByteArray().size}")
@@ -49,7 +86,7 @@ inline fun <reified T> roundTrip(objectToSerialize: T, serializer: KSerializer<T
   }
 
   val deserialized = encoder.decodeFromString(serializer, json)
-  assertThat(deserialized).isEqualTo(objectToSerialize)
+  comparisonCheck(deserialized, objectToSerialize)
 
   return deserialized
 }
@@ -81,3 +118,8 @@ fun <T> roundTripList(vararg objectsToSerialize: T, expectedJson: String?, seria
   assertThat(deserialized).isEqualTo(objectsToSerializeList)
 }
 
+
+/**
+ * Compares
+ */
+typealias ComparisonCheck<T> = (deserialized: T, objectToSerialize: T) -> Unit

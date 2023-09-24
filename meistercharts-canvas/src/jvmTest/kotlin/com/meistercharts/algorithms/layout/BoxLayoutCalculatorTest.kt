@@ -15,9 +15,10 @@
  */
 package com.meistercharts.algorithms.layout
 
+import assertk.*
+import assertk.assertions.*
+import com.meistercharts.zoom.Offset
 import it.neckar.open.kotlin.lang.fastFor
-import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
-import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Test
 
 /**
@@ -90,15 +91,15 @@ class BoxLayoutCalculatorTest {
       val center = layout.calculateCenter(boxIndex)
 
       //Exact hit
-      assertThat(layout.boxIndexFor(start)).describedAs("boxIndex $boxIndex - start: $start").isEqualTo(boxIndex)
-      assertThat(layout.boxIndexFor(center)).describedAs("boxIndex $boxIndex - center: $center").isEqualTo(boxIndex)
+      assertThat(layout.boxIndexFor(start)).isEqualTo(boxIndex)
+      assertThat(layout.boxIndexFor(center)).isEqualTo(boxIndex)
 
       //when gap is 0.0 - the end is part of the next box
-      assertThat(layout.boxIndexFor(end - 0.1)).describedAs("boxIndex $boxIndex - end: $end").isEqualTo(boxIndex)
+      assertThat(layout.boxIndexFor(end - 0.1)).isEqualTo(boxIndex)
 
       if (layout.gap > gapTestDelta) {
         //We have gaps!
-        assertThat(layout.boxIndexFor(end)).describedAs("boxIndex $boxIndex - end: $end").isEqualTo(boxIndex)
+        assertThat(layout.boxIndexFor(end)).isEqualTo(boxIndex)
 
         assertThat(layout.boxIndexFor(start - gapTestDelta)).isNull()
         assertThat(layout.boxIndexFor(end + 0.1)).isNull()
@@ -158,7 +159,7 @@ class BoxLayoutCalculatorTest {
       assertThat(layout.availableSpace).isEqualTo(101.7)
       assertThat(layout.boxSize).isEqualTo(25.0)
       assertThat(layout.gap).isEqualTo(0.0)
-      assertThat(layout.remainingSpace).isCloseTo(1.7, Offset.offset(0.000001))
+      assertThat(layout.remainingSpace).isCloseTo(1.7, 0.000001)
       assertThat(layout.usedSpace).isEqualTo(100.0)
       assertThat(layout.layoutDirection).isEqualTo(LayoutDirection.LeftToRight)
       assertThat(layout.totalGaps).isEqualTo(0.0)
@@ -301,7 +302,7 @@ class BoxLayoutCalculatorTest {
     assertThat(BoxLayoutCalculator.layout(100.0, 1, LayoutDirection.LeftToRight, 0.0, null).usedSpace).isEqualTo(100.0)
     assertThat(BoxLayoutCalculator.layout(100.0, 2, LayoutDirection.LeftToRight, 0.0, null).boxSize).isEqualTo(50.0)
     assertThat(BoxLayoutCalculator.layout(100.0, 2, LayoutDirection.LeftToRight, 0.0, null).usedSpace).isEqualTo(100.0)
-    assertThat(BoxLayoutCalculator.layout(100.0, 7, LayoutDirection.LeftToRight, 0.0, null).usedSpace).isEqualTo(100.0, Offset.offset(0.000000001))
+    assertThat(BoxLayoutCalculator.layout(100.0, 7, LayoutDirection.LeftToRight, 0.0, null).usedSpace).isCloseTo(100.0, 0.000000001)
     assertThat(BoxLayoutCalculator.layout(100.0, 1, LayoutDirection.LeftToRight, 0.0, null).remainingSpace).isEqualTo(0.0)
 
     BoxLayoutCalculator.layout(100.0, 1, LayoutDirection.LeftToRight, 0.0, 5.0).let {

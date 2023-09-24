@@ -26,7 +26,10 @@ import it.neckar.events.PointerDownEvent
 import it.neckar.events.PointerId
 import it.neckar.events.PointerMoveEvent
 import it.neckar.events.PointerUpEvent
-import org.assertj.core.data.Offset
+import assertk.*
+import assertk.assertions.*
+import com.meistercharts.zoom.Offset
+
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -172,8 +175,6 @@ class PinchGestureSupportTest {
       scaleY = it.zoom.scaleY
     }
 
-    val epsilon = Offset.offset(0.0001)
-
     pointerEvents.notifyDown(PointerDownEvent(1.0, Pointer(PointerId(1), Coordinates(10.0, 10.0))))
     pointerEvents.notifyDown(PointerDownEvent(1.0, Pointer(PointerId(2), Coordinates(20.0, 20.0))))
     assertThat(scaleX).isEqualTo(1.0)
@@ -205,8 +206,6 @@ class PinchGestureSupportTest {
       scaleX = it.zoom.scaleX
       scaleY = it.zoom.scaleY
     }
-
-    val epsilon = Offset.offset(0.0001)
 
     pointerEvents.notifyDown(PointerDownEvent(1.0, Pointer(PointerId(1), Coordinates(120.0, 120.0))))
     pointerEvents.notifyDown(PointerDownEvent(1.0, Pointer(PointerId(2), Coordinates(60.0, 60.0))))

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms
 
+import kotlin.test.*
 import assertk.*
 import assertk.assertions.*
 import it.neckar.geometry.AxisOrientationX
@@ -34,9 +35,9 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
 import com.meistercharts.state.MutableChartState
 import com.meistercharts.time.TimeRange
+import com.meistercharts.zoom.Offset
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.ms
-import org.assertj.core.data.Offset
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -264,25 +265,22 @@ internal class ChartCalculatorTest {
     @Zoomed val zoomed = calculator.contentArea2zoomedX(contentArea)
     @Window val window = calculator.zoomed2windowX(zoomed)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2contentAreaRelativeX(domainRelative)
-    ).isEqualTo(contentAreaRelative)
+    ).isCloseTo(contentAreaRelative, 0.0000000001)
 
-    Offset.offset(0.0000000001)
+
     assertThat(
       calculator.domainRelative2contentAreaX(domainRelative)
-    ).isEqualTo(contentArea)
+    ).isCloseTo(contentArea, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2zoomedX(domainRelative)
-    ).isEqualTo(zoomed)
+    ).isCloseTo(zoomed, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2windowX(domainRelative)
-    ).isEqualTo(window)
+    ).isCloseTo(window, 0.0000000001)
   }
 
   private fun runRoundTripY(@DomainRelative domainRelative: Double) {
@@ -298,14 +296,12 @@ internal class ChartCalculatorTest {
       )
     ).isCloseTo(domainRelative, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.zoomed2domainRelativeY(
         calculator.domainRelative2zoomedY(domainRelative)
       )
     ).isCloseTo(domainRelative, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.window2domainRelativeY(
         calculator.domainRelative2windowY(domainRelative)
@@ -320,25 +316,21 @@ internal class ChartCalculatorTest {
     @Zoomed val zoomed = calculator.contentArea2zoomedY(contentArea)
     @Window val window = calculator.zoomed2windowY(zoomed)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2contentAreaRelativeY(domainRelative)
-    ).isEqualTo(contentAreaRelative)
+    ).isCloseTo(contentAreaRelative, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2contentAreaY(domainRelative)
-    ).isEqualTo(contentArea)
+    ).isCloseTo(contentArea, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2zoomedY(domainRelative)
-    ).isEqualTo(zoomed)
+    ).isCloseTo(zoomed, 0.0000000001)
 
-    Offset.offset(0.0000000001)
     assertThat(
       calculator.domainRelative2windowY(domainRelative)
-    ).isEqualTo(window)
+    ).isCloseTo(window, 0.0000000001)
   }
 
   @Test

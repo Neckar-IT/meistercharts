@@ -15,8 +15,9 @@
  */
 package com.meistercharts.events
 
+import assertk.*
+import assertk.assertions.*
 import it.neckar.events.KeyCode
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class KeyCodeTest {
