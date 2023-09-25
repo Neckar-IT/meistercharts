@@ -215,8 +215,6 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
-    public const val joda_time: String = "joda-time:joda-time:_"
-
     public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
 
     public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
