@@ -85,7 +85,7 @@ kotlin {
       }
     }
 
-    named("jvmMain") {
+    jvm().compilations["main"].defaultSourceSet {
       dependencies {
         api(Libs.jsr305)
         implementation(Libs.kotlinx_coroutines_core)
@@ -96,10 +96,11 @@ kotlin {
         api(Libs.slf4j_api)
         api(Libs.logback_classic)
         api(Libs.kotlin_reflect)
+        implementation(Libs.commons_lang3)
       }
     }
 
-    named("jvmTest") {
+    jvm().compilations["test"].defaultSourceSet {
       dependencies {
         //implementation(project(":meistercharts-test-commons"))
         implementation(Libs.kotlin_test)
@@ -112,7 +113,6 @@ kotlin {
         implementation(Libs.controlsfx)
         implementation(Libs.miglayout_javafx)
         implementation(Libs.commons_io)
-        implementation(Libs.assertj_core)
         implementation(Libs.commons_math3)
         implementation(Libs.mockk)
         implementation(Libs.logback_classic)
@@ -121,13 +121,13 @@ kotlin {
       }
     }
 
-    named("jsMain") {
+    js().compilations["main"].defaultSourceSet {
       dependencies {
         api(Libs.kotlin_js)
         //implementation(project(Projects.open_unit_unit))
       }
     }
-    named("jsTest") {
+    js().compilations["test"].defaultSourceSet {
       dependencies {
         //implementation(project(Projects.dependencies_sets_js_kotlin_test))
       }
