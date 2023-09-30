@@ -25,6 +25,8 @@ object VersionInformation {
 
   const val gitCommit: String = VersionConstants.gitCommit
 
+  const val gitDescribe: String = VersionConstants.gitDescribe
+
   /**
    * Verbose version string that contains the git information
    */
