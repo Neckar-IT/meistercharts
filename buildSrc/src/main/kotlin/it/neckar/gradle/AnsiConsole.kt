@@ -1,5 +1,6 @@
 package it.neckar.gradle
 
+import getOrPut
 import org.gradle.api.Project
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.logging.configuration.ConsoleOutput
@@ -13,41 +14,49 @@ class AnsiConsole(val gradle: Gradle) {
 
   val plain: Boolean = gradle.startParameter.consoleOutput == ConsoleOutput.Plain
 
-  fun black(content: CharSequence): CharSequence {
-    return withColor(content, Color.Black)
+  fun black(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Black)
   }
 
-  fun red(content: CharSequence): CharSequence {
-    return withColor(content, Color.Red)
+  fun red(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Red)
   }
 
-  fun green(content: CharSequence): CharSequence {
-    return withColor(content, Color.Green)
+  fun green(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Green)
   }
 
-  fun yellow(content: CharSequence): CharSequence {
-    return withColor(content, Color.Yellow)
+  fun yellow(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Yellow)
   }
 
-  fun blue(content: CharSequence): CharSequence {
-    return withColor(content, Color.Blue)
+  fun blue(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Blue)
   }
 
-  fun magenta(content: CharSequence): CharSequence {
-    return withColor(content, Color.Magenta)
+  fun magenta(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Magenta)
   }
 
-  fun cyan(content: CharSequence): CharSequence {
-    return withColor(content, Color.Cyan)
+  fun cyan(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Cyan)
   }
 
-  fun white(content: CharSequence): CharSequence {
-    return withColor(content, Color.White)
+  fun white(content: Any): CharSequence {
+    return withColor(content.toString(), Color.White)
   }
 
-  private fun withColor(content: CharSequence, color: Color): CharSequence {
+  fun orange(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Orange)
+  }
+
+  fun gray(content: Any): CharSequence {
+    return withColor(content.toString(), Color.Gray)
+  }
+
+  private fun withColor(content: Any, color: Color): CharSequence {
     return if (plain) {
-      content
+      content.toString()
     } else {
       "$ESC${CSI}${color.foreground}m${content}$RESET"
     }
@@ -62,29 +71,36 @@ class AnsiConsole(val gradle: Gradle) {
     Magenta("35", "45"),
     Cyan("36", "46"),
     White("37", "47"),
+    Gray("90", "100"),
+    Orange("38;5;208", "48;5;208"),
   }
 
   companion object {
     /**
      * Starts the ANSI code
      */
-    val ESC: String = "\u001B"
+    const val ESC: String = "\u001B"
 
     /**
      * Control Sequence Introducer
-     * Begins a controle sequence
+     * Begins a control sequence
      * https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection
      */
-    val CSI: String = "["
+    const val CSI: String = "["
 
     /**
      * Resets all ansi attributes
      */
-    val RESET: String = "${ESC}${CSI}0m"
+    const val RESET: String = "${ESC}${CSI}0m"
   }
 }
 
+/**
+ * Returns the AnsiConsole for this project
+ */
 val Project.console: AnsiConsole
   get() {
-    return AnsiConsole(this.gradle)
+    return getOrPut("ansiConsole") {
+      return AnsiConsole(gradle)
+    }
   }

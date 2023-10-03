@@ -600,3 +600,18 @@ fun String.safeForDockerTag(): String {
     .replace('.', '_')
     .replace(' ', '_')
 }
+
+
+/**
+ * Returns the instance for the given project
+ */
+inline fun <reified T> Project.getOrPut(key: String, defaultValue: () -> T): T {
+  if (extra.has(key)) {
+    val found = extra.get(key)
+    return found as T
+  }
+
+  val value = defaultValue()
+  extra.set(key, value)
+  return value
+}
