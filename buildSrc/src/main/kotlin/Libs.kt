@@ -267,6 +267,12 @@ public object Libs {
 
     public const val fest_reflect: String = "org.easytesting:fest-reflect:_"
 
+    public const val dictionary_reader: String = "org.eclipse.milo:dictionary-reader:_"
+
+    public const val sdk_client: String = "org.eclipse.milo:sdk-client:_"
+
+    public const val sdk_server: String = "org.eclipse.milo:sdk-server:_"
+
     public const val freemarker: String = "org.freemarker:freemarker:_"
 
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"

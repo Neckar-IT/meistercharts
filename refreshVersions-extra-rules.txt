@@ -54,3 +54,8 @@ org.jetbrains.kotlinx:kotlin-deeplearning*
 
 com.google.devtools.ksp:*
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+org.eclipse.milo:*
+            ^^^^
+
+
