@@ -30,6 +30,7 @@ import it.neckar.open.unit.other.px
 /**
  * The configuration of the bullet chart
  */
+@JsExport
 external interface BulletChartConfiguration {
   /**
    * The categories to be shown.

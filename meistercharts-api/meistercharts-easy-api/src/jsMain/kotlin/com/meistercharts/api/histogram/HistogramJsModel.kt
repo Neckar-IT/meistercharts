@@ -18,6 +18,8 @@ package com.meistercharts.api.histogram
 import com.meistercharts.api.bar.BarChartGroupedData
 import com.meistercharts.api.bar.BarChartGroupedStyle
 
+@JsExport
 external interface HistogramData : BarChartGroupedData
 
+@JsExport
 external interface HistogramStyle : BarChartGroupedStyle

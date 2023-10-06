@@ -16,14 +16,15 @@
 package com.meistercharts.api
 
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
-import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.GridLayer
+import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.axis.TickProvider
-import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
+import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLabelPainter
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
@@ -31,19 +32,19 @@ import com.meistercharts.algorithms.layers.barchart.GreedyCategoryAxisLabelPaint
 import com.meistercharts.algorithms.layers.barchart.LabelVisibleCondition
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.linechart.Dashes
-import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
+import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.text.CanvasStringShortener
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.font.FontSize
-import com.meistercharts.font.FontWeight
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.parseCssFontFamily
 import com.meistercharts.canvas.parseCssFontStyle
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.font.FontWeight
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.provider.ValueRangeProvider
@@ -833,4 +834,11 @@ fun OverflowIndicatorPainter.applyStyle(jsStyle: OverflowIndicatorStyle) {
     jsStyle.arrowHeadLength,
     jsStyle.arrowHeadWidth
   )
+}
+
+fun com.meistercharts.api.EnumAggregationMode.toModel(): EnumAggregationMode {
+  return when (this) {
+    com.meistercharts.api.EnumAggregationMode.ByOrdinal -> EnumAggregationMode.ByOrdinal
+    com.meistercharts.api.EnumAggregationMode.MostTime -> EnumAggregationMode.MostTime
+  }
 }

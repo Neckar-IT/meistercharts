@@ -46,15 +46,22 @@ object KotlinSettings {
    */
 
   /**
-   * The free compiler args that must be used to configure the Kotlin compiler tasks
+   * The free compiler args that must be used to configure the Kotlin compiler tasks.
+   * These args are used for both JS and JVM
    */
   val freeCompilerArgs: List<String> = buildList {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
-    add("-Xinline-classes") //Enable inline classes
     add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design)
+    add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
+
+    //
+    // Old compiler settings, for documentation purposes
+    //
     //Stable since 1.9
     //add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
+    //Use value classes instead
+    //add("-Xinline-classes") //Enable inline classes
   }
 
   /**

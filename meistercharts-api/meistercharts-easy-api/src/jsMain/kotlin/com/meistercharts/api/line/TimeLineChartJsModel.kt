@@ -15,12 +15,11 @@
  */
 package com.meistercharts.api.line
 
-import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
-import com.meistercharts.algorithms.painter.stripe.refentry.DiscreteEntryAggregationMode
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.api.BoxStyle
 import com.meistercharts.api.CrossWireStyle
 import com.meistercharts.api.DataSeriesNumberFormat
+import com.meistercharts.api.EnumAggregationMode
 import com.meistercharts.api.EnumAxisStyle
 import com.meistercharts.api.EnumConfiguration
 import com.meistercharts.api.FontStyle
@@ -34,7 +33,6 @@ import com.meistercharts.api.TimeRange
 import com.meistercharts.api.ValueAxisStyle
 import com.meistercharts.api.ValueRange
 import com.meistercharts.history.DecimalDataSeriesIndexInt
-import com.meistercharts.history.DownSamplingMode
 import com.meistercharts.history.EnumDataSeriesIndexInt
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
@@ -43,6 +41,7 @@ import it.neckar.open.unit.si.s
 /**
  * The model of the time-line chart
  */
+@JsExport
 external interface TimeLineChartData {
   /**
    * The settings for the history
@@ -55,9 +54,23 @@ external interface TimeLineChartData {
   val play: Boolean?
 }
 
+@JsExport
+enum class DownSamplingMode {
+  /**
+   * Down sampling is executed automatically
+   */
+  Automatic,
+
+  /**
+   * Down sampling is not scheduled. It is probably necessary to calculate it manually.
+   */
+  None,
+}
+
 /**
  * The settings for the history
  */
+@JsExport
 external interface HistorySettings {
 
   /**
@@ -92,6 +105,7 @@ external interface HistorySettings {
 /**
  * Configuration for a decimal data series
  */
+@JsExport
 external interface DecimalDataSeries {
   /**
    * The id of the data series
@@ -107,6 +121,7 @@ external interface DecimalDataSeries {
 /**
  * Configuration for a enum data series
  */
+@JsExport
 external interface EnumDataSeries {
   /**
    * The id of the data series
@@ -124,6 +139,7 @@ external interface EnumDataSeries {
   val enumConfiguration: EnumConfiguration
 }
 
+@JsExport
 external interface DiscreteDataSeriesConfiguration {
   /**
    * The id of the data series
@@ -170,9 +186,26 @@ external interface DiscreteDataSeriesConfiguration {
 
 }
 
+@JsExport
+enum class DiscreteEntryAggregationMode{
+  /**
+   * Visualizes the most of the time reference entry
+   */
+  MostOfTheTimeLabel,
+
+  /**
+   * Visualizes the most important status.
+   *
+   * Does *not* show the most-of-the-time-label to avoid confusion.
+   * It is possible that the most-of-the-time-label does not have the status enum with the lowest ordinal.
+   */
+  MostImportantStatus,
+}
+
 /**
  * Data measured at a certain point in time
  */
+@JsExport
 external interface Sample {
   /**
    * A timestamp in milliseconds since 1 January 1970 UTC
@@ -210,6 +243,7 @@ external interface Sample {
   val enumValues: Array<Double>? //must be double since JS does not support Int
 }
 
+@JsExport
 external interface TimeLineChartStyle {
   /**
    * Whether to show the toolbar (true, default) or not (false)
@@ -344,6 +378,7 @@ external interface TimeLineChartStyle {
  * The configuration of a line of a time-line chart
  * For decimal values - use [EnumDataSeriesStyle] for enum values.
  */
+@JsExport
 external interface DecimalDataSeriesStyle {
   /**
    * The axis title of the series
@@ -351,7 +386,7 @@ external interface DecimalDataSeriesStyle {
   val valueAxisTitle: String?
 
   /**
-   * The value range to be used to scale the y axis for this line.
+   * The value range to be used to scale the y-axis for this line.
    */
   val valueRange: ValueRange?
 
@@ -372,6 +407,7 @@ external interface DecimalDataSeriesStyle {
 /**
  * The config of an enum-data series in the Plotter
  */
+@JsExport
 external interface EnumDataSeriesStyle {
   /**
    * Defines the stripe styles for the ordinals of the enum.
@@ -391,6 +427,7 @@ external interface EnumDataSeriesStyle {
 /**
  * Configuration for a single (decimal) line in the timeline chart.
  */
+@JsExport
 external interface TimeLineChartLineStyle {
   /**
    * The line style

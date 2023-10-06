@@ -23,6 +23,7 @@ import it.neckar.open.unit.other.px
 /**
  * External configuration that can be used to configure the style of a stacked bar chart
  */
+@JsExport
 external interface BarChartStackedStyle : BarChartStyle {
   /**
    * The format to be used for values shown close to the bar segments

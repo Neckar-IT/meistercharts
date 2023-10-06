@@ -7,6 +7,7 @@ import it.neckar.logging.LoggerLocalStorage
 import it.neckar.logging.LoggerName
 import it.neckar.logging.ShortenedLoggerName
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.version.VersionInformation
 
 
 /**
@@ -25,6 +26,7 @@ data class ConsoleLogFunctions(val prefix: String) {
       | * $prefix.rootLevel: Returns the current root level
       | * $prefix.rootLevel=newLevel: Sets the root level to the given value (supports "INFO", "DEBUG", "WARN", "ERROR")
       | * $prefix.list(): Lists all known loggers and their level
+      | * $prefix.version(): Prints the version information
       | * $prefix.get(loggerName): Returns the log level for the provided logger
       | * $prefix.set(loggerName, newLevel): Sets the log level for the provided logger (supports "INFO", "DEBUG", "WARN", "ERROR")
       | * $prefix.localStorage.help(): Prints the help related to the local storage
@@ -117,6 +119,13 @@ data class ConsoleLogFunctions(val prefix: String) {
         println("\t${logger.name} [${level?.name ?: "-"}] - ${effectiveLevel.name}")
     }
 
+    return null
+  }
+
+  fun version(): Any? {
+    println("Build Date Day: ${VersionInformation.buildDateDay}")
+    println("Git Commit: ${VersionInformation.gitCommit}")
+    println("Git Describe: ${VersionInformation.gitDescribe}")
     return null
   }
 }

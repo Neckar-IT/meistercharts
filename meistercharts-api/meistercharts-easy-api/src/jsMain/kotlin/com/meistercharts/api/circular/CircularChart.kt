@@ -105,6 +105,7 @@ private fun CircularChartGestalt.applyStyle(jsStyle: CircularChartStyle) {
   }
 }
 
+@JsExport
 external interface CircularChartStyle {
   /**
    * The max diameter
@@ -133,6 +134,7 @@ external interface CircularChartStyle {
   val legend: CircularChartLegendStyle?
 }
 
+@JsExport
 external interface CircularChartLegendStyle {
   val showCaption: Boolean?
 
@@ -150,6 +152,7 @@ external interface CircularChartLegendStyle {
 /**
  * The data for the chart
  */
+@JsExport
 external interface CircularChartData {
   val segments: Array<CircularChartSegment>?
 }
@@ -157,6 +160,7 @@ external interface CircularChartData {
 /**
  * The data for one segment
  */
+@JsExport
 external interface CircularChartSegment {
   val value: Double?
 

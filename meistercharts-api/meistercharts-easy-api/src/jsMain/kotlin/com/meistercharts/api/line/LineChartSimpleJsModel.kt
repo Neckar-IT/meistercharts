@@ -33,12 +33,14 @@ import it.neckar.open.unit.other.px
 /**
  * The data model of the simple line chart
  */
+@JsExport
 external interface LineChartSimpleData : CategoriesSeriesData {
 }
 
 /**
  * Contains style attributes for simple timeline charts
  */
+@JsExport
 external interface LineChartSimpleStyle {
   /**
    * The value range to be used
@@ -121,6 +123,7 @@ external interface LineChartSimpleStyle {
 /**
  * The style of a line of a line-chart
  */
+@JsExport
 external interface LineChartLineStyle {
   /**
    * Which point types to use

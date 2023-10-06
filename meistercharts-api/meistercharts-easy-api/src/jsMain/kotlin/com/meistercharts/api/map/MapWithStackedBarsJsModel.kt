@@ -21,6 +21,7 @@ import it.neckar.open.unit.other.deg
 /**
  * The data of a map with stacked bars
  */
+@JsExport
 external interface MapWithBarsData {
   val stackedBars: Array<StackedBarOnMap?>?
 }
@@ -28,6 +29,7 @@ external interface MapWithBarsData {
 /**
  * The data of a stacked bar on a map
  */
+@JsExport
 external interface StackedBarOnMap {
   /**
    * The latitude (90° N - 90° S) of the location of the bar
@@ -59,6 +61,7 @@ external interface StackedBarOnMap {
 /**
  * The style of a map with stacked bars
  */
+@JsExport
 external interface MapWithBarsStyle {
   /**
    * The value range to be used

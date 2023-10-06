@@ -26,7 +26,8 @@ object Plugins {
 
   const val generateIcons: String = "it.neckar.generate-icons"
 
-  const val generateTsDeclaration: String = "it.neckar.generate-ts-declaration"
+  const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
+
   const val gitLabDb: String = "it.neckar.gitlab.db"
 
   const val npmBundle: String = "it.neckar.npm-bundle"
@@ -43,7 +44,7 @@ object Plugins {
   /**
    * Creates a license report (used for SDD development)
    */
-  const val license: String = "it.neckar.license"
+  const val licenseReport: String = "it.neckar.license-report"
 
   const val licenseFormatBase = "com.github.hierynomus.license-base"
   const val licenseFormat = "com.github.hierynomus.license"
@@ -114,8 +115,8 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.nexusStaging: PluginDepe
 inline val org.gradle.plugin.use.PluginDependenciesSpec.versions: PluginDependencySpec
   get() = id(Plugins.versions)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.license: PluginDependencySpec
-  get() = id(Plugins.license)
+inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseReport: PluginDependencySpec
+  get() = id(Plugins.licenseReport)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormat: PluginDependencySpec
   get() = id(Plugins.licenseFormat)

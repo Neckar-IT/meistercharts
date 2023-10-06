@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers.barchart
 
 import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layout.LayoutDirection
+import kotlin.js.JsExport
 
 /**
  * Defines how the category chart (e.g. bar chart) is oriented

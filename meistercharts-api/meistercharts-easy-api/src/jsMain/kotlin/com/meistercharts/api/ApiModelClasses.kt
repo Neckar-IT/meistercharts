@@ -15,6 +15,8 @@
  */
 package com.meistercharts.api
 
+
+import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import it.neckar.open.unit.number.PositiveOrZero
@@ -25,9 +27,159 @@ import it.neckar.open.unit.si.ms
  * Contains default models
  */
 
+
+/**
+ * The direction for the layout
+ *
+ */
+@JsExport
+enum class LayoutDirection {
+  /**
+   * Distribute content from the center outwards (left and right)
+   */
+  CenterHorizontal,
+
+  /**
+   * Distribute content from the center up/downwards
+   */
+  CenterVertical,
+
+  /**
+   * Distribute content from left to right (typically for a horizontal layout)
+   */
+  LeftToRight,
+
+  /**
+   * Distribute content from right to left (typically for a horizontal layout)
+   */
+  RightToLeft,
+
+  /**
+   * Distribute content from top to bottom (typically for a vertical layout)
+   */
+  TopToBottom,
+
+  /**
+   * Distribute content from bottom to top (typically for a vertical layout)
+   */
+  BottomToTop,
+}
+
+
+@JsExport
+enum class PointStyle {
+  None,
+  Cross,
+  Cross45Degrees,
+  Dot,
+}
+
+/**
+ * Defines how the category chart (e.g. bar chart) is oriented
+ *
+ */
+@JsExport
+enum class CategoryChartOrientation {
+  /**
+   * ```
+   * ━━━
+   * ━━
+   * ━━━━━━━
+   * ━━━━
+   * <empty space>
+   *```
+   */
+  HorizontalTop(),
+
+  /**
+   * ```
+   * <empty space / 2.0>
+   * ━━━
+   * ━━
+   * ━━━━━━━
+   * ━━━━
+   * <empty space / 2.0>
+   *```
+   */
+  HorizontalCenter(),
+
+  /**
+   * ```
+   * <empty space>
+   * ━━━
+   * ━━
+   * ━━━━━━━
+   * ━━━━
+   *```
+   */
+  HorizontalBottom(),
+
+  /**
+   * ```
+   *  ┃     ┃
+   *  ┃   ┃ ┃
+   *  ┃ ┃ ┃ ┃ <empty space>
+   *```
+   */
+  VerticalLeft(),
+
+  /**
+   * ```
+   *                     ┃     ┃
+   *                     ┃   ┃ ┃
+   * <empty space / 2.0> ┃ ┃ ┃ ┃ <empty space / 2.0>
+   *```
+   */
+  VerticalCenter(),
+
+  /**
+   * ```
+   *               ┃     ┃
+   *               ┃   ┃ ┃
+   * <empty space> ┃ ┃ ┃ ┃
+   *```
+   */
+  VerticalRight(),
+}
+
+/**
+ * The orientation within the chart.
+ */
+@JsExport
+enum class Orientation {
+  /**
+   * The values of the chart are visible on the vertical (y) axis.
+   * e.g. BarChart: Bars are painted bottom to top
+   */
+  Vertical,
+
+  /**
+   * The values of the chart are visible on the horizontal (x) axis.
+   * e.g. BarChart: Bars are painted left to right
+   */
+  Horizontal;
+}
+
+/**
+ * How to visualize aggregated enum values
+ */
+@JsExport
+enum class EnumAggregationMode {
+  /**
+   * The enum-value with the lowest ordinal during a sampling period will be taken.
+   */
+  ByOrdinal,
+
+  /**
+   * The enum-value that is sampled the most during a sampling period will be taken.
+   */
+  MostTime,;
+}
+
 /**
  * Tooltip style for balloon tool tips
  */
+@JsExport
 external interface BalloonTooltipStyle {
   /**
    * The font style for the headline (if there is any)
@@ -81,6 +233,7 @@ external interface BalloonTooltipStyle {
 /**
  * Describes how an overflow indicator is styled
  */
+@JsExport
 external interface OverflowIndicatorStyle {
   /**
    * The fill of the indicator
@@ -112,6 +265,7 @@ external interface OverflowIndicatorStyle {
 /**
  * Describes how a cross-wire should look like
  */
+@JsExport
 external interface CrossWireStyle {
   /**
    * The color of the cross-wire line
@@ -127,6 +281,7 @@ external interface CrossWireStyle {
 /**
  * Represents a size
  */
+@JsExport
 external interface Size {
   /**
    * The width (in pixels)
@@ -143,6 +298,7 @@ external interface Size {
  * Represents insets.
  * If some values are not set they might be interpreted as 0.0 or ignored.
  */
+@JsExport
 external interface Insets {
   val top: Double?
   val left: Double?
@@ -153,6 +309,7 @@ external interface Insets {
 /**
  * Represents a value range
  */
+@JsExport
 external interface ValueRange {
   /**
    * The start of the range (inclusive)
@@ -170,6 +327,7 @@ external interface ValueRange {
   val scale: ValueRangeScale?
 }
 
+@JsExport
 enum class ValueRangeScale {
   /**
    * Denotes a linear value range.
@@ -214,7 +372,7 @@ data class HistoryQueryDescriptor(
   val end: @ms Double,
 
   /**
-   * The duration between two data points
+   * The duration between two data points in milliseconds
    */
   val durationBetweenSamples: @ms Double,
 )
@@ -225,6 +383,7 @@ data class HistoryQueryDescriptor(
  * * Values greater than 1.0 generally indicate a zoomed in state
  * * Values smaller than 1.0 generally indicate a zoomed out state
  */
+@JsExport
 external interface Zoom {
   /**
    * The scale factor along the x-axis
@@ -240,6 +399,7 @@ external interface Zoom {
 /**
  * A side of a four-sided shape.
  */
+@JsExport
 enum class Side {
   /**
    * The left side
@@ -265,6 +425,7 @@ enum class Side {
 /**
  * Describes the distance between two data points.
  */
+@JsExport
 enum class SamplingPeriod {
   /**
    * 1 sample every millisecond
@@ -320,6 +481,7 @@ enum class SamplingPeriod {
 /**
  * How a line should be painted
  */
+@JsExport
 external interface LineStyle {
   /**
    * The width of the line
@@ -340,6 +502,7 @@ external interface LineStyle {
 /**
  * How a (text) box should be painted
  */
+@JsExport
 external interface BoxStyle {
   /**
    * The padding of the box (on all four side) in pixels.
@@ -382,6 +545,7 @@ external interface BoxStyle {
 /**
  * Describes a shadow (e.g. for a box style)
  */
+@JsExport
 external interface Shadow {
   /**
    * The color of the shadow.
@@ -411,6 +575,7 @@ external interface Shadow {
  * null values are interpreted as "0.0"
  * negative values are not allowed
  */
+@JsExport
 external interface BorderRadius {
   @PositiveOrZero
   val topLeft: Double?
@@ -429,6 +594,7 @@ external interface BorderRadius {
 /**
  * How points are connected
  */
+@JsExport
 enum class PointConnectionType {
   /**
    * Points are connected with a direct line
@@ -445,6 +611,7 @@ enum class PointConnectionType {
 /**
  * Describes how the connection between two points is painted
  */
+@JsExport
 enum class PointConnectionStyle {
   /**
    * No line at all
@@ -475,6 +642,7 @@ enum class PointConnectionStyle {
 /**
  * Describes how a point looks like
  */
+@JsExport
 enum class PointType {
   /**
    * No point at all
@@ -505,6 +673,7 @@ enum class PointType {
 /**
  * How to wrap lines
  */
+@JsExport
 enum class WrapMode {
   /**
    * Keep the text on a single line.
@@ -521,6 +690,7 @@ enum class WrapMode {
 /**
  * Describes the font style
  */
+@JsExport
 external interface FontStyle {
   /**
    * The font-family (see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family)
@@ -546,6 +716,7 @@ external interface FontStyle {
 /**
  * Contains common chart style settings
  */
+@JsExport
 external interface ChartStyle {
   /**
    * The target refresh rate. 0 means unlimited which is the default.
@@ -558,6 +729,7 @@ external interface ChartStyle {
 /**
  * Defines how an axis looks like and behaves
  */
+@JsExport
 external interface AxisStyle {
   /**
    * The side on which to put the axis
@@ -623,6 +795,7 @@ external interface AxisStyle {
 /**
  * Defines how a value axis looks like and behaves
  */
+@JsExport
 external interface ValueAxisStyle : AxisStyle {
   /**
    * The maximum number of ticks for the axis
@@ -640,6 +813,7 @@ external interface ValueAxisStyle : AxisStyle {
   val presentationType: ValueAxisPresentationType?
 }
 
+@JsExport
 enum class ValueAxisPresentationType {
   /**
    * Default style with axis line, ticks and labels
@@ -656,6 +830,7 @@ enum class ValueAxisPresentationType {
 /**
  * Defines how a category axis looks like and behaves
  */
+@JsExport
 external interface CategoryAxisStyle : AxisStyle {
   /**
    * The minimum distance (in pixels) between two tick labels or tick icons
@@ -676,6 +851,7 @@ external interface CategoryAxisStyle : AxisStyle {
 /**
  * Determines how labels and icons associated with a tick are laid out
  */
+@JsExport
 enum class JustifyTickContent {
   /**
    * Space is distributed greedily from left to right (horizontal axis) or from top to bottom (vertical axis).
@@ -705,6 +881,7 @@ enum class JustifyTickContent {
 /**
  * Axis style for enum axis
  */
+@JsExport
 external interface EnumAxisStyle : AxisStyle {
   /**
    * If the labels are/will be wrapped
@@ -715,6 +892,7 @@ external interface EnumAxisStyle : AxisStyle {
 /**
  * Axis style fron discrete axis
  */
+@JsExport
 external interface DiscreteAxisStyle : AxisStyle {
   /**
    * If the labels are/will be wrapped
@@ -730,6 +908,7 @@ external interface DiscreteAxisStyle : AxisStyle {
 /**
  * Defines how a time axis looks like and behaves
  */
+@JsExport
 external interface TimeAxisStyle : AxisStyle {
   /**
    * The height (horizontal axis) or width (vertical axis) of the offset area
@@ -757,6 +936,7 @@ external interface TimeAxisStyle : AxisStyle {
 /**
  * Formats numbers
  */
+@JsExport
 external interface NumberFormat {
   /**
    * Formats the given value using the given locale.
@@ -779,6 +959,7 @@ external interface TicksFormat {
 /**
  * Format numbers of a data-series
  */
+@JsExport
 external interface DataSeriesNumberFormat {
   /**
    * Formats the given value of the date-series with the given index using the given locale.
@@ -789,6 +970,7 @@ external interface DataSeriesNumberFormat {
 /**
  * Describes the look of a grid
  */
+@JsExport
 external interface GridStyle {
   /**
    * Provides colors for grid lines
@@ -804,6 +986,7 @@ external interface GridStyle {
 /**
  * Provides the color of a grid line
  */
+@JsExport
 external interface GridLineColorProvider {
   /**
    * Provides the color of the grid line at the given index or for the given value
@@ -814,6 +997,7 @@ external interface GridLineColorProvider {
 /**
  * Threshold
  */
+@JsExport
 external interface Threshold {
   /**
    * The threshold value.
@@ -883,6 +1067,7 @@ external interface Threshold {
 /**
  * Describes the style to be used for value labels
  */
+@JsExport
 external interface ValueLabelsStyle {
   /**
    * Whether to show the value of a bar in a separate label
@@ -923,6 +1108,7 @@ external interface ValueLabelsStyle {
 /**
  * Defines the style of a stripe (that might for example be used to visualize an enum)
  */
+@JsExport
 external interface StripeStyle {
   /**
    * The main background color
@@ -956,7 +1142,8 @@ external interface StripeStyle {
 /**
  * A fill style for a rectangle
  */
-external enum class Fill {
+@JsExport
+enum class Fill {
   /**
    * The rectangle is filled with a solid color
    */
@@ -987,6 +1174,7 @@ external enum class Fill {
 /**
  * Base class for styles that have a content viewport margin
  */
+@JsExport
 external interface HasContentViewportMargin {
   /**
    * The content viewport margin: The space around the content viewport.

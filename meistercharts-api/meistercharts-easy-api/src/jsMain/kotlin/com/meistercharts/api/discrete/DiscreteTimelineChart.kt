@@ -66,7 +66,7 @@ class DiscreteTimelineChart internal constructor(
    * The meister charts object. Can be used to call markAsDirty and dispose
    */
   meisterChart: MeisterchartJS,
-  val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
+  internal val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage>,
 ) : MeisterChartsApi<DiscreteTimelineChartConfiguration>(meisterChart) {
 
   private val historyStorage: InMemoryHistoryStorage = historyStorageQueryMonitor.historyStorage
