@@ -84,9 +84,6 @@ public object Libs {
 
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
 
-    public const val com_google_devtools_ksp_gradle_plugin: String =
-            "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:_"
-
     public const val symbol_processing: String = "com.google.devtools.ksp:symbol-processing:_"
 
     public const val symbol_processing_api: String =
