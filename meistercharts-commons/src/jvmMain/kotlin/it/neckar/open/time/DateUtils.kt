@@ -52,7 +52,6 @@ import java.time.format.FormatStyle
 import java.time.temporal.Temporal
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import javax.annotation.Nonnull
 
 /**
  * Date related utils
@@ -61,8 +60,7 @@ object DateUtils {
   /**
    * Pattern to format a duration as HH:mm
    */
-  @Nonnull
-  val PATTERN_HH_MM: String = "HH:mm"
+  const val PATTERN_HH_MM: String = "HH:mm"
 
   /**
    * Converts the millis to a local date with the given zone
@@ -70,41 +68,34 @@ object DateUtils {
    * @param millis the milliseconds
    * @return the local date for the given zone id
    */
-  @Nonnull
-  fun toLocalDate(millis: Long, @Nonnull zone: ZoneId?): LocalDate {
+  fun toLocalDate(millis: Long, zone: ZoneId?): LocalDate {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), zone).toLocalDate()
   }
 
-  @Nonnull
   fun toZonedDateTime(millis: Long): ZonedDateTime {
     return toZonedDateTime(millis, ZoneId.systemDefault())
   }
 
-  @Nonnull
-  fun toZonedDateTime(millis: Long, @Nonnull zone: ZoneId?): ZonedDateTime {
+  fun toZonedDateTime(millis: Long, zone: ZoneId?): ZonedDateTime {
     return ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), zone)
   }
 
-  @Nonnull
-  fun toOffsetDateTime(millis: Long, @Nonnull zone: ZoneId?): OffsetDateTime {
+  fun toOffsetDateTime(millis: Long, zone: ZoneId?): OffsetDateTime {
     return OffsetDateTime.ofInstant(Instant.ofEpochMilli(millis), zone)
   }
 
-  @Nonnull
-  fun formatDurationWords(@Nonnull duration: Duration): String {
+  fun formatDurationWords(duration: Duration): String {
     return formatDurationWords(duration.toMillis())
   }
 
   /**
    * Interpret the millis as duration and format them words
    */
-  @Nonnull
   fun formatDurationWords(millis: @ms Long): String {
     return formatDurationWords(millis, Locale.getDefault())
   }
 
-  @Nonnull
-  fun formatDurationWords(millis: @ms Long, @Nonnull language: Locale?): String {
+  fun formatDurationWords(millis: @ms Long, language: Locale?): String {
     return formatDurationWords(millis, DurationI18n.get(language!!))
   }
 
@@ -155,8 +146,8 @@ object DateUtils {
     return durationStr.trim().toString()
   }
 
-  //@Nonnull
-  //private fun formatDurationWords(durationMillis: Long, @Nonnull durationI18n: DurationI18n): String {
+  //
+  //private fun formatDurationWords(durationMillis: Long,  durationI18n: DurationI18n): String {
   //  if (durationMillis < 0) {
   //    return "$durationMillis ms"
   //  }
@@ -211,7 +202,6 @@ object DateUtils {
   /**
    * Formats hour, minute, seconds, millis
    */
-  @Nonnull
   fun formatDurationHHmmSSmmm(millis: @ms Long): String {
     return DurationFormatUtils.formatDurationHMS(millis)
   }
@@ -219,27 +209,24 @@ object DateUtils {
   /**
    * Formats hour, minute, seconds
    */
-  @Nonnull
+
   fun formatHMS(millis: @ms Long): String {
     return DurationFormatUtils.formatDuration(millis, "HH:mm:ss")
   }
 
-  @Nonnull
-  fun asWeeksAndDays(@Nonnull period: Period): String {
+  fun asWeeksAndDays(period: Period): String {
     val days = period.days % 7
     val weeks = period.days / 7
     return "$weeks weeks, $days days"
   }
 
-  @Nonnull
-  fun formatHHmm(@Nonnull time: LocalTime?): String {
+  fun formatHHmm(time: LocalTime?): String {
     return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(time)
   }
 
   private const val SECONDS_PER_HOUR: @s Long = (60 * 60).toLong()
   private const val SECONDS_PER_MINUTE: @s Long = 60
 
-  @Nonnull
   fun formatDurationWordsWithSeconds(duration: @ms Duration?): String {
     return formatDurationWordsWithSeconds(duration!!.toMillis())
   }
@@ -286,17 +273,15 @@ object DateUtils {
    * @param instant instant to convert in nanos
    * @return nanos from epoch
    */
-  fun toNanos(@Nonnull instant: Instant): @ns Long {
+  fun toNanos(instant: Instant): @ns Long {
     return TimeUnit.SECONDS.toNanos(instant.epochSecond) + instant.nano
   }
 
-  @Nonnull
-  fun formatDurationHHmm(@Nonnull duration: Duration): String {
+  fun formatDurationHHmm(duration: Duration): String {
     return DurationFormatUtils.formatDuration(duration.toMillis(), PATTERN_HH_MM)
   }
 
-  @Nonnull
-  fun parseDurationHHmm(@Nonnull formatted: String): Duration {
+  fun parseDurationHHmm(formatted: String): Duration {
     val index = formatted.indexOf(':')
     require(index >= 0) { "Could not parse <$formatted>" }
     val firstPart = formatted.substring(0, index)
@@ -309,32 +294,29 @@ object DateUtils {
   /**
    * Formats a local date or local date time format
    */
-  fun formatLocalDateAndOrTime(@Nonnull temporal: Temporal?): String {
+  fun formatLocalDateAndOrTime(temporal: Temporal?): String {
     return if (temporal is LocalDateTime) {
       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(temporal)
     } else DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(temporal)
   }
 
   /**
-   * Returns a date time formatter that contains the milli seconds format
+   * Returns a date time formatter that contains the milliseconds format
    */
-  @Nonnull
-  fun createTimeMillisFormat(@Nonnull locale: Locale): DateTimeFormatter {
+
+  fun createTimeMillisFormat(locale: Locale): DateTimeFormatter {
     return createMillisFormat(locale, null, FormatStyle.MEDIUM)
   }
 
-  @Nonnull
-  fun createDateTimeMillisFormat(@Nonnull locale: Locale): DateTimeFormatter {
+  fun createDateTimeMillisFormat(locale: Locale): DateTimeFormatter {
     return createMillisFormat(locale, FormatStyle.MEDIUM, FormatStyle.MEDIUM)
   }
 
-  @Nonnull
-  fun createDateTimeShortMillisFormat(@Nonnull locale: Locale): DateTimeFormatter {
+  fun createDateTimeShortMillisFormat(locale: Locale): DateTimeFormatter {
     return createMillisFormat(locale, FormatStyle.SHORT, FormatStyle.MEDIUM)
   }
 
-  @Nonnull
-  private fun createMillisFormat(@Nonnull locale: Locale, dateStyle: FormatStyle?, timeStyle: FormatStyle?): DateTimeFormatter {
+  private fun createMillisFormat(locale: Locale, dateStyle: FormatStyle?, timeStyle: FormatStyle?): DateTimeFormatter {
     val chronology = Chronology.ofLocale(locale)
     val pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, timeStyle, chronology, locale).replace(":ss", ":ss.SSS")
     return DateTimeFormatter.ofPattern(pattern, locale)
