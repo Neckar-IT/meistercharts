@@ -26,8 +26,6 @@ public object Libs {
 
     public const val uuid: String = "com.benasher44:uuid:_"
 
-    public const val filepeek: String = "com.christophsturm:filepeek:_"
-
     public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
             "com.cosminpolifronie.gradle.plantuml:com.cosminpolifronie.gradle.plantuml.gradle.plugin:_"
 
@@ -52,8 +50,6 @@ public object Libs {
             "com.fasterxml.jackson.module:jackson-module-parameter-names:_"
 
     public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
-
-    public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val kotlin_csv: String = "com.github.doyaaaaaken:kotlin-csv:_"
 
@@ -117,10 +113,6 @@ public object Libs {
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
     public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
-
-    public const val assertk_js: String = "com.willowtreeapps.assertk:assertk-js:_"
-
-    public const val assertk_jvm: String = "com.willowtreeapps.assertk:assertk-jvm:_"
 
     public const val commons_cli: String = "commons-cli:commons-cli:_"
 
@@ -193,6 +185,8 @@ public object Libs {
 
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
+    public const val ktor_websockets: String = "io.ktor:ktor-websockets:_"
+
     public const val mockk: String = "io.mockk:mockk:_"
 
     public const val measured: String = "io.nacular.measured:measured:_"
@@ -225,10 +219,6 @@ public object Libs {
     public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
-
-    public const val tornadofx_controls: String = "no.tornado:tornadofx-controls:_"
-
-    public const val tornadofx_controlsfx: String = "no.tornado:tornadofx-controlsfx:_"
 
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
