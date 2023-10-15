@@ -7,6 +7,16 @@ import java.io.File
  */
 
 /**
+ * Returns the tools folder
+ */
+val Project.tools: File
+  get() {
+    return rootProject.file("tools").also {
+      require(it.isDirectory) { "tools directory <${it.absolutePath}> does not exist or is not a directory" }
+    }
+  }
+
+/**
  * Path to jib-cli
  */
 @Deprecated("use JibCliPlugin instead")
@@ -34,15 +44,5 @@ val Project.jibCli: File
 val Project.dockerCompose: File
   get() {
     throw UnsupportedOperationException("Use the installed docker compose")
-  }
-
-/**
- * Returns the tools folder
- */
-val Project.tools: File
-  get() {
-    return rootProject.file("tools").also {
-      require(it.isDirectory) { "tools directory <${it.absolutePath}> does not exist or is not a directory" }
-    }
   }
 

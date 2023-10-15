@@ -254,12 +254,12 @@ external interface OverflowIndicatorStyle {
   /**
    * The width of the arrow head (default: 15px)
    */
-  val arrowHeadWidth: Double
+  val arrowHeadWidth: Double?
 
   /**
    * The length of the arrow head (default: 10px)
    */
-  val arrowHeadLength: Double
+  val arrowHeadLength: Double?
 }
 
 /**
@@ -1009,24 +1009,24 @@ external interface Threshold {
    * The threshold label (supports \n).
    * Usually contains at least the formatted value.
    */
-  var label: String
+  var label: String?
 
   /**
    * The length of the arrow head that points from the label box to the axis.
    * Default is 10 pixels
    */
-  var arrowHeadLength: @px Double
+  var arrowHeadLength: @px Double?
 
   /**
    * The width of the arrow head that points from the label box to the axis
    * Default is 10 pixels
    */
-  var arrowHeadWidth: @px Double
+  var arrowHeadWidth: @px Double?
 
   /**
    * The color to be used for the threshold label
    */
-  val labelColor: String
+  val labelColor: String?
 
   /**
    * The color to b eused for the threshold label if it is active
@@ -1037,12 +1037,12 @@ external interface Threshold {
   /**
    * The font to be used for the threshold label
    */
-  val labelFont: FontStyle
+  val labelFont: FontStyle?
 
   /**
    * The style to be used for the threshold line
    */
-  val lineStyle: LineStyle
+  val lineStyle: LineStyle?
 
   /**
    * The style to be used for the threshold line - if it is active.
@@ -1054,7 +1054,7 @@ external interface Threshold {
   /**
    * The box style for the label
    */
-  val labelBoxStyle: BoxStyle
+  val labelBoxStyle: BoxStyle?
 
   /**
    * The box style for the label - if active

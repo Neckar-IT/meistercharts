@@ -15,17 +15,17 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.ArrowHead
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
+import com.meistercharts.resources.svg.PathPaintable
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
-import com.meistercharts.resources.svg.PathPaintable
 import it.neckar.open.unit.other.px
 
 /**
@@ -123,7 +123,7 @@ class OverflowIndicatorPainter(
     /**
      * Applies the default indicators with the provided values
      */
-    fun applyDefaultIndicators(fill: Color?, stroke: Color?, strokeWidth: @px Double, arrowHeadLength: @px Double, arrowHeadWidth: @px Double) {
+    fun applyDefaultIndicators(fill: Color?, stroke: Color?, strokeWidth: @px Double?, arrowHeadLength: @px Double?, arrowHeadWidth: @px Double?) {
       this.topIndicator = topIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
       this.rightIndicator = rightIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
       this.bottomIndicator = bottomIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
@@ -141,51 +141,100 @@ class OverflowIndicatorPainter(
     /**
      * The top indicator triangle (pointing to the top)
      */
-    fun topIndicatorTriangle(fill: Color?, stroke: Color?, strokeWidth: @px Double = 1.0, arrowHeadLength: Double = 10.0, arrowHeadWidth: Double = 15.0): PathPaintable = PathPaintable(
-      pathActions = ArrowHead.forOrientation(Direction.TopCenter, arrowHeadLength, arrowHeadWidth),
-      size = Size(arrowHeadWidth, arrowHeadLength),
-      scale = 1.0,
-      offset = Distance.of(arrowHeadWidth / 2.0, 0.0),
-      fill = fill,
-      stroke = stroke,
-      strokeWidth = strokeWidth,
-      alignmentPoint = Coordinates.of(-arrowHeadWidth / 2.0, 0.0),
-    )
+    fun topIndicatorTriangle(
+      fill: Color?,
+      stroke: Color?,
+      strokeWidth: @px Double? = null,
+      arrowHeadLength: Double? = null,
+      arrowHeadWidth: Double? = null,
+    ): PathPaintable {
 
-    fun leftIndicatorTriangle(fill: Color?, stroke: Color?, strokeWidth: @px Double = 1.0, arrowHeadLength: Double = 10.0, arrowHeadWidth: Double = 15.0): PathPaintable = PathPaintable(
-      pathActions = ArrowHead.forOrientation(Direction.CenterLeft, arrowHeadLength, arrowHeadWidth),
-      size = Size(arrowHeadLength, arrowHeadWidth),
-      scale = 1.0,
-      offset = Distance.of(0.0, arrowHeadWidth / 2.0),
-      fill = fill,
-      stroke = stroke,
-      strokeWidth = strokeWidth,
-      alignmentPoint = Coordinates.of(0.0, -arrowHeadWidth / 2.0),
-    )
+      val actualStrokeWidth = strokeWidth ?: 1.0
+      val actualArrowHeadLength = arrowHeadLength ?: 10.0
+      val actualArrowHeadWidth = arrowHeadWidth ?: 15.0
 
-    fun rightIndicatorTriangle(fill: Color?, stroke: Color?, strokeWidth: @px Double = 1.0, arrowHeadLength: Double = 10.0, arrowHeadWidth: Double = 15.0): PathPaintable = PathPaintable(
-      pathActions = ArrowHead.forOrientation(Direction.CenterRight, arrowHeadLength, arrowHeadWidth),
-      size = Size(arrowHeadLength, arrowHeadWidth),
-      scale = 1.0,
-      offset = Distance.of(arrowHeadLength, arrowHeadWidth / 2.0),
-      fill = fill,
-      stroke = stroke,
-      strokeWidth = strokeWidth,
-      alignmentPoint = Coordinates.of(-arrowHeadLength, -arrowHeadWidth / 2.0),
-    )
+      return PathPaintable(
+        pathActions = ArrowHead.forOrientation(Direction.TopCenter, actualArrowHeadLength, actualArrowHeadWidth),
+        size = Size(actualArrowHeadWidth, actualArrowHeadLength),
+        scale = 1.0,
+        offset = Distance.of(actualArrowHeadWidth / 2.0, 0.0),
+        fill = fill,
+        stroke = stroke,
+        strokeWidth = actualStrokeWidth,
+        alignmentPoint = Coordinates.of(-actualArrowHeadWidth / 2.0, 0.0),
+      )
+    }
+
+    fun leftIndicatorTriangle(
+      fill: Color?,
+      stroke: Color?,
+      strokeWidth: @px Double? = null,
+      arrowHeadLength: Double? = null,
+      arrowHeadWidth: Double? = null,
+    ): PathPaintable {
+      val actualStrokeWidth = strokeWidth ?: 1.0
+      val actualArrowHeadLength = arrowHeadLength ?: 10.0
+      val actualArrowHeadWidth = arrowHeadWidth ?: 15.0
+
+      return PathPaintable(
+        pathActions = ArrowHead.forOrientation(Direction.CenterLeft, actualArrowHeadLength, actualArrowHeadWidth),
+        size = Size(actualArrowHeadLength, actualArrowHeadWidth),
+        scale = 1.0,
+        offset = Distance.of(0.0, actualArrowHeadWidth / 2.0),
+        fill = fill,
+        stroke = stroke,
+        strokeWidth = actualStrokeWidth,
+        alignmentPoint = Coordinates.of(0.0, -actualArrowHeadWidth / 2.0)
+      )
+    }
+
+    fun rightIndicatorTriangle(
+      fill: Color?,
+      stroke: Color?,
+      strokeWidth: @px Double? = null,
+      arrowHeadLength: Double? = null,
+      arrowHeadWidth: Double? = null,
+    ): PathPaintable {
+      val actualStrokeWidth = strokeWidth ?: 1.0
+      val actualArrowHeadLength = arrowHeadLength ?: 10.0
+      val actualArrowHeadWidth = arrowHeadWidth ?: 15.0
+
+      return PathPaintable(
+        pathActions = ArrowHead.forOrientation(Direction.CenterRight, actualArrowHeadLength, actualArrowHeadWidth),
+        size = Size(actualArrowHeadLength, actualArrowHeadWidth),
+        scale = 1.0,
+        offset = Distance.of(actualArrowHeadLength, actualArrowHeadWidth / 2.0),
+        fill = fill,
+        stroke = stroke,
+        strokeWidth = actualStrokeWidth,
+        alignmentPoint = Coordinates.of(-actualArrowHeadLength, -actualArrowHeadWidth / 2.0)
+      )
+    }
 
     /**
      * Triangle that points to the bottom
      */
-    fun bottomIndicatorTriangle(fill: Color?, stroke: Color?, strokeWidth: @px Double = 1.0, arrowHeadLength: Double = 10.0, arrowHeadWidth: Double = 15.0): PathPaintable = PathPaintable(
-      pathActions = ArrowHead.forOrientation(Direction.BottomCenter, arrowHeadLength, arrowHeadWidth),
-      size = Size(arrowHeadWidth, arrowHeadLength),
-      scale = 1.0,
-      offset = Distance.of(arrowHeadWidth / 2.0, arrowHeadLength),
-      fill = fill,
-      stroke = stroke,
-      strokeWidth = strokeWidth,
-      alignmentPoint = Coordinates.of(-arrowHeadWidth / 2.0, -arrowHeadLength),
-    )
+    fun bottomIndicatorTriangle(
+      fill: Color?,
+      stroke: Color?,
+      strokeWidth: @px Double? = null,
+      arrowHeadLength: Double? = null,
+      arrowHeadWidth: Double? = null,
+    ): PathPaintable {
+      val actualStrokeWidth = strokeWidth ?: 1.0
+      val actualArrowHeadLength = arrowHeadLength ?: 10.0
+      val actualArrowHeadWidth = arrowHeadWidth ?: 15.0
+
+      return PathPaintable(
+        pathActions = ArrowHead.forOrientation(Direction.BottomCenter, actualArrowHeadLength, actualArrowHeadWidth),
+        size = Size(actualArrowHeadWidth, actualArrowHeadLength),
+        scale = 1.0,
+        offset = Distance.of(actualArrowHeadWidth / 2.0, actualArrowHeadLength),
+        fill = fill,
+        stroke = stroke,
+        strokeWidth = actualStrokeWidth,
+        alignmentPoint = Coordinates.of(-actualArrowHeadWidth / 2.0, -actualArrowHeadLength)
+      )
+    }
   }
 }

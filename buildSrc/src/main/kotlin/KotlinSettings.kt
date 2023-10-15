@@ -10,9 +10,6 @@ object KotlinSettings {
   val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
   val apiVersionAsString: String = apiVersion.version
 
-  @Deprecated("The JVM Target version depends on the JDK. Do not use this constant!", level = DeprecationLevel.ERROR)
-  const val jvmTarget: String = "1.8"
-
   /**
    * Contains the annotations we opted in.
    * Can be used to configure Kotlin extensions directly
