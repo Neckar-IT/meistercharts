@@ -25,12 +25,14 @@ import it.neckar.open.unit.other.px
 /**
  * The data model of the grouped bar chart
  */
+@JsExport
 external interface BarChartGroupedData : BarChartData {
 }
 
 /**
  * External configuration that can be used to configure the style of a grouped bar chart
  */
+@JsExport
 external interface BarChartGroupedStyle : BarChartStyle {
   /**
    * The colors to be used for the bars of a group.

@@ -34,7 +34,9 @@ interface JsErrorHandler {
     /**
      * Must be called to register the window error handler
      */
-    fun registerWindowErrorHandler() {
+    fun registerWindowErrorHandler(handler: JsErrorHandler = ConsoleJsErrorHandler) {
+      errorHandler = handler
+
       window.onerror = { message, source, lineno, colno, error ->
         println("Window error handler called: $message")
 

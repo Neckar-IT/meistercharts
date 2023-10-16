@@ -1,5 +1,7 @@
 package it.neckar.open.kotlin.lang
 
+import kotlin.contracts.contract
+
 /**
  * Requires that both parameters are equal.
  * Uses the provided lazy message appended with first/second
@@ -25,6 +27,16 @@ fun <T> checkEquals(first: T, second: T, lazyMessage: () -> Any) {
 /**
  * Suffix notation for checkNotNull
  */
-inline fun <T> T?.checkNotNull(lazyMessage: () -> Any): T {
+inline fun <T> T?.checkNotNull(lazyMessage: () -> Any = { "Must not be null" }): T {
+  contract {
+    returns() implies (this@checkNotNull != null)
+  }
   return checkNotNull(this, lazyMessage)
+}
+
+inline fun <T> T?.requireNotNull(lazyMessage: () -> Any = { "Must not be null" }): T {
+  contract {
+    returns() implies (this@requireNotNull != null)
+  }
+  return requireNotNull(this, lazyMessage)
 }

@@ -15,6 +15,8 @@
  */
 package it.neckar.geometry
 
+import kotlin.js.JsExport
+
 /**
  * The orientation within the chart.
  */

@@ -55,7 +55,6 @@ kotlin {
 
         implementation(Libs.commons_io)
         implementation(Libs.commons_lang3)
-        implementation(Libs.assertj_core)
         implementation(Libs.commons_math3)
         implementation(Libs.mockk)
         implementation(Libs.logback_classic)
@@ -75,7 +74,6 @@ kotlin {
         implementation(Libs.junit_jupiter_params)
         implementation(Libs.junit_jupiter_engine)
 
-        implementation(Libs.assertj_core)
         implementation(KotlinX.coroutines.core)
         implementation(Libs.filepeek) //necessary to ensure the file peek version is updated to latest version
       }

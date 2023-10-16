@@ -15,7 +15,9 @@
  */
 package com.meistercharts.algorithms.layers
 
-import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import assertk.*
+import assertk.assertions.*
+
 import org.junit.jupiter.api.Test
 
 /**

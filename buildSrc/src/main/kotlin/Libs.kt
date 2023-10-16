@@ -9,7 +9,7 @@ import kotlin.String
  *     $ ./gradlew refreshVersions
  * And edit the file `versions.properties`
  *
- * See https://github.com/jmfayard/refreshVersions
+ * See https://github.com/Splitties/refreshVersions
  */
 public object Libs {
     public const val aopalliance: String = "aopalliance:aopalliance:_"
@@ -25,8 +25,6 @@ public object Libs {
             "com.atlassian.commonmark:commonmark-ext-gfm-tables:_"
 
     public const val uuid: String = "com.benasher44:uuid:_"
-
-    public const val filepeek: String = "com.christophsturm:filepeek:_"
 
     public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
             "com.cosminpolifronie.gradle.plantuml:com.cosminpolifronie.gradle.plantuml.gradle.plugin:_"
@@ -52,8 +50,6 @@ public object Libs {
             "com.fasterxml.jackson.module:jackson-module-parameter-names:_"
 
     public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
-
-    public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val kotlin_csv: String = "com.github.doyaaaaaken:kotlin-csv:_"
 
@@ -83,9 +79,6 @@ public object Libs {
             "com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:_"
 
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
-
-    public const val com_google_devtools_ksp_gradle_plugin: String =
-            "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:_"
 
     public const val symbol_processing: String = "com.google.devtools.ksp:symbol-processing:_"
 
@@ -120,10 +113,6 @@ public object Libs {
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
     public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
-
-    public const val assertk_js: String = "com.willowtreeapps.assertk:assertk-js:_"
-
-    public const val assertk_jvm: String = "com.willowtreeapps.assertk:assertk-jvm:_"
 
     public const val commons_cli: String = "commons-cli:commons-cli:_"
 
@@ -196,6 +185,8 @@ public object Libs {
 
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
+    public const val ktor_websockets: String = "io.ktor:ktor-websockets:_"
+
     public const val mockk: String = "io.mockk:mockk:_"
 
     public const val measured: String = "io.nacular.measured:measured:_"
@@ -215,8 +206,6 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
-    public const val joda_time: String = "joda-time:joda-time:_"
-
     public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
 
     public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
@@ -230,10 +219,6 @@ public object Libs {
     public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
-
-    public const val tornadofx_controls: String = "no.tornado:tornadofx-controls:_"
-
-    public const val tornadofx_controlsfx: String = "no.tornado:tornadofx-controlsfx:_"
 
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
@@ -257,10 +242,6 @@ public object Libs {
     public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
 
-    public const val assertj_core: String = "org.assertj:assertj-core:_"
-
-    public const val assertj_guava: String = "org.assertj:assertj-guava:_"
-
     public const val awaitility: String = "org.awaitility:awaitility:_"
 
     public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
@@ -273,6 +254,12 @@ public object Libs {
 
     public const val fest_reflect: String = "org.easytesting:fest-reflect:_"
 
+    public const val dictionary_reader: String = "org.eclipse.milo:dictionary-reader:_"
+
+    public const val sdk_client: String = "org.eclipse.milo:sdk-client:_"
+
+    public const val sdk_server: String = "org.eclipse.milo:sdk-server:_"
+
     public const val freemarker: String = "org.freemarker:freemarker:_"
 
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
@@ -284,7 +271,8 @@ public object Libs {
     public const val all_modules_page_plugin: String =
             "org.jetbrains.dokka:all-modules-page-plugin:_"
 
-    public const val dokka_analysis: String = "org.jetbrains.dokka:dokka-analysis:_"
+    public const val analysis_kotlin_descriptors: String =
+            "org.jetbrains.dokka:analysis-kotlin-descriptors:_"
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
 
@@ -375,6 +363,9 @@ public object Libs {
     public const val kotlinx_coroutines_jdk8: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:_"
 
+    public const val kotlinx_coroutines_jdk9: String =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:_"
+
     public const val kotlinx_coroutines_test: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:_"
 
@@ -405,12 +396,6 @@ public object Libs {
 
     public const val org_openjfx_javafxplugin_gradle_plugin: String =
             "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"
-
-    public const val javafx_base: String = "org.openjfx:javafx-base:_"
-
-    public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
-
-    public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
 
     public const val opencv: String = "org.openpnp:opencv:_"
 

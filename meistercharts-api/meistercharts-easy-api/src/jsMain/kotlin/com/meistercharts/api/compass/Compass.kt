@@ -55,6 +55,7 @@ class Compass internal constructor(
 /**
  * External configuration that can be used to configure the data
  */
+@JsExport
 external interface CompassData {
   // This is the interface towards the browser. There is no guaranty that we will receive non-null and well-defined values. Hence, all types are nullable.
   /**
@@ -76,6 +77,6 @@ external interface CompassData {
 /**
  * External configuration that can be used to configure the style
  */
+@JsExport
 external interface CompassStyle {
-
 }

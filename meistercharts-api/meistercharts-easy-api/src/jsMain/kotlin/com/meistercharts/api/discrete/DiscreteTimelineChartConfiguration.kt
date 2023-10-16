@@ -26,6 +26,7 @@ import it.neckar.open.unit.si.ms
 /**
  * Configuration for the discrete timeline chart
  */
+@JsExport
 external interface DiscreteTimelineChartConfiguration {
   /**
    * The time range that is currently visible (in UTC)

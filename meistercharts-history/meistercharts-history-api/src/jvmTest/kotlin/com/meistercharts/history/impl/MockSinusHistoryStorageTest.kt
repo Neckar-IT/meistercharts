@@ -18,7 +18,9 @@ package com.meistercharts.history.impl
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.SamplingPeriod
-import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
+import assertk.*
+import assertk.assertions.*
+
 import org.junit.jupiter.api.Test
 
 /**

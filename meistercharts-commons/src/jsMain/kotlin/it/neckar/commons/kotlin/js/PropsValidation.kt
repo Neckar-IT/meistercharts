@@ -38,11 +38,27 @@ fun <T : Any> KProperty0<T>.safeGet(type: KClass<T>): T {
   }
 
   if ((type.isInstance(value)).not()) {
-    if (type.simpleName.equals("StateInstance")) {
-      throw PropertyValidationFailedException("Property [${this.name}] has invalid value => expected value: [${type.simpleName}] " +
-        "actual value: [$value]. Use method \"getNotNull()\" for properties with instance [${type.simpleName}]")
+    //Handle special cases
+    when {
+      type.simpleName.equals("StateInstance") -> {
+        throw PropertyValidationFailedException(
+          "Property [${this.name}] has invalid value => expected value: [${type.simpleName}] " +
+            "actual value: [$value]. Use method \"getNotNull()\" for properties with instance [${type.simpleName}]"
+        )
+      }
+
+      type.simpleName.equals("SuspendFunction0") -> {
+        if (value is Function1<*, *>) {
+          //This is ok, first parameter is $continuation
+          return value
+        }
+
+        //current
+        throw PropertyValidationFailedException("Property [${this.name}] expected a suspend function. Actual value: [$value] with type [${value::class}]")
+      }
+
+      else -> throw PropertyValidationFailedException("Property [${this.name}] has invalid value => expected value: [${type.simpleName}] actual value: [$value]")
     }
-    throw PropertyValidationFailedException("Property [${this.name}] has invalid value => expected value: [${type.simpleName}] actual value: [$value]")
   }
 
   return value

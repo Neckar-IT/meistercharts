@@ -18,6 +18,7 @@ package com.meistercharts.api
 /**
  * Enumeration configuration for an enumeration
  */
+@JsExport
 actual external interface EnumConfiguration {
   /**
    * A string description of the enum configuration
@@ -37,6 +38,7 @@ actual external interface EnumConfiguration {
 /**
  * Represents one possible value for a enum
  */
+@JsExport
 actual external interface EnumValue {
   /**
    * The position of this enum-value within the corresponding enum.

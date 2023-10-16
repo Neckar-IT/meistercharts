@@ -69,6 +69,16 @@ data class LineStyle @JvmOverloads constructor(
      * Line with large dashes
      */
     val LargeDashes: LineStyle = LineStyle(dashes = Dashes.LargeDashes)
+
+    /**
+     * Continuous line in light gray
+     */
+    val LightGray: LineStyle = LineStyle(color = Color.lightgray, lineWidth = 1.0)
+
+    /**
+     * Continuous line in dark gray
+     */
+    val DarkGray: LineStyle = LineStyle(color = Color.darkgray, lineWidth = 2.0)
   }
 }
 

@@ -26,6 +26,7 @@ import com.meistercharts.annotations.Domain
 /**
  * Hols data for category / series model
  */
+@JsExport
 external interface CategoriesSeriesData {
   /**
    * The categories to be shown.
@@ -36,6 +37,7 @@ external interface CategoriesSeriesData {
 /**
  * Base interface for category related data
  */
+@JsExport
 external interface BaseCategoryData {
   /**
    * The label of the category
@@ -51,6 +53,7 @@ external interface BaseCategoryData {
 /**
  * Contains the series data for a single category
  */
+@JsExport
 external interface CategorySeriesData : BaseCategoryData {
   /**
    * The values that belong to the category
@@ -62,6 +65,7 @@ external interface CategorySeriesData : BaseCategoryData {
 /**
  * Contains the bullet chart data for a single category
  */
+@JsExport
 external interface CategoryBulletChartData : BaseCategoryData {
   /**
    * The values that belong to the category

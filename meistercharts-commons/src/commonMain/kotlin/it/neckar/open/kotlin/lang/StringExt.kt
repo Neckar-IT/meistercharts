@@ -227,7 +227,8 @@ fun String.containsAll(elements: Iterable<String>, ignoreCase: Boolean = false):
 }
 
 /**
- * Returns a string that is safe to be used as file name
+ * Returns a string that is safe to be used as file name.
+ * Replaces all "forbidden" characters with underscores ("_")
  */
 fun String.encodeForFileName(): String {
   return InvalidForFileName.replace(this, "_")

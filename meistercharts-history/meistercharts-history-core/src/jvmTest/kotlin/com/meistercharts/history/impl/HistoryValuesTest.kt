@@ -19,7 +19,9 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.Pending
 import it.neckar.open.serialization.roundTrip
-import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import assertk.*
+import assertk.assertions.*
+
 import org.junit.jupiter.api.Test
 
 /**

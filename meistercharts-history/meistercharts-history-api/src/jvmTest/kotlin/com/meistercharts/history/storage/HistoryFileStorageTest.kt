@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history.storage
 
+import assertk.*
+import assertk.assertions.*
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
 import it.neckar.open.formatting.dateTimeFormat
@@ -22,8 +24,8 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.test.utils.TempFolder
 import it.neckar.open.test.utils.WithTempFiles
+import it.neckar.open.test.utils.doesNotExist
 import it.neckar.open.time.toDoubleMillis
-import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File

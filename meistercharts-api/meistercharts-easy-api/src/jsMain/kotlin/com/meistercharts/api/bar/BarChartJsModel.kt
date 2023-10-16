@@ -30,6 +30,7 @@ import com.meistercharts.api.category.CategoriesSeriesData
 /**
  * The data model of the bar charts (stacked or grouped)
  */
+@JsExport
 external interface BarChartData : CategoriesSeriesData {
   //BarChartData sounds nicer than CategoriesData. This interface ensures the nicer name in the external JavaScript API
 }
@@ -37,6 +38,7 @@ external interface BarChartData : CategoriesSeriesData {
 /**
  * Contains style attributes for all bar charts (stacked and grouped)
  */
+@JsExport
 external interface BarChartStyle : HasContentViewportMargin {
   /**
    * Whether the chart is horizontal (true) or vertical (false)

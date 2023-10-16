@@ -16,8 +16,8 @@
 package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.AxisConfiguration
-import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.debug.FramesPerSecondLayer
 import com.meistercharts.algorithms.layers.debug.PaintPerformanceLayer
@@ -54,11 +54,9 @@ import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.charts.timeline.setUpDemo
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Coordinates
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
-import com.meistercharts.history.DownSamplingMode
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryEnum
@@ -69,9 +67,10 @@ import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.js.MeisterchartJS
-import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.zoom.UpdateReason
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Side
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
@@ -433,7 +432,7 @@ class TimeLineChart internal constructor(
           }
 
           jsEnumDataSeriesStyle.aggregationMode?.let {
-            aggregationMode = it.sanitize()
+            aggregationMode = it.sanitize().toModel()
           }
         }
       }

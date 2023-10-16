@@ -19,7 +19,9 @@ import com.meistercharts.canvas.timer.CanvasBasedTimerImplementation
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.time.VirtualNowProvider
-import org.assertj.core.api.Assertions.assertThat
+import assertk.*
+import assertk.assertions.*
+
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.seconds

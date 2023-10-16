@@ -19,6 +19,7 @@ internal data class LegacyTest(val test: Boolean = true)
 /**
  * A helper property to test whether current compiler is running in legacy mode.
  */
+@Deprecated("Should no longer be required, since the legacy compiler has been removed")
 val isLegacyBackend: Boolean by lazy {
   LegacyTest().asDynamic()["test"] == true
 }

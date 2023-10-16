@@ -17,6 +17,10 @@ package com.meistercharts.axis
 
 import com.meistercharts.annotations.Domain
 import it.neckar.open.collections.fastMapDouble
+import it.neckar.open.kotlin.lang.or0ifNaN
+import it.neckar.open.kotlin.lang.or0ifNanOrInfinite
+import it.neckar.open.kotlin.lang.or1ifInfinite
+import it.neckar.open.kotlin.lang.or1ifNaN
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -43,8 +47,9 @@ object LogarithmicAxisTickCalculator {
 
     val logLower: Double = log10(lower)
     val logUpper: Double = log10(upper)
+    val minTickDistanceLog = log10(minTickDistance).or1ifInfinite()
 
-    return calculateExponents(logLower, logUpper, maxTickCount, minTickDistance).fastMapDouble {
+    return calculateExponents(logLower, logUpper, maxTickCount, minTickDistanceLog).fastMapDouble {
       10.0.pow(it)
     }
   }

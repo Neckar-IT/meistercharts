@@ -79,19 +79,32 @@ val Int.percent: @pct Double
     return this / 100.0
   }
 
-inline fun Double.isCloseTo(targetValue: Double, epsilon: Double = 0.0001): Boolean {
+/**
+ * Hard coded value for epsilon
+ */
+const val Epsilon: Double = 1e-10
+
+inline fun Double.isCloseTo(targetValue: Double, epsilon: Double = Epsilon): Boolean {
   return isEquivalent(this, targetValue, epsilon)
 }
 
-fun Double.isNotCloseTo(targetValue: Double, epsilon: Double = 0.0001): Boolean {
+fun Double.isNotCloseTo(targetValue: Double, epsilon: Double = Epsilon): Boolean {
   return !isCloseTo(targetValue, epsilon)
 }
 
 /**
  * Returns true if this is close to the given value - or smaller than the given value
  */
-fun Double.isCloseToOrLessThan(compareTo: @Inclusive Double, epsilon: Double = 0.0001): Boolean {
+fun Double.isCloseToOrLessThan(compareTo: @Inclusive Double, epsilon: Double = Epsilon): Boolean {
   if (this <= compareTo) {
+    return true
+  }
+
+  return this.isCloseTo(compareTo, epsilon)
+}
+
+fun Double.isCloseToOrMoreThan(compareTo: @Inclusive Double, epsilon: Double = Epsilon): Boolean {
+  if (this >= compareTo) {
     return true
   }
 

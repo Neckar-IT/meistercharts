@@ -18,6 +18,7 @@ package com.meistercharts.axis
 import com.meistercharts.annotations.Domain
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyDoubleArray
+import it.neckar.open.kotlin.lang.isCloseToOrMoreThan
 import it.neckar.open.kotlin.lang.roundDecimalPlaces
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -47,7 +48,7 @@ object LinearAxisTickCalculator {
     axisEndConfiguration: AxisEndConfiguration = AxisEndConfiguration.Exact,
     maxTickCount: Int,
     minTickDistance: @Domain Double = 0.0,
-    intermediateValuesMode: IntermediateValuesMode
+    intermediateValuesMode: IntermediateValuesMode,
   ): @Domain DoubleArray {
     require(maxTickCount >= 0) {
       "Max tick count must be greater than 0 but was <$maxTickCount>"
@@ -84,12 +85,42 @@ object LinearAxisTickCalculator {
     @Domain val ticks = DoubleArrayList()
     var current = tickBase
     var index = 0
-    while (current <= upperRounded) {
+    while (current <= upperRounded && ticks.size < maxTickCount) {
       ticks.add(current)
 
       //Calculate the next current
       index++
       current = tickBase + index * tickDistance
+    }
+
+    //Handle special case where no ticks have been found - but there are possible ticks
+    //we could have at least two ticks, but don't, add additional ticks as fallback
+    if (maxTickCount == 1 && ticks.isEmpty()) {
+      //No ticks, only one possible, add both
+      return doubleArrayOf(lower)
+    }
+
+    if (maxTickCount > 1 && ticks.isEmpty()) {
+      //No ticks, but two are possible, add both
+      return doubleArrayOf(lower, upper)
+    }
+
+    if (maxTickCount > 1 && ticks.size == 1) {
+      //Only one tick, but two are possible, add the other one, if possible
+
+      when (ticks[0]) {
+        lower -> {
+          ticks.add(upper) //add upper, since lower already in list
+        }
+
+        upper -> {
+          ticks.insertAt(0, lower) //add lower, since upper already in list
+        }
+
+        else -> {
+          //A tick in the "middle" has been added - do not add another tick
+        }
+      }
     }
 
     if (axisEndConfiguration == AxisEndConfiguration.Exact) {
@@ -109,6 +140,11 @@ object LinearAxisTickCalculator {
     }
 
     ticks[0] = lower
+
+    if (ticks.size == 1) {
+      return
+    }
+
     ticks[ticks.size - 1] = upper
   }
 
@@ -150,7 +186,7 @@ object LinearAxisTickCalculator {
     delta: @Domain Double,
     deltaRounded: @Domain Double,
     maxTickCount: Int,
-    intermediateValuesMode: IntermediateValuesMode = IntermediateValuesMode.Also5and2
+    intermediateValuesMode: IntermediateValuesMode = IntermediateValuesMode.Also5and2,
   ): @Domain Double {
     require(maxTickCount > 0) {
       "Max tick count must be greater than 0 but was <$maxTickCount>"
@@ -159,9 +195,16 @@ object LinearAxisTickCalculator {
       "The rounded delta must be greater than 0 but was <$deltaRounded>"
     }
 
+    //How many segments are there
+    val maxSegmentsCount = maxTickCount - 1
+
     //Step 1:
     //The minimal distance between ticks. This value ensures the max ticks count is not exceeded
-    @Domain val minTickDistance = (deltaRounded / maxTickCount)
+    @Domain val minTickDistance: Double = if (maxTickCount == 1) {
+      deltaRounded //special case: only one tick
+    } else {
+      deltaRounded / maxSegmentsCount
+    }
 
     //Step 2
     //Guess the optimal tick distance that is just above or same as the min tick distance
@@ -171,7 +214,7 @@ object LinearAxisTickCalculator {
     @Domain val smaller = 10.0.pow(floorLog10) //if we hit the min tick distance exactly
     @Domain val larger = 10.0.pow(floorLog10 + 1) //if min tick distance is too large
 
-    @Domain val greaterTickDistance = if (smaller >= minTickDistance) smaller else larger
+    @Domain val greaterTickDistance = if (smaller.isCloseToOrMoreThan(minTickDistance)) smaller else larger
 
     //Calculate the tick count
     val tickCount = (delta / greaterTickDistance).toInt()

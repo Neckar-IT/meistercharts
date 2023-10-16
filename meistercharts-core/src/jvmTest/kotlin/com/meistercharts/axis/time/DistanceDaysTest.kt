@@ -15,10 +15,11 @@
  */
 package com.meistercharts.axis.time
 
+import assertk.*
+import assertk.assertions.*
 import com.meistercharts.axis.time.DistanceDays.TicksPerMonth
 import it.neckar.datetime.minimal.DayOfMonth
 import it.neckar.datetime.minimal.LocalDate
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class DistanceDaysTest {

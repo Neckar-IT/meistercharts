@@ -468,7 +468,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testMergeNonMatching() {
-    assertThat {
+    assertFailure {
       val other = historyConfiguration {
         decimalDataSeries(DataSeriesId(222), TextKey.simple("asdf"))
       }.chunk {
@@ -477,7 +477,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
       }
 
       chunk.merge(other, 0.0, 10_000.0)
-    }.isFailure()
+    }
   }
 
   @Test

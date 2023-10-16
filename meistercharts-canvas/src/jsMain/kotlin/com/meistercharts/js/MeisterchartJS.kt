@@ -43,6 +43,11 @@ class MeisterchartJS(
    * It should be added to the DOM.
    */
   val holder: HTMLDivElement = (document.createElement("DIV") as HTMLDivElement).also {
+    chartSupport.onDispose {
+      //Remove the holder from the DOM: "Everything" related to the chart will be removed/cleaned up
+      it.remove()
+    }
+
     it.appendChild(htmlCanvas.canvasElement)
     it.classList.add(MeisterChartClasses.holder, MeisterChartClasses.chartId(chartSupport.chartId))
     chartSupport.onDispose {

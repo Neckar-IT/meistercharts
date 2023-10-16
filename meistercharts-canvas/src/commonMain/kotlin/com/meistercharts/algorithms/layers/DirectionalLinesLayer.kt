@@ -196,12 +196,12 @@ class DirectionalLinesLayer(
      * The line style for each line.
      * See [activeLineStyles] for the style if the line is active (usually mouse over)
      */
-    var lineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.lightgray, lineWidth = 1.0))
+    var lineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle.LightGray)
 
     /**
      * The style for the active line
      */
-    var activeLineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle(color = Color.darkgray, lineWidth = 2.0))
+    var activeLineStyles: MultiProvider<LineIndex, LineStyle> = MultiProvider.always(LineStyle.DarkGray)
 
     /**
      * Describes where the lines end
