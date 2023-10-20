@@ -25,6 +25,7 @@ object Plugins {
   const val download: String = "de.undercouch.download"
 
   const val generateIcons: String = "it.neckar.generate-icons"
+  const val projectConfig: String = "it.neckar.project.config"
 
   const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
 
@@ -126,6 +127,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormatBase: Plugi
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.projectConfig: PluginDependencySpec
+  get() = id(Plugins.projectConfig)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
   get() = id(Plugins.generateTsDeclaration)

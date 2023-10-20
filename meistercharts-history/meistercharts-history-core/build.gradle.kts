@@ -25,6 +25,7 @@ kotlin {
       dependencies {
         implementation(Libs.kotlin_test_common)
         implementation(Libs.kotlin_test_annotations_common)
+        implementation(Libs.assertk)
       }
     }
 
@@ -64,10 +65,6 @@ kotlin {
         implementation(Libs.kotlin_test_junit)
         implementation(KotlinX.coroutines.core)
         implementation(KotlinX.coroutines.test)
-        implementation(Libs.filepeek) //necessary to ensure the file peek version is updated to latest version
-        implementation(Libs.assertk_jvm)
-
-        implementation(Libs.assertk_jvm)
 
         implementation(Libs.junit_jupiter_api)
         implementation(Libs.junit_jupiter_params)

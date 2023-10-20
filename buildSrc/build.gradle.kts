@@ -43,6 +43,9 @@ dependencies {
   implementation(kotlin("scripting-compiler-embeddable", "_"))
   implementation(kotlin("klib-commonizer-embeddable", "_"))
 
+  implementation("com.google.devtools.ksp:symbol-processing-api:_")
+  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:_")
+
   implementation(KotlinX.serialization.json)
 
   implementation(kotlin("gradle-plugin", kotlinVersion))
@@ -64,6 +67,14 @@ gradlePlugin {
     register("NpmBundlePlugin") {
       id = "it.neckar.npm-bundle"
       implementationClass = "it.neckar.gradle.npmbundle.NpmBundlePlugin"
+    }
+    register("KspVerifyBoxingPlugin") {
+      id = "it.neckar.ksp.boxing-plugin"
+      implementationClass = "it.neckar.gradle.kps.boxing.KpsBoxingPlugin"
+    }
+    register("TypescriptDefinitionGenerationPlugin") {
+      id = "it.neckar.ksp.generating.ts-plugin"
+      implementationClass = "it.neckar.gradle.kps.generating.ts.TypescriptDefinitionGenerationPlugin"
     }
   }
 }

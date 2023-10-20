@@ -320,6 +320,9 @@ public object Libs {
     public const val org_jetbrains_kotlin_plugin_serialization_gradle_plugin: String =
             "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:_"
 
+    public const val kotlin_compiler_embeddable: String =
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:_"
+
     public const val kotlin_dom_api_compat: String = "org.jetbrains.kotlin:kotlin-dom-api-compat:_"
 
     public const val kotlin_reflect: String = "org.jetbrains.kotlin:kotlin-reflect:_"

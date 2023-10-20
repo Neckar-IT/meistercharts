@@ -50,7 +50,9 @@ object KotlinSettings {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
     add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design)
-    add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
+
+    //Only supported with 1.9.20
+    //add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
 
     //
     // Old compiler settings, for documentation purposes

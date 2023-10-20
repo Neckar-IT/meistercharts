@@ -99,26 +99,40 @@ inline val Project.isIntermediate: Boolean
 
 
 /**
- * Converts a string to camel case
+ * Converts a string to camel case format.
+ *
+ * Example: "hello_world" -> "helloWorld"
+ *
+ * @return The converted camel case string.
  */
 fun String.toCamelCase(): String {
-  val chars = this.toCharArray()
-
-  for ((index, _) in chars.withIndex()) {
-    if (index == 0) {
-      continue
+  return this.split("_", "-", " ")
+    .joinToString(separator = "") {
+      it.replaceFirstChar { char ->
+        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+      }
     }
+    .replaceFirstChar { it.lowercase() }
+}
 
-    val charBefore = chars[index - 1]
-    val char = chars[index]
-
-    //The char before is a "_" --> use camel case
-    if (charBefore == '_') {
-      chars[index] = char.uppercaseChar()
+/**
+ * Converts a string to upper camel case.
+ *
+ * This function takes a string and converts it to upper camel case by removing underscores and capitalizing
+ * the first letter of each word. It uses the default locale to determine the character casing.
+ *
+ * Example: "hello_world" -> "HelloWorld"
+ *
+ * @return The string converted to upper camel case.
+ */
+fun String.toUpperCamelCase(): String {
+  return this.split("_", "-", " ")
+    .joinToString(separator = "") {
+      it.replaceFirstChar { char ->
+        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+      }
     }
-  }
-
-  return String(chars).replace("_", "")
+    .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
 
 

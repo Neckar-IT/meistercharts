@@ -1,5 +1,3 @@
-import Http4k.format
-
 pluginManagement {
   repositories {
     mavenCentral()
@@ -45,6 +43,14 @@ configure<org.kordamp.gradle.plugin.insight.InsightExtension> {
 val dirName = "meistercharts.com-gradle"
 
 include(":meistercharts-commons")
+
+if (false) {
+  include(":ksp:ksp-commons")
+  include(":ksp:boxing-verifier")
+  include(":ksp:ts-declaration-generator")
+}
+
+
 include(":meistercharts-core")
 
 include(":meistercharts-history:meistercharts-history-core")

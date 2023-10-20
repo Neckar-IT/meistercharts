@@ -1,20 +1,27 @@
 import it.neckar.gradle.npmbundle.CopyBundleContentTask
-import it.neckar.gradle.tsdefinition.generateTypeScriptDefinitions
-import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackDevtool
 
 description = """Meistercharts - Easy API"""
 
 plugins {
   kotlinMultiPlatform
   kotlinxSerialization
-  generateTsDeclaration
   npmBundle
+
+  if (false) {
+    generateTsDeclaration
+  }
 }
 
 configureKotlin()
 configureToolchainJava17LTS()
 
 kotlin {
+  js {
+    browser()
+  }
+  jvm {
+  }
+
   sourceSets {
     commonMain {
       dependencies {
@@ -32,6 +39,7 @@ kotlin {
       dependencies {
         implementation(Libs.kotlin_test_common)
         implementation(Libs.kotlin_test_annotations_common)
+        implementation(Libs.assertk)
       }
     }
 
@@ -70,9 +78,6 @@ kotlin {
         implementation(Libs.kotlin_test_junit)
         implementation(KotlinX.coroutines.core)
         implementation(KotlinX.coroutines.test)
-        implementation(Libs.filepeek) //necessary to ensure the file peek version is updated to latest version
-        implementation(Libs.assertk_jvm)
-        implementation(Libs.assertk_jvm)
         implementation(Libs.mockk)
 
         implementation(Libs.junit_jupiter_api)
@@ -80,7 +85,6 @@ kotlin {
         implementation(Libs.junit_jupiter_engine)
 
         implementation(KotlinX.coroutines.core)
-        implementation(Libs.filepeek) //necessary to ensure the file peek version is updated to latest version
       }
     }
 
@@ -100,12 +104,13 @@ kotlin {
 /**
  * Generate type script definitions for the Kotlin public API
  */
-generateTypeScriptDefinitions {
-  namespace.set("Meistercharts")
-  typeScriptDefinitionFile.set(file("build/meistercharts-easy-api.d.ts"))
-
-  exportConfigFile.set(file("ts-generation.paths"))
-}
+//generateTypeScriptDefinitions {
+//namespace = "Meistercharts"
+//  typeScriptDefinitionFile.set(file("build/meistercharts-easy-api.d.ts"))
+//targetTypescriptDefinitionFileName = "meistercharts-easy-api.d.ts"
+//
+//  exportConfigFile.set(file("ts-generation.paths"))
+//}
 
 npmBundle {
   moduleName.set("@meistercharts/meistercharts")
@@ -115,7 +120,10 @@ npmBundle {
 }
 
 tasks.getByName<CopyBundleContentTask>("npmCopyBundleContent") {
-  dependsOn("createTypeScriptDefinitions", "jsBrowserWebpack", "jsBrowserDistribution")
+  dependsOn("jsBrowserWebpack", "jsBrowserDistribution")
+  tasks.findByName("createTypeScriptDefinitions")?.let {
+    dependsOn(it)
+  }
 
   from("build/distributions")
   include("meistercharts-easy-api.js", "meistercharts-easy-api.js.map")
@@ -133,7 +141,10 @@ npmBundleDevelopment {
 
 
 tasks.getByName<CopyBundleContentTask>("npmCopyBundleContentDevelopment") {
-  dependsOn("createTypeScriptDefinitions", "jsBrowserDevelopmentWebpack")
+  dependsOn("jsBrowserDevelopmentWebpack")
+  tasks.findByName("createTypeScriptDefinitions")?.let {
+    dependsOn(it)
+  }
 
   from("build/developmentExecutable")
   include("meistercharts-easy-api.js")

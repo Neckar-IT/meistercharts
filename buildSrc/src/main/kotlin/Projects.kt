@@ -2,6 +2,8 @@
  *
  */
 object Projects {
+  const val open_ksp_generating_ts_declaration = ":internal:open:ksp:ts-declaration-generator"
+
   const val meistercharts_commons: String = ":meistercharts-commons"
   const val meistercharts_core: String = ":meistercharts-core"
 

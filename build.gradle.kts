@@ -1,3 +1,4 @@
+import it.neckar.gradle.console
 import java.time.Instant
 
 description = "meistercharts.com"
@@ -134,6 +135,41 @@ allprojects {
       println("|-------------------------------------------------")
     }
   }
+
+  /**
+   * Prints all configured plugins
+   */
+  task("plugins") {
+    group = "Documentation"
+    description = "Prints all configured plugins"
+
+    doLast {
+      logger.lifecycle("")
+      logger.lifecycle("---------------------------------")
+      logger.lifecycle("Plugins for ${console.green(project.path)}:")
+      logger.lifecycle("---------------------------------")
+      project.plugins.forEach {
+        logger.lifecycle("Implementation: " + console.yellow(it::class.java.name))
+      }
+    }
+  }
+
+  task("configurations") {
+    description = "Prints all configurations"
+    group = "Help"
+
+    doLast {
+      logger.lifecycle("--------------------------------------------------------------")
+      logger.lifecycle("${"Configuration".padEnd(45)} Resolvable Consumable")
+      logger.lifecycle("--------------------------------------------------------------")
+      configurations.forEach {
+        val resolvableSuffix = if (it.isCanBeResolved) "+" else "-"
+        val consumableSuffix = if (it.isCanBeConsumed) "+" else "-"
+        println("${it.name.padEnd(45)} $resolvableSuffix          $consumableSuffix")
+      }
+    }
+  }
+
 
   ////for common
   //extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
