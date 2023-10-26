@@ -14,47 +14,47 @@ class AnsiConsole(val gradle: Gradle) {
 
   val plain: Boolean = gradle.startParameter.consoleOutput == ConsoleOutput.Plain
 
-  fun black(content: Any): CharSequence {
+  fun black(content: Any): String {
     return withColor(content.toString(), Color.Black)
   }
 
-  fun red(content: Any): CharSequence {
+  fun red(content: Any): String {
     return withColor(content.toString(), Color.Red)
   }
 
-  fun green(content: Any): CharSequence {
+  fun green(content: Any): String {
     return withColor(content.toString(), Color.Green)
   }
 
-  fun yellow(content: Any): CharSequence {
+  fun yellow(content: Any): String {
     return withColor(content.toString(), Color.Yellow)
   }
 
-  fun blue(content: Any): CharSequence {
+  fun blue(content: Any): String {
     return withColor(content.toString(), Color.Blue)
   }
 
-  fun magenta(content: Any): CharSequence {
+  fun magenta(content: Any): String {
     return withColor(content.toString(), Color.Magenta)
   }
 
-  fun cyan(content: Any): CharSequence {
+  fun cyan(content: Any): String {
     return withColor(content.toString(), Color.Cyan)
   }
 
-  fun white(content: Any): CharSequence {
+  fun white(content: Any): String {
     return withColor(content.toString(), Color.White)
   }
 
-  fun orange(content: Any): CharSequence {
+  fun orange(content: Any): String {
     return withColor(content.toString(), Color.Orange)
   }
 
-  fun gray(content: Any): CharSequence {
+  fun gray(content: Any): String {
     return withColor(content.toString(), Color.Gray)
   }
 
-  private fun withColor(content: Any, color: Color): CharSequence {
+  private fun withColor(content: Any, color: Color): String {
     return if (plain) {
       content.toString()
     } else {

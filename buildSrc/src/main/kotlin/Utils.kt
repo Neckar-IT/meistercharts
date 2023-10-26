@@ -216,6 +216,38 @@ fun Array<String>.exec(directory: File?): Process {
   return Runtime.getRuntime().exec(this, emptyArray(), directory)
 }
 
+/**
+ * Executes this command and waits for success
+ *
+ * Use [exec] using [Array<String>] instead if possible.
+ */
+fun String.exec(directory: File? = null) {
+  if (directory != null) {
+    println("Executing <$this> in ${directory.absolutePath}")
+  } else {
+    println("Executing <$this>")
+  }
+  return processBuilder(directory).start().waitForSuccess()
+}
+
+/**
+ * Wait for success, throws an exception if the return result is not 0
+ */
+fun Process.waitForSuccess() {
+  val result = this.waitFor()
+
+  if (result != 0) {
+    throw IllegalStateException("Process failed with $result")
+  }
+}
+
+fun String.processBuilder(dir: File?): ProcessBuilder = ProcessBuilder("/bin/sh", "-c", this)
+  .redirectErrorStream(true)
+  .inheritIO()
+  .directory(dir)
+
+
+
 val Process.text: String
   get() {
     return inputStream.bufferedReader().use {
