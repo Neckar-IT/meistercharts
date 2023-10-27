@@ -109,7 +109,7 @@ class ComboBox internal constructor(
   /**
    * The converter that is used to format the choice
    */
-  val converterProperty: ObservableObject<(Choice) -> String> = ObservableObject<(Choice) -> String> { it?.data.toString() }
+  val converterProperty: ObservableObject<(Choice) -> String> = ObservableObject<(Choice) -> String> { it.data.toString() }
   var converter: (Choice) -> String by converterProperty
 
   /**

@@ -26,6 +26,7 @@ import com.meistercharts.canvas.nativeComponentsSupport
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import kotlinx.browser.document
+import kotlinx.dom.addClass
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -55,9 +56,13 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
   }
 
   init {
+    chartSupport.onDispose {
+      div.addClass(MeisterChartClasses.disposed)
+    }
+
     chartSupport.nativeComponentsSupport.onComponent(object : NativeComponentsHandler {
       override fun textInput(textInput: TextInput) {
-        registerPlattformComponent(textInput, document.createElement("input") as HTMLInputElement) {
+        registerPlatformComponent(textInput, document.createElement("input") as HTMLInputElement) {
           //Configure as text
           it.setAttribute("type", "text")
 
@@ -67,7 +72,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
       }
 
       override fun checkBox(checkBox: CheckBox) {
-        registerPlattformComponent(checkBox, document.createElement("input") as HTMLInputElement) {
+        registerPlatformComponent(checkBox, document.createElement("input") as HTMLInputElement) {
           //Configure as text
           it.setAttribute("type", "checkbox")
 
@@ -77,7 +82,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
       }
 
       override fun comboBox(comboBox: ComboBox) {
-        registerPlattformComponent(comboBox, document.createElement("select") as HTMLSelectElement) {
+        registerPlatformComponent(comboBox, document.createElement("select") as HTMLSelectElement) {
           //Configure as text
           //it.setAttribute("type", "checkbox")
 
@@ -110,26 +115,26 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
   /**
    * Registers a plattform component
    */
-  private fun <T : HTMLElement> registerPlattformComponent(nativeComponent: NativeComponent, plattformComponent: T, binder: (plattformComponent: T) -> Unit) {
+  private fun <T : HTMLElement> registerPlatformComponent(nativeComponent: NativeComponent, platformComponent: T, binder: (plattformComponent: T) -> Unit) {
     //Assign the native element as ide
-    nativeComponent.id = plattformComponent
+    nativeComponent.id = platformComponent
 
     //Ensure events are processed by this elements
-    plattformComponent.style.setProperty("pointer-events", "auto")
+    platformComponent.style.setProperty("pointer-events", "auto")
 
     //Update the location
-    plattformComponent.style.setProperty("position", "absolute")
-    plattformComponent.bindLocation(nativeComponent)
+    platformComponent.style.setProperty("position", "absolute")
+    platformComponent.bindLocation(nativeComponent)
 
     //Add the element
-    div.appendChild(plattformComponent)
+    div.appendChild(platformComponent)
 
     nativeComponent.onDispose {
       //Remove if disposed
-      plattformComponent.removeFromParent()
+      platformComponent.remove()
     }
 
-    binder(plattformComponent)
+    binder(platformComponent)
   }
 }
 

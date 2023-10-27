@@ -25,16 +25,7 @@ import com.meistercharts.canvas.toCss
 import com.meistercharts.canvas.unselectable
 import com.meistercharts.environment
 import com.meistercharts.events.EventConsumption
-import it.neckar.events.MouseClickEvent
-import it.neckar.events.MouseDoubleClickEvent
-import it.neckar.events.MouseDownEvent
-import it.neckar.events.MouseDragEvent
-import it.neckar.events.MouseMoveEvent
-import it.neckar.events.MouseUpEvent
-import it.neckar.events.MouseWheelEvent
-import it.neckar.geometry.Coordinates
 import com.meistercharts.js.CanvasReadBackFrequency.Companion.readBackFrequency
-import it.neckar.geometry.Size
 import convertCancel
 import convertDown
 import convertEnd
@@ -49,6 +40,15 @@ import convertStart
 import convertType
 import convertUp
 import extractModifierCombination
+import it.neckar.events.MouseClickEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseMoveEvent
+import it.neckar.events.MouseUpEvent
+import it.neckar.events.MouseWheelEvent
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
@@ -58,7 +58,6 @@ import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.px
 import kotlinx.browser.document
-
 import offset
 import org.w3c.dom.AddEventListenerOptions
 import org.w3c.dom.HTMLCanvasElement
@@ -81,6 +80,10 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    */
   val canvasElement: HTMLCanvasElement = (document.createElement("CANVAS") as HTMLCanvasElement).also {
     it.classList.add(MeisterChartClasses.canvas)
+
+    disposeSupport.onDispose {
+      it.classList.add(MeisterChartClasses.disposed)
+    }
   }
 
   override val gc: CanvasRenderingContextJS = CanvasRenderingContextJS(this, type.readBackFrequency())

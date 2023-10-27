@@ -26,6 +26,7 @@ import com.meistercharts.events.ImageLoadedEventBroker
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.time.RelativeMillis
 import kotlinx.browser.document
+import kotlinx.dom.addClass
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -46,6 +47,8 @@ class MeisterchartJS(
     chartSupport.onDispose {
       //Remove the holder from the DOM: "Everything" related to the chart will be removed/cleaned up
       it.remove()
+
+      it.addClass(MeisterChartClasses.disposed)
     }
 
     it.appendChild(htmlCanvas.canvasElement)

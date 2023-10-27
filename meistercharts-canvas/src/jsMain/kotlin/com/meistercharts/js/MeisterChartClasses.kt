@@ -25,6 +25,11 @@ object MeisterChartClasses {
   const val nativeComponentsHolder: String = "meistercharts-native-components"
 
   /**
+   * Is added if a chart is disposed
+   */
+  const val disposed: String = "meistercharts-disposed"
+
+  /**
    * Class name for the holder of the chart
    */
   const val holder: String = "meistercharts"
