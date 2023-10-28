@@ -58,7 +58,7 @@ fun FontDescriptor.convertToHtmlFontString(): String {
   val htmlFontFamily = family.family
 
   //https://developer.mozilla.org/en-US/docs/Web/CSS/font
-  return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize $htmlFontFamily"
+  return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize \"$htmlFontFamily\""
 }
 
 private fun FontWeight.toHtmlFontWeightString(): String {

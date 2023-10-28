@@ -23,6 +23,11 @@ data class FontFamily(val family: String) {
     val SansSerif: FontFamily = FontFamily("sans-serif")
     val Serif: FontFamily = FontFamily("serif")
     val Monospace: FontFamily = FontFamily("monospace")
+
+    val FontAwesome6Free: FontFamily = FontFamily("Font Awesome 6 Free")
+    val FontAwesome6Brands: FontFamily = FontFamily("Font Awesome 6 Brands")
+
+    @Deprecated("use FontAwesome6Free or FontAwesome6Brands instead")
     val FontAwesome: FontFamily = FontFamily("FontAwesome")
   }
 

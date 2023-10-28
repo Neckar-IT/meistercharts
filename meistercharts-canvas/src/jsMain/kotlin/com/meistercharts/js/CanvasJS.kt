@@ -75,6 +75,8 @@ import timeStampAsDoubleWorkaround
 class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.js.CanvasJS")
 
+  private val disposeSupport: DisposeSupport = DisposeSupport()
+
   /**
    * The html canvas element
    */
@@ -144,8 +146,6 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * Indicates whether the document scroll-offset has changed
    */
   private var scrollOffsetHasChanged: Boolean = true
-
-  private val disposeSupport: DisposeSupport = DisposeSupport()
 
   override fun dispose() {
     disposeSupport.dispose()
