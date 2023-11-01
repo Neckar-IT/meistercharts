@@ -28,6 +28,7 @@ object KotlinSettings {
     "kotlin.ExperimentalUnsignedTypes", //Unsigned Types
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib
+    "kotlin.io.path.ExperimentalPathApi", //java.nio.file.Path support
   )
 
   /**

@@ -16,6 +16,7 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
@@ -489,6 +490,7 @@ fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration() {
     apiVersion.set(KotlinSettings.apiVersion)
     progressiveMode.set(true)
     optIn.set(KotlinSettings.optInExperimentalAnnotations)
+    javaParameters.set(true)
   }
 
   applyKotlinConfiguration()
@@ -523,6 +525,8 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
       })
     }
   }
+
+  applyDefaultHierarchyTemplate()
 
   applyKotlinConfiguration()
 }
