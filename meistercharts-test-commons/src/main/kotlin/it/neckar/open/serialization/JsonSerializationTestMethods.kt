@@ -18,8 +18,8 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T>,
   serializersModule: SerializersModule = EmptySerializersModule(),
-  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
-    assertThat(deserialized).isEqualTo(objectToSerialize)
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
 ) {
@@ -33,8 +33,8 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   serializersModule: SerializersModule = EmptySerializersModule(),
-  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
-    assertThat(deserialized).isEqualTo(objectToSerialize)
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJsonProvider: () -> String?,
 ): T {
@@ -54,8 +54,8 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   encoder: Json,
-  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
-    assertThat(deserialized).isEqualTo(objectToSerialize)
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
 ): T {
@@ -72,8 +72,8 @@ inline fun <reified T> roundTrip(
   /**
    * Comparison check that is called. Should throw an exception
    */
-  comparisonCheck: ComparisonCheck<T> = { deserialized, objectToSerialize ->
-    assertThat(deserialized).isEqualTo(objectToSerialize)
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJsonProvider: () -> String?,
 ): T {
@@ -122,4 +122,4 @@ fun <T> roundTripList(vararg objectsToSerialize: T, expectedJson: String?, seria
 /**
  * Compares
  */
-typealias ComparisonCheck<T> = (deserialized: T, objectToSerialize: T) -> Unit
+typealias ComparisonCheck<T> = (deserialized: T, originalObject: T) -> Unit

@@ -95,8 +95,8 @@ object DateUtils {
     return formatDurationWords(millis, Locale.getDefault())
   }
 
-  fun formatDurationWords(millis: @ms Long, language: Locale?): String {
-    return formatDurationWords(millis, DurationI18n.get(language!!))
+  fun formatDurationWords(millis: @ms Long, language: Locale): String {
+    return formatDurationWords(millis, DurationI18n[language])
   }
 
   private fun formatDurationWords(
@@ -227,15 +227,15 @@ object DateUtils {
   private const val SECONDS_PER_HOUR: @s Long = (60 * 60).toLong()
   private const val SECONDS_PER_MINUTE: @s Long = 60
 
-  fun formatDurationWordsWithSeconds(duration: @ms Duration?): String {
-    return formatDurationWordsWithSeconds(duration!!.toMillis())
+  fun formatDurationWordsWithSeconds(duration: Duration): String {
+    return formatDurationWordsWithSeconds(duration.toMillis())
   }
 
   fun formatDurationWordsWithSeconds(millis: @ms Long): String {
     val sb = StringBuilder()
     var seconds: @s Long = millis / 1000 // skip milliseconds
-    if (seconds >= SECONDS_PER_HOUR || sb.length > 0) {
-      if (sb.length > 0) {
+    if (seconds >= SECONDS_PER_HOUR || sb.isNotEmpty()) {
+      if (sb.isNotEmpty()) {
         sb.append(" ")
       }
       val hours = seconds / SECONDS_PER_HOUR
