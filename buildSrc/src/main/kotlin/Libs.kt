@@ -51,10 +51,10 @@ public object Libs {
 
     public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
 
-  public const val docker_java: String = "com.github.docker-java:docker-java:_"
+    public const val docker_java: String = "com.github.docker-java:docker-java:_"
 
-  public const val docker_java_transport_httpclient5: String =
-    "com.github.docker-java:docker-java-transport-httpclient5:_"
+    public const val docker_java_transport_httpclient5: String =
+            "com.github.docker-java:docker-java-transport-httpclient5:_"
 
     public const val kotlin_csv: String = "com.github.doyaaaaaken:kotlin-csv:_"
 
@@ -415,7 +415,7 @@ public object Libs {
     public const val org_springframework_boot_gradle_plugin: String =
             "org.springframework.boot:org.springframework.boot.gradle.plugin:_"
 
-  public const val testcontainers: String = "org.testcontainers:testcontainers:_"
+    public const val testcontainers: String = "org.testcontainers:testcontainers:_"
 
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
