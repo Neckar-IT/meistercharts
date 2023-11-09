@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.meistercharts.design.SegoeUiDesign
+import com.meistercharts.design.NeckarITDesign
 import com.meistercharts.js.MeisterChartsPlatform
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
@@ -24,7 +24,7 @@ fun main() {
   LogConfigurer.initializeFromLocalStorage(Level.WARN)
   ConsoleLogFunctionsSupport.init("meistercharts")
 
-  MeisterChartsPlatform.init(corporateDesign = SegoeUiDesign)
+  MeisterChartsPlatform.init(corporateDesign = NeckarITDesign)
 }
 
 /**

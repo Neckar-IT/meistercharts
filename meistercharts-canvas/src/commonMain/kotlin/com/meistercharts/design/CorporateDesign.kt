@@ -197,8 +197,8 @@ interface CorporateDesign {
 object NeckarITDesign : CorporateDesign {
   override val id: String = "Neckar IT"
 
-  val headlineFontFamily: FontFamily = FontFamily("Oswald")
-  val defaultFontFamily: FontFamily = FontFamily("Open Sans")
+  val headlineFontFamily: FontFamily = FontFamily("Sans Serif")
+  val defaultFontFamily: FontFamily = FontFamily("Sans Serif")
 
   override val primaryColor: Color = Color.web("#00a1e5")
 

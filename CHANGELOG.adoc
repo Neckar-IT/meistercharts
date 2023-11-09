@@ -1,5 +1,14 @@
 = MasterCharts Release Notes
 
+== 1.39.0-SNAPSHOT
+
+=== Fixes / Improvements
+
+==== Fonts
+
+Update the default font to "Sans Serif".
+This offers a better default for all platforms.
+
 == 1.38.0
 
 Release date: 2023-10-16
@@ -23,6 +32,7 @@ Release date: 2023-10-16
 === Fixes / Improvements
 
 ==== Easy API: #dispose() remove holder
+
 Calling `dispose()` clears up everything related to the chart:
 The `holder` is now also removed from the DOM - even if it has not been added to the DOM by meistercharts itself.
 
@@ -57,7 +67,7 @@ Release date: 2023-09-19
 === Improvements
 
 * Serialization of HistoryBuckets simplified
-  ** Start/End of Buckets calculated on the fly
+** Start/End of Buckets calculated on the fly
 * Removed a lot of old code that has been replaced with new layers
 * Improved code style: Removed a lot of warnings
 
@@ -75,18 +85,21 @@ Release date: 2023-09-13
 === Features
 
 ==== Replaced DateTime-API (Klock) with minimal implementation
+
 * reduces the dependencies - Klock is no longer required
 * Increased supported time range: now time ranges with negative years are supported
 * improved handling of time zones: The ticks in the time axis are aligned correctly in all cases (hopefully)
 * improved performance: Fewer objects are instantiated when calculating the ticks for the time axis
-* Attention: New tradeoff: Only the current timezone of the browser is supported for the time axis. This should be ok for 98% of the users / use cases
-
+* Attention: New tradeoff: Only the current timezone of the browser is supported for the time axis.
+This should be ok for 98% of the users / use cases
 
 === Bugfixes
 
-* Guaranteed History Duration: Fix edge case where the history duration was too short. Related to the alignment of the history buckets.
+* Guaranteed History Duration: Fix edge case where the history duration was too short.
+Related to the alignment of the history buckets.
 
 === Internal
+
 * Updated dependencies
 * additional checks introduced: Kotlin Compiler Plugin (KSP) to avoid accidental boxing of primitive values added.
 
@@ -109,7 +122,6 @@ Release date: 2023-08-13 +
 * Updated most `Layer`s to use the new pattern (`Configuration` with secondary constructor)
 * Updated some `Gestalt`s to use the new pattern with `Configuration`
 * Updated dependencies
-
 
 == MeisterCharts 1.34.1
 
