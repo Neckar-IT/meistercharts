@@ -1,11 +1,6 @@
 package it.neckar.open.file
 
-import it.neckar.open.http.Url
-import it.neckar.open.http.toUrl
-import it.neckar.open.lang.Os
 import java.io.File
-import java.net.URI
-import java.net.URLEncoder
 
 /**
  * File extensions
@@ -59,11 +54,18 @@ private fun File.treeRecursively(prefix: String = "", continuation: String = "",
  * Returns this
  */
 fun File.requireIsFile(): File {
-  require(this.isFile){"File <${this.absolutePath}> is not a File"}
+  require(this.isFile) { "File <${this.absolutePath}> is not a File" }
   return this
 }
 
 fun File.requireIsDirectory(): File {
-  require(this.isDirectory){"File <${this.absolutePath}> is not a Directory"}
+  require(this.isDirectory) { "File <${this.absolutePath}> is not a Directory" }
   return this
+}
+
+/**
+ * Creates a new child file
+ */
+fun File.file(path: String): File {
+  return File(this, path)
 }

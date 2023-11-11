@@ -15,7 +15,7 @@
  */
 package com.meistercharts.history
 
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 
 /**

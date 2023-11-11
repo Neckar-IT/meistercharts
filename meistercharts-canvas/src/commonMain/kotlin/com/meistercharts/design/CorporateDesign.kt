@@ -15,19 +15,23 @@
  */
 package com.meistercharts.design
 
+import com.meistercharts.canvas.paintable.ButtonColorProvider
+import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
+import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontFamily
+import com.meistercharts.font.FontFamilyConfiguration
 import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontStyle
 import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
-import com.meistercharts.canvas.paintable.ButtonColorProvider
-import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
-import com.meistercharts.canvas.paintable.SingleButtonColorProvider
-import it.neckar.open.provider.MultiProvider
+import com.meistercharts.font.GenericFamily
+import com.meistercharts.font.withGenericFamily
+import com.meistercharts.font.withSansSerif
 import com.meistercharts.style.Palette
+import it.neckar.open.provider.MultiProvider
 
 /**
  * Manages the corporate design settings
@@ -197,8 +201,8 @@ interface CorporateDesign {
 object NeckarITDesign : CorporateDesign {
   override val id: String = "Neckar IT"
 
-  val headlineFontFamily: FontFamily = FontFamily("Sans Serif")
-  val defaultFontFamily: FontFamily = FontFamily("Sans Serif")
+  val headlineFontFamily: FontFamilyConfiguration = FontFamily("Verdana").withGenericFamily(GenericFamily.Monospace)
+  val defaultFontFamily: FontFamilyConfiguration = FontFamily("Verdana").withGenericFamily(GenericFamily.Monospace)
 
   override val primaryColor: Color = Color.web("#00a1e5")
 
@@ -291,8 +295,8 @@ object NeckarITDesign : CorporateDesign {
 object SegoeUiDesign : CorporateDesign {
   override val id: String = "Segoe UI Design"
 
-  val headlineFontFamily: FontFamily = FontFamily("Segoe UI")
-  val defaultFontFamily: FontFamily = FontFamily("Segoe UI")
+  val headlineFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
+  val defaultFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
 
   override val primaryColor: Color = Color.web("#0084c2")
 
@@ -395,8 +399,8 @@ object SegoeUiDesign : CorporateDesign {
 object DebugDesign : CorporateDesign {
   override val id: String = "Debug Design"
 
-  val headlineFontFamily: FontFamily = FontFamily("Courier New")
-  val defaultFontFamily: FontFamily = FontFamily("Impact")
+  val headlineFontFamily: FontFamilyConfiguration = FontFamily("Courier New").withGenericFamily(GenericFamily.Monospace)
+  val defaultFontFamily: FontFamilyConfiguration = FontFamily("Impact").withGenericFamily(GenericFamily.Fantasy)
 
   override val primaryColor: Color = Color.blue
 

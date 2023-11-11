@@ -6,8 +6,10 @@
 
 ==== Fonts
 
-Update the default font to "Sans Serif".
+* Update the default font to "Verdana".
 This offers a better default for all platforms.
+
+* Add support for generic font families.
 
 == 1.38.0
 

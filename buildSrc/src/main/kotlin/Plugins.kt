@@ -70,6 +70,9 @@ object Plugins {
 
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
+  @Deprecated("Does not seem to work")
+  const val ssh: String = "online.colaba.ssh"
+
   /**
    * Only for JavaFX 17+
    */
@@ -202,3 +205,7 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpe
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
+
+@Deprecated("Does not seem to work")
+inline val org.gradle.plugin.use.PluginDependenciesSpec.ssh: PluginDependencySpec
+  get() = id(Plugins.ssh)

@@ -30,8 +30,8 @@
  */
 package it.neckar.open.io
 
+import it.neckar.open.file.requireIsDirectory
 import java.io.File
-import java.io.IOException
 import java.nio.charset.Charset
 
 /**
@@ -41,35 +41,22 @@ object FileUtils {
    * Throws an IOException if the given file is not a directory
    */
   @JvmStatic
-  @Throws(IOException::class)
-  fun ensureDirectoryExists(directory: File) {
-    if (!directory.exists()) {
-      throw IOException("Does not exist <" + directory.absolutePath + ">")
-    }
-    if (!directory.isDirectory) {
-      throw IOException("Directory not found <" + directory.absolutePath + ">")
-    }
+  @Deprecated("Inline", ReplaceWith("directory.requireIsDirectory()", "it.neckar.open.file.requireIsDirectory"))
+  fun ensureDirectoryExists(directory: File): File {
+    return directory.requireIsDirectory()
   }
-}
-
-/**
- * Creates the directory if it does not exist
- */
-fun File.createDirectoryIfNotExisting(): File {
-  FileUtils.ensureDirectoryExists(this)
-  return this
 }
 
 /** Writes into a file by first creating a temp file and then renaming the temp file to replace the actual target file.
  * Should the program crash while executing, the tmp file will remain next to the target file.*/
 fun File.writeTextWithRename(text: String, charset: Charset = Charsets.UTF_8) {
   val tmpFile: File = this.createTmpFile()
-  tmpFile.writeText(text,charset)
+  tmpFile.writeText(text, charset)
   tmpFile.renameTo(this)
 }
 
 /** Creates a corresponding tmp file for this file. The tmp file has an appendix consisting of a TMP suffix (.tmp) and the current nanoTime. */
-fun File.createTmpFile():File {
+fun File.createTmpFile(): File {
   return File(this.parent, this.name + SUFFIX_TMP + "_" + System.nanoTime())
 }
 

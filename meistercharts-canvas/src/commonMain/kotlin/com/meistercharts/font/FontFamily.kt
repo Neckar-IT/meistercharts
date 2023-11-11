@@ -13,25 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("SpellCheckingInspection")
+
 package com.meistercharts.font
+
+import it.neckar.open.annotations.TestOnly
 
 /**
  * Represents a font family
  */
 data class FontFamily(val family: String) {
+
+  override fun toString(): String {
+    return family
+  }
+
   companion object {
-    val SansSerif: FontFamily = FontFamily("sans-serif")
-    val Serif: FontFamily = FontFamily("serif")
-    val Monospace: FontFamily = FontFamily("monospace")
+    //Sans Serif families
+    val Arial: FontFamily = FontFamily("Arial")
+    val Verdana: FontFamily = FontFamily("Verdana")
+    val Tahoma: FontFamily = FontFamily("Tahoma")
+    val TrebuchetMS: FontFamily = FontFamily("Trebuchet MS")
+
+    //Serif families
+    val TimesNewRoman: FontFamily = FontFamily("Times New Roman")
+    val Palatino: FontFamily = FontFamily("Palatino")
+    val Georgia: FontFamily = FontFamily("Georgia")
+    val Garamond: FontFamily = FontFamily("Garamond")
+
+
+    //Monospaced
+    val CourierNew: FontFamily = FontFamily("Courier New")
+    val LucidaConsole: FontFamily = FontFamily("Lucida Console")
+
+    //Cursive
+    val BrushScriptMT: FontFamily = FontFamily("Brush Script MT")
+
 
     val FontAwesome6Free: FontFamily = FontFamily("Font Awesome 6 Free")
     val FontAwesome6Brands: FontFamily = FontFamily("Font Awesome 6 Brands")
 
     @Deprecated("use FontAwesome6Free or FontAwesome6Brands instead")
     val FontAwesome: FontFamily = FontFamily("FontAwesome")
-  }
 
-  override fun toString(): String {
-    return family
+    /**
+     * Contains some of the most common font families
+     */
+    @TestOnly
+    val entries: List<FontFamily> = listOf(
+      Arial,
+      Verdana,
+      Tahoma,
+      TrebuchetMS,
+      TimesNewRoman,
+      Palatino,
+      Georgia,
+      Garamond,
+      CourierNew,
+      LucidaConsole,
+      BrushScriptMT,
+      FontAwesome6Free,
+      FontAwesome6Brands,
+    )
   }
 }

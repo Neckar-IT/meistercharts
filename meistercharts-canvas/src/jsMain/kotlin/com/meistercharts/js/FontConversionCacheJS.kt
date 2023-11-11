@@ -19,6 +19,8 @@ import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontStyle
 import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.collections.cache
 
 /**
@@ -40,7 +42,7 @@ object FontConversionCacheJS {
   /**
    * Returns the font descriptor for a given font.
    *
-   * This methods just does a lookup!
+   * This method just does a lookup!
    */
   fun reverse(htmlFontString: String): FontDescriptor {
     return fromHtmlCache[htmlFontString] ?: throw IllegalArgumentException("No entry available for <$htmlFontString>")
@@ -55,11 +57,19 @@ fun FontDescriptor.convertToHtmlFontString(): String {
   val htmlFontStyle = style.toHtmlFontStyleString()
   val htmlFontVariant = variant.toHtmlFontVariantString()
   val htmlFontSize = "${size.size}px"
-  val htmlFontFamily = family.family
+
+  val fontFamiliesString: String = when (family) {
+    null -> genericFamily.keyword
+    else -> "\"${family.family}\", ${genericFamily.keyword}"
+  }
 
   //https://developer.mozilla.org/en-US/docs/Web/CSS/font
-  return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize \"$htmlFontFamily\""
+  return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize $fontFamiliesString".also {
+    logger.info("Converted font descriptor [$this] to [$it]")
+  }
 }
+
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.js.FontConversionCacheJS")
 
 private fun FontWeight.toHtmlFontWeightString(): String {
   return weight.toString()
@@ -67,15 +77,15 @@ private fun FontWeight.toHtmlFontWeightString(): String {
 
 private fun FontStyle.toHtmlFontStyleString(): String {
   return when (this) {
-    FontStyle.Normal  -> ""
-    FontStyle.Italic  -> "italic"
+    FontStyle.Normal -> ""
+    FontStyle.Italic -> "italic"
     FontStyle.Oblique -> "oblique"
   }
 }
 
 private fun FontVariant.toHtmlFontVariantString(): String {
   return when (this) {
-    FontVariant.Normal    -> ""
+    FontVariant.Normal -> ""
     FontVariant.SmallCaps -> "small-caps"
   }
 }
