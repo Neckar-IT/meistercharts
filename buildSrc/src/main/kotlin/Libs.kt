@@ -71,9 +71,6 @@ public object Libs {
     public const val com_github_johnrengelman_shadow_gradle_plugin: String =
             "com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:_"
 
-    public const val com_github_node_gradle_node_gradle_plugin: String =
-            "com.github.node-gradle.node:com.github.node-gradle.node.gradle.plugin:_"
-
     public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
 
     public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
