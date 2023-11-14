@@ -104,3 +104,9 @@ val Project.console: AnsiConsole
       return AnsiConsole(gradle)
     }
   }
+
+/**
+ * Alias for [Project.console]
+ */
+val Project.ansiConsole: AnsiConsole
+  get() = console
