@@ -1,5 +1,6 @@
 package it.neckar.ksp.ts
 
+import com.google.devtools.ksp.getPropertyDeclarationByName
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -47,13 +48,12 @@ class TypeScriptGeneratorProcessor(val codeGenerator: CodeGenerator, val logger:
       "typeScriptFileName not set"
     }
 
-    val loggerVisitor = LoggerVisitor(codeGenerator, logger)
-
     codeGenerator.createNewFileByPath(Dependencies.ALL_FILES, typeScriptDefinitionFileName, extensionName = "")
       .bufferedWriter().use { writer ->
         writer.appendLine("export as namespace $namespace;")
 
         val visitor = ExportTypescriptDefinitionFileVisitor(writer, logger)
+        val loggerVisitor = LoggerVisitor(codeGenerator, logger)
 
         resolver.getSymbolsWithAnnotation(annotationName).forEach {
           logger.info("Found annotated symbol $it of type ${it::class}")

@@ -22,28 +22,29 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
-import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptor
-import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
+import com.meistercharts.canvas.font
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.CanvasLinearGradient
 import com.meistercharts.color.CanvasPaint
 import com.meistercharts.color.CanvasRadialGradient
 import com.meistercharts.color.Color
-import it.neckar.geometry.Distance
-import it.neckar.geometry.Rectangle
+import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.js.CanvasReadBackFrequency.Frequent
+import com.meistercharts.model.Zoom
 import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.geometry.VerticalAlignment
-import com.meistercharts.model.Zoom
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.isPositiveOrZero
 import it.neckar.open.kotlin.lang.round
@@ -122,6 +123,10 @@ class CanvasRenderingContextJS(
 
   init {
     applyDefaults()
+  }
+
+  override fun defaultFont(): FontDescriptor {
+    return this.canvas.canvasElement.font().withDefaultValues()
   }
 
   override fun clip(x: Double, y: Double, width: Double, height: Double) {

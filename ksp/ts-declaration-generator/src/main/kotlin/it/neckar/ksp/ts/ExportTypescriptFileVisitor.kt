@@ -12,7 +12,7 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.visitor.KSTopDownVisitor
 import it.neckar.ksp.format
 import it.neckar.ksp.isDeprecated
-import it.neckar.ksp.isProperty
+import it.neckar.ksp.isClassProperty
 import java.io.BufferedWriter
 
 /**
@@ -125,11 +125,11 @@ class ExportTypescriptFileVisitor(val writer: BufferedWriter, val logger: KSPLog
         return
       }
 
-      if (property.isProperty().not()) {
+      if (property.isClassProperty().not()) {
         return
       }
 
-    require(property.isProperty()) {
+      require(property.isClassProperty()) {
       "Only for class parent declaration: ${property.parentDeclaration}"
     }
 

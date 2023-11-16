@@ -35,15 +35,15 @@ import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontMetrics
 import com.meistercharts.font.combineWith
+import com.meistercharts.model.Anchoring
+import com.meistercharts.model.Zoom
+import com.meistercharts.style.Shadow
 import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.RightTriangleType
-import com.meistercharts.model.Anchoring
-import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
-import com.meistercharts.model.Zoom
-import com.meistercharts.style.Shadow
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
@@ -127,9 +127,21 @@ interface CanvasRenderingContext : SupportsPathActions {
    * It is necessary to set the defaults again, because in HTML the canvas will be reset on resize
    */
   fun applyDefaults() {
-    font = corporateDesign.textFont
     lineJoin = LineJoin.Miter
+
+    /**
+     * Apply the default font first
+     */
+    this.font = defaultFont()
+    //Apply the corporate design text font descriptor fragment
+    this.font(corporateDesign.textFont)
   }
+
+  /**
+   * Returns the default font that is *always* set before painting.
+   * @see [applyDefaults]
+   */
+  fun defaultFont(): FontDescriptor
 
   /**
    * This method only exists so that it can be called from [saved]. Do not call directly

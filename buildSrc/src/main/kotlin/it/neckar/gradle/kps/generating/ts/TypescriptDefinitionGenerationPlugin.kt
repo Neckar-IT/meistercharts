@@ -11,7 +11,6 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.property
-import org.gradle.process.CommandLineArgumentProvider
 
 /**
  * Plugin that adds a task to create type script definitions from Kotlin source code
@@ -33,29 +32,22 @@ class TypescriptDefinitionGenerationPlugin : Plugin<Project> {
     //Apply the KSP plugin
     target.plugins.apply(Plugins.ksp)
 
-    target.afterEvaluate {
-      val kspConfigurations = target.configurations
-        .filter { it.name == "kspJs" }
+    val kspConfigurations = target.configurations
+      .filter { it.name == "kspJs" }
 
-      if (kspConfigurations.isEmpty()) {
-        println("Available configurations: ")
-        target.configurations.forEach {
-          println("  ${it.name}")
-        }
-
-        throw IllegalStateException("No [kspJs] configuration found for ${target.name}.")
-      }
-
-      kspConfigurations
-        .forEach {
-          val dependencies = target.dependencies
-          dependencies.add(it.name, target.project(Projects.open_ksp_generating_ts_declaration))
-        }
+    if (kspConfigurations.isEmpty()) {
+      throw IllegalStateException("No [kspJs] configuration found for ${target.name}.")
     }
+
+    kspConfigurations
+      .forEach {
+        val dependencies = target.dependencies
+        dependencies.add(it.name, target.project(Projects.open_ksp_generating_ts_declaration))
+      }
 
     target.extensions.findByType<com.google.devtools.ksp.gradle.KspExtension>()?.let { kspExtension ->
       //kspExtension.arg("kotlinGenerateDts", extension.exportConfigFile.orNull?.asFile?.absolutePath ?: "not set")
-      kspExtension.arg(CommandLineArgumentProvider {
+      kspExtension.arg {
         val annotationName = extension.annotationName.get()
         val typeScriptDefinitionFileName = extension.targetTypescriptDefinitionFileName.get()
         val targetTypescriptFileName = extension.targetTypescriptFileName.get()
@@ -68,7 +60,6 @@ class TypescriptDefinitionGenerationPlugin : Plugin<Project> {
           "namespace=$namespace",
         )
       }
-      )
     }
   }
 }

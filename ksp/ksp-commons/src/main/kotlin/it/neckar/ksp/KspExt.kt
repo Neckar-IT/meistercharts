@@ -195,6 +195,13 @@ fun KSAnnotated.isDeprecated(): Boolean {
 /**
  * Returns true if this property is a field - in a class
  */
-fun KSPropertyDeclaration.isProperty(): Boolean {
+fun KSPropertyDeclaration.isClassProperty(): Boolean {
   return this.parentDeclaration is KSClassDeclaration
+}
+
+/**
+ * Returns true if this property is a field
+ */
+fun KSPropertyDeclaration.isTopLevelProperty(): Boolean {
+  return this.parentDeclaration == null
 }

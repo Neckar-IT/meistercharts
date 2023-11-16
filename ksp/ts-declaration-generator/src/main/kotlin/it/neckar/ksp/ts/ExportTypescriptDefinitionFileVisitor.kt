@@ -15,8 +15,9 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.visitor.KSTopDownVisitor
 import it.neckar.ksp.format
+import it.neckar.ksp.isClassProperty
 import it.neckar.ksp.isDeprecated
-import it.neckar.ksp.isProperty
+import it.neckar.ksp.isTopLevelProperty
 import java.io.BufferedWriter
 
 /**
@@ -248,9 +249,19 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
       return
     }
 
-    require(property.isProperty()) {
+    if (property.parent == null) {
+      //Top Level property
+      return
+    }
+
+    if (property.isTopLevelProperty()) {
+      //Skip top level properties - for now
+      return
+    }
+
+    require(property.isClassProperty()) {
       logger.info("Parent declaration: ${property.parentDeclaration}")
-      "Parent declaration: ${property.parentDeclaration}"
+      "Expected class property! But parent declaration was: ${property.parentDeclaration}"
     }
 
     //Empty line before property
@@ -270,6 +281,8 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
 
     writer.appendLine("${indentation}${simpleName}${TypeScriptTypeSupport.getOptionalMarker(typeResolved)}: ${typeName};")
   }
+
+
 }
 
 private data class ResolvedParameter(val parameterName: String, val typeName: String)

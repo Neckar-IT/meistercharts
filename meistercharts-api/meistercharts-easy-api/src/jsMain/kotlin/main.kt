@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.meistercharts.design.DefaultDesign
 import com.meistercharts.design.NeckarITDesign
 import com.meistercharts.js.MeisterChartsPlatform
 import it.neckar.logging.Level
@@ -24,11 +25,5 @@ fun main() {
   LogConfigurer.initializeFromLocalStorage(Level.WARN)
   ConsoleLogFunctionsSupport.init("meistercharts")
 
-  MeisterChartsPlatform.init(corporateDesign = NeckarITDesign)
+  MeisterChartsPlatform.init(corporateDesign = DefaultDesign)
 }
-
-/**
- * If set to true, the styles will be printed to the console
- */
-@Deprecated("Use Logggers instead")
-const val StyleDebugEnabled: Boolean = false

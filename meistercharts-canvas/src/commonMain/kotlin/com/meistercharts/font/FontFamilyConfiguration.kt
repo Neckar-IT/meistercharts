@@ -19,15 +19,40 @@ package com.meistercharts.font
  * Represents a font configuration consisting of a font family and a generic family.
  */
 data class FontFamilyConfiguration(
+  /**
+   * The (optional) font family.
+   */
   override val family: FontFamily? = null,
+  /**
+   * The *required* generic family. Is used as fallback
+   */
   override val genericFamily: GenericFamily = GenericFamily.SansSerif,
-) : FontDescriptorFragment()
+) : FontDescriptorFragment() {
+  companion object {
+    /**
+     * Creates a new font family configuration with the given generic family.
+     * The font family is set to null.
+     */
+    fun onlyGeneric(genericFamily: GenericFamily): FontFamilyConfiguration {
+      return FontFamilyConfiguration(null, genericFamily)
+    }
+
+    /**
+     * A configuration that only contains the generic family "sans-serif".
+     * Does *not* contain a font family.
+     */
+    val SansSerif: FontFamilyConfiguration = FontFamilyConfiguration(null, GenericFamily.SansSerif)
+  }
+}
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun FontFamily.withSansSerif(): FontFamilyConfiguration {
   return withGenericFamily(GenericFamily.SansSerif)
 }
 
+/**
+ * Appends a generic family to the font family.
+ */
 fun FontFamily.withGenericFamily(genericFamily: GenericFamily): FontFamilyConfiguration {
   return FontFamilyConfiguration(this, genericFamily)
 }

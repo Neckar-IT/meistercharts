@@ -6,10 +6,15 @@
 
 ==== Fonts
 
-* Update the default font to "Verdana".
+* Update the default font to "sans-serif".
 This offers a better default for all platforms.
 
 * Add support for generic font families.
+* Add support for using the font family from the CSS style
+
+=== Fixes / Improvements
+
+* [Regression] Typescript Definition File not created (#16)
 
 == 1.38.0
 

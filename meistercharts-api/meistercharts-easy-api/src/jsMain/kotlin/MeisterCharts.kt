@@ -35,6 +35,8 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
+import com.meistercharts.design.DefaultDesign
+import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
@@ -47,6 +49,18 @@ import org.w3c.dom.Element
  *
  * ATTENTION: Do *NOT* move into a package. This file has to be placed in the default package to avoid unnecessary fqn in JS
  */
+
+/**
+ * If set to true the font family from the CSS file is used.
+ * If set to false, the default font family is used ("sans-serif").
+ */
+@JsExport
+fun setUseCssStyle(enabled: Boolean) {
+  when (enabled) {
+    true -> initCorporateDesign(com.meistercharts.design.CssFontDesign)
+    false -> initCorporateDesign(DefaultDesign)
+  }
+}
 
 /**
  * Creates the [BarChartStacked] as a child of the element with id [id].
@@ -65,7 +79,7 @@ fun createBarChartStackedFromId(
 
 /**
  * Creates the [BarChartStacked] as a child of [element].
- * @see [createBarChartStacked]
+ * @see [createBarChartStacked]h
  */
 @JsExport
 @JsName("createBarChartStackedFromElement")

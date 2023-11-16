@@ -15,18 +15,18 @@
  */
 package com.meistercharts.canvas.mock
 
-import com.meistercharts.color.CanvasPaint
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
-import com.meistercharts.canvas.text.CanvasStringShortener
-import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
+import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.color.CanvasPaint
+import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptor
+import com.meistercharts.font.FontMetrics
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
@@ -51,6 +51,10 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   override var globalAlpha: Double = 1.0
 
   override var font: FontDescriptor = FontDescriptor.Default
+
+  override fun defaultFont(): FontDescriptor {
+    return FontDescriptor.Default
+  }
 
   override fun currentFillDebug(): String {
     return "not implemented"
