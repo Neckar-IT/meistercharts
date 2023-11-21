@@ -51,6 +51,8 @@ public object Libs {
 
     public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
 
+    public const val clikt: String = "com.github.ajalt.clikt:clikt:_"
+
     public const val docker_java: String = "com.github.docker-java:docker-java:_"
 
     public const val docker_java_transport_httpclient5: String =
