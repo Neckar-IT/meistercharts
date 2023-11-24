@@ -1,5 +1,6 @@
 package it.neckar.open.file
 
+import it.neckar.open.kotlin.lang.encodeForFileName
 import java.io.File
 
 /**
@@ -68,4 +69,13 @@ fun File.requireIsDirectory(): File {
  */
 fun File.file(path: String): File {
   return File(this, path)
+}
+
+
+/**
+ * Helper method to improve visibility of the code completion
+ */
+@Suppress("NOTHING_TO_INLINE")
+inline fun String.toSafeFileName(): String {
+  return encodeForFileName()
 }
