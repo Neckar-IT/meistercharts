@@ -271,6 +271,8 @@ public object Libs {
 
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
 
+  public const val gitlab4j_api: String = "org.gitlab4j:gitlab4j-api:_"
+
     public const val chrome_devtools_kotlin: String = "org.hildan.chrome:chrome-devtools-kotlin:_"
 
     public const val im4java: String = "org.im4java:im4java:_"

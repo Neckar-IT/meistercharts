@@ -1,9 +1,12 @@
 package it.neckar.ksp.ts
 
 import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import it.neckar.ksp.format
+import it.neckar.ksp.getValueType
 import it.neckar.ksp.isPrimitiveArray
+import it.neckar.ksp.isValueClass
 
 /**
  * Converts kotlin types to TypeScript types.
@@ -13,10 +16,9 @@ object TypeScriptTypeSupport {
    * Returns the TypeScript type name for the given type.
    */
   fun toTypescriptType(type: KSType, logger: KSPLogger): String {
-    val typeDeclaration = type.declaration
-    val qualifiedName = typeDeclaration.qualifiedName?.asString() ?: throw IllegalArgumentException("No qualified name for ${typeDeclaration.simpleName.asString()} @ ${typeDeclaration.location.format()}")
+    val typeDeclaration: KSDeclaration = type.declaration
 
-    logger.info("getTypeName: $qualifiedName")
+    val qualifiedName: String = typeDeclaration.qualifiedName?.asString() ?: throw IllegalArgumentException("No qualified name for ${typeDeclaration.simpleName.asString()} @ ${typeDeclaration.location.format()}")
 
     if (qualifiedName == "kotlin.Unit") {
       return "void"
@@ -32,7 +34,7 @@ object TypeScriptTypeSupport {
         typeDeclaration.simpleName.getShortName().toTypeScriptType() + "[]$nullableSuffix"
       }
 
-      qualifiedName == "kotlin.Array" -> {
+      qualifiedName == "kotlin.collections.List" || qualifiedName == "kotlin.Array" -> {
         val typeArguments = type.arguments
 
         require(typeArguments.size == 1) {
@@ -54,7 +56,12 @@ object TypeScriptTypeSupport {
       }
 
       else -> {
-        typeDeclaration.simpleName.getShortName().toTypeScriptType() + nullableSuffix
+        if (typeDeclaration.isValueClass()) {
+          val valueType = typeDeclaration.getValueType().resolve()
+          valueType.declaration.simpleName.getShortName().toTypeScriptType() + nullableSuffix
+        } else {
+          typeDeclaration.simpleName.getShortName().toTypeScriptType() + nullableSuffix
+        }
       }
     }
   }

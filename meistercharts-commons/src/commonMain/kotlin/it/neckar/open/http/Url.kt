@@ -1,10 +1,12 @@
 package it.neckar.open.http
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
  * Represents a URL (relative or absolute)
  */
+@Serializable
 @JvmInline
 value class Url(val value: String) {
   fun isAbsoluteUrl(): Boolean {
@@ -21,6 +23,12 @@ value class Url(val value: String) {
 
   operator fun plus(relativePath: String): Url {
     return Url(value + relativePath)
+  }
+  operator fun plus(relativeUrl: Url): Url {
+    require(relativeUrl.isAbsoluteUrl().not()){
+      "relativeUrl ${relativeUrl} must be relative"
+    }
+    return Url(value + relativeUrl.value)
   }
 
   //Required for extension methods

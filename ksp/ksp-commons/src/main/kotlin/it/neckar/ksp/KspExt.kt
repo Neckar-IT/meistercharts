@@ -14,6 +14,7 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueParameter
 import com.google.devtools.ksp.symbol.Location
+import com.google.devtools.ksp.symbol.Modifier
 import com.google.devtools.ksp.symbol.NonExistLocation
 import com.google.devtools.ksp.symbol.Origin
 import kotlin.contracts.contract
@@ -105,6 +106,20 @@ fun KSDeclaration.isCompanionObject(): Boolean {
   return this is KSClassDeclaration && this.isCompanionObject
 }
 
+/**
+ * Returns true if the [KSDeclaration] is a value class (modifier [Modifier.VALUE] is set)
+ */
+fun KSDeclaration.isValueClass(): Boolean {
+  contract {
+    returns(true) implies (this@isValueClass is KSClassDeclaration)
+  }
+
+  if ((this is KSClassDeclaration).not()) {
+    return false
+  }
+
+  return this.modifiers.contains(Modifier.VALUE)
+}
 
 fun <T : Annotation> Sequence<KSAnnotation>.containsAnnotation(annotationKlass: KClass<T>): Boolean {
   val annotationClassSimpleName = requireNotNull(annotationKlass.simpleName) { "Annotation simple class name must not be null for $annotationKlass" }
@@ -204,4 +219,19 @@ fun KSPropertyDeclaration.isClassProperty(): Boolean {
  */
 fun KSPropertyDeclaration.isTopLevelProperty(): Boolean {
   return this.parentDeclaration == null
+}
+
+/**
+ * Returns the value type!
+ * Must only be called for value classes
+ */
+fun KSClassDeclaration.getValueType(): KSTypeReference {
+  require(this.isValueClass()) {
+    "Declaration ${this.simpleName.asString()} is not a value class @ ${this.location.format()}"
+  }
+
+  val primaryConstructor = primaryConstructor ?: throw IllegalArgumentException("No primary constructor for ${simpleName.asString()} @ ${location.format()}")
+  val constructorParameter = primaryConstructor.parameters.firstOrNull() ?: throw IllegalArgumentException("No constructor parameter for ${simpleName.asString()} @ ${location.format()}")
+
+  return constructorParameter.type
 }

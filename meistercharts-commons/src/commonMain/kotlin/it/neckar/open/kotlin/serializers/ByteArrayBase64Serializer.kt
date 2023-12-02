@@ -11,6 +11,8 @@ import kotlinx.serialization.encoding.Encoder
 
 /**
  * Serializer for ByteArray
+ *
+ * Usage:`val foobar: @Serializable(with = ByteArrayBase64Serializer::class) ByteArray?`
  */
 object ByteArrayBase64Serializer : KSerializer<ByteArray> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayBase64", PrimitiveKind.STRING)

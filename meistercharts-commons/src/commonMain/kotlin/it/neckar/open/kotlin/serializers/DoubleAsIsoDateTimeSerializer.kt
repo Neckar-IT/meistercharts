@@ -13,7 +13,10 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * Formats a double value as iso format.
  *
- * ATTENTION: Does *not* support nano seconds!
+ * ATTENTION: Does *not* support nanoseconds!
+ *
+ * Use like this:
+ * `@Serializable(with = DoubleAsIsoDateTimeSerializer::class)`
  */
 object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)

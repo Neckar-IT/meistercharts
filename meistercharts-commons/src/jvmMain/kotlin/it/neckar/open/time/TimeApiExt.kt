@@ -9,6 +9,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.chrono.ChronoZonedDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration
 
 /**
  * Returns the double millis from the instant
@@ -71,4 +72,11 @@ val OffsetDateTime.millis: Int
 
 fun ZonedDateTime.toISOString(): String {
   return DateTimeFormatter.ISO_DATE_TIME.format(this)
+}
+
+/**
+ * Calculates a new instant by adding the duration to the instant
+ */
+operator fun Instant.plus(duration: Duration): Instant {
+  return this.plusMillis(duration.inWholeMilliseconds)
 }

@@ -11,6 +11,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.property
+import toUpperCamelCase
 
 /**
  * Plugin that adds a task to create type script definitions from Kotlin source code
@@ -27,6 +28,7 @@ class TypescriptDefinitionGenerationPlugin : Plugin<Project> {
       targetTypescriptDefinitionFileName.convention("index.d.ts")
       targetTypescriptFileName.convention("index.ts")
       annotationName.convention("kotlin.js.JsExport")
+      namespace.convention(target.name.toUpperCamelCase())
     }
 
     //Apply the KSP plugin

@@ -18,6 +18,7 @@ import it.neckar.ksp.format
 import it.neckar.ksp.isClassProperty
 import it.neckar.ksp.isDeprecated
 import it.neckar.ksp.isTopLevelProperty
+import it.neckar.ksp.isValueClass
 import java.io.BufferedWriter
 
 /**
@@ -29,6 +30,12 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
 
   @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
   override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, generatingContext: GeneratingContext) {
+    logger.info("Visiting class ${classDeclaration.simpleName.asString()}")
+
+    if (classDeclaration.isValueClass()) {
+      return //skip value classes
+    }
+
     if (classDeclaration.isCompanionObject) {
       return  //skip companion objects
     }

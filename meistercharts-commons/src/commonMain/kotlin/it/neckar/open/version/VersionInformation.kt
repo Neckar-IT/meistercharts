@@ -1,7 +1,5 @@
 package it.neckar.open.version
 
-import it.neckar.open.version.VersionConstants
-
 /**
  * Application related information
  *
