@@ -210,6 +210,9 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
+    public const val me_champeau_jmh_gradle_plugin: String =
+            "me.champeau.jmh:me.champeau.jmh.gradle.plugin:_"
+
     public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
 
     public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
@@ -406,6 +409,12 @@ public object Libs {
     public const val junit_jupiter_engine: String = "org.junit.jupiter:junit-jupiter-engine:_"
 
     public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params:_"
+
+    public const val jmh_core: String = "org.openjdk.jmh:jmh-core:_"
+
+    public const val jmh_generator_annprocess: String = "org.openjdk.jmh:jmh-generator-annprocess:_"
+
+    public const val jmh_generator_bytecode: String = "org.openjdk.jmh:jmh-generator-bytecode:_"
 
     public const val org_openjfx_javafxplugin_gradle_plugin: String =
             "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"

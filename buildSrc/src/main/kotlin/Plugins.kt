@@ -43,6 +43,11 @@ object Plugins {
   const val jacoco: String = "org.gradle.jacoco"
 
   /**
+   * JMH micro benchmarking framework
+   */
+  const val jmh: String = "me.champeau.jmh"
+
+  /**
    * Creates a license report (used for SDD development)
    */
   const val licenseReport: String = "it.neckar.license-report"
@@ -157,6 +162,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependen
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.detekt: PluginDependencySpec
   get() = id(Plugins.detekt)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.jmh: PluginDependencySpec
+  get() = id(Plugins.jmh)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.pdfOverview: PluginDependencySpec
   get() = id(Plugins.pdfOverview)

@@ -12,6 +12,10 @@ fun Class<*>.getResourceSafe(url: String): URL {
   return this.getResource(url) ?: throw FileNotFoundException("Could not find resource for <$url>")
 }
 
+fun KClass<*>.getResourceSafe(url: String): URL {
+  return this.java.getResourceSafe(url)
+}
+
 /**
  * Extension method to load a resource that throws a nice error message if the resources could not be found
  */

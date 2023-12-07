@@ -24,10 +24,8 @@ value class Url(val value: String) {
   operator fun plus(relativePath: String): Url {
     return Url(value + relativePath)
   }
+
   operator fun plus(relativeUrl: Url): Url {
-    require(relativeUrl.isAbsoluteUrl().not()){
-      "relativeUrl ${relativeUrl} must be relative"
-    }
     return Url(value + relativeUrl.value)
   }
 
