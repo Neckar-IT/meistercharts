@@ -41,6 +41,8 @@ object Plugins {
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
   const val jacoco: String = "org.gradle.jacoco"
+  const val python: String = "com.pswidersk.python-plugin"
+  const val base: String = "org.gradle.base"
 
   /**
    * JMH micro benchmarking framework
@@ -186,6 +188,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.intellij: PluginDependen
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.springBoot: PluginDependencySpec
   get() = id(Plugins.springBoot)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.python: PluginDependencySpec
+  get() = id(Plugins.python)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.springDependencyManagement: PluginDependencySpec
   get() = id(Plugins.springDependencyManagement)

@@ -23,6 +23,17 @@ import org.junit.jupiter.api.Test
 
 internal class SizeTest {
   @Test
+  fun testResizeAspectRatio() {
+    assertThat(Size(100.0, 100.0).scaleToMax(100.0, 100.0)).isEqualTo(Size(100.0, 100.0))
+    assertThat(Size(100.0, 100.0).scaleToMax(50.0, 100.0)).isEqualTo(Size(50.0, 50.0))
+    assertThat(Size(100.0, 100.0).scaleToMax(499.0, 78.0)).isEqualTo(Size(78.0, 78.0))
+
+    assertThat(Size(120.0, 100.0).scaleToMax(120.0, 100.0)).isEqualTo(Size(120.0, 100.0))
+    assertThat(Size(120.0, 100.0).scaleToMax(60.0, 100.0)).isEqualTo(Size(60.0, 50.0))
+    assertThat(Size(120.0, 100.0).scaleToMax(499.0, 75.0)).isEqualTo(Size(90.0, 75.0))
+  }
+
+  @Test
   fun testContainWithAspect() {
     assertThat(Size(100.0, 100.0).containWithAspectRatio(1.0)).isEqualTo(Size(100.0, 100.0))
     assertThat(Size(100.0, 100.0).containWithAspectRatio(0.5)).isEqualTo(Size(100.0, 200.0))

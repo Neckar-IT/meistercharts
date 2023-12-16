@@ -282,6 +282,26 @@ data class Size(
     return times(scale)
   }
 
+  fun scaleToMax(maxWidth: Double, maxHeight: Double): Size {
+    if (this.width == 0.0) {
+      return invalid
+    }
+    if (this.height == 0.0) {
+      return invalid
+    }
+
+    // if the size is already smaller than the max size, return this
+    if (this.width <= maxWidth && this.height <= maxHeight) {
+      return this
+    }
+
+    return if (this.aspectRatio > maxWidth / maxHeight) {
+      scaleToWidth(maxWidth)
+    } else {
+      scaleToHeight(maxHeight)
+    }
+  }
+
   /**
    * Creates a new [Size] whose height is [newHeight] and whose width is scaled accordingly, i. e. the aspect ratio is kept.
    */

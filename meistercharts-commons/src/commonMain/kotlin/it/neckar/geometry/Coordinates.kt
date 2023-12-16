@@ -21,17 +21,22 @@ import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.distance
 import it.neckar.open.kotlin.lang.isPositive
+import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.other.deg
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
+import it.neckar.open.unit.si.rad
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
@@ -266,6 +271,22 @@ data class Coordinates(
     return x.isFinite() && y.isFinite()
   }
 
+  /**
+   * Helper function to rotate a point around a pivot.
+   * Positive values rotate counter-clockwise, negative values rotate clockwise
+   */
+  fun rotateAround(pivot: Coordinates, angleDegrees: @deg Double): Coordinates {
+    @rad val radians = angleDegrees.toRadians()
+
+    val cosTheta = cos(radians)
+    val sinTheta = sin(radians)
+    val translatedX = this.x - pivot.x
+    val translatedY = this.y - pivot.y
+
+    val rotatedX = translatedX * cosTheta - translatedY * sinTheta + pivot.x
+    val rotatedY = translatedX * sinTheta + translatedY * cosTheta + pivot.y
+    return Coordinates(rotatedX, rotatedY)
+  }
 
   companion object {
     @JvmField
@@ -309,6 +330,12 @@ data class Coordinates(
     fun center(first: Coordinates, second: Coordinates): Coordinates {
       return first.center(second)
     }
+
+    /**
+     * Comparator that compares by x and then by y
+     */
+    val CompareByYThenX: Comparator<Coordinates> = compareBy<Coordinates> { it.y }.thenBy { it.x }
+    val CompareByXThenY: Comparator<Coordinates> = compareBy<Coordinates> { it.x }.thenBy { it.y }
   }
 }
 

@@ -19,7 +19,6 @@ import com.meistercharts.annotations.Zoomed
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.Positive
-import it.neckar.open.unit.other.px
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
 
@@ -196,8 +195,12 @@ data class Rectangle(
       return true
     }
 
-    fun fromCoords(topLeft: @px Coordinates, bottomRight: @px Coordinates): Rectangle {
+    fun fromCoords(topLeft: Coordinates, bottomRight: Coordinates): Rectangle {
       return Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
+    }
+
+    fun fromCoords(topLeftX: Double, topLeftY: Double, bottomRightX: Double, bottomRightY: Double): Rectangle {
+      return Rectangle(topLeftX, topLeftY, bottomRightX - topLeftX, bottomRightY - topLeftY)
     }
   }
 }
