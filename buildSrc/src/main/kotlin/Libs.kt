@@ -227,9 +227,6 @@ public object Libs {
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
 
-    public const val online_colaba_ssh_gradle_plugin: String =
-            "online.colaba.ssh:online.colaba.ssh.gradle.plugin:_"
-
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
     public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
