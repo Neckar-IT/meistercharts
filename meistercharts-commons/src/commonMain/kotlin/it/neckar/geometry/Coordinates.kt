@@ -21,6 +21,7 @@ import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.distance
 import it.neckar.open.kotlin.lang.isPositive
+import it.neckar.open.kotlin.lang.toDegrees
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.deg
@@ -31,6 +32,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.max
@@ -382,4 +384,21 @@ fun Coordinates.isPerpendicularToLineSegment(lineSegmentStart: Coordinates, line
 
 fun getSlopeBetweenPoints(point1X: Double, point1Y: Double, point2X: Double, point2Y: Double): Double {
   return (point2Y - point1Y) / (point2X - point1X)
+}
+
+/**
+ * Calculates the angle of the corner in a rectangle
+ *
+ * This function should be called on the corner point that you want to get the angle for.
+ *
+ * @param p1 one of the adjacent corners
+ * @param p2 the other adjacent corner
+ *
+ * @return the angle in degrees
+ */
+fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Double {
+  val d1 = distanceTo(p1)
+  val d2 = distanceTo(p2)
+  val dotProduct = (this.x - p1.x) * (p2.x - this.x) + (this.y - p1.y) * (p2.y - this.y)
+  return acos(dotProduct / (d1 * d2)).toDegrees()
 }

@@ -115,3 +115,10 @@ object JsonUtils {
     }
   }
 }
+
+
+fun Assert<String>.isJsonEqualTo(expectedJsonString: String) {
+  given { current ->
+    JsonUtils.assertJsonEquals(expectedJsonString, current)
+  }
+}
