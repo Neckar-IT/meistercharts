@@ -186,8 +186,16 @@ class CanvasRenderingContextJS(
 
   override var font: FontDescriptor
     set(value) {
-      context.font = value.convertToHtmlFontString()
-      FontConversionCacheJS.store(value, context.font)
+      val htmlFontStringCached = FontConversionCacheJS.get(value)
+      if (htmlFontStringCached != null) {
+        context.font = htmlFontStringCached
+      } else {
+        context.font = value.convertToHtmlFontString()
+        // The browser sometimes changes the font property to a different value.
+        // Hence we must store the value that was computed by the browser to be
+        // able to reverse it later.
+        FontConversionCacheJS.store(value, context.font)
+      }
     }
     get() {
       return try {

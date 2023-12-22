@@ -21,7 +21,11 @@ import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
+import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
+
+typealias HtmlFontString = String
 
 /**
  * Helper that converts from FontDescriptor to font strings
@@ -30,13 +34,19 @@ object FontConversionCacheJS {
   /**
    * Reverse map for lookups from currently set font to font descriptor
    */
-  internal val fromHtmlCache = cache<String, FontDescriptor>("HtmlFontConversionCache", 500)
+  internal val fromHtmlCache: Cache<HtmlFontString, FontDescriptor> = cache("FontConversionCacheJS.fromHtml", 500)
+
+  /**
+   * FontDescriptor -> htmlFontString
+   */
+  internal val toHtmlCache: Cache<FontDescriptor, HtmlFontString> = cache("FontConversionCacheJS.toHtml", 500)
 
   /**
    * Stores the pair in the cache
    */
-  fun store(value: FontDescriptor, htmlFontString: String) {
-    fromHtmlCache[htmlFontString] = value
+  fun store(fontDescriptor: FontDescriptor, htmlFontString: HtmlFontString) {
+    fromHtmlCache[htmlFontString] = fontDescriptor
+    toHtmlCache[fontDescriptor] = htmlFontString
   }
 
   /**
@@ -44,15 +54,22 @@ object FontConversionCacheJS {
    *
    * This method just does a lookup!
    */
-  fun reverse(htmlFontString: String): FontDescriptor {
+  fun reverse(htmlFontString: HtmlFontString): FontDescriptor {
     return fromHtmlCache[htmlFontString] ?: throw IllegalArgumentException("No entry available for <$htmlFontString>")
+  }
+
+  /**
+   * Returns the font string for a given font descriptor.
+   */
+  fun get(fontDescriptor: FontDescriptor): HtmlFontString? {
+    return toHtmlCache[fontDescriptor]
   }
 }
 
 /**
  * Returns a string that represents this font descriptor
  */
-fun FontDescriptor.convertToHtmlFontString(): String {
+fun FontDescriptor.convertToHtmlFontString(): HtmlFontString {
   val htmlFontWeight = weight.toHtmlFontWeightString()
   val htmlFontStyle = style.toHtmlFontStyleString()
   val htmlFontVariant = variant.toHtmlFontVariantString()
@@ -65,7 +82,7 @@ fun FontDescriptor.convertToHtmlFontString(): String {
 
   //https://developer.mozilla.org/en-US/docs/Web/CSS/font
   return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize $fontFamiliesString".also {
-    logger.info("Converted font descriptor [$this] to [$it]")
+    logger.debug { "Converted font descriptor [$this] to [$it]" }
   }
 }
 
