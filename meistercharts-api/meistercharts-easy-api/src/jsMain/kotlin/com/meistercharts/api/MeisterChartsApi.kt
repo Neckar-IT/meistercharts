@@ -43,6 +43,14 @@ internal constructor(
 ) {
 
   /**
+   * A unique identifier for this chart.
+   */
+  val chartId: Int
+    get() {
+      return meisterCharts.chartSupport.chartId.id
+    }
+
+  /**
    * The window for dispatching events of a certain type.
    * Only one event per event-type is dispatched for each window.
    */
