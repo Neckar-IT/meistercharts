@@ -164,7 +164,7 @@ fun @EUR Int.formatEuroCents(i18nConfiguration: I18nConfiguration = DefaultI18nC
  * Formats the given value as euros
  */
 fun @EUR Double.formatEuro(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
-  return decimalFormat2digits.format(this, i18nConfiguration, whitespaceConfig) + "${whitespaceConfig.smallSpace}"
+  return decimalFormat2digits.format(this, i18nConfiguration, whitespaceConfig) + "${whitespaceConfig.smallSpace}€"
 }
 
 /**

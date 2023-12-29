@@ -80,7 +80,7 @@ val Int.percent: @pct Double
   }
 
 /**
- * Hard coded value for epsilon
+ * Hard-coded value for epsilon
  */
 const val Epsilon: Double = 1e-10
 
@@ -142,6 +142,12 @@ fun Double.sqrt(): Double = sqrt(this)
 fun Double.ceil(): Double = ceil(this)
 fun Double.floor(): Double = floor(this)
 fun Double.atan2(x: Double): Double = atan2(this, x)
+
+/**
+ * ATTENTION! Rounds to the nearest *even* integer
+ *
+ * Use [roundHalfUp] instead
+ */
 fun Double.round(): Double = round(this)
 fun Double.abs(): Double = abs(this)
 fun Double.sinh(): Double = sinh(this)
@@ -389,13 +395,41 @@ fun almostZero(a: Float) = abs(a) <= 0.0000001
 fun almostEquals(a: Double, b: Double) = almostZero(a - b)
 fun almostZero(a: Double) = abs(a) <= 0.0000001
 
+/**
+ * Rounds the double to the given number of decimal places.
+ *
+ * ATTENTION: Rounds to the nearest *even* integer. Use [roundDecimalPlacesHalfUp] if necessary
+ */
 fun Double.roundDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
   return round(this * placesFactor) / placesFactor
 }
 
+fun Double.roundDecimalPlacesHalfUp(places: Int): Double {
+  val placesFactor: Double = 10.0.pow(places.toDouble())
+  return (this * placesFactor).roundHalfUp() / placesFactor
+}
+
+/**
+ * Rounds to the nearest integer ("Kaufmännisches Runden")
+ *
+ * Attention: Uses [Epsilon] for comparison with 0.5
+ */
+fun Double.roundHalfUp(): Double {
+  val number = this
+  val fractionalPart = number % 1
+  val integralPart = number - fractionalPart
+
+  return when {
+    fractionalPart + Epsilon < 0.5 -> integralPart
+    fractionalPart + Epsilon >= 0.5 -> integralPart + 1.0
+    else -> throw IllegalStateException("Should not happen: number :$number, fractionalPart: $fractionalPart, integralPart: $integralPart")
+  }
+}
+
 fun Double.ceilDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
+
   return ceil(this * placesFactor) / placesFactor
 }
 
@@ -633,9 +667,11 @@ fun Int.roundDownToBase(base: Int): Int {
     this % base == 0 -> {
       this
     }
+
     this >= 0 -> {
       this / base * base
     }
+
     else -> {
       (this / base - 1) * base
     }

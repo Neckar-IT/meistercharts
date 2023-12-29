@@ -57,8 +57,7 @@ data class LayerPaintDurations(
   @ms
   val total: Double
     get() {
-      return paintDurations
-        .sumByDouble { it.duration }
+      return paintDurations.sumOf { it.duration }
     }
 }
 
