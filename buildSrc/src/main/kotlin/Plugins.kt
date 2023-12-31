@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 import org.gradle.plugin.use.PluginDependencySpec
 
 object Plugins {
@@ -41,7 +43,13 @@ object Plugins {
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
   const val jacoco: String = "org.gradle.jacoco"
-  const val python: String = "com.pswidersk.python-plugin"
+  const val pythonPswidersk: String = "com.pswidersk.python-plugin"
+  const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
+
+  /**
+   * Configures python projects
+   */
+  const val python: String = "it.neckar.python"
   const val base: String = "org.gradle.base"
 
   /**
@@ -159,6 +167,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.plantUml: PluginDependen
 inline val org.gradle.plugin.use.PluginDependenciesSpec.npmBundle: PluginDependencySpec
   get() = id(Plugins.npmBundle)
 
+inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
+  get() = id(Plugins.verifyMainClassExists)
+
 inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
 
@@ -188,6 +199,10 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.intellij: PluginDependen
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.springBoot: PluginDependencySpec
   get() = id(Plugins.springBoot)
+
+@Deprecated("Use the python plugin instead")
+inline val org.gradle.plugin.use.PluginDependenciesSpec.pythonPswidersk: PluginDependencySpec
+  get() = id(Plugins.pythonPswidersk)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.python: PluginDependencySpec
   get() = id(Plugins.python)
