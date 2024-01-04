@@ -338,6 +338,15 @@ data class Coordinates(
      */
     val CompareByYThenX: Comparator<Coordinates> = compareBy<Coordinates> { it.y }.thenBy { it.x }
     val CompareByXThenY: Comparator<Coordinates> = compareBy<Coordinates> { it.x }.thenBy { it.y }
+
+    /**
+     * Sorts the coordinates in CSS order (top left, top right, bottom right, bottom left)
+     */
+    fun sortCssOrder(unsorted: List<Coordinates>): CssOrderQuadrilateral {
+      require(unsorted.size == 4) { "Expected exactly 4 coordinates, but got ${unsorted.size} coordinates" }
+
+      return Quadrilateral.fromList(unsorted).inCssOrder()
+    }
   }
 }
 

@@ -2,6 +2,8 @@ package it.neckar.geometry
 
 import it.neckar.open.unit.other.deg
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
+import kotlin.math.atan2
 
 /**
  * A Quadrilateral is a 4-sided polygon. It is defined by 4 points (coordinates of corners).
@@ -118,5 +120,93 @@ data class Quadrilateral(
     val y2 = pointsByY[2].y
 
     return Rectangle.fromCoords(x1, y1, x2, y2)
+  }
+
+  /**
+   * Sorts the coordinates of the Quadrilateral in a clockwise order.
+   */
+  fun coordinatesInCssOrder(): List<Coordinates> {
+    // Calculate the center of the quadrilateral
+    val centerX = vertices().sumOf { it.x } / 4
+    val centerY = vertices().sumOf { it.y } / 4
+
+    // Sort the coordinates based on the angle they form with the center
+    return vertices().sortedWith(compareBy { atan2(it.y - centerY, it.x - centerX) })
+  }
+
+  /**
+   * Returns a new instance that contains the coordinates in CSS order (topLeft, topRight, bottomRight, bottomLeft)
+   */
+  fun inCssOrder(): CssOrderQuadrilateral {
+    return CssOrderQuadrilateral(fromList(coordinatesInCssOrder()))
+  }
+
+  override fun toString(): String {
+    return "[$point1, $point2, $point3, $point4]"
+  }
+
+  companion object {
+    fun fromList(coordinates: List<Coordinates>): Quadrilateral {
+      require(coordinates.size == 4) { "List must contain exactly 4 coordinates but had ${coordinates.size} elements" }
+      return Quadrilateral(
+        coordinates[0],
+        coordinates[1],
+        coordinates[2],
+        coordinates[3]
+      )
+    }
+  }
+}
+
+/**
+ * Wraps a [Quadrilateral] and provides the coordinates in CSS order (topLeft, topRight, bottomRight, bottomLeft)
+ */
+@JvmInline
+value class CssOrderQuadrilateral
+/**
+ * Do *not* call the constructor directly. Use [Quadrilateral.inCssOrder] instead to ensure the correct order.
+ */
+internal constructor(val quadrilateral: Quadrilateral) {
+  fun topWidth(): Double {
+    return topRight.x - topLeft.x
+  }
+
+  fun bottomWidth(): Double {
+    return bottomRight.x - bottomLeft.x
+  }
+
+  fun leftHeight(): Double {
+    return bottomLeft.y - topLeft.y
+  }
+
+  fun rightHeight(): Double {
+    return bottomRight.y - topRight.y
+  }
+
+  /**
+   * Returns the larger width of the quadrilateral (top or bottom)
+   */
+  fun largerWidth(): Double {
+    return maxOf(topWidth(), bottomWidth())
+  }
+
+  fun largerHeight(): Double {
+    return maxOf(leftHeight(), rightHeight())
+  }
+
+  val topLeft: Coordinates
+    get() = quadrilateral.point1
+
+  val topRight: Coordinates
+    get() = quadrilateral.point2
+
+  val bottomRight: Coordinates
+    get() = quadrilateral.point3
+
+  val bottomLeft: Coordinates
+    get() = quadrilateral.point4
+
+  override fun toString(): String {
+    return "[$topLeft, $topRight, $bottomRight, $bottomLeft]"
   }
 }

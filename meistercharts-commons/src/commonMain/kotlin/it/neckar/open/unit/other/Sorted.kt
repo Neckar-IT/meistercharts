@@ -1,5 +1,7 @@
 package it.neckar.open.unit.other
 
+import kotlin.reflect.KProperty
+
 /**
  * Marks sorted values
  */
@@ -27,6 +29,6 @@ annotation class Sorted(
   /**
    * Describes the sorting criteria
    */
-  val by: String = ""
+  val by: String = "",
 )
 
