@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "5.0.10"
+    "vite": "5.0.11"
   },
   "dependencies": {
     "@meistercharts/meistercharts": "1.38.0"
