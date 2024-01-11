@@ -17,7 +17,7 @@ import kotlinx.serialization.serializer
 /**
  * Serializer that can be used to serialize <Any> - *if* the object is serializable itself.
  *
- * Must be used with ]
+ * Must be used with classes that have been annotated with @[Serializable].
  */
 object AnySerializableSerializer : KSerializer<Any> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnyReflectionSerializer") {
