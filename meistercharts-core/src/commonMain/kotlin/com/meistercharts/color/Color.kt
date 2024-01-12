@@ -16,8 +16,17 @@
 package com.meistercharts.color
 
 import com.meistercharts.color.Colors.parse2DigitHex
+import it.neckar.open.collections.Cache
+import it.neckar.open.collections.cache
 import it.neckar.open.unit.other.pct
 import kotlin.jvm.JvmField
+
+object ColorConversionCache {
+  /**
+   * Maps a hex or rgba string to a [RgbaColor]
+   */
+  val parseHexOrRgbaCache: Cache<String, RgbaColor> = cache("Color.parserCache", 256)
+}
 
 /**
  * Represents a flat color.
@@ -200,21 +209,23 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
      * Parses hex and rgba strings
      */
     fun parseHexOrRgba(hexOrRgba: String): RgbaColor {
-      return when {
-        hexOrRgba.startsWith("#") -> {
-          parseHex(hexOrRgba)
-        }
+      return ColorConversionCache.parseHexOrRgbaCache.getOrStore(hexOrRgba) {
+        return when {
+          hexOrRgba.startsWith("#") -> {
+            parseHex(hexOrRgba)
+          }
 
-        hexOrRgba.startsWith("rgba") -> {
-          parseRgba(hexOrRgba)
-        }
+          hexOrRgba.startsWith("rgba") -> {
+            parseRgba(hexOrRgba)
+          }
 
-        hexOrRgba.startsWith("rgb") -> {
-          parseRgb(hexOrRgba)
-        }
+          hexOrRgba.startsWith("rgb") -> {
+            parseRgb(hexOrRgba)
+          }
 
-        else -> {
-          throw IllegalArgumentException("Parsing not supported for <$hexOrRgba>")
+          else -> {
+            throw IllegalArgumentException("Parsing not supported for <$hexOrRgba>")
+          }
         }
       }
     }

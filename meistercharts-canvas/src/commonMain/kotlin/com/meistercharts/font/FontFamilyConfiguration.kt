@@ -26,14 +26,14 @@ data class FontFamilyConfiguration(
   /**
    * The *required* generic family. Is used as fallback
    */
-  override val genericFamily: GenericFamily = GenericFamily.SansSerif,
+  override val genericFamily: GenericFontFamily = GenericFontFamily.SansSerif,
 ) : FontDescriptorFragment() {
   companion object {
     /**
      * Creates a new font family configuration with the given generic family.
      * The font family is set to null.
      */
-    fun onlyGeneric(genericFamily: GenericFamily): FontFamilyConfiguration {
+    fun onlyGeneric(genericFamily: GenericFontFamily): FontFamilyConfiguration {
       return FontFamilyConfiguration(null, genericFamily)
     }
 
@@ -41,18 +41,18 @@ data class FontFamilyConfiguration(
      * A configuration that only contains the generic family "sans-serif".
      * Does *not* contain a font family.
      */
-    val SansSerif: FontFamilyConfiguration = FontFamilyConfiguration(null, GenericFamily.SansSerif)
+    val SansSerif: FontFamilyConfiguration = FontFamilyConfiguration(null, GenericFontFamily.SansSerif)
   }
 }
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun FontFamily.withSansSerif(): FontFamilyConfiguration {
-  return withGenericFamily(GenericFamily.SansSerif)
+  return withGenericFontFamily(GenericFontFamily.SansSerif)
 }
 
 /**
  * Appends a generic family to the font family.
  */
-fun FontFamily.withGenericFamily(genericFamily: GenericFamily): FontFamilyConfiguration {
+fun FontFamily.withGenericFontFamily(genericFamily: GenericFontFamily): FontFamilyConfiguration {
   return FontFamilyConfiguration(this, genericFamily)
 }

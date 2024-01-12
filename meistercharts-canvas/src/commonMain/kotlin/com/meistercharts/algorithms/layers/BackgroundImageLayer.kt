@@ -54,7 +54,7 @@ class BackgroundImageLayer(
     /**
      * The color to be used as background
      */
-    var background: Color = Theme.lightBackgroundColor()
+    var background: Color = Theme.primaryBackgroundColor()
 
     /**
      * The optional background image that is painted in origin.
@@ -63,14 +63,17 @@ class BackgroundImageLayer(
     var backgroundImage: Paintable? = null
 
     /**
-     * Switches to the light background color
+     * Switches to the primary background color
      */
-    fun light() {
-      background = Theme.lightBackgroundColor()
+    fun primary() {
+      background = Theme.primaryBackgroundColor()
     }
 
-    fun dark() {
-      background = Theme.darkBackgroundColor()
+    /**
+     * Switches to the secondary background color
+     */
+    fun secondary() {
+      background = Theme.secondaryBackgroundColor()
     }
   }
 

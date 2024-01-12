@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Test
 class FontDescriptorTest {
   @Test
   fun testGenericFamily() {
-    assertThat(FontDescriptor.Default.genericFamily).isEqualTo(GenericFamily.SansSerif)
-    assertThat(FontDescriptor.Default.combineWith(FontDescriptorFragment(genericFamily = GenericFamily.Math)).genericFamily).isEqualTo(GenericFamily.Math)
+    assertThat(FontDescriptor.Default.genericFamily).isEqualTo(GenericFontFamily.SansSerif)
+    assertThat(FontDescriptor.Default.combineWith(FontDescriptorFragment(genericFamily = GenericFontFamily.Math)).genericFamily).isEqualTo(GenericFontFamily.Math)
   }
 
   @Test

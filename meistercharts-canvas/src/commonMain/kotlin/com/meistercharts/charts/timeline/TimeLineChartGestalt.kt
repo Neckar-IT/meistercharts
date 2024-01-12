@@ -22,21 +22,21 @@ import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
-import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers.PaintingOrder
-import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.TilesLayer
-import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TransformingChartStateLayer
+import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addTilesDebugLayer
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisHudInteractionLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
-import com.meistercharts.algorithms.layers.addClearBackground
-import com.meistercharts.algorithms.layers.addTilesDebugLayer
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
 import com.meistercharts.algorithms.layers.barchart.LabelWrapMode
@@ -78,7 +78,6 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisEndConfiguration
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
@@ -133,8 +132,6 @@ import com.meistercharts.history.search
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
-import it.neckar.geometry.Side
-import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.AreaBetweenLinesPainter
 import com.meistercharts.painter.PointPainter
@@ -148,11 +145,14 @@ import com.meistercharts.state.withTranslation
 import com.meistercharts.state.withZoom
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Shadow
-import com.meistercharts.style.withFillIfNull
 import com.meistercharts.time.TimeRange
 import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.zoom.UpdateReason
+import it.neckar.datetime.minimal.TimeConstants
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.DateTimeFormat
@@ -182,7 +182,6 @@ import it.neckar.open.provider.MultiProvider2
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.cached
 import it.neckar.open.provider.delegate
-import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
@@ -360,9 +359,10 @@ class TimeLineChartGestalt
   ) {
     hudLayerConfiguration = { decimalDataSeriesIndex: DecimalDataSeriesIndex, axis: ValueAxisHudLayer ->
       val color = configuration.lineStyles.valueAt(decimalDataSeriesIndex).color
-      axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5))
-      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Color.white, borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop))
+      axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor(), borderColor = color, radii = BorderRadius.all5))
+      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor(), borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop.copy(color = color)))
       axis.configuration.textColors = MultiProvider.always(color)
+      axis.configuration.textColorsActive = MultiProvider.always(color)
     }
   }
 
@@ -927,29 +927,8 @@ class TimeLineChartGestalt
         labelsCache[visibleSeriesIndex] = firstValue.key.resolve(textService, i18nConfiguration)
 
         //Update the formats
-        boxStylesCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex).withFillIfNull {
-          guessFillColor(dataSeriesIndex, firstSetOrdinal, historyEnum)
-        }
-
+        boxStylesCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex.value, firstSetOrdinal, historyEnum)
         labelTextColorCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
-      }
-    }
-
-    /**
-     * Guesses the fill color for the given data series index and values
-     */
-    private fun guessFillColor(
-      dataSeriesIndex: EnumDataSeriesIndex,
-      firstSetOrdinal: HistoryEnumOrdinal,
-      historyEnum: HistoryEnum,
-    ): Color {
-      //Get the painter and "guess" the type
-      val painter = historyEnumLayer.configuration.stripePainters.valueAt(dataSeriesIndex)
-
-      return if (painter is RectangleEnumStripePainter) {
-        painter.configuration.fillProvider(firstSetOrdinal, historyEnum)
-      } else {
-        Color.silver
       }
     }
 
@@ -1368,7 +1347,7 @@ class TimeLineChartGestalt
     /**
      * The background color of the value axes
      */
-    var valueAxesBackground: Color = Color.web("rgba(255,255,255,0.5)")
+    var valueAxesBackground: Color = Theme.primaryBackgroundColor().toRgba().withAlpha(0.5)
 
     /**
      * The indices of the lines that should be visible.
@@ -1471,7 +1450,13 @@ class TimeLineChartGestalt
      * The cross wire label styles - for the cross wire for decimal values
      */
     var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider {
-      BoxStyle(fill = Theme.chartColors().valueAt(it), borderColor = Color.white, padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding, radii = BorderRadius.all2, shadow = Shadow.LightDrop)
+      BoxStyle(
+        fill = Theme.chartColors().valueAt(it),
+        borderColor = Theme.borderColorConverter()(Theme.chartColors().valueAt(it)),
+        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
+        radii = BorderRadius.all2,
+        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor())
+      )
     }
 
     /**
@@ -1495,24 +1480,46 @@ class TimeLineChartGestalt
     /**
      * The text colors for the cross wire label
      */
-    var crossWireDecimalsLabelTextColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider.always(Color.white)
+    var crossWireDecimalsLabelTextColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider.always(Theme.primaryBackgroundColor())
 
     /**
      * The cross wire label styles - for the cross wire for enum values.
      *
      * If the background is set to null, the color for the current value will be used (as provided by [RectangleEnumStripePainter.Configuration.fillProvider])
      */
-    var crossWireEnumsLabelBoxStyles: MultiProvider<EnumDataSeriesIndex, BoxStyle> = MultiProvider {
+    var crossWireEnumsLabelBoxStyles: MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> = MultiProvider2 { dataSeriesIndexAsInt, firstSetOrdinal, historyEnum ->
+      val guessedFillColor = guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, configuration.historyConfiguration.enumConfiguration.getEnum(EnumDataSeriesIndex(dataSeriesIndexAsInt)))
+      val borderColor = Theme.borderColorConverter()(guessedFillColor)
+
       BoxStyle(
-        fill = null, //use color for current value
-        borderColor = Color.white,
+        fill = guessedFillColor,
+        borderColor = borderColor,
         padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
-        shadow = Shadow.LightDrop
+        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor())
       )
     }
 
-    var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = MultiProvider.always(Color.white)
+    /**
+     * Guesses the fill color for the given data series index and values
+     */
+    private fun guessFillColor(
+      dataSeriesIndex: EnumDataSeriesIndex,
+      firstSetOrdinal: HistoryEnumOrdinal,
+      historyEnum: HistoryEnum,
+    ): Color {
+      //Get the painter and "guess" the type
+      val painter = historyEnumLayer.configuration.stripePainters.valueAt(dataSeriesIndex)
+
+      return if (painter is RectangleEnumStripePainter) {
+        painter.configuration.fillProvider(firstSetOrdinal, historyEnum)
+      } else {
+        Color.silver
+      }
+    }
+
+
+    var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = MultiProvider.always(Theme.primaryBackgroundColor())
 
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.

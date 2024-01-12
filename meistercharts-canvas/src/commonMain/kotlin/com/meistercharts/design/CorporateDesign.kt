@@ -17,6 +17,7 @@ package com.meistercharts.design
 
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
 import it.neckar.open.provider.MultiProvider
 
@@ -55,69 +56,89 @@ interface CorporateDesign {
   val id: String
 
   /**
-   * The primary color
+   * The primary color, usually combined with [primaryBackgroundColor]
    */
-  val primaryColor: Color
+  val primaryColor: RgbaColor
 
-  val primaryColorDarker: Color
-  val primaryColorLighter: Color
+  val primaryColorDarker: RgbaColor
+  val primaryColorLighter: RgbaColor
 
   /**
-   * The secondary color
+   * The secondary color, usually combined with [secondaryBackgroundColor]
    */
-  val secondaryColor: Color
+  val secondaryColor: RgbaColor
 
   /**
    * The color for the default lines (e.g. borders, axis)
    */
-  val defaultLineColor: Color
+  val defaultLineColor: RgbaColor
 
-  val crossWireLineColor: Color
+  val crossWireLineColor: RgbaColor
     get() {
       return defaultLineColor
     }
 
   val h1: FontDescriptorFragment
-  val h1Color: Color
+  val h1Color: RgbaColor
 
   val h2: FontDescriptorFragment
-  val h2Color: Color
+  val h2Color: RgbaColor
 
   val h3: FontDescriptorFragment
-  val h3Color: Color
+  val h3Color: RgbaColor
 
   val h4: FontDescriptorFragment
-  val h4Color: Color
+  val h4Color: RgbaColor
 
   val h5: FontDescriptorFragment
-  val h5Color: Color
+  val h5Color: RgbaColor
 
   /**
    * The default text font that is applied to the canvas automatically.
    * Uses the defaults for all values that are not provided
    */
   val textFont: FontDescriptorFragment
-  val textColor: Color
+  val textColor: RgbaColor
 
-  val backgroundColorLight: Color
-  val backgroundColorDark: Color
+  /**
+   * The primary background-color, usually combined with [primaryColor]
+   */
+  val primaryBackgroundColor: RgbaColor
+
+  /**
+   * The secondary background-color, usually combined with [secondaryColor]
+   */
+  val secondaryBackgroundColor: RgbaColor
 
   /**
    * Active background (usually some kind of transparent gray)
    */
-  val backgroundColorActive: Color
+  val backgroundColorActive: RgbaColor
 
-  val inactiveElementBorder: Color
+  val inactiveElementBorder: RgbaColor
+
+  /**
+   * Generates a border-color from a given fill color.
+   *
+   * If there is no fill color, the default border color should be returned.
+   * If this converter returns null, the default border color is used.
+   */
+  val borderColorConverter: (fill: Color?) -> Color?
 
   /**
    * Colors to be used for charts
    */
-  val chartColors: MultiProvider<Any, Color>
+  val chartColors: MultiProvider<Any, RgbaColor>
+
+  /**
+   * The colors that are used for zebra backgrounds (e.g. in tables, offset areas).
+   */
+  val backgroundZebraColors: MultiProvider<Any, RgbaColor>
 
   /**
    * Colors to be used to visualize enums in the chart
    */
-  val enumColors: MultiProvider<Any, Color>
+  val enumColors: MultiProvider<Any, RgbaColor>
 
   /**
    * A primary button helps users to complete their journey.
@@ -151,10 +172,15 @@ interface CorporateDesign {
    */
   val secondaryButtonForegroundColors: ButtonColorProvider
 
-  val stateOk: Color
-  val stateWarning: Color
-  val stateError: Color
-  val stateUnknown: Color
+  val stateOk: RgbaColor
+  val stateWarning: RgbaColor
+  val stateError: RgbaColor
+  val stateUnknown: RgbaColor
+
+  /**
+   * The color to be used for shadows
+   */
+  val shadowColor: RgbaColor
 
   /**
    * Resolves the given theme key.
@@ -167,11 +193,15 @@ interface CorporateDesign {
   /**
    * Returns all colors that are used by the corporate design
    */
-  fun colors(): Set<Color> {
+  fun colors(): Set<RgbaColor> {
     return setOf(
       primaryColor, primaryColorDarker, primaryColorLighter,
       secondaryColor,
       defaultLineColor,
+      inactiveElementBorder,
+      shadowColor,
+      backgroundColorActive,
+      crossWireLineColor,
       h1Color,
       h2Color,
       h3Color,

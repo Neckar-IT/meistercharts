@@ -31,7 +31,7 @@ data class BoxStyle(
    * - no fill is used at all
    * - the fill might be derived from the context (e.g. the current value).
    *
-   * If you want to be sure that no fill is selected, use [Color.trans]
+   * If you want to be sure that no fill is selected, use [Color.transparent]
    */
   var fill: Color? = null,
   /**
@@ -129,4 +129,23 @@ fun BoxStyle.withFillIfNull(fillProvider: () -> Color): BoxStyle {
   }
 
   return this.copy(fill = fillProvider())
+}
+
+/**
+ * Returns this if a border color is already set.
+ * Creates a new instance with a border-color computed by the given converter (which takes the current fill)
+ */
+@Deprecated("Attention! Will overwrite the border - even if set to null purposefully")
+fun BoxStyle.withBorderColorIfNull(
+  /**
+   * Returns the border color based on the fill
+   */
+  borderColorForFill: (fill: Color?) -> Color?,
+): BoxStyle {
+  if (borderColor != null) {
+    return this
+  }
+
+  val newBorderColor = borderColorForFill(this.fill) ?: return this
+  return this.copy(borderColor = newBorderColor)
 }

@@ -192,7 +192,7 @@ class CanvasRenderingContextJS(
       } else {
         context.font = value.convertToHtmlFontString()
         // The browser sometimes changes the font property to a different value.
-        // Hence we must store the value that was computed by the browser to be
+        // Hence, we must store the value that was computed by the browser to be
         // able to reverse it later.
         FontConversionCacheJS.store(value, context.font)
       }

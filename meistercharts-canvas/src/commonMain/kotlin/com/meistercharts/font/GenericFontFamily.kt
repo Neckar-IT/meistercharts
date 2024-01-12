@@ -21,7 +21,7 @@ package com.meistercharts.font
  * See also:
  *  [https://developer.mozilla.org/en-US/docs/Web/CSS/generic-family]
  */
-enum class GenericFamily(val keyword: String) {
+enum class GenericFontFamily(val keyword: String) {
   Serif("serif"),
   SansSerif("sans-serif"),
   Monospace("monospace"),

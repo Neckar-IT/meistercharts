@@ -20,7 +20,10 @@ package com.meistercharts.font
 import it.neckar.open.annotations.TestOnly
 
 /**
- * Represents a font family
+ * Represents a font family.
+ *
+ * Attention: In CSS the complete list of font families and generic font families is called "font family"
+ * [https://developer.mozilla.org/en-US/docs/Web/CSS/font-family]
  */
 data class FontFamily(val family: String) {
 

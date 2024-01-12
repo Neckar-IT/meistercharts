@@ -35,7 +35,10 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
+import com.meistercharts.design.DarkDesign
+import com.meistercharts.design.DebugDesign
 import com.meistercharts.design.DefaultDesign
+import com.meistercharts.design.NeckarITDesign
 import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -51,14 +54,17 @@ import org.w3c.dom.Element
  */
 
 /**
- * If set to true the font family from the CSS file is used.
- * If set to false, the default font family is used ("sans-serif").
+ * Sets the look and feel of meistercharts.
+ * This method must be called before any chart is created.
  */
 @JsExport
-fun setUseCssStyle(enabled: Boolean) {
-  when (enabled) {
-    true -> initCorporateDesign(com.meistercharts.design.CssFontDesign)
-    false -> initCorporateDesign(DefaultDesign)
+fun setLookAndFeel(lookAndFeel: LookAndFeel) {
+  when (lookAndFeel) {
+    LookAndFeel.Default -> initCorporateDesign(DefaultDesign)
+    LookAndFeel.Dark -> initCorporateDesign(DarkDesign)
+    LookAndFeel.NeckarIT -> initCorporateDesign(NeckarITDesign)
+    LookAndFeel.Debug -> initCorporateDesign(DebugDesign)
+    else -> throw IllegalArgumentException("Unsupported LookAndFeel: $lookAndFeel")
   }
 }
 

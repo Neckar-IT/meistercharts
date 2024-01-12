@@ -424,8 +424,7 @@ class TimeAxisLayer(
     /**
      * The fills that are used for the offset areas.
      */
-    var offsetAreaFills: MultiProvider<GlobalTimeIndex, Color> = MultiProvider.modulo(Color.web("#DBE1E5"), Color.web("#F3F5F7"))
-
+    var offsetAreaFills: MultiProvider<GlobalTimeIndex, Color> = Theme.backgroundZebra()
     /**
      * The colors of the offset area ticks
      */

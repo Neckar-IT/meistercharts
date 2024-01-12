@@ -4,13 +4,17 @@
 
 === Fixes / Improvements
 
-==== Fonts
+==== Features
 
 * Update the default font to "sans-serif".
 This offers a better default for all platforms.
 
 * Add support for generic font families.
 * Add support for using the font family from the CSS style
+* Add a dark corporate design
+* Adjust the default background-color used for multi-value axes
+* Adjust the default background-color used for offsets in the time-axis
+* Adjust the default background-color used for the text-boxes of the HUD-layer
 
 === Fixes / Improvements
 

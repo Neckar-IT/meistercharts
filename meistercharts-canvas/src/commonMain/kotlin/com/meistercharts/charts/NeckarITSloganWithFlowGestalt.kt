@@ -49,7 +49,7 @@ class NeckarITSloganWithFlowGestalt(
   val flowLayer: NeckarItFlowLayer = NeckarItFlowLayer()
 
   val backgroundLayer: FillBackgroundLayer = FillBackgroundLayer {
-    dark()
+    secondary()
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

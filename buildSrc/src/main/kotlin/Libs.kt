@@ -77,14 +77,6 @@ public object Libs {
 
     public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
 
-    public const val jsonschema_generator: String = "com.github.victools:jsonschema-generator:_"
-
-    public const val jsonschema_module_jackson: String =
-            "com.github.victools:jsonschema-module-jackson:_"
-
-    public const val jsonschema_module_swagger_2: String =
-            "com.github.victools:jsonschema-module-swagger-2:_"
-
     public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
 
     public const val com_google_cloud_tools_jib_gradle_plugin: String =
@@ -199,8 +191,6 @@ public object Libs {
 
     public const val ktor_server_test_host: String = "io.ktor:ktor-server-test-host:_"
 
-    public const val ktor_server_webjars: String = "io.ktor:ktor-server-webjars:_"
-
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
     public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"
@@ -217,8 +207,6 @@ public object Libs {
 
     public const val io_spring_dependency_management_gradle_plugin: String =
             "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:_"
-
-    public const val swagger_parser: String = "io.swagger.parser.v3:swagger-parser:_"
 
     public const val javax_annotation_api: String = "javax.annotation:javax.annotation-api:_"
 
@@ -448,8 +436,6 @@ public object Libs {
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
-
-    public const val swagger_ui: String = "org.webjars:swagger-ui:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
 }

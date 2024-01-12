@@ -73,12 +73,12 @@ object Theme {
     it.defaultLineColor
   }
 
-  val darkBackgroundColor: ThemeKey<Color> = ThemeKey("background.color.dark") {
-    it.backgroundColorDark
+  val secondaryBackgroundColor: ThemeKey<Color> = ThemeKey("background.color.secondary") {
+    it.secondaryBackgroundColor
   }
 
-  val lightBackgroundColor: ThemeKey<Color> = ThemeKey("background.color.light") {
-    it.backgroundColorLight
+  val primaryBackgroundColor: ThemeKey<Color> = ThemeKey("background.color.primary") {
+    it.primaryBackgroundColor
   }
 
   val chartColors: ThemeKey<MultiProvider<Any, Color>> = ThemeKey("chart.colors") {
@@ -91,6 +91,13 @@ object Theme {
 
   val inactiveElementBorderColor: ThemeKey<Color> = ThemeKey("inactive.element.border.colors") {
     it.inactiveElementBorder
+  }
+
+  /**
+   * Generates a border-color from a given color
+   */
+  val borderColorConverter: ThemeKey<(fill: Color?) -> Color?> = ThemeKey("border.color.converter") {
+    it.borderColorConverter
   }
 
   val primaryButtonBackgroundColors: ThemeKey<ButtonColorProvider> = ThemeKey("button.primary.background.colors") {
@@ -129,6 +136,17 @@ object Theme {
 
   val backgroundColorActive: ThemeKey<Color> = ThemeKey("background.active") {
     it.backgroundColorActive
+  }
+
+  val backgroundZebra: ThemeKey<MultiProvider<Any, Color>> = ThemeKey("background zebra") {
+    it.backgroundZebraColors
+  }
+
+  /**
+   * The color to be used for shadows
+   */
+  val shadowColor: ThemeKey<Color> = ThemeKey("shadow.color") {
+    it.shadowColor
   }
 
   /**

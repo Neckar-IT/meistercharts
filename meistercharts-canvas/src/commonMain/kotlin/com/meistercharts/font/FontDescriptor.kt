@@ -31,7 +31,7 @@ class FontDescriptor(
   override val weight: FontWeight = FontWeight.Normal,
   override val style: FontStyle = FontStyle.Normal,
   override val variant: FontVariant = FontVariant.Normal,
-  override val genericFamily: GenericFamily = GenericFamily.SansSerif,
+  override val genericFamily: GenericFontFamily = GenericFontFamily.SansSerif,
 ) : FontDescriptorFragment() {
 
   constructor(
@@ -111,7 +111,7 @@ open class FontDescriptorFragment @JvmOverloads constructor(
   open val weight: FontWeight? = null,
   open val style: FontStyle? = null,
   open val variant: FontVariant? = null,
-  open val genericFamily: GenericFamily? = null,
+  open val genericFamily: GenericFontFamily? = null,
 ) {
 
   constructor(@px size: Double) : this(size = FontSize(size))
@@ -181,7 +181,7 @@ open class FontDescriptorFragment @JvmOverloads constructor(
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [genericFamily]
    */
-  fun withGenericFamily(genericFamily: GenericFamily): FontDescriptorFragment {
+  fun withGenericFamily(genericFamily: GenericFontFamily): FontDescriptorFragment {
     return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
   }
 

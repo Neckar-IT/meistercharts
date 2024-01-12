@@ -19,6 +19,7 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontFamily
 import com.meistercharts.font.FontFamilyConfiguration
@@ -38,66 +39,74 @@ object SegoeUiDesign : CorporateDesign {
   val headlineFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
   val defaultFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
 
-  override val primaryColor: Color = Color.web("#0084c2")
+  override val primaryColor: RgbaColor = Color.web("#0084c2").toRgba()
 
-  override val primaryColorDarker: Color = Color.web("#004d72")
-  override val primaryColorLighter: Color = Color.web("#03adff")
-  override val secondaryColor: Color = Color.web("#EE9624")
+  override val primaryColorDarker: RgbaColor = Color.web("#004d72").toRgba()
+  override val primaryColorLighter: RgbaColor = Color.web("#03adff").toRgba()
+  override val secondaryColor: RgbaColor = Color.web("#EE9624").toRgba()
 
-  override val defaultLineColor: Color = Color.web("#737f85")
+  override val defaultLineColor: RgbaColor = Color.web("#737f85").toRgba()
 
   override val h1: FontDescriptorFragment = FontDescriptorFragment(headlineFontFamily, FontSize(30.0))
-  override val h1Color: Color = primaryColor
+  override val h1Color: RgbaColor = primaryColor
 
   override val h2: FontDescriptorFragment = FontDescriptorFragment(headlineFontFamily, FontSize(26.0))
-  override val h2Color: Color = primaryColor
+  override val h2Color: RgbaColor = primaryColor
 
   override val h3: FontDescriptorFragment = FontDescriptorFragment(headlineFontFamily, FontSize(22.0), FontWeight.Bold)
-  override val h3Color: Color = Color("#555555")
+  override val h3Color: RgbaColor = Color("#555555").toRgba()
 
   override val h4: FontDescriptorFragment = FontDescriptorFragment(headlineFontFamily, FontSize(18.0))
-  override val h4Color: Color = Color("#555555")
+  override val h4Color: RgbaColor = Color("#555555").toRgba()
 
   override val h5: FontDescriptorFragment = FontDescriptorFragment(headlineFontFamily, FontSize(14.0))
-  override val h5Color: Color = Color("#555555")
+  override val h5Color: RgbaColor = Color("#555555").toRgba()
 
   override val textFont: FontDescriptorFragment = FontDescriptorFragment(defaultFontFamily, FontSize(14.0), FontWeight.Normal, style = FontStyle.Normal, variant = FontVariant.Normal)
-  override val textColor: Color = Color("#555555")
+  override val textColor: RgbaColor = Color("#555555").toRgba()
 
-  override val backgroundColorLight: Color = Color.white
-  override val backgroundColorDark: Color = Color.darkgray
+  override val primaryBackgroundColor: RgbaColor = Color.white
+  override val secondaryBackgroundColor: RgbaColor = Color.darkgray
 
-  override val inactiveElementBorder: Color = Color("#C5CACC")
+  override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
+  override val borderColorConverter: (fill: Color?) -> Color = { it?.toRgba()?.darker(0.15) ?: Color.darkgray }
 
-  override val backgroundColorActive: Color = Color.silver.withAlpha(0.5)
+  override val backgroundColorActive: RgbaColor = Color.silver.withAlpha(0.5)
 
-  override val chartColors: MultiProvider<Any, Color> = MultiProvider.forListModulo(
+  override val backgroundZebraColors: MultiProvider<Any, RgbaColor> = MultiProvider.Companion.forListModulo(
     listOf(
-      Color("#005B8E"),
-      Color("#007CC1"),
-      Color("#009DF4"),
-      Color("#3B5E43"),
-      Color("#00B9AF"),
-      Color("#ABC444"),
-      Color("#691A12"),
-      Color("#B96400"),
-      Color("#C19C31"),
-      Color("#7000B0"),
-      Color("#B501EB"),
-      Color("#FF00ED"),
+      Color.web("#DBE1E5").toRgba(),
+      Color.web("#F3F5F7").toRgba()
     )
   )
 
-  override val enumColors: MultiProvider<Any, Color> = MultiProvider.forListModulo(
+  override val chartColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(
+    listOf(
+      Color("#005B8E").toRgba(),
+      Color("#007CC1").toRgba(),
+      Color("#009DF4").toRgba(),
+      Color("#3B5E43").toRgba(),
+      Color("#00B9AF").toRgba(),
+      Color("#ABC444").toRgba(),
+      Color("#691A12").toRgba(),
+      Color("#B96400").toRgba(),
+      Color("#C19C31").toRgba(),
+      Color("#7000B0").toRgba(),
+      Color("#B501EB").toRgba(),
+      Color("#FF00ED").toRgba(),
+    )
+  )
+
+  override val enumColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(
     listOf(
       //From figma
-      Color("#8E989D"),
-      Color("#C5CACC"),
+      Color("#8E989D").toRgba(),
+      Color("#C5CACC").toRgba(),
 
       //own values
-      Color("#5C6366"),
-      Color("#CFDEE6"),
-      Color("#DAEAF2"),
+      Color("#5C6366").toRgba(),
+      Color("#CFDEE6").toRgba(),
+      Color("#DAEAF2").toRgba(),
     )
   )
 
@@ -111,24 +120,26 @@ object SegoeUiDesign : CorporateDesign {
 
   override val primaryButtonForegroundColors: ButtonColorProvider = DefaultButtonColorProvider(
     disabledColor = Color.white,
-    pressedColor = Color.web("#002e46"),
+    pressedColor = Color.web("#002e46").toRgba(),
     hoverColor = Color.white,
     focusedColor = Color.white,
     defaultColor = Color.white,
   )
 
   override val secondaryButtonBackgroundColors: ButtonColorProvider = DefaultButtonColorProvider(
-    disabledColor = Color.web("#A9A9A9"), // guessed
-    pressedColor = Color.web("#009EEF"), // guessed
-    hoverColor = Color.web("#009EEF"), // guessed
-    focusedColor = Color.web("#009EEF"), // guessed
+    disabledColor = Color.web("#A9A9A9").toRgba(), // guessed
+    pressedColor = Color.web("#009EEF").toRgba(), // guessed
+    hoverColor = Color.web("#009EEF").toRgba(), // guessed
+    focusedColor = Color.web("#009EEF").toRgba(), // guessed
     defaultColor = Color.rgb(0, 127, 195),
   )
 
   override val secondaryButtonForegroundColors: ButtonColorProvider = SingleButtonColorProvider(Color.white) // guessed
 
-  override val stateOk: Color = Color.web("#63b017")
-  override val stateWarning: Color = Color.web("#F5C413")
-  override val stateError: Color = Color.web("#EA0823")
-  override val stateUnknown: Color = Color.web("#737F85")
+  override val stateOk: RgbaColor = Color.web("#63b017").toRgba()
+  override val stateWarning: RgbaColor = Color.web("#F5C413").toRgba()
+  override val stateError: RgbaColor = Color.web("#EA0823").toRgba()
+  override val stateUnknown: RgbaColor = Color.web("#737F85").toRgba()
+
+  override val shadowColor: RgbaColor = Color.black.withAlpha(0.6)
 }
