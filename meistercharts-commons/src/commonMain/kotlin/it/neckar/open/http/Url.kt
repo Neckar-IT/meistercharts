@@ -22,11 +22,33 @@ value class Url(val value: String) {
   }
 
   operator fun plus(relativePath: String): Url {
-    return Url(value + relativePath)
+    val endsWithSlash = this.value.endsWith("/")
+    val startsWithSlash = relativePath.startsWith("/")
+
+    if (endsWithSlash && startsWithSlash) {
+      return Url(value + relativePath.substring(1))
+    }
+
+    if (endsWithSlash || startsWithSlash) {
+      return Url(value + relativePath)
+    }
+
+    return Url("$value/$relativePath")
   }
 
   operator fun plus(relativeUrl: Url): Url {
-    return Url(value + relativeUrl.value)
+    val endsWithSlash = this.value.endsWith("/")
+    val startsWithSlash = relativeUrl.value.startsWith("/")
+
+    if (endsWithSlash && startsWithSlash) {
+      return Url(value + relativeUrl.value.substring(1))
+    }
+
+    if (endsWithSlash || startsWithSlash) {
+      return Url(value + relativeUrl.value)
+    }
+
+    return Url("$value/${relativeUrl.value}")
   }
 
   //Required for extension methods
