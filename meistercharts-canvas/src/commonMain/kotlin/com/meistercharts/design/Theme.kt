@@ -81,6 +81,10 @@ object Theme {
     it.primaryBackgroundColor
   }
 
+  val canvasBackgroundColor: ThemeKey<Color> = ThemeKey("background.color.canvas") {
+    it.canvasBackgroundColor
+  }
+
   val chartColors: ThemeKey<MultiProvider<Any, Color>> = ThemeKey("chart.colors") {
     it.chartColors
   }

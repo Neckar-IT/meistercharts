@@ -77,7 +77,7 @@ fun FontDescriptor.convertToHtmlFontString(): HtmlFontString {
 
   val fontFamiliesString: String = when (family) {
     null -> genericFamily.keyword
-    else -> "\"${family.family}\", ${genericFamily.keyword}"
+    else -> "${family.family}, ${genericFamily.keyword}"
   }
 
   //https://developer.mozilla.org/en-US/docs/Web/CSS/font

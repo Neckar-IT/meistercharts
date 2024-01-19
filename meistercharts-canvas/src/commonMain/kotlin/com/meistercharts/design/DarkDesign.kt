@@ -37,6 +37,7 @@ class DarkCorporateDesign : DefaultCorporateDesign() {
 
   override val primaryBackgroundColor: RgbaColor = Color.web("#1f1e29").toRgba()
   override val secondaryBackgroundColor: RgbaColor = Color.web("#f4f4fe").toRgba()
+  override val canvasBackgroundColor: RgbaColor = primaryBackgroundColor
   override val backgroundColorActive: RgbaColor = primaryBackgroundColor.withAlpha(0.5)
 
   override val backgroundZebraColors: MultiProvider<Any, RgbaColor> = MultiProvider.Companion.forListModulo(

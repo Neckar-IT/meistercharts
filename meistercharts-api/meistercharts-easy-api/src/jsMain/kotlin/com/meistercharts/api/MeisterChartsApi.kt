@@ -17,6 +17,7 @@ package com.meistercharts.api
 
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.i18nSupport
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.js.MeisterchartJS
 import it.neckar.geometry.Size
@@ -107,6 +108,14 @@ internal constructor(
    */
   @JsName("setConfiguration")
   abstract fun setConfiguration(jsConfiguration: Configuration)
+
+  /**
+   * Sets the i18n configuration for this chart
+   */
+  @JsName("setI18nConfiguration")
+  fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
+    meisterCharts.chartSupport.i18nSupport.configuration = jsI18nConfiguration.toModel()
+  }
 
   /**
    * Should be called after each update of data/configuration/style

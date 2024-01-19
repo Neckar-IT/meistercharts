@@ -25,10 +25,27 @@ import it.neckar.open.annotations.TestOnly
  * Attention: In CSS the complete list of font families and generic font families is called "font family"
  * [https://developer.mozilla.org/en-US/docs/Web/CSS/font-family]
  */
-data class FontFamily(val family: String) {
+data class FontFamily(
+  /**
+   * The (complete) font family string. Might contain multiple font families separated by ","
+   */
+  val family: String,
+) {
+  init {
+    require(family.isNotBlank()) { "family must not be blank" }
+  }
 
   override fun toString(): String {
     return family
+  }
+
+  /**
+   * Returns true if this font familiy represents (possibly!) the default serif font familiy of the browser.
+   */
+  fun isProbablyDefaultSerifFamily(): Boolean {
+    return family == "serif" || //Firefox
+      family == "Times New Roman" //Chrome
+    //TODO safari
   }
 
   companion object {

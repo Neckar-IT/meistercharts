@@ -19,11 +19,15 @@ import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.history.DecimalDataSeriesIndex
 
+internal val needsToBeFixedForCustomer = true
+
 /**
  * Applies the default configuration for Easy API
  */
 fun TimeLineChartGestalt.applyEasyApiDefaults() {
-  this.configuration.applyValueAxisTitleOnTop()
-  thresholdsSupport.configuration.hudLayerConfiguration = { _: DecimalDataSeriesIndex, _: ValueAxisHudLayer ->
+  if (!needsToBeFixedForCustomer) {
+    this.configuration.applyValueAxisTitleOnTop()
+    thresholdsSupport.configuration.hudLayerConfiguration = { _: DecimalDataSeriesIndex, _: ValueAxisHudLayer ->
+    }
   }
 }

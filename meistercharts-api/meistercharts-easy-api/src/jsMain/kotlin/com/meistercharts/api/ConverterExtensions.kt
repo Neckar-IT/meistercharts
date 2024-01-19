@@ -49,13 +49,17 @@ import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.style.Palette
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
+import it.neckar.open.i18n.DefaultSystemLocale
+import it.neckar.open.i18n.DefaultSystemTimeZone
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.Locale
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
@@ -844,4 +848,17 @@ fun com.meistercharts.api.EnumAggregationMode.toModel(): EnumAggregationMode {
     com.meistercharts.api.EnumAggregationMode.ByOrdinal -> EnumAggregationMode.ByOrdinal
     com.meistercharts.api.EnumAggregationMode.MostTime -> EnumAggregationMode.MostTime
   }
+}
+
+fun com.meistercharts.api.I18nConfiguration.toModel(): I18nConfiguration {
+  val jsTextLocale = this.textLocale
+  val jsFormatLocale = this.formatLocale
+  val jsTimeZone = this.timeZone
+
+
+  return I18nConfiguration(
+    if (jsTextLocale.isNullOrBlank()) DefaultSystemLocale else Locale(jsTextLocale),
+    if (jsFormatLocale.isNullOrBlank()) DefaultSystemLocale else Locale(jsFormatLocale),
+    if (jsTimeZone.isNullOrBlank()) DefaultSystemTimeZone else TimeZone(jsTimeZone)
+  )
 }

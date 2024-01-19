@@ -21,8 +21,10 @@ import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontStyle
 import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
-import com.meistercharts.js.CanvasFontMetricsCalculatorJS.Companion.logger
+import com.meistercharts.font.GenericFontFamily
 import it.neckar.geometry.Size
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.unit.other.px
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -117,10 +119,13 @@ fun parseCssFontSize(fontSize: String): FontSize? {
   return null
 }
 
+/**
+ * Parses the given CSS font-family and returns a [FontFamily]
+ */
 fun parseCssFontFamily(fontFamily: String): FontFamily? {
   try {
     val trimmedFontFamily = fontFamily.trim()
-    if (trimmedFontFamily.isNullOrBlank()) {
+    if (trimmedFontFamily.isBlank()) {
       return null
     }
     return FontFamily(trimmedFontFamily)
@@ -188,3 +193,5 @@ val HTMLCanvasElement.size: @px Size
   get() {
     return Size(width, height)
   }
+
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.MeisterchartsExt")

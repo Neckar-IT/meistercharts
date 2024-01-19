@@ -17,6 +17,7 @@ package com.meistercharts.charts
 
 import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.circular.CircularChartLayer
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
@@ -77,6 +78,7 @@ class CircularChartGestalt(
         chartSupport.rootChartState.axisOrientationY = AxisOrientationY.OriginAtTop
 
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
         layers.addLayer(layer)
         layers.addLayer(legendLayer)
 

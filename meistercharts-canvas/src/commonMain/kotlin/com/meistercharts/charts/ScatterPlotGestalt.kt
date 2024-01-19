@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
@@ -112,6 +113,7 @@ class ScatterPlotGestalt(
 
     meisterChartBuilder.configure {
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
 
       layers.addLayer(scatterPlotLayer)
       layers.addLayer(valueAxisXLayer) //TODO bind visiblity

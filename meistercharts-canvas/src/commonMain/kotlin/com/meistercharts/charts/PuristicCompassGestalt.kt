@@ -18,6 +18,7 @@ package com.meistercharts.charts
 import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ResizablePaintableLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.compass.CompassNeedlePainter
 import com.meistercharts.algorithms.layers.compass.GaugePaintable
 import com.meistercharts.algorithms.layers.compass.PuristicCompassPainter
@@ -118,6 +119,7 @@ class PuristicCompassGestalt(
       }
 
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
       this.layers.addLayer(resizablePaintableLayer)
       this.layers.addLayer(valueLayer)
       this.layers.addLayer(subValueLayer)

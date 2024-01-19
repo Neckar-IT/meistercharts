@@ -21,6 +21,7 @@ import it.neckar.geometry.AxisSelection
 import com.meistercharts.zoom.delegate
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMap
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMapDe
@@ -127,6 +128,7 @@ class MapGestalt(
         }
 
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
         layers.addLayer(slippyMapLayer)
         layers.addLayer(legalNoticeLayer.visibleIf(configuration.showCopyrightMarkerProperty))
         layers.addLayer(toolbarLayer.visibleIf(configuration.showToolbarProperty))

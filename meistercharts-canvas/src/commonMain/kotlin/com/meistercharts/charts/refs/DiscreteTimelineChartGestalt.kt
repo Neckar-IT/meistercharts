@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
 import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
 import com.meistercharts.algorithms.layers.barchart.LabelWrapMode
@@ -397,6 +398,7 @@ class DiscreteTimelineChartGestalt(
       }
 
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
       layers.addLayer(toolbarInteractionLayer)
 
       layers.addLayer(historyRenderPropertiesCalculatorLayer)

@@ -34,5 +34,5 @@ enum class GenericFontFamily(val keyword: String) {
   UiRounded("ui-rounded"),
   Emoji("emoji"),
   Math("math"),
-  Fangsong("fangsong")
+  Fangsong("fangsong"),
 }

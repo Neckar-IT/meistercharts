@@ -65,6 +65,7 @@ object DebugDesign : CorporateDesign {
   override val textFont: FontDescriptorFragment = FontDescriptorFragment(defaultFontFamily, FontSize(12.0), FontWeight.Normal, style = FontStyle.Normal, variant = FontVariant.Normal)
   override val textColor: RgbaColor = Color.darkmagenta
 
+  override val canvasBackgroundColor: RgbaColor = Color.beige
   override val primaryBackgroundColor: RgbaColor = Color.lightcoral
   override val secondaryBackgroundColor: RgbaColor = Color.darkviolet
   override val backgroundColorActive: RgbaColor = Color.orange.withAlpha(0.5)

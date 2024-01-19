@@ -26,6 +26,7 @@ import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.axis.TickProvider
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -191,6 +192,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
 
     configure {
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
 
       valueAxisSupport.addLayers(this, Unit)
 

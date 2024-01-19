@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.meistercharts.api.I18nConfiguration
 import com.meistercharts.api.bar.BarChartGrouped
 import com.meistercharts.api.bar.BarChartStacked
 import com.meistercharts.api.bullet.BulletChart
@@ -24,6 +25,7 @@ import com.meistercharts.api.histogram.Histogram
 import com.meistercharts.api.line.LineChartSimple
 import com.meistercharts.api.line.TimeLineChart
 import com.meistercharts.api.map.MapWithStackedBars
+import com.meistercharts.api.toModel
 import com.meistercharts.charts.BarChartGroupedGestalt
 import com.meistercharts.charts.BarChartStackedGestalt
 import com.meistercharts.charts.CategoryLineChartGestalt
@@ -35,15 +37,15 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
-import com.meistercharts.design.DarkDesign
-import com.meistercharts.design.DebugDesign
-import com.meistercharts.design.DefaultDesign
-import com.meistercharts.design.NeckarITDesign
 import com.meistercharts.design.initCorporateDesign
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
 import com.meistercharts.js.MeisterchartBuilderJS
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
+import it.neckar.open.i18n.setAsDefault
 import kotlinx.browser.document
 import org.w3c.dom.Element
 
@@ -53,19 +55,25 @@ import org.w3c.dom.Element
  * ATTENTION: Do *NOT* move into a package. This file has to be placed in the default package to avoid unnecessary fqn in JS
  */
 
+private val logger: Logger = LoggerFactory.getLogger("meistercharts.api")
+
 /**
  * Sets the look and feel of meistercharts.
  * This method must be called before any chart is created.
  */
 @JsExport
-fun setLookAndFeel(lookAndFeel: LookAndFeel) {
-  when (lookAndFeel) {
-    LookAndFeel.Default -> initCorporateDesign(DefaultDesign)
-    LookAndFeel.Dark -> initCorporateDesign(DarkDesign)
-    LookAndFeel.NeckarIT -> initCorporateDesign(NeckarITDesign)
-    LookAndFeel.Debug -> initCorporateDesign(DebugDesign)
-    else -> throw IllegalArgumentException("Unsupported LookAndFeel: $lookAndFeel")
-  }
+fun initLookAndFeel(lookAndFeel: LookAndFeel) {
+  initCorporateDesign(lookAndFeel.toCorporateDesign())
+}
+
+/**
+ * Sets the default i18n configuration.
+ *
+ * This configuration may be overwritten on a per chart basis.
+ */
+@JsExport
+fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
+  jsI18nConfiguration.toModel().setAsDefault()
 }
 
 /**
@@ -76,7 +84,7 @@ fun setLookAndFeel(lookAndFeel: LookAndFeel) {
 @JsName("createBarChartStackedFromId")
 @Suppress("unused")
 fun createBarChartStackedFromId(
-  id: String
+  id: String,
 ): BarChartStacked {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -91,7 +99,7 @@ fun createBarChartStackedFromId(
 @JsName("createBarChartStackedFromElement")
 @Suppress("unused")
 fun createBarChartStackedFromElement(
-  element: Element
+  element: Element,
 ): BarChartStacked {
   val barChartStacked = createBarChartStacked()
   element.appendChild(barChartStacked.holder)
@@ -105,6 +113,7 @@ fun createBarChartStackedFromElement(
 @JsName("createBarChartStacked")
 @Suppress("unused")
 fun createBarChartStacked(): BarChartStacked {
+  logger.debug { "create BarChartStacked" }
   // The MeisterChartBuilder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("BarChartStacked")
   val gestalt = BarChartStackedGestalt().apply {
@@ -122,7 +131,7 @@ fun createBarChartStacked(): BarChartStacked {
 @JsName("createBarChartGroupedFromId")
 @Suppress("unused")
 fun createBarChartGroupedFromId(
-  id: String
+  id: String,
 ): BarChartGrouped {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -137,7 +146,7 @@ fun createBarChartGroupedFromId(
 @JsName("createBarChartGroupedFromElement")
 @Suppress("unused")
 fun createBarChartGroupedFromElement(
-  element: Element
+  element: Element,
 ): BarChartGrouped {
   val barChartGrouped = createBarChartGrouped()
   element.appendChild(barChartGrouped.holder)
@@ -151,6 +160,7 @@ fun createBarChartGroupedFromElement(
 @JsName("createBarChartGrouped")
 @Suppress("unused")
 fun createBarChartGrouped(): BarChartGrouped {
+  logger.debug { "create BarChartGrouped" }
   // The builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("BarChartGrouped")
   val gestalt = BarChartGroupedGestalt(initialToolTipType = ToolTipType.Balloon).apply {
@@ -169,7 +179,7 @@ fun createBarChartGrouped(): BarChartGrouped {
 @JsName("createHistogramFromId")
 @Suppress("unused")
 fun createHistogramFromId(
-  id: String
+  id: String,
 ): Histogram {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -184,7 +194,7 @@ fun createHistogramFromId(
 @JsName("createHistogramFromElement")
 @Suppress("unused")
 fun createHistogramFromElement(
-  element: Element
+  element: Element,
 ): Histogram {
   val histogram = createHistogram()
   element.appendChild(histogram.holder)
@@ -198,6 +208,7 @@ fun createHistogramFromElement(
 @JsName("createHistogram")
 @Suppress("unused")
 fun createHistogram(): Histogram {
+  logger.debug { "create Histogram" }
   // The builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("Histogram")
   val gestalt = HistogramGestalt().apply {
@@ -215,7 +226,7 @@ fun createHistogram(): Histogram {
 @Suppress("unused")
 @JsExport
 fun createCircularChartFromId(
-  id: String
+  id: String,
 ): CircularChart {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -229,7 +240,7 @@ fun createCircularChartFromId(
 @Suppress("unused")
 @JsExport
 fun createCircularChartFromElement(
-  element: Element
+  element: Element,
 ): CircularChart {
   val circularChart = createCircularChart()
   element.appendChild(circularChart.holder)
@@ -241,6 +252,7 @@ fun createCircularChartFromElement(
  */
 @Suppress("unused")
 fun createCircularChart(): CircularChart {
+  logger.debug { "create CircularChart" }
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("CircularChart")
   val gestalt = CircularChartGestalt().apply {
@@ -258,7 +270,7 @@ fun createCircularChart(): CircularChart {
 @Suppress("unused")
 @JsExport
 fun createCompassFromId(
-  id: String
+  id: String,
 ): Compass {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -272,7 +284,7 @@ fun createCompassFromId(
 @Suppress("unused")
 @JsExport
 fun createCompassFromElement(
-  element: Element
+  element: Element,
 ): Compass {
   val compass = createCompass()
   element.appendChild(compass.holder)
@@ -285,6 +297,7 @@ fun createCompassFromElement(
 @Suppress("unused")
 @JsExport
 fun createCompass(): Compass {
+  logger.debug { "create Compass" }
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("Compass")
   val gestalt = PuristicCompassGestalt().apply {
@@ -304,7 +317,7 @@ fun createCompass(): Compass {
 @JsName("createTimeLineChartFromId")
 @Suppress("unused")
 fun createTimeLineChartFromId(
-  id: String
+  id: String,
 ): TimeLineChart {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -319,7 +332,7 @@ fun createTimeLineChartFromId(
 @JsName("createTimeLineChartFromElement")
 @Suppress("unused")
 fun createTimeLineChartFromElement(
-  element: Element
+  element: Element,
 ): TimeLineChart {
   val timeLineChart = createTimeLineChart()
   element.appendChild(timeLineChart.holder)
@@ -333,6 +346,8 @@ fun createTimeLineChartFromElement(
 @JsName("createTimeLineChart")
 @Suppress("unused")
 fun createTimeLineChart(): TimeLineChart {
+  logger.debug { "create TimeLineChart" }
+
   val historyStorage = InMemoryHistoryStorage()
   val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage> = historyStorage.withQueryMonitor()
 
@@ -365,7 +380,7 @@ fun createTimeLineChart(): TimeLineChart {
 @JsExport
 @Suppress("unused")
 fun createLineChartSimpleFromId(
-  id: String
+  id: String,
 ): LineChartSimple {
   val element = document.getElementById(id)
   requireNotNull(element) { "failed to find the element with id $id" }
@@ -380,7 +395,7 @@ fun createLineChartSimpleFromId(
 @JsExport
 @Suppress("unused")
 fun createLineChartSimpleFromElement(
-  element: Element
+  element: Element,
 ): LineChartSimple {
   val lineChartSimple = createLineChartSimple()
   element.appendChild(lineChartSimple.holder)
@@ -394,6 +409,7 @@ fun createLineChartSimpleFromElement(
 @JsExport
 @Suppress("unused")
 fun createLineChartSimple(): LineChartSimple {
+  logger.debug { "create LineChartSimple" }
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("LineChartSimple")
   val gestalt = CategoryLineChartGestalt(initialToolTipType = ToolTipType.Balloon).apply {
@@ -441,6 +457,7 @@ fun createBulletChartFromElement(
 @JsExport
 @Suppress("unused")
 fun createBulletChart(): BulletChart {
+  logger.debug { "create BulletChart" }
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("BulletChart")
   val gestalt = BulletChartGestalt().apply {
@@ -488,6 +505,7 @@ fun createDiscreteTimelineChartFromElement(
 @JsExport
 @Suppress("unused")
 fun createDiscreteTimelineChart(): DiscreteTimelineChart {
+  logger.debug { "create DiscreteTimelineChart" }
   val historyStorage = InMemoryHistoryStorage()
   val historyStorageQueryMonitor: HistoryStorageQueryMonitor<InMemoryHistoryStorage> = historyStorage.withQueryMonitor()
 
@@ -532,7 +550,7 @@ fun createMapWithStackedBarsFromId(
 @Suppress("unused")
 @JsExport
 fun createMapWithStackedBarsFromElement(
-  element: Element
+  element: Element,
 ): MapWithStackedBars {
   val mapWithStackedBars = createMapWithStackedBars()
   element.appendChild(mapWithStackedBars.holder)
@@ -545,6 +563,7 @@ fun createMapWithStackedBarsFromElement(
 @Suppress("unused")
 @JsExport
 fun createMapWithStackedBars(): MapWithStackedBars {
+  logger.debug { "create MapWithStackedBars" }
   // The Builder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
   val meisterChartBuilder = MeisterchartBuilderJS.create("MapWithStackedBars")
   val gestalt = MapWithPaintablesGestalt(meisterChartBuilder.chartId).apply {

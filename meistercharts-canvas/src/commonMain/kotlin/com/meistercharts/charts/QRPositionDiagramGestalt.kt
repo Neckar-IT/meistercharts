@@ -24,6 +24,7 @@ import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.PaintableTranslateRotateLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
@@ -118,6 +119,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
 
       configure {
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
         chartSupport.rootChartState.axisOrientationY = AxisOrientationY.OriginAtBottom
 
         layers.addLayer(ContentAreaLayer())

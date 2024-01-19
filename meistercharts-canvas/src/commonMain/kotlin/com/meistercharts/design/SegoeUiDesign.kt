@@ -65,6 +65,7 @@ object SegoeUiDesign : CorporateDesign {
   override val textFont: FontDescriptorFragment = FontDescriptorFragment(defaultFontFamily, FontSize(14.0), FontWeight.Normal, style = FontStyle.Normal, variant = FontVariant.Normal)
   override val textColor: RgbaColor = Color("#555555").toRgba()
 
+  override val canvasBackgroundColor: RgbaColor = Color.white
   override val primaryBackgroundColor: RgbaColor = Color.white
   override val secondaryBackgroundColor: RgbaColor = Color.darkgray
 

@@ -49,7 +49,7 @@ class FontDescriptor(
   }
 
   override fun toString(): String {
-    return "FontDescriptor($family, ${size.size}, ${weight.weight}, $style, $variant)"
+    return "FontDescriptor(family=$family, size=$size, weight=$weight, style=$style, variant=$variant, genericFamily=$genericFamily)"
   }
 }
 
@@ -227,3 +227,22 @@ open class FontDescriptorFragment @JvmOverloads constructor(
     return "FontDescriptorFragment($family, ${size?.size}, ${weight?.weight}, $style, $variant, $genericFamily)"
   }
 }
+
+/**
+ * If the font family is (probably)
+ * * the unconfigured default font of the browser
+ * * a serif font
+ *
+ * This will return a new instance with the family set to null.
+ */
+fun FontDescriptorFragment.eraseSoleSerifFamily(): FontDescriptorFragment {
+  family?.isProbablyDefaultSerifFamily()?.let {
+    return withFamily(null)
+  }
+
+  if (family?.family == "serif" || family?.family == "Times New Roman") {
+    return withFamily(null)
+  }
+  return this
+}
+

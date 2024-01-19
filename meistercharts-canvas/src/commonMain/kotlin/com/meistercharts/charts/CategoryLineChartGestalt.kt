@@ -32,6 +32,7 @@ import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.createAxisLayer
 import com.meistercharts.algorithms.layers.clipped
@@ -334,6 +335,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
       meisterChartBuilder.configure {
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
         layers.addLayer(tooltipInteractionLayer.visibleIf(configuration.showTooltipsProperty))
         layers.addAboveBackground(valuesGridLayer.visibleIf(configuration.showValuesGridProperty))
         layers.addAboveBackground(categoriesGridLayer.visibleIf(configuration.showCategoriesGridProperty))

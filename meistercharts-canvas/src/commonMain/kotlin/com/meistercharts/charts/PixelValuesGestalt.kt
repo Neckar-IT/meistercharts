@@ -32,6 +32,7 @@ import com.meistercharts.algorithms.layers.UpperLimit
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.ZeroLinesLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
@@ -337,6 +338,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
         chartSupport.windowResizeBehavior = ResetToDefaultsOnWindowResize
 
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
 
         layers.addLayer(xValueAxisLayer)
         layers.addLayer(yValueAxisLayer)

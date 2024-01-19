@@ -1,3 +1,10 @@
+import com.meistercharts.design.CorporateDesign
+import com.meistercharts.design.DarkDesign
+import com.meistercharts.design.DebugDesign
+import com.meistercharts.design.DefaultDesign
+import com.meistercharts.design.NeckarITDesign
+import it.neckar.open.charting.api.sanitizing.sanitize
+
 /**
  * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
  *
@@ -37,4 +44,13 @@ enum class LookAndFeel {
    * Debug look and feel
    */
   Debug,
+}
+
+fun LookAndFeel.toCorporateDesign(): CorporateDesign {
+  return when (this.sanitize()) {
+    LookAndFeel.Default -> DefaultDesign
+    LookAndFeel.Dark -> DarkDesign
+    LookAndFeel.NeckarIT -> NeckarITDesign
+    LookAndFeel.Debug -> DebugDesign
+  }
 }

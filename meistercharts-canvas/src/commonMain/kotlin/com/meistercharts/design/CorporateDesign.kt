@@ -19,11 +19,16 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.color.Color
 import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
+import it.neckar.logging.debug
 import it.neckar.open.provider.MultiProvider
 
 /**
  * Manages the corporate design settings
  */
+
+private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.design.CorporateDesign")
 
 
 /**
@@ -43,6 +48,7 @@ var corporateDesign: CorporateDesign = DefaultDesign
  * Applies the corporate design
  */
 fun initCorporateDesign(newCorporateDesign: CorporateDesign) {
+  logger.debug { "init corporate design: ${newCorporateDesign.id}" }
   corporateDesign = newCorporateDesign
 }
 
@@ -99,6 +105,11 @@ interface CorporateDesign {
    */
   val textFont: FontDescriptorFragment
   val textColor: RgbaColor
+
+  /**
+   * The color the canvas is filled with
+   */
+  val canvasBackgroundColor: RgbaColor
 
   /**
    * The primary background-color, usually combined with [primaryColor]

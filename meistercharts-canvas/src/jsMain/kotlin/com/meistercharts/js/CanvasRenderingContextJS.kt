@@ -37,6 +37,7 @@ import com.meistercharts.color.CanvasRadialGradient
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontMetrics
+import com.meistercharts.font.eraseSoleSerifFamily
 import com.meistercharts.js.CanvasReadBackFrequency.Frequent
 import com.meistercharts.model.Zoom
 import it.neckar.geometry.Direction
@@ -126,7 +127,7 @@ class CanvasRenderingContextJS(
   }
 
   override fun defaultFont(): FontDescriptor {
-    return this.canvas.canvasElement.font().withDefaultValues()
+    return this.canvas.canvasElement.font().eraseSoleSerifFamily().withDefaultValues()
   }
 
   override fun clip(x: Double, y: Double, width: Double, height: Double) {

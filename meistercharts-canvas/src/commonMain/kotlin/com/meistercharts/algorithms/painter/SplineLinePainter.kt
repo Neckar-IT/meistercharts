@@ -34,7 +34,7 @@ class SplineLinePainter(
 ) : AbstractLinePainter(snapXValues, snapYValues) {
 
   /**
-   * The smoothing factor. The heigher the smoother the curve.
+   * The smoothing factor. The higher, the smoother the curve.
    * If too high, the spline will contain loops.
    */
   var smoothingFactor: Double = 0.5

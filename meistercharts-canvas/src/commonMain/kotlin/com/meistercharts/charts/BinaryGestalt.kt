@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.BinaryLayer
 import com.meistercharts.algorithms.layers.axis.BinaryTicksProvider
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterchartBuilder
@@ -73,6 +74,7 @@ class BinaryGestalt(
 
     meisterChartBuilder.configure {
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
       layers.addLayer(valueAxisLayer)
       layers.addLayer(binaryLayer)
 

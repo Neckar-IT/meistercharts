@@ -40,6 +40,11 @@ abstract class MeisterChartsAbstractPlatform {
     private set
 
 
+  /**
+   * Initializes the basics.
+   * If the [corporateDesign] is not null, nothing is applied.
+   * If the [defaultI18nConfiguration] is not null, nothing is applied.
+   */
   fun initBasics(corporateDesign: CorporateDesign?, defaultI18nConfiguration: I18nConfiguration?) {
     if (initialized.not()) {
       logger.info { "Initializing MeisterChartsPlatform ${MeisterChartsVersion.versionAsStringVerbose}" }

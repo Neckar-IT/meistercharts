@@ -30,6 +30,7 @@ import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.algorithms.layers.TilesLayer
 import com.meistercharts.algorithms.layers.TransformingChartStateLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.addTilesDebugLayer
 import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
@@ -1128,6 +1129,7 @@ class TimeLineChartGestalt
           }
 
           layers.addClearBackground()
+          layers.addFillCanvasBackground()
           layers.addLayer(historyRenderPropertiesCalculatorLayer)
 
           layers.addLayer(tilesLayerTransformed)

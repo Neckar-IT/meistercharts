@@ -29,6 +29,7 @@ import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -434,6 +435,7 @@ class BarChartGroupedGestalt constructor(
 
     configure {
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
 
       layers.addAboveBackground(gridLayer.visibleIf(style.showGridProperty))
       layers.addLayer(toolbarInteractionLayer.visibleIf(style.showTooltipsProperty))

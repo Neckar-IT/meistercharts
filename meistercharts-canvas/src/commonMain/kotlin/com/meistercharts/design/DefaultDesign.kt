@@ -70,6 +70,7 @@ open class DefaultCorporateDesign(
   override val textColor: RgbaColor
     get() = primaryColorDarker
 
+  override val canvasBackgroundColor: RgbaColor = Color.white
   override val primaryBackgroundColor: RgbaColor = Color.white
   override val secondaryBackgroundColor: RgbaColor = Color.web("#002e46").toRgba()
   override val backgroundColorActive: RgbaColor = Color.silver.withAlpha(0.5)

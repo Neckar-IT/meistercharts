@@ -18,6 +18,7 @@ package com.meistercharts.charts
 import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ResizablePaintableLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.compass.ArrowValuePainter
 import com.meistercharts.algorithms.layers.compass.CompassBasePainter
 import com.meistercharts.algorithms.layers.compass.GaugePaintable
@@ -82,6 +83,7 @@ class ClassicCompassGestalt(
 
     meisterChartBuilder.configure {
       layers.addClearBackground()
+      layers.addFillCanvasBackground()
       layers.addLayer(gaugePaintableLayer)
 
       layers.addVersionNumberHidden()

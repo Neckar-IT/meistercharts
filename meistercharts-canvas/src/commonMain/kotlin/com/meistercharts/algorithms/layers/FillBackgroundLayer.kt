@@ -16,8 +16,8 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import it.neckar.geometry.Coordinates
 
@@ -69,5 +69,16 @@ class FillBackgroundLayer(
     fun secondary() {
       background = Theme.secondaryBackgroundColor()
     }
+  }
+}
+
+/**
+ * Adds a [FillBackgroundLayer] to the layers that uses the canvas-background color provided by the theme
+ */
+fun Layers.addFillCanvasBackground(): FillBackgroundLayer {
+  return FillBackgroundLayer {
+    background = Theme.canvasBackgroundColor()
+  }.also {
+    addLayer(it)
   }
 }

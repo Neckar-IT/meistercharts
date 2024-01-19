@@ -15,10 +15,18 @@ This offers a better default for all platforms.
 * Adjust the default background-color used for multi-value axes
 * Adjust the default background-color used for offsets in the time-axis
 * Adjust the default background-color used for the text-boxes of the HUD-layer
+* Adjust the default background-color used for the content-area of all charts
 
 === Fixes / Improvements
 
 * [Regression] Typescript Definition File not created (#16)
+
+=== Easy API
+
+* Add support for setting the i18n-configuration of a chart
+* Add support for setting the global i18n-configuration
+* Add support for setting the look-and-feel of all charts
+* Change default styling of the value-axes used in the time-line chart
 
 == 1.38.0
 

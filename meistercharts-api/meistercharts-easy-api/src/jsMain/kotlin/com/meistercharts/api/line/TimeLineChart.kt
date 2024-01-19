@@ -324,26 +324,28 @@ class TimeLineChart internal constructor(
       this.multiValueAxisLayer.configuration.valueAxesGap = it
     }
 
-    jsStyle.valueAxesStyle?.let { jsValueAxisStyle ->
-      jsStyle.decimalDataSeriesStyles?.fastForEachIndexed { index: @DecimalDataSeriesIndexInt Int, jsDecimalDataSeriesStyle ->
-        //The value axis layer for this decimal data series
-        val valueAxisLayer = this.getValueAxisLayer(DecimalDataSeriesIndex(index))
-        val topTitleLayer = this.getValueAxisTopTitleLayer(DecimalDataSeriesIndex(index))
+    //TODO think about applying jsStyle.valueAxesStyle if decimalDataSeriesStyles is not set
+    jsStyle.decimalDataSeriesStyles?.fastForEachIndexed { index: @DecimalDataSeriesIndexInt Int, jsDecimalDataSeriesStyle ->
+      //The value axis layer for this decimal data series
+      val valueAxisLayer = this.getValueAxisLayer(DecimalDataSeriesIndex(index))
+      val topTitleLayer = this.getValueAxisTopTitleLayer(DecimalDataSeriesIndex(index))
 
-        //Call this method *before* applying the (more specific) properties from the jsDecimalDataSeriesStyle
+      //Call this method *before* applying the (more specific) properties from the jsDecimalDataSeriesStyle
+      jsStyle.valueAxesStyle?.let { jsValueAxisStyle ->
         valueAxisLayer.configuration.applyValueAxisStyle(jsValueAxisStyle)
         topTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
+      }
 
-        jsDecimalDataSeriesStyle.valueAxisTitle?.let { jsTitle ->
-          valueAxisLayer.configuration.setTitle(jsTitle)
-        }
+      jsDecimalDataSeriesStyle.valueAxisTitle?.let { jsTitle ->
+        valueAxisLayer.configuration.setTitle(jsTitle)
+      }
 
-        //Overwrites the default ticks format that might have been applied by applyValueAxisStyle
-        jsDecimalDataSeriesStyle.ticksFormat?.toNumberFormat()?.let {
-          valueAxisLayer.configuration.ticksFormat = it
-        }
+      //Overwrites the default ticks format that might have been applied by applyValueAxisStyle
+      jsDecimalDataSeriesStyle.ticksFormat?.toNumberFormat()?.let {
+        valueAxisLayer.configuration.ticksFormat = it
       }
     }
+
 
     jsStyle.enumAxisStyle?.let { jsEnumAxisStyle ->
       enumCategoryAxisLayer.configuration.applyEnumAxisStyle(jsEnumAxisStyle)
@@ -625,13 +627,16 @@ class TimeLineChart internal constructor(
   }
 }
 
+internal val needsToBeFixedForCustomer2 = true
 /**
  * Applies the default style for the timeline chart style
  */
 private fun ValueAxisLayer.Configuration.applyTimeLineChartStyle() {
-  side = Side.Left
-  tickOrientation = Vicinity.Outside
-  paintRange = AxisConfiguration.PaintRange.Continuous
+  if (!needsToBeFixedForCustomer2) {
+    side = Side.Left
+    tickOrientation = Vicinity.Outside
+    paintRange = AxisConfiguration.PaintRange.Continuous
+  }
 }
 
 /**

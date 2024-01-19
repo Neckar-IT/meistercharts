@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.FillBackgroundLayer
 import com.meistercharts.algorithms.layers.NeckarItFlowLayer
 import com.meistercharts.algorithms.layers.SloganLayer
 import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.color.Color
 import com.meistercharts.color.RadialGradient
@@ -58,6 +59,7 @@ class NeckarITSloganWithFlowGestalt(
 
       configure {
         layers.addClearBackground()
+        layers.addFillCanvasBackground()
         layers.addLayer(backgroundLayer)
         layers.addLayer(flowLayer)
         layers.addLayer(sloganLayer)

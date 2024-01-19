@@ -16,7 +16,6 @@
 package com.meistercharts.api
 
 
-import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import it.neckar.open.unit.number.PositiveOrZero
@@ -173,7 +172,8 @@ enum class EnumAggregationMode {
   /**
    * The enum-value that is sampled the most during a sampling period will be taken.
    */
-  MostTime,;
+  MostTime,
+  ;
 }
 
 /**
@@ -1181,4 +1181,29 @@ external interface HasContentViewportMargin {
    */
   val contentViewportMargin: @px Insets?
 
+}
+
+/**
+ * The i18n configuration
+ */
+@JsExport
+external interface I18nConfiguration {
+  /**
+   * The locale that is used to translate texts
+   */
+  val textLocale: String?
+
+  /**
+   * The locale that is used to format numbers / dates
+   *
+   * This locale must be supported by the Intl.NumberFormat and/or Intl.DateTimeFormat API.
+   */
+  val formatLocale: String?
+
+  /**
+   * The IANA time zone.
+   *
+   * This time zone must be supported by the Intl.DateTimeFormat API.
+   */
+  val timeZone: String?
 }
