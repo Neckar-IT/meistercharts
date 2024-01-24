@@ -13,6 +13,9 @@ val KClass<*>.isEnum: Boolean get() = this.java.isEnum
 
 val KClass<*>.isObject: Boolean get() = this.objectInstance != null
 
+/**
+ * Returns the simple name, including the name of the enclosing class if this is an inner class.
+ */
 val KClass<*>.simpleNameWithEnclosing: String
   get() {
     val simpleName = this.simpleName ?: throw IllegalStateException("simpleName is null for $this")
