@@ -9,7 +9,9 @@ import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.Copy
-import org.gradle.kotlin.dsl.getByName
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
 import java.io.File
 
 
@@ -103,8 +105,12 @@ fun Copy.copyJvmResources(configurationNames: List<String> = listOf("runtimeClas
 
   fun Copy.addCopyRef(dependency: Project) {
     dependency.pluginManager.withPlugin(Plugins.kotlinMultiPlatform) {
-      dependency.tasks.getByName("jvmProcessResources").let { task ->
-        val sourceDir = (task as Copy).destinationDir
+      dependency.tasks.named<Copy>("jvmProcessResources").let { task ->
+        var sourceDir: File? = null
+        task.configure {
+          sourceDir = destinationDir
+        }
+        require(sourceDir != null)
         inputs.files(sourceDir)
         dependsOn(task)
         from(sourceDir)
@@ -172,13 +178,15 @@ fun Configuration.findDirectProjectDependencies(): List<Project> {
  */
 @Deprecated("Use CopyResourcesPlugin instead")
 fun Project.alsoCopyJvmResourcesOfDependentProjects() {
-  val processResourcesTask: Copy = tasks.getByName<Copy>("processResources")
+  val processResourcesTask: TaskProvider<Copy> = tasks.named<Copy>("processResources")
 
-  val copyResourcesFromDeps = tasks.create("copyResourcesFromDeps", Copy::class.java) {
+  val copyResourcesFromDeps = tasks.register<Copy>("copyResourcesFromDeps") {
     copyJvmResources()
-    destinationDir = processResourcesTask.destinationDir
+    destinationDir = processResourcesTask.get().destinationDir
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE //necessary since we depend on other JS projects which already have copied all resources
   }
 
-  processResourcesTask.dependsOn(copyResourcesFromDeps)
+  processResourcesTask.configure {
+    dependsOn(copyResourcesFromDeps)
+  }
 }
