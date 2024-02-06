@@ -45,6 +45,7 @@ object Plugins {
   const val jacoco: String = "org.gradle.jacoco"
   const val pythonPswidersk: String = "com.pswidersk.python-plugin"
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
+  const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
 
   /**
    * Configures python projects
@@ -169,6 +170,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.npmBundle: PluginDepende
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
   get() = id(Plugins.verifyMainClassExists)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
+  get() = id(Plugins.additionalGitRepository)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
