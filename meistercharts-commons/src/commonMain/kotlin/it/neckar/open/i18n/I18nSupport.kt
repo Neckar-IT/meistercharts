@@ -1,6 +1,7 @@
 package it.neckar.open.i18n
 
 import it.neckar.datetime.minimal.TimeZone
+import it.neckar.open.context.Context
 
 /**
  * I18n support.
@@ -49,38 +50,49 @@ class I18nSupport {
 }
 
 /**
- * The default locale as provided by the system.
- * This value can not be changed since it is provided by the system
+ * The system locale - provided by the system (e.g., browser language).
+ * This value cannot be changed.
  */
-val DefaultSystemLocale: Locale = DefaultLocaleProvider().defaultLocale
+val SystemLocale: Locale = DefaultLocaleProvider().defaultLocale
 
 /**
  * Contains the default timeZone for this system.
- * Can not be set since it is provided by the system.
+ * Cannot be changed set since it is provided by the system.
  *
- * The default time zone can be set for each chart in [it.neckar.open.i18n.I18nSupport]
+ * The default time zone can be set for each component in [it.neckar.open.i18n.I18nSupport]
  *
  * A custom default time zone can be configured when initializing the platform
  */
-val DefaultSystemTimeZone: TimeZone = SystemTimeZoneProvider().systemTimeZone
+val SystemTimeZone: TimeZone = SystemTimeZoneProvider().systemTimeZone
 
 /**
- * The default i18n configuration. Is used as default when initializing a new chart
- * This value can be changed! Use with care!
+ * The system i18n configuration. Is used as fallback.
  */
-var DefaultI18nConfiguration: I18nConfiguration = I18nConfiguration(
-  textLocale = DefaultSystemLocale,
-  formatLocale = DefaultSystemLocale,
-  timeZone = DefaultSystemTimeZone
+val SystemI18nConfiguration: I18nConfiguration = I18nConfiguration(
+  textLocale = SystemLocale,
+  formatLocale = SystemLocale,
+  timeZone = SystemTimeZone
 )
-  private set
+
+
+/**
+ * The I18n context.
+ */
+val I18nContext: Context<I18nConfiguration> = Context(SystemI18nConfiguration)
+
+/**
+ * The (current) default i18n configuration.
+ * Uses the [I18nContext] to store/retrieve the value.
+ */
+val DefaultI18nConfiguration: I18nConfiguration
+  get() = I18nContext.current
 
 /**
  * Updates the [DefaultI18nConfiguration]. Use with care!
- * It is possible to set the locale for a chart itself ([I18nSupport]).
+ * It is possible to set the locale for a component itself ([I18nSupport]).
  */
 fun updateDefaultI18nConfiguration(i18nConfiguration: I18nConfiguration) {
-  DefaultI18nConfiguration = i18nConfiguration
+  I18nContext.setDefaultValue(i18nConfiguration)
 }
 
 /**

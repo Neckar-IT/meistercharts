@@ -191,6 +191,8 @@ public object Libs {
 
     public const val ktor_server_test_host: String = "io.ktor:ktor-server-test-host:_"
 
+    public const val ktor_server_test_host_jvm: String = "io.ktor:ktor-server-test-host-jvm:_"
+
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
     public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"

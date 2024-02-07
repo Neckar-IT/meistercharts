@@ -69,7 +69,7 @@ fun initLookAndFeel(lookAndFeel: LookAndFeel) {
 /**
  * Sets the default i18n configuration.
  *
- * This configuration may be overwritten on a per chart basis.
+ * This configuration may be overwritten on a per-chart basis.
  */
 @JsExport
 fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {

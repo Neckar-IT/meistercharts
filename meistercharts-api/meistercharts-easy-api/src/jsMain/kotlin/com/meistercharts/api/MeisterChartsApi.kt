@@ -110,7 +110,10 @@ internal constructor(
   abstract fun setConfiguration(jsConfiguration: Configuration)
 
   /**
-   * Sets the i18n configuration for this chart
+   * Sets the i18n configuration (only) for this chart.
+   *
+   * In most cases, it is sufficient to set the default i18n configuration for the whole platform:
+   * `meistercharts.setI18nConfiguration(config)`
    */
   @JsName("setI18nConfiguration")
   fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {

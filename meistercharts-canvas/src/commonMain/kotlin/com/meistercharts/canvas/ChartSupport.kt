@@ -58,6 +58,7 @@ import it.neckar.open.dispose.OnDispose
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.I18nContext
 import it.neckar.open.i18n.I18nSupport
 import it.neckar.open.i18n.addFallbackTextResolver
 import it.neckar.open.kotlin.lang.isNanOrInfinite
@@ -285,7 +286,7 @@ class ChartSupport(
   val touchEvents: TouchEventBroker = canvas.touchEvents
 
   /**
-   * The refresh listeners are notified on every refresh (more often than the paint listeners)
+   * The refresh listeners are notified on every refresh (more often than the paint listeners which are only called when the canvas is dirty)
    */
   internal val renderLoopListeners = mutableListOf<ChartRenderLoopListener>()
 
@@ -443,12 +444,25 @@ class ChartSupport(
         @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
         lastPaintTime = frameTimestamp
 
-        val paintingIndex = lastPaintingLoopIndex.next().also {
+        val paintingLoopIndex = lastPaintingLoopIndex.next().also {
           lastPaintingLoopIndex = it
         }
 
-        for (i in 0 until paintListeners.size) {
-          paintListeners[i].paint(frameTimestamp, repaintDelta, paintingIndex, dirtyReasons)
+        //Update the I18nContext
+        I18nContext.with(i18nConfiguration) {
+          CurrentPaintingContext.fill(
+            this,
+            paintingLoopIndex,
+            frameTimestamp,
+          )
+
+          try {
+            for (i in 0 until paintListeners.size) {
+              paintListeners[i].paint(frameTimestamp, repaintDelta, paintingLoopIndex, dirtyReasons)
+            }
+          } finally {
+            CurrentPaintingContext.clear()
+          }
         }
       }
     }

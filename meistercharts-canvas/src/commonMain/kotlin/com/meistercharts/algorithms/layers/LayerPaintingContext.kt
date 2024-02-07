@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.Meistercharts
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.calc.TimeChartCalculator
@@ -64,7 +65,7 @@ data class LayerPaintingContext(
   /**
    * The time of the current frame.
    *
-   * This timestamp can also be accessed using the val [currentFrameTimestamp] while painting.
+   * This timestamp can also be accessed using the [Meistercharts.renderLoop] while painting.
    * Therefore, it is not always necessary to pass the frame timestamp as parameter
    */
   val frameTimestamp: @ms Double,
@@ -241,7 +242,7 @@ fun Tween.interpolate(paintingContext: LayerPaintingContext): @pct Double {
 /**
  * Collects missing resources during the paint
  */
-class MissingResources() {
+class MissingResources {
   /**
    * Contains the missing URLs
    */

@@ -68,6 +68,7 @@ object Meistercharts {
   /**
    * Reference to the current [TimerImplementation]
    */
+  @Deprecated("No longer required")
   var timerImplementation: TimerImplementation
     get() {
       return it.neckar.open.time.timerImplementation

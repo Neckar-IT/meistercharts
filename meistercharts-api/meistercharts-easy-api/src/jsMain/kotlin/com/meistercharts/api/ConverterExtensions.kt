@@ -56,10 +56,10 @@ import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.cached
-import it.neckar.open.i18n.DefaultSystemLocale
-import it.neckar.open.i18n.DefaultSystemTimeZone
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
+import it.neckar.open.i18n.SystemLocale
+import it.neckar.open.i18n.SystemTimeZone
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
@@ -850,6 +850,9 @@ fun com.meistercharts.api.EnumAggregationMode.toModel(): EnumAggregationMode {
   }
 }
 
+/**
+ * Converts the [com.meistercharts.api.I18nConfiguration] (API) to a [I18nConfiguration] (model)
+ */
 fun com.meistercharts.api.I18nConfiguration.toModel(): I18nConfiguration {
   val jsTextLocale = this.textLocale
   val jsFormatLocale = this.formatLocale
@@ -857,8 +860,8 @@ fun com.meistercharts.api.I18nConfiguration.toModel(): I18nConfiguration {
 
 
   return I18nConfiguration(
-    if (jsTextLocale.isNullOrBlank()) DefaultSystemLocale else Locale(jsTextLocale),
-    if (jsFormatLocale.isNullOrBlank()) DefaultSystemLocale else Locale(jsFormatLocale),
-    if (jsTimeZone.isNullOrBlank()) DefaultSystemTimeZone else TimeZone(jsTimeZone)
+    if (jsTextLocale.isNullOrBlank()) SystemLocale else Locale(jsTextLocale),
+    if (jsFormatLocale.isNullOrBlank()) SystemLocale else Locale(jsFormatLocale),
+    if (jsTimeZone.isNullOrBlank()) SystemTimeZone else TimeZone(jsTimeZone)
   )
 }

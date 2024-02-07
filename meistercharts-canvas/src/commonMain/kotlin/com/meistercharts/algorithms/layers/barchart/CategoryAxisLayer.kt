@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
-import com.meistercharts.algorithms.layers.AxisPaintingVariables
 import com.meistercharts.algorithms.layers.AxisConfiguration
+import com.meistercharts.algorithms.layers.AxisPaintingVariables
 import com.meistercharts.algorithms.layers.CategoryLinesLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
@@ -52,7 +52,7 @@ class CategoryAxisLayer(
     labelsProvider: SizedLabelsProvider,
     layoutProvider: () -> EquisizedBoxLayout?,
     additionalConfiguration: Configuration.() -> Unit = {},
-  ): this(Configuration(labelsProvider, layoutProvider), additionalConfiguration)
+  ) : this(Configuration(labelsProvider, layoutProvider), additionalConfiguration)
 
   init {
     configuration.additionalConfiguration()

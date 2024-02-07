@@ -19,26 +19,27 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.textService
-import com.meistercharts.model.Anchoring
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.geometry.BasePointProvider
+import com.meistercharts.geometry.DirectionBasedBasePointProvider
+import com.meistercharts.model.Anchoring
+import com.meistercharts.model.Insets
+import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Direction.Center
-import com.meistercharts.geometry.DirectionBasedBasePointProvider
+import it.neckar.geometry.Distance
 import it.neckar.geometry.HorizontalAlignment
-import com.meistercharts.model.Insets
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
-import com.meistercharts.style.BoxStyle
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
@@ -57,7 +58,7 @@ class TextLayer(
     lines: LinesProvider,
     additionalConfiguration: Configuration.() -> Unit = {},
 
-  ): this(Configuration(lines), additionalConfiguration)
+    ) : this(Configuration(lines), additionalConfiguration)
 
   init {
     configuration.additionalConfiguration()
@@ -131,6 +132,11 @@ class TextLayer(
      * The base point provider that is used to calculate the base point
      */
     var anchorPointProvider: BasePointProvider = DirectionBasedBasePointProvider(Center)
+
+    fun topLeft(distance: Distance = Distance.of(20.0, 20.0)) {
+      anchorDirection = Direction.TopLeft
+      anchorPointProvider = DirectionBasedBasePointProvider(Direction.TopLeft, distance)
+    }
 
     /**
      * The anchor direction - describes where the text is painted relative to the base point

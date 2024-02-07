@@ -67,31 +67,6 @@ class RenderLoopSupport {
   }
 
   /**
-   * The backing field for the current frame timestamp.
-   * Will be set to [Double.NaN] when no frame is currently being painted.
-   */
-  private var currentFrameTimestampOrNaN: @ms @MayBeNaN Double = Double.NaN
-
-  /**
-   * Updates the current frame timestamp. Must only be used for tests
-   */
-  @TestOnly
-  internal fun setCurrentFrameTimestampForTestsOnly(currentFrameTimestamp: @ms @MayBeNaN Double) {
-    currentFrameTimestampOrNaN = currentFrameTimestamp
-  }
-
-  /**
-   * Returns the timestamp of the current frame.
-   * This field can be used as kind of "shortcut" to access the current frame timestamp
-   *
-   * ATTENTION: Will throw an exception if called from outside the frame paint method!
-   */
-  val currentFrameTimestamp: @ms @IsFinite Double
-    get() {
-      return currentFrameTimestampOrNaN.ifNaN { throw IllegalStateException("Not currently in a frame") }
-    }
-
-  /**
    * Render the next loop.
    * This method must not be called manually!
    *
@@ -115,6 +90,31 @@ class RenderLoopSupport {
       currentFrameTimestampOrNaN = Double.NaN
     }
   }
+
+  /**
+   * The backing field for the current frame timestamp.
+   * Will be set to [Double.NaN] when no frame is currently being painted.
+   */
+  private var currentFrameTimestampOrNaN: @ms @MayBeNaN Double = Double.NaN
+
+  /**
+   * Updates the current frame timestamp. Must only be used for tests
+   */
+  @TestOnly
+  internal fun setCurrentFrameTimestampForTestsOnly(currentFrameTimestamp: @ms @MayBeNaN Double) {
+    currentFrameTimestampOrNaN = currentFrameTimestamp
+  }
+
+  /**
+   * Returns the timestamp of the current frame.
+   * This field can be used as kind of "shortcut" to access the current frame timestamp
+   *
+   * ATTENTION: Will throw an exception if called from outside the frame paint method!
+   */
+  val currentFrameTimestamp: @ms @IsFinite Double
+    get() {
+      return currentFrameTimestampOrNaN.ifNaN { throw IllegalStateException("Not currently in a frame") }
+    }
 
   companion object {
     private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.loop.RenderLoopSupport")
