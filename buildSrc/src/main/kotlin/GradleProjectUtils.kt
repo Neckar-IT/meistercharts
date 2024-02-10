@@ -1,6 +1,9 @@
 import com.google.common.io.Files
 import org.gradle.api.GradleException
+import org.gradle.api.NamedDomainObjectProvider
+import org.gradle.api.NamedDomainObjectSet
 import org.gradle.api.Project
+import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
@@ -58,7 +61,7 @@ fun Project.findSourcesJar(sourcesJarTaskName: String = "sourcesJar"): File? {
  */
 fun Project.copySourcesJarToDir(
   targetDir: File,
-  sourcesJarTaskName: String = "jvmSourcesJar"
+  sourcesJarTaskName: String = "jvmSourcesJar",
 ) {
   findSourcesJar(sourcesJarTaskName)?.let { sourcesJar ->
     sourcesJar.ensureExists("sourcesJar")
@@ -188,5 +191,16 @@ fun Project.alsoCopyJvmResourcesOfDependentProjects() {
 
   processResourcesTask.configure {
     dependsOn(copyResourcesFromDeps)
+  }
+}
+
+/**
+ * Returns the named object or null
+ */
+fun <T> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObjectProvider<T>? {
+  return try {
+    this.named(name)
+  } catch (ignore: UnknownDomainObjectException) {
+    null
   }
 }

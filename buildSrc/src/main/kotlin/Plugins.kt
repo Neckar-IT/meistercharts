@@ -46,6 +46,8 @@ object Plugins {
   const val pythonPswidersk: String = "com.pswidersk.python-plugin"
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
+  const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
+  const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
 
   /**
    * Configures python projects
@@ -161,6 +163,12 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.asciidoctor: PluginDepen
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
   get() = id(Plugins.asciidoctorPdf)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
+  get() = id(Plugins.generatePackageJson)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
+  get() = id(Plugins.installPnpmDependency)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.plantUml: PluginDependencySpec
   get() = id(Plugins.plantUml)

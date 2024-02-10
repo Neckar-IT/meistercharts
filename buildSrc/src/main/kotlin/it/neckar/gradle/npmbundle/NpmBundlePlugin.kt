@@ -1,8 +1,10 @@
 @file:Suppress("unused")
 
 package it.neckar.gradle.npmbundle
+
 import child
 import com.google.common.io.Files
+import de.fayard.refreshVersions.core.versionFor
 import hasKotlinMultiplatformPlugin
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
@@ -52,7 +54,7 @@ class NpmBundlePlugin : Plugin<Project> {
       }
 
       packageJsonTemplate.convention {
-        project.file("package_template.json")
+        project.file("package.template.json")
       }
 
       targetDirectoryForArchive.convention {
@@ -81,7 +83,7 @@ class NpmBundlePlugin : Plugin<Project> {
       }
 
       packageJsonTemplate.convention {
-        project.file("package_template.json")
+        project.file("package.template.json")
       }
 
       targetDirectoryForArchive.convention {
@@ -218,6 +220,7 @@ open class NpmBundleExtension(objects: ObjectFactory) {
    * The kotlin version number
    */
   @Input
+  @Deprecated("Use versionProperty instead")
   val kotlinVersion: Property<String> = objects.property()
 
   //
@@ -246,10 +249,12 @@ open class NpmBundleExtension(objects: ObjectFactory) {
 /**
  * Creates the package json file
  */
+@Deprecated("Use packageJsonGenerator plugin instead")
 open class CreatePackageJsonTask : DefaultTask() {
   @Input
   val versionProperty: Property<String> = project.objects.property()
 
+  @Deprecated("Use versionProperty instead")
   @Input
   val kotlinVersionProperty: Property<String> = project.objects.property()
 
@@ -271,15 +276,28 @@ open class CreatePackageJsonTask : DefaultTask() {
 
     val template = packageJsonTemplateProperty.get().asFile
 
-    if (!template.isFile || !template.exists()) {
+    if (template.isFile.not() || template.exists().not()) {
       throw InvalidUserDataException("package.json template not found @ <${template.absolutePath}>")
     }
 
     val content = template.readText()
-    val replaced = content
+    var replaced = content
       .replace("\$KOTLIN_VERSION", kotlinVersion)
       .replace("\$VERSION", version)
       .replace("\$MODULE", module)
+
+
+    //find all variables in the style ${variable}
+    val versionVariableNames = "\\$\\{([^}]+)}".toRegex().findAll(content)
+      .map { it.groupValues[1] } //get the first group
+      .filter {
+        it.startsWith("version.")
+      }
+
+    replaced = versionVariableNames.fold(replaced) { acc, variableName ->
+      val versionValue = project.versionFor(variableName)
+      acc.replace("\${$variableName}", versionValue)
+    }
 
     val packageJson = targetDirProperty.get().asFile.child("package.json")
     packageJson.parentFile.let { dir ->
