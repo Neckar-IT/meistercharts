@@ -30,22 +30,9 @@
  */
 package it.neckar.open.io
 
-import it.neckar.open.file.requireIsDirectory
 import java.io.File
 import java.nio.charset.Charset
 
-/**
- */
-object FileUtils {
-  /**
-   * Throws an IOException if the given file is not a directory
-   */
-  @JvmStatic
-  @Deprecated("Inline", ReplaceWith("directory.requireIsDirectory()", "it.neckar.open.file.requireIsDirectory"))
-  fun ensureDirectoryExists(directory: File): File {
-    return directory.requireIsDirectory()
-  }
-}
 
 /** Writes into a file by first creating a temp file and then renaming the temp file to replace the actual target file.
  * Should the program crash while executing, the tmp file will remain next to the target file.*/
