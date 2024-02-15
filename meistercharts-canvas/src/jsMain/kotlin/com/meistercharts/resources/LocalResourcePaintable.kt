@@ -34,7 +34,7 @@ actual class LocalResourcePaintable actual constructor(
   /**
    * The alignment point for the bounding box
    */
-  val alignmentPoint: Coordinates,
+  actual val alignmentPoint: Coordinates,
 ) : Paintable {
 
   /**

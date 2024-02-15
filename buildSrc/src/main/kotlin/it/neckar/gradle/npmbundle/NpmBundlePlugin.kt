@@ -65,7 +65,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * The extension that configures the npm bundle (development)
      */
-    val npmBundleExtensionDevelopment = project.extensions.create<NpmBundleExtension>("npmBundleDevelopment").apply {
+    val npmBundleExtensionDevelopment = project.extensions.create<NpmBundleExtension>(NpmBundleDevelopmentTaskName).apply {
       moduleName.convention(project.name)
       dirNameInArchive.convention(project.name)
       archiveFileName.convention(project.name)
@@ -169,7 +169,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * Development task
      */
-    project.task<GzipNpmModuleTask>("npmBundleDevelopment") {
+    project.task<GzipNpmModuleTask>(NpmBundleDevelopmentTaskName) {
       group = "Neckar IT - NPM Bundle"
       description = "Creates the npm bundle (*.tar.gz) - (Development)"
 
@@ -185,6 +185,11 @@ class NpmBundlePlugin : Plugin<Project> {
     project.withTask("assemble") {
       it.dependsOn(gzipTask)
     }
+  }
+
+  companion object {
+    const val NpmBundleTaskName: String = "npmBundle"
+    const val NpmBundleDevelopmentTaskName: String = "npmBundleDevelopment"
   }
 }
 

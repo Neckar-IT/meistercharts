@@ -17,14 +17,16 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.ObjectFit
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 
 /**
- * Shows a background image - in the window
+ * Shows a background image - in the window.
+ *
+ * The image is aligned to the bottom left corner and is painted in the size of the canvas.
  */
 class BackgroundImageLayer(
   val configuration: Configuration = Configuration(),

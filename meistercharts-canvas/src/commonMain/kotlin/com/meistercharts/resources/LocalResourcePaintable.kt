@@ -37,6 +37,12 @@ expect class LocalResourcePaintable(
    */
   alignmentPoint: Coordinates = Coordinates.origin,
 ) : Paintable {
+
+  /**
+   * The alignment point for the bounding box.
+   */
+  val alignmentPoint: Coordinates
+
   fun withSize(size: Size): LocalResourcePaintable
 
   companion object

@@ -19,11 +19,11 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.model.Anchoring
+import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
-import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
 
@@ -34,7 +34,7 @@ import it.neckar.open.unit.other.px
 actual class LocalResourcePaintable actual constructor(
   val relativePath: Url,
   size: @px Size?,
-  val alignmentPoint: Coordinates,
+  actual val alignmentPoint: Coordinates,
 ) : Paintable {
 
   val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)

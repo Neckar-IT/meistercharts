@@ -59,6 +59,6 @@ data class Image @JvmOverloads constructor(
 
   override fun paintSizeForced(paintingContext: LayerPaintingContext, x: Double, y: Double, forcedSize: Size) {
     val gc = paintingContext.gc
-    gc.paintImage(this, x + alignmentPoint.x, y + alignmentPoint.y, forcedSize.width, forcedSize.height)
+    gc.paintImage(this, x, y, forcedSize.width, forcedSize.height)
   }
 }

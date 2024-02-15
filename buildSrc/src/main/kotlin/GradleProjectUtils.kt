@@ -10,11 +10,6 @@ import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
-import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.TaskProvider
-import org.gradle.kotlin.dsl.named
-import org.gradle.kotlin.dsl.register
 import java.io.File
 
 
@@ -96,49 +91,20 @@ fun Project.hasKotlinMultiplatformPlugin(): Boolean {
   return hasPlugin(Plugins.kotlinMultiPlatform)
 }
 
+/**
+ * Returns true if this project is a kotlin jvm project.
+ */
+fun Project.hasKotlinJvmPlugin(): Boolean {
+  return hasPlugin(Plugins.kotlinJvm)
+}
+
 fun Project.hasPlugin(kotlinMultiPlatform: String): Boolean {
   return this.pluginManager.findPlugin(kotlinMultiPlatform) != null
 }
 
 /**
- * Copy the resources from JVM
- */
-fun Copy.copyJvmResources(configurationNames: List<String> = listOf("runtimeClasspath", "commonMainApi", "jvmRuntimeClasspath")) {
-  val projectDependencies = this.project.findAllProjectDependencies(configurationNames)
-
-  fun Copy.addCopyRef(dependency: Project) {
-    dependency.pluginManager.withPlugin(Plugins.kotlinMultiPlatform) {
-      dependency.tasks.named<Copy>("jvmProcessResources").let { task ->
-        var sourceDir: File? = null
-        task.configure {
-          sourceDir = destinationDir
-        }
-        require(sourceDir != null)
-        inputs.files(sourceDir)
-        dependsOn(task)
-        from(sourceDir)
-      }
-    }
-  }
-
-  projectDependencies.forEach { dependency ->
-    when {
-      dependency.state.executed -> {
-        addCopyRef(dependency)
-      }
-
-      else -> {
-        dependency.afterEvaluate {
-          addCopyRef(dependency)
-        }
-      }
-    }
-  }
-}
-
-/**
- * Returns all project dependencies (including transitive dependencies), that:
- * * have a configuration
+ * Returns all project dependencies (including transitive dependencies)
+ * for the configurations with the given names.
  */
 fun Project.findAllProjectDependencies(
   configurationNames: List<String>,
@@ -148,14 +114,19 @@ fun Project.findAllProjectDependencies(
   if (this in visitedProjects) {
     return foundProjects
   }
-
   visitedProjects.add(this)
 
   configurationNames.forEach { configurationName ->
     val configuration = configurations.findByName(configurationName)
 
+    println("Finding deps for project ${project.path} with configuration $configurationName")
+
+
     if (configuration != null) {
       val directDependencies = configuration.findDirectProjectDependencies()
+      println("--> Finding deps: isCanBeResolved: ${configuration.isCanBeResolved}")
+      println("--> Finding deps: direct: ${configuration.allDependencies.size}")
+
       foundProjects.addAll(directDependencies)
 
       directDependencies.forEach { project ->
@@ -174,24 +145,6 @@ fun Configuration.findDirectProjectDependencies(): List<Project> {
   return allDependencies
     .filterIsInstance<ProjectDependency>()
     .map { it.dependencyProject }
-}
-
-/**
- * Copy resources for JVM projects
- */
-@Deprecated("Use CopyResourcesPlugin instead")
-fun Project.alsoCopyJvmResourcesOfDependentProjects() {
-  val processResourcesTask: TaskProvider<Copy> = tasks.named<Copy>("processResources")
-
-  val copyResourcesFromDeps = tasks.register<Copy>("copyResourcesFromDeps") {
-    copyJvmResources()
-    destinationDir = processResourcesTask.get().destinationDir
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE //necessary since we depend on other JS projects which already have copied all resources
-  }
-
-  processResourcesTask.configure {
-    dependsOn(copyResourcesFromDeps)
-  }
 }
 
 /**
