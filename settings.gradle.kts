@@ -13,13 +13,9 @@ pluginManagement {
 plugins {
   //Prints the Maven like output at the end of the build
   //https://kordamp.org/kordamp-gradle-plugins/#_org_kordamp_gradle_insight
-  id("org.kordamp.gradle.insight") version "0.51.0"
+  id("org.kordamp.gradle.insight") version "0.54.0"
 
-  id("de.fayard.refreshVersions") version "0.40.2"
-  ////                          # available:"0.50.0"
-  ////                          # available:"0.50.1"
-  ////                          # available:"0.50.2"
-  ////                          # available:"0.51.0"
+  id("de.fayard.refreshVersions") version "0.60.5"
 }
 
 rootProject.name = "meistercharts.com"

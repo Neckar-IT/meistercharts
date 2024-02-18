@@ -119,14 +119,8 @@ fun Project.findAllProjectDependencies(
   configurationNames.forEach { configurationName ->
     val configuration = configurations.findByName(configurationName)
 
-    println("Finding deps for project ${project.path} with configuration $configurationName")
-
-
     if (configuration != null) {
       val directDependencies = configuration.findDirectProjectDependencies()
-      println("--> Finding deps: isCanBeResolved: ${configuration.isCanBeResolved}")
-      println("--> Finding deps: direct: ${configuration.allDependencies.size}")
-
       foundProjects.addAll(directDependencies)
 
       directDependencies.forEach { project ->

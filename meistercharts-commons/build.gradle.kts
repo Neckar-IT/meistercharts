@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackDevtool
-
 description = """Meistercharts - Commons"""
 
 plugins {
@@ -94,6 +92,7 @@ kotlin {
         //api(project(Projects.open_annotations))
         //api(project(Projects.open_commons_time))
         api(Libs.slf4j_api)
+        api(Libs.commons_io)
         api(Libs.logback_classic)
         api(Libs.kotlin_reflect)
         implementation(Libs.commons_lang3)

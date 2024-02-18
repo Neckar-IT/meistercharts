@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.property
 import toUpperCamelCase
-
+import project
 /**
  * Plugin that adds a task to create type script definitions from Kotlin source code
  */

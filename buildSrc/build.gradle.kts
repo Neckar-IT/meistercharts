@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "1.9.20-RC"
+val kotlinVersion: String = "1.9.20"
 
 plugins {
   `kotlin-dsl`
@@ -22,7 +22,7 @@ idea {
 }
 
 dependencies {
-  implementation("com.google.guava:guava:30.1.1-jre")
+  implementation("com.google.guava:guava:_")
   implementation("commons-io:commons-io:_")
   implementation("org.apache.commons:commons-compress:_")
   implementation("org.apache.commons:commons-lang3:_")
@@ -75,6 +75,14 @@ gradlePlugin {
     register("TypescriptDefinitionGenerationPlugin") {
       id = "it.neckar.ksp.generating.ts-plugin"
       implementationClass = "it.neckar.gradle.kps.generating.ts.TypescriptDefinitionGenerationPlugin"
+    }
+    register("GeneratePackageJsonPlugin") {
+      id = "it.neckar.repos.generate-package-json"
+      implementationClass = "it.neckar.gradle.packagejson.GeneratePackageJsonPlugin"
+    }
+    register("InstallPnpmDependencyPlugin") {
+      id = "it.neckar.repos.install-pnpm-dependency"
+      implementationClass = "it.neckar.gradle.packagejson.InstallPnpmDependencyPlugin"
     }
   }
 }
