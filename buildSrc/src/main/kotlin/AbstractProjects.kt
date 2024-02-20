@@ -4,6 +4,9 @@ import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
 import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
 
+/**
+ * Abstract base class for objects that contain constants for all projects
+ */
 abstract class AbstractProjects {
   /**
    * Contains all configured projects

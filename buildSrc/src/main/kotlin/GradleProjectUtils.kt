@@ -1,4 +1,6 @@
 import com.google.common.io.Files
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import org.gradle.api.GradleException
 import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.NamedDomainObjectSet
@@ -150,4 +152,18 @@ fun <T> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObjectProvid
   } catch (ignore: UnknownDomainObjectException) {
     null
   }
+}
+
+/**
+ * Returns the parsed package.json file
+ * Throws an exception if the file does not exist
+ */
+fun Project.parsePackageJson(): JsonElement {
+  val packageJson = file("package.json")
+
+  if (packageJson.isFile.not()) {
+    throw GradleException("Expected ${packageJson.absolutePath} to be a file")
+  }
+
+  return Json.parseToJsonElement(packageJson.readText())
 }
