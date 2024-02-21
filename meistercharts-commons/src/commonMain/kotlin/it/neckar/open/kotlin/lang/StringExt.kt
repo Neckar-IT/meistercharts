@@ -234,10 +234,19 @@ fun String.encodeForFileName(): String {
   return InvalidForFileName.replace(this, "_")
 }
 
+fun String.encodeForCodeIdentifier(): String {
+  return InvalidForCodeIdentifier.replace(this, "_")
+}
+
 /**
  * Regex that contains invalid elements for a file name
  */
 private val InvalidForFileName: Regex = Regex("[:\\\\/*\"?|<>']")
+
+/**
+ * All chars that are *not* valid for code identifiers
+ */
+private val InvalidForCodeIdentifier: Regex = Regex("[^a-zA-Z0-9_]")
 
 /**
  * This is far from perfect.
