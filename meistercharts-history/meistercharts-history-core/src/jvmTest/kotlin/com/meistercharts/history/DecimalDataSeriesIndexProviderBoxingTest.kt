@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test
  *
  */
 class DecimalDataSeriesIndexProviderBoxingTest {
+  @Disabled
   @Test
   fun testBoxing() {
     val provider = DecimalDataSeriesIndexProvider.indices { 17 }

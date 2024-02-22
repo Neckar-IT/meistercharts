@@ -40,8 +40,6 @@ class SimpleRefsTest {
     assertThat(chunk.enumDataSeriesCount).isEqualTo(0)
     assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(1)
 
-    println(chunk.dump())
-
     assertThat(chunk.dump()).isEqualComparingLinesTrim(
       """
         Start: 2020-05-21T15:00:41.500Z

@@ -17,7 +17,6 @@ package com.meistercharts.history.impl
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -26,6 +25,7 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.downsampling.DownSamplingService
 import com.meistercharts.history.historyConfiguration
+import com.meistercharts.time.TimeRanges
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.test.utils.isNaN
 import it.neckar.open.unit.si.ms
@@ -142,6 +142,8 @@ class HistoryAutoScaleTest {
     assertThat(downSampledBucket.chunk.getMin(DecimalDataSeriesIndex.zero, TimestampIndex(400))).isEqualTo(31.0)
     assertThat(downSampledBucket.chunk.getMax(DecimalDataSeriesIndex.zero, TimestampIndex(400))).isEqualTo(33.0)
 
-    println(downSampledBucket.chunk.toString())
+    if (false) {
+      println(downSampledBucket.chunk.toString())
+    }
   }
 }

@@ -17,7 +17,6 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRange
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
@@ -32,9 +31,10 @@ import com.meistercharts.history.generator.ReferenceEntryGenerator
 import com.meistercharts.history.isEqualToHistoryEnumSet
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
+import com.meistercharts.time.TimeRange
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.RandomWithSeed
-import it.neckar.datetime.minimal.TimeConstants
 import org.junit.jupiter.api.Test
 
 class DownSamplingReferenceEntryCalculatorTest {
@@ -107,7 +107,9 @@ class DownSamplingReferenceEntryCalculatorTest {
 
       val historyChunk = bucket.chunk
 
-      println(historyChunk.dump())
+      if (false) {
+        println(historyChunk.dump())
+      }
 
       assertThat(bucket.start.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
       assertThat(bucket.end.formatUtc()).isEqualTo("2024-01-01T00:01:00.000Z")

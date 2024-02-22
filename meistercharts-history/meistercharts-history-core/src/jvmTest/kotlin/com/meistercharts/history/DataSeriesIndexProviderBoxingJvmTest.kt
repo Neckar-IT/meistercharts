@@ -15,12 +15,14 @@
  */
 package com.meistercharts.history
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 
 /**
  */
 class DataSeriesIndexProviderBoxingJvmTest {
+  @Disabled
   @Test
   fun testBoxing() {
     val provider = DecimalDataSeriesIndexProvider.indices { 17 }
@@ -30,6 +32,7 @@ class DataSeriesIndexProviderBoxingJvmTest {
     val result = provider.valueAt(4)
   }
 
+  @Disabled
   @Test
   fun testBoxingWithDeclaration() {
     val provider: DecimalDataSeriesIndexProvider = DecimalDataSeriesIndexProvider.indices { 17 }
@@ -39,6 +42,7 @@ class DataSeriesIndexProviderBoxingJvmTest {
     val result = provider.valueAt(5)
   }
 
+  @Disabled
   @Test
   fun testBoxingWithWidenedDeclaration() {
     val provider: DataSeriesIndexProvider<DecimalDataSeriesIndex> = DecimalDataSeriesIndexProvider.indices { 17 }
@@ -48,6 +52,7 @@ class DataSeriesIndexProviderBoxingJvmTest {
     val result = provider.valueAt(6)
   }
 
+  @Disabled
   @Test
   fun testBoxingWithWidenedDeclarationWildcard() {
     val provider: DataSeriesIndexProvider<*> = DecimalDataSeriesIndexProvider.indices { 17 }

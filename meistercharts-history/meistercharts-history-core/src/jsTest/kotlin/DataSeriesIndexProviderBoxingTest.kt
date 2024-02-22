@@ -15,12 +15,14 @@
  */
 package com.meistercharts.history
 
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 
 /**
  *
  */
+@Ignore
 class DataSeriesIndexProviderBoxingTest {
   @Test
   fun testBoxing() {

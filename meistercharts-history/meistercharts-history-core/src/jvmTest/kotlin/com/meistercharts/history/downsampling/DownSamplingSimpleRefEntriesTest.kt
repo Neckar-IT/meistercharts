@@ -63,6 +63,8 @@ class DownSamplingSimpleRefEntriesTest {
     assertThat(downSampled.start.formatUtc()).isEqualTo("2020-05-21T15:00:00.000Z")
     assertThat(downSampled.end.formatUtc()).isEqualTo("2020-05-21T15:10:00.000Z")
 
-    println(downSampled.chunk.dump())
+    if (false) {
+      println(downSampled.chunk.dump())
+    }
   }
 }

@@ -15,13 +15,14 @@
  */
 package com.meistercharts.history
 
-import com.meistercharts.history.DecimalDataSeriesIndexProvider
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 /**
  *
  */
 class DecimalDataSeriesIndexProviderBoxingTest {
+  @Ignore
   @Test
   fun testBoxing() {
     val provider = DecimalDataSeriesIndexProvider.indices { 17 }

@@ -272,7 +272,9 @@ class TileIndexTest {
     var iterations = 0
 
     TileIndex.iterateOverTileIndices(start, end) { mainX, subX, mainY, subY ->
-      println("$mainX.$subX  / $mainY.$subY")
+      if (false) {
+        println("$mainX.$subX  / $mainY.$subY")
+      }
       iterations++
     }
 

@@ -17,6 +17,7 @@ package com.meistercharts.time
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.formatting.dateTimeFormatIso8601
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
@@ -25,7 +26,6 @@ import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.time.ClockNowProvider
 import it.neckar.open.time.RealClockTime
-import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.time.VirtualNowProvider
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
@@ -101,7 +101,6 @@ class VirtualNowProviderTest {
         assertThat(virtualNow, virtualNow.formatUtc()).isCloseTo(now, 10_000.0)
       }
     }
-
   }
 
   @Test

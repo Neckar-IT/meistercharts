@@ -17,8 +17,6 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRange
-import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -35,9 +33,11 @@ import com.meistercharts.history.isEnumSetPending
 import com.meistercharts.history.isEqualToHistoryEnumSet
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.RandomWithSeed
-import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
@@ -203,7 +203,7 @@ class DownSamplingReferenceEntriesTest {
     //Next Layer (1 min)
     historyStorage.get(HistoryBucketDescriptor.forTimestamp(start, samplingPeriodAbove.above()?.above()!!.toHistoryBucketRange())).let { bucket ->
       requireNotNull(bucket)
-      if (true) {
+      if (false) {
         println(bucket.chunk.dump())
       }
 

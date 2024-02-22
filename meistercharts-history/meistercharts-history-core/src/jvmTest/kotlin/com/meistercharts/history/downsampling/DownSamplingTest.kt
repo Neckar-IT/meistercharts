@@ -17,7 +17,6 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
-import assertk.assertions.support.*
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryBucket
@@ -39,7 +38,7 @@ import org.junit.jupiter.api.Test
 class DownSamplingTest {
   @Test
   fun testBitSet() {
-    println("Result: ${4 or 5}")
+    assertThat(4 or 5).isEqualTo(5)
   }
 
   @Test
