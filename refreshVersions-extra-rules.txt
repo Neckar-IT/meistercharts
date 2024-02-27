@@ -60,3 +60,6 @@ org.eclipse.milo:*
 
 org.openjdk.jmh:*
 ^^^.^^^^^^^.^^^
+
+com.github.docker-java:docker(-*)
+^^^.^^^^^^.^^^^^^^^^^^
