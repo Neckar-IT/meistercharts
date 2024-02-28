@@ -28,8 +28,10 @@ import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.font
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.CanvasLinearGradient
 import com.meistercharts.color.CanvasPaint
@@ -370,7 +372,7 @@ class CanvasRenderingContextJS(
   }
 
   override fun clearShadow() {
-    context.shadowColor = Color.transparent.web
+    context.shadowColor = Color.transparent().web
   }
 
   /**

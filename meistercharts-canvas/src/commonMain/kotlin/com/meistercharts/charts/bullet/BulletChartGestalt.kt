@@ -15,20 +15,18 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.range.LinearValueRange
-import com.meistercharts.resize.ResetToDefaultsOnWindowResize
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.GridLayer
-import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
-import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -36,10 +34,6 @@ import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.model.category.valueAt
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.BulletChartBalloonTooltipSupport
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport
@@ -47,33 +41,40 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
 import com.meistercharts.charts.FixedChartGestalt
 import com.meistercharts.charts.support.CategoryAxisSupport
-import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
-import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
+import com.meistercharts.model.Vicinity
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.valueAt
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
-import com.meistercharts.model.Vicinity
+import it.neckar.open.formatting.CachedNumberFormat
+import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.TextService
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.delegate
-import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.TextService
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 
@@ -276,7 +277,7 @@ class BulletChartGestalt constructor(
     ),
     model = { categoryModel },
     valueFormat = { configuration.balloonTooltipValueLabelFormat },
-    currentValueSymbolColor = { bulletChartPainter.configuration.currentValueColor },
+    currentValueSymbolColor = bulletChartPainter.configuration.currentValueColor,
     barSymbolColor = { categoryIndex ->
       bulletChartPainter.configuration.barColors.valueAt(categoryIndex)
     }
@@ -459,16 +460,16 @@ class BulletChartGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.tickFont = font
-      valueAxisLayer.configuration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font.asProvider()
+      valueAxisLayer.configuration.tickFont = font.asProvider()
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.titleFont = font
-      valueAxisLayer.configuration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font.asProvider()
+      valueAxisLayer.configuration.titleFont = font.asProvider()
     }
 
     var balloonTooltipValueLabelFormat: CachedNumberFormat = decimalFormat

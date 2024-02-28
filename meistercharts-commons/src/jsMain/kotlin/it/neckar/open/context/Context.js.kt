@@ -17,15 +17,7 @@ actual class Context<T> actual constructor(
   /**
    * The default value that is returned, if no [with] block is active.
    */
-  private var defaultValue: T = initial
-
-  /**
-   * Sets the default value.
-   * Handle with care! In most cases it is better to use [with].
-   */
-  actual fun setDefaultValue(value: T) {
-    this.defaultValue = value
-  }
+  actual var defaultValue: T = initial
 
   /**
    * The current value.

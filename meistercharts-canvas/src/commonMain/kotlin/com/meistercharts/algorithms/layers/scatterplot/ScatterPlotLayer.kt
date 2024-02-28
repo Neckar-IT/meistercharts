@@ -23,7 +23,7 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.design.corporateDesign
+import com.meistercharts.design.CurrentTheme
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
 import com.meistercharts.provider.ValueRangeProvider
@@ -102,15 +102,15 @@ class ScatterPlotLayer(
         gc.stroke(
           if (x < gc.width / 2.0) {
             if (y < gc.height / 2.0) {
-              corporateDesign.primaryColor
+              CurrentTheme.primaryColor
             } else {
-              corporateDesign.secondaryColor
+              CurrentTheme.secondaryColor
             }
           } else {
             if (y < gc.height / 2.0) {
-              corporateDesign.primaryColorLighter
+              CurrentTheme.primaryColorLighter
             } else {
-              corporateDesign.primaryColorDarker
+              CurrentTheme.primaryColorDarker
             }
           }
         )

@@ -22,6 +22,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Direction.BottomRight
@@ -92,7 +94,7 @@ class TextsLayer(
     /**
      * The color of the text
      */
-    var textColor: Color = Color.black
+    var textColor: ColorProvider = Color.black
 
     /**
      * Describes the font

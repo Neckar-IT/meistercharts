@@ -18,9 +18,9 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.font.FontMetrics
+import com.meistercharts.model.Vicinity
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
-import com.meistercharts.model.Vicinity
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 
@@ -198,7 +198,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
   ) {
-    paintingContext.gc.font(style.tickFont)
+    paintingContext.gc.font(style.tickFont())
     tickFontMetrics = paintingContext.gc.getFontMetrics()
   }
 
@@ -213,7 +213,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
     //Calculate the space for the title
     spaceForTitleIncludingGap = if (style.titleVisible() && style.hasNonBlankTitle(paintingContext.chartSupport)) {
       //Title font related calculations
-      paintingContext.gc.font(style.titleFont)
+      paintingContext.gc.font(style.titleFont())
       titleFontMetrics = paintingContext.gc.getFontMetrics()
 
       titleFontMetrics.totalHeight + style.titleGap

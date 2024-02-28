@@ -23,15 +23,17 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.model.category.CategoryModel
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategoryModel
 import it.neckar.geometry.Orientation
 
 /**
@@ -246,7 +248,7 @@ class CategoryLayer<T : CategoryModel>(
     /**
      * The background color for the highlighted category (mouse over)
      */
-    var activeCategoryBackground: Color = Theme.backgroundColorActive()
+    var activeCategoryBackground: ColorProvider = Theme.backgroundColorActive.provider()
 
     /**
      * Provides the size for the background of the active category.

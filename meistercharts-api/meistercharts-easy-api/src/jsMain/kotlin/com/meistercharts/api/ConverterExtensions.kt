@@ -41,6 +41,7 @@ import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontWeight
@@ -140,7 +141,7 @@ fun Shadow?.toModel(): com.meistercharts.style.Shadow? {
   }
 
   return com.meistercharts.style.Shadow(
-    color = color.toColor() ?: com.meistercharts.style.Shadow.Default.color,
+    color = color.toColor().asProvider(com.meistercharts.style.Shadow.Default.color),
     blurRadius = blurRadius?.sanitize() ?: com.meistercharts.style.Shadow.Default.blurRadius,
     offsetX = offsetX?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetX,
     offsetY = offsetY?.sanitize() ?: com.meistercharts.style.Shadow.Default.offsetY,
@@ -293,7 +294,7 @@ fun LineStyle.toModel(): com.meistercharts.algorithms.layers.linechart.LineStyle
   var lineColor = Palette.defaultGray
 
   this.color.toColor()?.let {
-    lineColor = it
+    lineColor = it.asProvider()
   }
 
   this.type?.let {
@@ -386,11 +387,11 @@ private fun com.meistercharts.algorithms.layers.AxisConfiguration.applyAxisStyle
   }
 
   jsStyle.titleFont?.toFontDescriptorFragment()?.let {
-    this.titleFont = it
+    this.titleFont = it.asProvider()
   }
 
   jsStyle.tickFont?.toFontDescriptorFragment()?.let {
-    this.tickFont = it
+    this.tickFont = it.asProvider()
   }
 
   jsStyle.tickLabelColor.toColor()?.let {
@@ -406,11 +407,11 @@ fun TimeAxisLayer.Configuration.applyTimeAxisStyle(jsStyle: TimeAxisStyle?) {
 
   //The offset should use the same font as the tick labels
   jsStyle?.tickFont?.toFontDescriptorFragment()?.let {
-    this.offsetTickFont = it
+    this.offsetTickFont = it.asProvider()
   }
 
   jsStyle?.offsetTickLabelColor?.toColor()?.let {
-    this.offsetTickLabelColor = it
+    this.offsetTickLabelColor = it.asProvider()
   }
 
   jsStyle?.offsetAreaSize?.let {
@@ -422,7 +423,7 @@ fun TimeAxisLayer.Configuration.applyTimeAxisStyle(jsStyle: TimeAxisStyle?) {
   }
 
   jsStyle?.offsetAreaFills?.let { colorCodes ->
-    this.offsetAreaFills = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver)
+    this.offsetAreaFills = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver())
   }
 }
 
@@ -594,7 +595,7 @@ fun AxisTopTopTitleLayer.Configuration.applyTitleStyle(jsStyle: AxisStyle) {
   }
 
   jsStyle.titleFont?.toFontDescriptorFragment()?.let {
-    this.titleFont = it
+    this.titleFont = it.asProvider()
   }
 
   jsStyle.titleGap?.let {
@@ -619,7 +620,7 @@ fun CrossWireLayer.Configuration.applyCrossWireStyle(jsStyle: CrossWireStyle?) {
     return
   }
   jsStyle.wireColor?.toColor()?.let {
-    wireColor = it
+    wireColor = it.asProvider()
   }
 
   jsStyle.wireWidth?.let {
@@ -714,11 +715,11 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
   )
 
   hudLayer.configuration.textColors = MultiProvider.forListModulo(
-    jsThresholds.map { jsThreshold -> jsThreshold.labelColor.toColor() ?: Color.black }
+    jsThresholds.map { jsThreshold -> jsThreshold.labelColor.toColor() ?: Color.black() }
   )
   hudLayer.configuration.textColorsActive = MultiProvider.forListModulo(
     //TODO remove the fallback asap
-    jsThresholds.map { jsThreshold -> jsThreshold.labelColorActive.toColor() ?: jsThreshold.labelColor.toColor() ?: Color.black }
+    jsThresholds.map { jsThreshold -> jsThreshold.labelColorActive.toColor() ?: jsThreshold.labelColor.toColor() ?: Color.black() }
   )
 
   hudLayer.configuration.textFonts = MultiProvider.forListModulo(
@@ -752,7 +753,7 @@ fun DomainRelativeGridLayer.Configuration.applyLinesStyle(
   jsStyle?.lineColors?.let { gridLineColorProvider ->
     lineStyles = { value: @DomainRelative Double ->
       val domainValue = valueRangeProvider().toDomain(value)
-      com.meistercharts.algorithms.layers.linechart.LineStyle(color = gridLineColorProvider.lineColor(domainValue).toColor())
+      com.meistercharts.algorithms.layers.linechart.LineStyle(color = gridLineColorProvider.lineColor(domainValue).toColorProvider())
     }
   }
 }
@@ -763,7 +764,7 @@ fun DomainRelativeGridLayer.Configuration.applyLinesStyle(
 fun GridLayer.Configuration.applyLinesStyle(jsStyle: GridStyle?) {
   jsStyle?.lineColors?.let { gridLineColorProvider ->
     lineStyles = MultiProvider { index ->
-      com.meistercharts.algorithms.layers.linechart.LineStyle(color = gridLineColorProvider.lineColor(index.toDouble()).toColor())
+      com.meistercharts.algorithms.layers.linechart.LineStyle(color = gridLineColorProvider.lineColor(index.toDouble()).toColorProvider())
     }
   }
 }
@@ -772,8 +773,8 @@ fun GridLayer.Configuration.applyLinesStyle(jsStyle: GridStyle?) {
  * Turns the given JavaScript box-styles into a provider of colors
  */
 fun <IndexContext> toColors(jsBoxStyles: Array<BoxStyle>): MultiProvider<IndexContext, Color> {
-  val colors = jsBoxStyles.map { jsBoxStyle ->
-    jsBoxStyle.color.toColor() ?: Color.white
+  val colors: List<Color> = jsBoxStyles.map { jsBoxStyle ->
+    jsBoxStyle.color.toColor() ?: Color.white()
   }
   return MultiProvider.forListModulo(colors)
 }
@@ -793,8 +794,8 @@ fun <IndexContext> toBoxStyles(jsBoxStyles: Array<BoxStyle>): MultiProvider<Inde
  * Turns the given JavaScript box-style into a model-box-style
  */
 fun BoxStyle.toModel(): com.meistercharts.style.BoxStyle {
-  val fill = backgroundColor.toColor()
-  val borderColor = borderColor.toColor()
+  val fill = backgroundColor?.toColorProvider()
+  val borderColor = borderColor?.toColorProvider()
   val padding = padding?.toModel() ?: com.meistercharts.model.Insets(5.0, 7.0, 5.0, 7.0)
   val shadow = shadow.toModel()
   val radii = borderRadius.toModel()
@@ -830,13 +831,17 @@ fun String.toColor(): Color {
   return Color.unparsed(this.sanitize())
 }
 
+fun String.toColorProvider(): ColorProvider {
+  return toColor().asProvider()
+}
+
 /**
  * Applies the style to an overflow indicator painter
  */
 fun OverflowIndicatorPainter.applyStyle(jsStyle: OverflowIndicatorStyle) {
   this.configuration.applyDefaultIndicators(
-    fill = jsStyle.fill.toColor(),
-    stroke = jsStyle.stroke.toColor(),
+    fill = jsStyle.fill?.toColorProvider(),
+    stroke = jsStyle.stroke?.toColorProvider(),
     strokeWidth = jsStyle.strokeWidth,
     arrowHeadLength = jsStyle.arrowHeadLength,
     arrowHeadWidth = jsStyle.arrowHeadWidth

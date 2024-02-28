@@ -16,12 +16,16 @@
 package com.meistercharts.canvas.slider
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.color.Color
-import it.neckar.geometry.Rectangle
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import com.meistercharts.style.Shadow
+import it.neckar.geometry.Rectangle
 import it.neckar.open.unit.other.px
 
 /**
@@ -58,19 +62,19 @@ class RoundHandlePaintable(
       Slider.State.Default -> {
         gc.fill(configuration.fill)
         gc.shadow(configuration.shadow)
-        relevantStroke = configuration.stroke
+        relevantStroke = configuration.stroke.get()
       }
 
       Slider.State.MouseOverHandle -> {
         gc.fill(configuration.fillMouseOver)
         gc.shadow(configuration.shadowMouseOver)
-        relevantStroke = configuration.strokeMouseOver
+        relevantStroke = configuration.strokeMouseOver.get()
       }
 
       Slider.State.Dragging -> {
         gc.fill(configuration.fillDragging)
         gc.shadow(configuration.shadowDragging)
-        relevantStroke = configuration.strokeDragging
+        relevantStroke = configuration.strokeDragging.get()
       }
     }
 
@@ -90,13 +94,13 @@ class RoundHandlePaintable(
      */
     var diameter: @px Double = 15.0
 
-    var fill: Color = Color.white
-    var fillMouseOver: Color = Color.whitesmoke
-    var fillDragging: Color = Color.whitesmoke
+    var fill: ColorProvider = Color.white
+    var fillMouseOver: ColorProvider = Color.whitesmoke
+    var fillDragging: ColorProvider = Color.whitesmoke
 
-    var stroke: Color? = Color.silver
-    var strokeMouseOver: Color? = Color.silver
-    var strokeDragging: Color? = Color.silver
+    var stroke: ColorProviderNullable = Color.silver
+    var strokeMouseOver: ColorProviderNullable = Color.silver
+    var strokeDragging: ColorProviderNullable = Color.silver
 
     var shadow: Shadow? = Shadow.Drop
     var shadowMouseOver: Shadow? = Shadow.Drop

@@ -19,7 +19,7 @@ package com.meistercharts.tile
 
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.intFormat
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.other.Inclusive
@@ -152,10 +152,10 @@ data class TileIndex(
    * Returns a string representation of the tile index, formatted according to the provided [NumberFormat].
    *
    * @param format The [NumberFormat] to use when formatting the string. Defaults to [intFormat].
-   * @param i18nConfiguration The [I18nConfiguration] to use when formatting the string. Defaults to [DefaultI18nConfiguration].
+   * @param i18nConfiguration The [I18nConfiguration] to use when formatting the string. Defaults to [CurrentI18nConfiguration].
    * @return A string representation of the tile index, formatted according to the provided [NumberFormat].
    */
-  fun format(format: NumberFormat = intFormat, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
+  fun format(format: NumberFormat = intFormat, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
     return "${mainX.format(format, i18nConfiguration)}:${subX.format(format, i18nConfiguration)}/${mainY.format(format, i18nConfiguration)}:${subY.format(format, i18nConfiguration)}"
   }
 

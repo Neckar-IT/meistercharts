@@ -16,7 +16,6 @@
 package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
-import com.meistercharts.color.Color
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyTitleStyle
@@ -27,10 +26,12 @@ import com.meistercharts.api.toModelLinear
 import com.meistercharts.api.toNumberFormat
 import com.meistercharts.api.withValues
 import com.meistercharts.charts.BarChartStackedGestalt
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.unit.other.px
+import com.meistercharts.color.Color
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.provider.MultiProvider
+import it.neckar.open.unit.other.px
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartStackedExtensions")
 
@@ -82,15 +83,15 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.segmentColors?.let { colorCodes ->
-    this.stackedBarsPainter.stackedBarPaintable.style.colorsProvider = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver)
+    this.stackedBarsPainter.stackedBarPaintable.style.colorsProvider = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver())
   }
 
   jsStyle.remainderSegmentBorderColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBorderColor = it
+    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBorderColor = it.asProvider()
   }
 
   jsStyle.remainderSegmentBackgroundColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBackgroundColor = it
+    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBackgroundColor = it.asProvider()
   }
 
   jsStyle.remainderSegmentBorderWidth?.let {
@@ -129,7 +130,7 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.valueLabelColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.valueLabelColor = it
+    this.stackedBarsPainter.stackedBarPaintable.style.valueLabelColor = it.asProvider()
   }
 
 

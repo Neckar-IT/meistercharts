@@ -16,6 +16,7 @@
 package demo
 
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.open.kotlin.lang.and
 
 /**
@@ -32,8 +33,8 @@ class MyChart(
    * The style for this chart
    */
   open class Style {
-    var backgroundColor: Color = Color.white //<3>
-    var foregroundColor: Color = Color.orange
+    var backgroundColor: ColorProvider = Color.white //<3>
+    var foregroundColor: ColorProvider = Color.orange
   }
 }
 // end::styleExample[]
@@ -63,7 +64,7 @@ class MyChartWithSubStyles(
    * The style for this chart
    */
   open class Style {
-    var bg: Color = Color.white //<5>
+    var bg: ColorProvider = Color.white //<5>
 
     //<3>
     var myChartConfiguration: MyChart.Style.() -> Unit = {
@@ -103,7 +104,7 @@ class MyChartWithReferencedSubStyles(
   open class Style(
     val myChart: MyChart.Style //<4>
   ) {
-    var bg: Color = Color.white //<5>
+    var bg: ColorProvider = Color.white //<5>
   }
 }
 // end::subStyleExampleRef[]

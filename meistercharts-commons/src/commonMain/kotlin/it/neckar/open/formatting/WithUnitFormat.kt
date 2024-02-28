@@ -1,6 +1,6 @@
 package it.neckar.open.formatting
 
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.asProvider
@@ -33,7 +33,7 @@ class WithUnitFormat(
    * ATTENTION: The values are *not* cached!
    * In most cases it is preferred to use a [CachedNumberFormat] instead.
    */
-  fun formatWithUnit(value: Double, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+  fun formatWithUnit(value: Double, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
     val formattedValue = delegate.format(value, i18nConfiguration)
 
     return appendUnit(formattedValue, unit(), whitespaceConfig)
@@ -44,7 +44,7 @@ class WithUnitFormat(
      * Helper method to format a value with a unit.
      * This method can be used instead of a [WithUnitFormat] instance to avoid unnecessary object creation.
      */
-    fun formatWithUnit(value: Double, valueFormat: NumberFormat, unitLabel: String, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+    fun formatWithUnit(value: Double, valueFormat: NumberFormat, unitLabel: String, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
       val formattedValue = valueFormat.format(value, i18nConfiguration)
       return appendUnit(formattedValue, unitLabel, whitespaceConfig)
     }

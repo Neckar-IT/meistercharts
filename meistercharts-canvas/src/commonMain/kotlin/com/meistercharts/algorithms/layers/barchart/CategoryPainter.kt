@@ -21,7 +21,9 @@ import com.meistercharts.model.category.CategoryModel
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintMark
+import com.meistercharts.canvas.stroke
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Rectangle
 
@@ -160,7 +162,7 @@ class CategoryDebugPainter : CategoryPainter<CategoryModel> {
     gc.stroke(Color.orange)
     gc.strokeRect(categoryArea, StrokeLocation.Inside)
 
-    gc.paintMark(0.0, startY, color = Color.blue)
+    gc.paintMark(0.0, startY, color = Color.blue())
   }
 
 
@@ -193,6 +195,6 @@ class CategoryDebugPainter : CategoryPainter<CategoryModel> {
     gc.stroke(Color.orange)
     gc.strokeRect(categoryArea, StrokeLocation.Inside)
 
-    gc.paintMark(startX, 0.0, color = Color.blue)
+    gc.paintMark(startX, 0.0, color = Color.blue())
   }
 }

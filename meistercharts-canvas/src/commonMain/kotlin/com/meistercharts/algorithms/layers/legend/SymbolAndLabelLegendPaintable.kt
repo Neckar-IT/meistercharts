@@ -20,6 +20,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
@@ -31,6 +32,7 @@ import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
@@ -42,6 +44,8 @@ import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.provider.asSizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import com.meistercharts.style.Palette
+import it.neckar.open.provider.mapped
+import it.neckar.open.provider.resolved
 import it.neckar.open.unit.other.px
 
 /**
@@ -227,7 +231,7 @@ class SymbolAndLabelLegendPaintable(
     /**
      * The color the text is painted with
      */
-    var labelColors: MultiProvider<LegendEntryIndex, Color> = MultiProvider.always(Palette.defaultGray)
+    var labelColors: MultiProvider<LegendEntryIndex, Color> = MultiProvider.always<LegendEntryIndex, ColorProvider>(Palette.defaultGray).resolved()
 
     /**
      * The (optional) max length of the labels

@@ -15,21 +15,19 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.range.LinearValueRange
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
-import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
-import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
+import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -45,16 +43,7 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.algorithms.layers.axis.withMaxNumberOfTicks
 import com.meistercharts.algorithms.layout.BoxIndex
-import com.meistercharts.model.category.Category
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.model.category.CategorySeriesModel
-import com.meistercharts.model.category.DefaultCategorySeriesModel
-import com.meistercharts.model.category.DefaultSeries
-import com.meistercharts.model.category.SeriesIndex
-import com.meistercharts.model.category.createCategoryLabelsProvider
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.LabelPlacement
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
 import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacementSupport
@@ -63,36 +52,49 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.BorderRadius
-import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.charts.support.CategoryAxisSupport
-import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
-import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
+import com.meistercharts.charts.support.threshold.ThresholdsSupport
+import com.meistercharts.charts.support.threshold.addLayers
 import com.meistercharts.charts.support.threshold.thresholdsSupportSingle
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
+import com.meistercharts.design.valueAt
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.Side
-import it.neckar.geometry.Size
 import com.meistercharts.model.Vicinity
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.DefaultSeries
+import com.meistercharts.model.category.SeriesIndex
+import com.meistercharts.model.category.createCategoryLabelsProvider
 import com.meistercharts.provider.BoxProvider1
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.Palette.chartColors
 import com.meistercharts.style.Shadow
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
+import it.neckar.geometry.Size
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.observable.ObservableBoolean
@@ -216,48 +218,48 @@ class BarChartGroupedGestalt constructor(
         val locations = @MayBeNaN DoubleCache()
 
         override fun calculate(paintingContext: LayerPaintingContext) {
-            val chartCalculator = paintingContext.chartCalculator
+          val chartCalculator = paintingContext.chartCalculator
 
-            val categoryIndex = activeCategoryIndexOrNull
-            if (categoryIndex == null) {
-              locations.prepare(0)
-              return
-            }
-
-            val categoryModel = configuration.categorySeriesModel
-
-            locations.prepare(categoryModel.numberOfSeries)
-
-            categoryModel.numberOfSeries.fastFor { seriesIndexAsInt ->
-              val seriesIndex = SeriesIndex(seriesIndexAsInt)
-              @MayBeNaN @Domain val value = categoryModel.valueAt(categoryIndex, seriesIndex)
-              @MayBeNaN @DomainRelative val relativeValue = style.valueRange.toDomainRelative(value)
-
-              locations[seriesIndexAsInt] = chartCalculator.domainRelative2windowY(relativeValue)
-            }
+          val categoryIndex = activeCategoryIndexOrNull
+          if (categoryIndex == null) {
+            locations.prepare(0)
+            return
           }
-        }
 
-        override fun size(): Int {
-          return paintingVariables.locations.size
-        }
-
-        override fun layout(wireLocation: Double, paintingContext: LayerPaintingContext) {
-          paintingVariables.calculate(paintingContext)
-        }
-
-        override fun locationAt(index: Int): @Window @MayBeNaN Double {
-          return paintingVariables.locations[index]
-        }
-
-        override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-          val categoryIndex = activeCategoryIndex
           val categoryModel = configuration.categorySeriesModel
 
-          @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
-          return style.crossWireValueLabelFormat.format(value)
+          locations.prepare(categoryModel.numberOfSeries)
+
+          categoryModel.numberOfSeries.fastFor { seriesIndexAsInt ->
+            val seriesIndex = SeriesIndex(seriesIndexAsInt)
+            @MayBeNaN @Domain val value = categoryModel.valueAt(categoryIndex, seriesIndex)
+            @MayBeNaN @DomainRelative val relativeValue = style.valueRange.toDomainRelative(value)
+
+            locations[seriesIndexAsInt] = chartCalculator.domainRelative2windowY(relativeValue)
+          }
         }
       }
+
+      override fun size(): Int {
+        return paintingVariables.locations.size
+      }
+
+      override fun layout(wireLocation: Double, paintingContext: LayerPaintingContext) {
+        paintingVariables.calculate(paintingContext)
+      }
+
+      override fun locationAt(index: Int): @Window @MayBeNaN Double {
+        return paintingVariables.locations[index]
+      }
+
+      override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
+        val categoryIndex = activeCategoryIndex
+        val categoryModel = configuration.categorySeriesModel
+
+        @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
+        return style.crossWireValueLabelFormat.format(value)
+      }
+    }
   ) {
     //The active category is visualized by the category layer
     showCrossWireLine = false
@@ -553,16 +555,16 @@ class BarChartGroupedGestalt constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.tickFont = font
-      valueAxisLayer.configuration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font.asProvider()
+      valueAxisLayer.configuration.tickFont = font.asProvider()
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.titleFont = font
-      valueAxisLayer.configuration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font.asProvider()
+      valueAxisLayer.configuration.titleFont = font.asProvider()
     }
 
     /**
@@ -611,7 +613,10 @@ class BarChartGroupedGestalt constructor(
      */
     var crossWireLabelBoxStyles: CategoryModelBoxStylesProvider = CategoryModelBoxStylesProvider { _, seriesIndex ->
       BoxStyle(
-        fill = Theme.chartColors().valueAt(seriesIndex.value), borderColor = Color.white, borderWidth = 2.0, padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
+        fill = Theme.chartColors.valueAt(seriesIndex.value),
+        borderColor = Color.white,
+        borderWidth = 2.0,
+        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
         shadow = Shadow.LightDrop
       )
@@ -620,7 +625,7 @@ class BarChartGroupedGestalt constructor(
     /**
      * The text colors for the cross wire label
      */
-    var crossWireLabelTextColors: CategorySeriesModelColorsProvider = CategorySeriesModelColorsProvider { _, _ -> Color.white }
+    var crossWireLabelTextColors: CategorySeriesModelColorsProvider = CategorySeriesModelColorsProvider { _, _ -> Color.white() }
 
     /**
      * The minimum required space before the cross wire is moved to the left

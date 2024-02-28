@@ -19,7 +19,9 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
 import it.neckar.open.unit.si.rad
@@ -58,6 +60,6 @@ class ArrowValuePainter(
     /**
      * The color to paint the pointer
      */
-    var pointerColor: Color = Color.red
+    var pointerColor: ColorProvider = Color.red
   }
 }

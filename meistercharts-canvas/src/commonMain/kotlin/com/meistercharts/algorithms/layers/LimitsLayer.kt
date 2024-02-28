@@ -15,16 +15,17 @@
  */
 package com.meistercharts.algorithms.layers
 
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.AxisOrientationX
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.painter.RectangleAreaPainter
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.model.SidesSelection
 import com.meistercharts.provider.LimitsProvider
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Orientation
 import it.neckar.open.provider.fastForEach
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
@@ -163,7 +164,7 @@ class LimitsLayer @JvmOverloads constructor(
     /**
      * The color for the lines
      */
-    var stroke: Color? = Color.gray
+    var stroke: ColorProviderNullable = Color.gray
 
     /**
      * The width of the stroke
@@ -173,7 +174,7 @@ class LimitsLayer @JvmOverloads constructor(
     /**
      * The color for the area
      */
-    var fill: Color? = Color.silver
+    var fill: ColorProviderNullable = Color.silver
 
     /**
      * The orientation of this layer:

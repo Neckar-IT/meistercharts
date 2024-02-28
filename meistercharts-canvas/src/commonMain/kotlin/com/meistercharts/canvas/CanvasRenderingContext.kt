@@ -30,7 +30,8 @@ import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.CanvasPaint
 import com.meistercharts.color.Color
-import com.meistercharts.design.corporateDesign
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.design.CurrentTheme
 import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontMetrics
@@ -133,8 +134,8 @@ interface CanvasRenderingContext : SupportsPathActions {
      * Apply the default font first
      */
     this.font = defaultFont()
-    //Apply the corporate design text font descriptor fragment
-    this.font(corporateDesign.textFont)
+    //Apply the theme text font descriptor fragment
+    this.font(CurrentTheme.textFont)
   }
 
   /**
@@ -555,7 +556,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Activates the shadow
    */
   fun shadow(
-    color: Color = Shadow.Default.color,
+    color: Color = Shadow.Default.color(),
     blurRadius: @px Double = Shadow.Default.blurRadius,
     offsetX: @px Double = Shadow.Default.offsetX,
     offsetY: @px Double = Shadow.Default.offsetY,
@@ -569,7 +570,7 @@ interface CanvasRenderingContext : SupportsPathActions {
     if (shadow == null) {
       clearShadow()
     } else {
-      shadow(shadow.color, shadow.blurRadius, shadow.offsetX, shadow.offsetY)
+      shadow(shadow.color(), shadow.blurRadius, shadow.offsetX, shadow.offsetY)
     }
   }
 
@@ -991,6 +992,33 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   var scaleX: Double
   var scaleY: Double
+}
+
+inline fun CanvasRenderingContext.fill(colorProvider: ColorProvider) {
+  fillStyle(colorProvider())
+}
+
+inline fun CanvasRenderingContext.strokeStyle(color: ColorProvider) {
+  strokeStyle(color())
+}
+
+inline fun CanvasRenderingContext.fillStyle(color: ColorProvider) {
+  fillStyle(color())
+}
+
+/**
+ * Applies the font descriptor fragment from the provider.
+ * Helper method to help working with providers.
+ */
+inline fun CanvasRenderingContext.font(fontFragmentProvider: () -> FontDescriptorFragment) {
+  font(fontFragmentProvider())
+}
+
+/**
+ * Helper method to be able to call stroke for providers
+ */
+inline fun CanvasRenderingContext.stroke(colorProvider: ColorProvider) {
+  strokeStyle(colorProvider())
 }
 
 /**

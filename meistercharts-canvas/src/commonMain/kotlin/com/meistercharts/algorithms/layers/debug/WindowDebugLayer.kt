@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.pixelSnapSupport
+import com.meistercharts.canvas.stroke
 
 /**
  * Shows some debug markers for the current window

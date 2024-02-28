@@ -25,14 +25,16 @@ import com.meistercharts.axis.OffsetTickCalculator
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.canvas.font
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Direction
-import it.neckar.geometry.Orientation
+import com.meistercharts.font.FontDescriptorFragmentProvider
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.open.kotlin.lang.abs
@@ -299,7 +301,7 @@ class ValueAxisWithOffsetLayer(
 
     gc.fillStyle(configuration.tickLabelColor())
     gc.strokeStyle(configuration.lineColor())
-    gc.font(configuration.tickFont)
+    gc.font(configuration.tickFont())
     gc.lineWidth = configuration.tickLineWidth
 
     val valueRange = configuration.valueRangeProvider()
@@ -481,12 +483,12 @@ class ValueAxisWithOffsetLayer(
     /**
      * The colors of the offset area ticks
      */
-    var offsetTickLabelColor: Color = Theme.axisTickColor()
+    var offsetTickLabelColor: ColorProvider = Theme.axisTickColor.provider()
 
     /**
      * The font for the offset ticks
      */
-    var offsetTickFont: FontDescriptorFragment = Theme.offsetTickFont()
+    var offsetTickFont: FontDescriptorFragmentProvider = Theme.offsetTickFont.provider()
 
     /**
      * The maximum amount of digits each value tick is allowed to have before an offset is added

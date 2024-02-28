@@ -20,14 +20,17 @@ import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
-import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.strokeRoundedRect
 import com.meistercharts.color.CanvasPaintProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.range.ValueRange
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 
@@ -36,13 +39,13 @@ import it.neckar.open.provider.MultiProvider
  */
 class CategoryLanesLayer(
   val configuration: Configuration,
-  additionalConfiguration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
 
   constructor(
     valuesProvider: @Domain DoublesProvider,
-    additionalConfiguration: Configuration.() -> Unit = {}
-  ): this(Configuration(valuesProvider), additionalConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(valuesProvider), additionalConfiguration)
 
   init {
     configuration.additionalConfiguration()
@@ -88,7 +91,7 @@ class CategoryLanesLayer(
         }
 
         //The (optional) center line
-        configuration.centerLineStroke.valueAt(index)?.let {
+        configuration.centerLineStroke.valueAt(index).get()?.let {
           gc.stroke(it)
 
           @Domain val domainValue = configuration.valuesProvider.valueAt(index)
@@ -129,17 +132,17 @@ class CategoryLanesLayer(
     /**
      * The (optional) fill of the lane
      */
-    var fill: MultiProvider<CategoryIndex, CanvasPaintProvider?> = MultiProvider.always(Color.silver)
+    var fill: MultiProvider<CategoryIndex, CanvasPaintProvider?> = MultiProvider.always(Color.silver())
 
     /**
      * The (optional) stroke around the lane
      */
-    var stroke: MultiProvider<CategoryIndex, Color> = MultiProvider.always(Color.darkgray)
+    var stroke: MultiProvider<CategoryIndex, Color> = MultiProvider.always(Color.darkgray())
 
     /**
      * The (optional) stroke for the center line
      */
-    var centerLineStroke: MultiProvider<CategoryIndex, Color?> = MultiProvider.always(Color.web("#e5f1f8"))
+    var centerLineStroke: MultiProvider<CategoryIndex, ColorProviderNullable> = MultiProvider.always(Color.web("#e5f1f8").asProvider())
 
     /**
      * The corner radii

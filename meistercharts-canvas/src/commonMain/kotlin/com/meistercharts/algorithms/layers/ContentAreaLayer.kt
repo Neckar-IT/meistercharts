@@ -15,9 +15,10 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.ContentAreaPainter
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.model.SidesSelection
 import it.neckar.open.unit.other.px
 
@@ -52,7 +53,7 @@ class ContentAreaLayer(
     /**
      * The color for the lines
      */
-    var color: Color = Color.silver
+    var color: ColorProvider = Color.silver
 
     var lineWidth: @px Double = 1.0
 

@@ -24,6 +24,7 @@ import com.meistercharts.api.PointConnectionStyle
 import com.meistercharts.api.PointType
 import com.meistercharts.api.forEnumValueFromJsDouble
 import com.meistercharts.api.toColor
+import com.meistercharts.api.toColorProvider
 import com.meistercharts.api.toHistoryEnum
 import com.meistercharts.api.toModel
 import com.meistercharts.color.Color
@@ -49,6 +50,7 @@ import it.neckar.open.formatting.cached
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.WhitespaceConfig
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider.Companion.invoke
 
@@ -74,7 +76,7 @@ object TimeLineChartConverter {
     }
     var lineStyle = LineStyle.Continuous
     jsLineStyle.color?.let {
-      lineStyle = lineStyle.copy(color = it.toColor())
+      lineStyle = lineStyle.copy(color = it.toColorProvider())
     }
     jsLineStyle.width?.let {
       lineStyle = lineStyle.copy(lineWidth = it)
@@ -103,7 +105,7 @@ object TimeLineChartConverter {
         PointType.None -> null
         PointType.Dot -> {
           PointStylePainter(PointStyle.Dot, pointSize, false, false).also {
-            it.color = color
+            it.color = color.asProvider()
           }
         }
 
@@ -141,7 +143,7 @@ object TimeLineChartConverter {
     return MultiProvider.forListOrNull(areaPainters)
   }
 
-  fun toMinMaxAreaColors(jsLineStyles: Array<TimeLineChartLineStyle>, fallbackColor: Color = Color.lightgray): MultiProvider<DecimalDataSeriesIndex, Color> {
+  fun toMinMaxAreaColors(jsLineStyles: Array<TimeLineChartLineStyle>, fallbackColor: Color = Color.lightgray()): MultiProvider<DecimalDataSeriesIndex, Color> {
     val colors = jsLineStyles.map { jsTimelineChartLineStyle ->
       jsTimelineChartLineStyle.minMaxAreaColor.toColor() ?: fallbackColor
     }

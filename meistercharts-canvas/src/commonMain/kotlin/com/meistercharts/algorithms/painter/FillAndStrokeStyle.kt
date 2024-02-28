@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.color.CanvasPaint
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Combines a fill and a stroke
@@ -25,12 +26,14 @@ data class FillAndStrokeStyle(
   /**
    * The fill
    */
-  val fill: CanvasPaint,
+  val fill: () -> CanvasPaint,
   /**
    * The stroke
    */
-  val stroke: CanvasPaint,
+  val stroke: () -> CanvasPaint,
 ) {
+  constructor(fill: CanvasPaint, stroke: CanvasPaint) : this(fill.asProvider(), stroke.asProvider())
+
   /**
    * Apply the fill and stroke to the given gc
    */
@@ -43,5 +46,5 @@ data class FillAndStrokeStyle(
  * Sets the fill and stroke
  */
 fun CanvasRenderingContext.fillAndStroke(style: FillAndStrokeStyle) {
-  fillAndStroke(style.fill, style.stroke)
+  fillAndStroke(style.fill(), style.stroke())
 }

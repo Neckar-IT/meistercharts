@@ -16,14 +16,14 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.style.Palette
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 
@@ -74,7 +74,7 @@ class SymbolAndImagePaintable(
     /**
      * The color the image should be painted in
      */
-    var imageColor: Color = Palette.defaultGray
+    var imageColor: ColorProvider = Palette.defaultGray
 
     /**
      * The gap between the symbol and the image

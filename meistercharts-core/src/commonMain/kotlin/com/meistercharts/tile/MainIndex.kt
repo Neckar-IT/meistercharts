@@ -17,7 +17,7 @@ package com.meistercharts.tile
 
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.intFormat
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.toIntFloor
 import kotlin.jvm.JvmInline
@@ -27,7 +27,7 @@ import kotlin.jvm.JvmInline
  */
 @JvmInline
 value class MainIndex(val value: Int) : Comparable<MainIndex> {
-  fun format(format: NumberFormat = intFormat, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
+  fun format(format: NumberFormat = intFormat, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
     return format.format(value.toDouble(), i18nConfiguration)
   }
 

@@ -224,7 +224,7 @@ class EventsDebugLayer(
     painter.paintText(
       gc,
       eventDescriptionList,
-      Color.black,
+      Color.black(),
       BoxStyle.none,
       LineSpacing.Single,
       HorizontalAlignment.Left,

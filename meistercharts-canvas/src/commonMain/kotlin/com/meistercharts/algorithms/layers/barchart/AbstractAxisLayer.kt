@@ -25,8 +25,10 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.font
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.get
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
@@ -69,7 +71,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   }
 
   /**
-   * Translates to the "inner" origin of the axis - without title
+   * Translates to the "inner" origin of the axis - without a title
    */
   fun CanvasRenderingContext.translateToAxisInnerOrigin() {
     val gc = this.canvas.gc
@@ -96,7 +98,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
     gc.translateToAxisTitleOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisTitleOrigin", color = Color.brown)
+      gc.paintLocation(label = "axisTitleOrigin", color = Color.brown())
     }
 
     gc.font(configuration.titleFont)
@@ -140,7 +142,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
   private fun debugAxisCenterLocation(paintingContext: LayerPaintingContext, gc: CanvasRenderingContext) {
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisCenter", color = Color.green)
+      gc.paintLocation(label = "axisCenter", color = Color.green())
     }
   }
 
@@ -156,7 +158,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
     gc.translateToAxisLineOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisLineOrigin", color = Color.cadetblue)
+      gc.paintLocation(label = "axisLineOrigin", color = Color.cadetblue())
     }
 
     gc.strokeStyle(configuration.lineColor())
@@ -208,7 +210,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     //To the top of the title
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisInner", color = Color.fuchsia)
+      gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
     //Paint depending on the tick orientation
@@ -247,7 +249,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisInner", color = Color.fuchsia)
+      gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
     //Paint depending on the tick orientation
@@ -288,7 +290,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisInner", color = Color.fuchsia)
+      gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
     //Paint depending on the tick orientation
@@ -322,7 +324,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "axisInner", color = Color.fuchsia)
+      gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
 
@@ -349,7 +351,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   }
 
   private fun fillBackground(paintingContext: LayerPaintingContext, side: Side) {
-    configuration.background.invoke()?.let { background ->
+    configuration.background.get()?.let { background ->
       val gc = paintingContext.gc
 
       gc.fill(background)

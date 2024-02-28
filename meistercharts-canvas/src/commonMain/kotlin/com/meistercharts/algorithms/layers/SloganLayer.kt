@@ -15,17 +15,20 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.color.Color
-import com.meistercharts.color.RadialGradient
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.font.FontSize
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.guessFontSize
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.RadialGradient
 import com.meistercharts.design.Theme
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragmentProvider
+import com.meistercharts.font.FontSize
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
 import it.neckar.geometry.VerticalAlignment
@@ -65,7 +68,7 @@ class SloganLayer(
       return
     }
 
-    gc.font(configuration.sloganFont)
+    gc.font(configuration.sloganFont())
 
     var textSize: Size = gc.calculateTextSize(sloganText)
     if (configuration.keepSloganInBounds) {
@@ -137,7 +140,7 @@ class SloganLayer(
     /**
      * The color to be used as foreground
      */
-    var foreground: Color = Color.white
+    var foreground: ColorProvider = Color.white
 
     /**
      * The gradient that is used as glow background
@@ -160,7 +163,7 @@ class SloganLayer(
     /**
      * The font to be used for the slogan text
      */
-    var sloganFont: FontDescriptorFragment = Theme.sloganFont()
+    var sloganFont: FontDescriptorFragmentProvider = Theme.sloganFont.provider()
 
     /**
      * Whether to adjust the font size of the slogan to ensure that it does not break out of this layer's bounds

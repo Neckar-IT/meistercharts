@@ -53,7 +53,9 @@ import com.meistercharts.charts.timeline.ConfigurationAssistant
 import com.meistercharts.charts.timeline.TimeLineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.charts.timeline.setUpDemo
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
+import com.meistercharts.design.valueAt
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexInt
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
@@ -78,6 +80,7 @@ import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider2
@@ -317,7 +320,7 @@ class TimeLineChart internal constructor(
     }
 
     jsStyle.valueAxesBackground?.toColor()?.let {
-      this.configuration.valueAxesBackground = it
+      this.configuration.valueAxesBackground = it.asProvider()
     }
 
     jsStyle.valueAxesGap?.let {
@@ -424,12 +427,13 @@ class TimeLineChart internal constructor(
           jsEnumDataSeriesStyle.stripeStyles?.let { jsStripeStyles ->
             //TODO support other fill types, too
 
-            val fillColors = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
-              jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
+            val fillColors: List<ColorProvider> = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
+              jsStripeStyle?.backgroundColor?.toColor()?.asProvider() ?: Theme.enumColors.valueAt(index)
             }
 
             fillProvider = { value: HistoryEnumOrdinal, _: HistoryEnum ->
-              fillColors.getOrNull(value.value) ?: Theme.enumColors().valueAt(value.value)
+              @Suppress("DEPRECATION")
+              fillColors.getOrNull(value.value)?.invoke() ?: Theme.enumColors.resolve().valueAt(value.value)
             }
           }
 
@@ -628,6 +632,7 @@ class TimeLineChart internal constructor(
 }
 
 internal val needsToBeFixedForCustomer2 = true
+
 /**
  * Applies the default style for the timeline chart style
  */

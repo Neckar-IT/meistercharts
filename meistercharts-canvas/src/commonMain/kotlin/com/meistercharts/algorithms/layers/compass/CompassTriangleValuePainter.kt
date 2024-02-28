@@ -19,10 +19,14 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.LineJoin
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
@@ -91,9 +95,9 @@ class CompassTriangleValuePainter(
 
     var lineWidth: @px Double = 5.0
 
-    var stroke: Color = Color("#185ba6")
+    var stroke: ColorProvider = Color("#185ba6").asProvider()
 
-    var fill: Color = Color.white
+    var fill: ColorProvider = Color.white
   }
 }
 

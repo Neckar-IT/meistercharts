@@ -33,9 +33,12 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.open.formatting.formatUtc
@@ -181,12 +184,12 @@ class TilesDebugLayer(
     /**
      * The color to be used for the border of a tile
      */
-    var tileBorderColor: Color = Color.silver
+    var tileBorderColor: ColorProvider = Color.silver
 
     /**
      * The color to be used for the text that displays the index of a tile
      */
-    var tileIndexTextColor: Color = Color.silver
+    var tileIndexTextColor: ColorProvider = Color.silver
 
     /**
      * If set to true the tile index is painted in the center of the tile

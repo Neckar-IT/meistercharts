@@ -25,6 +25,7 @@ import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.font
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.textService

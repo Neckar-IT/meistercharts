@@ -23,38 +23,38 @@ import javax.annotation.Nonnull
 class ColorTest {
   @Test
   fun testParseHexOrRgb() {
-    assertThat(Color.parseHexOrRgba("#FF0000")).isEqualTo(Color.red)
-    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 1)")).isEqualTo(Color.red)
-    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 0.5)")).isEqualTo(Color.red.withAlpha(0.5))
+    assertThat(Color.parseHexOrRgba("#FF0000")).isEqualTo(Color.red())
+    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 1)")).isEqualTo(Color.red())
+    assertThat(Color.parseHexOrRgba("rgba(255, 0, 0, 0.5)")).isEqualTo(Color.red().withAlpha(0.5))
   }
 
   @Test
   fun testBasics() {
-    assertThat(Color.red.web).isEqualTo("#FF0000")
+    assertThat(Color.red().web).isEqualTo("#FF0000")
   }
 
   @Test
   fun testBrighter() {
-    assertThat(Color.red.lighter(0.2).web).isEqualTo("#FF3333")
-    assertThat(Color.white.lighter(0.2).web).isEqualTo("#FFFFFF")
+    assertThat(Color.red().lighter(0.2).web).isEqualTo("#FF3333")
+    assertThat(Color.white().lighter(0.2).web).isEqualTo("#FFFFFF")
   }
 
   @Test
   fun testDarker() {
-    assertThat(Color.red.darker(0.2).web).isEqualTo("#CC0000")
-    assertThat(Color.white.darker(0.2).web).isEqualTo("#CCCCCC")
+    assertThat(Color.red().darker(0.2).web).isEqualTo("#CC0000")
+    assertThat(Color.white().darker(0.2).web).isEqualTo("#CCCCCC")
   }
 
   @Test
   fun testParseHex() {
-    assertThat(Color.red.web).isEqualTo("#FF0000")
-    assertThat(Color.parseHex(Color.red.web)).isEqualTo(Color.red)
-    assertThat(Color.parseHex(Color.bisque.web)).isEqualTo(Color.bisque)
+    assertThat(Color.red().web).isEqualTo("#FF0000")
+    assertThat(Color.parseHex(Color.red().web)).isEqualTo(Color.red())
+    assertThat(Color.parseHex(Color.bisque().web)).isEqualTo(Color.bisque())
   }
 
   @Test
   fun testParseHex8Digits() {
-    assertThat(Color.parseHex("#FF0000FF")).isEqualTo(Color.red)
+    assertThat(Color.parseHex("#FF0000FF")).isEqualTo(Color.red())
   }
 }
 

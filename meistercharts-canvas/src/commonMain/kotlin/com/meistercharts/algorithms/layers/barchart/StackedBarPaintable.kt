@@ -23,36 +23,43 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.AxisOrientationX
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.model.BorderRadius
-import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeRoundedRect
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.RgbaColorProvider
+import com.meistercharts.color.get
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Rectangle
-import it.neckar.geometry.Direction
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.Size
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.model.BorderRadius
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
 import com.meistercharts.state.withContentAreaSize
 import com.meistercharts.style.Palette.chartColors
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastFindAny
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.abs
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.or0ifNanOrInfinite
 import it.neckar.open.provider.DefaultDoublesProvider
@@ -61,6 +68,7 @@ import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.fastForEach
 import it.neckar.open.provider.fastForEachIndexed
+import it.neckar.open.provider.resolved
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.Negative
 import it.neckar.open.unit.other.px
@@ -82,7 +90,7 @@ class StackedBarPaintable(
    */
   var height: @Zoomed Double,
 
-  styleConfigurer: Style.() -> Unit = {}
+  styleConfigurer: Style.() -> Unit = {},
 ) : Paintable {
 
   override fun boundingBox(paintingContext: LayerPaintingContext): @Zoomed Rectangle {
@@ -104,7 +112,7 @@ class StackedBarPaintable(
       Orientation.Horizontal -> {
         y = -height / 2.0
         x = when (chartSupport.currentChartState.axisOrientationX) {
-          AxisOrientationX.OriginAtLeft  -> 0.0
+          AxisOrientationX.OriginAtLeft -> 0.0
           AxisOrientationX.OriginAtRight -> -width
         }
       }
@@ -579,7 +587,7 @@ class StackedBarPaintable(
           (currentLabelLeft > rightModeLabelRight //below the lowest
             || currentLabelRight < leftMostLabelLeft) //above the highest
         ) {
-          gc.fill(style.valueLabelColor ?: segmentColor)
+          gc.fill(style.valueLabelColor?.invoke() ?: segmentColor)
           gc.fillText(labelText, textLocation, 0.0, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
 
           leftMostLabelLeft = min(leftMostLabelLeft, currentLabelLeft)
@@ -615,7 +623,7 @@ class StackedBarPaintable(
         @Zoomed val endX = calculator.domainRelative2zoomedX(layout.remainderStartPositive + layout.remainderNetSizePositive)
         @Zoomed val width = endX - startX
 
-        style.remainderSegmentBackgroundColor?.let {
+        style.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
           gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii)
         }
@@ -629,7 +637,7 @@ class StackedBarPaintable(
         @Zoomed val endX = calculator.domainRelative2zoomedX(layout.remainderStartNegative + layout.remainderNetSizeNegative)
         @Zoomed val width = endX - startX
 
-        style.remainderSegmentBackgroundColor?.let {
+        style.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
           gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii)
         }
@@ -749,7 +757,7 @@ class StackedBarPaintable(
           (currentLabelTop > undermostLabelBottom //below the lowest
             || currentLabelBottom < topmostLabelTop) //above the highest
         ) {
-          gc.fill(style.valueLabelColor ?: segmentColor)
+          gc.fill(style.valueLabelColor?.invoke() ?: segmentColor)
           gc.fillText(style.valueLabelFormat.format(value), 0.0, textLocation, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
 
           topmostLabelTop = min(topmostLabelTop, currentLabelTop)
@@ -785,7 +793,7 @@ class StackedBarPaintable(
         @Zoomed val endY = calculator.domainRelative2zoomedY(layout.remainderStartPositive + layout.remainderNetSizePositive)
         @Zoomed val height = endY - startY
 
-        style.remainderSegmentBackgroundColor?.let {
+        style.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
           gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii)
         }
@@ -799,7 +807,7 @@ class StackedBarPaintable(
         @Zoomed val endY = calculator.domainRelative2zoomedY(layout.remainderStartNegative + layout.remainderNetSizeNegative)
         @Zoomed val height = endY - startY
 
-        style.remainderSegmentBackgroundColor?.let {
+        style.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
           gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii)
         }
@@ -853,7 +861,7 @@ class StackedBarPaintable(
     /**
      * Provides the colors for the segments of a bar
      */
-    var colorsProvider: MultiProvider<StackedBarValueIndex, Color> = MultiProvider.forListModulo(chartColors)
+    var colorsProvider: MultiProvider<StackedBarValueIndex, Color> = MultiProvider.forListModulo<StackedBarValueIndex, RgbaColorProvider>(chartColors).resolved()
 
     /**
      * Format used for the labels of the values
@@ -868,7 +876,7 @@ class StackedBarPaintable(
     /**
      * Color used for the labels of the values; set to null to use the same color as the corresponding segment
      */
-    var valueLabelColor: Color? = null
+    var valueLabelColor: ColorProviderNullable = { null }
 
     /**
      * Provides the domain values, where no label must be painted.
@@ -887,7 +895,7 @@ class StackedBarPaintable(
     /**
      * The color to paint the border around a bar with
      */
-    var borderColor: Color = Color.darkgray
+    var borderColor: ColorProvider = Color.darkgray
 
     /**
      * The width of the border around a bar
@@ -902,7 +910,7 @@ class StackedBarPaintable(
     /**
      * The color to paint the background
      */
-    var backgroundColor: Color = Color.lightgray
+    var backgroundColor: ColorProvider = Color.lightgray
 
     /**
      * The width of the background rect lines
@@ -912,7 +920,7 @@ class StackedBarPaintable(
     /**
      * The color to paint the border of the background in
      */
-    var backgroundBorderColor: Color = Color.web("#E6EAEC")
+    var backgroundBorderColor: ColorProvider = Color.web("#E6EAEC").asProvider()
 
     /**
      * Radius for the top/bottom of the background rectangle
@@ -955,12 +963,12 @@ class StackedBarPaintable(
     /**
      * The background color of the segment that represents the difference of the value range and the sum of all segment values.
      */
-    var remainderSegmentBackgroundColor: Color? = Color.white
+    var remainderSegmentBackgroundColor: ColorProviderNullable = Color.white
 
     /**
      * The border color of the segment that represents the difference of the value range and the sum of all segment values.
      */
-    var remainderSegmentBorderColor: Color = Theme.inactiveElementBorderColor()
+    var remainderSegmentBorderColor: ColorProvider = Theme.inactiveElementBorderColor.provider()
 
     /**
      * The border line width of the segment that represents the difference of the value range and the sum of all segment values.

@@ -15,7 +15,6 @@
  */
 package com.meistercharts.api.bullet
 
-import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
 import com.meistercharts.api.applyStyle
@@ -34,11 +33,12 @@ import com.meistercharts.api.toThresholdLabelsProvider
 import com.meistercharts.api.toThresholdValuesProvider
 import com.meistercharts.api.withValues
 import com.meistercharts.charts.bullet.BulletChartGestalt
+import com.meistercharts.model.category.CategoryIndex
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.logging.Logger
-import it.neckar.logging.LoggerFactory
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bullet.BulletChartExtensions")
 
@@ -150,10 +150,10 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
   }
 
   jsConfiguration.currentValueIndicatorColor?.toColor()?.let { color ->
-    this.bulletChartPainter.configuration.currentValueColor = color
+    this.bulletChartPainter.configuration.currentValueColor = color.asProvider()
   }
   jsConfiguration.currentValueIndicatorOutlineColor?.toColor()?.let { color ->
-    this.bulletChartPainter.configuration.currentValueOutlineColor = color
+    this.bulletChartPainter.configuration.currentValueOutlineColor = color.asProvider()
   }
 
   CategoryConverter.toCategoryColorProvider(jsConfiguration.barColors)?.let {
@@ -212,11 +212,11 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     }
   }
   jsConfiguration.activeCategoryBackgroundColor.toColor()?.let {
-    this.categoryLayer.configuration.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it.asProvider()
   }
 
   jsConfiguration.overflowIndicatorStyle?.let {
-    this.bulletChartPainter.configuration.overflowIndicatorPainter?.applyStyle(it)
+    this.bulletChartPainter.configuration.overflowIndicatorPainter.applyStyle(it)
   }
 
 

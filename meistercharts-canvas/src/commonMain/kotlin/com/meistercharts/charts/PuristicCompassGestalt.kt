@@ -15,7 +15,6 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ResizablePaintableLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
@@ -25,18 +24,19 @@ import com.meistercharts.algorithms.layers.compass.PuristicCompassPainter
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
+import com.meistercharts.design.Theme
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
-import com.meistercharts.canvas.MeisterchartBuilder
-import com.meistercharts.design.corporateDesign
-import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import it.neckar.geometry.RotationDirection
-import it.neckar.geometry.Size
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.provider.delegate
+import com.meistercharts.range.ValueRange
+import it.neckar.geometry.Direction
+import it.neckar.geometry.RotationDirection
+import it.neckar.geometry.Size
 import it.neckar.open.formatting.decimalFormat1digit
-import it.neckar.open.kotlin.lang.round
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.asDoubleProvider
@@ -96,7 +96,7 @@ class PuristicCompassGestalt(
   val subValueLayer: TextLayer = TextLayer({ _, _ ->
     listOf("48°24'49.7\"N", "9°03'03.0\"E")
   }) {
-    font = FontDescriptorFragment(size = FontSize(20.0))
+    font = FontDescriptorFragment(size = FontSize(20.0)).asProvider()
     margin = Insets.of(500.0, 0.0, 0.0, 0.0)
     anchorDirection = Direction.TopCenter
   }
@@ -113,8 +113,8 @@ class PuristicCompassGestalt(
 
       //Adjust font-size in accordance with window height which is approximately the diameter of the compass.
       chartSupport.rootChartState.windowSizeProperty.consumeImmediately {
-        valueLayer.configuration.font = corporateDesign.h1.withSize(FontSize((it.height * 0.1).round()))
-        subValueLayer.configuration.font = corporateDesign.h1.withSize(FontSize((it.height * 0.04).round()))
+        valueLayer.configuration.font = Theme.mainValueLabelFont.provider()
+        subValueLayer.configuration.font = Theme.subValueLabelFont.provider()
         subValueLayer.configuration.margin = Insets.onlyTop(it.height * 0.5)
       }
 

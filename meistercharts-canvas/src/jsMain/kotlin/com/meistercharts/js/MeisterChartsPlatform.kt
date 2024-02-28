@@ -21,7 +21,7 @@ import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.PlatformStateListener
 import com.meistercharts.canvas.UrlConversion
 import com.meistercharts.canvas.UrlConverter
-import com.meistercharts.design.CorporateDesign
+import com.meistercharts.design.Theme
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.js.external.FontFace
 import com.meistercharts.js.external.FontFaceSet
@@ -58,14 +58,14 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
    * Initializes the global configuration. Can be called multiple times
    */
   fun init(
-    corporateDesign: CorporateDesign? = null,
+    theme: Theme? = null,
     defaultI18nConfiguration: I18nConfiguration? = null,
     /**
      * The (optional) url converter
      */
     urlConverter: UrlConverter? = null,
   ) {
-    initBasics(corporateDesign, defaultI18nConfiguration)
+    initBasics(theme, defaultI18nConfiguration)
 
     urlConverter?.let {
       UrlConversion.activate(it)

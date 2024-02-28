@@ -18,6 +18,7 @@ package com.meistercharts.processvalues
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.open.kotlin.lang.and
 import it.neckar.open.kotlin.lang.wrapped
 import org.junit.jupiter.api.Test
@@ -65,7 +66,7 @@ class StyleLambdaTest {
   }
 
   open class Style1 {
-    var backgroundColor: Color = Color.orange
+    var backgroundColor: ColorProvider = Color.orange
 
     var style2Configuration: Style2.() -> Unit = {
       backgroundColor = Color.brown
@@ -73,9 +74,9 @@ class StyleLambdaTest {
   }
 
   open class Style2 {
-    var backgroundColor: Color = Color.blue
-    var foregroundColor1: Color = Color.black
-    var foregroundColor2: Color = Color.black
-    var foregroundColor3: Color = Color.black
+    var backgroundColor: ColorProvider = Color.blue
+    var foregroundColor1: ColorProvider = Color.black
+    var foregroundColor2: ColorProvider = Color.black
+    var foregroundColor3: ColorProvider = Color.black
   }
 }

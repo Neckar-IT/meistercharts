@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.Layer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
 import it.neckar.geometry.Direction
 

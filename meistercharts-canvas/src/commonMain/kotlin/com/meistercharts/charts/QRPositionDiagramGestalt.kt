@@ -15,33 +15,32 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.range.ValueRange
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.ContentAreaLayer
-import com.meistercharts.algorithms.layers.axis.DomainAxisMarkersLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.PaintableTranslateRotateLayer
-import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.DomainAxisMarkersLayer
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
-import it.neckar.geometry.Coordinates
+import com.meistercharts.color.Color
 import com.meistercharts.model.Insets
+import com.meistercharts.model.Vicinity
+import com.meistercharts.range.ValueRange
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
-import com.meistercharts.model.Vicinity
-import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble
@@ -66,9 +65,9 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     tickOrientation = Vicinity.Outside
     paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Bottom
-    titleColor = Color.black.asProvider()
-    lineColor = Color.black.asProvider()
-    tickLabelColor = Color.black.asProvider()
+    titleColor = Color.black
+    lineColor = Color.black
+    tickLabelColor = Color.black
     margin = Insets.empty
   }
 
@@ -81,9 +80,9 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     tickOrientation = Vicinity.Outside
     paintRange = AxisConfiguration.PaintRange.Continuous
     side = Side.Left
-    titleColor = Color.black.asProvider()
-    lineColor = Color.black.asProvider()
-    tickLabelColor = Color.black.asProvider()
+    titleColor = Color.black
+    lineColor = Color.black
+    tickLabelColor = Color.black
     margin = Insets.empty
   }
 

@@ -25,8 +25,10 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.Image
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.size
+import com.meistercharts.canvas.stroke
 import it.neckar.events.KeyCode
 import it.neckar.events.KeyStroke
 import it.neckar.events.ModifierCombination

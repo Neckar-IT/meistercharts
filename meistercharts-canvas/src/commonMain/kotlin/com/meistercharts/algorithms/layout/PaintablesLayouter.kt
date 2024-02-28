@@ -28,6 +28,7 @@ import com.meistercharts.canvas.layout.cache.ObjectsCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment

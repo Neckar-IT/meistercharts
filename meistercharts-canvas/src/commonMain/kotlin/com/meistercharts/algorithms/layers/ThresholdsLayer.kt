@@ -31,6 +31,7 @@ import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.geometry.BasePointProvider
 import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
@@ -191,13 +192,13 @@ class ThresholdsLayer @JvmOverloads constructor(
       gc.translate(anchorPoint.x, anchorPoint.y)
 
       if (DebugFeature.ShowBounds.enabled(paintingContext)) {
-        gc.paintMark(color = Color.black)
+        gc.paintMark(color = Color.black())
       }
 
       textPainter.paintText(
         gc,
         labels,
-        configuration.textColor,
+        configuration.textColor(),
         configuration.boxStyle(),
         configuration.lineSpacing,
         configuration.horizontalAlignment,
@@ -267,7 +268,7 @@ class ThresholdsLayer @JvmOverloads constructor(
     /**
      * The color of the text of the threshold label
      */
-    var textColor: Color = Color.lightgray
+    var textColor: ColorProvider = Color.lightgray
 
     /**
      * The style for the box (background fill + border stroke) of the threshold label

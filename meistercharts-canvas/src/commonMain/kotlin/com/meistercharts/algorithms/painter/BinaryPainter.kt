@@ -15,10 +15,12 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.calc.ChartingUtils
 import com.meistercharts.annotations.Window
+import com.meistercharts.calc.ChartingUtils
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.color.Color
+import com.meistercharts.canvas.strokeStyle
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import it.neckar.open.unit.other.px
 
 /**
@@ -60,7 +62,7 @@ class BinaryPainter(
   /**
    * The optional fill for the area
    */
-  var areaFill: Color? = null
+  var areaFill: ColorProviderNullable = { null }
 
   fun reset() {
     firstX = 0.0
@@ -106,7 +108,7 @@ class BinaryPainter(
     gc.lineWidth = lineWidth
 
     //Fill the area
-    areaFill?.let {
+    areaFill?.invoke()?.let {
       gc.fillStyle(it)
 
       val fillPath = path.copy()
@@ -128,7 +130,7 @@ class BinaryPainter(
       gc.fill(fillPath)
     }
 
-    shadow?.let {
+    shadow.get()?.let {
       gc.strokeStyle(it)
       gc.translate(shadowOffsetX, shadowOffsetY)
       gc.stroke(path)

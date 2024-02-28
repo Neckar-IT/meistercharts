@@ -18,6 +18,9 @@ package com.meistercharts.algorithms.tile
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.font.FontDescriptorFragment
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
@@ -74,11 +77,11 @@ class DebugTilePainter(
     /**
      * The color to be used for the border
      */
-    var borderColor: Color = Color.darkgray,
+    var borderColor: ColorProvider = Color.darkgray,
     /**
      * The color to be used for the text
      */
-    var textColor: Color = Color.darkgray,
+    var textColor: ColorProvider = Color.darkgray,
     /**
      * The font to be used for the text
      */

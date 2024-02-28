@@ -18,7 +18,9 @@ package com.meistercharts.algorithms.layers.compass
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.PolarCoordinates
 import com.meistercharts.range.ValueRange
@@ -60,7 +62,7 @@ class LineValuePainter(
     /**
      * The color to paint the pointer
      */
-    var pointerColor: Color = Color.red
+    var pointerColor: ColorProvider = Color.red
   }
 }
 

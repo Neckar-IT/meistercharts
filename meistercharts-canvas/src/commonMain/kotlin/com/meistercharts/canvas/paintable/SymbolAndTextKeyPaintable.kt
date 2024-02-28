@@ -16,21 +16,22 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.PaintableLocation
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintTextWithPaintable
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.style.Palette
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 
@@ -87,7 +88,7 @@ class SymbolAndTextKeyPaintable(
     /**
      * The color the text is painted with
      */
-    var textColor: Color = Palette.defaultGray
+    var textColor: ColorProvider = Palette.defaultGray
 
     /**
      * The font the text is painted with

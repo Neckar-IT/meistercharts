@@ -15,10 +15,10 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.Window
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.model.SidesSelection
 
 /**
@@ -26,7 +26,7 @@ import com.meistercharts.model.SidesSelection
  *
  */
 class ContentAreaPainter {
-  var stroke: Color? = null
+  var stroke: ColorProviderNullable = null
   var sidesToPaint: SidesSelection = SidesSelection.all
 
   private val areaPainter: RectangleAreaPainter = RectangleAreaPainter(snapXValues = false, snapYValues = false).apply {

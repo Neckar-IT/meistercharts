@@ -31,10 +31,10 @@ import com.meistercharts.font.withSansSerif
 import it.neckar.open.provider.MultiProvider
 
 /**
- * Another corporate design that uses Segoe UI
+ * Another theme that uses Segoe UI
  */
-object SegoeUiDesign : CorporateDesign {
-  override val id: String = "Segoe UI Design"
+object SegoeUiTheme : Theme {
+  override val id: String = "Segoe UI Theme"
 
   val headlineFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
   val defaultFontFamily: FontFamilyConfiguration = FontFamily("Segoe UI").withSansSerif()
@@ -65,14 +65,14 @@ object SegoeUiDesign : CorporateDesign {
   override val textFont: FontDescriptorFragment = FontDescriptorFragment(defaultFontFamily, FontSize(14.0), FontWeight.Normal, style = FontStyle.Normal, variant = FontVariant.Normal)
   override val textColor: RgbaColor = Color("#555555").toRgba()
 
-  override val canvasBackgroundColor: RgbaColor = Color.white
-  override val primaryBackgroundColor: RgbaColor = Color.white
-  override val secondaryBackgroundColor: RgbaColor = Color.darkgray
+  override val canvasBackgroundColor: RgbaColor = Color.white()
+  override val primaryBackgroundColor: RgbaColor = Color.white()
+  override val secondaryBackgroundColor: RgbaColor = Color.darkgray()
 
   override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
-  override val borderColorConverter: (fill: Color?) -> Color = { it?.toRgba()?.darker(0.15) ?: Color.darkgray }
+  override val borderColorConverter: (fill: Color?) -> Color = { it?.toRgba()?.darker(0.15) ?: Color.darkgray() }
 
-  override val backgroundColorActive: RgbaColor = Color.silver.withAlpha(0.5)
+  override val backgroundColorActive: RgbaColor = Color.silver().withAlpha(0.5)
 
   override val backgroundZebraColors: MultiProvider<Any, RgbaColor> = MultiProvider.Companion.forListModulo(
     listOf(
@@ -120,11 +120,11 @@ object SegoeUiDesign : CorporateDesign {
   )
 
   override val primaryButtonForegroundColors: ButtonColorProvider = DefaultButtonColorProvider(
-    disabledColor = Color.white,
+    disabledColor = Color.white(),
     pressedColor = Color.web("#002e46").toRgba(),
-    hoverColor = Color.white,
-    focusedColor = Color.white,
-    defaultColor = Color.white,
+    hoverColor = Color.white(),
+    focusedColor = Color.white(),
+    defaultColor = Color.white(),
   )
 
   override val secondaryButtonBackgroundColors: ButtonColorProvider = DefaultButtonColorProvider(
@@ -142,5 +142,5 @@ object SegoeUiDesign : CorporateDesign {
   override val stateError: RgbaColor = Color.web("#EA0823").toRgba()
   override val stateUnknown: RgbaColor = Color.web("#737F85").toRgba()
 
-  override val shadowColor: RgbaColor = Color.black.withAlpha(0.6)
+  override val shadowColor: RgbaColor = Color.black().withAlpha(0.6)
 }

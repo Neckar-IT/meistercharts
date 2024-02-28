@@ -15,19 +15,20 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.calc.ChartCalculator
-import it.neckar.geometry.AxisOrientationX
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.fillStyle
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
 import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.unit.other.px
@@ -91,7 +92,7 @@ class ChartingStateDebugPainter {
 
       gc.saved { gc ->
         gc.translate(x, y)
-        paintArea(calculator, "View / Content", contentOriginInWindow, contentSizeInWindow, gc, width, height, Color.red, contentAreaFill)
+        paintArea(calculator, "View / Content", contentOriginInWindow, contentSizeInWindow, gc, width, height, Color.red(), contentAreaFill)
 
         //Paint the y axis orientation arrow
         if (width > 80 && height > 50) {
@@ -147,7 +148,7 @@ class ChartingStateDebugPainter {
 
       gc.saved {
         gc.translate(x, y)
-        paintArea(calculator, "Window\nZF: ${calculator.chartState.zoomX.format(DefaultI18nConfiguration, 3)} / ${calculator.chartState.zoomY.format(DefaultI18nConfiguration, 3)}", Coordinates.origin, calculator.chartState.contentAreaSize, gc, width, height, Color.green, windowFill)
+        paintArea(calculator, "Window\nZF: ${calculator.chartState.zoomX.format(CurrentI18nConfiguration, 3)} / ${calculator.chartState.zoomY.format(CurrentI18nConfiguration, 3)}", Coordinates.origin, calculator.chartState.contentAreaSize, gc, width, height, Color.green(), windowFill)
       }
     }
   }
@@ -207,11 +208,11 @@ class ChartingStateDebugPainter {
      */
     private val windowFill = Color.color(0.0, 1.0, 0.0, 0.2)
 
-    private fun Double.format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+    private fun Double.format(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
       return decimalFormat(maxFractionDigits).format(this, i18nConfiguration, whitespaceConfig)
     }
 
-    private fun Double.formatPct(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+    private fun Double.formatPct(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, maxFractionDigits: Int = 1, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
       return "${decimalFormat(maxFractionDigits).format(this, i18nConfiguration, whitespaceConfig)}%"
     }
   }

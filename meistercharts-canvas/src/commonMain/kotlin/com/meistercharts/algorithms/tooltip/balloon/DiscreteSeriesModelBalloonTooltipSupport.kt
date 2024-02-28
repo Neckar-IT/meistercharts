@@ -22,16 +22,16 @@ import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable.Companion.defaultSymbols
 import com.meistercharts.algorithms.layers.legend.withHeadline
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
-import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import it.neckar.geometry.Size
 import it.neckar.open.i18n.DefaultTextService
@@ -43,7 +43,6 @@ import it.neckar.open.i18n.resolve
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProvider1
-import it.neckar.open.unit.number.MayBeNegative
 
 /**
  * Balloon tooltip support for discrete series.
@@ -72,7 +71,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
   /**
    * Provides the status colors
    */
-  val statusColor: () -> Color,
+  val statusColor: ColorProvider,
 ) {
 
   /**
@@ -140,13 +139,14 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * This method can be called later to recreate the provider with a different symbol size
    */
   private fun createSymbolsProvider(symbolSize: Size = Size.PX_16): MultiProvider<LegendEntryIndex, Paintable> {
-    return defaultSymbols(symbolSize = symbolSize, symbolColors = { index: Int ->
-      if (index == 0 && referenceEntryDataProvider()?.label.isEmpty().not()) {
-        Color.transparent
-      } else {
-        statusColor()
-      }
-    })
+    return defaultSymbols(symbolSize = symbolSize,
+      symbolColors = { index: Int ->
+        if (index == 0 && referenceEntryDataProvider()?.label.isEmpty().not()) {
+          Color.transparent()
+        } else {
+          statusColor()
+        }
+      })
   }
 
   /**

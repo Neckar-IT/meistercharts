@@ -16,17 +16,17 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.color.Color
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.font.FontDescriptorFragment
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.VerticalAlignment
-import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 import it.neckar.open.unit.other.px
@@ -112,7 +112,7 @@ class LabelPaintable(
   ) {
 
     var font: FontDescriptorFragment = FontDescriptorFragment.DefaultSize
-    var labelColor: () -> Color = Color.black.asProvider()
+    var labelColor: ColorProvider = Color.black
 
     var anchorDirection: Direction = Direction.TopLeft
     var anchorGapHorizontal: @px Double = 0.0

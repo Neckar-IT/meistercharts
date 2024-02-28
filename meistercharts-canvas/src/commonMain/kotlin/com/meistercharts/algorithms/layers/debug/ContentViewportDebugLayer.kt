@@ -24,6 +24,9 @@ import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.NonOverlappingPasspartoutPaintingStrategy
 import com.meistercharts.algorithms.painter.PasspartoutPainter
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.withAlpha
 import com.meistercharts.model.Insets
 
 /**
@@ -49,7 +52,7 @@ open class ContentViewportDebugLayer(
 
     passpartoutPainter.paintPasspartout(
       paintingContext = paintingContext,
-      color = configuration.fill,
+      color = configuration.fill(),
       margin = Insets.empty,
       insets = chartState.contentViewportMargin,
       strategy = NonOverlappingPasspartoutPaintingStrategy
@@ -66,7 +69,7 @@ open class ContentViewportDebugLayer(
 
   @ConfigurationDsl
   class Configuration {
-    var fill: Color = Color.blue.withAlpha(0.5)
-    var stroke: Color = Color.blue
+    var fill: ColorProvider = Color.blue.withAlpha(0.5)
+    var stroke: ColorProvider = Color.blue
   }
 }

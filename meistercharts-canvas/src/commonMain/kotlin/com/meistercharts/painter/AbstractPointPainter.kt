@@ -18,14 +18,20 @@ package com.meistercharts.painter
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.painter.AbstractPainter
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.canvas.strokeCross45Degrees
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import it.neckar.geometry.Rectangle
+import it.neckar.open.kotlin.lang.asProvider
 import kotlin.math.max
 
 /**
@@ -51,7 +57,7 @@ class PointStylePainter(
   /**
    * The color to be used for the point - null implies to use the current color
    */
-  var color: Color? = null
+  var color: ColorProviderNullable = null
 
   init {
     pointSize = calculatePointSize(pointStyle, lineWidth)
@@ -62,7 +68,7 @@ class PointStylePainter(
       return
     }
     gc.lineWidth = lineWidth
-    color?.let {
+    color.get()?.let {
       gc.strokeStyle(it)
       gc.fillStyle(it)
     }
@@ -98,7 +104,7 @@ class RectanglePointPainter(
   snapXValues: Boolean,
   snapYValues: Boolean
 ) : AbstractPointPainter(snapXValues, snapYValues) {
-  var stroke: Color = Color.black
+  var stroke: ColorProvider = Color.black
 
   var lineWidth: @Zoomed Double = 1.0
 
@@ -122,8 +128,8 @@ class CirclePointPainter(
   configuration: CirclePointPainter.() -> Unit = {},
 
   ) : AbstractPointPainter(snapXValues, snapYValues), Paintable {
-  var fill: Color = Color.white
-  var stroke: Color = Color.web("#ffc83e")
+  var fill: ColorProvider = Color.white
+  var stroke: ColorProvider = Color.web("#ffc83e").asProvider()
 
   var lineWidth: @Zoomed Double = 1.0
 
@@ -164,9 +170,9 @@ class FancyPointPainter(
     pointSize = 16.0
   }
 
-  var innerFill: Color = Color.black
-  var fill: Color = Color.web("#ffc83e")
-  var outerFill: Color = Color.black
+  var innerFill: ColorProvider = Color.black
+  var fill: ColorProvider = Color.web("#ffc83e").asProvider()
+  var outerFill: ColorProvider = Color.black
   var outerWidth: Double = 4.0
   var fillSize: Double = 6.0
 

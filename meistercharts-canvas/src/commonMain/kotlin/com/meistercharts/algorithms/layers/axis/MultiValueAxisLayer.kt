@@ -19,13 +19,14 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.layout.cache.DoubleCache
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import it.neckar.geometry.Side
 import it.neckar.open.kotlin.lang.checkEquals
 import it.neckar.open.kotlin.lang.fastFor
@@ -130,7 +131,7 @@ class MultiValueAxisLayer constructor(
     val gc = paintingContext.gc
 
     //paint the background first
-    configuration.background()?.let { background ->
+    configuration.background.get()?.let { background ->
       gc.fill(background)
       gc.fillRect(0.0, 0.0, paintingVariables.totalWidth, gc.height)
     }
@@ -153,7 +154,7 @@ class MultiValueAxisLayer constructor(
     /**
      * The background color - if any
      */
-    var background: () -> Color? = { null }
+    var background: ColorProviderNullable = null
 
     /**
      * The maximum available width for the value axis layers relative to the window width

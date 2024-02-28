@@ -19,6 +19,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.stroke
 import com.meistercharts.design.neckarit.NeckarItFlowPaintable
 import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.pct

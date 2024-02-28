@@ -20,9 +20,9 @@ import com.meistercharts.font.GenericFontFamily
 import com.meistercharts.font.withGenericFontFamily
 
 /**
- * The corporate design definition for the Neckar IT
+ * The theme for Neckar IT
  */
-class NeckarITCorporateDesign : DefaultCorporateDesign(
+class NeckarITTheme : DefaultTheme(
   headlineFontFamily = FontFamily("Oswald").withGenericFontFamily(GenericFontFamily.SansSerif),
   defaultFontFamily = FontFamily.Verdana.withGenericFontFamily(GenericFontFamily.SansSerif)
 ) {
@@ -30,6 +30,6 @@ class NeckarITCorporateDesign : DefaultCorporateDesign(
 }
 
 /**
- * The corporate design for the Neckar IT
+ * The theme for Neckar IT
  */
-val NeckarITDesign: CorporateDesign = NeckarITCorporateDesign()
+val NeckarITDesign: Theme = NeckarITTheme()

@@ -19,6 +19,7 @@ import com.meistercharts.time.TimeRange
 import com.meistercharts.color.Color
 import com.meistercharts.algorithms.tile.SamplingPeriodCalculator
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.history.HistoryBucketDescriptor

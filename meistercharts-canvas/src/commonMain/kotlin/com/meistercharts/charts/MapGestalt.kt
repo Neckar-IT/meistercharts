@@ -15,34 +15,35 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.zoom.UpdateReason
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.AxisSelection
-import com.meistercharts.zoom.delegate
 import com.meistercharts.algorithms.layers.MouseWheelWithoutModifierMessageLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.addMouseWheelWithoutModifierHint
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMap
 import com.meistercharts.algorithms.layers.slippymap.OpenStreetMapDe
-import com.meistercharts.maps.SlippyMapCenter
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapLayer
 import com.meistercharts.algorithms.layers.slippymap.SlippyMapProvider
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.canvas.paintable.ZoomButtons
-import it.neckar.geometry.Direction
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
+import com.meistercharts.maps.SlippyMapCenter
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.delegate
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Orientation
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 
@@ -97,7 +98,7 @@ class MapGestalt(
    */
   val legalNoticeLayer: TextLayer = TextLayer({ _, _ -> listOf(slippyMapLayer.configuration.slippyMapProvider.legalNotice.orEmpty()) }) {
     textColor = Color.gray
-    font = FontDescriptorFragment(10.0)
+    font = FontDescriptorFragment(10.0).asProvider()
     anchorDirection = Direction.BottomLeft
     anchorPointProvider = DirectionBasedBasePointProvider(anchorDirection)
   }

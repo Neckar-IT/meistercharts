@@ -15,9 +15,11 @@
  */
 package com.meistercharts.algorithms.layers.linechart
 
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.LineJoin
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmField
@@ -29,10 +31,10 @@ import kotlin.jvm.JvmOverloads
  * Can be used to set dashes, stroke and line width
  */
 data class LineStyle @JvmOverloads constructor(
-  val color: Color = Palette.defaultGray,
+  val color: ColorProvider = Palette.defaultGray,
   val lineWidth: @px Double = 1.0,
   val dashes: @px Dashes? = null,
-  val lineJoin: LineJoin = LineJoin.Miter
+  val lineJoin: LineJoin = LineJoin.Miter,
 ) {
   /**
    * Applies the given line style to the graphics context
@@ -93,7 +95,7 @@ data class Dashes(
   /**
    * The length of the gap
    */
-  val gap: @px Double
+  val gap: @px Double,
 ) {
 
   init {

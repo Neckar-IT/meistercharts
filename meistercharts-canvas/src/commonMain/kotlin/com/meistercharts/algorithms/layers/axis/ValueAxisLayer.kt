@@ -20,19 +20,21 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer.Companion.linear
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer.Companion.logarithmic
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer.Configuration
 import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.text.CanvasStringShortener
+import com.meistercharts.canvas.font
 import com.meistercharts.canvas.layout.cache.DoubleCache
-import it.neckar.geometry.Direction
-import it.neckar.geometry.HorizontalAlignment
-import it.neckar.geometry.Orientation
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.LogarithmicValueRange
 import com.meistercharts.range.ValueRange
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
@@ -134,7 +136,7 @@ class ValueAxisLayer
 
     gc.fillStyle(configuration.tickLabelColor())
     gc.strokeStyle(configuration.lineColor())
-    gc.font(configuration.tickFont)
+    gc.font(configuration.tickFont())
     gc.lineWidth = configuration.tickLineWidth
 
     val valueRange = configuration.valueRangeProvider()

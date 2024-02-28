@@ -17,7 +17,11 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.strokeStyle
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.px
 
@@ -38,7 +42,7 @@ open class FancyXyLinePainter(
   /**
    * The color of the line
    */
-  var color: Color = Color.black
+  var color: ColorProvider = Color.black
 
   /**
    * The width
@@ -51,7 +55,7 @@ open class FancyXyLinePainter(
    * The (optional) shadow color.
    * If set to null no shadow is painted
    */
-  var shadowColor: Color? = null
+  var shadowColor: ColorProviderNullable = { null }
 
   /**
    * The offset of the shadow
@@ -69,7 +73,7 @@ open class FancyXyLinePainter(
     }
 
     //Paint the shadow if there is one
-    shadowColor?.let {
+    shadowColor.get()?.let {
       gc.strokeStyle(it)
       gc.translate(shadowOffset, shadowOffset)
 

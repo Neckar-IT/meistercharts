@@ -37,12 +37,15 @@ import com.meistercharts.axis.time.TimeTickDistance
 import com.meistercharts.axis.time.TimeUnits
 import com.meistercharts.axis.time.valueAt
 import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.design.multiProvider
+import com.meistercharts.font.FontDescriptorFragmentProvider
 import com.meistercharts.model.Vicinity
 import com.meistercharts.time.TimeRange
 import it.neckar.datetime.minimal.TimeConstants
@@ -221,7 +224,7 @@ class TimeAxisLayer(
       gc.fillStyle(configuration.tickLabelColor())
       gc.strokeStyle(configuration.lineColor())
       gc.lineWidth = configuration.tickLineWidth
-      gc.font(configuration.tickFont)
+      gc.font(configuration.tickFont())
 
       //Save the total height
       paintingVariables.spaceForTickLabels = gc.getFontMetrics().totalHeight
@@ -311,7 +314,7 @@ class TimeAxisLayer(
         if (availableWidth > textWidth) {
           //We have enough space for the label, paint at center
           @Window val textCenter = minX + (maxX - minX) / 2.0
-          gc.font(configuration.offsetTickFont)
+          gc.font(configuration.offsetTickFont())
           gc.fill(configuration.offsetTickLabelColor)
           val snappedX = paintingContext.snapConfiguration.snapXValue(textCenter)
           gc.fillText(formatted, snappedX, configuration.offsetAreaSize / 2.0, Direction.Center)
@@ -348,7 +351,7 @@ class TimeAxisLayer(
       gc.fillRectCoordinates(paintingVariables.axisStart, 0.0, paintingVariables.axisEnd, configuration.offsetAreaSize)
 
       val x = gc.width / 2.0
-      gc.font(configuration.offsetTickFont)
+      gc.font(configuration.offsetTickFont())
       gc.fill(configuration.offsetTickLabelColor)
       gc.fillText(paintingVariables.offsetTickDistance.formatAsOffset(millis, paintingContext.i18nConfiguration), x, configuration.offsetAreaSize / 2.0, Direction.Center)
     }
@@ -424,16 +427,16 @@ class TimeAxisLayer(
     /**
      * The fills that are used for the offset areas.
      */
-    var offsetAreaFills: MultiProvider<GlobalTimeIndex, Color> = Theme.backgroundZebra()
+    var offsetAreaFills: MultiProvider<GlobalTimeIndex, Color> = Theme.backgroundZebra.multiProvider()
     /**
      * The colors of the offset area ticks
      */
-    var offsetTickLabelColor: Color = Theme.axisTickColor()
+    var offsetTickLabelColor: ColorProvider = Theme.axisTickColor.provider()
 
     /**
      * The font for the offset ticks
      */
-    var offsetTickFont: FontDescriptorFragment = Theme.offsetTickFont()
+    var offsetTickFont: FontDescriptorFragmentProvider = Theme.offsetTickFont.provider()
   }
 }
 

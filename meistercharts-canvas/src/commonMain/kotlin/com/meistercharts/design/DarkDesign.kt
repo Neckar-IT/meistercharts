@@ -24,7 +24,7 @@ import it.neckar.open.provider.MultiProvider
 /**
  * A dark design definition.
  */
-class DarkCorporateDesign : DefaultCorporateDesign() {
+class DarkTheme : DefaultTheme() {
   override val id: String = "Dark Design"
 
   override val primaryColor: RgbaColor = Color.web("#5fd0f5").toRgba()
@@ -50,7 +50,7 @@ class DarkCorporateDesign : DefaultCorporateDesign() {
   override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
 
   override val borderColorConverter: (fill: Color?) -> Color = { fill ->
-    fill?.toRgba()?.darker(0.35) ?: Color.darkgray
+    fill?.toRgba()?.darker(0.35) ?: Color.darkgray()
   }
 
   override val chartColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(
@@ -109,10 +109,10 @@ class DarkCorporateDesign : DefaultCorporateDesign() {
   override val stateError: RgbaColor = Color.web("#ff6763").toRgba()
   override val stateUnknown: RgbaColor = Color.web("#60626c").toRgba()
 
-  override val shadowColor: RgbaColor = Color.black
+  override val shadowColor: RgbaColor = Color.black()
 }
 
 /**
  * A dark design
  */
-val DarkDesign : CorporateDesign = DarkCorporateDesign()
+val DarkDesign: Theme = DarkTheme()

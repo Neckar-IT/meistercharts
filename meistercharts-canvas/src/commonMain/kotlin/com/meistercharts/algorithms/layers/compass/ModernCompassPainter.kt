@@ -21,9 +21,12 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.PolarCoordinates
@@ -180,7 +183,7 @@ class ModernCompassPainter(
     /**
      * The color to paint the background
      */
-    var innerCircleColor: Color = Color.white
+    var innerCircleColor: ColorProvider = Color.white
 
     /**
      * The color to paint the ticks

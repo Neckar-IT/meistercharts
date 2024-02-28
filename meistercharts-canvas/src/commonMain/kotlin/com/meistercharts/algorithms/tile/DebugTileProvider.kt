@@ -20,6 +20,9 @@ import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.devicePixelRatio
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
 import it.neckar.open.time.nowMillis
@@ -90,16 +93,16 @@ class DebugTileProvider(
     /**
      * The color to be used for the border of the tiles
      */
-    var borderColor: Color = Color.lightgray,
+    var borderColor: ColorProvider = Color.lightgray,
     /**
      * The inner border (insets 10px)
      */
-    var innerBorderColor: Color = Color.silver,
+    var innerBorderColor: ColorProvider = Color.silver,
 
     /**
      * The color to be used for the debug text
      */
-    var textColor: Color = Color.black,
+    var textColor: ColorProvider = Color.black,
 
     /**
      * The font to be used for the debug text

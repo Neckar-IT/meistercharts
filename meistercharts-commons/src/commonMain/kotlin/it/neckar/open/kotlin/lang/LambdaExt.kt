@@ -34,10 +34,14 @@ fun <T> wrapped(delegate: T.() -> Unit, function: T.() -> Unit): T.() -> Unit {
 /**
  * Converts a constant value to a provider.
  *
- * This method is especially useful, if it is used on the result of a method call.
+ * This method is especially useful if it is used on the result of a method call.
  */
 fun <T> T.asProvider(): () -> T {
   return { this }
+}
+
+fun <T> T?.asProvider(fallback: () -> T): () -> T {
+  return { this ?: fallback() }
 }
 
 /**

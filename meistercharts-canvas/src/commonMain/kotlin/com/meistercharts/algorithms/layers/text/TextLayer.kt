@@ -28,7 +28,9 @@ import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.textService
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragmentProvider
 import com.meistercharts.geometry.BasePointProvider
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.Anchoring
@@ -43,6 +45,7 @@ import it.neckar.geometry.Size
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.px
 
 
@@ -70,7 +73,7 @@ class TextLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.font(configuration.font)
+    gc.font(configuration.font())
 
     gc.saved {
       val anchorPoint = configuration.anchorPointProvider.calculateBasePoint(gc.boundingBox)
@@ -81,7 +84,7 @@ class TextLayer(
       painter.paintText(
         gc,
         lines = configuration.linesProvider(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration),
-        textColor = configuration.textColor,
+        textColor = configuration.textColor(),
         boxStyle = configuration.boxStyle,
         lineSpacing = configuration.lineSpacing,
         horizontalAlignment = configuration.horizontalAlignment,
@@ -111,7 +114,7 @@ class TextLayer(
     /**
      * The color of the text
      */
-    var textColor: Color = Color.black
+    var textColor: ColorProvider = Color.black
 
     /**
      * The style for the box (background fill + border stroke)
@@ -119,9 +122,9 @@ class TextLayer(
     var boxStyle: BoxStyle = BoxStyle.none
 
     /**
-     * Describes the font
+     * Describes the font.
      */
-    var font: FontDescriptorFragment = FontDescriptorFragment(26.0)
+    var font: FontDescriptorFragmentProvider = FontDescriptorFragment(26.0).asProvider()
 
     /**
      * The line spacing
@@ -185,33 +188,29 @@ class TextLayer(
 /**
  * Adds a text layer with a text that is resolved
  */
-fun Layers.addText(textKey: TextKey, color: Color = Color.blueviolet): TextLayer {
-  return addText(listOf(textKey), color)
+fun Layers.addTextColored(textKey: TextKey, color: ColorProvider = Color.blueviolet): TextLayer {
+  return addTextColored(listOf(textKey), color)
 }
 
 /**
  * Adds a text layer with texts that are resolved
  */
-fun Layers.addText(textKeys: List<TextKey>, color: Color = Color.blueviolet): TextLayer {
-  return addText(textKeys) {
-    textColor = color
-  }
+fun Layers.addTextColored(textKeys: List<TextKey>, color: ColorProvider = Color.blueviolet): TextLayer {
+  return addText(textKeys, styleConfiguration = { textColor = color })
 }
 
 /**
  * Adds a text layer with a text that is not resolved
  */
-fun Layers.addTextUnresolved(text: String, color: Color = Color.blueviolet): TextLayer {
-  return addTextUnresolved(listOf(text), color)
+fun Layers.addTextUnresolvedColored(text: String, color: ColorProvider): TextLayer {
+  return addTextUnresolvedColored(listOf(text), color)
 }
 
 /**
  * Adds a message layer with texts that are not resolved
  */
-fun Layers.addTextUnresolved(texts: List<String>, color: Color = Color.blueviolet): TextLayer {
-  return addTextUnresolved(texts) {
-    textColor = color
-  }
+fun Layers.addTextUnresolvedColored(texts: List<String>, color: ColorProvider): TextLayer {
+  return addTextUnresolved(texts, styleConfiguration = { textColor = color })
 }
 
 /**
@@ -231,7 +230,7 @@ fun Layers.addText(textKeys: List<TextKey>, styleConfiguration: TextLayer.Config
 /**
  * Adds a message layer with a fixed string that is not resolved.
  */
-fun Layers.addTextUnresolved(texts: String, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+fun Layers.addTextUnresolved(texts: String, styleConfiguration: TextLayer.Configuration.() -> Unit = {}): TextLayer {
   return addTextUnresolved(listOf(texts), styleConfiguration)
 }
 

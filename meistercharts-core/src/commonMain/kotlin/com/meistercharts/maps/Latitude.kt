@@ -16,7 +16,7 @@
 package com.meistercharts.maps
 
 import it.neckar.open.formatting.format
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.unit.other.deg
 import kotlinx.serialization.Serializable
@@ -55,7 +55,7 @@ value class Latitude(
    *
    * more: https://en.wikipedia.org/wiki/Geographic_coordinate_system
    */
-  fun format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
+  fun format(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
     val latitudeMinutesCalculation = ((value % 1) * 60)
     val latitudeSecondsCalculation = (latitudeMinutesCalculation % 1) * 60
     return buildString {

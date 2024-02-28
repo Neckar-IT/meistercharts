@@ -15,17 +15,16 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.NonOverlappingPasspartoutPaintingStrategy
 import com.meistercharts.algorithms.painter.OverlappingPasspartoutPaintingStrategy
 import com.meistercharts.algorithms.painter.PasspartoutPainter
 import com.meistercharts.algorithms.painter.PasspartoutPaintingStrategy
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Side
-import com.meistercharts.provider.ColorProvider
-import com.meistercharts.provider.InsetsProvider
 import it.neckar.open.unit.other.px
 
 /**
@@ -49,8 +48,8 @@ class PasspartoutLayer(
     painter.paintPasspartout(
       paintingContext,
       configuration.color(),
-      configuration.margin(),
-      configuration.insets(),
+      configuration.margin(paintingContext),
+      configuration.insets(paintingContext),
       configuration.strategy,
     )
   }
@@ -62,17 +61,17 @@ class PasspartoutLayer(
     /**
      * The insets of the [PasspartoutLayer]; this area is filled with [color]
      */
-    var insets: @Zoomed InsetsProvider = { Insets.empty }
+    var insets: @Zoomed PaintingContextAwareInsetsProvider = { Insets.empty }
 
     /**
      * A margin around the passpartout (which is *not* painted)
      */
-    var margin: @Zoomed InsetsProvider = { Insets.empty }
+    var margin: @Zoomed PaintingContextAwareInsetsProvider = { Insets.empty }
 
     /**
      * The color used for the passpartout (the area defined by [insets])
      */
-    var color: ColorProvider = { Color.white }
+    var color: ColorProvider = Color.white
   }
 
   companion object {
@@ -83,10 +82,10 @@ class PasspartoutLayer(
 /**
  * Adds a [PasspartoutLayer] with the given [insets] and of the given [color]
  */
-fun Layers.addPasspartout(@px @Zoomed insets: Insets, color: Color): PasspartoutLayer {
+fun Layers.addPasspartout(@px @Zoomed insets: Insets, color: ColorProvider): PasspartoutLayer {
   PasspartoutLayer {
     this.insets = { insets }
-    this.color = { color }
+    this.color = color
   }.let {
     addLayer(it)
     return it

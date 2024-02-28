@@ -24,7 +24,9 @@ import com.meistercharts.annotations.Tile
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.RgbaColor
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
@@ -40,6 +42,7 @@ import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.provider.MultiProvider
+import it.neckar.open.provider.resolved
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -229,7 +232,7 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
     /**
      * Returns the area color for min/max areas
      */
-    val minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider.always(Color.lightgray),
+    val minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider.always<DecimalDataSeriesIndex, () -> RgbaColor>(Color.lightgray).resolved(),
 
     ) : HistoryCanvasTilePainter.Configuration(historyStorage, contentAreaTimeRange, valueRanges, visibleDecimalSeriesIndices)
 }

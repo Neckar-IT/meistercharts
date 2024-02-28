@@ -1,11 +1,13 @@
 package it.neckar.datetime.minimal
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
  * Represents a day of a month
  */
 @JvmInline
+@Serializable
 value class DayOfMonth(val value: Int) : Comparable<DayOfMonth> {
   operator fun plus(daysToAdd: Int): DayOfMonth {
     return DayOfMonth(value + daysToAdd)

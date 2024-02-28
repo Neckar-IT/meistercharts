@@ -17,19 +17,21 @@ package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
-import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Rectangle
-import it.neckar.geometry.Direction
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
-import it.neckar.geometry.Size
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
 import com.meistercharts.style.BoxStyle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DefaultDoublesProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -48,11 +50,11 @@ class StackedBarWithLabelPaintable(
     name: String = "",
     valuesProvider: DoublesProvider = DefaultDoublesProvider(listOf(5.0, 6.0, 7.0)),
     valueRange: LinearValueRange = ValueRange.default,
-    colors: List<Color>,
+    colors: List<ColorProvider>,
     width: @px Double = 15.0,
-    height: @px Double = 200.0
+    height: @px Double = 200.0,
   ) : this(Data(name, valuesProvider, valueRange), width, height) {
-    stackedBarPaintable.style.colorsProvider = MultiProvider.forListModulo(colors, Color.gray)
+    stackedBarPaintable.style.colorsProvider = MultiProvider.forListModuloProvider(values = colors, fallback = Color.gray())
   }
 
   val style: Style = Style()
@@ -99,7 +101,7 @@ class StackedBarWithLabelPaintable(
      * The box style for the label
      */
     var labelBoxStyle: BoxStyle = BoxStyle(
-      fill = Color("rgba(255, 255, 255, 0.55)"),
+      fill = Color.web("rgba(255, 255, 255, 0.55)").asProvider(),
       padding = Insets(3.0, 5.0, 3.0, 5.0)
     )
   }

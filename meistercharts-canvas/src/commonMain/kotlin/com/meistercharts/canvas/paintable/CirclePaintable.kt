@@ -16,7 +16,9 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.canvas.fill
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
@@ -26,8 +28,8 @@ import it.neckar.open.unit.other.px
  * Paints a solid circle with the given diameter
  */
 class CirclePaintable(
-  val color: Color,
-  val diameter: @px Double
+  val color: ColorProvider,
+  val diameter: @px Double,
 ) : Paintable {
 
   val boundingBox: Rectangle = Rectangle(Coordinates.origin, Size(diameter, diameter))

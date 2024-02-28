@@ -16,23 +16,23 @@
 package com.meistercharts.api.circular
 
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.CircleSegmentIndex
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
 import it.neckar.open.http.Url
-import it.neckar.open.provider.MultiProvider
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.provider.MultiProvider
 
 /**
  * Converts the circular chart data
  */
 object CircularChartConverter {
   fun toSegmentsColorProvider(data: CircularChartData): MultiProvider<CircleSegmentIndex, Color> {
-    val segments = data.segments ?: return MultiProvider.always(Color.silver)
-    val colors = segments
-      .map { it.color?.let { color -> Color.web(color) } ?: Color.silver }
+    val segments = data.segments ?: return MultiProvider.always(Color.silver())
+    val colors: List<Color> = segments
+      .map { it.color?.let { color -> Color.web(color) } ?: Color.silver() }
       .toList()
-    return MultiProvider.forListModulo(colors, Color.silver)
+    return MultiProvider.forListModulo(colors, Color.silver())
   }
 
   fun toSegmentsLabelProvider(data: CircularChartData): MultiProvider<CircleSegmentIndex, TextKey?> {

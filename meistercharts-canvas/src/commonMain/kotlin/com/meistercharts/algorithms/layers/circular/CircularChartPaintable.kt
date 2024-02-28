@@ -17,18 +17,22 @@ package com.meistercharts.algorithms.layers.circular
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.CircleSegmentIndex
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.RgbaColorProvider
+import com.meistercharts.style.Palette.chartColors
 import it.neckar.geometry.Rectangle
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.fastForEachIndexed
-import com.meistercharts.style.Palette.chartColors
+import it.neckar.open.provider.resolved
 import it.neckar.open.unit.other.deg
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -47,7 +51,7 @@ class CircularChartPaintable(
   /**
    * The style of the paintable
    */
-  val style: Style = Style()
+  val style: Style = Style(),
 ) : Paintable {
 
   /**
@@ -91,7 +95,7 @@ class CircularChartPaintable(
     //Stroke the inner circle
     if (style.innerCircleWidth > 0.0) {
       gc.lineWidth = style.innerCircleWidth
-      gc.stroke(style.innerCircleColor)
+      gc.stroke(style.innerCircleColor())
       gc.strokeOvalCenter(x, y, innerRadius * 2, innerRadius * 2)
     }
   }
@@ -101,7 +105,7 @@ class CircularChartPaintable(
     /**
      * Provides the color for the segment at a certain index
      */
-    var segmentsColorProvider: MultiProvider<CircleSegmentIndex, Color> = MultiProvider.forListModulo(chartColors)
+    var segmentsColorProvider: MultiProvider<CircleSegmentIndex, Color> = MultiProvider.forListModulo<CircleSegmentIndex, RgbaColorProvider>(chartColors).resolved()
 
     var outerCircleWidth: @px Double = 23.0
 
@@ -126,7 +130,7 @@ class CircularChartPaintable(
     /**
      * The color of the inner circle
      */
-    var innerCircleColor: Color = Color.web("#eeeff0")
+    var innerCircleColor: ColorProvider = Color.web("#eeeff0").asProvider()
 
     /**
      * The gap between inner and outer circle

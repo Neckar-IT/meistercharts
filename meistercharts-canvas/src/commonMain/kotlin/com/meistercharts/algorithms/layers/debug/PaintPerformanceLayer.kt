@@ -24,6 +24,9 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.open.formatting.NumberFormat
@@ -211,22 +214,22 @@ class PaintPerformanceLayer(
     /**
      * The color that is used for the axis and ticks
      */
-    var axis: Color = Color.black
+    var axis: ColorProvider = Color.black
 
     /**
      * The color for the threshold
      */
-    var threshold: Color = Color.red
+    var threshold: ColorProvider = Color.red
 
     /**
      * The color that is used for values above the threshold
      */
-    var warning: Color = Color.red
+    var warning: ColorProvider = Color.red
 
     /**
      * A normal value
      */
-    var value: Color = Color.gray
+    var value: ColorProvider = Color.gray
 
     /**
      * The tick labels font

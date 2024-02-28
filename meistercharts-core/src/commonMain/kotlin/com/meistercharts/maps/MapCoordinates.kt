@@ -16,7 +16,7 @@
 package com.meistercharts.maps
 
 import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.unit.other.deg
 import kotlinx.serialization.Serializable
@@ -35,7 +35,7 @@ data class MapCoordinates(
    */
   val longitude: Longitude,
 ) {
-  fun format(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration): String {
+  fun format(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
     val format = decimalFormat(10, 5)
     return "${format.format(latitude.value, i18nConfiguration)}, ${format.format(longitude.value, i18nConfiguration)}"
   }

@@ -25,27 +25,24 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Snapped
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.AxisOrientationX
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.LocationType
 import com.meistercharts.canvas.forTranslationX
 import com.meistercharts.canvas.forTranslationY
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.snapPhysicalTranslation
+import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Direction
-import it.neckar.geometry.HorizontalAlignment
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.VerticalAlignment
+import com.meistercharts.design.multiProvider
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.SeriesIndex
@@ -53,6 +50,12 @@ import com.meistercharts.model.category.valuesAt
 import com.meistercharts.provider.BoxProvider1
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.isNegative
@@ -384,7 +387,7 @@ class GroupedBarsPainter(
     val maxWidth: Double? = null
     val maxHeight: Double? = null
 
-    configuration.valueLabelStrokeColor?.let { strokeColor ->
+    configuration.valueLabelStrokeColor.get()?.let { strokeColor ->
       gc.stroke(strokeColor)
       gc.lineWidth = 1.0
       gc.strokeText(
@@ -409,7 +412,7 @@ class GroupedBarsPainter(
     val boxWidth: @Zoomed Double = valueLabelBox.getWidth(chartCalculator)
     val boxHeight: @Zoomed Double = valueLabelBox.getHeight(chartCalculator)
 
-    gc.fill(configuration.valueLabelColor ?: barColor)
+    gc.fill(configuration.valueLabelColor.get() ?: barColor)
     gc.fillTextWithin(
       text = valueText,
       x = anchorX,
@@ -435,7 +438,7 @@ class GroupedBarsPainter(
     /**
      * Provides the color for a bar.
      */
-    var colorsProvider: CategorySeriesModelColorsProvider = onlySeriesColorsProvider(Theme.chartColors())
+    var colorsProvider: CategorySeriesModelColorsProvider = onlySeriesColorsProvider(Theme.chartColors.multiProvider())
 
     /**
      * Calculates the layout for the bars
@@ -469,12 +472,12 @@ class GroupedBarsPainter(
     /**
      * The color to be used for the value labels; set to null to use the color of the corresponding bar
      */
-    var valueLabelColor: Color? = null
+    var valueLabelColor: ColorProviderNullable = null
 
     /**
      * The color to be used to stroke the value-labels
      */
-    var valueLabelStrokeColor: Color? = null
+    var valueLabelStrokeColor: ColorProviderNullable = null
 
     /**
      * The gap for the value label anchor

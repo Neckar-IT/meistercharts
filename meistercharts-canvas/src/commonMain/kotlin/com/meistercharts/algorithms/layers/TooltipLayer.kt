@@ -21,6 +21,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.tooltipSupport
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Rectangle
@@ -78,7 +79,7 @@ class TooltipLayer(
       )
 
       gc.translate(mousePosition.x, mousePosition.y)
-      gc.paintTextBox(tooltipContent.lines, Direction.BottomLeft, 3.0, 3.0, configuration.boxStyle, configuration.textColor, gc.width)
+      gc.paintTextBox(tooltipContent.lines, Direction.BottomLeft, 3.0, 3.0, configuration.boxStyle, configuration.textColor(), gc.width)
 
     } else {
       lastVisibleTooltipInfo = null
@@ -91,7 +92,7 @@ class TooltipLayer(
      * The style for the box
      */
     val boxStyle: BoxStyle = BoxStyle(fill = Color.lightgray, borderColor = Color.darkgrey, padding = Insets.of(5.0))
-    val textColor: Color = Color.black
+    val textColor: ColorProvider = Color.black
 
     var font: FontDescriptorFragment = FontDescriptorFragment.empty
   }

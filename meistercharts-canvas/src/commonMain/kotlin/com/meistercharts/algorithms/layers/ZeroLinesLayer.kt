@@ -19,6 +19,8 @@ import it.neckar.geometry.AxisSelection
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import it.neckar.open.unit.other.px
 
 /**
@@ -55,7 +57,7 @@ class ZeroLinesLayer(
     /**
      * The color for the lines
      */
-    var color: Color = Color.silver
+    var color: ColorProvider = Color.silver
 
     var lineWidth: @px Double = 1.0
 

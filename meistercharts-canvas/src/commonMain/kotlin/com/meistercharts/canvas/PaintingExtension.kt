@@ -15,33 +15,34 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.color.Color
-import it.neckar.open.unit.number.MayBeNegative
-import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.geometry.BezierCurve
 import com.meistercharts.canvas.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.text.TextLineCalculations
+import com.meistercharts.color.Color
+import com.meistercharts.color.get
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
-import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Rectangle
 import com.meistercharts.model.*
+import com.meistercharts.style.BoxStyle
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.kotlin.lang.ifBlank
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.isPositiveOrZero
-import com.meistercharts.style.BoxStyle
-import it.neckar.geometry.Direction
-import it.neckar.geometry.HorizontalAlignment
-import it.neckar.geometry.Size
-import it.neckar.geometry.VerticalAlignment
+import it.neckar.open.unit.number.MayBeNegative
+import it.neckar.open.unit.number.PositiveOrZero
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 
@@ -601,7 +602,7 @@ fun CanvasRenderingContext.strokeCross45Degrees(@Window x: Double = 0.0, @Window
  * Helper methods that marks the current location (translation of the rendering context).
  * Should only be used for debugging
  */
-fun CanvasRenderingContext.paintLocation(location: Coordinates, color: Color = Color.orangered) {
+fun CanvasRenderingContext.paintLocation(location: Coordinates, color: Color = Color.orangered()) {
   paintLocation(location.x, location.y, color)
 }
 
@@ -609,7 +610,7 @@ fun CanvasRenderingContext.paintLocation(location: Coordinates, color: Color = C
  * Helper methods that marks the current location (translation of the rendering context).
  * Should only be used for debugging
  */
-fun CanvasRenderingContext.paintLocation(x: Double = 0.0, y: Double = 0.0, color: Color = Color.orangered, label: String? = null) {
+fun CanvasRenderingContext.paintLocation(x: Double = 0.0, y: Double = 0.0, color: Color = Color.orangered(), label: String? = null) {
   //Debug function - should not modify GC
   saved {
     lineWidth = 1.0
@@ -657,7 +658,7 @@ fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: D
 
     label?.let {
       stroke(Color.white)
-      fill(color ?: Color.black)
+      fill(color ?: Color.black())
       strokeText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
       fillText(text = label, x = x, y = y, anchorDirection = Direction.CenterLeft, gapHorizontal = 10.0)
     }
@@ -726,7 +727,7 @@ fun CanvasRenderingContext.paintTextWithPaintable(
 /**
  * Paints the bounding box of a paintable at the given location
  */
-fun Paintable.strokeBoundingBox(paintingContext: LayerPaintingContext, x: @Window Double, y: @Window Double, showOrigin: Boolean = false, stroke: Color = Color.orange) {
+fun Paintable.strokeBoundingBox(paintingContext: LayerPaintingContext, x: @Window Double, y: @Window Double, showOrigin: Boolean = false, stroke: Color = Color.orange()) {
   val gc = paintingContext.gc
   gc.translate(x, y)
 
@@ -951,7 +952,7 @@ fun CanvasRenderingContext.paintTextBox(
   /**
    * The text color
    */
-  textColor: Color = Color.black,
+  textColor: Color = Color.black(),
   /**
    * The max string width
    */
@@ -1009,7 +1010,7 @@ fun CanvasRenderingContext.paintTextBox(
   /**
    * The text color
    */
-  textColor: Color = Color.black,
+  textColor: Color = Color.black(),
   /**
    * The max string width
    */
@@ -1079,7 +1080,7 @@ fun CanvasRenderingContext.paintTextBox(
   /**
    * The text color
    */
-  textColor: Color = Color.black,
+  textColor: Color = Color.black(),
   /**
    * The max string width
    */
@@ -1141,7 +1142,7 @@ fun CanvasRenderingContext.paintTextBox(
   }
 
   //Fill the background - of the box
-  boxStyle.fill?.let {
+  boxStyle.fill.get()?.let {
     fill(it)
     fillRoundedRect(boxBounds, boxStyle.radii)
   }
@@ -1151,7 +1152,7 @@ fun CanvasRenderingContext.paintTextBox(
 
 
   //Draw the (optional) border
-  boxStyle.borderColor?.let { border ->
+  boxStyle.borderColor.get()?.let { border ->
     stroke(border)
     lineWidth = boxStyle.borderWidth
     strokeRoundedRect(boxBounds, boxStyle.radii)

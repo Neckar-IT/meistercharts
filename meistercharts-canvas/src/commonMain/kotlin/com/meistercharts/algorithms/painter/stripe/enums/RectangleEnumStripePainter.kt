@@ -16,13 +16,13 @@
 package com.meistercharts.algorithms.painter.stripe.enums
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.snapPhysicalTranslation
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
@@ -122,7 +122,7 @@ class RectangleEnumStripePainter(
      */
     fun enumFillProvider(): (value: HistoryEnumOrdinal, historyEnum: HistoryEnum) -> Color {
       return { value, _ ->
-        Theme.enumColors().valueAt(value.value)
+        Theme.enumColors.resolve().valueAt(value.value)
       }
     }
 
@@ -131,7 +131,7 @@ class RectangleEnumStripePainter(
      */
     fun enumStateFillProvider(): (value: HistoryEnumOrdinal, historyEnum: HistoryEnum) -> Color {
       return { value, _ ->
-        Theme.stateColors().valueAt(value.value)
+        Theme.stateColors.resolve().valueAt(value.value)
       }
     }
   }

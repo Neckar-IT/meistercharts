@@ -22,6 +22,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.paintMark
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeRect
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
@@ -50,7 +51,7 @@ class DebugCategoryAxisLabelPainter : CategoryAxisLabelPainter {
       stroke(Color.green)
       lineWidth = 1.0
       strokeRect(x, y, width, height, tickDirection)
-      paintMark(x, y, color = Color.orange)
+      paintMark(x, y, color = Color.orange())
     }
   }
 }

@@ -24,6 +24,9 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
 import it.neckar.geometry.Direction
@@ -100,9 +103,9 @@ class DirtyRangesDebugLayer(
      */
     val barHeight: @Zoomed Double = 20.0
 
-    val barColor: Color = Color.orange
+    val barColor: ColorProvider = Color.orange
 
-    val barLabelColor: Color = Color.red
+    val barLabelColor: ColorProvider = Color.red
   }
 }
 

@@ -39,15 +39,15 @@ fun interface ReferenceEntryStatusColorProvider {
       return ReferenceEntryStatusColorProvider { _, _, statusEnumSet, _ ->
         when {
           statusEnumSet.isNoValue() -> {
-            Color.silver
+            Color.silver()
           }
 
           statusEnumSet.isPending() -> {
-            Color.lightgray
+            Color.lightgray()
           }
 
           else -> {
-            Theme.enumColors().valueAt(statusEnumSet.firstSetOrdinal().value)
+            Theme.enumColors.resolve().valueAt(statusEnumSet.firstSetOrdinal().value)
           }
         }
       }

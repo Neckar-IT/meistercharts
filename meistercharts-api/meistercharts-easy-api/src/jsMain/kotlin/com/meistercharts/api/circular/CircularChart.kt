@@ -15,14 +15,15 @@
  */
 package com.meistercharts.api.circular
 
-import com.meistercharts.color.Color
 import com.meistercharts.api.MeisterChartsApiLegacy
 import com.meistercharts.api.Size
 import com.meistercharts.api.toModelSize
+import com.meistercharts.charts.CircularChartGestalt
+import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.combineWith
-import com.meistercharts.charts.CircularChartGestalt
 import com.meistercharts.js.MeisterchartJS
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.MutableDoublesProvider
 import it.neckar.open.unit.other.px
 
@@ -86,7 +87,7 @@ private fun CircularChartGestalt.applyStyle(jsStyle: CircularChartStyle) {
   }
 
   jsStyle.innerCircleColor?.let {
-    this.layer.configuration.innerCircleColor = Color.web(it)
+    this.layer.configuration.innerCircleColor = Color.web(it).asProvider()
   }
 
   jsStyle.legend?.let { circularChartLegendStyle ->
@@ -94,7 +95,7 @@ private fun CircularChartGestalt.applyStyle(jsStyle: CircularChartStyle) {
       this.legendLayer.configuration.showCaption = it
     }
     circularChartLegendStyle.fontColor?.let {
-      this.legendLayer.configuration.fontColor = Color.web(it)
+      this.legendLayer.configuration.fontColor = Color.web(it).asProvider()
     }
     circularChartLegendStyle.fontSize?.let {
       this.legendLayer.configuration.font = this.legendLayer.configuration.font.combineWith(FontDescriptorFragment(it))

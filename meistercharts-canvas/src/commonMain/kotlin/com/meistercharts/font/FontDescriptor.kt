@@ -18,6 +18,9 @@ package com.meistercharts.font
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
 
+typealias FontDescriptorProvider = () -> FontDescriptor
+typealias FontDescriptorFragmentProvider = () -> FontDescriptorFragment
+
 /**
  * Describes a font that can be set to a graphics context
  */

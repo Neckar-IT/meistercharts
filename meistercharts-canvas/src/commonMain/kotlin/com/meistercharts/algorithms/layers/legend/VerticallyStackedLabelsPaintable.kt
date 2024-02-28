@@ -19,12 +19,14 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
@@ -104,7 +106,7 @@ class VerticallyStackedLabelsPaintable(
         anchorDirection = Direction.CenterLeft,
         anchorGapHorizontal = 0.0,
         anchorGapVertical = 0.0,
-        textColor = configuration.labelColor,
+        textColor = configuration.labelColor(),
         maxStringWidth = configuration.maxLabelWidth
       )
       gc.translate(0.0, configuration.entriesGap + paintingVariables.rowHeightWithoutGap)
@@ -133,7 +135,7 @@ class VerticallyStackedLabelsPaintable(
     /**
      * The color the text is painted with
      */
-    var labelColor: Color = Palette.defaultGray
+    var labelColor: ColorProvider = Palette.defaultGray
 
     /**
      * The font the text is painted with

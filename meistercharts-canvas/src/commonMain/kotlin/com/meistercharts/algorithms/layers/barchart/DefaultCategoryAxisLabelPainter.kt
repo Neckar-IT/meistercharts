@@ -30,6 +30,7 @@ import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeRect
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
@@ -71,7 +72,7 @@ class DefaultCategoryAxisLabelPainter(styleConfiguration: Style.() -> Unit = {})
         stroke(Color.lightblue)
         lineWidth = 1.0
         strokeRect(x, y, width, height, tickDirection)
-        paintMark(x, y, color = Color.orange)
+        paintMark(x, y, color = Color.orange())
       }
     }
 
@@ -111,7 +112,7 @@ class DefaultCategoryAxisLabelPainter(styleConfiguration: Style.() -> Unit = {})
     }
 
     if (DebugFeature.ShowBounds.enabled(paintingContext)) {
-      gc.paintMark(x + gapX, y + gapY, color = Color.orangered)
+      gc.paintMark(x + gapX, y + gapY, color = Color.orangered())
     }
 
     when (style.wrapMode) {

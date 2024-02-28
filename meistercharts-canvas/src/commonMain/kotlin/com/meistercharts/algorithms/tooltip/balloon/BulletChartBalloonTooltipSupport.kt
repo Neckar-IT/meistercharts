@@ -15,24 +15,25 @@
  */
 package com.meistercharts.algorithms.tooltip.balloon
 
-import com.meistercharts.range.LinearValueRange
 import com.meistercharts.algorithms.layers.legend.HeadlineAbovePaintable
 import com.meistercharts.algorithms.layers.legend.LegendEntryIndex
 import com.meistercharts.algorithms.layers.legend.SymbolAndLabelLegendPaintable
 import com.meistercharts.algorithms.layers.legend.withHeadline
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.RectanglePaintable
 import com.meistercharts.charts.bullet.CategoryModelBulletChart
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.range.LinearValueRange
 import it.neckar.geometry.Size
+import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.provider.SizedProviderWithIndexMapping
 import it.neckar.open.provider.impl.IndexMappingSupport
 import it.neckar.open.provider.withMappedIndex
-import it.neckar.open.formatting.CachedNumberFormat
 
 
 /**
@@ -57,7 +58,7 @@ class BulletChartBalloonTooltipSupport(
   /**
    * Returns the color for the current value symbol
    */
-  val currentValueSymbolColor: () -> Color,
+  val currentValueSymbolColor: ColorProvider,
 
   /**
    * Returns the color for the bar of the provided category index

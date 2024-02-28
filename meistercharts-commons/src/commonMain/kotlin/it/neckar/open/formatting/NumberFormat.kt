@@ -1,5 +1,6 @@
 package it.neckar.open.formatting
 
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
@@ -12,7 +13,7 @@ interface NumberFormat {
   /**
    * Formats a number to a string
    */
-  fun format(value: Double, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String
+  fun format(value: Double, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String
 
   /**
    * The smallest absolute difference between two double values that leads to different results calling [format].

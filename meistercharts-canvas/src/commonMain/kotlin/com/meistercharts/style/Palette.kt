@@ -16,7 +16,10 @@
 package com.meistercharts.style
 
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.RgbaColor
+import com.meistercharts.color.RgbaColorProvider
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.getModulo
 
 /**
@@ -26,58 +29,58 @@ object Palette {
   /**
    * A "nice" gray that is used as default at a lot of places
    */
-  val defaultGray: Color = Color.rgb(115, 127, 133)
+  val defaultGray: ColorProvider = Color.rgb(115, 127, 133).asProvider()
 
-  val primaryColors: List<RgbaColor> = listOf(
-    Color.rgb(0, 161, 229), //first
-    Color.rgb(0, 46, 70), //second
-    Color.rgb(159, 213, 216) //third
+  val primaryColors: List<RgbaColorProvider> = listOf(
+    Color.rgb(0, 161, 229).asProvider(), //first
+    Color.rgb(0, 46, 70).asProvider(), //second
+    Color.rgb(159, 213, 216).asProvider(), //third
   )
 
   /**
    * Returns the primary color for the given index (modulo)
    */
-  fun getPrimaryColor(index: Int): Color = primaryColors.getModulo(index)
+  fun getPrimaryColor(index: Int): RgbaColorProvider = primaryColors.getModulo(index)
 
-  val chartColors: List<RgbaColor> = listOf(
-    Color.rgb(0, 161, 229),
-    Color.rgb(0, 46, 70),
-    Color.rgb(159, 213, 216),
-    Color.rgb(0, 104, 150),
-    Color.rgb(118, 199, 238),
-    Color.rgb(59, 145, 129)
+  val chartColors: List<RgbaColorProvider> = listOf(
+    Color.rgb(0, 161, 229).asProvider(),
+    Color.rgb(0, 46, 70).asProvider(),
+    Color.rgb(159, 213, 216).asProvider(),
+    Color.rgb(0, 104, 150).asProvider(),
+    Color.rgb(118, 199, 238).asProvider(),
+    Color.rgb(59, 145, 129).asProvider(),
   )
 
   /**
    * Returns a chart color for the given index (modulo)
    */
-  fun getChartColor(index: Int): Color = chartColors.getModulo(index)
+  fun getChartColor(index: Int): RgbaColorProvider = chartColors.getModulo(index)
 
   /** 'green'; could also be used for an OK-state */
-  val stateSuperior: RgbaColor = Color.rgb(146, 194, 89)
+  val stateSuperior: RgbaColorProvider = Color.rgb(146, 194, 89).asProvider()
 
   /** 'blue' */
-  val stateNormal: RgbaColor = Color.rgb(0, 161, 229)
+  val stateNormal: RgbaColorProvider = Color.rgb(0, 161, 229).asProvider()
 
   /** 'yellow' */
-  val stateWarning: RgbaColor = Color.rgb(243, 197, 0)
+  val stateWarning: RgbaColorProvider = Color.rgb(243, 197, 0).asProvider()
 
   /** 'orange' */
-  val stateCritical: RgbaColor = Color.rgb(241, 132, 34)
+  val stateCritical: RgbaColorProvider = Color.rgb(241, 132, 34).asProvider()
 
   /** 'red' */
-  val stateError: RgbaColor = Color.rgb(230, 44, 86)
+  val stateError: RgbaColorProvider = Color.rgb(230, 44, 86).asProvider()
 
   /** 'dark blue'; could also be used for an unknown-state */
-  val stateOffline: RgbaColor = Color.rgb(0, 46, 70)
+  val stateOffline: RgbaColorProvider = Color.rgb(0, 46, 70).asProvider()
 
   /**
    * Contains all state colors
    */
-  val stateColors: List<RgbaColor> = listOf(stateSuperior, stateNormal, stateWarning, stateCritical, stateError, stateOffline)
+  val stateColors: List<RgbaColorProvider> = listOf(stateSuperior, stateNormal, stateWarning, stateCritical, stateError, stateOffline)
 
   /**
    * Contains all palettes
    */
-  val all: List<List<RgbaColor>> = listOf(primaryColors, chartColors, stateColors)
+  val all: List<List<RgbaColorProvider>> = listOf(primaryColors, chartColors, stateColors)
 }

@@ -15,9 +15,10 @@
  */
 package com.meistercharts.algorithms.layers.barchart
 
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.SeriesIndex
-import com.meistercharts.color.Color
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -35,8 +36,8 @@ fun interface CategorySeriesModelColorsProvider {
      *
      * This is useful if there is more than one series visible per category.
      */
-    fun onlySeriesColorsProvider(seriesColors: List<Color>): CategorySeriesModelColorsProvider {
-      return onlySeriesColorsProvider(MultiProvider.forListModulo(seriesColors))
+    fun onlySeriesColorsProvider(seriesColors: List<ColorProvider>): CategorySeriesModelColorsProvider {
+      return onlySeriesColorsProvider(MultiProvider.forListModuloProvider(seriesColors))
     }
 
     /**
@@ -53,8 +54,8 @@ fun interface CategorySeriesModelColorsProvider {
      *
      * This is especially useful if there is only one data series, and you want every category to be in a different color.
      */
-    fun onlyCategoryColorsProvider(categoriesColors: List<Color>): CategorySeriesModelColorsProvider {
-      return onlyCategoryColorsProvider(MultiProvider.forListModulo(categoriesColors))
+    fun onlyCategoryColorsProvider(categoriesColors: List<ColorProvider>): CategorySeriesModelColorsProvider {
+      return onlyCategoryColorsProvider(MultiProvider.forListModuloProvider(categoriesColors))
     }
 
     /**

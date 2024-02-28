@@ -41,14 +41,6 @@ typealias TimeRangeProvider = () -> TimeRange
  */
 typealias CoordinatesProvider = () -> @Domain Coordinates
 /**
- * Provides insets
- */
-typealias InsetsProvider = () -> Insets
-/**
- * Provides a color
- */
-typealias ColorProvider = () -> Color
-/**
  * Provides a [NumberFormat]
  */
 typealias NumberFormatProvider = () -> NumberFormat

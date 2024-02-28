@@ -11,10 +11,10 @@ expect class Context<T>(initial: T) {
   val current: T
 
   /**
-   * Sets the default value.
-   * Handle with care! In most cases it is better to use [with].
+   * The default value that is returned, if no [with] block is active.
+   * Usually [with] (to write) and [current] (to read) should be used instead.
    */
-  fun setDefaultValue(value: T)
+  var defaultValue: T
 
   /**
    * Executes this block with the updated value.

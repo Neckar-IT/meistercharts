@@ -19,29 +19,32 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
-import com.meistercharts.color.Color
+import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.Configuration
 import com.meistercharts.algorithms.painter.LabelPainter2
 import com.meistercharts.algorithms.painter.LabelPlacement
-import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Direction
-import it.neckar.geometry.Distance
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
 import com.meistercharts.provider.LabelsProvider
+import com.meistercharts.style.BoxStyle
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.open.i18n.I18nConfiguration
+import it.neckar.open.i18n.TextService
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.HasSize
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
-import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.TextService
-import com.meistercharts.style.BoxStyle
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 
 /**
@@ -168,7 +171,12 @@ class CrossWireLayer(
         }
 
         gc.paintTextBox(
-          currentLocationLabelText, configuration.currentLocationLabelAnchorDirection, 0.0, 0.0, configuration.currentLocationLabelBoxStyle, configuration.currentLocationLabelTextColor
+          line = currentLocationLabelText,
+          anchorDirection = configuration.currentLocationLabelAnchorDirection,
+          anchorGapHorizontal = 0.0,
+          anchorGapVertical = 0.0,
+          boxStyle = configuration.currentLocationLabelBoxStyle,
+          textColor = configuration.currentLocationLabelTextColor()
         )
       }
     }
@@ -259,7 +267,7 @@ class CrossWireLayer(
     /**
      * Provides the color for the label text
      */
-    var valueLabelTextColor: MultiProvider<LabelIndex, Color> = MultiProvider.always(Color.white)
+    var valueLabelTextColor: MultiProvider<LabelIndex, Color> = MultiProvider.always(Color.white())
 
     /**
      * Sets the given font for all labels of the cross wire
@@ -307,7 +315,7 @@ class CrossWireLayer(
     /**
      * The color of the cross wire
      */
-    var wireColor: Color = Theme.crossWireLineColor()
+    var wireColor: ColorProvider = Theme.crossWireLineColor.provider()
 
     /**
      * The width of the cross wire
@@ -338,7 +346,7 @@ class CrossWireLayer(
     /**
      * The text color for the location-label
      */
-    var currentLocationLabelTextColor: Color = Color.white
+    var currentLocationLabelTextColor: ColorProvider = Color.white
 
     /**
      * The font to be used for the location-label

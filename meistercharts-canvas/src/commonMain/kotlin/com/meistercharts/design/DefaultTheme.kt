@@ -32,10 +32,10 @@ import it.neckar.open.provider.MultiProvider
  * The default design definition.
  * This definition does not require any pre-installed fonts.
  */
-open class DefaultCorporateDesign(
+open class DefaultTheme(
   val headlineFontFamily: FontFamilyConfiguration = FontFamilyConfiguration.SansSerif,
   val defaultFontFamily: FontFamilyConfiguration = FontFamilyConfiguration.SansSerif,
-) : CorporateDesign {
+) : Theme {
   override val id: String = "Default Design"
 
   override val primaryColor: RgbaColor = Color.web("#00a1e5").toRgba()
@@ -70,10 +70,10 @@ open class DefaultCorporateDesign(
   override val textColor: RgbaColor
     get() = primaryColorDarker
 
-  override val canvasBackgroundColor: RgbaColor = Color.white
-  override val primaryBackgroundColor: RgbaColor = Color.white
+  override val canvasBackgroundColor: RgbaColor = Color.white()
+  override val primaryBackgroundColor: RgbaColor = Color.white()
   override val secondaryBackgroundColor: RgbaColor = Color.web("#002e46").toRgba()
-  override val backgroundColorActive: RgbaColor = Color.silver.withAlpha(0.5)
+  override val backgroundColorActive: RgbaColor = Color.silver().withAlpha(0.5)
 
   override val backgroundZebraColors: MultiProvider<Any, RgbaColor> = MultiProvider.Companion.forListModulo(
     listOf(
@@ -85,10 +85,10 @@ open class DefaultCorporateDesign(
   override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
 
   override val borderColorConverter: (fill: Color?) -> Color = { fill ->
-    fill?.toRgba()?.darker(0.15) ?: Color.darkgray
+    fill?.toRgba()?.darker(0.15) ?: Color.darkgray()
   }
 
-  override val chartColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(Palette.chartColors)
+  override val chartColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModuloProvider(Palette.chartColors)
 
   override val enumColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(
     listOf(
@@ -111,11 +111,11 @@ open class DefaultCorporateDesign(
   )
 
   override val primaryButtonForegroundColors: ButtonColorProvider = DefaultButtonColorProvider(
-    disabledColor = Color.white,
+    disabledColor = Color.white(),
     pressedColor = Color.web("#002e46"),
-    hoverColor = Color.white,
-    focusedColor = Color.white,
-    defaultColor = Color.white
+    hoverColor = Color.white(),
+    focusedColor = Color.white(),
+    defaultColor = Color.white(),
   )
 
   override val secondaryButtonBackgroundColors: ButtonColorProvider = DefaultButtonColorProvider(
@@ -140,11 +140,13 @@ open class DefaultCorporateDesign(
   override val stateError: RgbaColor = Color.web("#EA0823").toRgba()
   override val stateUnknown: RgbaColor = Color.web("#737F85").toRgba()
 
-  override val shadowColor: RgbaColor = Color.black.withAlpha(0.6)
-}
+  override val shadowColor: RgbaColor = Color.black().withAlpha(0.6)
 
-/**
- * The default design.
- * This design does not require any pre-installed fonts.
- */
-val DefaultDesign: CorporateDesign = DefaultCorporateDesign()
+  companion object {
+    /**
+     * The default design.
+     * This design does not require any pre-installed fonts.
+     */
+    val Instance: Theme = DefaultTheme()
+  }
+}

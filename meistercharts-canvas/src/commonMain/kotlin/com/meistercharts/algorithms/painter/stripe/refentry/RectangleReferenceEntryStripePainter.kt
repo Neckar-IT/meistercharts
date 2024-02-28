@@ -17,13 +17,17 @@ package com.meistercharts.algorithms.painter.stripe.refentry
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolve
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.SnapConfiguration
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.snapPhysicalTranslation
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -122,7 +126,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fillRect(startXinViewport, 0.0, rectangleWidth, snapConfiguration.snapYSize(rectangleHeight))
 
         //Stroke the left + right separators
-        configuration.separatorStroke?.let {
+        configuration.separatorStroke.get()?.let {
           if (configuration.separatorSize > 0) {
             gc.lineWidth = configuration.separatorSize
             gc.stroke(it)
@@ -169,7 +173,7 @@ class RectangleReferenceEntryStripePainter(
     /**
      * Provides the color of the label for the given value
      */
-    var labelColorProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { _, _, _ -> Color.white }
+    var labelColorProvider: (value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration) -> Color = { _, _, _ -> Color.white() }
 
     /**
      * The font of the label
@@ -179,12 +183,12 @@ class RectangleReferenceEntryStripePainter(
     /**
      * The color when the count is shown
      */
-    var countLabelColor: Color = Color.gray
+    var countLabelColor: ColorProvider = Color.gray
 
     /**
      * The fill that is used when the count is displayed
      */
-    var countFill: Color = Color.silver
+    var countFill: ColorProvider = Color.silver
 
     /**
      * The size of the separator.
@@ -196,6 +200,6 @@ class RectangleReferenceEntryStripePainter(
      * The color of the separator between two lines.
      * The separator is not displayed if set to null
      */
-    var separatorStroke: Color? = Color.white
+    var separatorStroke: ColorProviderNullable = Color.white
   }
 }

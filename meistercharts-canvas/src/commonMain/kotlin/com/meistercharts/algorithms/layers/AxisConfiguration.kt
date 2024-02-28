@@ -15,27 +15,28 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.axis.AxisEndConfiguration
-import com.meistercharts.color.Color
-import it.neckar.open.annotations.JavaFriendly
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.font.FontMetrics
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.design.Theme
-import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontDescriptorFragmentProvider
+import com.meistercharts.font.FontMetrics
 import com.meistercharts.model.Insets
+import com.meistercharts.model.Vicinity
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
-import com.meistercharts.model.Vicinity
-import it.neckar.open.kotlin.lang.asProvider
-import it.neckar.open.provider.BooleanProvider
+import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
+import it.neckar.open.provider.BooleanProvider
 import it.neckar.open.unit.other.px
 
 /**
@@ -157,7 +158,7 @@ open class AxisConfiguration {
     return when (side) {
       Side.Left, Side.Right -> {
         //We need half the tick size to be sure the top ticks are still visible
-        FontMetrics[tickFont.withDefaultValues()].totalHeight / 2.0
+        FontMetrics[tickFont().withDefaultValues()].totalHeight / 2.0
       }
 
       Side.Top, Side.Bottom -> 0.0 //no space needed for top/bottom
@@ -212,27 +213,27 @@ open class AxisConfiguration {
   /**
    * The color to be used for the axis-line and the ticks
    */
-  var lineColor: () -> Color = Theme.axisLineColor().asProvider()
+  var lineColor: ColorProvider = Theme.axisLineColor.provider()
 
   /**
    * The color for the tick labels
    */
-  var tickLabelColor: () -> Color = Theme.axisTickColor().asProvider()
+  var tickLabelColor: ColorProvider = Theme.axisTickColor.provider()
 
   /**
    * The color to be used for the title of the axis
    */
-  var titleColor: () -> Color = Theme.axisTitleColor().asProvider()
+  var titleColor: ColorProvider = Theme.axisTitleColor.provider()
 
   /**
    * The font to be used for the ticks of the axis
    */
-  var tickFont: FontDescriptorFragment = Theme.axisTickFont()
+  var tickFont: FontDescriptorFragmentProvider = Theme.axisTickFont.provider()
 
   /**
    * The font that is used for the title
    */
-  var titleFont: FontDescriptorFragment = Theme.axisTitleFont()
+  var titleFont: FontDescriptorFragmentProvider = Theme.axisTitleFont.provider()
 
   /**
    * The space that is added to the width (vertical axis) or height (horizontal axis) of the text box of the title
@@ -257,7 +258,7 @@ open class AxisConfiguration {
   /**
    * The (optional) background color
    */
-  var background: () -> Color? = { null }
+  var background: ColorProviderNullable = null
 
   /**
    * Describes the range where the value axis is painted

@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
 import it.neckar.open.unit.other.px
 
 
@@ -31,12 +33,12 @@ protected constructor(
   /**
    * The stroke color for the line
    */
-  var stroke: Color = Color.black
+  var stroke: ColorProvider = Color.black
 
   /**
    * The shadow color
    */
-  var shadow: Color? = null
+  var shadow: ColorProviderNullable = { null }
 
   @px
   var lineWidth: Double = 1.0

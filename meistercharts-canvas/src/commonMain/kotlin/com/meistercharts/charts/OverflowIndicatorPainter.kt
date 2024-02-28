@@ -21,6 +21,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.resources.svg.PathPaintable
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
@@ -29,7 +30,7 @@ import it.neckar.geometry.Size
 import it.neckar.open.unit.other.px
 
 /**
- * Paints overflow indicators (e.g. for bars).
+ * Paints overflow indicators (e.g., for bars).
  */
 class OverflowIndicatorPainter(
   additionalConfiguration: Configuration.() -> Unit = {},
@@ -123,7 +124,7 @@ class OverflowIndicatorPainter(
     /**
      * Applies the default indicators with the provided values
      */
-    fun applyDefaultIndicators(fill: Color?, stroke: Color?, strokeWidth: @px Double?, arrowHeadLength: @px Double?, arrowHeadWidth: @px Double?) {
+    fun applyDefaultIndicators(fill: ColorProviderNullable, stroke: ColorProviderNullable, strokeWidth: @px Double?, arrowHeadLength: @px Double?, arrowHeadWidth: @px Double?) {
       this.topIndicator = topIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
       this.rightIndicator = rightIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
       this.bottomIndicator = bottomIndicatorTriangle(fill, stroke, strokeWidth, arrowHeadLength, arrowHeadWidth)
@@ -142,8 +143,8 @@ class OverflowIndicatorPainter(
      * The top indicator triangle (pointing to the top)
      */
     fun topIndicatorTriangle(
-      fill: Color?,
-      stroke: Color?,
+      fill: ColorProviderNullable,
+      stroke: ColorProviderNullable,
       strokeWidth: @px Double? = null,
       arrowHeadLength: Double? = null,
       arrowHeadWidth: Double? = null,
@@ -166,8 +167,8 @@ class OverflowIndicatorPainter(
     }
 
     fun leftIndicatorTriangle(
-      fill: Color?,
-      stroke: Color?,
+      fill: ColorProviderNullable,
+      stroke: ColorProviderNullable,
       strokeWidth: @px Double? = null,
       arrowHeadLength: Double? = null,
       arrowHeadWidth: Double? = null,
@@ -189,8 +190,8 @@ class OverflowIndicatorPainter(
     }
 
     fun rightIndicatorTriangle(
-      fill: Color?,
-      stroke: Color?,
+      fill: ColorProviderNullable,
+      stroke: ColorProviderNullable,
       strokeWidth: @px Double? = null,
       arrowHeadLength: Double? = null,
       arrowHeadWidth: Double? = null,
@@ -215,8 +216,8 @@ class OverflowIndicatorPainter(
      * Triangle that points to the bottom
      */
     fun bottomIndicatorTriangle(
-      fill: Color?,
-      stroke: Color?,
+      fill: ColorProviderNullable,
+      stroke: ColorProviderNullable,
       strokeWidth: @px Double? = null,
       arrowHeadLength: Double? = null,
       arrowHeadWidth: Double? = null,

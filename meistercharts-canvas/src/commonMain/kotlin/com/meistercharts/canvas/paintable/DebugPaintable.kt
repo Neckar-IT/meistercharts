@@ -16,17 +16,20 @@
 package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.canvas.fill
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintMark
+import com.meistercharts.canvas.stroke
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Rectangle
 
 /**
  * A paintable that can be used to diagnose paintables
  */
 class DebugPaintable : Paintable {
-  var strokeColor: Color = Color.orangered
-  var fillColor: Color = Color.orange
-  var alignmentPointMarkerColor: Color = Color.blue
+  var strokeColor: ColorProvider = Color.orangered
+  var fillColor: ColorProvider = Color.orange
+  var alignmentPointMarkerColor: ColorProvider = Color.blue
 
   var alignmentPointX: Double = -10.0
   var alignmentPointY: Double = -20.0
@@ -52,6 +55,6 @@ class DebugPaintable : Paintable {
     gc.strokeLine(boundingBox.topLeft(), boundingBox.bottomRight())
     gc.strokeLine(boundingBox.bottomLeft(), boundingBox.topRight())
 
-    gc.paintMark(0.0, 0.0, color = alignmentPointMarkerColor)
+    gc.paintMark(0.0, 0.0, color = alignmentPointMarkerColor())
   }
 }

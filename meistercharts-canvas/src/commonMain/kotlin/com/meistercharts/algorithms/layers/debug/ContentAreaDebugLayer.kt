@@ -27,6 +27,8 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.strokeStyle
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.unit.other.pct
@@ -82,12 +84,12 @@ open class ContentAreaDebugLayer(
     //Draw the texts
     gc.saved {
       gc.translate(x0, y0)
-      gc.paintTextBox("@ContentArea: 0/0", Direction.TopLeft, 0.0, 0.0, BoxStyle.gray, Color.white)
+      gc.paintTextBox("@ContentArea: 0/0", Direction.TopLeft, 0.0, 0.0, BoxStyle.gray, Color.white())
     }
 
     gc.saved {
       gc.translate(x1, y1)
-      gc.paintTextBox("@ContentArea: 1.0/1.0", Direction.BottomRight, 0.0, 0.0, BoxStyle.gray, Color.white)
+      gc.paintTextBox("@ContentArea: 1.0/1.0", Direction.BottomRight, 0.0, 0.0, BoxStyle.gray, Color.white())
     }
 
     //Paint helper lines if the complete content area is invisible!
@@ -134,7 +136,7 @@ open class ContentAreaDebugLayer(
     /**
      * Sets all lines to the given color
      */
-    fun lines(color: Color) {
+    fun lines(color: ColorProvider) {
       line0pct = color
       line5px = color
       line10pct = color
@@ -145,27 +147,27 @@ open class ContentAreaDebugLayer(
     /**
      * The outer line
      */
-    var line0pct: Color = Color.red
+    var line0pct: ColorProvider = Color.red
 
     /**
      * The 5px line
      */
-    var line5px: Color = Color.red
+    var line5px: ColorProvider = Color.red
 
     /**
      * The 10% line
      */
-    var line10pct: Color = Color.orange
+    var line10pct: ColorProvider = Color.orange
 
     /**
      * The 25% line
      */
-    var line25pct: Color = Color.orange
+    var line25pct: ColorProvider = Color.orange
 
     /**
      * The diagonals
      */
-    var diagonals: Color = Color.orange
+    var diagonals: ColorProvider = Color.orange
 
     var font: FontDescriptorFragment = FontDescriptorFragment.empty
   }

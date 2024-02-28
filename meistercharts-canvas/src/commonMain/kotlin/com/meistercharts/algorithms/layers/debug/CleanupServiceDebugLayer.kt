@@ -21,6 +21,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketDescriptor.Companion.MaxSupportedDescriptorsCount

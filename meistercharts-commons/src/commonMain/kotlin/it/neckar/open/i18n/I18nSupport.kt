@@ -15,9 +15,9 @@ import it.neckar.open.context.Context
 class I18nSupport {
   /**
    * The current i18n configuration.
-   * Is initialized with [DefaultI18nConfiguration]
+   * Is initialized with [CurrentI18nConfiguration]
    */
-  var configuration: I18nConfiguration = DefaultI18nConfiguration
+  var configuration: I18nConfiguration = CurrentI18nConfiguration
 
   /**
    * The time zone
@@ -84,15 +84,20 @@ val I18nContext: Context<I18nConfiguration> = Context(SystemI18nConfiguration)
  * The (current) default i18n configuration.
  * Uses the [I18nContext] to store/retrieve the value.
  */
-val DefaultI18nConfiguration: I18nConfiguration
+val CurrentI18nConfiguration: I18nConfiguration
   get() = I18nContext.current
 
+
+@Deprecated("Use DefaultI18nConfiguration instead", ReplaceWith("CurrentI18nConfiguration"))
+val DefaultI18nConfiguration: I18nConfiguration
+  get() = CurrentI18nConfiguration
+
 /**
- * Updates the [DefaultI18nConfiguration]. Use with care!
+ * Updates the [CurrentI18nConfiguration]. Use with care!
  * It is possible to set the locale for a component itself ([I18nSupport]).
  */
 fun updateDefaultI18nConfiguration(i18nConfiguration: I18nConfiguration) {
-  I18nContext.setDefaultValue(i18nConfiguration)
+  I18nContext.defaultValue = i18nConfiguration
 }
 
 /**

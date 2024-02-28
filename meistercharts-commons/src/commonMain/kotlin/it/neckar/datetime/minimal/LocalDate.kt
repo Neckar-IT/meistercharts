@@ -1,12 +1,14 @@
 package it.neckar.datetime.minimal
 
 import it.neckar.open.unit.si.ms
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a local date.
  *
  * Attention: This is a very minimalistic implementation without any special checks.
  */
+@Serializable
 data class LocalDate(
   val year: Year,
   val month: Month,

@@ -17,20 +17,20 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.textService
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Direction
+import com.meistercharts.font.FontDescriptorFragmentProvider
 import com.meistercharts.model.Vicinity
+import it.neckar.geometry.Direction
+import it.neckar.open.i18n.TextService
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoubleProvider1
-import it.neckar.open.i18n.TextService
 import it.neckar.open.unit.other.px
 
 /**
@@ -94,7 +94,7 @@ class AxisTopTopTitleLayer(
 
     val title = configuration.titleProvider(textService, i18nConfiguration) ?: return
 
-    gc.font(configuration.titleFont)
+    gc.font(configuration.titleFont())
     gc.fill(configuration.titleColor())
 
     gc.fillText(
@@ -145,12 +145,12 @@ class AxisTopTopTitleLayer(
     /**
      * The color to be used for the title of the axis
      */
-    var titleColor: () -> Color = Theme.axisTitleColor().asProvider()
+    var titleColor: ColorProvider = Theme.axisTitleColor.provider()
 
     /**
      * The font that is used for the title
      */
-    var titleFont: FontDescriptorFragment = Theme.axisTitleFont()
+    var titleFont: FontDescriptorFragmentProvider = Theme.axisTitleFont.provider()
   }
 
   companion object {

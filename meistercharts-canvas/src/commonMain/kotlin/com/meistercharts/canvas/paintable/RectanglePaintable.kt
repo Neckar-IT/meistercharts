@@ -17,6 +17,7 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
@@ -29,10 +30,10 @@ import it.neckar.open.unit.other.px
 class RectanglePaintable(
   val width: @px Double,
   val height: @px Double,
-  var color: () -> Color,
+  var color: ColorProvider,
 ) : Paintable {
 
-  constructor(size: Size, color: () -> Color) : this(size.width, size.height, color)
+  constructor(size: Size, color: ColorProvider) : this(size.width, size.height, color)
   constructor(size: Size, color: Color) : this(size.width, size.height, color.asProvider())
 
   val boundingBox: Rectangle = Rectangle(Coordinates.origin, Size(width, height))
@@ -48,6 +49,14 @@ class RectanglePaintable(
   }
 
   companion object {
+    operator fun invoke(
+      width: @px Double,
+      height: @px Double,
+      color: ColorProvider,
+    ): RectanglePaintable {
+      return invoke(width, height, color())
+    }
+
     operator fun invoke(
       width: @px Double,
       height: @px Double,

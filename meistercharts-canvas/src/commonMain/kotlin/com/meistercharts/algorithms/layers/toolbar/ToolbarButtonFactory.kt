@@ -15,8 +15,6 @@
  */
 package com.meistercharts.algorithms.layers.toolbar
 
-import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.paintable.Button
 import com.meistercharts.canvas.paintable.ButtonPressedEvent
 import com.meistercharts.canvas.paintable.ButtonPriority
@@ -27,8 +25,12 @@ import com.meistercharts.canvas.resetOnlyZoom
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
 import com.meistercharts.canvas.zoomIn
 import com.meistercharts.canvas.zoomOut
-import it.neckar.geometry.Size
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.resources.Icons
+import com.meistercharts.zoom.UpdateReason
+import it.neckar.geometry.Size
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Provides an image for a given button state
@@ -48,7 +50,7 @@ class ToolbarButtonFactory(
    * Fill provider based upon the button state.
    * The fill provider is used for methods that do not provide a button painter
    */
-  val fillProvider: (state: ButtonState) -> Color = defaultFillProvider
+  val fillProvider: (state: ButtonState) -> ColorProviderNullable = defaultFillProvider,
 ) {
 
   /**
@@ -78,7 +80,7 @@ class ToolbarButtonFactory(
   }
 
   /**
-   * Creates a button using  a paintable resolver.
+   * Creates a button using a paintable resolver.
    *
    * This method uses the default [sizeProvider] and [fillProvider]
    */
@@ -86,7 +88,7 @@ class ToolbarButtonFactory(
     /**
      * Returns a paintable for a size and fill (e.g. `Icons::zoomIn`)
      */
-    paintableResolver: (size: Size, fill: Color) -> Paintable,
+    paintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
     /**
      * The button priority
      */
@@ -106,10 +108,13 @@ class ToolbarButtonFactory(
    * Usually you would bind the selected property of the button after creating it.
    */
   fun toggleButton(
-    defaultPaintableResolver: (size: Size, fill: Color) -> Paintable,
-    selectedPaintableResolver: (size: Size, fill: Color) -> Paintable
+    defaultPaintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
+    selectedPaintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
   ): Button {
-    return button(DefaultToggleButtonPaintableProvider(defaultPaintableResolver, selectedPaintableResolver, sizeProvider, fillProvider)::getPaintable, sizeProvider(ButtonState.default)) {
+    return button(
+      buttonPaintableProvider = DefaultToggleButtonPaintableProvider(defaultPaintableResolver, selectedPaintableResolver, sizeProvider, fillProvider)::getPaintable,
+      size = sizeProvider(ButtonState.default),
+    ) {
       it.target.toggleSelected()
     }
   }
@@ -142,10 +147,10 @@ class DefaultButtonPaintableProvider(
   /**
    * Returns the paintable for the given size and fill
    */
-  val paintableResolver: (size: Size, fill: Color) -> Paintable,
+  val paintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
 
   val sizeProvider: (state: ButtonState) -> Size,
-  val fillProvider: (state: ButtonState) -> Color
+  val fillProvider: (state: ButtonState) -> ColorProviderNullable,
 ) {
 
   /**
@@ -163,11 +168,11 @@ class DefaultToggleButtonPaintableProvider(
   /**
    * Returns the paintable for the given size and fill
    */
-  val defaultPaintableResolver: (size: Size, fill: Color) -> Paintable,
-  val selectedPaintableResolver: (size: Size, fill: Color) -> Paintable,
+  val defaultPaintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
+  val selectedPaintableResolver: (size: Size, fill: ColorProviderNullable) -> Paintable,
 
   val sizeProvider: (state: ButtonState) -> Size,
-  val fillProvider: (state: ButtonState) -> Color
+  val fillProvider: (state: ButtonState) -> ColorProviderNullable,
 ) {
 
   /**
@@ -188,7 +193,7 @@ class DefaultToggleButtonPaintableProvider(
 /**
  * Returns the default fill color for a button
  */
-val defaultFillProvider: (state: ButtonState) -> Color = DefaultToolbarButtonFillProvider()::color
+val defaultFillProvider: (state: ButtonState) -> ColorProviderNullable = DefaultToolbarButtonFillProvider()::color
 
 /**
  * Provides default sizes for a button paintable. Returns larger sizes for pressed/hover
@@ -200,7 +205,7 @@ val defaultSizeProvider: (state: ButtonState) -> Size = DefaultToolbarButtonSize
  */
 class DefaultToolbarButtonSizeProvider(
   var defaultSize: Size = Size.PX_40,
-  var activeSize: Size = Size.PX_50
+  var activeSize: Size = Size.PX_50,
 ) {
   fun size(state: ButtonState): Size {
     if (state.disabled) {
@@ -219,13 +224,13 @@ class DefaultToolbarButtonSizeProvider(
  * Provides a fixed color depending on the state
  */
 class DefaultToolbarButtonFillProvider {
-  fun color(state: ButtonState): Color {
+  fun color(state: ButtonState): ColorProviderNullable {
     return when {
-      state.disabled -> Color.rgba(200, 200, 200, 0.6)
-      state.pressed  -> Color.rgba(150, 150, 150, 1.0)
-      state.hover    -> Color.rgba(150, 150, 150, 0.75)
-      state.focused  -> Color.rgba(150, 150, 150, 0.85)
-      else           -> Color.rgba(150, 150, 150, 0.6)
+      state.disabled -> Color.rgba(200, 200, 200, 0.6).asProvider()
+      state.pressed -> Color.rgba(150, 150, 150, 1.0).asProvider()
+      state.hover -> Color.rgba(150, 150, 150, 0.75).asProvider()
+      state.focused -> Color.rgba(150, 150, 150, 0.85).asProvider()
+      else -> Color.rgba(150, 150, 150, 0.6).asProvider()
     }
   }
 }

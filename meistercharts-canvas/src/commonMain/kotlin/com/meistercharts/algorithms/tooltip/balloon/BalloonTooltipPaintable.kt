@@ -17,24 +17,25 @@ package com.meistercharts.algorithms.tooltip.balloon
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.ArcPathWorkaroundEpsilon
-import it.neckar.open.unit.number.NegativeOrZero
-import it.neckar.open.unit.number.PositiveOrZero
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.BorderRadius
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.AbstractPaintable
+import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
-import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
+import com.meistercharts.color.get
+import com.meistercharts.model.BorderRadius
+import com.meistercharts.model.Insets
+import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
-import com.meistercharts.model.Insets
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
 import it.neckar.geometry.VerticalAlignment
-import com.meistercharts.style.BoxStyle
+import it.neckar.open.unit.number.NegativeOrZero
+import it.neckar.open.unit.number.PositiveOrZero
 import it.neckar.open.unit.other.Relative
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -331,14 +332,14 @@ class BalloonTooltipPaintable(
       configuration.boxStyle.shadow?.let { shadow ->
         gc.shadow(shadow)
       }
-      configuration.boxStyle.fill?.let { fill ->
+      configuration.boxStyle.fill.get()?.let { fill ->
         gc.fill(fill)
         gc.fill()
       }
       gc.clearShadow()
 
       //Stroke the border
-      configuration.boxStyle.borderColor?.let { borderColor ->
+      configuration.boxStyle.borderColor.get()?.let { borderColor ->
         gc.lineWidth = configuration.boxStyle.borderWidth
         gc.stroke(borderColor)
         gc.stroke()

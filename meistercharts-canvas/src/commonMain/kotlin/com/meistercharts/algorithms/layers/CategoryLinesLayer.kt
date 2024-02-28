@@ -29,7 +29,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.whatsAt
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Coordinates
+import com.meistercharts.design.valueAt
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.SeriesIndex
@@ -41,6 +41,7 @@ import com.meistercharts.painter.XyCategoryLinePainter
 import com.meistercharts.range.ValueRange
 import com.meistercharts.whatsat.ResultElementType
 import com.meistercharts.whatsat.WhatsAtResultElement
+import it.neckar.geometry.Coordinates
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.MultiProvider
 
@@ -236,10 +237,10 @@ class CategoryLinesLayer(
 
     /**
      * Provides styles for lines of a certain series.
-     * Please also set crossWireLabelBoxStyles in the corresponding cross wire layer.
+     * Please also set crossWireLabelBoxStyles in the corresponding cross-wire layer.
      */
     var lineStyles: MultiProvider<SeriesIndex, LineStyle> = MultiProvider {
-      LineStyle(color = Theme.chartColors().valueAt(it), lineWidth = 1.0)
+      LineStyle(color = Theme.chartColors.valueAt(it), lineWidth = 1.0)
     }
 
     /**

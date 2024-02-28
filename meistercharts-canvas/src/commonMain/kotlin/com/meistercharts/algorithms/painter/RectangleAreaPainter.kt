@@ -19,6 +19,9 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import com.meistercharts.model.SidesSelection
 import it.neckar.open.unit.other.px
 import kotlin.math.max
@@ -36,12 +39,12 @@ open class RectangleAreaPainter(
   /**
    * The background color to be used for the area
    */
-  var fill: Color? = Color.gray
+  var fill: ColorProviderNullable = Color.gray
 
   /**
    * The color to be used for the border
    */
-  var borderColor: Color? = null
+  var borderColor: ColorProviderNullable = { null }
 
   /**
    * The line width of the border
@@ -58,7 +61,7 @@ open class RectangleAreaPainter(
    *
    * @param fill Color to fill the area with.
    */
-  fun setFill(fill: Color): RectangleAreaPainter {
+  fun setFill(fill: ColorProvider): RectangleAreaPainter {
     this.fill = fill
     return this
   }
@@ -68,7 +71,7 @@ open class RectangleAreaPainter(
    *
    * @param borderColor Color to set as the border color.
    */
-  fun setBorderColor(borderColor: Color?): RectangleAreaPainter {
+  fun setBorderColor(borderColor: ColorProviderNullable): RectangleAreaPainter {
     this.borderColor = borderColor
     return this
   }
@@ -84,13 +87,13 @@ open class RectangleAreaPainter(
     @Zoomed @px val height = largerY - smallerY
 
     // Fill the rect first
-    fill?.let {
+    fill.get()?.let {
       gc.fill(it)
       gc.fillRect(smallerX, smallerY, width, height)
     }
 
     // Draw the borders
-    borderColor?.let {
+    borderColor.get()?.let {
       gc.strokeStyle(it)
       gc.lineWidth = borderWidth
       if (borderSides.leftSelected) {

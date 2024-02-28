@@ -24,6 +24,7 @@ import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
+import com.meistercharts.canvas.stroke
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Rectangle

@@ -19,7 +19,10 @@ import com.meistercharts.algorithms.painter.BinaryPainter
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.range.BinaryValueRange
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.BooleanValuesProvider
 
 /**
@@ -79,9 +82,9 @@ class BinaryLayer(
     val valuesProvider: BooleanValuesProvider
   ) {
     var lineWidth: Double = 5.0
-    var stroke: Color = Color.rgba(10, 10, 10, 0.5)
-    var shadow: Color? = null
-    var areaFill: Color? = null
+    var stroke: ColorProvider = Color.rgba(10, 10, 10, 0.5).asProvider()
+    var shadow: ColorProviderNullable = { null }
+    var areaFill: ColorProviderNullable = { null }
     var shadowOffset: Double = 4.0
   }
 

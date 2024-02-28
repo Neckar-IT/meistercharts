@@ -18,10 +18,10 @@ package com.meistercharts.charts.refs
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.HistoryReferenceEntryLayer
 import com.meistercharts.algorithms.layers.LayerVisibilityAdapter
-import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.TooltipInteractionLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.time.TimeAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.DefaultCategoryAxisLabelPainter
 import com.meistercharts.algorithms.layers.barchart.LabelWrapMode
@@ -45,7 +45,6 @@ import com.meistercharts.algorithms.tooltip.balloon.DiscreteSeriesModelBalloonTo
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
@@ -65,7 +64,6 @@ import com.meistercharts.history.atMost
 import com.meistercharts.history.indexOf
 import com.meistercharts.history.valueAt
 import com.meistercharts.model.Insets
-import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.SizedLabelsProvider
 import com.meistercharts.provider.delegate
@@ -75,6 +73,9 @@ import com.meistercharts.zoom.DelegatingZoomAndTranslationDefaults
 import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.zoom.MoveDomainValueToLocation
 import com.meistercharts.zoom.UpdateReason
+import it.neckar.datetime.minimal.TimeConstants
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Side
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
@@ -87,7 +88,6 @@ import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.provider.MultiProvider
-import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.Positive
@@ -233,7 +233,7 @@ class DiscreteTimelineChartGestalt(
       val activeDataSeriesIndex = historyReferenceEntryLayer.configuration.activeDataSeriesIndex
 
       if (activeDataSeriesIndex == null) {
-        return@DiscreteSeriesModelBalloonTooltipSupport Color.pink //TODO!!!
+        return@DiscreteSeriesModelBalloonTooltipSupport Color.pink() //TODO!!!
       }
 
       val status = historyReferenceEntryLayer.paintingVariables().activeInformation.status

@@ -22,6 +22,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.mouseCursorSupport
 import com.meistercharts.canvas.paintLocation
@@ -29,16 +30,18 @@ import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
 import com.meistercharts.canvas.paintable.Paintable2
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
+import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.events.EventConsumption
+import com.meistercharts.font.FontDescriptorFragment
 import it.neckar.events.MouseDownEvent
 import it.neckar.events.MouseDragEvent
 import it.neckar.events.MouseMoveEvent
 import it.neckar.events.MouseUpEvent
-import com.meistercharts.font.FontDescriptorFragment
 import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Direction
+import it.neckar.geometry.Rectangle
 import it.neckar.open.kotlin.lang.abs
 import it.neckar.open.kotlin.lang.setIfDifferent
 import it.neckar.open.provider.DoubleProvider
@@ -295,7 +298,7 @@ class Slider(
     gc.translate(x, y + height / 2.0) //Translate to the left center of the slider area
 
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
-      gc.paintLocation(label = "origin", color = Color.cadetblue)
+      gc.paintLocation(label = "origin", color = Color.cadetblue())
     }
 
     paintingContext.ifDebug(DebugFeature.ShowBounds) {
@@ -367,7 +370,7 @@ class Slider(
     /**
      * The fill color of the slider area
      */
-    var areaFill: Color = Color.silver
+    var areaFill: ColorProvider = Color.silver
 
     /**
      * The paintable that is used to paint the handle
@@ -382,7 +385,7 @@ class Slider(
     /**
      * The color for the tick
      */
-    var tickColor: () -> Color = { areaFill }
+    var tickColor: ColorProvider = areaFill
 
     /**
      * The gap between tick and label
@@ -397,7 +400,7 @@ class Slider(
     /**
      * The color of the tick label
      */
-    var tickLabelColor: Color = Color.darkgray
+    var tickLabelColor: ColorProvider = Color.darkgray
   }
 
   /**

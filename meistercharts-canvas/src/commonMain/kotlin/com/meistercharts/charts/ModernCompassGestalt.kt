@@ -15,7 +15,6 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.ResizablePaintableLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
@@ -24,17 +23,18 @@ import com.meistercharts.algorithms.layers.compass.GaugePaintable
 import com.meistercharts.algorithms.layers.compass.ModernCompassPainter
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
+import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
-import com.meistercharts.canvas.MeisterchartBuilder
-import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
-import it.neckar.geometry.RotationDirection
-import it.neckar.geometry.Size
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.provider.delegate
+import com.meistercharts.range.ValueRange
+import it.neckar.geometry.Direction
+import it.neckar.geometry.RotationDirection
+import it.neckar.geometry.Size
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.observable.ObservableObject
@@ -68,8 +68,8 @@ class ModernCompassGestalt(
 
   val compassTriangleValuePainter: CompassTriangleValuePainter = CompassTriangleValuePainter {
     lineWidth = 3.0
-    stroke = Color("#185ba6")
-    fill = Color("rgba(24, 91, 166, 0.5)")
+    stroke = Color("#185ba6").asProvider()
+    fill = Color("rgba(24, 91, 166, 0.5)").asProvider()
   }
 
   val gaugePaintable: GaugePaintable = GaugePaintable(
@@ -93,14 +93,14 @@ class ModernCompassGestalt(
     val value = configuration.currentValueProvider()
     listOf("${decimalFormat.format(value, i18nConfiguration)}°")
   }) {
-    font = FontDescriptorFragment(size = FontSize(50.0))
+    font = FontDescriptorFragment(size = FontSize(50.0)).asProvider()
     anchorDirection = Direction.BottomCenter
   }
 
   val subValueLayer: TextLayer = TextLayer({ _, _ ->
     listOf("48°24'49.7\"N", "9°03'03.0\"E")
   }) {
-    font = FontDescriptorFragment(size = FontSize(20.0))
+    font = FontDescriptorFragment(size = FontSize(20.0)).asProvider()
     margin = Insets.of(500.0, 0.0, 0.0, 0.0)
     anchorDirection = Direction.TopCenter
   }

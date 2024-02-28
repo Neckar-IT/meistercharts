@@ -17,28 +17,31 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.LabelIndex
-import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable
 import com.meistercharts.canvas.layout.cache.LayoutVariablesObjectCache
 import com.meistercharts.canvas.layout.cache.StringsCache.Companion.Uninitialized
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.textService
 import com.meistercharts.color.Color
-import it.neckar.geometry.Direction
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.color.get
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.provider.LabelsProvider
+import com.meistercharts.style.BoxStyle
+import it.neckar.geometry.Direction
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.fastForEachIndexed
-import com.meistercharts.style.BoxStyle
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import kotlin.math.max
@@ -410,7 +413,7 @@ class LabelPainter2(
 
         //Debug code
         paintingContext.ifDebug(DebugFeature.ShowMinMax) {
-          gc.stroke(labelFillStyle.fill ?: Color.darkgray)
+          gc.stroke(labelFillStyle.fill.get() ?: Color.darkgray())
 
           //Vertical line
           if (label.centerYMin > label.centerYMax) {
@@ -459,7 +462,7 @@ class LabelPainter2(
     /**
      * The color of the line (from the label to the box)
      */
-    var lineColor: Color = Color.gray
+    var lineColor: ColorProvider = Color.gray
 
     /**
      * The width of the line (from the label to the box)

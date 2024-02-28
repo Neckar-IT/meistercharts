@@ -15,13 +15,6 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.resize.ResetToDefaultsOnWindowResize
-import com.meistercharts.zoom.UpdateReason
-import com.meistercharts.range.ValueRange
-import com.meistercharts.zoom.autoScaleByZoomSupport
-import com.meistercharts.axis.AxisEndConfiguration
-import it.neckar.geometry.AxisSelection
-import com.meistercharts.zoom.BoundsProvider
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.ClippingLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
@@ -29,10 +22,10 @@ import com.meistercharts.algorithms.layers.Limit
 import com.meistercharts.algorithms.layers.LimitsLayer
 import com.meistercharts.algorithms.layers.LowerLimit
 import com.meistercharts.algorithms.layers.UpperLimit
-import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.ZeroLinesLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
@@ -44,37 +37,46 @@ import com.meistercharts.algorithms.layers.linechart.PointStyle
 import com.meistercharts.algorithms.layers.linechart.toDomainRelativeY
 import com.meistercharts.algorithms.layers.toolbar.ToolbarButtonFactory
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.resetZoomAndTranslationToDefaults
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.model.Insets
-import it.neckar.geometry.Orientation
-import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import com.meistercharts.painter.LinePainter
 import com.meistercharts.painter.NoLinePainter
 import com.meistercharts.painter.NoPointPainter
 import com.meistercharts.painter.PointPainter
 import com.meistercharts.painter.PointStylePainter
+import com.meistercharts.range.ValueRange
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.resources.Icons
+import com.meistercharts.style.Palette
+import com.meistercharts.zoom.BoundsProvider
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.autoScaleByZoomSupport
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Orientation
+import it.neckar.geometry.Side
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.formatting.intFormat
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.randomNormal
-import it.neckar.open.provider.DoublesProvider
-import it.neckar.open.provider.MultiProvider
-import it.neckar.open.formatting.intFormat
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
-import com.meistercharts.resources.Icons
-import com.meistercharts.style.Palette
+import it.neckar.open.provider.DoublesProvider
+import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.asSizedProvider
 import kotlin.jvm.JvmOverloads
 import kotlin.math.max
@@ -222,7 +224,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
 
   val limitsLayer: ClippingLayer<LimitsLayer> = LimitsLayer(model.limits.asSizedProvider()) {
     orientation = Orientation.Horizontal
-    fill = Color.rgba(255, 255, 255, 0.85)
+    fill = Color.rgba(255, 255, 255, 0.85).asProvider()
     stroke = Color.white
     strokeWidth = 1.0
   }.clipped()
@@ -274,7 +276,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   }.clipped()
 
   val teachEdgesLayer: ClippingLayer<DomainRelativeGridLayer> = DomainRelativeGridLayer {
-    lineStyles = LineStyle(color = Color("#404c4f")).asProvider1()
+    lineStyles = LineStyle(color = Color("#404c4f").asProvider()).asProvider1()
   }.clipped()
 
   init {
@@ -392,14 +394,14 @@ class PixelValuesGestalt @JvmOverloads constructor(
      */
     var domainModel: PixelValuesModel
   ) {
-    var minColor: Color = Color.web("#3f51b5")
-    var averageColor: Color = Color.web("#2196f3")
-    var maxColor: Color = Color.web("#009688")
-    var standardDeviationColor: Color = Color.web("#00bcd4")
+    var minColor: ColorProvider = Color.web("#3f51b5").asProvider()
+    var averageColor: ColorProvider = Color.web("#2196f3").asProvider()
+    var maxColor: ColorProvider = Color.web("#009688").asProvider()
+    var standardDeviationColor: ColorProvider = Color.web("#00bcd4").asProvider()
 
-    var liveEdgesColor: Color = Color.red
-    var detectedEdgesColor: Color = Color.blue
-    var teachEdgesColor: Color = Color.orange
+    var liveEdgesColor: ColorProvider = Color.red
+    var detectedEdgesColor: ColorProvider = Color.blue
+    var teachEdgesColor: ColorProvider = Color.orange
 
     /**
      * If set to true dots are painted
@@ -416,7 +418,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     /**
      * Returns the line color for the series
      */
-    internal fun getLineColor(mode: PixelValueVisualizationMode, seriesIndex: Int): Color {
+    internal fun getLineColor(mode: PixelValueVisualizationMode, seriesIndex: Int): ColorProvider {
       return when (mode) {
         PixelValueVisualizationMode.Standard -> {
           when (seriesIndex) {
@@ -430,7 +432,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
 
         PixelValueVisualizationMode.HeldAverages -> {
           val opacity = (1 - seriesIndex * 0.1)
-          Color.rgba(0, 0, 0, opacity)
+          Color.rgba(0, 0, 0, opacity).asProvider()
         }
       }
     }

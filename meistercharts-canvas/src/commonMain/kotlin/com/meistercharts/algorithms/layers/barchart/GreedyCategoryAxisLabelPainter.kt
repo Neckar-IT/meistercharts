@@ -31,6 +31,7 @@ import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeRect
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Size

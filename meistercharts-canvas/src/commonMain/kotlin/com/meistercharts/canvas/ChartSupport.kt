@@ -25,6 +25,9 @@ import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.resize.ResizeHandlesSupport
 import com.meistercharts.charts.ChartId
 import com.meistercharts.color.Color
+import com.meistercharts.design.Theme
+import com.meistercharts.design.ThemeContext
+import com.meistercharts.design.ThemeSupport
 import com.meistercharts.environment
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
@@ -450,18 +453,22 @@ class ChartSupport(
 
         //Update the I18nContext
         I18nContext.with(i18nConfiguration) {
-          CurrentPaintingContext.fill(
-            this,
-            paintingLoopIndex,
-            frameTimestamp,
-          )
+          ThemeContext.with(theme) {
 
-          try {
-            for (i in 0 until paintListeners.size) {
-              paintListeners[i].paint(frameTimestamp, repaintDelta, paintingLoopIndex, dirtyReasons)
+            //Paint the canvas
+            CurrentPaintingContext.fill(
+              this,
+              paintingLoopIndex,
+              frameTimestamp,
+            )
+
+            try {
+              for (i in 0 until paintListeners.size) {
+                paintListeners[i].paint(frameTimestamp, repaintDelta, paintingLoopIndex, dirtyReasons)
+              }
+            } finally {
+              CurrentPaintingContext.clear()
             }
-          } finally {
-            CurrentPaintingContext.clear()
           }
         }
       }
@@ -477,14 +484,14 @@ class ChartSupport(
   }
 
   /**
-   * Registers a paint listener that is notified on every repaint
+   * Registers a paint listener notified on every repaint
    */
   fun onPaint(paintListener: PaintListener) {
     paintListeners.add(paintListener)
   }
 
   /**
-   * Registers a listener that is notified on every repaint. Adds the listener at first position
+   * Registers a listener notified on every repaint. Adds the listener at first position
    */
   fun onPaintPrepend(paintListener: PaintListener) {
     paintListeners.add(0, paintListener)
@@ -492,7 +499,7 @@ class ChartSupport(
 
 
   /**
-   * Registers a refresh listener that is notified whenever refresh is called
+   * Registers a refresh listener notified whenever refresh is called
    */
   fun onRender(renderLoopListener: ChartRenderLoopListener) {
     renderLoopListeners.add(renderLoopListener)
@@ -596,7 +603,7 @@ fun paintPaintDisabledText(gc: CanvasRenderingContext) {
 /**
  * Registers a dirty listener that marks the chart support as dirty, every time the property changes
  */
-fun ReadOnlyObservableObject<out Any?>.registerDirtyListener(chartSupport: ChartSupport, reason: DirtyReason) {
+fun ReadOnlyObservableObject<Any?>.registerDirtyListener(chartSupport: ChartSupport, reason: DirtyReason) {
   consume {
     chartSupport.markAsDirty(reason)
   }
@@ -708,6 +715,24 @@ val ChartSupport.i18nSupport: I18nSupport
 val ChartSupport.i18nConfiguration: I18nConfiguration
   get() {
     return i18nSupport.configuration
+  }
+
+/**
+ * Contains the locales that should be used for the canvas
+ */
+val ChartSupport.themeSupport: ThemeSupport
+  get() {
+    return serviceRegistry.get(ThemeSupport::class) {
+      ThemeSupport()
+    }
+  }
+
+/**
+ * Returns the *current* theme for this chart.
+ */
+val ChartSupport.theme: Theme
+  get() {
+    return themeSupport.theme
   }
 
 /**

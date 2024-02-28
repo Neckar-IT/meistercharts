@@ -15,18 +15,16 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.range.LinearValueRange
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.AxisConfiguration
 import com.meistercharts.algorithms.layers.AxisTitleLocation
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
-import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.DefaultCategoryLayouter
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
-import com.meistercharts.algorithms.layers.axis.TickProvider
-import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
+import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
+import com.meistercharts.algorithms.layers.axis.TickProvider
+import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryChartOrientation
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
@@ -35,15 +33,8 @@ import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
-import com.meistercharts.model.category.Category
-import com.meistercharts.model.category.CategorySeriesModel
-import com.meistercharts.model.category.DefaultCategorySeriesModel
-import com.meistercharts.model.category.DefaultSeries
-import com.meistercharts.model.category.createCategoryLabelsProvider
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.charts.support.CategoryAxisSupport
 import com.meistercharts.charts.support.ValueAxisSupport
@@ -51,13 +42,22 @@ import com.meistercharts.charts.support.addLayers
 import com.meistercharts.charts.support.createCategoryAxisSupport
 import com.meistercharts.charts.support.getAxisLayer
 import com.meistercharts.charts.support.getTopTitleLayer
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
+import com.meistercharts.model.Vicinity
+import com.meistercharts.model.category.Category
+import com.meistercharts.model.category.CategorySeriesModel
+import com.meistercharts.model.category.DefaultCategorySeriesModel
+import com.meistercharts.model.category.DefaultSeries
+import com.meistercharts.model.category.createCategoryLabelsProvider
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
-import com.meistercharts.model.Vicinity
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
-import it.neckar.open.i18n.TextKey
 import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
@@ -270,16 +270,16 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Sets the given font for all tick labels of all axes
      */
     fun applyAxisTickFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.tickFont = font
-      valueAxisLayer.configuration.tickFont = font
+      categoryAxisLayer.configuration.tickFont = font.asProvider()
+      valueAxisLayer.configuration.tickFont = font.asProvider()
     }
 
     /**
      * Sets the given font for all titles of all axes
      */
     fun applyAxisTitleFont(font: FontDescriptorFragment) {
-      categoryAxisLayer.configuration.titleFont = font
-      valueAxisLayer.configuration.titleFont = font
+      categoryAxisLayer.configuration.titleFont = font.asProvider()
+      valueAxisLayer.configuration.titleFont = font.asProvider()
     }
 
     /**

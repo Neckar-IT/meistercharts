@@ -25,6 +25,7 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.textService
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.events.EventConsumption
 import it.neckar.events.MouseWheelEvent
 import com.meistercharts.font.FontDescriptorFragment
@@ -82,7 +83,7 @@ class MouseWheelWithoutModifierMessageLayer(
     messagePainter.paintText(
       gc,
       texts,
-      configuration.textColor,
+      configuration.textColor(),
       configuration.boxStyle,
       configuration.lineSpacing,
       HorizontalAlignment.Center,
@@ -121,7 +122,7 @@ class MouseWheelWithoutModifierMessageLayer(
     /**
      * The color of the text
      */
-    var textColor: Color = Color.white
+    var textColor: ColorProvider = Color.white
 
     /**
      * The background fill that is painted over all other content

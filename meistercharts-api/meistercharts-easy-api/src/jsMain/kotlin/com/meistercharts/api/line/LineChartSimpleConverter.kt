@@ -35,6 +35,7 @@ import com.meistercharts.painter.emptyCategoryLinePainter
 import com.meistercharts.painter.emptyCategoryPointPainter
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.fastMapIndexed
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.getModuloOrElse
 import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
@@ -67,7 +68,7 @@ object LineChartSimpleConverter {
 
         PointType.Dot -> {
           DotCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it.asProvider() }
             pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
             pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
@@ -75,7 +76,7 @@ object LineChartSimpleConverter {
 
         PointType.Cross -> {
           CrossCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it.asProvider() }
             pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
             pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
@@ -83,7 +84,7 @@ object LineChartSimpleConverter {
 
         PointType.Cross45 -> {
           Cross45DegreesCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it }
+            pointColors1.getModuloOrNull(index)?.let { pointStylePainter.color = it.asProvider() }
             pointSizes.getModuloOrNull(index)?.let { pointStylePainter.pointSize = it }
             pointLineWidths.getModuloOrNull(index)?.let { pointStylePainter.lineWidth = it }
           }
@@ -91,8 +92,8 @@ object LineChartSimpleConverter {
 
         PointType.Circle -> {
           CircleCategoryPointPainter(snapXValues = false, snapYValues = false).apply {
-            pointColors1.getModuloOrNull(index)?.let { circlePointPainter.fill = it }
-            pointColors2.getModuloOrNull(index)?.let { circlePointPainter.stroke = it }
+            pointColors1.getModuloOrNull(index)?.let { circlePointPainter.fill = it.asProvider() }
+            pointColors2.getModuloOrNull(index)?.let { circlePointPainter.stroke = it.asProvider() }
             pointSizes.getModuloOrNull(index)?.let { circlePointPainter.pointSize = it }
           }
         }

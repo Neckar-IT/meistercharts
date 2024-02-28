@@ -24,8 +24,11 @@ import com.meistercharts.axis.LinearAxisTickCalculator.calculateTickValues
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.PolarCoordinates
@@ -114,17 +117,17 @@ class CompassBasePainter(
     /**
      * The color to paint the compass frame
      */
-    var compassColor: Color = Color.black
+    var compassColor: ColorProvider = Color.black
 
     /**
      * The color to paint the ticks
      */
-    var tickColor: Color = Color.lightgray
+    var tickColor: ColorProvider = Color.lightgray
 
     /**
      * The color to paint the tick labels
      */
-    var labelsColor: Color = Color.blue
+    var labelsColor: ColorProvider = Color.blue
 
     /**
      * The gap between the compass rose and the labels

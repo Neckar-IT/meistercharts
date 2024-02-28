@@ -165,7 +165,7 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
 
       AxisTitleLocation.AtTop -> {
         val topTitleLayer = getTopTitleLayer(key)
-        val titleFontHeight = FontMetrics[topTitleLayer.configuration.titleFont.withDefaultValues()].totalHeight
+        val titleFontHeight = FontMetrics[topTitleLayer.configuration.titleFont().withDefaultValues()].totalHeight
         return (titleFontHeight + topTitleLayer.configuration.titleGapVertical)
       }
     }

@@ -37,7 +37,7 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
-import com.meistercharts.design.initCorporateDesign
+import com.meistercharts.design.setDefaultTheme
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
@@ -63,7 +63,7 @@ private val logger: Logger = LoggerFactory.getLogger("meistercharts.api")
  */
 @JsExport
 fun initLookAndFeel(lookAndFeel: LookAndFeel) {
-  initCorporateDesign(lookAndFeel.toCorporateDesign())
+  setDefaultTheme(lookAndFeel.toTheme())
 }
 
 /**

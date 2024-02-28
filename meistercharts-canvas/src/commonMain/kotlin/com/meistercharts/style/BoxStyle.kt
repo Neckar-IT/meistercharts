@@ -16,6 +16,8 @@
 package com.meistercharts.style
 
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProviderNullable
+import com.meistercharts.color.get
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.Insets
 import it.neckar.open.unit.other.px
@@ -27,17 +29,17 @@ import kotlin.jvm.JvmStatic
 data class BoxStyle(
   /**
    * The fill for the box.
-   * If set to null this could mean:
+   * If set to null, this could mean:
    * - no fill is used at all
-   * - the fill might be derived from the context (e.g. the current value).
+   * - the fill might be derived from the context (e.g., the current value).
    *
    * If you want to be sure that no fill is selected, use [Color.transparent]
    */
-  var fill: Color? = null,
+  var fill: ColorProviderNullable = { null },
   /**
    * The optional border color
    */
-  var borderColor: Color? = null,
+  var borderColor: ColorProviderNullable = { null },
   /**
    * The width of the border
    */
@@ -72,13 +74,13 @@ data class BoxStyle(
     val none: BoxStyle = BoxStyle(padding = Insets.empty)
 
     /**
-     * Box with black background
+     * Box with a black background
      */
     @JvmStatic
     val black: BoxStyle = BoxStyle(fill = Color.black)
 
     /**
-     * Box with silver background and gray border
+     * Box with a silver background and gray border
      */
     @JvmStatic
     val gray: BoxStyle = BoxStyle(fill = Color.silver, borderColor = Color.gray)
@@ -90,7 +92,7 @@ data class BoxStyle(
     val balloon: BoxStyle = BoxStyle(fill = Color.white, borderColor = Color.black, shadow = Shadow.Default, padding = Insets.all10, radii = BorderRadius.all5)
 
     /**
-     * Box with dark gray background, rounded borders and drop shadow.
+     * Box with a dark gray background, rounded borders and drop shadow.
      */
     @JvmStatic
     val modernGray: BoxStyle = BoxStyle(
@@ -121,14 +123,14 @@ data class BoxStyle(
 }
 
 /**
- * Creates a new instance with the provided fill, if the fill of this is null
+ * Creates a new instance with the provided fill provider, if the fill provider of this is null (at the moment of calling)
  */
-fun BoxStyle.withFillIfNull(fillProvider: () -> Color): BoxStyle {
+fun BoxStyle.withFillIfNull(fillProvider: ColorProviderNullable): BoxStyle {
   if (fill != null) {
     return this
   }
 
-  return this.copy(fill = fillProvider())
+  return this.copy(fill = fillProvider)
 }
 
 /**
@@ -140,12 +142,12 @@ fun BoxStyle.withBorderColorIfNull(
   /**
    * Returns the border color based on the fill
    */
-  borderColorForFill: (fill: Color?) -> Color?,
+  borderColorForFill: (fill: Color?) -> ColorProviderNullable?,
 ): BoxStyle {
   if (borderColor != null) {
     return this
   }
 
-  val newBorderColor = borderColorForFill(this.fill) ?: return this
+  val newBorderColor = borderColorForFill(this.fill.get()) ?: return this
   return this.copy(borderColor = newBorderColor)
 }

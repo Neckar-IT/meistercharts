@@ -19,10 +19,14 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.fillRectCoordinates
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeRectCoordinates
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * A layer that visualizers the rubber band (mouse gesture)
@@ -79,11 +83,11 @@ class RubberBandVisualizationLayer(
     /**
      * The stroke of the rubber band
      */
-    var stroke: Color = Color.orange
+    var stroke: ColorProvider = Color.orange
 
     /**
      * The fill of the rubber band
      */
-    var fill: Color = Color.rgba(255, 165, 0, 0.5)
+    var fill: ColorProvider = Color.rgba(255, 165, 0, 0.5).asProvider()
   }
 }

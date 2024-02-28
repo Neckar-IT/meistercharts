@@ -24,6 +24,12 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
 
 /**
+ * Provides insets
+ */
+typealias InsetsProvider = () -> Insets
+
+
+/**
  * A class that describes space on four sides.
  */
 @Serializable
@@ -33,7 +39,6 @@ data class Insets(
   val bottom: Double,
   val left: Double,
 ) {
-
   operator fun plus(other: Insets): @Zoomed Insets {
     return Insets(top + other.top, right + other.right, bottom + other.bottom, left + other.left)
   }

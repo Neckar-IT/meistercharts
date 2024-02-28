@@ -19,6 +19,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
+import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
@@ -26,6 +27,7 @@ import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat2digits
 import it.neckar.open.i18n.I18nConfiguration
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Shows the current zoom level
@@ -48,7 +50,7 @@ class ShowZoomLevelLayer(
     //to top right corner
 
     gc.font(configuration.font)
-    gc.paintTextBox(text, Direction.TopRight, 5.0, 5.0, configuration.boxStyle, configuration.textColor, 150.0)
+    gc.paintTextBox(text, Direction.TopRight, 5.0, 5.0, configuration.boxStyle, configuration.textColor(), 150.0)
   }
 
   /**
@@ -68,12 +70,12 @@ class ShowZoomLevelLayer(
     /**
      * The style for the box (background fill + border stroke + insets)
      */
-    var boxStyle: BoxStyle = BoxStyle(Color.rgba(102, 102, 102, 0.5), null, padding = Insets(3.0, 5.0, 3.0, 5.0))
+    var boxStyle: BoxStyle = BoxStyle(Color.rgba(102, 102, 102, 0.5).asProvider(), null, padding = Insets(3.0, 5.0, 3.0, 5.0))
 
     /**
      * The color that is used for the text
      */
-    var textColor: Color = Color.white
+    var textColor: ColorProvider = Color.white
 
     /**
      * The font that is used for the text

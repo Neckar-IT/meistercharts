@@ -1,11 +1,13 @@
 package it.neckar.datetime.minimal
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
  * Represents a year
  */
 @JvmInline
+@Serializable
 value class Year(val value: Int) : Comparable<Year> {
   /**
    * Returns true if this year is a leap year.

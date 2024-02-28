@@ -18,7 +18,6 @@ package com.meistercharts.api.bar
 
 import com.meistercharts.algorithms.layers.barchart.CategoryModelBoxStylesProvider
 import com.meistercharts.algorithms.layers.barchart.CategorySeriesModelColorsProvider
-import com.meistercharts.color.Color
 import com.meistercharts.api.BoxStyle
 import com.meistercharts.api.applyCategoryAxisStyle
 import com.meistercharts.api.applyLinesStyle
@@ -28,6 +27,7 @@ import com.meistercharts.api.applyTitleStyle
 import com.meistercharts.api.applyValueAxisStyle
 import com.meistercharts.api.category.CategoryConverter
 import com.meistercharts.api.toColor
+import com.meistercharts.api.toColorProvider
 import com.meistercharts.api.toFontDescriptorFragment
 import com.meistercharts.api.toModel
 import com.meistercharts.api.toModelSizes
@@ -36,12 +36,13 @@ import com.meistercharts.api.toThresholdLabelsProvider
 import com.meistercharts.api.toThresholdValuesProvider
 import com.meistercharts.api.withValues
 import com.meistercharts.charts.BarChartGroupedGestalt
+import com.meistercharts.color.Color
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.getModuloOrNull
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.other.px
-import it.neckar.logging.Logger
-import it.neckar.logging.LoggerFactory
 
 private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.BarChartGroupedExtensions")
 
@@ -148,11 +149,11 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     }
 
     valueLabelsStyle.valueLabelColor?.toColor()?.let {
-      this.groupedBarsPainter.configuration.valueLabelColor = it
+      this.groupedBarsPainter.configuration.valueLabelColor = it.asProvider()
     }
 
     valueLabelsStyle.valueLabelStrokeColor?.toColor()?.let {
-      this.groupedBarsPainter.configuration.valueLabelStrokeColor = it
+      this.groupedBarsPainter.configuration.valueLabelStrokeColor = it.asProvider()
     }
   }
 
@@ -216,7 +217,7 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
   }
 
   jsStyle.activeGroupBackgroundColor.toColor()?.let {
-    this.categoryLayer.configuration.activeCategoryBackground = it
+    this.categoryLayer.configuration.activeCategoryBackground = it.asProvider()
   }
 
   jsStyle.overflowIndicatorStyle?.let {
@@ -245,10 +246,10 @@ fun toCategoryModelBoxStylesProvider(jsBoxStyles: Array<Array<BoxStyle>>): Categ
 
 @Deprecated("no required?")
 fun toCategoryModelColorsProvider(jsBoxStyles: Array<Array<BoxStyle>>): CategorySeriesModelColorsProvider {
-  val colors = jsBoxStyles.map { s -> s.map { t -> t.color.toColor() ?: Color.white } }
+  val colors = jsBoxStyles.map { s -> s.map { t -> t.color?.toColorProvider() ?: Color.white } }
+
   return CategorySeriesModelColorsProvider { categoryIndex, seriesIndex ->
-    colors.getModuloOrNull(categoryIndex.value)
-      ?.getModuloOrNull(seriesIndex.value)
-      ?: Color.white
+    val colorProvider = colors.getModuloOrNull(categoryIndex.value)?.getModuloOrNull(seriesIndex.value) ?: Color.white
+    colorProvider()
   }
 }

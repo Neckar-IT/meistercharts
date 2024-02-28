@@ -100,10 +100,14 @@ import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.charts.support.threshold.thresholdsSupport
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.RgbaColor
 import com.meistercharts.color.UnparsedWebColor
+import com.meistercharts.color.withAlpha
 import com.meistercharts.demo.TimeBasedValueGeneratorBuilder
 import com.meistercharts.design.Theme
+import com.meistercharts.design.forColor
+import com.meistercharts.design.valueAt
 import com.meistercharts.history.AndBefore
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
@@ -169,6 +173,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.fastMap
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.kotlin.lang.isPositive
@@ -322,7 +327,7 @@ class TimeLineChartGestalt
       ticksFormat = decimalFormat2digits //Apply the default
       titleProvider = { textService, i18nConfiguration -> configuration.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
 
-      val colorProvider = { configuration.lineStyles.valueAt(dataSeriesIndex.value).color }
+      val colorProvider: ColorProvider = configuration.lineStyles.valueAt(dataSeriesIndex.value).color
       lineColor = colorProvider
       tickLabelColor = colorProvider
       titleColor = colorProvider
@@ -360,10 +365,10 @@ class TimeLineChartGestalt
   ) {
     hudLayerConfiguration = { decimalDataSeriesIndex: DecimalDataSeriesIndex, axis: ValueAxisHudLayer ->
       val color = configuration.lineStyles.valueAt(decimalDataSeriesIndex).color
-      axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor(), borderColor = color, radii = BorderRadius.all5))
-      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor(), borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop.copy(color = color)))
-      axis.configuration.textColors = MultiProvider.always(color)
-      axis.configuration.textColorsActive = MultiProvider.always(color)
+      axis.configuration.boxStyles = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor.provider(), borderColor = color, radii = BorderRadius.all5))
+      axis.configuration.boxStylesActive = MultiProvider.always(BoxStyle(fill = Theme.primaryBackgroundColor.provider(), borderColor = color, radii = BorderRadius.all5, shadow = Shadow.Drop.copy(color = color)))
+      axis.configuration.textColors = MultiProvider.alwaysProvider(color)
+      axis.configuration.textColorsActive = MultiProvider.alwaysProvider(color)
     }
   }
 
@@ -438,7 +443,7 @@ class TimeLineChartGestalt
   ) {
     valueAxesGap = 10.0
     valueAxesMaxWidthPercentage = 1.0
-    background = { configuration.valueAxesBackground }
+    background = configuration.valueAxesBackground
   }
 
   /**
@@ -504,9 +509,7 @@ class TimeLineChartGestalt
     tickOrientation = Vicinity.Outside
     axisEndConfiguration = AxisEndConfiguration.Default
     paintRange = AxisConfiguration.PaintRange.ContentArea
-    background = {
-      configuration.valueAxesBackground
-    }
+    background = configuration.valueAxesBackground
     axisLabelPainter = DefaultCategoryAxisLabelPainter {
       wrapMode = LabelWrapMode.IfNecessary
     }
@@ -688,7 +691,7 @@ class TimeLineChartGestalt
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink())
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = configuration.actualVisibleDecimalSeriesIndices.size()
@@ -846,7 +849,7 @@ class TimeLineChartGestalt
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectsCache<Color>(Color.pink)
+    val labelTextColorCache = ObjectsCache<Color>(Color.pink())
 
     /**
      * Clears all labels
@@ -1282,7 +1285,7 @@ class TimeLineChartGestalt
      */
     val lineStylesProperty: ObservableObject<MultiProvider<DecimalDataSeriesIndex, LineStyle>> = ObservableObject(
       MultiProvider {
-        LineStyle(Theme.chartColors().valueAt(it), 1.0, null)
+        LineStyle(Theme.chartColors.valueAt(it), 1.0, null)
       }
     )
     var lineStyles: MultiProvider<DecimalDataSeriesIndex, LineStyle> by lineStylesProperty
@@ -1309,9 +1312,9 @@ class TimeLineChartGestalt
     var minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider {
       val averageLineStyle = lineStyles.valueAt(it)
 
-      when (val lineStyleColor = averageLineStyle.color) {
+      when (val lineStyleColor = averageLineStyle.color.invoke()) {
         is RgbaColor -> lineStyleColor.withAlpha(0.3)
-        is UnparsedWebColor -> Color.gray.withAlpha(0.3)
+        is UnparsedWebColor -> Color.gray.withAlpha(0.3)()
       }
     }
 
@@ -1349,7 +1352,7 @@ class TimeLineChartGestalt
     /**
      * The background color of the value axes
      */
-    var valueAxesBackground: Color = Theme.primaryBackgroundColor().toRgba().withAlpha(0.5)
+    var valueAxesBackground: ColorProvider = Theme.axisBackgroundColor.provider()
 
     /**
      * The indices of the lines that should be visible.
@@ -1451,13 +1454,14 @@ class TimeLineChartGestalt
     /**
      * The cross wire label styles - for the cross wire for decimal values
      */
-    var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider {
+    var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider { index ->
+
       BoxStyle(
-        fill = Theme.chartColors().valueAt(it),
-        borderColor = Theme.borderColorConverter()(Theme.chartColors().valueAt(it)),
+        fill = Theme.chartColors.valueAt(index),
+        borderColor = Theme.borderColorConverter.forColor(Theme.chartColors.valueAt(index)),
         padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
-        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor())
+        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
       )
     }
 
@@ -1482,7 +1486,7 @@ class TimeLineChartGestalt
     /**
      * The text colors for the cross wire label
      */
-    var crossWireDecimalsLabelTextColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider.always(Theme.primaryBackgroundColor())
+    var crossWireDecimalsLabelTextColors: MultiProvider<DecimalDataSeriesIndex, Color> = Theme.primaryBackgroundColor.multiProviderAlways()
 
     /**
      * The cross wire label styles - for the cross wire for enum values.
@@ -1491,14 +1495,14 @@ class TimeLineChartGestalt
      */
     var crossWireEnumsLabelBoxStyles: MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> = MultiProvider2 { dataSeriesIndexAsInt, firstSetOrdinal, historyEnum ->
       val guessedFillColor = guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, configuration.historyConfiguration.enumConfiguration.getEnum(EnumDataSeriesIndex(dataSeriesIndexAsInt)))
-      val borderColor = Theme.borderColorConverter()(guessedFillColor)
+      val borderColor = Theme.borderColorConverter.resolve()(guessedFillColor)
 
       BoxStyle(
-        fill = guessedFillColor,
-        borderColor = borderColor,
+        fill = guessedFillColor.asProvider(),
+        borderColor = borderColor.asProvider(),
         padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
         radii = BorderRadius.all2,
-        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor())
+        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
       )
     }
 
@@ -1516,12 +1520,12 @@ class TimeLineChartGestalt
       return if (painter is RectangleEnumStripePainter) {
         painter.configuration.fillProvider(firstSetOrdinal, historyEnum)
       } else {
-        Color.silver
+        Color.silver()
       }
     }
 
 
-    var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = MultiProvider.always(Theme.primaryBackgroundColor())
+    var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = Theme.primaryBackgroundColor.multiProviderAlways()
 
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.
@@ -1609,7 +1613,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     fillProvider = RectangleEnumStripePainter.enumStateFillProvider()
   }), fallbackProvider = {
     RectangleEnumStripePainter {
-      fillProvider = { value, _ -> Theme.chartColors().valueAt(value.value) }
+      fillProvider = { value, _ -> Theme.chartColors.resolve().valueAt(value.value) }
     }
   }).cached()
 

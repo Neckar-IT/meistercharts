@@ -22,13 +22,14 @@ import com.meistercharts.algorithms.layers.toggleShortcut
 import com.meistercharts.algorithms.layers.visible
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
-import it.neckar.geometry.Direction
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
 import com.meistercharts.model.Insets
+import com.meistercharts.version.MeisterChartsVersion
 import it.neckar.events.KeyCode
 import it.neckar.events.KeyStroke
 import it.neckar.events.ModifierCombination
-import com.meistercharts.version.MeisterChartsVersion
+import it.neckar.geometry.Direction
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Adds the version number layer - permanently visible
@@ -45,7 +46,7 @@ fun Layers.addVersionNumber(anchorDirection: Direction = Direction.TopRight): Te
 private fun versionNumberLayer(anchorDirection: Direction = Direction.TopRight): TextLayer {
   return TextLayer({ _, _ -> listOf(MeisterChartsVersion.versionAsStringVerbose) }) {
     textColor = Color.gray
-    font = FontDescriptorFragment(12.0)
+    font = FontDescriptorFragment(12.0).asProvider()
     this.anchorDirection = anchorDirection
     anchorPointProvider = DirectionBasedBasePointProvider(anchorDirection)
     margin = Insets.of(4.0)

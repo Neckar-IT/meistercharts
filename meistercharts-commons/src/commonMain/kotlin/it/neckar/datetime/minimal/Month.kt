@@ -1,11 +1,13 @@
 package it.neckar.datetime.minimal
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
  * Represents a month
  */
 @JvmInline
+@Serializable
 value class Month(val value: Int) : Comparable<Month> {
   init {
     require(value in 1..12) {

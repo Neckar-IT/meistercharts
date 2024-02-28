@@ -16,10 +16,13 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
 import it.neckar.geometry.Coordinates
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Fills the canvas with a background color
@@ -32,7 +35,7 @@ class FillBackgroundLayer(
   val configuration: Configuration = Configuration().also(configuration)
 
   constructor(backgroundColor: Color) : this({
-    this.background = backgroundColor
+    this.background = backgroundColor.asProvider()
   })
 
   override fun paint(paintingContext: LayerPaintingContext) {
@@ -48,7 +51,7 @@ class FillBackgroundLayer(
     /**
      * The color to be used as background
      */
-    var background: Color = Theme.primaryBackgroundColor()
+    var background: ColorProvider = Theme.primaryBackgroundColor.provider()
 
     /**
      * The optional background image that is painted in origin.
@@ -60,14 +63,14 @@ class FillBackgroundLayer(
      * Switches to the primary background color
      */
     fun primary() {
-      background = Theme.primaryBackgroundColor()
+      background = Theme.primaryBackgroundColor.provider()
     }
 
     /**
      * Switches to the secondary background color
      */
     fun secondary() {
-      background = Theme.secondaryBackgroundColor()
+      background = Theme.secondaryBackgroundColor.provider()
     }
   }
 }
@@ -77,7 +80,7 @@ class FillBackgroundLayer(
  */
 fun Layers.addFillCanvasBackground(): FillBackgroundLayer {
   return FillBackgroundLayer {
-    background = Theme.canvasBackgroundColor()
+    background = Theme.canvasBackgroundColor.provider()
   }.also {
     addLayer(it)
   }

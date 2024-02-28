@@ -3,6 +3,7 @@ package it.neckar.open.provider
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 import it.neckar.open.kotlin.lang.getModulo
+import it.neckar.open.kotlin.lang.getModuloOrElse
 import kotlin.jvm.JvmStatic
 import kotlin.reflect.KProperty0
 
@@ -13,7 +14,7 @@ import kotlin.reflect.KProperty0
  * ATTENTION: Do not replace this interface with lambdas. Lambdas do not support primitive types (at least in JVM 1.8).
  * Therefore, the index is always boxed!
  *
- * @param IndexContext: The type for the index.
+ * @param IndexContext The type for the index.
  * This should be either:
  * - a value class wrapping an index
  * - an annotation annotated with [MultiProviderIndexContextAnnotation] - if a value class seems to be overkill
@@ -44,8 +45,28 @@ fun interface MultiProvider<in IndexContext, out T> : MultiProvider1<IndexContex
     }
 
     @JvmStatic
+    fun <IndexContext, T> forListModuloProvider(values: List<() -> T>): MultiProvider<IndexContext, T> {
+      return MultiProvider { index -> values.getModulo(index).invoke() }
+    }
+
+    @JvmStatic
+    fun <IndexContext, T> forListModuloProvider(values: List<() -> T>, fallback: T): MultiProvider<IndexContext, T> {
+      return MultiProvider { index -> values.getModuloOrElse(index) { fallback }.invoke() }
+    }
+
+    @JvmStatic
     fun <IndexContext, T> modulo(vararg values: T): MultiProvider<IndexContext, T> {
       return forListModulo(values.toList())
+    }
+
+    @JvmStatic
+    fun <IndexContext, T> moduloProvider(vararg valueProviders: () -> T): MultiProvider<IndexContext, T> {
+      return moduloProvider(valueProviders.toList())
+    }
+
+    @JvmStatic
+    fun <IndexContext, T> moduloProvider(valueProviders: List<() -> T>): MultiProvider<IndexContext, T> {
+      return MultiProvider { index -> valueProviders.getModulo(index).invoke() }
     }
 
     /**
@@ -105,6 +126,11 @@ fun interface MultiProvider<in IndexContext, out T> : MultiProvider1<IndexContex
       return MultiProvider { value }
     }
 
+    @JvmStatic
+    fun <IndexContext, T> alwaysProvider(valueProvider: () -> T): MultiProvider<IndexContext, T> {
+      return MultiProvider { valueProvider() }
+    }
+
     /**
      * Creates new instances for each index - as required.
      * The provider is called for each index exactly once. The returned value is then cached
@@ -137,6 +163,13 @@ fun interface MultiProvider<in IndexContext, out T> : MultiProvider1<IndexContex
     operator fun <IndexContext, T> invoke(lambda: (index: Int) -> T): MultiProvider<IndexContext, T> {
       return MultiProvider { index -> lambda(index) }
     }
+
+    /**
+     * Creates a new multi provider that delegates all calls to the current value of this property
+     */
+    fun <IndexContext, T> delegating(provider: () -> MultiProvider<IndexContext, T>): MultiProvider<IndexContext, T> {
+      return MultiProvider { index -> provider().valueAt(index) }
+    }
   }
 }
 
@@ -159,6 +192,12 @@ fun <IndexContext, T> KProperty0<MultiProvider<IndexContext, T>>.delegate(): Mul
 fun <IndexContext, T, R> MultiProvider<IndexContext, T>.mapped(function: (T) -> R): MultiProvider<IndexContext, R> {
   return MultiProvider.invoke {
     function(this.valueAt(it))
+  }
+}
+
+fun <IndexContext, T> MultiProvider<IndexContext, () -> T>.resolved(): MultiProvider<IndexContext, T> {
+  return MultiProvider.invoke {
+    this.valueAt(it).invoke()
   }
 }
 

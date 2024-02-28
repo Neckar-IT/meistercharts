@@ -1,8 +1,8 @@
-import com.meistercharts.design.CorporateDesign
 import com.meistercharts.design.DarkDesign
-import com.meistercharts.design.DebugDesign
-import com.meistercharts.design.DefaultDesign
+import com.meistercharts.design.DebugTheme
+import com.meistercharts.design.DefaultTheme
 import com.meistercharts.design.NeckarITDesign
+import com.meistercharts.design.Theme
 import it.neckar.open.charting.api.sanitizing.sanitize
 
 /**
@@ -46,11 +46,11 @@ enum class LookAndFeel {
   Debug,
 }
 
-fun LookAndFeel.toCorporateDesign(): CorporateDesign {
+fun LookAndFeel.toTheme(): Theme {
   return when (this.sanitize()) {
-    LookAndFeel.Default -> DefaultDesign
+    LookAndFeel.Default -> DefaultTheme.Instance
     LookAndFeel.Dark -> DarkDesign
     LookAndFeel.NeckarIT -> NeckarITDesign
-    LookAndFeel.Debug -> DebugDesign
+    LookAndFeel.Debug -> DebugTheme
   }
 }

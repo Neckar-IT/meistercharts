@@ -18,6 +18,8 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.color.ColorProvider
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.toIntCeil
 
@@ -57,8 +59,8 @@ class FillBackgroundCheckerLayer(
     /**
      * The color to be used as background
      */
-    var background0: Color = Color.lightgray
-    var background1: Color = Color.white
+    var background0: ColorProvider = Color.lightgray
+    var background1: ColorProvider = Color.white
 
     var segmentWith: @Zoomed Double = 15.0
     var segmentHeight: @Zoomed Double = 15.0

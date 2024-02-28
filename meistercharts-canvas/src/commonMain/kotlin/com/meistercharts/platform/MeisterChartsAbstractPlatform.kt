@@ -19,8 +19,8 @@ import com.meistercharts.Meistercharts
 import com.meistercharts.canvas.Meisterchart
 import com.meistercharts.canvas.PlatformStateListener
 import com.meistercharts.canvas.timer.CanvasBasedTimerImplementation
-import com.meistercharts.design.CorporateDesign
-import com.meistercharts.design.initCorporateDesign
+import com.meistercharts.design.Theme
+import com.meistercharts.design.setDefaultTheme
 import com.meistercharts.version.MeisterChartsVersion
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -42,17 +42,17 @@ abstract class MeisterChartsAbstractPlatform {
 
   /**
    * Initializes the basics.
-   * If the [corporateDesign] is not null, nothing is applied.
+   * If the [theme] is not null, nothing is applied.
    * If the [defaultI18nConfiguration] is not null, nothing is applied.
    */
-  fun initBasics(corporateDesign: CorporateDesign?, defaultI18nConfiguration: I18nConfiguration?) {
+  fun initBasics(theme: Theme?, defaultI18nConfiguration: I18nConfiguration?) {
     if (initialized.not()) {
       logger.info { "Initializing MeisterChartsPlatform ${MeisterChartsVersion.versionAsStringVerbose}" }
     }
 
 
-    corporateDesign?.let {
-      initCorporateDesign(it)
+    theme?.let {
+      setDefaultTheme(it)
     }
 
     defaultI18nConfiguration?.let {

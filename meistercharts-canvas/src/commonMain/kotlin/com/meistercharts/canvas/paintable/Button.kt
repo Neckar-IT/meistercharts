@@ -18,10 +18,11 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolve
 import com.meistercharts.algorithms.layers.toolbar.ButtonPaintableProvider
-import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.fillRoundedRect
 import com.meistercharts.canvas.paintable.ButtonState.Companion.disabled
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
@@ -352,8 +353,10 @@ class DefaultButtonColorProvider(
 /**
  * Provides the same color for all button states
  */
-class SingleButtonColorProvider(private val buttonColor: Color) : ButtonColorProvider {
-  override fun invoke(buttonState: ButtonState): Color = buttonColor
+class SingleButtonColorProvider(private val buttonColor: ColorProvider) : ButtonColorProvider {
+  override fun invoke(buttonState: ButtonState): Color {
+    return buttonColor()
+  }
 }
 
 /**
@@ -392,26 +395,26 @@ open class DefaultButtonPainter(
 
     val foregroundColor = buttonForegroundColorProvider(state)
     gc.fill(foregroundColor)
-    gc.font(Theme.buttonFont())
+    gc.font(Theme.buttonFont.resolve())
     gc.fillText(buttonLabel, width * 0.5, height * 0.5, Direction.Center, 0.0, 0.0, width)
   }
 }
 
 /**
- * A [ButtonPainter] for primary buttons using the corporate design
+ * A [ButtonPainter] for primary buttons using the theme
  */
 class DefaultPrimaryButtonPainter(text: TextKey?) : DefaultButtonPainter(
   text,
-  Theme.primaryButtonBackgroundColors(),
-  Theme.primaryButtonForegroundColors()
+  Theme.primaryButtonBackgroundColors.resolve(),
+  Theme.primaryButtonForegroundColors.resolve()
 )
 
 /**
- * A [ButtonPainter] for secondary buttons using the corporate design
+ * A [ButtonPainter] for secondary buttons using the theme
  */
 class DefaultSecondaryButtonPainter(text: TextKey?) : DefaultButtonPainter(
   text,
-  Theme.secondaryButtonBackgroundColors(),
-  Theme.secondaryButtonForegroundColors()
+  Theme.secondaryButtonBackgroundColors.resolve(),
+  Theme.secondaryButtonForegroundColors.resolve()
 )
 

@@ -26,6 +26,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseEventBroker
 import it.neckar.geometry.Coordinates
@@ -136,7 +138,7 @@ class MovableCrossWireLayer(
     /**
      * The fill of the marker at the bottom
      */
-    var markerFill: Color = Color.gray
+    var markerFill: ColorProvider = Color.gray
 
     /**
      * The padding at the bottom
@@ -159,7 +161,7 @@ class MovableCrossWireLayer(
     /**
      * The fill of the marker at the bottom
      */
-    var markerFill: Color = Color.gray
+    var markerFill: ColorProvider = Color.gray
 
     /**
      * The padding at the bottom

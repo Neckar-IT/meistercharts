@@ -162,3 +162,12 @@ data class RgbaColor(
     }
   }
 }
+
+/**
+ * With alpha
+ */
+fun RgbaColorProvider.withAlpha(newAlpha: @pct Double): RgbaColorProvider {
+  return {
+    this().withAlpha(newAlpha)
+  }
+}

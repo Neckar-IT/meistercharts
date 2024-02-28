@@ -19,25 +19,27 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.SidesSelection
+import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.kotlin.lang.asProvider1
 
 /**
  * Provides the insets for a painting context.
  * The insets are applied relative to the window
  */
-typealias InsetsProvider = (paintingContext: LayerPaintingContext) -> @Window Insets
+typealias PaintingContextAwareInsetsProvider = (paintingContext: LayerPaintingContext) -> @Window Insets
 
 /**
  * Clips a layer from the outside
  */
 class ClippingLayer<T : Layer>(
   val configuration: Configuration<T>,
-  additionalConfiguration: Configuration<T>.() -> Unit = {}
+  additionalConfiguration: Configuration<T>.() -> Unit = {},
 ) : DelegatingLayer<T>(configuration.delegate) {
 
   constructor(
     delegate: T,
-    additionalConfiguration: Configuration<T>.() -> Unit = {}
-  ): this(Configuration(delegate), additionalConfiguration)
+    additionalConfiguration: Configuration<T>.() -> Unit = {},
+  ) : this(Configuration(delegate), additionalConfiguration)
 
   init {
     configuration.additionalConfiguration()
@@ -54,13 +56,13 @@ class ClippingLayer<T : Layer>(
     get() = "ClippingLayer{${delegate.description}}"
 
   @ConfigurationDsl
-  class Configuration<T: Layer>(
+  class Configuration<T : Layer>(
     var delegate: T,
-    ) {
+  ) {
     /**
      * The insets
      */
-    var insets: InsetsProvider = { Insets.empty }
+    var insets: PaintingContextAwareInsetsProvider = Insets.empty.asProvider1()
   }
 }
 
@@ -108,9 +110,9 @@ fun <T : Layer> T.clippedToContentViewport(sides: SidesSelection = SidesSelectio
 
 
 /**
- * Clips the given layer with the given [InsetsProvider] (relative to the window)
+ * Clips the given layer with the given [PaintingContextAwareInsetsProvider] (relative to the window)
  */
-fun <T : Layer> T.clipped(insetsProvider: @Window InsetsProvider): ClippingLayer<T> {
+fun <T : Layer> T.clipped(insetsProvider: @Window PaintingContextAwareInsetsProvider): ClippingLayer<T> {
   return ClippingLayer(this) {
     this.insets = insetsProvider
   }

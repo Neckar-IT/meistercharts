@@ -15,28 +15,29 @@
  */
 package com.meistercharts.charts
 
-import it.neckar.geometry.AxisOrientationY
 import com.meistercharts.algorithms.layers.addClearBackground
 import com.meistercharts.algorithms.layers.addFillCanvasBackground
 import com.meistercharts.algorithms.layers.circular.CircularChartLayer
 import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.color.Color
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Insets
+import com.meistercharts.resources.Icons
+import com.meistercharts.style.Palette
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.open.i18n.TextKey
+import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MutableDoublesProvider
 import it.neckar.open.provider.delegate
 import it.neckar.open.provider.toRelative
-import it.neckar.open.i18n.TextKey
-import it.neckar.open.observable.ObservableObject
-import com.meistercharts.resources.Icons
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.pct
 
 /**
@@ -120,10 +121,10 @@ class CircularChartGestalt(
     fun createDefaultColorsProvider(): MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> {
       return MultiProvider.forListModulo(
         listOf(
-          Palette.stateSuperior,
-          Palette.stateOffline,
-          Palette.stateError,
-          Palette.stateWarning
+          Palette.stateSuperior(),
+          Palette.stateOffline(),
+          Palette.stateError(),
+          Palette.stateWarning(),
         )
       )
     }
@@ -150,10 +151,10 @@ class CircularChartGestalt(
         val fill = colorsProvider.valueAt(index)
 
         when (index) {
-          0 -> Icons.ok(fill = fill)
-          1 -> Icons.questionmark(fill = fill)
-          2 -> Icons.error(fill = fill)
-          3 -> Icons.warning(fill = fill)
+          0 -> Icons.ok(fill = fill.asProvider())
+          1 -> Icons.questionmark(fill = fill.asProvider())
+          2 -> Icons.error(fill = fill.asProvider())
+          3 -> Icons.warning(fill = fill.asProvider())
           else -> null
         }
       }

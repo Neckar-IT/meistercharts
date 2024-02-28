@@ -19,29 +19,30 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.resolve
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.PaintableLocation
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintTextWithPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.TransparentPaintable
 import com.meistercharts.canvas.saved
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.Anchoring
-import it.neckar.geometry.Coordinates
 import com.meistercharts.model.Corner
-import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
+import com.meistercharts.style.Palette
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Direction
 import it.neckar.geometry.Size
+import it.neckar.open.formatting.CachedNumberFormat
+import it.neckar.open.formatting.decimalFormat
+import it.neckar.open.i18n.TextKey
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.fastForEachIndexed
-import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.formatting.decimalFormat
-import it.neckar.open.i18n.TextKey
-import com.meistercharts.style.Palette
 import it.neckar.open.unit.other.px
 
 
@@ -135,7 +136,7 @@ class CircularChartLegendLayer(
     /**
      * The color of the font
      */
-    var fontColor: Color = Palette.defaultGray
+    var fontColor: ColorProvider = Palette.defaultGray
 
     var paintableSize: Size = Size(40.0, 40.0)
 

@@ -28,8 +28,6 @@ import com.meistercharts.annotations.ZIndex
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.layout.cache.CoordinatesCache
 import com.meistercharts.canvas.layout.cache.ObjectsCache
@@ -37,15 +35,17 @@ import com.meistercharts.canvas.layout.cache.ZIndexSortingCache
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
+import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.model.Vicinity
+import com.meistercharts.style.BoxStyle
+import com.meistercharts.style.Shadow
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
-import com.meistercharts.model.Vicinity
-import com.meistercharts.style.BoxStyle
-import com.meistercharts.style.Shadow
 import it.neckar.open.provider.CoordinatesProvider1
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiDoublesProvider
@@ -289,7 +289,7 @@ class ValueAxisHudLayer(
      */
     var arrowFills: MultiProvider<HudElementIndex, Color> = MultiProvider { index: @HudElementIndex Int ->
       val boxStyle = boxStyles.valueAt(index)
-      boxStyle.borderColor ?: boxStyle.fill ?: textColors.valueAt(index)
+      boxStyle.borderColor?.invoke() ?: boxStyle.fill?.invoke() ?: textColors.valueAt(index)
     }
 
     /**
@@ -297,20 +297,20 @@ class ValueAxisHudLayer(
      */
     var arrowFillsActive: MultiProvider<HudElementIndex, Color> = MultiProvider { index: @HudElementIndex Int ->
       val boxStyle = boxStylesActive.valueAt(index)
-      boxStyle.borderColor ?: boxStyle.fill ?: textColors.valueAt(index)
+      boxStyle.borderColor?.invoke() ?: boxStyle.fill?.invoke() ?: textColors.valueAt(index)
     }
 
     /**
      * The text color for the label
      */
-    var textColors: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black)
+    var textColors: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black())
 
-    var textColorsActive: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black)
+    var textColorsActive: MultiProvider<HudElementIndex, Color> = MultiProvider.always(Color.black())
 
     /**
      * The text font fragments
      */
-    var textFonts: MultiProvider<HudElementIndex, FontDescriptorFragment> = MultiProvider.always(Theme.thresholdLabelFont())
+    var textFonts: MultiProvider<HudElementIndex, FontDescriptorFragment> = MultiProvider.alwaysProvider(Theme.thresholdLabelFont.provider())
 
     /**
      * The text alignment

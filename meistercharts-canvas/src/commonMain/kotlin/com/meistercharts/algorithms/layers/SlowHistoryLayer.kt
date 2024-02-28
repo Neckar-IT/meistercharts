@@ -18,6 +18,8 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.color.Color
 import com.meistercharts.history.DecimalDataSeriesIndex

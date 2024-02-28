@@ -15,21 +15,25 @@
  */
 package com.meistercharts.charts.bullet
 
-import com.meistercharts.range.ValueRange
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.barchart.CategoryPainter
 import com.meistercharts.algorithms.layers.barchart.CategoryPainterPaintingVariables
-import com.meistercharts.model.category.CategoryIndex
-import com.meistercharts.model.category.valueAt
-import com.meistercharts.color.Color
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StrokeLocation
+import com.meistercharts.canvas.fill
+import com.meistercharts.canvas.stroke
 import com.meistercharts.charts.OverflowIndicatorPainter
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Orientation
+import com.meistercharts.design.multiProvider
+import com.meistercharts.model.category.CategoryIndex
+import com.meistercharts.model.category.valueAt
 import com.meistercharts.provider.ValueRangeProvider
+import com.meistercharts.range.ValueRange
+import it.neckar.geometry.Orientation
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
@@ -211,13 +215,13 @@ class BulletChartPainter(
      */
     var currentValueIndicatorOutlineWidth: @px Double = 1.0
 
-    var currentValueColor: Color = Color.black
-    var currentValueOutlineColor: Color = Color.white
+    var currentValueColor: ColorProvider = Color.black
+    var currentValueOutlineColor: ColorProvider = Color.white
 
     /**
      * Provides the color for a bar.
      */
-    var barColors: CategoryColorProvider = Theme.chartColors()
+    var barColors: CategoryColorProvider = Theme.chartColors.multiProvider()
 
     /**
      * The size of the bar.

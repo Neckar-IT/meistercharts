@@ -15,10 +15,6 @@
  */
 package com.meistercharts.api.discrete
 
-import com.meistercharts.resize.ResetToDefaultsOnWindowResize
-import com.meistercharts.zoom.UpdateReason
-import it.neckar.geometry.AxisSelection
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.stripe.refentry.RectangleReferenceEntryStripePainter
 import com.meistercharts.algorithms.painter.stripe.refentry.ReferenceEntryStatusColorProvider
 import com.meistercharts.annotations.DomainRelative
@@ -35,12 +31,18 @@ import com.meistercharts.api.toModelSizes
 import com.meistercharts.api.toNumberFormat
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
+import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
+import com.meistercharts.design.valueAt
 import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDataSeriesIndexProvider
 import com.meistercharts.history.historyConfiguration
+import com.meistercharts.resize.ResetToDefaultsOnWindowResize
+import com.meistercharts.zoom.UpdateReason
+import it.neckar.geometry.AxisSelection
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.charting.api.sanitizing.sanitize
@@ -106,20 +108,21 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
           //TODO support other fill types, too
 
           //The fill colors for the different state ordinals
-          val fillColors = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
-            jsStripeStyle?.backgroundColor?.toColor() ?: Theme.enumColors().valueAt(index)
+          val fillColors: List<ColorProvider> = jsStripeStyles.mapIndexed { index: Int, jsStripeStyle: StripeStyle? ->
+            jsStripeStyle?.backgroundColor?.toColor()?.asProvider() ?: Theme.enumColors.valueAt(index)
           }
           this.fillProvider = ReferenceEntryStatusColorProvider { _, _, statusEnumSet, _ ->
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
-            fillColors.getModuloOrNull(firstOrdinal.value) ?: Theme.enumColors().valueAt(firstOrdinal.value)
+            @Suppress("DEPRECATION")
+            fillColors.getModuloOrNull(firstOrdinal.value)?.invoke() ?: Theme.enumColors.resolve().valueAt(firstOrdinal.value)
           }
 
-          val labelColors = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
-            jsStripeStyle?.labelColor?.toColor() ?: Color.white
+          val labelColors: List<Color> = jsStripeStyles.map { jsStripeStyle: StripeStyle? ->
+            jsStripeStyle?.labelColor?.toColor() ?: Color.white()
           }
           labelColorProvider = { _, statusEnumSet, _ ->
             val firstOrdinal = statusEnumSet.firstSetOrdinal()
-            labelColors.getModuloOrNull(firstOrdinal.value) ?: Color.white
+            labelColors.getModuloOrNull(firstOrdinal.value) ?: Color.white()
           }
         }
 
@@ -128,7 +131,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
         }
 
         jsDiscreteDataSeriesConfiguration.stripeSegmentSeparatorColor?.toColor()?.let {
-          separatorStroke = it
+          separatorStroke = it.asProvider()
         }
         jsDiscreteDataSeriesConfiguration.stripeSegmentSeparatorWidth?.sanitize()?.let {
           separatorSize = it

@@ -89,6 +89,7 @@ object Plugins {
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
   const val dockerPasswordFromSecretFile: String = "it.neckar.docker-password-from-secret-file"
+  const val secretFromPropertiesFile: String = "it.neckar.secret-from-properties-file"
 
   @Deprecated("Does not seem to work")
   const val ssh: String = "online.colaba.ssh"
@@ -244,6 +245,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDepende
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.dockerPasswordFromSecretFile: PluginDependencySpec
   get() = id(Plugins.dockerPasswordFromSecretFile)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.secretFromPropertiesFile: PluginDependencySpec
+  get() = id(Plugins.secretFromPropertiesFile)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)

@@ -17,7 +17,7 @@ package com.meistercharts.provider
 
 import it.neckar.open.annotations.CreatesObjects
 import it.neckar.open.formatting.CachedNumberFormat
-import it.neckar.open.i18n.DefaultI18nConfiguration
+import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.kotlin.lang.DoubleMapFunction
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.SizedProvider
@@ -29,5 +29,5 @@ import it.neckar.open.provider.mapped
  */
 @CreatesObjects
 fun DoublesProvider.formatted(valueFormat: () -> CachedNumberFormat): SizedProvider<String> {
-  return mapped(DoubleMapFunction { value -> valueFormat().format(value, i18nConfiguration = DefaultI18nConfiguration) })
+  return mapped(DoubleMapFunction { value -> valueFormat().format(value, i18nConfiguration = CurrentI18nConfiguration) })
 }

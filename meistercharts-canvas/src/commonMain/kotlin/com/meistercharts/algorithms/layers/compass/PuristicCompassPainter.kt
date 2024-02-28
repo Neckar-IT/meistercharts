@@ -21,16 +21,18 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.font.FontDescriptorFragment
-import com.meistercharts.font.FontSize
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorProvider
+import com.meistercharts.design.CurrentTheme
 import com.meistercharts.design.Theme
-import com.meistercharts.design.corporateDesign
+import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.FontSize
+import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.PolarCoordinates
-import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.NumberFormat
@@ -136,22 +138,22 @@ class PuristicCompassPainter(
     /**
      * The background color
      */
-    var backgroundColor: Color = Color.white
+    var backgroundColor: ColorProvider = Color.white
 
     /**
      * The color of the lines
      */
-    var lineColor: Color = Theme.axisLineColor()
+    var lineColor: ColorProvider = Theme.axisLineColor.provider()
 
     /**
      * The color to paint the ticks
      */
-    var tickColor: Color = Theme.axisTickColor()
+    var tickColor: ColorProvider = Theme.axisTickColor.provider()
 
     /**
      * The color to paint the tick labels
      */
-    var labelsColor: Color = tickColor
+    var labelsColor: ColorProvider = tickColor
 
     /**
      * The gap between the compass rose and the labels
@@ -164,9 +166,9 @@ class PuristicCompassPainter(
     var tickFont: (@px Double, CompassTickType) -> FontDescriptorFragment = { radius, tickType ->
       //TODO avoid object allocation
       when (tickType) {
-        CompassTickType.Major -> corporateDesign.h1.withSize(FontSize((radius * 0.1).round()))
-        CompassTickType.Medium -> corporateDesign.h1.withSize(FontSize((radius * 0.05).round()))
-        else                   -> corporateDesign.h1.withSize(FontSize((radius * 0.025).round()))
+        CompassTickType.Major -> CurrentTheme.h1.withSize(FontSize((radius * 0.1).round()))
+        CompassTickType.Medium -> CurrentTheme.h1.withSize(FontSize((radius * 0.05).round()))
+        else -> CurrentTheme.h1.withSize(FontSize((radius * 0.025).round()))
       }
     }
 

@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.stroke
 import com.meistercharts.canvas.strokeCross
 import com.meistercharts.provider.CoordinatesProvider
 
