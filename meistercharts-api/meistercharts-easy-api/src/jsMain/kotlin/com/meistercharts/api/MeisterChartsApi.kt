@@ -15,9 +15,11 @@
  */
 package com.meistercharts.api
 
+import ThemeId
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.i18nSupport
+import com.meistercharts.canvas.themeSupport
 import com.meistercharts.canvas.timerSupport
 import com.meistercharts.js.MeisterchartJS
 import it.neckar.geometry.Size
@@ -28,6 +30,7 @@ import it.neckar.open.unit.number.MayBeZero
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.CustomEventInit
 import org.w3c.dom.HTMLDivElement
+import toTheme
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -116,8 +119,18 @@ internal constructor(
    * `meistercharts.setI18nConfiguration(config)`
    */
   @JsName("setI18nConfiguration")
-  fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
-    meisterCharts.chartSupport.i18nSupport.configuration = jsI18nConfiguration.toModel()
+  fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration?) {
+    meisterCharts.chartSupport.i18nSupport.selectedConfiguration = jsI18nConfiguration?.toModel()
+  }
+
+  /**
+   * Sets the theme for this chart.
+   *
+   * If null is passed, the default theme is used.
+   */
+  @JsName("setTheme")
+  fun setTheme(themeId: ThemeId?) {
+    meisterCharts.chartSupport.themeSupport.selectedTheme = themeId?.toTheme()
   }
 
   /**

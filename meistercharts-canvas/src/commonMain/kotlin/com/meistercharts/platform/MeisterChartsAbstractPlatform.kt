@@ -26,7 +26,7 @@ import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.info
 import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.i18n.updateDefaultI18nConfiguration
+import it.neckar.open.i18n.setDefaultI18nConfiguration
 import it.neckar.open.time.timerImplementation
 
 /**
@@ -56,7 +56,7 @@ abstract class MeisterChartsAbstractPlatform {
     }
 
     defaultI18nConfiguration?.let {
-      updateDefaultI18nConfiguration(it)
+      setDefaultI18nConfiguration(it)
     }
 
     if (initialized.not()) {

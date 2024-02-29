@@ -24,7 +24,7 @@ import it.neckar.open.charting.api.sanitizing.sanitize
  * Supported Look and Feels for meistercharts.
  */
 @JsExport
-enum class LookAndFeel {
+enum class ThemeId {
   /**
    * The default look and feel. Uses the CSS font
    */
@@ -46,11 +46,14 @@ enum class LookAndFeel {
   Debug,
 }
 
-fun LookAndFeel.toTheme(): Theme {
+/**
+ * Converts the theme id to a theme.
+ */
+fun ThemeId.toTheme(): Theme {
   return when (this.sanitize()) {
-    LookAndFeel.Default -> DefaultTheme.Instance
-    LookAndFeel.Dark -> DarkDesign
-    LookAndFeel.NeckarIT -> NeckarITDesign
-    LookAndFeel.Debug -> DebugTheme
+    ThemeId.Default -> DefaultTheme.Instance
+    ThemeId.Dark -> DarkDesign
+    ThemeId.NeckarIT -> NeckarITDesign
+    ThemeId.Debug -> DebugTheme
   }
 }

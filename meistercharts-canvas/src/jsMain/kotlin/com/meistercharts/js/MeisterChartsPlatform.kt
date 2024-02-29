@@ -58,7 +58,13 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
    * Initializes the global configuration. Can be called multiple times
    */
   fun init(
+    /**
+     * The (optional) theme that will be applied as *default* theme for all charts
+     */
     theme: Theme? = null,
+    /**
+     * The (optional) default i18n configuration that will be applied as *default* i18n configuration for all charts
+     */
     defaultI18nConfiguration: I18nConfiguration? = null,
     /**
      * The (optional) url converter

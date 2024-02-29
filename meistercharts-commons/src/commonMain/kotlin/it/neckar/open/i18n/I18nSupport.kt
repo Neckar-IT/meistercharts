@@ -15,9 +15,17 @@ import it.neckar.open.context.Context
 class I18nSupport {
   /**
    * The current i18n configuration.
-   * Is initialized with [CurrentI18nConfiguration]
+   * If no configuration is set, the value is null.
    */
-  var configuration: I18nConfiguration = CurrentI18nConfiguration
+  var selectedConfiguration: I18nConfiguration? = null
+
+  /**
+   * Returns the configured i18n configuration or [CurrentI18nConfiguration] if no configuration is set
+   */
+  val configuration: I18nConfiguration
+    get() {
+      return selectedConfiguration ?: CurrentI18nConfiguration
+    }
 
   /**
    * The time zone
@@ -27,7 +35,7 @@ class I18nSupport {
       return configuration.timeZone
     }
     set(value) {
-      configuration = configuration.copy(timeZone = value)
+      selectedConfiguration = configuration.copy(timeZone = value)
     }
 
   /**
@@ -36,7 +44,7 @@ class I18nSupport {
   var textLocale: Locale
     get() = configuration.textLocale
     set(value) {
-      configuration = configuration.copy(textLocale = value)
+      selectedConfiguration = configuration.copy(textLocale = value)
     }
 
   /**
@@ -45,7 +53,7 @@ class I18nSupport {
   var formatLocale: Locale
     get() = configuration.formatLocale
     set(value) {
-      configuration = configuration.copy(formatLocale = value)
+      selectedConfiguration = configuration.copy(formatLocale = value)
     }
 }
 
@@ -96,7 +104,7 @@ val DefaultI18nConfiguration: I18nConfiguration
  * Updates the [CurrentI18nConfiguration]. Use with care!
  * It is possible to set the locale for a component itself ([I18nSupport]).
  */
-fun updateDefaultI18nConfiguration(i18nConfiguration: I18nConfiguration) {
+fun setDefaultI18nConfiguration(i18nConfiguration: I18nConfiguration) {
   I18nContext.defaultValue = i18nConfiguration
 }
 
@@ -104,5 +112,5 @@ fun updateDefaultI18nConfiguration(i18nConfiguration: I18nConfiguration) {
  * Sets this configuration as default
  */
 fun I18nConfiguration.setAsDefault() {
-  updateDefaultI18nConfiguration(this)
+  setDefaultI18nConfiguration(this)
 }

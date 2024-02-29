@@ -51,8 +51,9 @@ class MeisterchartJS(
       it.addClass(MeisterChartClasses.disposed)
     }
 
-    it.appendChild(htmlCanvas.canvasElement)
     it.classList.add(MeisterChartClasses.holder, MeisterChartClasses.chartId(chartSupport.chartId))
+
+    it.appendChild(htmlCanvas.canvasElement)
     chartSupport.onDispose {
       it.removeChild(htmlCanvas.canvasElement)
     }
@@ -71,6 +72,8 @@ class MeisterchartJS(
     //Set the style to 100%
     it.style.setProperty("width", "100%")
     it.style.setProperty("height", "100%")
+
+    //The canvas (child of this div) is set to absolute positioning. Therefore, this div must be set to relative
     it.style.setProperty("position", "relative")
 
     //Reset other options that might have been set from CSS

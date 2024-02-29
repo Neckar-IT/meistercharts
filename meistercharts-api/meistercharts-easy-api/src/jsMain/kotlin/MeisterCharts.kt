@@ -37,7 +37,7 @@ import com.meistercharts.charts.ToolTipType
 import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
-import com.meistercharts.design.setDefaultTheme
+import com.meistercharts.design.setAsDefault
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
@@ -58,12 +58,12 @@ import org.w3c.dom.Element
 private val logger: Logger = LoggerFactory.getLogger("meistercharts.api")
 
 /**
- * Sets the look and feel of meistercharts.
- * This method must be called before any chart is created.
+ * Sets the default theme of meistercharts.
+ * This theme is used for all charts that do not have a theme set.
  */
 @JsExport
-fun initLookAndFeel(lookAndFeel: LookAndFeel) {
-  setDefaultTheme(lookAndFeel.toTheme())
+fun setDefaultTheme(themeId: ThemeId) {
+  themeId.toTheme().setAsDefault()
 }
 
 /**
@@ -72,7 +72,7 @@ fun initLookAndFeel(lookAndFeel: LookAndFeel) {
  * This configuration may be overwritten on a per-chart basis.
  */
 @JsExport
-fun setI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
+fun setDefaultI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
   jsI18nConfiguration.toModel().setAsDefault()
 }
 
