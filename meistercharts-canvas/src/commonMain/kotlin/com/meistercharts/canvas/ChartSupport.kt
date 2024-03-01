@@ -438,22 +438,21 @@ class ChartSupport(
 
       logger.trace { "Paint ${frameTimestamp.formatUtc()} $relativeHighRes - because of $dirtyReasons" }
 
-      //The canvas might have been reset (HTML canvas on resize)
-      //Therefore it is necessary to set the defaults
-      canvas.gc.applyDefaults()
+      //Update the I18nContext and the theme context before(!) applying the canvas-defaults
+      I18nContext.with(i18nConfiguration) {
+        ThemeContext.with(theme) {
+          //The canvas might have been reset (HTML canvas on resize)
+          //Therefore it is necessary to set the defaults
+          canvas.gc.applyDefaults()
 
-      //Paint with a saved canvas
-      canvas.gc.saved {
-        @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
-        lastPaintTime = frameTimestamp
+          //Paint with a saved canvas
+          canvas.gc.saved {
+            @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
+            lastPaintTime = frameTimestamp
 
-        val paintingLoopIndex = lastPaintingLoopIndex.next().also {
-          lastPaintingLoopIndex = it
-        }
-
-        //Update the I18nContext
-        I18nContext.with(i18nConfiguration) {
-          ThemeContext.with(theme) {
+            val paintingLoopIndex = lastPaintingLoopIndex.next().also {
+              lastPaintingLoopIndex = it
+            }
 
             //Paint the canvas
             CurrentPaintingContext.fill(
