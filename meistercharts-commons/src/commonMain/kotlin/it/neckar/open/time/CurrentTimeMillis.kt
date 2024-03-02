@@ -2,7 +2,6 @@ package it.neckar.open.time
 
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.si.ms
-import it.neckar.open.unit.si.ns
 
 /**
  * Returns the current time in millis.
@@ -13,6 +12,13 @@ import it.neckar.open.unit.si.ns
  */
 fun nowMillis(): @ms @IsFinite Double {
   return nowProvider.nowMillis()
+}
+
+/**
+ * Returns the current time in millis.
+ */
+fun nowMillisLong(): @ms @IsFinite Long {
+  return nowMillis().toLong()
 }
 
 /**
