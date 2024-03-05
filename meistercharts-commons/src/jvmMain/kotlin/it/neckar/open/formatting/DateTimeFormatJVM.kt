@@ -12,12 +12,63 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.DateTimeParseException
 import java.time.format.FormatStyle
+import java.time.temporal.ChronoField
 import java.time.temporal.TemporalQueries
 
 actual class DateTimeFormatIso8601 : DateTimeFormat {
+  /**
+   * Append three digits for the milliseconds
+   */
+  private val isoTimeFormatter = DateTimeFormatterBuilder()
+    .appendValue(ChronoField.HOUR_OF_DAY, 2)
+    .appendLiteral(':')
+    .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+    .optionalStart()
+    .appendLiteral(':')
+    .appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+    .optionalStart()
+    .appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
+    .toFormatter()
+
+  /**
+   * Uses the custom [isoTimeFormatter]
+   */
+  private val isoLocalDateTime = DateTimeFormatterBuilder()
+    .parseCaseInsensitive()
+    .append(DateTimeFormatter.ISO_LOCAL_DATE)
+    .appendLiteral('T')
+    .append(isoTimeFormatter)
+    .toFormatter()
+
+  private val iso8601DateTimeFormatter = DateTimeFormatterBuilder()
+    .append(isoLocalDateTime)
+    .optionalStart()
+    .appendOffsetId()
+    .toFormatter()
+
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
-    return DateUtils.toZonedDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).format(DateTimeFormatter.ISO_DATE_TIME)
+    //Always return UTC
+    return DateUtils.toOffsetDateTime(timestamp.toLong(), ZoneOffset.UTC).format(iso8601DateTimeFormatter)
+  }
+
+  actual companion object {
+    /**
+     * Parses the date-time string to a timestamp
+     */
+    @Throws(DateTimeParseException::class)
+    actual fun parse(formattedIsoString: String): @ms Double {
+      DateTimeFormatter.ISO_DATE_TIME.parse(formattedIsoString).let {
+        val date = it.query(TemporalQueries.localDate())
+        val time = it.query(TemporalQueries.localTime())
+        val zoneId = it.query(TemporalQueries.zone())
+
+        val instant = ZonedDateTime.of(date, time, zoneId).toInstant()
+        return instant.toDoubleMillis()
+      }
+    }
   }
 }
 
@@ -42,7 +93,7 @@ actual class DateTimeFormatUTC : DateTimeFormat {
     /**
      * Parses the UTC string to a timestamp
      */
-    actual fun parse(formattedUtc: String): Double {
+    actual fun parse(formattedUtc: String): @ms Double {
       it.neckar.open.time.utcDateTimeFormat.parse(formattedUtc).let {
         val date = it.query(TemporalQueries.localDate())
         val time = it.query(TemporalQueries.localTime())

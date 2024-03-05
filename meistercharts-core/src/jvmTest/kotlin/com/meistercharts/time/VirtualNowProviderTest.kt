@@ -107,8 +107,8 @@ class VirtualNowProviderTest {
   fun testNow() {
     assertThat(nowMillis()).isEqualTo(1.6168815230025E12)
     assertThat(nowMillis().formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
-    assertThat(dateTimeFormatIso8601.format(nowMillis(), I18nConfiguration.Germany)).isEqualTo("2021-03-27T22:45:23.002+01:00[Europe/Berlin]")
-    assertThat(dateTimeFormatIso8601.format(nowMillis(), I18nConfiguration(TimeZone.Tokyo, Locale.Germany))).isEqualTo("2021-03-28T06:45:23.002+09:00[Asia/Tokyo]")
+    assertThat(dateTimeFormatIso8601.format(nowMillis(), I18nConfiguration.Germany)).isEqualTo("2021-03-27T21:45:23.002Z")
+    assertThat(dateTimeFormatIso8601.format(nowMillis(), I18nConfiguration(TimeZone.Tokyo, Locale.Germany))).isEqualTo("2021-03-27T21:45:23.002Z")
   }
 
   @Test

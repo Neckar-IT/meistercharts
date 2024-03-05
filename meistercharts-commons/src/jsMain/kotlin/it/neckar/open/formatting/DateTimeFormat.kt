@@ -15,6 +15,15 @@ actual class DateTimeFormatIso8601 : DateTimeFormat {
     //https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
     return Date(timestamp).toISOString()
   }
+
+  actual companion object {
+    /**
+     * Parses the date-time string to a timestamp
+     */
+    actual fun parse(formattedIsoString: String): Double {
+      return Date.parse(formattedIsoString)
+    }
+  }
 }
 
 actual class DateFormatIso8601 : DateTimeFormat {

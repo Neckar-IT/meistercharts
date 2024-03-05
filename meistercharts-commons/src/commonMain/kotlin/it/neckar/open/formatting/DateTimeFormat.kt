@@ -87,9 +87,20 @@ val dateTimeFormatWithMillis: CachedDateTimeFormat = DateTimeFormatWithMillis().
 val dateTimeFormatShortWithMillis: CachedDateTimeFormat = DateTimeFormatShortWithMillis().cached()
 
 /**
- * Formats a date-time in accordance to the ISO format 8601
+ * Formats a date-time in accordance to the ISO format 8601 (https://en.wikipedia.org/wiki/ISO_8601)
+ *
+ * Example: `2001-09-08T21:46:40:00Z`
+ *
+ * This formatter always returns "Z" (UTC) as time zone
  */
-expect class DateTimeFormatIso8601() : DateTimeFormat
+expect class DateTimeFormatIso8601() : DateTimeFormat {
+  companion object {
+    /**
+     * Parses the date-time string to a timestamp
+     */
+    fun parse(formattedIsoString: String): @ms Double
+  }
+}
 
 expect class DateFormatIso8601() : DateTimeFormat
 

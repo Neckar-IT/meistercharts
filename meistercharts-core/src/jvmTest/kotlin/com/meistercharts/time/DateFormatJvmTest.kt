@@ -91,9 +91,9 @@ class DateFormatJvmTest {
 
   @Test
   fun dataFormatIso8601() {
-    assertThat(dateTimeFormatIso8601.format(now, I18nConfiguration.Germany)).isEqualTo("2021-03-14T23:46:11.002+01:00[Europe/Berlin]")
-    assertThat(dateTimeFormatIso8601.format(now, englishBerlin)).isEqualTo("2021-03-14T23:46:11.002+01:00[Europe/Berlin]")
-    assertThat(dateTimeFormatIso8601.format(now, englishTokyo)).isEqualTo("2021-03-15T07:46:11.002+09:00[Asia/Tokyo]")
+    assertThat(dateTimeFormatIso8601.format(now, I18nConfiguration.Germany)).isEqualTo("2021-03-14T22:46:11.002Z")
+    assertThat(dateTimeFormatIso8601.format(now, englishBerlin)).isEqualTo("2021-03-14T22:46:11.002Z")
+    assertThat(dateTimeFormatIso8601.format(now, englishTokyo)).isEqualTo("2021-03-14T22:46:11.002Z")
   }
 
   @Test
