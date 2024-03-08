@@ -16,6 +16,7 @@
 package com.meistercharts.api.line
 
 import com.meistercharts.algorithms.layers.AxisConfiguration
+import com.meistercharts.algorithms.layers.HistoryEnumLayer.Companion.guessFillColor
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.axis.HudElementIndex
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
@@ -70,6 +71,8 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.fastForEach
 import com.meistercharts.js.MeisterchartJS
 import com.meistercharts.model.Vicinity
+import com.meistercharts.style.withBorderColorIfNull
+import com.meistercharts.style.withFillIfNull
 import com.meistercharts.zoom.UpdateReason
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Side
@@ -287,7 +290,19 @@ class TimeLineChart internal constructor(
     }
 
     jsStyle.crossWireEnumsLabelBoxStyles?.let { jsBoxStyles ->
-      this.configuration.crossWireEnumsLabelBoxStyles = toBoxStyles(jsBoxStyles)
+      val boxStyles = toBoxStyles<EnumDataSeriesIndex>(jsBoxStyles)
+
+      this.configuration.crossWireEnumsLabelBoxStyles = MultiProvider2 { dataSeriesIndexAsInt, firstSetOrdinal, historyEnum ->
+        val guessedFillColor = historyEnumLayer.guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, historyEnum)
+        val borderColor = Theme.borderColorConverter.resolve()(guessedFillColor)
+
+        val original = boxStyles.valueAt(dataSeriesIndexAsInt, firstSetOrdinal, historyEnum)
+
+        original
+          .withFillIfNull(guessedFillColor.asProvider())
+          .withBorderColorIfNull(borderColor.asProvider())
+      }
+
       this.configuration.crossWireEnumsLabelTextColors = toColors(jsBoxStyles)
     }
 
@@ -631,17 +646,13 @@ class TimeLineChart internal constructor(
   }
 }
 
-internal val needsToBeFixedForCustomer2 = true
-
 /**
  * Applies the default style for the timeline chart style
  */
 private fun ValueAxisLayer.Configuration.applyTimeLineChartStyle() {
-  if (!needsToBeFixedForCustomer2) {
-    side = Side.Left
-    tickOrientation = Vicinity.Outside
-    paintRange = AxisConfiguration.PaintRange.Continuous
-  }
+  side = Side.Left
+  tickOrientation = Vicinity.Outside
+  paintRange = AxisConfiguration.PaintRange.Continuous
 }
 
 /**

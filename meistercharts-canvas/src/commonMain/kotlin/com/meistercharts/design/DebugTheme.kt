@@ -18,6 +18,7 @@ package com.meistercharts.design
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorMapperNullable
 import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontFamily
@@ -77,7 +78,7 @@ object DebugTheme : Theme {
   )
 
   override val inactiveElementBorder: RgbaColor = Color.lime()
-  override val borderColorConverter: (fill: Color?) -> Color = { Color.red() }
+  override val borderColorConverter: ColorMapperNullable = { Color.red() }
   override val crossWireLineColor: RgbaColor = Color.pink()
 
   override val chartColors: MultiProvider<Any, RgbaColor> = MultiProvider.forListModulo(

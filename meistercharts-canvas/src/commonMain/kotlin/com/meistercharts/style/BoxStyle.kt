@@ -123,26 +123,37 @@ data class BoxStyle(
 }
 
 /**
- * Creates a new instance with the provided fill provider, if the fill provider of this is null (at the moment of calling)
+ * If [fillProvider] is not null, it will be used as the fill.
+ * Returns a new instance in that case.
+ * Just returns this if [fill] is already set.
  */
 fun BoxStyle.withFillIfNull(fillProvider: ColorProviderNullable): BoxStyle {
-  if (fill != null) {
+  if (fill != null || fillProvider == null) {
     return this
   }
 
   return this.copy(fill = fillProvider)
 }
 
+fun BoxStyle.withBorderColorIfNull(borderColorProvider: ColorProviderNullable): BoxStyle {
+  if (borderColor != null || borderColorProvider == null) {
+    return this
+  }
+
+  return this.copy(borderColor = borderColorProvider)
+}
+
 /**
  * Returns this if a border color is already set.
  * Creates a new instance with a border-color computed by the given converter (which takes the current fill)
+ *
+ * Attention! Will overwrite the border - even if set to null purposefully
  */
-@Deprecated("Attention! Will overwrite the border - even if set to null purposefully")
-fun BoxStyle.withBorderColorIfNull(
+fun BoxStyle.withBorderColorIfNullOld(
   /**
    * Returns the border color based on the fill
    */
-  borderColorForFill: (fill: Color?) -> ColorProviderNullable?,
+  borderColorForFill: (fill: Color?) -> ColorProviderNullable,
 ): BoxStyle {
   if (borderColor != null) {
     return this

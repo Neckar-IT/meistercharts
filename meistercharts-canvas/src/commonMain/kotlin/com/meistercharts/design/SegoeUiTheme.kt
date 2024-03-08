@@ -19,6 +19,7 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.canvas.paintable.SingleButtonColorProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorMapperNullable
 import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontFamily
@@ -70,7 +71,7 @@ object SegoeUiTheme : Theme {
   override val secondaryBackgroundColor: RgbaColor = Color.darkgray()
 
   override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
-  override val borderColorConverter: (fill: Color?) -> Color = { it?.toRgba()?.darker(0.15) ?: Color.darkgray() }
+  override val borderColorConverter: ColorMapperNullable = { it?.toRgba()?.darker(0.15) ?: Color.darkgray() }
 
   override val backgroundColorActive: RgbaColor = Color.silver().withAlpha(0.5)
 

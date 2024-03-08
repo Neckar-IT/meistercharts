@@ -18,6 +18,8 @@ package com.meistercharts.design
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.color.Color
+import com.meistercharts.color.ColorMapper
+import com.meistercharts.color.ColorMapperNullable
 import com.meistercharts.color.RgbaColor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontFamilyConfiguration
@@ -84,7 +86,7 @@ open class DefaultTheme(
 
   override val inactiveElementBorder: RgbaColor = Color("#C5CACC").toRgba()
 
-  override val borderColorConverter: (fill: Color?) -> Color = { fill ->
+  override val borderColorConverter: ColorMapperNullable = { fill ->
     fill?.toRgba()?.darker(0.15) ?: Color.darkgray()
   }
 

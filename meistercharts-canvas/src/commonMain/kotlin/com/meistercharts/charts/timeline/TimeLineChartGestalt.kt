@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesInteractionLayer
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
 import com.meistercharts.algorithms.layers.HistoryEnumLayer
+import com.meistercharts.algorithms.layers.HistoryEnumLayer.Companion.guessFillColor
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers.PaintingOrder
@@ -327,7 +328,9 @@ class TimeLineChartGestalt
       ticksFormat = decimalFormat2digits //Apply the default
       titleProvider = { textService, i18nConfiguration -> configuration.historyConfiguration.decimalConfiguration.getDisplayName(dataSeriesIndex).resolve(textService, i18nConfiguration) }
 
-      val colorProvider: ColorProvider = configuration.lineStyles.valueAt(dataSeriesIndex.value).color
+      val colorProvider: ColorProvider = {
+        configuration.lineStyles.valueAt(dataSeriesIndex.value).color()
+      }
       lineColor = colorProvider
       tickLabelColor = colorProvider
       titleColor = colorProvider
@@ -443,7 +446,7 @@ class TimeLineChartGestalt
   ) {
     valueAxesGap = 10.0
     valueAxesMaxWidthPercentage = 1.0
-    background = configuration.valueAxesBackground
+    background = { configuration.valueAxesBackground() }
   }
 
   /**
@@ -509,7 +512,7 @@ class TimeLineChartGestalt
     tickOrientation = Vicinity.Outside
     axisEndConfiguration = AxisEndConfiguration.Default
     paintRange = AxisConfiguration.PaintRange.ContentArea
-    background = configuration.valueAxesBackground
+    background = { configuration.valueAxesBackground() }
     axisLabelPainter = DefaultCategoryAxisLabelPainter {
       wrapMode = LabelWrapMode.IfNecessary
     }
@@ -1489,12 +1492,12 @@ class TimeLineChartGestalt
     var crossWireDecimalsLabelTextColors: MultiProvider<DecimalDataSeriesIndex, Color> = Theme.primaryBackgroundColor.multiProviderAlways()
 
     /**
-     * The cross wire label styles - for the cross wire for enum values.
+     * The cross wire label styles - for the cross-wire for enum values.
      *
      * If the background is set to null, the color for the current value will be used (as provided by [RectangleEnumStripePainter.Configuration.fillProvider])
      */
     var crossWireEnumsLabelBoxStyles: MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> = MultiProvider2 { dataSeriesIndexAsInt, firstSetOrdinal, historyEnum ->
-      val guessedFillColor = guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, configuration.historyConfiguration.enumConfiguration.getEnum(EnumDataSeriesIndex(dataSeriesIndexAsInt)))
+      val guessedFillColor = historyEnumLayer.guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, historyEnum)
       val borderColor = Theme.borderColorConverter.resolve()(guessedFillColor)
 
       BoxStyle(
@@ -1505,25 +1508,6 @@ class TimeLineChartGestalt
         shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
       )
     }
-
-    /**
-     * Guesses the fill color for the given data series index and values
-     */
-    private fun guessFillColor(
-      dataSeriesIndex: EnumDataSeriesIndex,
-      firstSetOrdinal: HistoryEnumOrdinal,
-      historyEnum: HistoryEnum,
-    ): Color {
-      //Get the painter and "guess" the type
-      val painter = historyEnumLayer.configuration.stripePainters.valueAt(dataSeriesIndex)
-
-      return if (painter is RectangleEnumStripePainter) {
-        painter.configuration.fillProvider(firstSetOrdinal, historyEnum)
-      } else {
-        Color.silver()
-      }
-    }
-
 
     var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = Theme.primaryBackgroundColor.multiProviderAlways()
 

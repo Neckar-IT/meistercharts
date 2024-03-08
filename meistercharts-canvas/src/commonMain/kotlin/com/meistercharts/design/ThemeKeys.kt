@@ -97,6 +97,9 @@ fun <IndexContext, T> ThemeKey<MultiProvider<IndexContext, T>>.mapped(mapping: M
   }
 }
 
+/**
+ * Returns a provider that returns the value at the given index
+ */
 fun <IndexContext, T> ThemeKey<MultiProvider<IndexContext, T>>.valueAt(index: Int): () -> T {
   return mapped { valueAt(index) }
 }

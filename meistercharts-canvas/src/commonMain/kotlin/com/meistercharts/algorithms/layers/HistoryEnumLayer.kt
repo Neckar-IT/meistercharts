@@ -15,19 +15,25 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.algorithms.layers.HistoryEnumLayer.Companion.guessFillColor
 import com.meistercharts.algorithms.painter.stripe.enums.EnumStripePainter
 import com.meistercharts.algorithms.painter.stripe.enums.RectangleEnumStripePainter
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.color.Color
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndexProvider
 import com.meistercharts.history.HistoryConfiguration
+import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk
+import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
+import com.meistercharts.style.BoxStyle
+import com.meistercharts.style.withFillIfNull
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -111,6 +117,26 @@ class HistoryEnumLayer(
     contentAreaTimeRange = contentAreaTimeRange,
     stripePainters = MultiProvider.always(RectangleEnumStripePainter()),
   )
+
+  companion object {
+    /**
+     * Guesses the fill color for the given data series index and values
+     */
+    fun HistoryEnumLayer.guessFillColor(
+      dataSeriesIndex: EnumDataSeriesIndex,
+      firstSetOrdinal: HistoryEnumOrdinal,
+      historyEnum: HistoryEnum,
+    ): Color {
+      //Get the painter and "guess" the type
+      val painter = this.configuration.stripePainters.valueAt(dataSeriesIndex)
+
+      return if (painter is RectangleEnumStripePainter) {
+        painter.configuration.fillProvider(firstSetOrdinal, historyEnum)
+      } else {
+        Color.silver()
+      }
+    }
+  }
 }
 
 interface HistoryEnumPaintingVariables : AbstractHistoryStripeLayer.HistoryStripeLayerPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit> {

@@ -6,6 +6,12 @@
 
 ==== Features
 
+* Themes: Add support for themes per chart
+** Configurable at runtime
+
+* I18n: Configurable per chart
+** Configurable at runtime
+
 * Update the default font to "sans-serif".
 This offers a better default for all platforms.
 
@@ -17,15 +23,33 @@ This offers a better default for all platforms.
 * Adjust the default background-color used for the text-boxes of the HUD-layer
 * Adjust the default background-color used for the content-area of all charts
 
+* Introduce React Wrapper:
+** Add support for setting the theme for a chart
+** Add support for setting the i18n configuration for a chart
+** Performance improvements
+
+* Fonts:
+** Support font families and generic fonts
+** Support for using the font family from the CSS style
+** Improve Performance of Font mapping service
+
 === Fixes / Improvements
 
 * [Regression] Typescript Definition File not created (#16)
+* Logging improvements
+* Simplify build configuration
+* Update to Kotlin 1.9.20
+* Update to Gradle 8.5
+* Updated numerous libraries
+* Fixed: Invalid offset when painting background image
+* Fixed: Support for FontAwesome
 
 === Easy API
 
 * Add support for setting the i18n-configuration of a chart
-* Add support for setting the global i18n-configuration
-* Add support for setting the look-and-feel of all charts
+* Add support for setting the default i18n-configuration
+* Add support for setting the theme for a chart
+* Add support for setting the default theme for all charts
 * Change default styling of the value-axes used in the time-line chart
 
 == 1.38.0
