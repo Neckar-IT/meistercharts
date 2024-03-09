@@ -243,6 +243,10 @@ public object Libs {
 
     public const val pdfbox: String = "org.apache.pdfbox:pdfbox:_"
 
+    public const val poi: String = "org.apache.poi:poi:_"
+
+    public const val poi_ooxml: String = "org.apache.poi:poi-ooxml:_"
+
     public const val batik_svggen: String = "org.apache.xmlgraphics:batik-svggen:_"
 
     public const val batik_svgrasterizer: String = "org.apache.xmlgraphics:batik-svgrasterizer:_"

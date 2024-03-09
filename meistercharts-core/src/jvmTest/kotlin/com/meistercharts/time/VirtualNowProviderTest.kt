@@ -48,7 +48,7 @@ class VirtualNowProviderTest {
 
     assertThat(virtualNowProvider.startedRealTime - virtualNowProvider.offsetBetweenStartedRealTimeAndInitialNow).isEqualTo(10_000.0)
 
-    assertThat(virtualNowProvider.startedRealTime).isEqualTo(now)
+    assertThat(virtualNowProvider.startedRealTime).isCloseTo(now, 10_000.0) //should be in the ballpark of the real time
     assertThat(virtualNowProvider.initialNow).isEqualTo(10_000.0)
 
     //These checks depend on the real time clock. Therefore, they are prone to fail.
