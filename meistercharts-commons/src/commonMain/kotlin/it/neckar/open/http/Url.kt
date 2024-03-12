@@ -21,34 +21,41 @@ value class Url(val value: String) {
     return value
   }
 
-  operator fun plus(relativePath: String): Url {
+  /**
+   * Appends something to the URL
+   */
+  operator fun plus(toAppend: String): Url {
+    if (toAppend.startsWith("?")) {
+      return Url(value + toAppend)
+    }
+
     val endsWithSlash = this.value.endsWith("/")
-    val startsWithSlash = relativePath.startsWith("/")
+    val startsWithSlash = toAppend.startsWith("/")
 
     if (endsWithSlash && startsWithSlash) {
-      return Url(value + relativePath.substring(1))
+      return Url(value + toAppend.substring(1))
     }
 
     if (endsWithSlash || startsWithSlash) {
-      return Url(value + relativePath)
+      return Url(value + toAppend)
     }
 
-    return Url("$value/$relativePath")
+    return Url("$value/$toAppend")
   }
 
-  operator fun plus(relativeUrl: Url): Url {
+  operator fun plus(toAppend: Url): Url {
     val endsWithSlash = this.value.endsWith("/")
-    val startsWithSlash = relativeUrl.value.startsWith("/")
+    val startsWithSlash = toAppend.value.startsWith("/")
 
     if (endsWithSlash && startsWithSlash) {
-      return Url(value + relativeUrl.value.substring(1))
+      return Url(value + toAppend.value.substring(1))
     }
 
     if (endsWithSlash || startsWithSlash) {
-      return Url(value + relativeUrl.value)
+      return Url(value + toAppend.value)
     }
 
-    return Url("$value/${relativeUrl.value}")
+    return Url("$value/${toAppend.value}")
   }
 
   //Required for extension methods

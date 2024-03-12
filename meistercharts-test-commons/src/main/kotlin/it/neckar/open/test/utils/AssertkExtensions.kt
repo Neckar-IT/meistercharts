@@ -7,14 +7,33 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
+ * Peeks into the actual value
+
+ */
+fun <T> Assert<T>.peek(
+  block: (T) -> Unit,
+): Assert<T> = apply { given(block) }
+
+/**
+ * Returns the value of the assert
+ */
+fun <T> Assert<T>.value(): T {
+  given {
+    return it
+  }
+
+  throw IllegalStateException("This should never be reached")
+}
+
+/**
  *
  */
-fun Assert<AtomicBoolean>.isFalse() = given {
+fun Assert<AtomicBoolean>.isFalse(): Unit = given {
   if (!it.get()) return
   expected("false")
 }
 
-fun Assert<AtomicBoolean>.isTrue() = given {
+fun Assert<AtomicBoolean>.isTrue(): Unit = given {
   if (it.get()) return
   expected("true")
 }
