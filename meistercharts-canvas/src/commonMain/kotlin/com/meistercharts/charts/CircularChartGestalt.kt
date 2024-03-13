@@ -22,7 +22,6 @@ import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
@@ -32,7 +31,6 @@ import com.meistercharts.style.Palette
 import it.neckar.geometry.AxisOrientationY
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.asProvider
-import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MutableDoublesProvider
@@ -44,17 +42,22 @@ import it.neckar.open.unit.other.pct
  * Configuration for a simple circular chart
  */
 class CircularChartGestalt(
-  val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
-) : ChartGestalt {
+) : AbstractChartGestalt() {
+
+  val configuration: Configuration = Configuration()
 
   constructor(
     absoluteValuesProvider: @Domain DoublesProvider = createDefaultValuesProvider(),
     relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative(),
     additionalConfiguration: Configuration.() -> Unit = {},
-  ) : this(Configuration(absoluteValuesProvider, relativeValuesProvider), additionalConfiguration)
+  ) : this({
+    this.absoluteValuesProvider = absoluteValuesProvider
+    this.relativeValuesProvider = relativeValuesProvider
+    additionalConfiguration()
+  })
 
-  val layer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(configuration::relativeValuesProvider.delegate())) {
+  val circularChartLayer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(configuration::relativeValuesProvider.delegate())) {
   }
 
   val legendLayer: CircularChartLegendLayer = CircularChartLegendLayer(configuration::absoluteValuesProvider.delegate()) {
@@ -63,33 +66,28 @@ class CircularChartGestalt(
 
   init {
     configuration.additionalConfiguration()
-    configuration.colorsProviderProperty.consumeImmediately {
-      layer.configuration.segmentsColorProvider = it
-    }
 
     legendLayer.configuration.segmentsLabelProvider = createDefaultLabelProvider()
     legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(configuration::colorsProvider.delegate())
-  }
 
-  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
-    FixedChartGestalt(Insets.of(75.0)).configure(meisterChartBuilder)
+    configureBuilder {
+      FixedChartGestalt(Insets.of(75.0)).configure(it)
+    }
 
-    meisterChartBuilder.apply {
-      configure {
-        chartSupport.rootChartState.axisOrientationY = AxisOrientationY.OriginAtTop
+    configure {
+      chartSupport.rootChartState.axisOrientationY = AxisOrientationY.OriginAtTop
 
-        layers.addClearBackground()
-        layers.addFillCanvasBackground()
-        layers.addLayer(layer)
-        layers.addLayer(legendLayer)
+      layers.addClearBackground()
+      layers.addFillCanvasBackground()
+      layers.addLayer(circularChartLayer)
+      layers.addLayer(legendLayer)
 
-        layers.addVersionNumberHidden()
-      }
+      layers.addVersionNumberHidden()
     }
   }
 
   @ConfigurationDsl
-  class Configuration(
+  inner class Configuration(
     /**
      * Provides values for circular chart segments.
      * The values are provided in percentage. The sum of the values must not be greater than 1.0
@@ -101,8 +99,9 @@ class CircularChartGestalt(
      */
     var relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative(),
   ) {
-    val colorsProviderProperty: ObservableObject<MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color>> = ObservableObject(createDefaultColorsProvider())
-    var colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by colorsProviderProperty
+    var colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by circularChartLayer.configuration::segmentsColorProvider.also {
+      it.set(createDefaultColorsProvider())
+    }
   }
 
   companion object {

@@ -79,7 +79,7 @@ abstract class AbstractLayer : Layer {
   /**
    * The mouse cursor for this layer
    *
-   * Hint: This method requires the layer and chart support. It can not be moved somewhere else
+   * Hint: This method requires the layer and chart support. It cannot be moved somewhere else
    */
   var ChartSupport.cursor: MouseCursor?
     get() {

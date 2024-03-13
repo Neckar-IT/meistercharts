@@ -17,12 +17,12 @@ package com.meistercharts.canvas
 
 import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.components.NativeComponentsSupport
-import it.neckar.geometry.Size
-import it.neckar.open.dispose.Disposable
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
+import it.neckar.geometry.Size
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.px
@@ -46,14 +46,14 @@ interface Canvas : Disposable {
 
   /**
    * The current size of the canvas
-   * Represents the *logical* size of the the canvas - includes the device pixel ratio.
+   * Represents the *logical* size of the canvas - includes the device pixel ratio.
    */
   @px
   val sizeProperty: ReadOnlyObservableObject<Size>
 
   /**
    * The size of the canvas.
-   * Represents the *logical* size of the the canvas - includes the device pixel ratio.
+   * Represents the *logical* size of the canvas - includes the device pixel ratio.
    */
   val size: @px Size
 

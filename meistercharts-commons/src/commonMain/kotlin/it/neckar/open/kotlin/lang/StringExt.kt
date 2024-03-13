@@ -479,3 +479,22 @@ fun String?.padEndMaxLength(length: Int): String? {
 
   return this.truncateToLength(length) ?: throw IllegalStateException("???")
 }
+
+/**
+ * Returns the string between the given start and end string.
+ */
+fun String.substringBetween(start: String, end: String): String {
+  val foundStart = this.indexOf(start)
+  if (foundStart < 0) {
+    throw IllegalArgumentException("Start [$start] not found in [$this]")
+  }
+
+  val startIndex = foundStart + start.length
+  val endIndex = this.indexOf(end, startIndex)
+
+  if (endIndex < 0) {
+    throw IllegalArgumentException("End [$end] not found in [$this]")
+  }
+
+  return this.substring(startIndex, endIndex)
+}

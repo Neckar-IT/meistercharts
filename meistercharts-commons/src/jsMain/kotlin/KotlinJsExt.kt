@@ -93,3 +93,18 @@ fun <T : Any> toKotlinObj(data: dynamic, kClass: KClass<T>): T {
   }
   return newT
 }
+
+/**
+ * Returns true if the given value is undefined.
+ */
+fun Any?.isUndefined(): Boolean = this === undefined
+
+/**
+ * Returns true if the given value is undefined.
+ */
+fun isUndefined(value: Any?): Boolean = value === undefined
+
+/**
+ * Returns true if the given value is undefined.
+ */
+fun isUndefined(value: dynamic): Boolean = value === undefined

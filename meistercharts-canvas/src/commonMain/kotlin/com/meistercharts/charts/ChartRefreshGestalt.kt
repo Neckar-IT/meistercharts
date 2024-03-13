@@ -16,48 +16,35 @@
 package com.meistercharts.charts
 
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.RoundingStrategy
 import com.meistercharts.canvas.TargetRefreshRate
 import com.meistercharts.canvas.translateOverTime
-import it.neckar.open.observable.ObservableObject
 
 /**
  * A gestalt that provides configurations related to repainting the chart
  */
 class ChartRefreshGestalt(
+  /**
+   * The target refresh rate
+   */
   targetRefreshRate: TargetRefreshRate = TargetRefreshRate.veryFast60,
-) : ChartGestalt {
+) : AbstractChartGestalt() {
 
   val configuration: Configuration = Configuration().also {
     it.targetRefreshRate = targetRefreshRate
   }
 
-  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
-    meisterChartBuilder.configure {
-      configuration.targetRefreshRateProperty.consumeImmediately {
-        chartSupport.targetRenderRate = it
-      }
-
-      configuration.chartAnimationRoundingStrategyProperty.consumeImmediately {
-        chartSupport.translateOverTime.roundingStrategy = it
-      }
-    }
-  }
-
   @ConfigurationDsl
-  class Configuration {
+  inner class Configuration {
     /**
      * The target refresh rate for the repaints
      */
-    val targetRefreshRateProperty: ObservableObject<TargetRefreshRate> = ObservableObject(TargetRefreshRate.veryFast60)
-    var targetRefreshRate: TargetRefreshRate by targetRefreshRateProperty
+    var targetRefreshRate: TargetRefreshRate by chartSupport()::targetRenderRate
 
     /**
      * The animation rounding strategy. Mostly relevant when animating by time
      */
-    val chartAnimationRoundingStrategyProperty: ObservableObject<RoundingStrategy> = ObservableObject(RoundingStrategy.quarter)
-    var chartAnimationRoundingStrategy: RoundingStrategy by chartAnimationRoundingStrategyProperty
+    var chartAnimationRoundingStrategy: RoundingStrategy by chartSupport().translateOverTime::roundingStrategy
   }
 }
 

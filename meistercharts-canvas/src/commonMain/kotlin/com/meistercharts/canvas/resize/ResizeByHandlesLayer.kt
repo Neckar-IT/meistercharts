@@ -30,12 +30,12 @@ import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
 import com.meistercharts.canvas.paintable.ResizeHandlesPaintable
 import com.meistercharts.canvas.resizeHandlesSupport
 import com.meistercharts.events.EventConsumption
-import it.neckar.events.MouseMoveEvent
 import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
+import it.neckar.events.MouseMoveEvent
 import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Distance
 import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.unit.other.px
 
@@ -71,7 +71,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
   val dragSupport: CanvasDragSupport = CanvasDragSupport().also {
     it.handle(object : CanvasDragSupport.Handler {
       override fun isDraggingAllowedFromHere(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): Boolean {
-        if (!handlesVisible) return false
+        if (handlesVisible.not()) return false
 
         val handleIndex = handleBounds.findIndex(location) ?: return false
         uiState = uiState.startDragging(handleIndex.toDirection())
@@ -118,9 +118,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
     )
 
     //Delegate the drag support
-    dragSupport.connectedMouseEventHandler()?.let {
-      delegate(it)
-    }
+    delegate(dragSupport.connectedMouseEventHandler())
   }
 
   /**
@@ -191,7 +189,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
     val contentBounds = resizeHandlesSupport.resizableContentBounds
     handlesVisible = contentBounds != null
 
-    if (!handlesVisible || contentBounds == null) {
+    if (handlesVisible.not() || contentBounds == null) {
       return
     }
 

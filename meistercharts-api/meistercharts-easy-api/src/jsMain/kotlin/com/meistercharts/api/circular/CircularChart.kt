@@ -50,7 +50,7 @@ class CircularChart internal constructor(
     valuesProvider.addAll(CircularChartConverter.toValues(jsData))
 
     CircularChartConverter.toSegmentsColorProvider(jsData).apply {
-      gestalt.layer.configuration.segmentsColorProvider = this
+      gestalt.circularChartLayer.configuration.segmentsColorProvider = this
     }
     gestalt.legendLayer.configuration.segmentsImageProvider = CircularChartConverter.toSegmentsImageProvider(jsData)
     gestalt.legendLayer.configuration.segmentsLabelProvider = CircularChartConverter.toSegmentsLabelProvider(jsData)
@@ -67,27 +67,27 @@ class CircularChart internal constructor(
 
 private fun CircularChartGestalt.applyStyle(jsStyle: CircularChartStyle) {
   jsStyle.maxDiameter?.let {
-    this.layer.configuration.maxDiameter = it
+    this.circularChartLayer.configuration.maxDiameter = it
   }
 
   jsStyle.outerCircleWidth?.let {
-    this.layer.configuration.outerCircleWidth = it
+    this.circularChartLayer.configuration.outerCircleWidth = it
   }
 
   jsStyle.outerCircleValueGap?.let {
-    this.layer.configuration.outerCircleValueGapPixels(it)
+    this.circularChartLayer.configuration.outerCircleValueGapPixels(it)
   }
 
   jsStyle.innerCircleWidth?.let {
-    this.layer.configuration.innerCircleWidth = it
+    this.circularChartLayer.configuration.innerCircleWidth = it
   }
 
   jsStyle.gapInnerOuter?.let {
-    this.layer.configuration.gapInnerOuter = it
+    this.circularChartLayer.configuration.gapInnerOuter = it
   }
 
   jsStyle.innerCircleColor?.let {
-    this.layer.configuration.innerCircleColor = Color.web(it).asProvider()
+    this.circularChartLayer.configuration.innerCircleColor = Color.web(it).asProvider()
   }
 
   jsStyle.legend?.let { circularChartLegendStyle ->

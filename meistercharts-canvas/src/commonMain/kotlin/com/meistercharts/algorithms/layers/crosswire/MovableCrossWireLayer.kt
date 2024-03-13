@@ -18,15 +18,15 @@ package com.meistercharts.algorithms.layers.crosswire
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
-import com.meistercharts.color.Color
 import com.meistercharts.algorithms.painter.Path
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.MouseCursorSupport
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
+import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.MouseEventBroker
@@ -37,7 +37,7 @@ import it.neckar.open.observable.clear
 import it.neckar.open.unit.other.px
 
 /**
- * Adds support for moving the cross wire
+ * Adds support for moving the cross-wire
  */
 class MovableCrossWireLayer(
   val configuration: Configuration,
@@ -148,12 +148,12 @@ class MovableCrossWireLayer(
   }
 
   /**
-   * The style for the movable cross wire layer
+   * The style for the movable cross-wire layer
    */
   @ConfigurationDsl
   open class Style {
     /**
-     * The location of the cross wire
+     * The location of the cross-wire
      */
     var locationX: () -> @WindowRelative Double = { 0.75 }
 
@@ -172,7 +172,7 @@ class MovableCrossWireLayer(
 }
 
 /**
- * Wraps the given cross wire layer with mouse over cross wire layer
+ * Wraps the given cross-wire layer with mouse over cross-wire layer
  */
 fun CrossWireLayer.movable(
   mouseCursorSupport: MouseCursorSupport,

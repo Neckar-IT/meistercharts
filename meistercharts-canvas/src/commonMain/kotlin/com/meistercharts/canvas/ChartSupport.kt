@@ -66,7 +66,6 @@ import it.neckar.open.i18n.I18nSupport
 import it.neckar.open.i18n.addFallbackTextResolver
 import it.neckar.open.kotlin.lang.isNanOrInfinite
 import it.neckar.open.observable.ObservableBoolean
-import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.other.pct
@@ -236,19 +235,9 @@ class ChartSupport(
   val zoomAndTranslationSupport: ZoomAndTranslationSupport = ZoomAndTranslationSupport(chartCalculator, rootChartState, zoomAndTranslationModifier, zoomAndTranslationDefaults, zoomChangeFactor)
 
   /**
-   * Contains the behavior for when the canvas size is changed (e.g. resize of the stage)
+   * Contains the behavior for when the canvas size is changed (e.g., resize of the stage)
    */
-  val windowResizeBehaviorProperty: ObservableObject<WindowResizeBehavior> = ObservableObject(KeepCenterOnWindowResize)
-
-  /**
-   * The resize behavior
-   */
-  var windowResizeBehavior: WindowResizeBehavior by windowResizeBehaviorProperty
-
-  /**
-   * The target refresh rate property
-   */
-  val targetRefreshRateProperty: ObservableObject<TargetRefreshRate> = ObservableObject(TargetRefreshRate.veryFast60)
+  var windowResizeBehavior: WindowResizeBehavior = KeepCenterOnWindowResize
 
   /**
    * The target refresh rate.
@@ -257,7 +246,7 @@ class ChartSupport(
    *
    * The canvas will only be repainted if [markAsDirty] has been called and therefore [dirtySupport] returns [DirtySupport.dirty] `true`.
    */
-  var targetRenderRate: TargetRefreshRate by targetRefreshRateProperty
+  var targetRenderRate: TargetRefreshRate = TargetRefreshRate.veryFast60
 
   /**
    * The service registry that provides services related to the chart support

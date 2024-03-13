@@ -15,19 +15,17 @@
  */
 package com.meistercharts.canvas
 
-import com.meistercharts.state.MutableChartState
-import com.meistercharts.resize.WindowResizeEvent
 import com.meistercharts.annotations.ContentArea
-import it.neckar.open.unit.number.MayBeZero
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.model.Insets
-import it.neckar.geometry.Size
+import com.meistercharts.resize.WindowResizeEvent
 import com.meistercharts.state.ChartState
-import it.neckar.open.collections.arrayOfNotNull
+import com.meistercharts.state.MutableChartState
+import it.neckar.geometry.Size
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
+import it.neckar.open.unit.number.MayBeZero
 
 /**
  * Defines how the content area size is configured
@@ -52,7 +50,7 @@ abstract class AbstractContentAreaSizingStrategy(
    * Is (at least) called:
    * - once initially
    * - on a window change event
-   * - whenever a one of the provided dependencies is updated
+   * - whenever one of the provided dependencies is updated
    */
   val contentAreaSizeCalculator: (ChartState) -> @ContentArea @MayBeZero Size,
 
@@ -187,24 +185,6 @@ class FixedContentAreaHeight(
 }
 
 /**
- * The content area size is bound to the window size
- * --> When the zoom level is set to 1.0/1.0, the complete content area size is visible in the windows
- */
-@Deprecated("Probably no longer required - has been replaced by BindContentArea2ContentViewport")
-class BindContentAreaSize2WindowSize constructor(
-  /**
-   * The margin property that triggers a recalculation of the content-area size when it changes
-   */
-  val marginProperty: ObservableObject<@Zoomed Insets>?,
-) : AbstractContentAreaSizingStrategy(
-  { chartState ->
-    @Zoomed val margin = marginProperty?.value ?: Insets.empty
-
-    chartState.windowSize.minus(margin.offsetWidth, margin.offsetHeight).coerceAtLeast(Size.zero)
-  }, *marginProperty.arrayOfNotNull()
-) {}
-
-/**
  * Binds the content area to the content viewport.
  *
  * --> When the zoom level is set to 1.0/1.0, the complete content area is visible within the content viewport
@@ -219,7 +199,7 @@ class BindContentAreaSize2ContentViewport : AbstractContentAreaSizingStrategy(
 /**
  * Binds the content area to an observable property
  */
-class BindContentAreaSize2Property constructor(
+class BindContentAreaSize2Property(
   /**
    * The margin property that triggers a recalculation of the content-area size when it changes
    */

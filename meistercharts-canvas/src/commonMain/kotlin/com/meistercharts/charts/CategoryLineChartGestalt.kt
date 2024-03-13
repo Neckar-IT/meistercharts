@@ -83,8 +83,6 @@ import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.fastFor
-import it.neckar.open.observable.ObservableBoolean
-import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -323,23 +321,15 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
       categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
     }
 
-    configuration.valueRangeProperty.consumeImmediately {
-      categoryLinesLayer.configuration.valueRange = it
-    }
-
-    configuration.numberFormatProperty.consumeImmediately {
-      valueAxisLayer.configuration.ticksFormat = it
-    }
-
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 
       meisterChartBuilder.configure {
         layers.addClearBackground()
         layers.addFillCanvasBackground()
-        layers.addLayer(tooltipInteractionLayer.visibleIf(configuration.showTooltipsProperty))
-        layers.addAboveBackground(valuesGridLayer.visibleIf(configuration.showValuesGridProperty))
-        layers.addAboveBackground(categoriesGridLayer.visibleIf(configuration.showCategoriesGridProperty))
+        layers.addLayer(tooltipInteractionLayer.visibleIf { configuration.showTooltip })
+        layers.addAboveBackground(valuesGridLayer.visibleIf { configuration.showValuesGrid })
+        layers.addAboveBackground(categoriesGridLayer.visibleIf { configuration.showCategoriesGrid })
 
         //Visible for *all* tooltip types (CrossWire *and* Balloon)
         layers.addLayer(crossWireLineLayer.visibleIf { categoryLinesLayer.configuration.activeCategoryIndex != null }.clippedWithoutAxis())
@@ -441,22 +431,21 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     /**
      * Determines whether a line/data-series is visible (true) or not (false).
      */
-    val lineIsVisibleProperty: ObservableObject<MultiProvider<SeriesIndex, Boolean>> = ObservableObject(MultiProvider.always(true))
-    var lineIsVisible: MultiProvider<SeriesIndex, Boolean> by lineIsVisibleProperty
-
+    var lineIsVisible: MultiProvider<SeriesIndex, Boolean> = MultiProvider.always(true)
 
     /**
      * The value range to be used for this chart
      */
-    val valueRangeProperty: ObservableObject<ValueRange> = ObservableObject(createDefaultValueRange())
-    var valueRange: ValueRange by valueRangeProperty
-
+    var valueRange: ValueRange by categoryLinesLayer.configuration::valueRange.also {
+      it.set(createDefaultValueRange)
+    }
 
     /**
      * The number format that is used for all formatting
      */
-    val numberFormatProperty: ObservableObject<CachedNumberFormat> = ObservableObject(defaultNumberFormat)
-    var numberFormat: CachedNumberFormat by numberFormatProperty
+    var numberFormat: CachedNumberFormat by valueAxisLayer.configuration::ticksFormat.also {
+      it.set(defaultNumberFormat)
+    }
 
     /**
      * The min width/height of a category
@@ -468,26 +457,22 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
      */
     var maxCategorySize: @Zoomed Double? = 150.0
 
-    val categoryGapProperty: @Zoomed ObservableObject<Double> = ObservableObject(0.0)
-    var categoryGap: @Zoomed Double by categoryGapProperty
+    var categoryGap: @Zoomed Double = 0.0
 
     /**
      * Whether to show tooltips
      */
-    val showTooltipsProperty: ObservableBoolean = ObservableBoolean(true)
-    var showTooltip: Boolean by showTooltipsProperty
+    var showTooltip: Boolean = true
 
     /**
      * Whether to show the grid lines for the value axis
      */
-    val showValuesGridProperty: ObservableBoolean = ObservableBoolean(true)
-    var showValuesGrid: Boolean by showValuesGridProperty
+    var showValuesGrid: Boolean = true
 
     /**
      * Whether to show the grid lines for the category axis
      */
-    val showCategoriesGridProperty: ObservableBoolean = ObservableBoolean(false)
-    var showCategoriesGrid: Boolean by showCategoriesGridProperty
+    var showCategoriesGrid: Boolean = false
 
 
     /**
@@ -577,8 +562,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
       )
     )
 
-    private fun createDefaultValueRange(): ValueRange = ValueRange.linear(0.0, 110.0)
-
+    private val createDefaultValueRange: ValueRange = ValueRange.linear(0.0, 110.0)
     private val defaultNumberFormat: CachedNumberFormat = intFormat
 
     private fun createDefaultThresholds(): SizedProvider<Threshold> {
