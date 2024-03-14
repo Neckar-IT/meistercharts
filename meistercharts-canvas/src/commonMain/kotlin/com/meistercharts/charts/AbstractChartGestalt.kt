@@ -86,7 +86,7 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
    */
   fun chartSupport(): ChartSupport {
     return configuredChartSupport
-      ?: throw IllegalStateException("ChartSupport not available - gestalt has not yet been configured")
+      ?: throw IllegalStateException("ChartSupport not available - gestalt [${this::class.simpleName}] has not yet been configured")
   }
 
   /**
