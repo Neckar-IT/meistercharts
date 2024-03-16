@@ -3,6 +3,7 @@ import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
 import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
+import java.io.File
 
 /**
  * Abstract base class for objects that contain constants for all projects
@@ -15,7 +16,7 @@ abstract class AbstractProjects {
   private val path2project = mutableMapOf<String, ConfiguredProject>()
 
   protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
-    require(path2project.get(path) == null) { "Project $path already configured" }
+    require(path2project[path] == null) { "Project $path already configured" }
 
     return ConfiguredProject(path, projectType).also {
       configuredProjects.add(it)
@@ -94,7 +95,6 @@ abstract class AbstractProjects {
   fun otherProjects(): List<ConfiguredProject> {
     return configuredProjects.filter { it.type == ProjectType.Other }
   }
-
 }
 
 

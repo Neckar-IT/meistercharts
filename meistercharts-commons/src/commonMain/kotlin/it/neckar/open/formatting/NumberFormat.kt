@@ -53,7 +53,7 @@ val decimalFormat2digits: CachedNumberFormat = DecimalFormatsCache.get(2, 2)
 /**
  * Formats a percentage with up to two fraction digits
  */
-val percentageFormat: CachedNumberFormat = PercentageFormat(decimalFormat2digits).cached()
+val percentageFormat: CachedNumberFormat = PercentageFormat(decimalFormat).cached()
 
 /**
  * Formats a percentage with exactly two fraction digits
