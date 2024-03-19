@@ -2,6 +2,26 @@ package it.neckar.open.kotlin.lang
 
 import it.neckar.open.unit.other.Inclusive
 
+
+/**
+ *
+ * stripQuotes
+ *
+ * @param this@stripQuotes a String object.
+ * @return a String object.
+ */
+fun String.stripQuotes(): String {
+  var updatedValue = this
+
+  if (updatedValue.indexOf('\"') == 0) {
+    updatedValue = updatedValue.substring(1)
+  }
+  if (updatedValue.endsWith("\"")) {
+    updatedValue = updatedValue.substring(0, updatedValue.length - 1)
+  }
+  return updatedValue
+}
+
 /**
  * Deletes the suffix - if there is one
  */
