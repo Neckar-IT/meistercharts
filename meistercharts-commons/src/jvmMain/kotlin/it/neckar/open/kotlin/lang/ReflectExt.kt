@@ -46,13 +46,16 @@ fun KType.asKClass(): KClass<*> {
 }
 
 /**
- * Returns the sealed interface for this class
+ * Returns the sealed interface for this class.
+ * Throws an exception if the sealed interface is not found
  */
-fun KClass<*>.findSealedInterface(): KClass<*> {
-  val sealedInterfaces = supertypes.firstOrNull {
+fun KClass<*>.getSealedInterface(): KClass<*> {
+  return findSealedInterface() ?: throw IllegalArgumentException("Could not find sealed interface for ${this::class} in super types")
+}
+
+fun KClass<*>.findSealedInterface(): KClass<*>? {
+  return supertypes.firstOrNull {
     //Is a sealed interface?
     it.isSealedInterface()
-  } ?: throw IllegalArgumentException("Could not find sealed interface for ${this::class} in super types")
-
-  return sealedInterfaces.asKClass()
+  }?.asKClass()
 }

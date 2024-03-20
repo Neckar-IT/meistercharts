@@ -53,22 +53,14 @@ constructor(
   /**
    *
    * Getter for the field `major`.
-   *
-   * @return a int.
    */
   val major: Int,
   /**
-   *
    * Getter for the field `minor`.
-   *
-   * @return a int.
    */
   val minor: Int,
   /**
-   *
    * Getter for the field `build`.
-   *
-   * @return a int.
    */
   val build: Int,
   /**
@@ -83,15 +75,9 @@ constructor(
     get() = suffix != null && suffix.contains("SNAPSHOT")
 
   init {
-    if (major < 0) {
-      throw IllegalArgumentException("Invalid major <$major>")
-    }
-    if (minor < 0) {
-      throw IllegalArgumentException("Invalid minor <$minor>")
-    }
-    if (build < 0) {
-      throw IllegalArgumentException("Invalid build <$build>")
-    }
+    require(major >= 0) { "Invalid major <$major>" }
+    require(minor >= 0) { "Invalid minor <$minor>" }
+    require(build >= 0) { "Invalid build <$build>" }
   }
 
   fun withMajor(major: Int): Version {
@@ -117,18 +103,18 @@ constructor(
    * @return a String object.
    */
   fun format(): String {
-    return toString()
+    return if (suffix.isNullOrBlank()) {
+      "$major.$minor.$build"
+    } else {
+      "$major.$minor.$build-$suffix"
+    }
   }
 
   /**
    * {@inheritDoc}
    */
   override fun toString(): String {
-    return if (suffix.isNullOrBlank()) {
-      "$major.$minor.$build"
-    } else {
-      "$major.$minor.$build-$suffix"
-    }
+    return format()
   }
 
   /**
@@ -147,11 +133,14 @@ constructor(
   }
 
   /**
-   * Liefert den Int-Werte des Versionsnummer. Major, Minor und Build gehen maximal bis 99.
-   *
-   * @return the int value for the version
+   * Returns an int representation of the version.
+   * Only supports [major], [minor] and [build] versions up to 99
    */
   fun toInt(): Int {
+    require(major in 0..99) { "Major version must be between 0 and 99" }
+    require(minor in 0..99) { "Minor version must be between 0 and 99" }
+    require(build in 0..99) { "Build version must be between 0 and 99" }
+
     return major * 10000 + minor * 100 + build
   }
 

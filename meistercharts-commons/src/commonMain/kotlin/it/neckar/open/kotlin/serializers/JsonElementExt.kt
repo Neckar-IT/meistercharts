@@ -1,6 +1,7 @@
 package it.neckar.open.kotlin.serializers
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.put
@@ -18,6 +19,12 @@ fun JsonObjectBuilder.putNotNull(key: String, value: String?) {
 fun JsonObjectBuilder.putNotNull(key: String, value: Boolean?) {
   if (value != null) {
     put(key, value)
+  }
+}
+
+fun JsonObjectBuilder.putNotEmpty(key: String, buildJsonArray: JsonArray) {
+  if (buildJsonArray.isNotEmpty()) {
+    put(key, buildJsonArray)
   }
 }
 
