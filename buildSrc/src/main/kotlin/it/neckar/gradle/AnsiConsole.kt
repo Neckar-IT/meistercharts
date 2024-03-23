@@ -54,6 +54,15 @@ class AnsiConsole(val gradle: Gradle) {
     return withColor(content.toString(), Color.Gray)
   }
 
+  /**
+   * Creates a loading bar string with a carriage return (\r) to overwrite the previous loading bar string if there is one. Must be used in a loop.
+   */
+  fun loadingBar(current: Int, max: Int, color: Color): String {
+    val currentString: String = "#".repeat(current)
+    val freeSpaceString: String = " ".repeat(max - current)
+    return withColor("\r[$currentString$freeSpaceString]", color)
+  }
+
   private fun withColor(content: Any, color: Color): String {
     return if (plain) {
       content.toString()
