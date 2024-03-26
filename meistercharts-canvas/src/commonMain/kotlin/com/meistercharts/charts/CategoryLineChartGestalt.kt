@@ -132,6 +132,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
   }
 
   val categoryLinesLayer: CategoryLinesLayer = CategoryLinesLayer(configuration::filteredCategorySeriesModel.delegate()) {
+    configuration.valueRange = defaultValueRange
     layoutCalculator = defaultCategoryLayouter
   }
 
@@ -436,16 +437,24 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     /**
      * The value range to be used for this chart
      */
-    var valueRange: ValueRange by categoryLinesLayer.configuration::valueRange.also {
-      it.set(createDefaultValueRange)
-    }
+    var valueRange: ValueRange
+      get() {
+        return categoryLinesLayer.configuration.valueRange
+      }
+      set(value) {
+        categoryLinesLayer.configuration.valueRange = value
+      }
 
     /**
      * The number format that is used for all formatting
      */
-    var numberFormat: CachedNumberFormat by valueAxisLayer.configuration::ticksFormat.also {
-      it.set(defaultNumberFormat)
-    }
+    var numberFormat: CachedNumberFormat
+      get() {
+        return valueAxisLayer.configuration.ticksFormat
+      }
+      set(value) {
+        valueAxisLayer.configuration.ticksFormat = value
+      }
 
     /**
      * The min width/height of a category
@@ -562,7 +571,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
       )
     )
 
-    private val createDefaultValueRange: ValueRange = ValueRange.linear(0.0, 110.0)
+    private val defaultValueRange: ValueRange = ValueRange.linear(0.0, 110.0)
     private val defaultNumberFormat: CachedNumberFormat = intFormat
 
     private fun createDefaultThresholds(): SizedProvider<Threshold> {

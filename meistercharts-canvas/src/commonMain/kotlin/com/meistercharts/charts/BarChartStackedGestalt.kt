@@ -89,7 +89,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
    * The painter used by the [categoryLayer]
    */
   val stackedBarsPainter: StackedBarsPainter = StackedBarsPainter().apply {
-    stackedBarPaintable.data.valueRange = createDefaultValueRange()
+    stackedBarPaintable.data.valueRange = defaultValueRange
   }
 
   /**
@@ -361,7 +361,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
       )
     )
 
-    private fun createDefaultValueRange(): LinearValueRange = ValueRange.linear(0.0, 62.0)
+    private val defaultValueRange: LinearValueRange = ValueRange.linear(0.0, 62.0)
   }
 }
 
