@@ -132,7 +132,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
   }
 
   val categoryLinesLayer: CategoryLinesLayer = CategoryLinesLayer(configuration::filteredCategorySeriesModel.delegate()) {
-    configuration.valueRange = defaultValueRange
+    //configuration.valueRange = defaultValueRange
     layoutCalculator = defaultCategoryLayouter
   }
 
