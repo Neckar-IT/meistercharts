@@ -19,6 +19,7 @@ import com.meistercharts.annotations.Zoomed
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.Positive
+import it.neckar.open.unit.other.pct
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
 
@@ -107,6 +108,40 @@ data class Rectangle(
    */
   fun plus(x: Double, y: Double): @Zoomed Rectangle {
     return Rectangle(this.location.plus(x, y), size)
+  }
+
+  /**
+   * Returns a new object with the added values on each side.
+   *
+   * If a value of 0.05 percent is provided, the rectangle will be enlarged by 5% on each side.
+   * Therefore, it will be 10% wider and 10% higher.
+   */
+  fun enlarge(additionalSpacePercentageOnEachSide: @pct Double): Rectangle {
+    if (additionalSpacePercentageOnEachSide == 0.0) {
+      return this
+    }
+
+    val additionalX = widthAbs * additionalSpacePercentageOnEachSide
+    val additionalY = heightAbs * additionalSpacePercentageOnEachSide
+
+    return enlarge(additionalX, additionalY, additionalX, additionalY)
+  }
+
+  /**
+   * Enlarges the rectangle by the given values
+   */
+  fun enlarge(
+    left: Double,
+    top: Double,
+    right: Double,
+    bottom: Double,
+  ): Rectangle {
+    return Rectangle(
+      getX() - left,
+      getY() - top,
+      getWidth() + left + right,
+      getHeight() + top + bottom
+    )
   }
 
   companion object {

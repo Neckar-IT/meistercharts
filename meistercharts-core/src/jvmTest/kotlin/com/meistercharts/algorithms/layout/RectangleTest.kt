@@ -23,11 +23,22 @@ import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.toRadians
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 
 
 /**
  */
 class RectangleTest {
+  @Test
+  fun testEnlargeRelative() {
+    assertThat(Rectangle(10.0, 20.0, 200.0, 300.0).enlarge(0.01)).isEqualTo(Rectangle(8.0, 17.0, 204.0, 306.0))
+  }
+
+  @Test
+  fun enlargeAbsolute() {
+    assertThat(Rectangle(10.0, 20.0, 200.0, 300.0).enlarge(1.0, 2.0, 3.0, 4.0)).isEqualTo(Rectangle(9.0, 18.0, 204.0, 306.0))
+  }
+
   @Test
   fun testWithin() {
 
