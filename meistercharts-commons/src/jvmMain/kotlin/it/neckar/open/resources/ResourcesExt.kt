@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * Extension method to load a resource that throws a nice error message if the resources could not be found
  */
 inline fun Class<*>.getResourceSafe(url: String): URL {
-  return getResourceSafe(Url(url))
+  return getResourceSafe(Url.parse(url))
 }
 
 fun Class<*>.getResourceSafe(url: Url): URL {
@@ -18,7 +18,7 @@ fun Class<*>.getResourceSafe(url: Url): URL {
 }
 
 inline fun KClass<*>.getResourceSafe(url: String): URL {
-  return getResourceSafe(Url(url))
+  return getResourceSafe(Url.parse(url))
 }
 
 inline fun KClass<*>.getResourceSafe(url: Url): URL {

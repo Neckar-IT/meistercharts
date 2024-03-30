@@ -138,14 +138,14 @@ object CategoryConverter {
     return jsData.categories?.map { jsCategory ->
       jsCategory.image
         ?.takeIf { it.isNotBlank() }
-        ?.let { UrlPaintable.naturalSize(Url(it)) }
+        ?.let { UrlPaintable.naturalSize(Url.parse(it)) }
     }
   }
 
   private fun toCategoryImage(jsCategory: CategorySeriesData?): Paintable? {
     return jsCategory?.image
       ?.takeIf { it.isNotBlank() }
-      ?.let { UrlPaintable.naturalSize(Url(it)) }
+      ?.let { UrlPaintable.naturalSize(Url.parse(it)) }
   }
 
   /**

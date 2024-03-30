@@ -25,12 +25,8 @@ import it.neckar.open.http.Url
  * The URI is expected to start with "data:image"
  */
 //TODO this class does probably only work for JS
-class ImageDataPaintable(data: String) : Paintable {
-  init {
-    require(data.startsWith(prefix)) { "Invalid uri: <$data>. Expected to start with $prefix" }
-  }
-
-  val delegate: Paintable = UrlPaintable.naturalSize(Url(data)) //TODO this looks stupid, but should be ok
+class ImageDataPaintable(data: Url.DataScheme) : Paintable {
+  val delegate: Paintable = UrlPaintable.naturalSize(data) //TODO this looks stupid, but should be ok
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)

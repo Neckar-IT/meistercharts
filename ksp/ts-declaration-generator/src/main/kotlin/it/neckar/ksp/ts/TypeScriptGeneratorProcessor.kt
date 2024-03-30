@@ -57,13 +57,17 @@ class TypeScriptGeneratorProcessor(val codeGenerator: CodeGenerator, val logger:
         writer.appendLine("export type Uuid = string;")
         writer.appendLine("export type Url = string;")
 
-        val visitor = ExportTypescriptDefinitionFileVisitor(writer, logger)
+        val exportTypescriptDefinitionVisitor = ExportTypescriptDefinitionFileVisitor(writer, logger)
         val loggerVisitor = LoggerVisitor(codeGenerator, logger)
 
         resolver.getSymbolsWithAnnotation(annotationName).forEach {
           logger.info("Found annotated symbol $it of type ${it::class}")
-          it.accept(visitor, GeneratingContext())
-          it.accept(loggerVisitor, 0)
+          it.accept(exportTypescriptDefinitionVisitor, GeneratingContext())
+
+          if (false) {
+            //Currently disabled because of https://github.com/google/ksp/issues/1716
+            it.accept(loggerVisitor, 0)
+          }
         }
       }
 

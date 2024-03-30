@@ -16,7 +16,7 @@ fun org.w3c.dom.Window.baseUrl(): Url {
   val pathname = location.pathname
   val directory = pathname.substringBeforeLast("/")
 
-  return Url("$protocol//$hostWithPort$directory")
+  return Url.absolute("$protocol//$hostWithPort$directory")
 }
 
 /**

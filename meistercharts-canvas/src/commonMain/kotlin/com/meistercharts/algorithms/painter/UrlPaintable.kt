@@ -149,7 +149,7 @@ private constructor(
 
   companion object {
     /**
-     * Creates an url paintable that uses the natural size of the loaded image
+     * Creates a url paintable that uses the natural size of the loaded image
      */
     fun naturalSize(
       /**

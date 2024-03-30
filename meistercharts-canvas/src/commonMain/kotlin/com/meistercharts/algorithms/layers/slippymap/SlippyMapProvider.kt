@@ -94,7 +94,7 @@ data object OpenStreetMap : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -115,7 +115,7 @@ data object OpenStreetMapDe : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -136,7 +136,7 @@ data object OpenStreetMapHumanitarian : SlippyMapProvider {
       1 -> "b"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -154,7 +154,7 @@ data object OpenStreetMapHumanitarian : SlippyMapProvider {
 @Deprecated("Does not work anymore")
 data object OpenStreetMapGrayscale : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url("https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -176,7 +176,7 @@ data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -200,7 +200,7 @@ data object OpenStreetMapTerrain : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -215,7 +215,7 @@ data object OpenStreetMapTerrain : SlippyMapProvider {
  */
 data object WikimediaMaps : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url("https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://maps.wikimedia.org/osm-intl/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use
@@ -232,7 +232,7 @@ data object Cyclosm : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -246,7 +246,7 @@ data object CyclosmLite : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm-lite/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm-lite/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -260,7 +260,7 @@ data object OsmFrance : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile.openstreetmap.fr/osmfr/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile.openstreetmap.fr/osmfr/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -268,7 +268,7 @@ data object OsmFrance : SlippyMapProvider {
 
 data object MemoMaps : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url("https://tile.memomaps.de/tilegen/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://tile.memomaps.de/tilegen/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -282,7 +282,7 @@ data object OpenTopoMap : SlippyMapProvider {
       2 -> "c"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.tile.opentopomap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.tile.opentopomap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -292,7 +292,7 @@ data object OpenTopoMap : SlippyMapProvider {
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=MtbMap
 data object MtbMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url("http://tile.mtbmap.cz/mtbmap_tiles/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("http://tile.mtbmap.cz/mtbmap_tiles/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -309,7 +309,7 @@ data object CartoDBPositron : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.basemaps.cartocdn.com/light_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/light_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -326,7 +326,7 @@ data object CartoDBPositronNoLabels : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.basemaps.cartocdn.com/light_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/light_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -343,7 +343,7 @@ data object CartoDBDarkMatter : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.basemaps.cartocdn.com/dark_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/dark_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"
@@ -360,7 +360,7 @@ data object CartoDBVoyager : SlippyMapProvider {
       3 -> "d"
       else -> throw IllegalStateException("fix modulo computation: $modulo")
     }
-    return Url("https://$subDomain.basemaps.cartocdn.com/rastertiles/voyager/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/rastertiles/voyager/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   override val legalNotice: String = "TODO"

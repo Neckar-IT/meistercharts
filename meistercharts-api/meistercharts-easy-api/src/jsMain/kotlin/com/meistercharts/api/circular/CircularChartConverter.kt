@@ -47,7 +47,7 @@ object CircularChartConverter {
   fun toSegmentsImageProvider(data: CircularChartData): MultiProvider<CircleSegmentIndex, Paintable?> {
     val segments = data.segments ?: return MultiProvider.alwaysNull()
     val images = segments
-      .map { it.icon?.let { idAsString -> UrlPaintable.naturalSize(Url(idAsString)) } }
+      .map { it.icon?.let { iconUrlAsString -> UrlPaintable.naturalSize(Url.parse(iconUrlAsString)) } }
       .toList()
     return MultiProvider.Companion.forListModulo(images)
   }

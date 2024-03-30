@@ -45,7 +45,7 @@ external interface BaseCategoryData {
   val label: String?
 
   /**
-   * The image of the category
+   * The image url of the category (e.g. a data URL)
    */
   val image: String?
 }

@@ -11,7 +11,7 @@ fun Url.toURL(): URL {
 }
 
 fun Url.Companion.fromURL(url: URL): Url {
-  return Url(url.toExternalForm())
+  return Url.parse(url.toExternalForm())
 }
 
 fun Url.Companion.fromFile(file: File): Url {
@@ -21,8 +21,8 @@ fun Url.Companion.fromFile(file: File): Url {
 /**
  * Converts a file to a URL
  */
-fun File.toUrl(): Url {
+fun File.toUrl(): Url.Absolute {
   //Java creates URIs with only a single "/"
   val asciiString = toURI().toASCIIString().replace("file:/", "file:///")
-  return Url(asciiString)
+  return Url.absolute(asciiString)
 }

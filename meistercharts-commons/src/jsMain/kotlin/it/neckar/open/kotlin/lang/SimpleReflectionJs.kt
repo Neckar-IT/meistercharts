@@ -1,6 +1,6 @@
 package it.neckar.open.kotlin.lang
 
-import js.core.Object
+import js.objects.Object
 
 /**
  * Returns kind of a properties' description.

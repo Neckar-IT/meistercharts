@@ -57,14 +57,14 @@ fun interface UrlConverter {
      * Makes each URL absolute
      */
     val MakeAbsolute: UrlConverter = UrlConverter { url ->
-      if (url.isExternalUrl()) {
-        return@UrlConverter url
-      }
-      if (url.isAbsoluteUrl()) {
-        return@UrlConverter url
-      }
+      return@UrlConverter when (url) {
+        is Url.Absolute -> url
+        is Url.DataScheme -> throw UnsupportedOperationException("Data URLs cannot be converted to absolute URLs")
+        is Url.Relative -> Url.RootRelative.root + url
+        is Url.RootRelative -> url
 
-      return@UrlConverter Url("/$url")
+        is Url.RelativeAppender<*> -> throw UnsupportedOperationException("How can this be reached for $url of type ${url::class}")
+      }
     }
   }
 }
