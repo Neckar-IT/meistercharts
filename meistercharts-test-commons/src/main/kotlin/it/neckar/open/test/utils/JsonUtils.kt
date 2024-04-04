@@ -117,8 +117,11 @@ object JsonUtils {
 }
 
 
-fun Assert<String>.isJsonEqualTo(expectedJsonString: String) {
+fun Assert<String>.isJsonEqualTo(
+  expectedJsonString: String,
+  actualTreeModifier: JsonNode.() -> Unit = {},
+) {
   given { current ->
-    JsonUtils.assertJsonEquals(expectedJsonString, current)
+    JsonUtils.assertJsonEquals(expectedJsonString, current, actualTreeModifier)
   }
 }
