@@ -1,3 +1,5 @@
+package it.neckar.open
+
 import kotlin.reflect.KClass
 
 /**

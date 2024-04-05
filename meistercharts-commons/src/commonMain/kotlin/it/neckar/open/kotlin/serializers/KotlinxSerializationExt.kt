@@ -5,6 +5,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.elementNames
+import kotlin.reflect.KClass
 
 /**
  * Returns true if this serial kind is a primitive
@@ -45,3 +46,11 @@ fun SerialDescriptor.requiredElementNames(): List<String> {
 fun SerialDescriptor.getElementDescriptorByName(name: String): SerialDescriptor {
   return getElementDescriptor(getElementIndex(name))
 }
+
+/**
+ * Throws an exception if this type should not be used for serialization
+ *
+ * Returns false, if:
+ * * this implements a sealed interface
+ */
+expect fun <S: Any> KClass<S>.verifyPlausibleForSerialization(): Unit

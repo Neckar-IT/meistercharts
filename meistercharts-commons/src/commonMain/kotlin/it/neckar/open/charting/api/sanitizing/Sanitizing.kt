@@ -1,25 +1,16 @@
 package it.neckar.open.charting.api.sanitizing
 
-import it.neckar.open.kotlin.lang.enumEntries
-
-
 /**
  * Ensures that this enum value is in fact an enum value.
  *
  * This is a workaround because the enum values we receive are actually of type string.
  */
-inline fun <reified T : Enum<T>> Enum<T>.sanitize(): T {
-  try {
-    return enumValueOf(this.toString())
-  } catch (e: Throwable) {
-    throwEnumConversionException(this, enumEntries(), e)
-  }
-}
+expect inline fun <reified T : Enum<T>> T.sanitize(): T
 
 /**
  * Helper method that throws an exception
  */
-fun <E : Enum<E>> throwEnumConversionException(value: Enum<E>, enumValues: List<E>, e: Throwable): Nothing {
+fun <E : Enum<E>> throwEnumConversionException(value: Enum<E>, enumValues: List<E>, e: Throwable?): Nothing {
   throw SanitizingFailedException("Could not sanitize [$value] to Enum.\nPossible values: ${enumValues.joinToString(", ")}", e)
 }
 

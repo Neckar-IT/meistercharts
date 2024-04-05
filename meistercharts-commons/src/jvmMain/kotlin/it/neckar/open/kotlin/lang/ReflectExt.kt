@@ -33,7 +33,10 @@ val <T : Any> KClass<T>.enumValues: Array<T>
     return this.java.enumConstants ?: throw IllegalStateException("enumConstants is null for $this")
   }
 
-fun KType.isSealedInterface(): Boolean {
+/**
+ * Returns true if this type is sealed
+ */
+fun KType.isSealed(): Boolean {
   return asKClass().isSealed
 }
 
@@ -56,6 +59,6 @@ fun KClass<*>.getSealedInterface(): KClass<*> {
 fun KClass<*>.findSealedInterface(): KClass<*>? {
   return supertypes.firstOrNull {
     //Is a sealed interface?
-    it.isSealedInterface()
+    it.isSealed()
   }?.asKClass()
 }

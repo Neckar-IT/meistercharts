@@ -18,7 +18,7 @@ package com.meistercharts.config
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.js.MeisterChartClasses
 import com.meistercharts.js.MeisterchartJS
-import forEach
+import it.neckar.open.forEach
 import it.neckar.commons.kotlin.js.config.JsonScriptTagSupport
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory

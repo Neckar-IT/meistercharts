@@ -1,6 +1,8 @@
 package it.neckar.open.http
 
 import it.neckar.open.http.io.UrlSerializer
+import it.neckar.open.kotlin.lang.fromBase64
+import it.neckar.open.kotlin.lang.toBase64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -50,6 +52,11 @@ sealed interface Url {
       return DataScheme(url)
     }
 
+    @JsExport.Ignore
+    inline fun image(bytes: ByteArray, imageFormat: String): DataScheme {
+      return DataScheme("data:image/$imageFormat;base64,${bytes.toBase64()}")
+    }
+
     /**
      * Parses an URL
      */
@@ -64,7 +71,8 @@ sealed interface Url {
   }
 
   /**
-   * A URL that starts with "/" or "https"
+   * A URL that represents a data.
+   * E.g. a base64 encoded image: "data:image/jpg;base64,...."
    */
   @Serializable(with = UrlSerializer.DataScheme::class)
   @SerialName("data")
@@ -74,6 +82,44 @@ sealed interface Url {
       require(value.startsWith("data:")) {
         "The URL must start with data: but was [$value]"
       }
+    }
+
+    /**
+     * Returns the media type. E.g. "image/jpg"
+     */
+    val mediaType: String
+      get() {
+        return value.substringAfter("data:").substringBefore(";")
+      }
+
+    /**
+     * Returns the data segment - as base64 encoded string
+     */
+    val data: String
+      get() {
+        return value.substringAfter("base64,")
+      }
+
+    /**
+     * Returns the data segment - as a byte array
+     */
+    val dataBytes: ByteArray
+      get() {
+        return data.fromBase64()
+      }
+
+    /**
+     * Returns true if this a data URL that contains an image
+     */
+    fun isImage(): Boolean {
+      return mediaType.startsWith("image/")
+    }
+
+    /**
+     * Returns true if this a data URL that contains an image with the given format
+     */
+    fun isImage(format: String): Boolean {
+      return mediaType.startsWith("image/$format")
     }
 
     override fun toString(): String {

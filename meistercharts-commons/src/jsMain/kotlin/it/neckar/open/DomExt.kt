@@ -1,3 +1,5 @@
+package it.neckar.open
+
 import it.neckar.open.kotlin.lang.fastFor
 import kotlinx.browser.document
 import org.w3c.dom.COMPLETE
