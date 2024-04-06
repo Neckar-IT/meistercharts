@@ -3,6 +3,7 @@ package it.neckar.open.test.utils
 import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
+import it.neckar.open.kotlin.lang.toBase64
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -100,6 +101,21 @@ fun Assert<String>.isEqualComparingLinesTrim(expected: String): Unit = given { a
   }
 
   fail(expected, actual)
+}
+
+/**
+ * Compares the base64 representation of the byte arrays
+ */
+fun Assert<ByteArray>.isEqualBase64(expected: ByteArray): Unit = given { actual ->
+  assertk.assertThat(actual.toBase64()).isEqualTo(expected.toBase64())
+}
+
+fun Assert<ByteArray>.isEqualTo(expected: ByteArray): Unit = given { actual ->
+  if (actual.contentEquals(expected)) {
+    return
+  }
+
+  fail(expected.toBase64(), actual.toBase64())
 }
 
 private fun String.getRelevantLines() = lineSequence()

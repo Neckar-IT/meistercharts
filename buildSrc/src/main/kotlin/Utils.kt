@@ -16,7 +16,6 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
-import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
@@ -631,6 +630,18 @@ val Project.ciInformation: GitlabCiInformation
 val Project.inCi: Boolean
   get() {
     return ciInformation.inCi
+  }
+
+/**
+ * Retrieves the CI_JOB_TOKEN, throws an exception if the token is null.
+ */
+val Project.ciJobToken: String
+  get() {
+    val ciJobToken: String? = System.getenv("CI_JOB_TOKEN")
+    require(ciJobToken.isNullOrBlank().not()) {
+      "CI_JOB_TOKEN is blank"
+    }
+    return ciJobToken ?: throw IllegalStateException("CI_JOB_TOKEN is null")
   }
 
 /**
