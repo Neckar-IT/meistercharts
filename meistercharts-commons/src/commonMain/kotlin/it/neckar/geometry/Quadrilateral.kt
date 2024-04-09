@@ -149,10 +149,10 @@ data class Quadrilateral(
     fun fromList(coordinates: List<Coordinates>): Quadrilateral {
       require(coordinates.size == 4) { "List must contain exactly 4 coordinates but had ${coordinates.size} elements" }
       return Quadrilateral(
-        coordinates[0],
-        coordinates[1],
-        coordinates[2],
-        coordinates[3]
+        point1 = coordinates[0],
+        point2 = coordinates[1],
+        point3 = coordinates[2],
+        point4 = coordinates[3]
       )
     }
   }
