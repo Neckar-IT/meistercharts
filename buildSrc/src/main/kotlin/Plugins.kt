@@ -43,6 +43,8 @@ object Plugins {
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
   const val jacoco: String = "org.gradle.jacoco"
+
+  @Deprecated("Do not use anymyore - is based on conda")
   const val pythonPswidersk: String = "com.pswidersk.python-plugin"
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"

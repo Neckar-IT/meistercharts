@@ -54,13 +54,13 @@ private fun File.treeRecursively(prefix: String = "", continuation: String = "",
  *
  * Returns this
  */
-fun File.requireIsFile(): File {
-  require(this.isFile) { "File <${this.absolutePath}> is not a file" }
+fun File.requireIsFile(messageProvider: (File) -> String = { "File <${this.absolutePath}> is not a file" }): File {
+  require(this.isFile) { messageProvider(this) }
   return this
 }
 
-fun File.requireIsDirectory(): File {
-  require(this.isDirectory) { "File <${this.absolutePath}> is not a directory" }
+fun File.requireIsDirectory(messageProvider: (File) -> String = { "File <${this.absolutePath}> is not a directory" }): File {
+  require(this.isDirectory) { messageProvider(this) }
   return this
 }
 
