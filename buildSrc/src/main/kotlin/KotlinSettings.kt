@@ -55,6 +55,12 @@ object KotlinSettings {
     //Only supported with 1.9.20
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
 
+    if (false) {
+      //Not working with 1.9
+      add("-Xoptimize-generated-js") //Perform additional optimizations on the generated JS code
+      add("-Xfake-override-validator") //Enable the IR fake override validator.
+    }
+
     //
     // Old compiler settings, for documentation purposes
     //
