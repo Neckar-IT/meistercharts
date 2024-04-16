@@ -16,7 +16,6 @@
 package it.neckar.open.unit.other
 
 import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.Length
 import it.neckar.open.unit.Name
 import it.neckar.open.unit.Symbol
 
@@ -45,10 +44,9 @@ import it.neckar.open.unit.Symbol
 @Suppress("ClassName")
 @Unit
 @Name("byte")
-@Symbol(byte.SYMBOL)
-annotation class byte {
+@Symbol(UnsignedByte.SYMBOL)
+annotation class UnsignedByte {
   companion object {
     const val SYMBOL: String = "byte"
   }
-
 }

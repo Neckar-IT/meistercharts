@@ -63,5 +63,14 @@ fun File.replaceDirWithRename(sourceDirectory: File) {
   backupDirectory.deleteRecursively()
 }
 
+/**
+ * Writes the given ByteArray into the file by first creating a temp file and then renaming the temp file to replace the actual target file.
+ */
+fun File.writeBytesWithRename(array: ByteArray) {
+  val tmpFile: File = this.createTmpFile()
+  tmpFile.writeBytes(array)
+  tmpFile.renameTo(this)
+}
+
 
 const val SUFFIX_TMP: String = ".tmp"
