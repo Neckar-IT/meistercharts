@@ -48,7 +48,7 @@ abstract class MeisterchartBuilder(
    */
   val chartId: ChartId = ChartId.next(),
   /**
-   * The factory that is used to create platform dependent objects
+   * The factory that is used to create platform-dependent objects
    */
   val meisterchartFactory: MeisterchartFactory = MeisterchartFactory.get(),
 ) : OnDispose {

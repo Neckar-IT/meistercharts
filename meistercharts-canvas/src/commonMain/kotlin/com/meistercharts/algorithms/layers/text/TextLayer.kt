@@ -220,6 +220,10 @@ fun Layers.addText(textKey: TextKey, styleConfiguration: TextLayer.Configuration
   return addText(listOf(textKey), styleConfiguration)
 }
 
+fun Layers.addText(text: String, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+  return addText(listOf(TextKey.simple(text)), styleConfiguration)
+}
+
 /**
  * Adds a text layer with texts that are resolved
  */

@@ -149,6 +149,32 @@ data class Rectangle(
       return Rectangle(left, top, right - left, bottom - top)
     }
 
+    enum class Alignment {
+      CENTER,
+      TOP_LEFT,
+      TOP_RIGHT,
+      BOTTOM_LEFT,
+      BOTTOM_RIGHT,
+      CENTER_LEFT,
+      CENTER_RIGHT,
+      CENTER_TOP,
+      CENTER_BOTTOM,
+    }
+
+    fun fromOrigin(origin: Coordinates, size: Size, alignment: Alignment): Rectangle {
+      return when (alignment) {
+        Alignment.CENTER -> centered(size)
+        Alignment.TOP_LEFT -> topLeft(size)
+        Alignment.TOP_RIGHT -> topRight(size)
+        Alignment.BOTTOM_LEFT -> bottomLeft(size)
+        Alignment.BOTTOM_RIGHT -> bottomRight(size)
+        Alignment.CENTER_LEFT -> centerLeft(size)
+        Alignment.CENTER_RIGHT -> centerRight(size)
+        Alignment.CENTER_TOP -> centerTop(size)
+        Alignment.CENTER_BOTTOM -> centerBottom(size)
+      }.plus(origin.x, origin.y)
+    }
+
     /**
      * Returns a rectangle created from centered X/Y coordinates
      */
@@ -160,7 +186,7 @@ data class Rectangle(
      * Returns a rectangle that has its origin centered with the given width/height
      */
     fun centered(width: Double, height: Double): Rectangle {
-      return Rectangle(Coordinates.of(-width / 2.0, -height / 2.0), Size(width, height))
+      return centered(Size(width, height))
     }
 
     /**
@@ -199,7 +225,23 @@ data class Rectangle(
     }
 
     fun centerLeft(width: Double, height: Double): Rectangle {
-      return Rectangle(Coordinates.of(0.0, -height / 2.0), Size(width, height))
+      return centerLeft(Size(width, height))
+    }
+
+    fun centerLeft(size: Size): Rectangle {
+      return Rectangle(Coordinates.of(0.0, -size.height / 2.0), size)
+    }
+
+    fun centerRight(size: Size): Rectangle {
+      return Rectangle(Coordinates.of(-size.width, -size.height / 2.0), size)
+    }
+
+    fun centerTop(size: Size): Rectangle {
+      return Rectangle(Coordinates.of(-size.width / 2.0, size.height), size)
+    }
+
+    fun centerBottom(size: Size): Rectangle {
+      return Rectangle(Coordinates.of(-size.width / 2.0, -size.height), size)
     }
 
     val zero: Rectangle = Rectangle(Coordinates.origin, Size.zero)

@@ -21,6 +21,7 @@ import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
+import com.meistercharts.zoom.OriginToContentViewport.provider
 import it.neckar.geometry.Coordinates
 import it.neckar.open.kotlin.lang.asProvider
 
@@ -78,9 +79,9 @@ class FillBackgroundLayer(
 /**
  * Adds a [FillBackgroundLayer] to the layers that uses the canvas-background color provided by the theme
  */
-fun Layers.addFillCanvasBackground(): FillBackgroundLayer {
+fun Layers.addFillCanvasBackground(backgroundColor: () -> Color = Theme.canvasBackgroundColor.provider()): FillBackgroundLayer {
   return FillBackgroundLayer {
-    background = Theme.canvasBackgroundColor.provider()
+    background = backgroundColor
   }.also {
     addLayer(it)
   }

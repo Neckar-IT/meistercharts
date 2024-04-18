@@ -15,12 +15,12 @@
  */
 package com.meistercharts.charts
 
-import com.meistercharts.zoom.UpdateReason
-import it.neckar.geometry.AxisSelection
-import com.meistercharts.zoom.FittingInContentViewport
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.model.Insets
+import com.meistercharts.zoom.FittingInContentViewport
+import com.meistercharts.zoom.UpdateReason
+import it.neckar.geometry.AxisSelection
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.observable.ObservableObject
@@ -30,7 +30,7 @@ import it.neckar.open.observable.ObservableObject
  */
 open class ContentViewportGestalt(
   contentViewportMargin: @Zoomed Insets,
-  val updateBehavior: UpdateBehavior = ResetToDefaults,
+  val updateBehavior: UpdateBehavior = UpdateBehavior.ResetToDefaults,
 ) : ChartGestalt {
   /**
    * The current content viewport margin
@@ -53,15 +53,15 @@ open class ContentViewportGestalt(
           chartSupport.rootChartState.contentViewportMargin = newValue
 
           when (updateBehavior) {
-            KeepCurrentZoomAndTranslation -> {
+            UpdateBehavior.KeepCurrentZoomAndTranslation -> {
               //do nothing
             }
 
-            ResetToDefaults -> {
+            UpdateBehavior.ResetToDefaults -> {
               chartSupport.zoomAndTranslationSupport.resetToDefaults(reason = UpdateReason.ConfigurationUpdate)
             }
 
-            ResetAffectedAxisToDefaults -> {
+            UpdateBehavior.ResetAffectedAxisToDefaults -> {
               val axisSelection = AxisSelection.get(
                 xSelected = oldValue.left != newValue.left || oldValue.right != newValue.right,
                 ySelected = oldValue.top != newValue.top || oldValue.bottom != newValue.bottom
@@ -70,7 +70,7 @@ open class ContentViewportGestalt(
               chartSupport.zoomAndTranslationSupport.resetToDefaults(axisSelection = axisSelection, reason = UpdateReason.ConfigurationUpdate)
             }
 
-            ResetAffectedAxisOnMarginIncreaseToDefaults -> {
+            UpdateBehavior.ResetAffectedAxisOnMarginIncreaseToDefaults -> {
               val axisSelection = AxisSelection.get(
                 xSelected = newValue.left > oldValue.left || newValue.right > oldValue.right,
                 ySelected = newValue.top > oldValue.top || newValue.bottom > oldValue.bottom
@@ -111,25 +111,24 @@ open class ContentViewportGestalt(
    * Defines the behavior when the content viewport margin changes
    */
   sealed interface UpdateBehavior {
+    /**
+     * Resets the zoom and translation to the defaults
+     */
+    data object ResetToDefaults : UpdateBehavior
+
+    /**
+     * Keeps the current zoom and translation - does nothing
+     */
+    data object KeepCurrentZoomAndTranslation : UpdateBehavior
+
+    /**
+     * Resets the zoom and translation to the defaults, but only for the axis that are affected by the margin change
+     */
+    data object ResetAffectedAxisToDefaults : UpdateBehavior
+
+    /**
+     * Only resets zoom and translations to the defaults - but only for the axis that are affected by the margin change and if the margin has increased!
+     */
+    data object ResetAffectedAxisOnMarginIncreaseToDefaults : UpdateBehavior
   }
-
-  /**
-   * Resets the zoom and translation to the defaults
-   */
-  data object ResetToDefaults : UpdateBehavior
-
-  /**
-   * Keeps the current zoom and translation - does nothing
-   */
-  data object KeepCurrentZoomAndTranslation : UpdateBehavior
-
-  /**
-   * Resets the zoom and translation to the defaults, but only for the axis that are affected by the margin change
-   */
-  data object ResetAffectedAxisToDefaults : UpdateBehavior
-
-  /**
-   * Only resets zoom and translations to the defaults - but only for the axis that are affected by the margin change and if the margin has increased!
-   */
-  data object ResetAffectedAxisOnMarginIncreaseToDefaults : UpdateBehavior
 }

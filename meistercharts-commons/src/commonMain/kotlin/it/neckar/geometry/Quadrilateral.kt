@@ -1,9 +1,17 @@
 package it.neckar.geometry
 
+import it.neckar.open.kotlin.lang.toDegrees
 import it.neckar.open.unit.other.deg
+import it.neckar.open.unit.time.h
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.atan2
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sign
+import kotlin.math.sqrt
 
 /**
  * A Quadrilateral is a 4-sided polygon. It is defined by 4 points (coordinates of corners).
@@ -76,7 +84,7 @@ data class Quadrilateral(
   /**
    * Rotates the Quadrilateral around its centroid by a given angle (in degrees)
    */
-  fun rotate(angleDegrees: @deg Double): Quadrilateral {
+  fun rotateAroundCentroid(angleDegrees: @deg Double): Quadrilateral {
     val centroid = calculateCentroid()
 
     val first = point1.rotateAround(centroid, angleDegrees)
@@ -91,6 +99,94 @@ data class Quadrilateral(
       fourth
     )
   }
+
+  /**
+   * Returns the angle in degrees needed to get it to a square Quadrilateral after rotating
+   */
+  fun getSquareRotationAngle(): Double {
+    //TL
+    // Calculate the difference in y-coordinates between the top-left and top-right corners
+    val deltaYTL = point2.y - point1.y
+    // Calculate the difference in x-coordinates between the top-left and top-right corners
+    val deltaXTL = point2.x - point1.x
+
+    //BR
+    // Calculate the difference in y-coordinates between the bottom-right and bottom-left corners
+    val deltaYBR = point4.y - point3.y
+    val deltaXBR = point4.x - point3.x
+
+    val degreesTL = atan2(deltaYTL, deltaXTL).toDegrees()
+    var degreesBR = atan2(deltaYBR, deltaXBR).toDegrees()
+    // Fix opposite angle rotation of lower side in comparison to upper side
+    // If the angle of the top-left corner is negative, the angle of the bottom-right corner should be negative as well
+    degreesBR = if (degreesBR.sign == 1.0) {
+      degreesBR - 180
+    } else {
+      degreesBR + 180
+    }
+
+    //println("degreesTL: $degreesTL degreesBR: $degreesBR")
+
+    return (abs(degreesTL) + abs(degreesBR)) / 2 * degreesTL.sign * -1
+  }
+
+
+  /**
+   * Returns the lowest y-coordinate of the top side of the Quadrilateral
+   */
+  fun getLowestPointOfTop(): Double {
+    return max(point1.y, point2.y)
+  }
+
+  /**
+   * Returns the highest y-coordinate of the bottom side of the Quadrilateral
+   */
+  fun getHighestPointOfBottom(): Double {
+    return min(point3.y, point4.y)
+  }
+
+  /**
+   * Returns the innermost x-coordinate of the left side of the Quadrilateral
+   */
+  fun getInnerMostXLeftSide(): Double {
+    return max(point1.x, point4.x)
+  }
+
+  /**
+   * Returns the innermost x-coordinate of the right side of the Quadrilateral
+   */
+  fun getInnerMostXRightSide(): Double {
+    return min(point2.x, point3.x)
+  }
+
+  /**
+   * Generates a rectangle for cropping a rotated quadrilateral.
+   * This function calculates the bounding box of the quadrilateral and then determines the distances from the borders of the bounding box to the actual borders of the quadrilateral.
+   * It then creates a new rectangle that is shifted by these distances and optionally padded.
+   * The resulting rectangle can be used for cropping the quadrilateral from an image.
+   * Used after rotating, which results in a white background in areas where the original image got rotated away from.
+   *
+   * @param width The width of the image from which the quadrilateral is to be cropped.
+   * @param height The height of the image from which the quadrilateral is to be cropped.
+   * @param padding An optional padding to be added to the rectangle. Defaults to 0.0.
+   * @return A Rectangle object representing the area to be cropped from the image.
+   */
+  fun generateRectangleForRotatedCropping(width: Double, height: Double, padding: Double = 0.0): Rectangle {
+    val rectangle = calculateBoundingBox()
+
+    // Calculate the distances from the borders of the bounding box to the actual borders of the quadrilateral
+    val distanceToBorderTop = abs(rectangle.top - getLowestPointOfTop())
+    val distanceToBorderBottom = abs(getHighestPointOfBottom() - rectangle.bottom)
+    val distanceToBorderLeft = abs(rectangle.left - getInnerMostXLeftSide())
+    val distanceToBorderRight = abs(getInnerMostXRightSide() - rectangle.right)
+
+    // Create a new rectangle that is shifted by these distances and optionally padded
+    return Rectangle.fromCoords(
+      topLeft = Coordinates(0.0 + distanceToBorderLeft - padding, distanceToBorderTop - padding),
+      bottomRight = Coordinates(width - distanceToBorderRight + padding, height - distanceToBorderBottom + padding)
+    )
+  }
+
 
   /**
    * Calculates the bounding box of the Quadrilateral: The smallest rectangle that contains the Quadrilateral.
