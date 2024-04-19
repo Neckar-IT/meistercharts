@@ -149,29 +149,18 @@ data class Rectangle(
       return Rectangle(left, top, right - left, bottom - top)
     }
 
-    enum class Alignment {
-      CENTER,
-      TOP_LEFT,
-      TOP_RIGHT,
-      BOTTOM_LEFT,
-      BOTTOM_RIGHT,
-      CENTER_LEFT,
-      CENTER_RIGHT,
-      CENTER_TOP,
-      CENTER_BOTTOM,
-    }
-
-    fun fromOrigin(origin: Coordinates, size: Size, alignment: Alignment): Rectangle {
-      return when (alignment) {
-        Alignment.CENTER -> centered(size)
-        Alignment.TOP_LEFT -> topLeft(size)
-        Alignment.TOP_RIGHT -> topRight(size)
-        Alignment.BOTTOM_LEFT -> bottomLeft(size)
-        Alignment.BOTTOM_RIGHT -> bottomRight(size)
-        Alignment.CENTER_LEFT -> centerLeft(size)
-        Alignment.CENTER_RIGHT -> centerRight(size)
-        Alignment.CENTER_TOP -> centerTop(size)
-        Alignment.CENTER_BOTTOM -> centerBottom(size)
+    fun fromOrigin(origin: Coordinates, size: Size, direction: Direction): Rectangle {
+      return when (direction) {
+        Direction.Center -> centered(size)
+        Direction.CenterLeft -> centerLeft(size)
+        Direction.CenterRight -> centerRight(size)
+        Direction.TopLeft -> topLeft(size)
+        Direction.TopCenter -> centerTop(size)
+        Direction.TopRight -> topRight(size)
+        Direction.BottomLeft -> bottomLeft(size)
+        Direction.BottomCenter -> centerBottom(size)
+        Direction.BottomRight -> bottomRight(size)
+        else -> throw IllegalArgumentException("Invalid direction: $direction")
       }.plus(origin.x, origin.y)
     }
 
