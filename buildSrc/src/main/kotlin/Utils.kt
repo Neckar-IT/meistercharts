@@ -511,17 +511,17 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
     browser {
       configureJsKarma()
 
-      commonWebpackConfig(Action {
+      commonWebpackConfig {
         devtool = WebpackDevtool.SOURCE_MAP
 
         cssSupport {
           enabled.set(true) //enable CSS support for all tasks (https://kotlinlang.org/docs/js-project-setup.html#building-executables)
         }
-      })
+      }
 
-      webpackTask(Action {
+      webpackTask {
         sourceMaps = true
-      })
+      }
     }
   }
 
@@ -534,9 +534,9 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
  * Configures JS test runner using karma
  */
 fun org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl.configureJsKarma() {
-  testTask(Action {
+  testTask {
     configureJsKarma()
-  })
+  }
 }
 
 /**
@@ -544,7 +544,7 @@ fun org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl.configureJsKar
  */
 fun org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest.configureJsKarma() {
   useKarma {
-    if (project.inCi) {
+    if (project.inCi || project.inContainer) {
       useChromeHeadlessNoSandbox()
     } else {
       useChromeHeadless()
@@ -630,6 +630,19 @@ val Project.ciInformation: GitlabCiInformation
 val Project.inCi: Boolean
   get() {
     return ciInformation.inCi
+  }
+
+val Project.inContainer: Boolean
+  get() {
+    return devContainerInformation.inDockerContainer
+  }
+
+/**
+ * Returns true if this process is running in a development container
+ */
+val Project.devContainerInformation: DevContainerInformation
+  get() {
+    return rootProject.extra.get("devContainerInformation") as? DevContainerInformation ?: throw IllegalStateException("Could not find DevContainerInformation in extra")
   }
 
 /**

@@ -57,6 +57,11 @@ sealed interface Url {
       return DataScheme("data:image/$imageFormat;base64,${bytes.toBase64()}")
     }
 
+    @JsExport.Ignore
+    inline fun image(bytesBase64Encoded: String, imageFormat: String): DataScheme {
+      return DataScheme("data:image/$imageFormat;base64,$bytesBase64Encoded")
+    }
+
     /**
      * Parses an URL
      */
