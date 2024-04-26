@@ -21,7 +21,6 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.unit.other.px
-import kotlin.jvm.JvmOverloads
 
 /**
  * Describes an image that can be painted on a graphics context.
@@ -36,7 +35,11 @@ import kotlin.jvm.JvmOverloads
  * ### JavaFX
  * In JavaFX [data] contains a javafx.scene.image.Image
  */
-data class Image @JvmOverloads constructor(
+data class Image
+/**
+ * Use the platform dependent `create` methods instead
+ */
+internal constructor(
   val data: Any,
   /**
    * The size of the image - may or may *not* be the natural size of the image
@@ -47,7 +50,7 @@ data class Image @JvmOverloads constructor(
    * The alignment point of the image.
    * Is useful for images that have a "natural" base - e.g. the tip of an arrow
    */
-  val alignmentPoint: Coordinates = Coordinates.origin
+  val alignmentPoint: Coordinates = Coordinates.origin,
 ) : Paintable {
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle = Rectangle(alignmentPoint, size)
@@ -60,5 +63,18 @@ data class Image @JvmOverloads constructor(
   override fun paintSizeForced(paintingContext: LayerPaintingContext, x: Double, y: Double, forcedSize: Size) {
     val gc = paintingContext.gc
     gc.paintImage(this, x, y, forcedSize.width, forcedSize.height)
+  }
+
+  /**
+   * Required for extension methods
+   */
+  companion object {
+    /**
+     * Must not be called directly. Use the platform-specific extensions ("create) instead
+     */
+    @Suppress("FunctionName")
+    //TODO @Deprected with hidden(!?)
+    @Deprecated("Do not use. Use the platform-specific extensions instead - `Image.create(...)`", level = DeprecationLevel.WARNING, replaceWith = ReplaceWith("Image.create(data, size, alignmentPoint)"))
+    fun _fromPlatform(data: Any, size: Size, alignmentPoint: Coordinates): Image = Image(data, size, alignmentPoint)
   }
 }

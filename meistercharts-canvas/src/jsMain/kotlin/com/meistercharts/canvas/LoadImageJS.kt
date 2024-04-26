@@ -17,7 +17,6 @@ package com.meistercharts.canvas
 
 import com.meistercharts.events.ImageLoadedEventBroker
 import com.meistercharts.js.MeisterChartClasses
-import it.neckar.geometry.Size
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.http.Url
@@ -72,7 +71,7 @@ actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
  * @return the newly created Image object
  */
 private fun HTMLImageElement.createImage(): Image {
-  return Image(this, Size(this.naturalWidth.toDouble(), this.naturalHeight.toDouble()))
+  return Image.create(this, this.naturalSize)
 }
 
 private val logger = LoggerFactory.getLogger("com.meistercharts.canvas.LoadImageJs")

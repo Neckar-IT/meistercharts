@@ -27,6 +27,15 @@ class Path : PathActions, SupportsPathActions {
   override val actions: MutableList<PathAction> = mutableListOf()
 
   /**
+   * Returns true if the current path is a new path.
+   * This is the case if beginPath was called and no path actions were executed.
+   */
+  val isNewPath: Boolean
+    get() {
+      return actions.isEmpty()
+    }
+
+  /**
    * Returns the current point of the path
    */
   val currentPointOrNull: Coordinates?

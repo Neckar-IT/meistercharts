@@ -4,6 +4,7 @@ import it.neckar.open.collections.fastForEach
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.Image
 import org.w3c.dom.parsing.XMLSerializer
 
 
@@ -42,4 +43,3 @@ fun HTMLElement.findParentWithClass(className: String): Element? {
   }
   return null
 }
-

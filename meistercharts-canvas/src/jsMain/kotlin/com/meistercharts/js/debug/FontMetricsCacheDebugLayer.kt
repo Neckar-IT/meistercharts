@@ -25,6 +25,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.Image
+import com.meistercharts.canvas.create
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.size
@@ -61,7 +62,7 @@ class FontMetricsCacheDebugLayer(
 
     gc.saved {
       gc.scale(1.0, 1.0 / FontMetricsCacheJS.fontMetricsCalculator.scaleFactorY)
-      val image = Image(canvas, canvas.size)
+      val image = Image.create(canvas, canvas.size)
       paintingContext.gc.saved {
         image.paintInBoundingBox(paintingContext, 0.0, 0.0, Direction.TopLeft)
       }

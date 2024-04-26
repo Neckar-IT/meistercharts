@@ -20,6 +20,7 @@ import com.meistercharts.canvas.AbstractCanvas
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.ChartSizeClassification
 import com.meistercharts.canvas.Image
+import com.meistercharts.canvas.create
 import com.meistercharts.canvas.noFocusBorder
 import com.meistercharts.canvas.toCss
 import com.meistercharts.canvas.unselectable
@@ -552,7 +553,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   override fun takeSnapshot(): Image {
     requireOffScreenCanvas()
 
-    return Image(canvasElement, size)
+    return Image.create(canvasElement, size)
   }
 
   /**
@@ -561,7 +562,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   fun takeSnapshotPhysicalSize(): Image {
     requireOffScreenCanvas()
 
-    return Image(canvasElement, Size(physicalWidth, physicalHeight))
+    return Image.create(canvasElement, Size(physicalWidth, physicalHeight))
   }
 }
 

@@ -101,7 +101,7 @@ data class Size(
   /**
    * Multiplies width and height with the given factor
    */
-  fun times(factor: Double): Size {
+  operator fun times(factor: Double): Size {
     if (factor == 1.0) {
       return this
     }

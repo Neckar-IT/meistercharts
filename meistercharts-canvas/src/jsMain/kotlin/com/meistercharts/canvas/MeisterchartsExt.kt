@@ -21,7 +21,6 @@ import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontStyle
 import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
-import com.meistercharts.font.GenericFontFamily
 import it.neckar.geometry.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -40,7 +39,7 @@ import org.w3c.dom.Image
  */
 fun createImage(src: String): com.meistercharts.canvas.Image {
   throw UnsupportedOperationException("not implemented yet")
-  return Image(createImageElement(src), Size.zero)
+  return com.meistercharts.canvas.Image.create(createImageElement(src), Size.zero)
 }
 
 /**
