@@ -44,8 +44,6 @@ object Plugins {
 
   const val jacoco: String = "org.gradle.jacoco"
 
-  @Deprecated("Do not use anymyore - is based on conda")
-  const val pythonPswidersk: String = "com.pswidersk.python-plugin"
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
@@ -90,8 +88,7 @@ object Plugins {
 
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
-  const val dockerPasswordFromSecretFile: String = "it.neckar.docker-password-from-secret-file"
-  const val secretFromPropertiesFile: String = "it.neckar.secret-from-properties-file"
+  const val secretLoader: String = "it.neckar.secrets-loader"
 
   @Deprecated("Does not seem to work")
   const val ssh: String = "online.colaba.ssh"
@@ -217,10 +214,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.intellij: PluginDependen
 inline val org.gradle.plugin.use.PluginDependenciesSpec.springBoot: PluginDependencySpec
   get() = id(Plugins.springBoot)
 
-@Deprecated("Use the python plugin instead")
-inline val org.gradle.plugin.use.PluginDependenciesSpec.pythonPswidersk: PluginDependencySpec
-  get() = id(Plugins.pythonPswidersk)
-
 inline val org.gradle.plugin.use.PluginDependenciesSpec.python: PluginDependencySpec
   get() = id(Plugins.python)
 
@@ -245,11 +238,8 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependenc
 inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
   get() = id(Plugins.copyResourcesFromDependencies)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.dockerPasswordFromSecretFile: PluginDependencySpec
-  get() = id(Plugins.dockerPasswordFromSecretFile)
-
-inline val org.gradle.plugin.use.PluginDependenciesSpec.secretFromPropertiesFile: PluginDependencySpec
-  get() = id(Plugins.secretFromPropertiesFile)
+inline val org.gradle.plugin.use.PluginDependenciesSpec.secretLoader: PluginDependencySpec
+  get() = id(Plugins.secretLoader)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)
@@ -257,6 +247,7 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpe
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
 
+@Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")
 inline val org.gradle.plugin.use.PluginDependenciesSpec.ssh: PluginDependencySpec
   get() = id(Plugins.ssh)

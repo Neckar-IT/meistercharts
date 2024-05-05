@@ -2,8 +2,6 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
-import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
-import java.io.File
 
 /**
  * Abstract base class for objects that contain constants for all projects
@@ -178,11 +176,6 @@ data class ConfiguredProject internal constructor(
    */
   val type: ProjectType,
 ) {
-  //context(ProjectDelegate)
-  fun getProject(resolver: ProjectDelegate): Project {
-    return resolver.project(path)
-  }
-
   fun getProject(resolver: Project): Project {
     return resolver.project(path)
   }

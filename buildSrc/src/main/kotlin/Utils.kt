@@ -569,6 +569,14 @@ val Project.branch: String
   }
 
 /**
+ * Returns true if the current branch is the master/main branch
+ */
+val Project.onMainBranch: Boolean
+  get() {
+    return rootProject.branch == "master" || rootProject.branch == "main"
+  }
+
+/**
  * Returns the sha1 of the current git commit
  */
 val Project.gitCommit: String
