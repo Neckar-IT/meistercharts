@@ -180,6 +180,20 @@ data class ConfiguredProject internal constructor(
     return resolver.project(path)
   }
 
+  /**
+   * Returns the project using this as resolver
+   */
+  context (Project) //currently not supported by kotlin-dsl + Gradle:
+  //https://github.com/gradle/gradle/issues/24221
+  fun projectWithContext(): Project {
+    return project(path)
+  }
+
+  //TODO replace with context once supported
+  fun project(): Project {
+    return GradleContext.project(path)
+  }
+
   override fun toString(): String {
     return path
   }

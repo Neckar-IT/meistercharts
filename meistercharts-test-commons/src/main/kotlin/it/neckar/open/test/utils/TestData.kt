@@ -2,6 +2,9 @@ package it.neckar.open.test.utils
 
 import it.neckar.open.http.Url
 import it.neckar.open.kotlin.lang.fromBase64
+import it.neckar.open.resources.getResourceAsStreamSafe
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 
 /**
  * Contains test data that can be used in tests
@@ -22,4 +25,9 @@ object TestData {
     }
   }
 
+  val drop300Bytes: ByteArray = this::class.getResourceAsStreamSafe("/images/drop_300.jpg").readBytes()
+  val drop300: BufferedImage = ImageIO.read(drop300Bytes.inputStream())
+
+  val dropBytes: ByteArray = this::class.getResourceAsStreamSafe("/images/drop.jpg").readBytes()
+  val drop: BufferedImage = ImageIO.read(drop300Bytes.inputStream())
 }

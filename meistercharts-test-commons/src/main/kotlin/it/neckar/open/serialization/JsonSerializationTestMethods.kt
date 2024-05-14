@@ -18,7 +18,7 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T>,
   serializersModule: SerializersModule = EmptySerializersModule(),
-  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+  noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
@@ -33,10 +33,10 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   serializersModule: SerializersModule = EmptySerializersModule(),
-  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+  noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
-  expectedJsonProvider: () -> String?,
+  noinline expectedJsonProvider: () -> String?,
 ): T {
   val encoder: Json = Json {
     this.serializersModule = serializersModule
@@ -54,7 +54,7 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   encoder: Json,
-  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+  noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
@@ -72,16 +72,25 @@ inline fun <reified T> roundTrip(
   /**
    * Comparison check that is called. Should throw an exception
    */
-  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+  noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJsonProvider: () -> String?,
 ): T {
+  return _roundTrip(encoder, serializer, objectToSerialize, comparisonCheck, expectedJsonProvider())
+}
+
+@Suppress("FunctionName")
+fun <T> _roundTrip(
+  encoder: Json, serializer: KSerializer<T>,
+  objectToSerialize: T,
+  comparisonCheck: ComparisonCheck<T>,
+  expectedJson: String?,
+): T {
   val json = encoder.encodeToString(serializer, objectToSerialize)
 
   //println("JSON length: ${json.toByteArray().size}")
-
-  expectedJsonProvider()?.let { expectedJson ->
+  expectedJson?.let {
     JsonUtils.assertJsonEquals(expectedJson, json)
   }
 

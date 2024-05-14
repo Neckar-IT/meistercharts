@@ -63,3 +63,6 @@ org.openjdk.jmh:*
 
 com.github.docker-java:docker(-*)
 ^^^.^^^^^^.^^^^^^^^^^^
+
+org.testcontainers:*
+    ^^^^^^^^^^^^^^

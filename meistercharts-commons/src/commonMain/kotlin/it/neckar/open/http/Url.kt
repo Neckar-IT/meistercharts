@@ -73,6 +73,11 @@ sealed interface Url {
         else -> Relative(url)
       }
     }
+
+    /**
+     * HTTP url to localhost
+     */
+    val localhostHttp: Absolute = Url.absolute("http://localhost")
   }
 
   /**

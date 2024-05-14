@@ -13,6 +13,13 @@ value class HttpParameterName(val value: String) {
     return value
   }
 
+  /**
+   * Returns the parameter as a URL pattern parameter which can be used in KTOR routing
+   */
+  fun asUrlPatternParameter(): String {
+    return "{$value}"
+  }
+
   companion object {
     val uuid: HttpParameterName = HttpParameterName("uuid")
     val verbose: HttpParameterName = HttpParameterName("verbose")

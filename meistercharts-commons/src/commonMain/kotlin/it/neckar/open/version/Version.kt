@@ -32,6 +32,8 @@
 package it.neckar.open.version
 
 
+import it.neckar.open.version.io.VersionSerializer
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
@@ -39,6 +41,7 @@ import kotlin.jvm.JvmStatic
  * A version
  *
  */
+@Serializable(with = VersionSerializer::class)
 data class Version
 /**
  * Creates a version
@@ -68,7 +71,7 @@ constructor(
    *
    * @return the suffix or null if no suffix has been set
    */
-  val suffix: String? = null
+  val suffix: String? = null,
 ) : Comparable<Version> {
 
   val isSnapshot: Boolean

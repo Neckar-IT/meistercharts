@@ -15,7 +15,7 @@ object KClassSerializer : KSerializer<KClass<*>> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("KType", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: KClass<*>) {
-    encoder.encodeString(value.qualifiedName ?: throw IllegalStateException("Cannot serialize anonymous class"))
+    encoder.encodeString(value.java.name)
   }
 
   override fun deserialize(decoder: Decoder): KClass<*> {

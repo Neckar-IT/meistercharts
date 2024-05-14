@@ -88,7 +88,7 @@ object Plugins {
 
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
-  const val secretLoader: String = "it.neckar.secrets-loader"
+  const val secretsLoader: String = "it.neckar.secrets-loader"
 
   @Deprecated("Does not seem to work")
   const val ssh: String = "online.colaba.ssh"
@@ -238,8 +238,8 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependenc
 inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
   get() = id(Plugins.copyResourcesFromDependencies)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.secretLoader: PluginDependencySpec
-  get() = id(Plugins.secretLoader)
+inline val org.gradle.plugin.use.PluginDependenciesSpec.secretsLoader: PluginDependencySpec
+  get() = id(Plugins.secretsLoader)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)
