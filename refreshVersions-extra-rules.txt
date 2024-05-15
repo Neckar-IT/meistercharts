@@ -66,3 +66,6 @@ com.github.docker-java:docker(-*)
 
 org.testcontainers:*
     ^^^^^^^^^^^^^^
+
+aws.sdk.kotlin:*
+^^^^^^^^^^^^^^

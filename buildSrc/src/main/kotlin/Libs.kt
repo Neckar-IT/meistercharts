@@ -148,8 +148,6 @@ public object Libs {
 
     public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
 
-    public const val ktor_swagger_ui: String = "io.github.smiley4:ktor-swagger-ui:_"
-
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
     public const val ktor_client_cio: String = "io.ktor:ktor-client-cio:_"
@@ -448,7 +446,7 @@ public object Libs {
     public const val org_springframework_boot_gradle_plugin: String =
             "org.springframework.boot:org.springframework.boot.gradle.plugin:_"
 
-  public const val junit_jupiter: String = "org.testcontainers:junit-jupiter:_"
+    public const val junit_jupiter: String = "org.testcontainers:junit-jupiter:_"
 
     public const val org_testcontainers_minio: String = "org.testcontainers:minio:_"
 
