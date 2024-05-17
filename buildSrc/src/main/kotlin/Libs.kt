@@ -461,4 +461,6 @@ public object Libs {
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
+
+    public const val net_java_dev_jna: String = "net.java.dev.jna:jna:_"
 }
