@@ -39,6 +39,11 @@ expect fun guessInUnitTestEnvironment(): Boolean
 expect fun guessInCIEnvironment(): Boolean
 
 /**
+ * Returns true if the process is (probably) currently debugging
+ */
+expect fun guessDebugging(): Boolean
+
+/**
  * Guesses the environment mode
  */
 expect fun guessEnvironmentMode(): EnvironmentMode

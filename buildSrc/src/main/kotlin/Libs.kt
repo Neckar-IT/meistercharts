@@ -30,6 +30,8 @@ public object Libs {
 
     public const val uuid: String = "com.benasher44:uuid:_"
 
+  public const val kaml: String = "com.charleskorn.kaml:kaml:_"
+
     public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
             "com.cosminpolifronie.gradle.plantuml:com.cosminpolifronie.gradle.plantuml.gradle.plugin:_"
 
@@ -232,6 +234,8 @@ public object Libs {
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
+
+    public const val jna: String = "net.java.dev.jna:jna:_"
 
     public const val launch4j: String = "net.sf.launch4j:launch4j:_"
 
@@ -461,6 +465,4 @@ public object Libs {
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
-
-    public const val net_java_dev_jna: String = "net.java.dev.jna:jna:_"
 }

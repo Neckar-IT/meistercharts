@@ -1,6 +1,14 @@
 package it.neckar.open.kotlin.lang
 
 /**
+ * Returns true if the process is (probably) currently debugging
+ */
+actual fun guessDebugging(): Boolean {
+  return false
+}
+
+
+/**
  * Returns true if this test is running (probably) in a unit test
  */
 actual fun guessInUnitTestEnvironment(): Boolean {
