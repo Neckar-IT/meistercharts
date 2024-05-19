@@ -30,7 +30,7 @@ public object Libs {
 
     public const val uuid: String = "com.benasher44:uuid:_"
 
-  public const val kaml: String = "com.charleskorn.kaml:kaml:_"
+    public const val kaml: String = "com.charleskorn.kaml:kaml:_"
 
     public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
             "com.cosminpolifronie.gradle.plantuml:com.cosminpolifronie.gradle.plantuml.gradle.plugin:_"
@@ -195,8 +195,6 @@ public object Libs {
 
     public const val ktor_server_test_host: String = "io.ktor:ktor-server-test-host:_"
 
-    public const val ktor_server_test_host_jvm: String = "io.ktor:ktor-server-test-host-jvm:_"
-
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
     public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"
@@ -230,6 +228,8 @@ public object Libs {
     public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
 
     public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
+
+    public const val image4j: String = "net.ifok.image:image4j:_"
 
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
@@ -320,12 +320,6 @@ public object Libs {
     public const val org_jetbrains_dokka_gradle_plugin: String =
             "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:_"
 
-    public const val intellij_coverage_agent: String =
-            "org.jetbrains.intellij.deps:intellij-coverage-agent:_"
-
-    public const val intellij_coverage_reporter: String =
-            "org.jetbrains.intellij.deps:intellij-coverage-reporter:_"
-
     public const val org_jetbrains_intellij_gradle_plugin: String =
             "org.jetbrains.intellij:org.jetbrains.intellij.gradle.plugin:_"
 
@@ -414,6 +408,8 @@ public object Libs {
 
     public const val kotlinx_serialization_protobuf: String =
             "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:_"
+
+    public const val kover_jvm_agent: String = "org.jetbrains.kotlinx:kover-jvm-agent:_"
 
     public const val fxgraphics2d: String = "org.jfree:fxgraphics2d:_"
 
