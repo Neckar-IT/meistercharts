@@ -2,11 +2,17 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
+import java.io.File
 
 /**
  * Abstract base class for objects that contain constants for all projects
  */
 abstract class AbstractProjects {
+
+  val disabledProjectsSupport: DisabledProjectsSupport = DisabledProjectsSupport.load(
+    GradleContext.rootProject.file("disabled-projects.json5")
+  )
+
   /**
    * Contains all configured projects
    */
@@ -16,7 +22,7 @@ abstract class AbstractProjects {
   protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
     require(path2project[path] == null) { "Project $path already configured" }
 
-    return ConfiguredProject(path, projectType).also {
+    return ConfiguredProject(path = path, type = projectType, disabled = disabledProjectsSupport.isDisabled(path)).also {
       configuredProjects.add(it)
       path2project[path] = it
     }
@@ -175,9 +181,25 @@ data class ConfiguredProject internal constructor(
    * The type of the project
    */
   val type: ProjectType,
+
+  /**
+   * Set to true if this project has been disabled
+   */
+  val disabled: Boolean,
 ) {
+
+  val enabled: Boolean
+    get() = disabled.not()
+
   fun getProject(resolver: Project): Project {
-    return resolver.project(path)
+    try {
+      return resolver.project(path)
+    } catch (e: org.gradle.api.UnknownProjectException) {
+      println("Could not find project $path - is it disabled?: $disabled")
+      println("Check disabled-projects.json if the project has been disabled!")
+      println("Try `gradle clean build --no-configuration-cache --no-daemon --no-build-cache` to force recompilation")
+      throw e
+    }
   }
 
   /**
