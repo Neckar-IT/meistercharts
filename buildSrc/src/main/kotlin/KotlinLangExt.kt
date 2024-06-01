@@ -17,23 +17,25 @@ fun <T> T?.ifNull(block: () -> Unit): T? {
  * Checks whether a given file is a symbolic link.
  */
 fun File.isSymbolicLink(): Boolean {
-  if (this.isFile.not()) {
-    return false
-  }
-
-  return absoluteFile != canonicalFile
+  return Files.isSymbolicLink(this.toPath())
 }
 
 /**
  * Returns true if this file is a symlink to the provided target
  */
 fun File.isSymLinkTo(targetFile: File): Boolean {
-  if (this.isSymbolicLink().not()) {
+  if (isSymbolicLink().not()) {
     return false
   }
 
-  return targetFile.absolutePath == canonicalPath
+  val symlinkTarget = Files.readSymbolicLink(toPath())
+
+  val resolvedSymlinkTarget = toPath().parent.resolve(symlinkTarget).normalize().toAbsolutePath()
+  val expectedTargetPath = targetFile.toPath().toAbsolutePath().normalize()
+
+  return resolvedSymlinkTarget == expectedTargetPath
 }
+
 
 /**
  * Creates a symlink to the target
