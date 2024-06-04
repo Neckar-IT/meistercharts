@@ -17,7 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.canvas.mock.MockCanvasRenderingContext
 import com.meistercharts.canvas.text.CanvasStringShortener
-import com.meistercharts.canvas.text.StringShortener
+import it.neckar.open.string.StringShortener
 import assertk.*
 import assertk.assertions.*
 

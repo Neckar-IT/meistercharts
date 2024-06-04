@@ -22,7 +22,7 @@ val Project.tools: File
 @Deprecated("use JibCliPlugin instead")
 val Project.jibCli: File
   get() {
-    val jibCliDir = File(tools, "jib-cli/jib-0.12.0")
+    val jibCliDir = File(tools, "jib-cli/jib-0.13.0")
     val jibCliBinDir = File(jibCliDir, "bin").also { require(it.isDirectory) { "jib-cli bin directory <${it.absolutePath}> does not exist or is not a directory" } }
 
     return when {

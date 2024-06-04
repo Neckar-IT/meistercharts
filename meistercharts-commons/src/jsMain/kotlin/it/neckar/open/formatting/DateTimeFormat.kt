@@ -11,7 +11,7 @@ import kotlin.js.Date
  * The formatted date is always UTC.
  */
 actual class DateTimeFormatIso8601 : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     //https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
     return Date(timestamp).toISOString()
   }
@@ -27,14 +27,14 @@ actual class DateTimeFormatIso8601 : DateTimeFormat {
 }
 
 actual class DateFormatIso8601 : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     return "${date.getFullYear()}-${(date.getMonth() + 1).formatWithLeadingZeros()}-${date.getDate().formatWithLeadingZeros()}"
   }
 }
 
 actual class TimeFormatIso8601 : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     return date.toLocaleTimeString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone) {
       hour12 = false
@@ -56,7 +56,7 @@ private fun @PositiveOrZero Int.formatWithLeadingZeros(length: Int = 2): String 
  * The formatted date is always UTC.
  */
 actual class DateTimeFormatUTC : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     //https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
     return Date(timestamp).toISOString()
   }
@@ -75,13 +75,13 @@ actual class DateTimeFormatUTC : DateTimeFormat {
  * A formatted date (no date)
  */
 actual class TimeFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return Date(timestamp).toLocaleTimeString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
   }
 }
 
 actual class TimeFormatWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     val formattedTimeWithoutMillis = date.toLocaleTimeString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
     return insertMillis(formattedTimeWithoutMillis, date.getUTCMilliseconds())
@@ -89,19 +89,19 @@ actual class TimeFormatWithMillis : DateTimeFormat {
 }
 
 actual class DateFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return Date(timestamp).toLocaleDateString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
   }
 }
 
 actual class DefaultDateTimeFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return Date(timestamp).toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
   }
 }
 
 actual class DateTimeFormatShort : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return Date(timestamp).toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone) {
       dateStyle = "short"
       timeStyle = "short"
@@ -110,7 +110,7 @@ actual class DateTimeFormatShort : DateTimeFormat {
 }
 
 actual class DateTimeFormatWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     val formattedDateTimeWithoutMillis = date.toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
     return insertMillis(formattedDateTimeWithoutMillis, date.getUTCMilliseconds())
@@ -118,7 +118,7 @@ actual class DateTimeFormatWithMillis : DateTimeFormat {
 }
 
 actual class DateTimeFormatShortWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     val formattedDateTimeWithoutMillis = date.toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone))
     return insertMillis(formattedDateTimeWithoutMillis, date.getUTCMilliseconds())
@@ -129,7 +129,7 @@ actual class DateTimeFormatShortWithMillis : DateTimeFormat {
  * A format that formats a date - but only prints the month and year
  */
 actual class YearMonthFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
 
     return date.toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone) {
@@ -140,7 +140,7 @@ actual class YearMonthFormat actual constructor() : DateTimeFormat {
 }
 
 actual class YearFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
 
     return date.toLocaleString(i18nConfiguration.formatLocale.locale, localeOptions(i18nConfiguration.timeZone) {
@@ -153,7 +153,7 @@ actual class YearFormat actual constructor() : DateTimeFormat {
  * Formats a time stamp as second with millis
  */
 actual class SecondMillisFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val date = Date(timestamp)
     val number = date.getSeconds() + date.getMilliseconds() / 1000.0
     return number.format(

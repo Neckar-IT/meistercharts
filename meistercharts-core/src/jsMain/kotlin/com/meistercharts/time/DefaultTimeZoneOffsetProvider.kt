@@ -21,7 +21,7 @@ import it.neckar.open.unit.si.ms
 import kotlin.js.Date
 
 actual class DefaultTimeZoneOffsetProvider : TimeZoneOffsetProvider {
-  override fun timeZoneOffset(timestamp: Double, timeZone: TimeZone): Double {
+  actual override fun timeZoneOffset(timestamp: Double, timeZone: TimeZone): Double {
     //Round the time stamp to avoid time zone offsets with fragments of millis
     val timestampRounded = timestamp.round()
 

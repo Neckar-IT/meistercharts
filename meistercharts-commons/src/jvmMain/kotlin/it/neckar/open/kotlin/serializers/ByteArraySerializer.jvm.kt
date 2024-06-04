@@ -19,9 +19,9 @@ import org.bson.codecs.kotlinx.BsonEncoder
  * Usage:`val foobar: @Serializable(with = ByteArrayBase64Serializer::class) ByteArray?`
  */
 actual object ByteArraySerializer : KSerializer<ByteArray> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayBase64", PrimitiveKind.STRING)
+  actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteArrayBase64", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, value: ByteArray) {
+  actual override fun serialize(encoder: Encoder, value: ByteArray) {
     when (encoder) {
       is BsonEncoder -> {
         encoder.encodeBsonValue(BsonBinary(BsonBinarySubType.BINARY, value))
@@ -31,7 +31,7 @@ actual object ByteArraySerializer : KSerializer<ByteArray> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): ByteArray {
+  actual override fun deserialize(decoder: Decoder): ByteArray {
     return when (decoder) {
       is BsonDecoder -> {
         decoder.decodeBsonValue().asBinary().data

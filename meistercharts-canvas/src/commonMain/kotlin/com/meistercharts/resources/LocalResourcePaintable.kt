@@ -15,8 +15,10 @@
  */
 package com.meistercharts.resources
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
@@ -44,6 +46,10 @@ expect class LocalResourcePaintable(
   val alignmentPoint: Coordinates
 
   fun withSize(size: Size): LocalResourcePaintable
+
+  override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle
+
+  override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double)
 
   companion object
 }

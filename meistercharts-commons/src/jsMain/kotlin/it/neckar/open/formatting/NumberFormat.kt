@@ -9,13 +9,13 @@ import kotlin.math.pow
  */
 actual class DecimalFormat internal actual constructor(
   /** Possible values are from 0 to 20 */
-  override val maximumFractionDigits: Int,
+  actual override val maximumFractionDigits: Int,
   /** Possible values are from 0 to 20 */
-  override val minimumFractionDigits: Int,
+  actual override val minimumFractionDigits: Int,
   /** Possible values are from 1 to 21 */
-  override val minimumIntegerDigits: Int,
+  actual override val minimumIntegerDigits: Int,
   /** Whether thousand separators should be used */
-  override val useGrouping: Boolean
+  actual override val useGrouping: Boolean,
 ) : NumberFormat, DecimalFormatDescriptor {
 
   /**
@@ -35,7 +35,7 @@ actual class DecimalFormat internal actual constructor(
     val useGrouping = this@DecimalFormat.useGrouping
   }
 
-  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     //add 0.0 to avoid "-0.0"
     return (value + 0.0).asDynamic().toLocaleString(i18nConfiguration.formatLocale.locale, formatOptions) as String
   }
@@ -57,7 +57,7 @@ actual class ExponentialFormat actual constructor(
   val useGrouping: Boolean
 ) : NumberFormat {
 
-  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return value.asDynamic().toExponential(maximumFractionDigits) as String
   }
 

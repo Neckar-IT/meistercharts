@@ -25,7 +25,7 @@ object GradleContext {
 
   /**
    * Returns the project instance.
-   * Replace with context receivers as soon as //https://github.com/gradle/gradle/issues/24221 has been fixed
+   * Replace with context receivers as soon as https://github.com/gradle/gradle/issues/24221 has been fixed
    */
   fun project(path: String): Project {
     return gradle.rootProject.project(path)

@@ -346,6 +346,9 @@ public object Libs {
     public const val org_jetbrains_kotlin_plugin_serialization_gradle_plugin: String =
             "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:_"
 
+    public const val kotlin_build_tools_impl: String =
+            "org.jetbrains.kotlin:kotlin-build-tools-impl"
+
     public const val kotlin_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-compiler-embeddable:_"
 

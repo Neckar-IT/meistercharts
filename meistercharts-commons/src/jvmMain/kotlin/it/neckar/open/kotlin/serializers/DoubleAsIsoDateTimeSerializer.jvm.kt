@@ -22,9 +22,9 @@ import org.bson.codecs.kotlinx.BsonEncoder
  * `@Serializable(with = DoubleAsIsoDateTimeSerializer::class)`
  */
 actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
+  actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, value: @ms Double) {
+  actual override fun serialize(encoder: Encoder, value: @ms Double) {
     when (encoder) {
       is BsonEncoder -> {
         encoder.writer().writeDateTime(value.toLong())
@@ -36,7 +36,7 @@ actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
     }
   }
 
-  override fun deserialize(decoder: Decoder): @ms Double {
+  actual override fun deserialize(decoder: Decoder): @ms Double {
     return when (decoder) {
       is BsonDecoder -> {
         decoder.reader().readDateTime().toDouble()

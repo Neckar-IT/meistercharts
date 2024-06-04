@@ -4,9 +4,13 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
  * Kotlin settings
  */
 object KotlinSettings {
-  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
   val languageVersionAsString: String = languageVersion.version
 
+  /**
+   * Currently updating to 2.0 does nto work with KSP
+   * https://github.com/google/ksp/issues/1536
+   */
   val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
   val apiVersionAsString: String = apiVersion.version
 

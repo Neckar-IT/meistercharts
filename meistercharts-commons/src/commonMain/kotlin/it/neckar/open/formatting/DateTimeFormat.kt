@@ -94,6 +94,8 @@ val dateTimeFormatShortWithMillis: CachedDateTimeFormat = DateTimeFormatShortWit
  * This formatter always returns "Z" (UTC) as time zone
  */
 expect class DateTimeFormatIso8601() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+
   companion object {
     /**
      * Parses the date-time string to a timestamp
@@ -102,14 +104,20 @@ expect class DateTimeFormatIso8601() : DateTimeFormat {
   }
 }
 
-expect class DateFormatIso8601() : DateTimeFormat
+expect class DateFormatIso8601() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
-expect class TimeFormatIso8601() : DateTimeFormat
+expect class TimeFormatIso8601() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * Formats a date as a UTC date (locale independent)
  */
 expect class DateTimeFormatUTC() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+
   companion object {
     /**
      * Parses the UTC string to a timestamp
@@ -121,52 +129,72 @@ expect class DateTimeFormatUTC() : DateTimeFormat {
 /**
  * A formatted date (time only)
  */
-expect class TimeFormat() : DateTimeFormat
+expect class TimeFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A formatted time including milliseconds
  */
-expect class TimeFormatWithMillis() : DateTimeFormat
+expect class TimeFormatWithMillis() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format for a date (without time)
  */
-expect class DateFormat() : DateTimeFormat
+expect class DateFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format that formats a date - but only prints the month and year
  */
-expect class YearMonthFormat() : DateTimeFormat
+expect class YearMonthFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format that formats a date - but only prints the year
  */
-expect class YearFormat() : DateTimeFormat
+expect class YearFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * Formats a time stamp as second with millis
  */
-expect class SecondMillisFormat() : DateTimeFormat
+expect class SecondMillisFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format for a date and a time
  */
-expect class DefaultDateTimeFormat() : DateTimeFormat
+expect class DefaultDateTimeFormat() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format for a date and a time (short date format)
  */
-expect class DateTimeFormatShort() : DateTimeFormat
+expect class DateTimeFormatShort() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format for a date and a time with millis
  */
-expect class DateTimeFormatWithMillis() : DateTimeFormat
+expect class DateTimeFormatWithMillis() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 /**
  * A format for a date and a time with millis (short date format)
  */
-expect class DateTimeFormatShortWithMillis() : DateTimeFormat
+expect class DateTimeFormatShortWithMillis() : DateTimeFormat {
+  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 
 
 /**

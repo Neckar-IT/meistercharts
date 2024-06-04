@@ -49,7 +49,7 @@ actual class DateTimeFormatIso8601 : DateTimeFormat {
     .appendOffsetId()
     .toFormatter()
 
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     //Always return UTC
     return DateUtils.toOffsetDateTime(timestamp.toLong(), ZoneOffset.UTC).format(iso8601DateTimeFormatter)
   }
@@ -73,19 +73,19 @@ actual class DateTimeFormatIso8601 : DateTimeFormat {
 }
 
 actual class DateFormatIso8601 : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return DateUtils.toZonedDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).format(DateTimeFormatter.ISO_LOCAL_DATE)
   }
 }
 
 actual class TimeFormatIso8601 : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return DateUtils.toZonedDateTime(timestamp.toLong(), i18nConfiguration.timeZone.toZoneId()).format(DateTimeFormatter.ISO_LOCAL_TIME)
   }
 }
 
 actual class DateTimeFormatUTC : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return DateUtils.toOffsetDateTime(timestamp.toLong(), ZoneOffset.UTC).format(it.neckar.open.time.utcDateTimeFormat)
   }
 
@@ -106,42 +106,42 @@ actual class DateTimeFormatUTC : DateTimeFormat {
 }
 
 actual class TimeFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
 }
 
 actual class TimeFormatWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateUtils.createTimeMillisFormat(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
 }
 
 actual class DateFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
 }
 
 actual class DefaultDateTimeFormat : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
 }
 
 actual class DateTimeFormatShort : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
 }
 
 actual class DateTimeFormatWithMillis : DateTimeFormat {
-  override fun format(timestamp: @ms Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: @ms Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     if (timestamp.isNaN()) {
       return "NaN"
     }
@@ -155,7 +155,7 @@ actual class DateTimeFormatWithMillis : DateTimeFormat {
 }
 
 actual class DateTimeFormatShortWithMillis : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return DateUtils.createDateTimeShortMillisFormat(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
@@ -165,7 +165,7 @@ actual class DateTimeFormatShortWithMillis : DateTimeFormat {
  * A format that formats a date - but only prints the month and year
  */
 actual class YearMonthFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return monthYearFormatSpace(whitespaceConfig).withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
@@ -184,7 +184,7 @@ actual class YearMonthFormat actual constructor() : DateTimeFormat {
 }
 
 actual class YearFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
     return yearFormat.withLocale(i18nConfiguration.formatLocale.convert()).format(dateTime)
   }
@@ -198,7 +198,7 @@ actual class YearFormat actual constructor() : DateTimeFormat {
  * Formats a time stamp as second with millis
  */
 actual class SecondMillisFormat actual constructor() : DateTimeFormat {
-  override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp.toLong()), i18nConfiguration.timeZone.toZoneId())
 
     val value = dateTime.second + dateTime.nano / 1_000_000_000.0

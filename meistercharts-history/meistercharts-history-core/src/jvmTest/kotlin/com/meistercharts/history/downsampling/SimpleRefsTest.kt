@@ -65,10 +65,10 @@ class SimpleRefsTest {
     }
 
     val chunk0 = historyChunk(historyConfiguration) {
-      this.addReferenceEntryValues(timestamp = nowForTests, referenceEntryValues = intArrayOf(99), referenceEntryStatuses = intArrayOf(0b101))
+      addReferenceEntryValues(timestamp = nowForTests, referenceEntryValues = intArrayOf(99), referenceEntryStatuses = intArrayOf(0b101))
     }
     val chunk1: HistoryChunk = historyChunk(historyConfiguration) {
-      this.addReferenceEntryValues(timestamp = nowForTests + 100.0, referenceEntryValues = intArrayOf(100), referenceEntryStatuses = intArrayOf(0b011))
+      addReferenceEntryValues(timestamp = nowForTests + 100.0, referenceEntryValues = intArrayOf(100), referenceEntryStatuses = intArrayOf(0b011))
     }
 
     chunk0.merge(chunk1, nowForTests, nowForTests + 1_000).let { merged ->

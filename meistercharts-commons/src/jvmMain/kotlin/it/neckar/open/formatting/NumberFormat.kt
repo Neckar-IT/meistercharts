@@ -11,10 +11,10 @@ import kotlin.math.pow
  * Decimal format implementation for the JVM
  */
 actual class DecimalFormat internal actual constructor(
-  override val maximumFractionDigits: Int,
-  override val minimumFractionDigits: Int,
-  override val minimumIntegerDigits: Int,
-  override val useGrouping: Boolean
+  actual override val maximumFractionDigits: Int,
+  actual override val minimumFractionDigits: Int,
+  actual override val minimumIntegerDigits: Int,
+  actual override val useGrouping: Boolean,
 ) : NumberFormat, DecimalFormatDescriptor {
 
   private val numberFormatCache = NumberFormatCache("DecimalFormat(Fractions: min: $minimumFractionDigits, max: $maximumFractionDigits; Min int: $minimumIntegerDigits; grouping: $useGrouping)") {
@@ -24,7 +24,7 @@ actual class DecimalFormat internal actual constructor(
     this.isGroupingUsed = this@DecimalFormat.useGrouping
   }
 
-  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return numberFormatCache[i18nConfiguration.formatLocale].format(value + 0.0) //add 0.0 to avoid "-0.0"
   }
 
@@ -38,7 +38,7 @@ actual class ExponentialFormat actual constructor(
   val useGrouping: Boolean
 ) : NumberFormat {
 
-  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
+  actual override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     //TODO add cache
     return createExponentialFormat(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, i18nConfiguration.formatLocale).format(value)
   }

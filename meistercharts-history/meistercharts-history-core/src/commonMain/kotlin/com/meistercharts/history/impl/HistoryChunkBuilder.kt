@@ -111,13 +111,13 @@ class HistoryChunkBuilder(
   @ForOnePointInTime
   fun addReferenceEntryValues(
     timestamp: @ms @IsFinite Double,
-    vararg referenceEntryValues: @ReferenceEntryIdInt Int,
-    referenceEntryStatuses: @HistoryEnumSetInt IntArray = IntArray(referenceEntryValues.size) { HistoryEnumSet.NoValueAsInt },
+    vararg referenceEntryValuesVarArg: @ReferenceEntryIdInt Int,
+    referenceEntryStatuses: @HistoryEnumSetInt IntArray = IntArray(referenceEntryValuesVarArg.size) { HistoryEnumSet.NoValueAsInt },
     referenceEntriesDataMap: ReferenceEntriesDataMap = ReferenceEntriesDataMap.empty,
   ) {
     addReferenceEntryValues(
       timestamp = timestamp,
-      referenceEntryValues = referenceEntryValues,
+      referenceEntryValues = referenceEntryValuesVarArg,
       referenceEntryIdsCount = null,
       referenceEntryStatuses = referenceEntryStatuses,
       referenceEntriesDataMap = referenceEntriesDataMap

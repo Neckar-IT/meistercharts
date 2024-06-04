@@ -97,7 +97,7 @@ fun decimalFormat(
   /**
    * Whether to use grouping or not
    */
-  useGrouping: Boolean = true
+  useGrouping: Boolean = true,
 ): CachedNumberFormat {
   return DecimalFormatsCache.get(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
 }
@@ -129,7 +129,8 @@ fun Double.format(
   /**
    * Whether to use grouping or not
    */
-  useGrouping: Boolean = true, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration
+  useGrouping: Boolean = true,
+  i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration,
 ): String {
   return decimalFormat(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping).format(this, i18nConfiguration)
 }
@@ -213,8 +214,14 @@ expect class DecimalFormat internal constructor(
   /**
    * Whether to use grouping or not
    */
-  useGrouping: Boolean = true
-) : NumberFormat, DecimalFormatDescriptor
+  useGrouping: Boolean = true,
+) : NumberFormat, DecimalFormatDescriptor {
+  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+  override val maximumFractionDigits: Int
+  override val minimumFractionDigits: Int
+  override val minimumIntegerDigits: Int
+  override val useGrouping: Boolean
+}
 
 /**
  * Format that prints exponential
@@ -235,6 +242,8 @@ expect class ExponentialFormat(
   /**
    * Whether to use grouping or not
    */
-  useGrouping: Boolean = true
-) : NumberFormat
+  useGrouping: Boolean = true,
+) : NumberFormat {
+  override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
+}
 

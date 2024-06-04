@@ -19,13 +19,13 @@ import kotlinx.serialization.encoding.Encoder
  * `@Serializable(with = DoubleAsIsoDateTimeSerializer::class)`
  */
 actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
+  actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
 
-  override fun serialize(encoder: Encoder, value: @ms Double) {
+  actual override fun serialize(encoder: Encoder, value: @ms Double) {
     encoder.encodeString(value.formatUtc())
   }
 
-  override fun deserialize(decoder: Decoder): @ms Double {
+  actual override fun deserialize(decoder: Decoder): @ms Double {
     return parseUtc(decoder.decodeString())
   }
 }

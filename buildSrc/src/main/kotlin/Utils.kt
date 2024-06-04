@@ -1,6 +1,5 @@
 import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
-import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
@@ -16,6 +15,7 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
@@ -67,7 +67,7 @@ inline val Project.isOpenSource: Boolean
   get() = path.startsWith(":open:")
 
 /**
- * Converts a gradle path (containing ":") to a file path (containing "/")
+ * Converts a Gradle path (containing ":") to a file path (containing "/")
  */
 fun String.gradlePathToFilePath(): String {
   return this.replace(':', '/')
@@ -247,7 +247,6 @@ fun String.processBuilder(dir: File?): ProcessBuilder = ProcessBuilder("/bin/sh"
   .directory(dir)
 
 
-
 val Process.text: String
   get() {
     return inputStream.bufferedReader().use {
@@ -274,8 +273,11 @@ fun Project.getGitlabAccessToken(): String? {
 
 
 fun ZipInputStream.forEachEntry(block: (entry: ZipEntry, stream: InputStream) -> Unit) {
-  var entry: ZipEntry? = null
-  while ({ entry = this.nextEntry; entry }() != null) {
+  var entry: ZipEntry?
+  while (run {
+      entry = nextEntry
+      entry
+    } != null) {
     try {
       block(entry as ZipEntry, this)
     } finally {
@@ -305,10 +307,18 @@ fun Project.configureToolchainJava8WithFx(): Provider<JavaCompiler> {
 
 /**
  * Java 17 is a LTS version
- * Seet https://en.wikipedia.org/wiki/Java_version_history for details
+ * See https://en.wikipedia.org/wiki/Java_version_history for details
  */
 fun Project.configureToolchainJava17LTS(): Provider<JavaCompiler> {
   return configureToolchain(JavaLanguageVersion.of(17))
+}
+
+/**
+ * Java 21 is a LTS version
+ * See https://en.wikipedia.org/wiki/Java_version_history for details
+ */
+fun Project.configureToolchainJava21LTS(): Provider<JavaCompiler> {
+  return configureToolchain(JavaLanguageVersion.of(21))
 }
 
 /**
@@ -425,7 +435,7 @@ fun Project.isMultiplatform(): Boolean {
 fun Project.configureNodeJsRootExtension() {
   afterEvaluate {
     rootProject.extensions.findByType(NodeJsRootExtension::class)?.apply {
-      nodeVersion = versionFor("version.npm.node")
+      version = versionFor("version.npm.node")
       versions.webpackCli.version = versionFor("version.npm.webpack-cli")
     }
   }
@@ -485,11 +495,11 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
  */
 fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration() {
   compilerOptions {
-    languageVersion.set(KotlinSettings.languageVersion)
-    apiVersion.set(KotlinSettings.apiVersion)
-    progressiveMode.set(true)
-    optIn.set(KotlinSettings.optInExperimentalAnnotations)
-    javaParameters.set(true)
+    languageVersion = KotlinSettings.languageVersion
+    apiVersion = KotlinSettings.apiVersion
+    progressiveMode = true
+    optIn = KotlinSettings.optInExperimentalAnnotations
+    javaParameters = true
   }
 
   applyKotlinConfiguration()
@@ -515,7 +525,7 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
         devtool = WebpackDevtool.SOURCE_MAP
 
         cssSupport {
-          enabled.set(true) //enable CSS support for all tasks (https://kotlinlang.org/docs/js-project-setup.html#building-executables)
+          enabled = true //enable CSS support for all tasks (https://kotlinlang.org/docs/js-project-setup.html#building-executables)
         }
       }
 

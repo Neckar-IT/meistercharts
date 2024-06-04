@@ -15,7 +15,11 @@
  */
 package com.meistercharts.time
 
+import it.neckar.datetime.minimal.TimeZone
+
 /**
  * Computes the 'real' time-zone offset for a given timestamp and a given time-zone
  */
-expect class DefaultTimeZoneOffsetProvider() : TimeZoneOffsetProvider
+expect class DefaultTimeZoneOffsetProvider() : TimeZoneOffsetProvider {
+  override fun timeZoneOffset(timestamp: Double, timeZone: TimeZone): Double
+}

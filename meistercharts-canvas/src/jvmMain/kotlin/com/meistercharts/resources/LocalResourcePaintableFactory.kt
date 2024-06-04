@@ -39,11 +39,11 @@ actual class LocalResourcePaintable actual constructor(
 
   val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)
 
-  override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
+  actual override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)
   }
 
-  override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
+  actual override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
     delegate.paint(paintingContext, x, y)
   }
 
