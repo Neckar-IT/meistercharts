@@ -15,12 +15,14 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 
 /**
  */
+@DisableLogging
 class DataSeriesIndexProviderBoxingJvmTest {
   @Disabled
   @Test

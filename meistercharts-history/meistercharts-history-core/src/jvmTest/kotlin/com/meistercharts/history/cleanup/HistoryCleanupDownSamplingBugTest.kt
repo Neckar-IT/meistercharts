@@ -32,6 +32,7 @@ import com.meistercharts.history.downsampling.RefreshPartially
 import com.meistercharts.history.impl.createSinusChunk
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test
@@ -39,6 +40,7 @@ import org.junit.jupiter.api.Test
 /**
  *
  */
+@DisableLogging
 class HistoryCleanupDownSamplingBugTest {
   @Test
   fun testIt() {

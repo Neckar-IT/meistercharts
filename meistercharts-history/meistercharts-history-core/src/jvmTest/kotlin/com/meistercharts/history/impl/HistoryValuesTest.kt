@@ -21,11 +21,13 @@ import com.meistercharts.history.impl.HistoryChunk.Companion.Pending
 import it.neckar.open.serialization.roundTrip
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.test.utils.DisableLogging
 
 import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class HistoryValuesTest {
   @Test
   fun testSerialization() {

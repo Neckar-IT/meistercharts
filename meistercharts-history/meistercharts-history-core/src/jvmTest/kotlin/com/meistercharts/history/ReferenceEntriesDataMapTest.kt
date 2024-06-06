@@ -19,8 +19,10 @@ import assertk.*
 import assertk.assertions.*
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class ReferenceEntriesDataMapTest {
   @Test
   fun testEmptySerialization() {

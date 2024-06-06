@@ -30,12 +30,14 @@ import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
 
 /**
  */
+@DisableLogging
 class HistoryChunkOnlyDecimalsTest {
   lateinit var chunk: HistoryChunk
 

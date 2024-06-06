@@ -30,11 +30,13 @@ import com.meistercharts.model.Zoom
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationSupport
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.unit.other.px
 import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class ZoomAndTranslationSupportTest {
   @Test
   fun testChartStateEmpty() {

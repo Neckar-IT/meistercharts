@@ -22,9 +22,11 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.historyConfiguration
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.unit.other.Inclusive
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryChunkMergeBugTest {
 
   /**

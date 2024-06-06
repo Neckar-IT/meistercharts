@@ -18,8 +18,10 @@ package com.meistercharts.history.impl
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class TimestampIndexTest {
   @Test
   fun testCompare() {

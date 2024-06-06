@@ -22,12 +22,14 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class InMemoryHistoryStorageTest {
   val start = 1000.0
   val samplingPeriod = SamplingPeriod.EveryHundredMillis

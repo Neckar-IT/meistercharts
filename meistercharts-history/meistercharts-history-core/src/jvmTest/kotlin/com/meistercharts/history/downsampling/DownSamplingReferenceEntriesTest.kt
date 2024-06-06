@@ -37,6 +37,7 @@ import com.meistercharts.time.TimeRange
 import com.meistercharts.time.TimeRanges
 import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.RandomWithSeed
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test
@@ -44,6 +45,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
+@DisableLogging
 class DownSamplingReferenceEntriesTest {
   @Test
   fun test45s() {

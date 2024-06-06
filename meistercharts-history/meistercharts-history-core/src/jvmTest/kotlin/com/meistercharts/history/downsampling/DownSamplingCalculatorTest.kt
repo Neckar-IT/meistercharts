@@ -29,10 +29,12 @@ import com.meistercharts.history.isEnumSetPending
 import com.meistercharts.history.isEqualToHistoryEnumSet
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class DownSamplingCalculatorTest {
   @Test
   fun testInitialValues() {

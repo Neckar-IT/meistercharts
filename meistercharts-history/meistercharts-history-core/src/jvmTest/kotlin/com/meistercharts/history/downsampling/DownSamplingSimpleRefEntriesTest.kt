@@ -24,8 +24,10 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class DownSamplingSimpleRefEntriesTest {
   private val historyConfiguration = historyConfiguration {
     referenceEntryDataSeries(DataSeriesId(17), "Series A", HistoryEnum.Active)

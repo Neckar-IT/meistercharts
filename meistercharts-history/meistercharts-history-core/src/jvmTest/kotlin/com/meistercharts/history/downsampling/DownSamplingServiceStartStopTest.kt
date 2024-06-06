@@ -18,6 +18,7 @@ package com.meistercharts.history.downsampling
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.InMemoryHistoryStorage
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.time.JVMTimerCoroutineImplementation
 import it.neckar.open.time.timerImplementation
 import kotlinx.coroutines.*
@@ -25,6 +26,7 @@ import kotlinx.coroutines.test.*
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.seconds
 
+@DisableLogging
 class DownSamplingServiceStartStopTest {
   @Test
   fun testIt(): Unit = runTest {

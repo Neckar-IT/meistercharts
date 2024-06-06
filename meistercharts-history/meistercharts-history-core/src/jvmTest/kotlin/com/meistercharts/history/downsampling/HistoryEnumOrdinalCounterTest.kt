@@ -19,11 +19,13 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryEnumOrdinalCounterTest {
   @Test
   fun testPending() {

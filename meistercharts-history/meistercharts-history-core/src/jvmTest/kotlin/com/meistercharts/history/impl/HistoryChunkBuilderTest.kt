@@ -23,12 +23,14 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.historyConfigurationOnlyDecimals
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 
 /**
  */
+@DisableLogging
 class HistoryChunkBuilderTest {
   @Test
   fun testResize() {

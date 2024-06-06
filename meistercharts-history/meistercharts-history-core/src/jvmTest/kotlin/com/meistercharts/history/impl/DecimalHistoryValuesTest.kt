@@ -17,8 +17,10 @@ package com.meistercharts.history.impl
 
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.serialization.roundTrip
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class DecimalHistoryValuesTest {
   @Test
   fun testSerialization() {

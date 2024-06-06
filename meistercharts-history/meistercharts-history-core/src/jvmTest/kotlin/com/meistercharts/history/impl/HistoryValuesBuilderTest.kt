@@ -26,11 +26,13 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryValuesBuilderTest {
   @Test
   fun testSizeBuild() {

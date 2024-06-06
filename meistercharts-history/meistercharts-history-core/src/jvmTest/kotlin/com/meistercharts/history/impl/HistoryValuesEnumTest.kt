@@ -31,11 +31,13 @@ import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryValuesEnumTest {
   @Test
   fun testIt() {

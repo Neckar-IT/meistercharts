@@ -21,8 +21,10 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryId
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class ReferenceEntryCounterTest {
   @Test
   fun testSimpleBaseFromMeasured() {

@@ -21,8 +21,10 @@ import com.meistercharts.history.DataSeriesId
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryChunkMinMaxRecordingTest {
   @Test
   fun testRecordMinMaxCalculated() {

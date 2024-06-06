@@ -27,6 +27,7 @@ import com.meistercharts.history.downsampling.DownSamplingService
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.time.TimeRanges
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isNaN
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Test
 /**
  *
  */
+@DisableLogging
 class HistoryAutoScaleTest {
   val storage: InMemoryHistoryStorage = InMemoryHistoryStorage()
 

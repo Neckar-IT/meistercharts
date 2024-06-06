@@ -24,6 +24,7 @@ import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.test.utils.first
 import it.neckar.open.test.utils.last
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Test
 /**
  *
  */
+@DisableLogging
 class DownSamplingServiceTest {
   lateinit var historyStorage: InMemoryHistoryStorage
 

@@ -19,8 +19,10 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.isEqualToReferenceEntryIdsCount
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class ReferenceEntryDifferentIdsCountTest {
   @Test
   fun testAdd() {

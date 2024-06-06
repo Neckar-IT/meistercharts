@@ -28,12 +28,14 @@ import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
 /**
  * Reproduces a down sampling bug related to corona dashboard
  */
+@DisableLogging
 class DownSamplingNegativeMinMaxBugTest {
   @Test
   fun testBug() {

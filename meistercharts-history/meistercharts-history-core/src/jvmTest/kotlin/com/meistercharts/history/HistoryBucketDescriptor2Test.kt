@@ -18,6 +18,7 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.time.toMillis
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -26,6 +27,7 @@ import java.time.ZoneOffset
 
 /**
  */
+@DisableLogging
 class HistoryBucketDescriptor2Test {
   val millis = 1312003123123.0
   val instant = Instant.ofEpochMilli(millis.toLong())

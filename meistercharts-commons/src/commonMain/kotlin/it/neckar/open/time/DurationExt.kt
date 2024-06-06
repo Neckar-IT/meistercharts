@@ -3,6 +3,7 @@ package it.neckar.open.time
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.toIntFloor
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  *
@@ -32,4 +33,12 @@ fun Duration.formatHourAndMinutes(whitespaceConfig: WhitespaceConfig = Whitespac
 
 fun Duration.formatMinutes(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   return "$inWholeMinutes${whitespaceConfig.smallSpace}min"
+}
+
+/**
+ * Formats the duration as string - without milliseconds
+
+ */
+fun Duration.formatWithoutMillis(): String {
+  return this.inWholeSeconds.seconds.toString()
 }

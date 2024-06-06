@@ -14,6 +14,7 @@ import ch.qos.logback.core.spi.FilterReply
 import ch.qos.logback.core.util.FileSize
 import ch.qos.logback.core.util.StatusPrinter
 import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 import java.io.File
 import java.io.OutputStream
 import java.io.PrintStream
@@ -24,6 +25,17 @@ import java.io.PrintStream
  * @see [http://logback.qos.ch/](http://logback.qos.ch/)
  */
 object LogbackConfigurer {
+  /**
+   * Configures the logger for console output only - with a special level for Neckar IT classes.
+   */
+  fun configureLoggingConsoleOnly(
+    levelForRoot: org.slf4j.event.Level = Level.INFO,
+    levelForNeckarIt: org.slf4j.event.Level,
+  ) {
+    configureLoggingConsoleOnly(levelForRoot)
+    setLoggerLevel("it.neckar", levelForNeckarIt)
+  }
+
   /**
    * Configures the logger for console output only
    */

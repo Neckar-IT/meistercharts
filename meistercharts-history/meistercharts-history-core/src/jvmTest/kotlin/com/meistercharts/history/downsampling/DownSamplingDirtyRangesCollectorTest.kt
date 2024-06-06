@@ -27,6 +27,7 @@ import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class DownSamplingDirtyRangesCollectorTest {
   val now: @ms Double = 1.5900732415E12
 

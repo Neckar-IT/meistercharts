@@ -24,6 +24,7 @@ import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
 import it.neckar.open.test.utils.VirtualTime
 import it.neckar.datetime.minimal.TimeConstants
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
@@ -32,6 +33,7 @@ import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class HistoryBucketDescriptorTest {
   @Disabled
   @Test

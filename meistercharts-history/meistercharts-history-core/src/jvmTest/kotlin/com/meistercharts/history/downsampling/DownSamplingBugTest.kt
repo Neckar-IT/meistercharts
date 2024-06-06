@@ -23,11 +23,13 @@ import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.collections.asDoubles
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  * Reproduces a down sampling bug related to corona dashboard
  */
+@DisableLogging
 class DownSamplingBugTest {
   @Test
   fun testBug() {

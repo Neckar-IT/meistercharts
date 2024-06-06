@@ -683,10 +683,15 @@ val Project.meisterchartsVersion: String
     return rootProject.extra.get("meisterchartsVersion") as? String ?: throw IllegalStateException("Could not find meisterchartsVersion in extra")
   }
 
+@Deprecated("use this.encodeForDockerTag() instead!", ReplaceWith("this.encodeForDockerTag()"))
+inline fun String.safeForDockerTag(): String {
+  return this.encodeForDockerTag()
+}
+
 /**
  * Replaces unsafe characters that must not be used in docker tags
  */
-fun String.safeForDockerTag(): String {
+fun String.encodeForDockerTag(): String {
   return replace('/', '_')
     .replace(':', '_')
     .replace('.', '_')

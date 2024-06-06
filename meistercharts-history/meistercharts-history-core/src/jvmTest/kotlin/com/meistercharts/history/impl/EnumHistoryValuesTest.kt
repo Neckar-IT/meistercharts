@@ -17,8 +17,10 @@ package com.meistercharts.history.impl
 
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.serialization.roundTrip
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class EnumHistoryValuesTest {
   @Test
   fun testIt() {

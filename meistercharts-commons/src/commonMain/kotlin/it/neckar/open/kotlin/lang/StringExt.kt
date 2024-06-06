@@ -258,6 +258,21 @@ fun String.encodeForCodeIdentifier(): String {
   return InvalidForCodeIdentifier.replace(this, "_")
 }
 
+@Deprecated("use this.encodeForDockerTag() instead!", ReplaceWith("this.encodeForDockerTag()"))
+inline fun String.safeForDockerTag(): String {
+  return this.encodeForDockerTag()
+}
+
+/**
+ * Replaces unsafe characters that must not be used in docker tags
+ */
+fun String.encodeForDockerTag(): String {
+  return replace('/', '_')
+    .replace(':', '_')
+    .replace('.', '_')
+    .replace(' ', '_')
+}
+
 /**
  * Regex that contains invalid elements for a file name
  */

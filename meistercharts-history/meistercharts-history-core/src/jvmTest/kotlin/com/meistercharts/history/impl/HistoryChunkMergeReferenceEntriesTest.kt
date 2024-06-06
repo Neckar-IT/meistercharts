@@ -28,8 +28,10 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.isEqualToHistoryEnumSet
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryChunkMergeReferenceEntriesTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration {
     referenceEntryDataSeries(DataSeriesId(10), TextKey("state1"), statusEnum = HistoryEnum.Active)

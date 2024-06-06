@@ -19,8 +19,10 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.time.TimeRange
 import com.meistercharts.time.TimeRanges
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryUpdateInfoTest {
 
   @Test

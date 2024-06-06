@@ -20,10 +20,12 @@ import assertk.assertions.*
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.HistoryStorage
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  */
+@DisableLogging
 class HistoryStorageTest {
   @Test
   fun testMock() {

@@ -21,11 +21,13 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.isOrdinalNoValue
 import com.meistercharts.history.isOrdinalPending
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryEnumSetTest {
 
   @Test

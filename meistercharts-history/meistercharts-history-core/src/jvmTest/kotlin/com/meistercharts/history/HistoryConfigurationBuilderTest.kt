@@ -18,8 +18,10 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryConfigurationBuilderTest {
   @Test
   fun testDecimals() {

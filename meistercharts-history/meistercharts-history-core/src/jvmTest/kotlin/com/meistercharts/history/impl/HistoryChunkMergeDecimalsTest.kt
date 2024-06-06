@@ -22,11 +22,13 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryChunkMergeDecimalsTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration {
     decimalDataSeries(DataSeriesId(10), TextKey("temp", "Temperature"))

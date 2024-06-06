@@ -21,11 +21,12 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Test
 import kotlin.math.sin
 
-
+@DisableLogging
 class RequestedRangeTooBigBugTest {
 
   @Test

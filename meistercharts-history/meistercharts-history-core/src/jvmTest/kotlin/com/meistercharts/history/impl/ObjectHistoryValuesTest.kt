@@ -22,8 +22,10 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
 import it.neckar.open.collections.IntArray2
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class ObjectHistoryValuesTest {
   @Test
   fun testBasics() {

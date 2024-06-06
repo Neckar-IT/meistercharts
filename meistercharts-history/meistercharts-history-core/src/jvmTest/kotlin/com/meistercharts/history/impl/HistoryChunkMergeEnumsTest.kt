@@ -23,8 +23,10 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.downsampling.createDemoEnumConfiguration
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class HistoryChunkMergeEnumsTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration {
     enumDataSeries(DataSeriesId(10), TextKey("state1"), createDemoEnumConfiguration(10))

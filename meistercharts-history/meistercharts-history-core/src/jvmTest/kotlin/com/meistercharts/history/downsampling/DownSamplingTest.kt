@@ -27,6 +27,7 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.isEnumSetPending
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isCloseTo
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Disabled
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Test
 /**
  *
  */
+@DisableLogging
 class DownSamplingTest {
   @Test
   fun testBitSet() {

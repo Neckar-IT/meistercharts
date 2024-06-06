@@ -19,12 +19,14 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class HistoryAccessApiTest {
   lateinit var historyStorage: InMemoryHistoryStorage
 

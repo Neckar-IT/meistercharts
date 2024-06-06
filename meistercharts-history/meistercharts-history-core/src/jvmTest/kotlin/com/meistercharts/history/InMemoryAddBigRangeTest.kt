@@ -18,11 +18,13 @@ package com.meistercharts.history
 import com.meistercharts.history.impl.HistoryChunk
 import it.neckar.open.i18n.TextKey
 import com.meistercharts.history.impl.historyChunk
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class InMemoryAddBigRangeTest {
   @Test
   fun reproduces1050RequestedRangeTooBig() {

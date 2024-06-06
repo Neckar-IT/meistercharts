@@ -33,6 +33,7 @@ import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,6 +41,7 @@ import kotlin.test.assertFails
 
 /**
  */
+@DisableLogging
 class HistoryChunkOnlyReferenceEntriesTest {
   lateinit var chunk: HistoryChunk
 

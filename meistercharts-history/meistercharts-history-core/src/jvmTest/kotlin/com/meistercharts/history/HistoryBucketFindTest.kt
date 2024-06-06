@@ -18,6 +18,7 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.impl.bucket
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isNaN
 import it.neckar.open.time.toMillis
 import it.neckar.open.unit.si.ms
@@ -27,6 +28,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
+@DisableLogging
 class HistoryBucketFindTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration(
     decimalDataSeriesCount = 1,

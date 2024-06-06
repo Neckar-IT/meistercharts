@@ -29,6 +29,7 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.RecordingType
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.RandomWithSeed
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
@@ -37,6 +38,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  *
  */
+@DisableLogging
 class HistoryChunkGeneratorTest {
 
   private val now = 1.5900732415E12

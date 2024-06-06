@@ -35,6 +35,7 @@ import com.meistercharts.history.isEnumSetPending
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
@@ -42,6 +43,7 @@ import kotlin.test.assertNotNull
 /**
  *
  */
+@DisableLogging
 class DownSamplingCalculationsTest {
   @Test
   fun testIEA() {

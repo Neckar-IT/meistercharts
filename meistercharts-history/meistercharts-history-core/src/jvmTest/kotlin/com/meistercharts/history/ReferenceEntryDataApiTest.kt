@@ -19,11 +19,13 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.impl.ReferenceEntryHistoryValues
 import com.meistercharts.history.impl.historyChunk
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  * Shows how the [HistoryConfiguration] and [ReferenceEntriesDataMap] relate to each other
  */
+@DisableLogging
 class ReferenceEntryDataApiTest {
   @Test
   fun testIt() {

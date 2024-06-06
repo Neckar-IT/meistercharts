@@ -22,9 +22,11 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.historyChunk
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class SimpleRefsTest {
   @Test
   fun testSimpleRefEntry() {

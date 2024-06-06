@@ -19,6 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.time.toMillis
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
@@ -29,6 +30,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 
+@DisableLogging
 class HistoryBucketRangeTest {
   @Test
   fun testFind() {

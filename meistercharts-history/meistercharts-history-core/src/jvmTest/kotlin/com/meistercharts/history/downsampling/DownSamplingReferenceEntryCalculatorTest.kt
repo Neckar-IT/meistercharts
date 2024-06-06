@@ -34,9 +34,11 @@ import com.meistercharts.history.isEqualToReferenceEntryIdsCount
 import com.meistercharts.time.TimeRange
 import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.RandomWithSeed
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class DownSamplingReferenceEntryCalculatorTest {
   @Test
   fun testIt() {

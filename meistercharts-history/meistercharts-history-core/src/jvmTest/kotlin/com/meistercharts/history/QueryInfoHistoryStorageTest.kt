@@ -20,8 +20,10 @@ import assertk.assertions.*
 import com.meistercharts.history.impl.EmptyHistoryStorage
 import io.mockk.mockk
 import io.mockk.verifyOrder
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class QueryInfoHistoryStorageTest {
   @Test
   fun testCallbacks() {

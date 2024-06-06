@@ -23,10 +23,12 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.downsampling.createDemoEnumConfiguration
 import com.meistercharts.history.historyConfiguration
 import it.neckar.open.i18n.TextKey
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
+@DisableLogging
 class HistoryChunkRangeTest {
   @Test
   fun testRangeEnum() {

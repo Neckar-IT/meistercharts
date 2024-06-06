@@ -15,11 +15,13 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class DecimalDataSeriesIndexProviderTest {
   @Test
   fun testBoxing() {

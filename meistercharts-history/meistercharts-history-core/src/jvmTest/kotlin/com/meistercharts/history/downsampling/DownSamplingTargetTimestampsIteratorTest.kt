@@ -19,11 +19,13 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryBucketRange
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
 /**
  *
  */
+@DisableLogging
 class DownSamplingTargetTimestampsIteratorTest {
   @Test
   fun testIterator() {

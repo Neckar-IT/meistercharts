@@ -26,8 +26,10 @@ import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.impl.chunk
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.Test
 
+@DisableLogging
 class DownSamplingSimpleDecimalsTest {
   private val historyConfiguration = historyConfiguration {
     decimalDataSeries(DataSeriesId(17), "Dec Series A")

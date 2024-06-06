@@ -23,10 +23,12 @@ import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
 import com.meistercharts.history.impl.createSinusChunk
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.test.utils.VirtualTime
 import org.junit.jupiter.api.Test
 
 
+@DisableLogging
 internal class InMemoryBookKeepingTest {
   @Test
   fun testClear() {

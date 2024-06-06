@@ -18,6 +18,7 @@ package com.meistercharts.history
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.test.utils.DisableLogging
 import it.neckar.open.time.toDoubleMillis
 import org.junit.jupiter.api.Test
 import java.time.ZoneId
@@ -26,6 +27,7 @@ import java.time.ZonedDateTime
 /**
  *
  */
+@DisableLogging
 class HistoryRangeTest {
   @Test
   fun testRanges() {
