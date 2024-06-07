@@ -69,3 +69,10 @@ interface StringShortener {
   }
 }
 
+/**
+ * Shortens the given string
+ */
+fun String.shorten(length: Int, stringShortener: StringShortener = StringShortener.TruncateToLength): String? {
+  return stringShortener.shorten(this, length)
+}
+
