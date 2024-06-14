@@ -150,9 +150,9 @@ public object Libs {
 
     public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
 
-    public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
+    public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
 
-    public const val ktor_client_cio: String = "io.ktor:ktor-client-cio:_"
+    public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
     public const val ktor_client_content_negotiation: String =
             "io.ktor:ktor-client-content-negotiation:_"
@@ -161,9 +161,13 @@ public object Libs {
 
     public const val ktor_client_encoding: String = "io.ktor:ktor-client-encoding:_"
 
+    public const val ktor_client_jetty: String = "io.ktor:ktor-client-jetty:_"
+
     public const val ktor_client_json: String = "io.ktor:ktor-client-json:_"
 
     public const val ktor_client_logging: String = "io.ktor:ktor-client-logging:_"
+
+    public const val ktor_client_okhttp: String = "io.ktor:ktor-client-okhttp:_"
 
     public const val ktor_client_serialization: String = "io.ktor:ktor-client-serialization:_"
 
