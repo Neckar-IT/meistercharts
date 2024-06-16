@@ -14,9 +14,7 @@ import kotlin.String
 public object Libs {
     public const val aopalliance: String = "aopalliance:aopalliance:_"
 
-    public const val aws_sdk_kotlin_s3: String = "aws.sdk.kotlin:s3:_"
-
-    public const val s3_jvm: String = "aws.sdk.kotlin:s3-jvm:_"
+    public const val s3: String = "aws.sdk.kotlin:s3:_"
 
     public const val ca_cutterslade_analyze_gradle_plugin: String =
             "ca.cutterslade.analyze:ca.cutterslade.analyze.gradle.plugin:_"
@@ -154,6 +152,8 @@ public object Libs {
 
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
 
+    public const val ktor_client_cio: String = "io.ktor:ktor-client-cio:_"
+
     public const val ktor_client_content_negotiation: String =
             "io.ktor:ktor-client-content-negotiation:_"
 
@@ -204,8 +204,6 @@ public object Libs {
     public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"
 
     public const val ktor_websockets: String = "io.ktor:ktor-websockets:_"
-
-    public const val io_minio_minio: String = "io.minio:minio:_"
 
     public const val mockk: String = "io.mockk:mockk:_"
 
@@ -455,7 +453,7 @@ public object Libs {
 
     public const val junit_jupiter: String = "org.testcontainers:junit-jupiter:_"
 
-    public const val org_testcontainers_minio: String = "org.testcontainers:minio:_"
+    public const val minio: String = "org.testcontainers:minio:_"
 
     public const val mongodb: String = "org.testcontainers:mongodb:_"
 
@@ -464,8 +462,6 @@ public object Libs {
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
-
-    public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
 }
