@@ -48,6 +48,15 @@ expect interface Logger {
   fun debug(msg: String?, t: Throwable?)
 
   /**
+   * Debugs the provided object.
+   *
+   * ATTENTION: This is a workaround to be able to serialize objects in JS.
+   * It behaves differently on the JVM where the [message] is interpreted as format.
+   */
+  @Deprecated("Only use in special cases!!!!")
+  fun debug(message: String, objectDebug: Any?);
+
+  /**
    * Is the logger instance enabled for the INFO level?
    *
    * @return True if this Logger is enabled for the INFO level, false otherwise.

@@ -27,6 +27,10 @@ object LogConfigurer {
     (logger as LoggerImplJs).level = logLevel
   }
 
+  fun setLogLevel(loggerName: String, logLevel: Level) {
+    setLogLevel(LoggerFactory.getLogger(loggerName), logLevel)
+  }
+
   /**
    * Returns the directly configured log level for the logger.
    * Call [getEffectiveLogLevel] in most cases instead.

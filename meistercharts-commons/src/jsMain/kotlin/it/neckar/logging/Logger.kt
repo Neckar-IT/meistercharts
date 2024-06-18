@@ -53,7 +53,7 @@ actual interface Logger {
   /**
    * Debug the message with the object
    */
-  fun debug(message: String, objectDebug: Any?)
+  actual fun debug(message: String, objectDebug: Any?)
 
   fun debug(messageProvider: () -> String, objectDebug: Any?)
 
