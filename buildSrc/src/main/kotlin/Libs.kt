@@ -167,6 +167,8 @@ public object Libs {
 
     public const val ktor_client_logging: String = "io.ktor:ktor-client-logging:_"
 
+    public const val ktor_client_mock: String = "io.ktor:ktor-client-mock:_"
+
     public const val ktor_client_okhttp: String = "io.ktor:ktor-client-okhttp:_"
 
     public const val ktor_client_serialization: String = "io.ktor:ktor-client-serialization:_"
