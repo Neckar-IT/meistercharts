@@ -1,10 +1,12 @@
 import com.google.common.io.Files
+import it.neckar.gradle.ansiConsole
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import org.gradle.api.GradleException
 import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.NamedDomainObjectSet
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ProjectDependency
@@ -12,7 +14,6 @@ import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
-import org.gradle.api.tasks.TaskContainer
 import java.io.File
 
 
@@ -167,4 +168,17 @@ fun Project.parsePackageJson(): JsonElement {
   }
 
   return Json.parseToJsonElement(packageJson.readText())
+}
+
+/**
+ * Executes the task only if the property [propertyName] is set to true
+ */
+fun Task.onlyIfPropertyTrue(propertyName: String) {
+  onlyIf {
+    val executeTask = project.findProperty(propertyName)?.toString() == "true"
+    if (executeTask.not()) {
+      logger.lifecycle("${ansiConsole.orange("Skipping $name")} because property ${ansiConsole.green(propertyName)} is not set. Call ${ansiConsole.green("gradle build -P${propertyName}=true")} to execute this task")
+    }
+    executeTask
+  }
 }

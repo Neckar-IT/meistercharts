@@ -83,9 +83,6 @@ public object Libs {
 
     public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
 
-    public const val com_google_cloud_tools_jib_gradle_plugin: String =
-            "com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:_"
-
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
 
     public const val symbol_processing: String = "com.google.devtools.ksp:symbol-processing:_"

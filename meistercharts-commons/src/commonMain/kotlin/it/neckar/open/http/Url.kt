@@ -149,7 +149,7 @@ sealed interface Url {
      * Appends an HTTP parameter to the URL.
      * Wraps the parameter in curly braces.
      */
-    operator fun plus(imagePathBase64: HttpParameterName): T {
+    operator fun plus(imagePathBase64: UrlParameterName): T {
       return plus("{${imagePathBase64.value}}")
     }
   }

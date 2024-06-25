@@ -8,7 +8,7 @@ import kotlin.jvm.JvmInline
  */
 @JvmInline
 @Serializable
-value class HttpParameterName(val value: String) {
+value class UrlParameterName(val value: String) {
   override fun toString(): String {
     return value
   }
@@ -21,7 +21,7 @@ value class HttpParameterName(val value: String) {
   }
 
   companion object {
-    val uuid: HttpParameterName = HttpParameterName("uuid")
-    val verbose: HttpParameterName = HttpParameterName("verbose")
+    val uuid: UrlParameterName = UrlParameterName("uuid")
+    val verbose: UrlParameterName = UrlParameterName("verbose")
   }
 }

@@ -2,6 +2,7 @@ package it.neckar.gradle
 
 import getOrPut
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.logging.configuration.ConsoleOutput
 
@@ -117,5 +118,8 @@ val Project.console: AnsiConsole
 /**
  * Alias for [Project.console]
  */
-val Project.ansiConsole: AnsiConsole
+inline val Project.ansiConsole: AnsiConsole
   get() = console
+
+val Task.ansiConsole: AnsiConsole
+  get() = project.ansiConsole
