@@ -4,6 +4,7 @@ import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
+import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.unit.currency.EUR
 
 /**
@@ -167,6 +168,32 @@ fun @EUR Int.formatEuroCents(i18nConfiguration: I18nConfiguration = DefaultI18nC
  */
 fun @EUR Double.formatEuro(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   return decimalFormat2digits.format(this, i18nConfiguration, whitespaceConfig) + "${whitespaceConfig.smallSpace}€"
+}
+
+fun Double.prettyFormat(numberOfDecimals: Int = 2, useGrouping: Boolean = true, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+  val prePoint = floor()
+  val postPoint = this - prePoint
+  return when (postPoint) {
+    1.0 / 10.0 -> "$prePoint ⅒"
+    1.0 / 9.0 -> "$prePoint ⅑"
+    1.0 / 8.0 -> "$prePoint ⅛"
+    1.0 / 7.0 -> "$prePoint ⅐"
+    1.0 / 6.0 -> "$prePoint ⅙"
+    1.0 / 5.0 -> "$prePoint ⅕"
+    1.0 / 4.0 -> "$prePoint ¼"
+    3.0 / 8.0 -> "$prePoint ⅜"
+    1.0 / 3.0 -> "$prePoint ⅓"
+    2.0 / 5.0 -> "$prePoint ⅖"
+    1.0 / 2.0 -> "$prePoint ½"
+    3.0 / 5.0 -> "$prePoint ⅗"
+    2.0 / 3.0 -> "$prePoint ⅔"
+    3.0 / 4.0 -> "$prePoint ¾"
+    4.0 / 5.0 -> "$prePoint ⅘"
+    5.0 / 8.0 -> "$prePoint ⅝"
+    5.0 / 6.0 -> "$prePoint ⅚"
+    7.0 / 8.0 -> "$prePoint ⅞"
+    else -> format(numberOfDecimals, useGrouping, i18nConfiguration, whitespaceConfig)
+  }
 }
 
 /**
