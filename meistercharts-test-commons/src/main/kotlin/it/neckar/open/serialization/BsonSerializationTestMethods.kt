@@ -2,6 +2,7 @@ package it.neckar.open.serialization
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.mongodb.Mongo
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -15,7 +16,6 @@ import org.bson.BsonBinaryWriter
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
-import org.bson.codecs.kotlinx.BsonConfiguration
 import org.bson.codecs.kotlinx.KotlinSerializerCodec
 import org.bson.io.BasicOutputBuffer
 import org.bson.json.JsonReader
@@ -52,14 +52,11 @@ inline fun <reified T : Any> roundTripBson(
   noinline expectedBsonProvider: () -> String?,
 ): T {
 
-  val bsonConfiguration = BsonConfiguration(
-  )
-
   val codec = KotlinSerializerCodec.create(
     kClass = T::class,
     serializer = serializer,
     serializersModule = serializersModule,
-    bsonConfiguration = bsonConfiguration
+    bsonConfiguration = Mongo.bsonConfiguration
   )
 
   return roundTripBson(T::class, objectToSerialize, codec, comparisonCheck, expectedBsonProvider)

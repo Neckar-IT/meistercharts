@@ -468,6 +468,10 @@ fun Project.configureJunit() {
       showCauses = true
       showStackTraces = true
     }
+
+    //Set the JVM properties for the tests
+    //Set Coroutines Debugging - see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html
+    systemProperty("kotlinx.coroutines.debug", "on")
   }
 }
 

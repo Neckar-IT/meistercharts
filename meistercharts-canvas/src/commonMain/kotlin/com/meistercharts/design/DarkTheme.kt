@@ -18,7 +18,6 @@ package com.meistercharts.design
 import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.canvas.paintable.DefaultButtonColorProvider
 import com.meistercharts.color.Color
-import com.meistercharts.color.ColorMapper
 import com.meistercharts.color.ColorMapperNullable
 import com.meistercharts.color.RgbaColor
 import it.neckar.open.provider.MultiProvider

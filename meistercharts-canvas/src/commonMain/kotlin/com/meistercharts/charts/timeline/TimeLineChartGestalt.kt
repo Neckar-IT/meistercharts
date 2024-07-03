@@ -1563,7 +1563,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
   }
 
   configuration.crossWireDecimalFormat = SizedProvider.of(4) { dataSeriesIndex ->
-    val unit = configuration.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name ?: ""
+    val unit = configuration.historyConfiguration.decimalConfiguration.getUnit(DecimalDataSeriesIndex(dataSeriesIndex)).name.orEmpty()
     when (dataSeriesIndex) {
       2 -> decimalFormat1digit.appendUnit(unit).cached()
       3 -> decimalFormat2digits.appendUnit(unit).cached()
