@@ -2,7 +2,6 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
-import java.io.File
 
 /**
  * Abstract base class for objects that contain constants for all projects
@@ -22,7 +21,16 @@ abstract class AbstractProjects {
   protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
     require(path2project[path] == null) { "Project $path already configured" }
 
-    return ConfiguredProject(path = path, type = projectType, disabled = disabledProjectsSupport.isDisabled(path)).also {
+    val disabled = disabledProjectsSupport.isDisabled(path)
+    if (disabled && projectType == ProjectType.PNPM) {
+      throw IllegalStateException("Disabling PNPM projects is not supported!. Project $path is disabled!\nCheck disabled-projects.json5! Add to forceEnabled if necessary!")
+    }
+
+    return ConfiguredProject(
+      path = path,
+      type = projectType,
+      disabled = disabled
+    ).also {
       configuredProjects.add(it)
       path2project[path] = it
     }
@@ -191,6 +199,9 @@ data class ConfiguredProject internal constructor(
   val enabled: Boolean
     get() = disabled.not()
 
+  /**
+   * Returns the project using the given [resolver]
+   */
   fun getProject(resolver: Project): Project {
     try {
       return resolver.project(path)
@@ -198,6 +209,9 @@ data class ConfiguredProject internal constructor(
       println("Could not find project $path - is it disabled?: $disabled")
       println("Check disabled-projects.json if the project has been disabled!")
       println("Try `gradle clean build --no-configuration-cache --no-daemon --no-build-cache` to force recompilation")
+      throw e
+    } catch (e: Exception) {
+      println("Unexpected exception of type ${e.javaClass.simpleName} while resolving project $path - is it disabled?: $disabled")
       throw e
     }
   }

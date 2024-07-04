@@ -390,6 +390,9 @@ public object Libs {
     public const val kotlinx_coroutines_core: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:_"
 
+    public const val kotlinx_coroutines_debug: String =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-debug:_"
+
     public const val kotlinx_coroutines_javafx: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:_"
 
@@ -398,6 +401,9 @@ public object Libs {
 
     public const val kotlinx_coroutines_jdk9: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:_"
+
+    public const val kotlinx_coroutines_reactive: String =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:_"
 
     public const val kotlinx_coroutines_test: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:_"
