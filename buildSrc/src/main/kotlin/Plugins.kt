@@ -42,6 +42,7 @@ object Plugins {
 
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
+  @Deprecated("Do not use - runs into problems when")
   const val jacoco: String = "org.gradle.jacoco"
 
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
@@ -101,6 +102,7 @@ object Plugins {
 
   const val ksp: String = "com.google.devtools.ksp"
   const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
+  const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
 }
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
@@ -246,6 +248,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpe
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: PluginDependencySpec
+  get() = id(Plugins.kspSerialization)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

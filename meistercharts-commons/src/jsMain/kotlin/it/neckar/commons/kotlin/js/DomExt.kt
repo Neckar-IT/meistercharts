@@ -4,7 +4,6 @@ import it.neckar.open.collections.fastForEach
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.Image
 import org.w3c.dom.parsing.XMLSerializer
 
 
@@ -34,6 +33,7 @@ fun HTMLElement.appendAll(addedElements: List<HTMLElement>) {
  * Returns the first parent that contains the provided class
  */
 fun HTMLElement.findParentWithClass(className: String): Element? {
+  require(className.contains(" ").not()) { "Class name must not contain spaces!" }
   var parent = this.parentElement
   while (parent != null) {
     if (parent.classList.contains(className)) {

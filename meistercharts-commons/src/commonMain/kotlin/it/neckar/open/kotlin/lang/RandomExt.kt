@@ -67,3 +67,22 @@ data class RandomWeights<T>(val weightsMap: Map<T, Double>) {
 fun randomNormal(center: Double, sigma: Double): Double {
   return center + (sigma * sqrt(-2.0 * kotlin.math.log(random.nextDouble(), 10.0)) * cos(2.0 * PI * random.nextDouble()))
 }
+
+
+/**
+ * Creates a random string of the given length using the provided dictionary
+ */
+fun Random.nextString(length: Int, dictionary: String): String {
+  return nextString(length, dictionary.toCharArray())
+}
+
+fun Random.nextString(length: Int, dictionary: CharArray): String {
+  val chars = CharArray(length)
+  val dictionarySize = dictionary.size
+
+  for (index in 0 until length) {
+    chars[index] = dictionary[nextInt(dictionarySize)]
+  }
+
+  return chars.concatToString()
+}

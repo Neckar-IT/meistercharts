@@ -11,6 +11,18 @@ import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueParameter
 import kotlin.reflect.KClass
 
+fun <T : Annotation> Resolver.getClassesWithAnnotation(annotationKlass: KClass<T>): Sequence<KSClassDeclaration> {
+  return getAllFiles().flatMap { ksFile ->
+    ksFile.declarations.filterIsInstance<KSClassDeclaration>().filter { it.hasAnnotation(annotationKlass) }
+  }
+}
+
+fun <T : Any> KSClassDeclaration.hasAnnotation(annotationKlass: KClass<T>): Boolean {
+  return this.annotations.any {
+    it.annotationType.resolve().declaration.qualifiedName?.asString() == annotationKlass.qualifiedName
+  }
+}
+
 /**
  * Returns all function declarations that have the specified annotation or have a parameter with the specified annotation.
  */

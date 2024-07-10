@@ -533,3 +533,10 @@ fun String.substringBetween(start: String, end: String): String {
 
   return this.substring(startIndex, endIndex)
 }
+
+/**
+ * Removes all white spaces from this string
+ */
+fun String.removeWhitespaces(): String {
+  return this.replace("\\s".toRegex(), "")
+}

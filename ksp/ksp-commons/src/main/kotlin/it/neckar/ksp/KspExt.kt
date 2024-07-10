@@ -3,7 +3,9 @@
 package it.neckar.ksp
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.isAnnotationPresent
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
@@ -72,6 +74,14 @@ private val kotlinPrimitiveArrayNames = setOf(
   "kotlin.FloatArray",
   "kotlin.DoubleArray"
 )
+
+/**
+ * Returns true if this is of type [ClassKind.CLASS]
+ */
+val ClassKind.isClass: Boolean
+  get() {
+    return this == ClassKind.CLASS
+  }
 
 /**
  * Returns true if this declaration is a primitive array
@@ -185,7 +195,7 @@ fun findSuperParameter(function: KSFunctionDeclaration, superFunction: KSFunctio
 /**
  * Returns true if this function contains the provided annotation anywhere in the declaration or parameters
  */
-fun <T: Annotation> KSFunctionDeclaration.hasAnnotationInDeclarationOrParameters(annotationKlass: KClass<T>): Boolean {
+fun <T : Annotation> KSFunctionDeclaration.hasAnnotationInDeclarationOrParameters(annotationKlass: KClass<T>): Boolean {
   return isReturnTypeAnnotated(annotationKlass) || //The method itself or return type is annotated
     parameters.any { parameter ->
       parameter.isAnnotatedAnywhere(annotationKlass)
@@ -234,4 +244,18 @@ fun KSClassDeclaration.getValueType(): KSTypeReference {
   val constructorParameter = primaryConstructor.parameters.firstOrNull() ?: throw IllegalArgumentException("No constructor parameter for ${simpleName.asString()} @ ${location.format()}")
 
   return constructorParameter.type
+}
+
+/**
+ * Returns true if this declaration implements a sealed interface
+ */
+fun KSClassDeclaration.implementsSealed(): Boolean {
+  return getAllSuperTypes().any { superType ->
+    val declaration = superType.declaration
+    if (declaration is KSClassDeclaration) {
+      declaration.modifiers.contains(Modifier.SEALED)
+    } else {
+      false
+    }
+  }
 }
