@@ -583,6 +583,19 @@ val Project.branch: String
   }
 
 /**
+ * Returns the guessed tag that can/should be used for docker - based on the current branch name
+ */
+val Project.tagForDocker: String
+  get() {
+    val tagForDocker: String = branch.encodeForDockerTag()
+    require(tagForDocker.isNotBlank()) {
+      "Tag for docker must not be blank"
+    }
+
+    return tagForDocker
+  }
+
+/**
  * Returns true if the current branch is the master/main branch
  */
 val Project.onMainBranch: Boolean

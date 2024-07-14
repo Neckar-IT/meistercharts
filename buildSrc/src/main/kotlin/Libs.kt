@@ -187,6 +187,8 @@ public object Libs {
 
     public const val ktor_server_auth_jwt: String = "io.ktor:ktor-server-auth-jwt:_"
 
+    public const val ktor_server_call_id: String = "io.ktor:ktor-server-call-id:_"
+
     public const val ktor_server_conditional_headers: String =
             "io.ktor:ktor-server-conditional-headers:_"
 
@@ -205,6 +207,9 @@ public object Libs {
     public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"
 
     public const val ktor_websockets: String = "io.ktor:ktor-websockets:_"
+
+    public const val micrometer_registry_prometheus: String =
+            "io.micrometer:micrometer-registry-prometheus:_"
 
     public const val mockk: String = "io.mockk:mockk:_"
 
@@ -380,7 +385,7 @@ public object Libs {
 
     public const val kotlin_test_js_runner: String = "org.jetbrains.kotlin:kotlin-test-js-runner"
 
-    public const val kotlin_test_junit: String = "org.jetbrains.kotlin:kotlin-test-junit:_"
+    public const val kotlin_test_junit5: String = "org.jetbrains.kotlin:kotlin-test-junit5:_"
 
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
             "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"

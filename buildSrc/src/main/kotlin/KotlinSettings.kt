@@ -58,6 +58,7 @@ object KotlinSettings {
 
     //Only supported with 1.9.20
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
+    add("-Xconsistent-data-class-copy-visibility") //Enable the new copy visibility)
 
     if (false) {
       //Not working with 1.9

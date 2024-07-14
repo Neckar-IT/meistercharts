@@ -14,6 +14,17 @@ interface DateTimeFormat {
    * Formats a date to a string
    */
   fun format(@ms timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String
+
+  /**
+   * Format the provided timestamp. If the timestamp is null, the [fallback] is returned.
+   */
+  fun formatNullable(@ms timestamp: Double?, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking, fallback: String): String {
+    if (timestamp == null) {
+      return fallback
+    }
+
+    return format(timestamp, i18nConfiguration, whitespaceConfig)
+  }
 }
 
 /**

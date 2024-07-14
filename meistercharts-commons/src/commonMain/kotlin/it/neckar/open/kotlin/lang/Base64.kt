@@ -1,5 +1,7 @@
 package it.neckar.open.kotlin.lang
 
+import kotlin.io.encoding.Base64.PaddingOption
+
 
 /**
  * Converts a byte array to base64
@@ -45,7 +47,13 @@ fun ByteArray.toBase64UrlString(): String {
 }
 
 fun String.fromBase64Url(): ByteArray {
-  return kotlin.io.encoding.Base64.UrlSafe.decode(this)
+  return kotlin.io.encoding.Base64.UrlSafe.decode(addBase64Padding(this))
+}
+
+//Workaround for https://youtrack.jetbrains.com/issue/KT-69846
+private fun addBase64Padding(encoded: String): String {
+  val paddingSize = (4 - (encoded.length % 4)) % 4
+  return encoded.padEnd(encoded.length + paddingSize, '=')
 }
 
 fun String.fromBase64UrlString(): String {
