@@ -2,16 +2,13 @@ package it.neckar.geometry
 
 import it.neckar.open.kotlin.lang.toDegrees
 import it.neckar.open.unit.other.deg
-import it.neckar.open.unit.time.h
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.math.abs
-import kotlin.math.acos
 import kotlin.math.atan2
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
-import kotlin.math.sqrt
 
 /**
  * A Quadrilateral is a 4-sided polygon. It is defined by 4 points (coordinates of corners).
@@ -219,22 +216,10 @@ data class Quadrilateral(
   }
 
   /**
-   * Sorts the coordinates of the Quadrilateral in a clockwise order.
-   */
-  fun coordinatesInCssOrder(): List<Coordinates> {
-    // Calculate the center of the quadrilateral
-    val centerX = vertices().sumOf { it.x } / 4
-    val centerY = vertices().sumOf { it.y } / 4
-
-    // Sort the coordinates based on the angle they form with the center
-    return vertices().sortedWith(compareBy { atan2(it.y - centerY, it.x - centerX) })
-  }
-
-  /**
    * Returns a new instance that contains the coordinates in CSS order (topLeft, topRight, bottomRight, bottomLeft)
    */
   fun inCssOrder(): CssOrderQuadrilateral {
-    return CssOrderQuadrilateral(fromList(coordinatesInCssOrder()))
+    return CssOrderQuadrilateral(fromList(vertices().inCssOrder()))
   }
 
   override fun toString(): String {
@@ -250,6 +235,13 @@ data class Quadrilateral(
         point3 = coordinates[2],
         point4 = coordinates[3]
       )
+    }
+
+    fun minimumBoundingBoxFromList(coordinates: List<Coordinates>): Quadrilateral {
+      require(coordinates.size >= 3) { "List must contain at least 3 coordinates but had ${coordinates.size} elements" }
+
+      val hull = convexHull(coordinates)
+      return rotatingCalipers(hull)
     }
   }
 }

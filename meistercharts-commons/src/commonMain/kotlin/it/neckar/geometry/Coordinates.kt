@@ -35,6 +35,7 @@ import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -168,6 +169,10 @@ data class Coordinates(
   operator fun div(that: Coordinates): Coordinates = Coordinates(x / that.x, y / that.y)
   operator fun div(scale: Double): Coordinates = Coordinates(x / scale, y / scale)
 
+  fun crossProduct(p1: Coordinates, p2: Coordinates): Double {
+    return (p1.x - this.x) * (p2.y - this.y) - (p1.y - this.y) * (p2.x - this.x)
+  }
+
 
   /**
    * Computes the center between these [Coordinates] and [other]
@@ -199,8 +204,8 @@ data class Coordinates(
    */
   fun isCloseTo(other: Coordinates, deltaX: Double, deltaY: Double = deltaX): Boolean {
     return x.betweenInclusive(other.x - deltaX, other.x + deltaX)
-      &&
-      y.betweenInclusive(other.y - deltaY, other.y + deltaY)
+        &&
+        y.betweenInclusive(other.y - deltaY, other.y + deltaY)
   }
 
   /**
@@ -410,4 +415,98 @@ fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Do
   val d2 = distanceTo(p2)
   val dotProduct = (this.x - p1.x) * (p2.x - this.x) + (this.y - p1.y) * (p2.y - this.y)
   return acos(dotProduct / (d1 * d2)).toDegrees()
+}
+
+/**
+ * Sorts the coordinates in a clockwise order.
+ */
+fun List<Coordinates>.inCssOrder(): List<Coordinates> {
+  // Calculate the center of the quadrilateral
+  val centerX = sumOf { it.x } / 4
+  val centerY = sumOf { it.y } / 4
+
+  // Sort the coordinates based on the angle they form with the center
+  return sortedWith(compareBy { atan2(it.y - centerY, it.x - centerX) })
+}
+
+/**
+ * Calculates the convex hull enclosing the given points
+ * Uses Andrew's monotone chain algorithm https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+ */
+fun convexHull(points: List<Coordinates>): Hull {
+  if (points.size <= 1) return Hull(points)
+  val sortedPoints = points.sortedWith(compareBy({ it.x }, { it.y }))
+
+  val lowerBound = mutableListOf<Coordinates>()
+  for (point in sortedPoints) {
+    while (lowerBound.size >= 2 && lowerBound[lowerBound.size - 2].crossProduct(lowerBound[lowerBound.size - 1], point) <= 0) {
+      lowerBound.removeAt(lowerBound.size - 1)
+    }
+    lowerBound.add(point)
+  }
+
+  val upperBound = mutableListOf<Coordinates>()
+  for (point in sortedPoints.asReversed()) {
+    while (upperBound.size >= 2 && upperBound[upperBound.size - 2].crossProduct(upperBound[upperBound.size - 1], point) <= 0) {
+      upperBound.removeAt(upperBound.size - 1)
+    }
+    upperBound.add(point)
+  }
+
+  lowerBound.removeAt(lowerBound.size - 1)
+  upperBound.removeAt(upperBound.size - 1)
+
+  return Hull(lowerBound + upperBound)
+}
+
+@Serializable
+data class Hull(val coordinates: List<Coordinates>)
+
+/**
+ * Calculates the smallest rectangle that encloses the given convex hull
+ * Uses rotating calipers algorithm https://en.wikipedia.org/wiki/Rotating_calipers
+ */
+fun rotatingCalipers(hull: Hull): Quadrilateral {
+  val coordinates = hull.coordinates
+  var minArea = Double.MAX_VALUE
+  var bestRectangle = listOf<Coordinates>()
+
+  for (index in coordinates.indices) {
+    val p1 = coordinates[index]
+    val p2 = coordinates[(index + 1) % coordinates.size]
+    val edge = Coordinates(p2.x - p1.x, p2.y - p1.y)
+    val edgeLength = hypot(edge.x, edge.y)
+    val edgeDir = Coordinates(edge.x / edgeLength, edge.y / edgeLength)
+
+    var minDot = Double.MAX_VALUE
+    var maxDot = Double.MIN_VALUE
+    var minCross = Double.MAX_VALUE
+    var maxCross = Double.MIN_VALUE
+
+    for (p in coordinates) {
+      val relativePoint = Coordinates(p.x - p1.x, p.y - p1.y)
+      val dot = relativePoint.x * edgeDir.x + relativePoint.y * edgeDir.y
+      val cross = relativePoint.x * edgeDir.y - relativePoint.y * edgeDir.x
+
+      minDot = min(minDot, dot)
+      maxDot = max(maxDot, dot)
+      minCross = min(minCross, cross)
+      maxCross = max(maxCross, cross)
+    }
+
+    val width = maxDot - minDot
+    val height = maxCross - minCross
+    val area = width * height
+
+    if (area < minArea) {
+      minArea = area
+      val corner1 = Coordinates(p1.x + edgeDir.x * minDot, p1.y + edgeDir.y * minDot)
+      val corner2 = Coordinates(p1.x + edgeDir.x * maxDot, p1.y + edgeDir.y * maxDot)
+      val corner3 = Coordinates(corner2.x - edgeDir.y * height, corner2.y + edgeDir.x * height)
+      val corner4 = Coordinates(corner1.x - edgeDir.y * height, corner1.y + edgeDir.x * height)
+      bestRectangle = listOf(corner1, corner2, corner3, corner4)
+    }
+  }
+
+  return Quadrilateral.fromList(bestRectangle)
 }
