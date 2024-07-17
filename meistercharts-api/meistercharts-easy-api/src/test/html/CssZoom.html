@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+</head>
+
+
+<body>
+<h1 id="headline1" style="zoom: 2.5; height: 100px">CSS Size Demo
+  <p id="headline1p">within H1</p>
+</h1>
+
+<p id="sizep">
+</p>
+
+<script>
+  let headline1Height = document.getElementById("headline1").getBoundingClientRect().height;
+  let headline1pHeight = document.getElementById("headline1p").getBoundingClientRect().height;
+
+  document.getElementById("sizep").textContent = "h1:" + headline1Height + " h1.p: " + headline1pHeight;
+</script>
+
+</body>
+</html>
