@@ -1,10 +1,12 @@
 package it.neckar.open.kotlin.serializers
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.elementNames
+import kotlinx.serialization.serializerOrNull
 import kotlin.reflect.KClass
 
 /**
@@ -53,4 +55,24 @@ fun SerialDescriptor.getElementDescriptorByName(name: String): SerialDescriptor 
  * Returns false, if:
  * * this implements a sealed interface
  */
-expect fun <S: Any> KClass<S>.verifyPlausibleForSerialization(): Unit
+expect fun <S : Any> KClass<S>.verifyPlausibleForSerialization(): Unit
+
+
+/**
+ * Returns true if the descriptor is a primitive serializer:
+ * A serializer which does not have any elements.
+ */
+fun SerialDescriptor.isPrimitive(): Boolean {
+  return this.kind.isPrimitive
+}
+
+/**
+ * Returns true if the given class is serialized as a primitive.
+ *
+ * Returns true if the class is a primitive type or a sealed class with only primitive types.
+ */
+@OptIn(InternalSerializationApi::class)
+fun KClass<*>.isSerializedAsPrimitive(): Boolean {
+  return serializerOrNull()?.descriptor?.isPrimitive() ?: false
+}
+

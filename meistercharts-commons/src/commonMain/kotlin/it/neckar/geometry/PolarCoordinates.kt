@@ -36,6 +36,13 @@ data class PolarCoordinates(
     return Coordinates(toCartesianX(r, theta), toCartesianY(r, theta))
   }
 
+  /**
+   * Rotates the angle by the given angle
+   */
+  fun rotated(angle: @rad Double): PolarCoordinates {
+    return PolarCoordinates(r, theta + angle)
+  }
+
   companion object {
     fun toCartesianY(r: Double, theta: @rad Double): Double = r * sin(theta)
 

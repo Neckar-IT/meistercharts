@@ -44,6 +44,9 @@ data class Rectangle(
     height: @MayBeNegative Double,
   ) : this(Coordinates(x, y), Size(width, height))
 
+  val orientation: Orientation
+    get() = if (size.width >= size.height) Orientation.Horizontal else Orientation.Vertical
+
   override fun vertices(): List<Coordinates> {
     return listOf(topRight(), bottomRight(), bottomLeft(), topLeft())
   }
@@ -141,6 +144,18 @@ data class Rectangle(
       getY() - top,
       getWidth() + left + right,
       getHeight() + top + bottom
+    )
+  }
+
+  /**
+   * Coerces the rectangle to fit inside the given [outer] [Rectangle]
+   */
+  fun coerceInside(outer: Rectangle): Rectangle {
+    return Rectangle(
+      getX().coerceAtLeast(outer.getX()),
+      getY().coerceAtLeast(outer.getY()),
+      getWidth().coerceAtMost(outer.getX() - getX() + outer.getWidth()),
+      getHeight().coerceAtMost(outer.getY() - getY() + outer.getHeight()),
     )
   }
 

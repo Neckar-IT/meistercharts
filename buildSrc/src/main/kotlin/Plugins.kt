@@ -90,6 +90,7 @@ object Plugins {
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
   const val secretsLoader: String = "it.neckar.secrets-loader"
+  const val openapiValidator: String = "it.neckar.openapi.validator"
 
   @Deprecated("Does not seem to work")
   const val ssh: String = "online.colaba.ssh"
@@ -251,6 +252,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDepende
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: PluginDependencySpec
   get() = id(Plugins.kspSerialization)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: PluginDependencySpec
+  get() = id(Plugins.openapiValidator)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

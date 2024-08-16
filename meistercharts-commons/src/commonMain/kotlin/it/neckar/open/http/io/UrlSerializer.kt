@@ -1,22 +1,18 @@
 package it.neckar.open.http.io
 
 import it.neckar.open.http.Url
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.internal.InlinePrimitiveDescriptor
 
 /**
  * Serializer for URL
  */
-@OptIn(InternalSerializationApi::class)
 object UrlSerializer : KSerializer<Url> {
-  override val descriptor: SerialDescriptor = InlinePrimitiveDescriptor("Url", String.serializer())
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Url", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: Url) {
     encoder.encodeString(value.toString())
@@ -27,7 +23,7 @@ object UrlSerializer : KSerializer<Url> {
   }
 
   object DataScheme : KSerializer<Url.DataScheme> {
-    override val descriptor: SerialDescriptor = InlinePrimitiveDescriptor("Url.Data", String.serializer())
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Url.DataScheme", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Url.DataScheme) {
       encoder.encodeString(value.toString())
@@ -39,7 +35,7 @@ object UrlSerializer : KSerializer<Url> {
   }
 
   object Absolute : KSerializer<Url.Absolute> {
-    override val descriptor: SerialDescriptor = InlinePrimitiveDescriptor("Url.Absolute", String.serializer())
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Url.Absolute", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Url.Absolute) {
       encoder.encodeString(value.toString())
@@ -51,7 +47,7 @@ object UrlSerializer : KSerializer<Url> {
   }
 
   object RootRelative : KSerializer<Url.RootRelative> {
-    override val descriptor: SerialDescriptor = InlinePrimitiveDescriptor("Url.RootRelative", String.serializer())
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Url.RootRelative", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Url.RootRelative) {
       encoder.encodeString(value.toString())
@@ -63,7 +59,7 @@ object UrlSerializer : KSerializer<Url> {
   }
 
   object Relative : KSerializer<Url.Relative> {
-    override val descriptor: SerialDescriptor = InlinePrimitiveDescriptor("Url.Relative", String.serializer())
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Url.Relative", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Url.Relative) {
       encoder.encodeString(value.toString())

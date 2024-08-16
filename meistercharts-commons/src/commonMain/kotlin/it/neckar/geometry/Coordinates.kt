@@ -422,8 +422,8 @@ fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Do
  */
 fun List<Coordinates>.inCssOrder(): List<Coordinates> {
   // Calculate the center of the quadrilateral
-  val centerX = sumOf { it.x } / 4
-  val centerY = sumOf { it.y } / 4
+  val centerX = sumOf { it.x } / size.toDouble()
+  val centerY = sumOf { it.y } / size.toDouble()
 
   // Sort the coordinates based on the angle they form with the center
   return sortedWith(compareBy { atan2(it.y - centerY, it.x - centerX) })
@@ -508,5 +508,5 @@ fun rotatingCalipers(hull: Hull): Quadrilateral {
     }
   }
 
-  return Quadrilateral.fromList(bestRectangle)
+  return Quadrilateral.fromList(bestRectangle.inCssOrder())
 }

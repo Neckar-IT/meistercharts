@@ -40,3 +40,11 @@ inline fun <T> T?.requireNotNull(lazyMessage: () -> Any = { "Must not be null" }
   }
   return requireNotNull(this, lazyMessage)
 }
+
+/**
+ * Throws an exception if this list is empty
+ */
+inline fun <T> List<T>.checkNotEmpty(lazyMessage: () -> Any = { "Must not be empty" }): List<T> {
+  check(isNotEmpty(), lazyMessage)
+  return this
+}

@@ -42,14 +42,15 @@ enum class RightTriangleType {
 }
 
 /**
- * Represents a rectangle.
+ * Represents a right-angle triangle.
  *
- * The rectangle has a size that starts at a given location. The size may be negative.
- * Therefore, the upper left corner of the rectangle is:
+ * The triangle has a size that starts at a given location. The size may be negative.
+ * Therefore, the upper left corner of the triangle is:
  * * the location if the size is positive
  * * location - size if the size is negative
+ * The triangle is defined by the corner that is missing to form a rectangle
  */
-data class Triangle(
+data class RightTriangle(
   override val location: Coordinates,
   @MayBeNegative
   override val size: Size,
@@ -80,52 +81,52 @@ data class Triangle(
   /**
    * Moves the rectangle
    */
-  override fun move(deltaX: Double, deltaY: Double): Triangle {
-    return Triangle(location.plus(deltaX, deltaY), size, rightTriangleType)
+  override fun move(deltaX: Double, deltaY: Double): RightTriangle {
+    return RightTriangle(location.plus(deltaX, deltaY), size, rightTriangleType)
   }
 
-  override fun move(distance: Distance): Triangle {
+  override fun move(distance: Distance): RightTriangle {
     return move(distance.x, distance.y)
   }
 
-  override fun withX(newX: Double): Triangle {
-    return Triangle(newX, getY(), getWidth(), getHeight(), rightTriangleType)
+  override fun withX(newX: Double): RightTriangle {
+    return RightTriangle(newX, getY(), getWidth(), getHeight(), rightTriangleType)
   }
 
-  override fun withY(newY: Double): Triangle {
-    return Triangle(getX(), newY, getWidth(), getHeight(), rightTriangleType)
+  override fun withY(newY: Double): RightTriangle {
+    return RightTriangle(getX(), newY, getWidth(), getHeight(), rightTriangleType)
   }
 
   /**
    * Creates a [Rectangle] from this [Rectangle] with width [newWidth]
    */
-  override fun withWidth(newWidth: Double): Triangle {
-    return Triangle(getX(), getY(), newWidth, getHeight(), rightTriangleType)
+  override fun withWidth(newWidth: Double): RightTriangle {
+    return RightTriangle(getX(), getY(), newWidth, getHeight(), rightTriangleType)
   }
 
   /**
    * Creates a [Rectangle] from this [Rectangle] with height [newHeight]
    */
-  override fun withHeight(newHeight: Double): Triangle {
-    return Triangle(getX(), getY(), getWidth(), newHeight, rightTriangleType)
+  override fun withHeight(newHeight: Double): RightTriangle {
+    return RightTriangle(getX(), getY(), getWidth(), newHeight, rightTriangleType)
   }
 
   /**
    * Returns a new rectangle object with the given location - but the same height/width
    */
-  override fun withLocation(location: Coordinates): Triangle {
+  override fun withLocation(location: Coordinates): RightTriangle {
     if (this.location == location) {
       return this
     }
 
-    return Triangle(location, size, rightTriangleType)
+    return RightTriangle(location, size, rightTriangleType)
   }
 
   /**
    * Returns a new rectangle that has been extended with the given values
    */
-  override fun expand(left: Double, top: Double, right: Double, bottom: Double): Triangle {
-    return Triangle(getX() - left, getY() - top, getWidth() + left + right, getHeight() + top + bottom, rightTriangleType)
+  override fun expand(left: Double, top: Double, right: Double, bottom: Double): RightTriangle {
+    return RightTriangle(getX() - left, getY() - top, getWidth() + left + right, getHeight() + top + bottom, rightTriangleType)
   }
 
   /**
@@ -136,7 +137,7 @@ data class Triangle(
   }
 
   /**
-   * Checks if a [Shape] currently collides with this [Triangle]
+   * Checks if a [Shape] currently collides with this [RightTriangle]
    * Does NOT work with concave shapes
    */
   override fun doesNotOverlap(other: Shape): Boolean {
@@ -172,54 +173,54 @@ data class Triangle(
 
 
   companion object {
-    fun withLTRB(left: Double, top: Double, right: Double, bottom: Double, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(left, top, right - left, bottom - top, rightTriangleType)
+    fun withLTRB(left: Double, top: Double, right: Double, bottom: Double, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(left, top, right - left, bottom - top, rightTriangleType)
     }
 
     /**
      * Returns a rectangle that has its origin centered with the given width/height
      */
-    fun centered(width: Double, height: Double, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates.of(-width / 2.0, -height / 2.0), Size(width, height), rightTriangleType)
+    fun centered(width: Double, height: Double, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates.of(-width / 2.0, -height / 2.0), Size(width, height), rightTriangleType)
     }
 
     /**
      * Returns a rectangle that has its origin centered with the given width/height
      */
-    fun centered(size: Size, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates.of(-size.width / 2.0, -size.height / 2.0), size, rightTriangleType)
+    fun centered(size: Size, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates.of(-size.width / 2.0, -size.height / 2.0), size, rightTriangleType)
     }
 
     /**
      * Creates a new rectangle with its origin set to the bottom right corner
      */
-    fun bottomRight(size: Size, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates(-size.width, -size.height), size, rightTriangleType)
+    fun bottomRight(size: Size, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates(-size.width, -size.height), size, rightTriangleType)
     }
 
     /**
      * Creates a new rectangle with its origin set to the bottom left corner
      */
-    fun bottomLeft(size: Size, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates(0.0, -size.height), size, rightTriangleType)
+    fun bottomLeft(size: Size, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates(0.0, -size.height), size, rightTriangleType)
     }
 
     /**
      * Creates a new rectangle with its origin set to the top right corner
      */
-    fun topRight(size: Size, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates(-size.width, 0.0), size, rightTriangleType)
+    fun topRight(size: Size, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates(-size.width, 0.0), size, rightTriangleType)
     }
 
     /**
      * Creates a new rectangle with its origin set to the top right corner.
      */
-    fun topLeft(size: Size, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates.origin, size, rightTriangleType)
+    fun topLeft(size: Size, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates.origin, size, rightTriangleType)
     }
 
-    fun centerLeft(width: Double, height: Double, rightTriangleType: RightTriangleType): Triangle {
-      return Triangle(Coordinates.of(0.0, -height / 2.0), Size(width, height), rightTriangleType)
+    fun centerLeft(width: Double, height: Double, rightTriangleType: RightTriangleType): RightTriangle {
+      return RightTriangle(Coordinates.of(0.0, -height / 2.0), Size(width, height), rightTriangleType)
     }
   }
 }

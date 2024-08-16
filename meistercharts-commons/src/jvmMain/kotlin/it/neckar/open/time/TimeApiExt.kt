@@ -4,7 +4,9 @@ import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.si.ns
 import it.neckar.open.unit.si.s
 import java.time.Instant
+import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.chrono.ChronoZonedDateTime
@@ -45,6 +47,11 @@ fun millis2Instant(@ms millis: Double): Instant {
 
 fun millisToUtc(millisInDouble: Double): OffsetDateTime {
   return millis2Instant(millisInDouble).toUtc()
+}
+
+fun millisToLocalDate(millisInDouble: Double): LocalDate {
+  val instant = millis2Instant(millisInDouble)
+  return instant.atZone(ZoneId.systemDefault()).toLocalDate()
 }
 
 /**

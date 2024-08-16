@@ -83,6 +83,11 @@ val ClassKind.isClass: Boolean
     return this == ClassKind.CLASS
   }
 
+val ClassKind.isObject: Boolean
+  get() {
+    return this == ClassKind.OBJECT
+  }
+
 /**
  * Returns true if this declaration is a primitive array
  */

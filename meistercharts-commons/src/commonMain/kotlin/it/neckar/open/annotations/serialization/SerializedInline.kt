@@ -10,5 +10,6 @@ package it.neckar.open.annotations.serialization
 @Target(
   AnnotationTarget.CLASS,
 )
+@Deprecated("Too complicated to use. Use ::isSerializedAsPrimitive() instead")
 @MustBeDocumented
 annotation class SerializedInline

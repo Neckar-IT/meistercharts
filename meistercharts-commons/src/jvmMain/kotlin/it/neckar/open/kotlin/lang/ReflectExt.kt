@@ -2,6 +2,7 @@ package it.neckar.open.kotlin.lang
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 
 /**
  * Returns true if this is an interface.
@@ -21,8 +22,8 @@ val KClass<*>.simpleNameWithEnclosing: String
   get() {
     val simpleName = this.simpleName ?: throw IllegalStateException("simpleName is null for $this")
 
-    val enclosingClass: Class<*> = this.java.enclosingClass ?: return simpleName
-    return "${enclosingClass.simpleName}.$simpleName"
+    val enclosingClass: KClass<*> = this.java.enclosingClass?.kotlin ?: return simpleName
+    return "${enclosingClass.simpleNameWithEnclosing}.$simpleName"
   }
 
 /**
@@ -49,16 +50,97 @@ fun KType.asKClass(): KClass<*> {
 }
 
 /**
+ * Returns all ancestors
+ */
+fun KClass<*>.getAllAncestors(): Set<KType> {
+  return supertypes.flatMap {
+    buildSet {
+      add(it)
+      addAll(it.asKClass().getAllAncestors())
+    }
+  }.toSet()
+}
+
+/**
+ * Returns all *subclasses* of this sealed interface.
+ * Including subclasses of subinterfaces.
+ *
+ * Does *not* include sealed interfaces or sealed classes.
+ */
+fun <T : Any> KClass<T>.getAllSealedSubclasses(): List<KClass<out T>> {
+  require(this.isSealed) { "[$this] must be sealed" }
+
+  return sealedSubclasses.flatMap {
+    if (it.isSealed) {
+      it.getAllSealedSubclasses()
+    } else {
+      listOf(it)
+    }
+  }
+}
+
+/**
  * Returns the sealed interface for this class.
  * Throws an exception if the sealed interface is not found
  */
 fun KClass<*>.getSealedInterface(): KClass<*> {
-  return findSealedInterface() ?: throw IllegalArgumentException("Could not find sealed interface for ${this::class} in super types")
+  return findSealedInterface() ?: throw IllegalArgumentException("Could not find sealed interface for [${this::simpleNameWithEnclosing}] in super types")
 }
 
+/**
+ * Returns the sealed interface for this class or null if it is not found
+ */
 fun KClass<*>.findSealedInterface(): KClass<*>? {
   return supertypes.firstOrNull {
     //Is a sealed interface?
     it.isSealed()
   }?.asKClass()
+}
+
+/**
+ * Returns all sealed interfaces that are ancestors for this class
+ */
+fun KClass<*>.findSealedInterfacesAncestors(): List<KType> {
+  return getAllAncestors().filter {
+    it.isSealed()
+  }.map { it }
+}
+
+/**
+ * Returns true if this class is a sealed class and shares a common ancestor with the other class.
+ */
+fun KClass<*>.hasCommonSealedAncestorWith(other: KClass<*>): Boolean {
+  //Check if the sealed interfaces share a common ancestor
+  val myAncestors = findSealedInterfacesAncestors()
+  val otherAncestors = other.findSealedInterfacesAncestors()
+
+  return myAncestors.any { it in otherAncestors }
+}
+
+/**
+ * Returns the supertype or null if there is none.
+ */
+inline fun <reified SuperType : Any> KClass<*>.findSupertype(): KType? {
+  return supertypes.firstOrNull {
+    it.classifier == SuperType::class
+  }
+}
+
+/**
+ * Returns true if this class has a supertype of the given type.
+ */
+@Deprecated(("Inline!"), ReplaceWith("isSubclassOf(T::class)", "kotlin.reflect.full.isSubclassOf"))
+inline fun <reified T : Any> KClass<*>.hasSupertype(): Boolean {
+  return isSubclassOf(T::class)
+}
+
+/**
+ * Returns true if this type is a Nothing type
+ */
+fun KType.isNothing(): Boolean {
+  return this.classifier == Nothing::class
+}
+
+fun KType.isNotNothing(): Boolean {
+  return isNothing().not()
 }

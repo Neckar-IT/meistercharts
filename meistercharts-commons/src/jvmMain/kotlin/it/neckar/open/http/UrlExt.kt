@@ -3,6 +3,7 @@ package it.neckar.open.http
 import java.awt.image.BufferedImage
 import java.io.File
 import java.net.URL
+import javax.imageio.ImageIO
 
 /**
  * Converts to a [java.net.URL]
@@ -12,7 +13,7 @@ fun Url.toURL(): URL {
 }
 
 fun Url.Companion.fromURL(url: URL): Url {
-  return Url.parse(url.toExternalForm())
+  return parse(url.toExternalForm())
 }
 
 fun Url.Companion.fromFile(file: File): Url {
@@ -38,5 +39,5 @@ fun Url.DataScheme.loadImage(): BufferedImage {
     "Is not an image. Media type: $mediaType"
   }
 
-  return javax.imageio.ImageIO.read(dataBytes.inputStream())
+  return ImageIO.read(dataBytes.inputStream())
 }

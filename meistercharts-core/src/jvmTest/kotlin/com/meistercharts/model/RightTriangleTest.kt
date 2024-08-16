@@ -18,20 +18,20 @@ package com.meistercharts.model
 import assertk.*
 import assertk.assertions.*
 import it.neckar.geometry.Rectangle
+import it.neckar.geometry.RightTriangle
 import it.neckar.geometry.RightTriangleType.MissingCornerInFirstQuadrant
 import it.neckar.geometry.RightTriangleType.MissingCornerInFourthQuadrant
 import it.neckar.geometry.RightTriangleType.MissingCornerInSecondQuadrant
 import it.neckar.geometry.RightTriangleType.MissingCornerInThirdQuadrant
-import it.neckar.geometry.Triangle
 import org.junit.jupiter.api.Test
 
-class TriangleTest {
+class RightTriangleTest {
   @Test
   fun testSimpleTriangleCollision() {
-    val testTriangle1 = Triangle(100.0, 200.0, 100.0, 200.0, MissingCornerInFirstQuadrant)
-    val testTriangle2 = Triangle(1000.0, 200.0, 1000.0, 2000.0, MissingCornerInSecondQuadrant)
-    val testTriangle3 = Triangle(-100.0, -200.0, -600.0, -200.0, MissingCornerInThirdQuadrant)
-    val testTriangle4 = Triangle(-3000.0, -5000.0, 4000.0, 10000.0, MissingCornerInFourthQuadrant)
+    val testTriangle1 = RightTriangle(100.0, 200.0, 100.0, 200.0, MissingCornerInFirstQuadrant)
+    val testTriangle2 = RightTriangle(1000.0, 200.0, 1000.0, 2000.0, MissingCornerInSecondQuadrant)
+    val testTriangle3 = RightTriangle(-100.0, -200.0, -600.0, -200.0, MissingCornerInThirdQuadrant)
+    val testTriangle4 = RightTriangle(-3000.0, -5000.0, 4000.0, 10000.0, MissingCornerInFourthQuadrant)
 
     val testRectangle1 = Rectangle(100.0, 200.0, 100.0, 200.0)
     val testRectangle2 = Rectangle(-100.0, -200.0, -100.0, -200.0)

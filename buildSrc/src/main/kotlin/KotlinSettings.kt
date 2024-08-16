@@ -54,7 +54,6 @@ object KotlinSettings {
   val freeCompilerArgs: List<String> = buildList {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
-    add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design)
 
     //Only supported with 1.9.20
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
@@ -69,6 +68,8 @@ object KotlinSettings {
     //
     // Old compiler settings, for documentation purposes
     //
+    // Context Receivers have been removed!
+    //add("-Xcontext-receivers") //Enable context receivers (https://github.com/Kotlin/KEEP/blob/master/proposals/context-receivers.md#detailed-design
     //Stable since 1.9
     //add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
     //Use value classes instead

@@ -331,22 +331,19 @@ public object Libs {
     public const val org_jetbrains_intellij_gradle_plugin: String =
             "org.jetbrains.intellij:org.jetbrains.intellij.gradle.plugin:_"
 
-    public const val kotlin_css: String = "org.jetbrains.kotlin-wrappers:kotlin-css"
+    public const val kotlin_css: String = "org.jetbrains.kotlin-wrappers:kotlin-css:_"
 
     public const val kotlin_js: String = "org.jetbrains.kotlin-wrappers:kotlin-js:_"
 
-    public const val kotlin_react: String = "org.jetbrains.kotlin-wrappers:kotlin-react"
+    public const val kotlin_react: String = "org.jetbrains.kotlin-wrappers:kotlin-react:_"
 
-    public const val kotlin_react_dom: String = "org.jetbrains.kotlin-wrappers:kotlin-react-dom"
-
-    public const val kotlin_react_redux: String = "org.jetbrains.kotlin-wrappers:kotlin-react-redux"
+    public const val kotlin_react_dom: String = "org.jetbrains.kotlin-wrappers:kotlin-react-dom:_"
 
     public const val kotlin_react_router_dom: String =
-            "org.jetbrains.kotlin-wrappers:kotlin-react-router-dom"
+            "org.jetbrains.kotlin-wrappers:kotlin-react-router-dom:_"
 
-    public const val kotlin_redux: String = "org.jetbrains.kotlin-wrappers:kotlin-redux"
-
-    public const val kotlin_styled_next: String = "org.jetbrains.kotlin-wrappers:kotlin-styled-next"
+    public const val kotlin_styled_next: String =
+            "org.jetbrains.kotlin-wrappers:kotlin-styled-next:_"
 
     public const val kotlin_wrappers_bom: String =
             "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:_"
