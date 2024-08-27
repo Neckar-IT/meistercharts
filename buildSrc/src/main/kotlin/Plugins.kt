@@ -49,6 +49,7 @@ object Plugins {
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
   const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
+  const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
 
   /**
    * Configures python projects
@@ -255,6 +256,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: Plugin
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: PluginDependencySpec
   get() = id(Plugins.openapiValidator)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
+  get() = id(Plugins.generatePnpmWorkspaceYaml)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

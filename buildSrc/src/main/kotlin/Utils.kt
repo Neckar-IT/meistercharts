@@ -701,7 +701,7 @@ val Project.meisterchartsVersion: String
   }
 
 @Deprecated("use this.encodeForDockerTag() instead!", ReplaceWith("this.encodeForDockerTag()"))
-inline fun String.safeForDockerTag(): String {
+fun String.safeForDockerTag(): String {
   return this.encodeForDockerTag()
 }
 
