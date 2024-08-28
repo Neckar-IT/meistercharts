@@ -176,6 +176,8 @@ public object Libs {
 
     public const val ktor_http: String = "io.ktor:ktor-http:_"
 
+    public const val ktor_serialization_jackson: String = "io.ktor:ktor-serialization-jackson:_"
+
     public const val ktor_serialization_kotlinx: String = "io.ktor:ktor-serialization-kotlinx:_"
 
     public const val ktor_serialization_kotlinx_json: String =
@@ -191,6 +193,9 @@ public object Libs {
 
     public const val ktor_server_conditional_headers: String =
             "io.ktor:ktor-server-conditional-headers:_"
+
+    public const val ktor_server_content_negotiation: String =
+            "io.ktor:ktor-server-content-negotiation:_"
 
     public const val ktor_server_core: String = "io.ktor:ktor-server-core:_"
 
