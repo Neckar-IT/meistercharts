@@ -1,4 +1,6 @@
 import com.google.common.io.Files
+import it.neckar.docker.ExternalDockerImages
+import it.neckar.docker.externalDockerImages
 import it.neckar.gradle.ansiConsole
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -14,6 +16,7 @@ import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.tasks.AbstractCopyTask
 import java.io.File
 
 
@@ -180,5 +183,37 @@ fun Task.onlyIfPropertyTrue(propertyName: String) {
       logger.lifecycle("${ansiConsole.orange("Skipping $name")} because property ${ansiConsole.green(propertyName)} is not set. Call ${ansiConsole.green("gradle build -P${propertyName}=true")} to execute this task")
     }
     executeTask
+  }
+}
+
+/**
+ * Filters all (external) docker image variables
+ */
+fun AbstractCopyTask.filterAllExternalDockerImages() {
+  filter { line ->
+    var currentLine = line;
+
+    ExternalDockerImages.entries.forEach { dockerImageDescriptor ->
+      val variableName = ExternalDockerImages.variableName(dockerImageDescriptor)
+      val oldValue = "\${${variableName}}"
+      currentLine = currentLine.replace(oldValue, dockerImageDescriptor.fqName)
+    }
+
+    currentLine
+  }
+}
+
+/**
+ * Replaces the variables for external docker images - if available.
+ *
+ * This method configures everything necessary for filtering.
+ * No necessity to call any other methods.
+ */
+fun AbstractCopyTask.filterExternalDockerImages() {
+  //Adds the versions for external docker images as input
+  inputs.externalDockerImages()
+
+  doFirst {
+    filterAllExternalDockerImages()
   }
 }

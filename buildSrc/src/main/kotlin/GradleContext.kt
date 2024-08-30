@@ -16,6 +16,17 @@ object GradleContext {
     private set
 
   /**
+   * Returns null if the [gradle] instance has not been initialized yet
+   */
+  fun rootProjectOrNull(): Project? {
+    return if (::gradle.isInitialized) {
+      gradle.rootProject
+    } else {
+      null
+    }
+  }
+
+  /**
    * The root project
    */
   val rootProject: Project

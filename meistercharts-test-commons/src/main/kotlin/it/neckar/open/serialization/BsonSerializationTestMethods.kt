@@ -16,6 +16,7 @@ import org.bson.BsonBinaryWriter
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
+import org.bson.codecs.kotlinx.BsonConfiguration
 import org.bson.codecs.kotlinx.KotlinSerializerCodec
 import org.bson.io.BasicOutputBuffer
 import org.bson.json.JsonReader
@@ -36,7 +37,7 @@ inline fun <reified T : Any> roundTripBson(
   },
   expectedBson: String?,
 ) {
-  roundTripBson(objectToSerialize, serializer, serializersModule, comparisonCheck) { expectedBson }
+  roundTripBson(objectToSerialize = objectToSerialize, serializer = serializer, serializersModule = serializersModule, comparisonCheck = comparisonCheck) { expectedBson }
 }
 
 /**
@@ -46,6 +47,10 @@ inline fun <reified T : Any> roundTripBson(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   serializersModule: SerializersModule = EmptySerializersModule(),
+  /**
+   * The bson configuration - which is used to configure the bson serialization (e.g., include null values)
+   */
+  bsonConfiguration: BsonConfiguration = Mongo.bsonConfiguration,
   noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
@@ -56,7 +61,7 @@ inline fun <reified T : Any> roundTripBson(
     kClass = T::class,
     serializer = serializer,
     serializersModule = serializersModule,
-    bsonConfiguration = Mongo.bsonConfiguration
+    bsonConfiguration = bsonConfiguration
   )
 
   return roundTripBson(T::class, objectToSerialize, codec, comparisonCheck, expectedBsonProvider)
