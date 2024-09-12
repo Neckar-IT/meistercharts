@@ -16,6 +16,7 @@
 package com.meistercharts.history.storage
 
 import com.meistercharts.history.HistoryBucket
+import it.neckar.open.kotlin.serializers.defaultJsonConfiguration
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -62,7 +63,6 @@ fun createPrettyJsonFormat(): Json {
     serializersModule = SerializersModule {
     }
 
-    prettyPrint = true
-    prettyPrintIndent = "  "
+    defaultJsonConfiguration(true)
   }
 }

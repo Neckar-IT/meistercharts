@@ -25,7 +25,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable
 import com.meistercharts.canvas.layout.cache.LayoutVariablesObjectCache
-import com.meistercharts.canvas.layout.cache.StringsCache.Companion.Uninitialized
+import com.meistercharts.canvas.layout.cache.StringMultiCache.Companion.Uninitialized
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.stroke

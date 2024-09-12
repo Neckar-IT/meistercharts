@@ -2,6 +2,7 @@ package it.neckar.open.serialization
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.kotlin.serializers.defaultJsonConfiguration
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -40,11 +41,7 @@ inline fun <reified T> roundTrip(
 ): T {
   val encoder: Json = Json {
     this.serializersModule = serializersModule
-    prettyPrint = true
-    /**
-     * encode default properties of Serializable Classes
-     * */
-    encodeDefaults = true
+    defaultJsonConfiguration(true)
   }
 
   return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck, expectedJsonProvider)
@@ -105,11 +102,7 @@ fun <T> _roundTrip(
  */
 fun <T> roundTripList(vararg objectsToSerialize: T, expectedJson: String?, serializer: KSerializer<T>) {
   val encoder = Json {
-    prettyPrint = false
-    /**
-     * encode default properties of Serializable Classes
-     * */
-    encodeDefaults = true
+    defaultJsonConfiguration(true)
   }
 
   val listSerializer = ListSerializer(serializer)

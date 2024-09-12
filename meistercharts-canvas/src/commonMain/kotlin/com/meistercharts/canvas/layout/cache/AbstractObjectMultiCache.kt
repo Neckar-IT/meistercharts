@@ -21,12 +21,12 @@ import it.neckar.open.collections.fastForEachReversed
 import it.neckar.open.collections.fastForEachWithIndex
 
 /**
- * Abstract base class for objects cache.
- * This class accepts all kind of objects (e.g. Strings).
+ * Abstract base class for a cache for "normal" objects.
+ * This class accepts all kinds of objects (e.g., Strings).
  *
- * It is simpler to use [LayoutVariablesObjectCache] if the object extend [LayoutVariable]
+ * Use [LayoutVariablesObjectCache] if the object extend [LayoutVariable]
  */
-abstract class AbstractObjectsCache<T>(
+abstract class AbstractObjectMultiCache<T>(
   /**
    * The factory that is used to create new elements.
    *
@@ -40,13 +40,13 @@ abstract class AbstractObjectsCache<T>(
    * Contains the layout objects, that can be used for layout.
    * This list must never be used directly. Instead use [values]
    */
-  internal val objectsStock: MutableList<T> = mutableListOf()
+  internal val objectPool: MutableList<T> = mutableListOf()
 
   /**
-   * Holds the layout variables.
-   * This list is always resized / refilled on size changes.
+   * Holds the active/used layout variables.
+   * This list is always resized / refilled on size changes (from the [objectPool]).
    *
-   * This list has the correct size
+   * This list has the correct size.
    */
   @PublishedApi
   internal val values: MutableList<T> = mutableListOf()
@@ -56,6 +56,9 @@ abstract class AbstractObjectsCache<T>(
       return values.size
     }
 
+  /**
+   * Returns true if the cache has no elements
+   */
   fun isEmpty(): Boolean {
     return values.isEmpty()
   }
@@ -74,8 +77,9 @@ abstract class AbstractObjectsCache<T>(
    */
   open fun addNewElement(): T {
     val newSize = size + 1
+    @Suppress("DEPRECATION")
     ensureSize(newSize)
-    return objectsStock[newSize - 1]
+    return objectPool[newSize - 1]
   }
 
   /**
@@ -85,9 +89,9 @@ abstract class AbstractObjectsCache<T>(
    */
   @Deprecated("Use reset instead")
   override fun ensureSize(size: Int) {
-    //Increase the size of the objects stock if necessary
-    while (objectsStock.size < size) {
-      objectsStock.add(factory())
+    //Increase the size of the object pool if necessary
+    while (objectPool.size < size) {
+      objectPool.add(factory())
     }
 
     //If the size is correct, return immediately
@@ -110,7 +114,7 @@ abstract class AbstractObjectsCache<T>(
 
     //Increase if necessary
     while (values.size < size) {
-      values.add(objectsStock[values.size])
+      values.add(objectPool[values.size])
     }
   }
 

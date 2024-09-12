@@ -15,14 +15,19 @@
  */
 package com.meistercharts.zoom
 
-import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.Distance
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.model.Insets
 import com.meistercharts.model.Zoom
+import it.neckar.geometry.Direction
+import it.neckar.geometry.Distance
+import it.neckar.geometry.HorizontalAlignment
+import it.neckar.geometry.VerticalAlignment
 import it.neckar.geometry.asDistance
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.pct
 import kotlin.reflect.KProperty0
 
@@ -84,7 +89,7 @@ open class FittingWithMarginPercentage(
   /**
    * The padding percentage for the x axis (applied on top and bottom)
    */
-  val marginPercentageY: @pct Double
+  val marginPercentageY: @pct Double,
 ) : ZoomAndTranslationDefaults {
   init {
     require(marginPercentageX < 1.0) { "marginPercentageX must be smaller than 1.0 but was <${marginPercentageX}" }
@@ -120,6 +125,19 @@ class FittingWithMarginPercentageAspectRatio(
  * Shows the content area within the content viewport
  */
 object FittingInContentViewport : FittingWithMargin(
+  alignment = Direction.TopLeft.asProvider(),
+  {
+    it.chartState.contentViewportMargin
+  }
+)
+
+/**
+ * Shows the content area within the content viewport - respects the aspect ratio of the content area
+ */
+class FittingInContentViewportAspectRatio(
+  alignment: () -> Direction = Direction.TopLeft.asProvider(),
+) : FittingWithMarginAspectRatio(
+  alignment = alignment,
   {
     it.chartState.contentViewportMargin
   }
@@ -132,31 +150,40 @@ object FittingInContentViewport : FittingWithMargin(
  */
 open class FittingWithMargin(
   /**
+   * Where the content area is aligned in the window.
+   *
+   * The alignment is relevant if the content area has a different aspect ratio than the window.
+   */
+  val alignment: () -> Direction = Direction.TopLeft.asProvider(),
+
+  /**
    * The margin
    */
   var marginProvider: (chartCalculator: ChartCalculator) -> @Zoomed Insets,
 ) : ZoomAndTranslationDefaults {
 
-  constructor(margin: @Zoomed Insets = Insets.empty) : this({ margin })
+  constructor(margin: @Zoomed Insets = Insets.empty) : this(marginProvider = { margin })
 
   override fun defaultZoom(chartCalculator: ChartCalculator): Zoom {
     val chartState = chartCalculator.chartState
 
     if (chartState.hasAnyZeroSize) {
+      //width/or height is zero. Zoom factor cannot be calculated
       return Zoom.default
     }
 
-    val windowSize = chartState.windowSize
-    val margin = marginProvider(chartCalculator)
+    @Zoomed val windowSize = chartState.windowSize
+    @Zoomed val margin = marginProvider(chartCalculator)
 
-    val windowNetWidth = windowSize.width - margin.offsetWidth
-    val windowNetHeight = windowSize.height - margin.offsetHeight
+    @Zoomed val windowNetWidth = windowSize.width - margin.offsetWidth
+    @Zoomed val windowNetHeight = windowSize.height - margin.offsetHeight
 
     if (windowNetHeight <= 0.0 || windowNetHeight <= 0.0) {
+      //not enough space for content area: Cannot calculate the zoom factor
       return Zoom.default
     }
 
-    val contentAreaSize = chartState.contentAreaSize
+    @ContentArea val contentAreaSize = chartState.contentAreaSize
 
     return Zoom.of(
       1.0 / contentAreaSize.width * windowNetWidth,
@@ -165,24 +192,63 @@ open class FittingWithMargin(
   }
 
   override fun defaultTranslation(chartCalculator: ChartCalculator): @Zoomed Distance {
-    marginProvider(chartCalculator).let { margin ->
-      return Distance(
-        margin.left,
-        margin.top
-      )
+    @Zoomed val margin = marginProvider(chartCalculator)
+    val currentAlignment = alignment()
+
+    val translationX = when (currentAlignment.horizontalAlignment) {
+      HorizontalAlignment.Left -> margin.left
+      HorizontalAlignment.Center -> {
+        @Zoomed val windowNetWidth = chartCalculator.chartState.windowWidth - margin.offsetWidth
+        @Zoomed val contentAreaWidth = chartCalculator.contentArea2zoomedX(chartCalculator.chartState.contentAreaWidth)
+        margin.left + (windowNetWidth - contentAreaWidth) / 2.0
+      }
+
+      HorizontalAlignment.Right -> {
+        @Zoomed val windowWidth = chartCalculator.chartState.windowWidth
+        @Zoomed val windowNetWidth = windowWidth - margin.offsetWidth
+        @Zoomed val contentAreaWidth = chartCalculator.contentArea2zoomedX(chartCalculator.chartState.contentAreaWidth)
+        windowWidth - margin.right - contentAreaWidth
+      }
     }
+
+    val translationY = when (currentAlignment.verticalAlignment) {
+      VerticalAlignment.Top -> margin.top
+      VerticalAlignment.Baseline,
+      VerticalAlignment.Center,
+        -> {
+        val windowHeight = chartCalculator.chartState.windowHeight
+        @Zoomed val windowNetHeight = windowHeight - margin.offsetHeight
+        @Zoomed val contentAreaHeight = chartCalculator.contentArea2zoomedY(chartCalculator.chartState.contentAreaHeight)
+        margin.top + (windowNetHeight - contentAreaHeight) / 2.0
+      }
+
+      VerticalAlignment.Bottom -> {
+        @Zoomed val windowHeight = chartCalculator.chartState.windowHeight
+        @Zoomed val contentAreaHeight = chartCalculator.contentArea2zoomedY(chartCalculator.chartState.contentAreaHeight)
+
+        windowHeight - margin.bottom - contentAreaHeight
+      }
+    }
+
+    return Distance(
+      translationX,
+      translationY
+    )
   }
 }
 
 /**
  * Fits with margin - keeps both zoom factors the same
+ *
+ * Use [FittingInContentViewportAspectRatio] instead in most cases!
  */
 open class FittingWithMarginAspectRatio(
+  alignment: () -> Direction = Direction.TopLeft.asProvider(),
   /**
    * The margin provider
    */
   marginProvider: (chartCalculator: ChartCalculator) -> @Zoomed Insets = { Insets.empty },
-) : FittingWithMargin(marginProvider) {
+) : FittingWithMargin(alignment, marginProvider) {
   override fun defaultZoom(chartCalculator: ChartCalculator): Zoom {
     return super.defaultZoom(chartCalculator).smallerValueForBoth()
   }

@@ -34,7 +34,7 @@ interface LayoutVariableWithSize : LayoutVariable {
   }
 
   /**
-   * ATTENTION: Please call prepare instead
+   * ATTENTION: Please call [prepare] instead
    */
   @Deprecated("Use prepare instead")
   override fun reset()
@@ -51,8 +51,17 @@ interface LayoutVariableWithSize : LayoutVariable {
   fun ensureSize(size: Int)
 
   /**
+   * Throws an exception if the index is invalid
+   */
+  fun verifyIndex(index: Int) {
+    if (index < 0 || index >= size) {
+      throw IndexOutOfBoundsException("Index $index is out of bounds [0, $size)")
+    }
+  }
+
+  /**
    * Returns the current size of the cache - as has been set by [ensureSize] before.
-   * Initially this value is (usually) 0
+   * Initially, this value is (usually) 0
    */
   val size: Int
 }

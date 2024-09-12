@@ -21,8 +21,8 @@ import com.meistercharts.algorithms.layers.AxisPaintingVariablesImpl
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.canvas.layout.cache.StringsCache
+import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.cache.StringMultiCache
 import it.neckar.geometry.Side
 import com.meistercharts.range.ValueRange
 import it.neckar.open.collections.fastForEachIndexed
@@ -52,7 +52,7 @@ interface ValueAxisPaintingVariables : AxisPaintingVariables {
   /**
    * Contains the tick values
    */
-  val tickDomainValues: @Domain DoubleCache
+  val tickDomainValues: @Domain DoubleMultiCache
 }
 
 /**
@@ -76,7 +76,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    */
   override var contentAreaValueRange: @Domain ValueRange = ValueRange.default
 
-  override var tickDomainValues: @Domain DoubleCache = DoubleCache()
+  override var tickDomainValues: @Domain DoubleMultiCache = DoubleMultiCache()
 
 
   /**
@@ -88,7 +88,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   /**
    * Contains the formatted tick labels
    */
-  val ticksFormatted: StringsCache = StringsCache()
+  val ticksFormatted: StringMultiCache = StringMultiCache()
 
   /**
    * Resets all variables to their default values

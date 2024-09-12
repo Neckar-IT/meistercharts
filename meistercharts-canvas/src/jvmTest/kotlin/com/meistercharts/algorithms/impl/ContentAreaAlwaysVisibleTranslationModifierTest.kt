@@ -76,15 +76,17 @@ class ContentAreaAlwaysVisibleTranslationModifierTest {
   fun testLimitWithZoomFactor1() {
     val chartState = DefaultChartState()
     chartState.contentAreaSize = Size(800.0, 600.0)
+    chartState.windowSize = Size(1800.0, 1600.0)
     val calculator = ChartCalculator(chartState)
+    assertThat(chartState.zoom).isEqualTo(Zoom.of(1.0, 1.0))
 
     val modifier = ContentAreaAlwaysBarelyVisibleTranslationModifier(ZoomAndTranslationModifier.none)
 
 
     modifier.modifyTranslation(Distance.of(5000.0, 5000.0), calculator)
       .also {
-        assertThat(it.x).isEqualTo(800.0)
-        assertThat(it.y).isEqualTo(600.0)
+        assertThat(it.x).isEqualTo(1800.0)
+        assertThat(it.y).isEqualTo(1600.0)
       }
 
     modifier.modifyTranslation(Distance.of(-5000.0, -5000.0), calculator)
@@ -100,6 +102,8 @@ class ContentAreaAlwaysVisibleTranslationModifierTest {
     val calculator = ChartCalculator(chartState)
 
     chartState.contentAreaSize = Size(800.0, 600.0)
+    chartState.windowSize = Size(1800.0, 1600.0)
+
     chartState.zoom = Zoom.of(2.0, 2.0)
 
     val modifier = ContentAreaAlwaysBarelyVisibleTranslationModifier(ZoomAndTranslationModifier.none)
@@ -107,8 +111,8 @@ class ContentAreaAlwaysVisibleTranslationModifierTest {
     //Max panning to the bottom right
     modifier.modifyTranslation(Distance.of(5000.0, 5000.0), calculator)
       .also {
-        assertThat(it.x).isEqualTo(800.0)
-        assertThat(it.y).isEqualTo(600.0)
+        assertThat(it.x).isEqualTo(1800.0)
+        assertThat(it.y).isEqualTo(1600.0)
       }
 
     modifier.modifyTranslation(Distance.of(-5000.0, -5000.0), calculator)

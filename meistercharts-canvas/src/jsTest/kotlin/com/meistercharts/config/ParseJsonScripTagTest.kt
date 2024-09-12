@@ -19,6 +19,7 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.config.ChartConfigParsingSupport
 import it.neckar.commons.kotlin.js.render
+import it.neckar.open.kotlin.serializers.JsonPretty
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.script
@@ -33,7 +34,7 @@ class ParseJsonScripTagTest {
     val body = requireNotNull(document.body)
 
     val toSerialize = MyJsonObject("asdf", 1234)
-    val json = Json { prettyPrint = true }
+    val json = JsonPretty
 
     val id = "meistercharts-json-data"
 

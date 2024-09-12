@@ -107,7 +107,7 @@ interface Paintable {
   fun paint(
     paintingContext: LayerPaintingContext,
     @Zoomed x: Double = 0.0,
-    @Zoomed y: Double = 0.0
+    @Zoomed y: Double = 0.0,
   )
 
   /**
@@ -221,6 +221,10 @@ interface Paintable {
 
   /**
    * Paints this [Paintable] into the given bounding box
+   *
+   * ATTENTION: The default value for [objectFit] is [ObjectFit.ContainNoGrow].
+   * This might result in unexpected behavior if zoomed in a lot!
+   *
    * @param paintingContext the canvas rendering context
    * @param x the x-coordinate of the location where to paint the paintable
    * @param y the y-coordinate of the location where to paint the paintable
@@ -249,7 +253,7 @@ interface Paintable {
     /**
      * The object fit that is used to resize the paintable
      */
-    objectFit: ObjectFit = ObjectFit.ContainNoGrow
+    objectFit: ObjectFit = ObjectFit.ContainNoGrow,
   ) {
     //TODO add scaling
 
@@ -258,7 +262,7 @@ interface Paintable {
     val alignmentY = y + anchorDirection.verticalAlignment.calculateOffsetYWithAnchor(height, gapVertical, paintingContext.gc)
 
     @px val currentBoundingBox = boundingBox(paintingContext)
-    @px val size = currentBoundingBox.size
+    @px val currentSize = currentBoundingBox.size
 
     when (objectFit) {
       ObjectFit.None -> {
@@ -269,28 +273,28 @@ interface Paintable {
 
       ObjectFit.ContainNoGrow -> {
         //The target size
-        val targetSize = size.withMax(width, height).fitWithAspectRatio(size.aspectRatio)
+        val targetSize = currentSize.withMax(width, height).fitWithAspectRatio(currentSize.aspectRatio)
 
         //Keep aspect ratio
-        val scaleX = 1.0 / size.width * targetSize.width
-        val scaleY = 1.0 / size.height * targetSize.height
+        val scaleX = 1.0 / currentSize.width * targetSize.width
+        val scaleY = 1.0 / currentSize.height * targetSize.height
 
-        @px val deltaX = size.width * scaleX - width
-        @px val deltaY = size.height * scaleY - height
+        @px val deltaX = currentSize.width * scaleX - width
+        @px val deltaY = currentSize.height * scaleY - height
 
         paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
       }
 
       ObjectFit.Contain -> {
         //The target size
-        val targetSize = Size(width, height).fitWithAspectRatio(size.aspectRatio)
+        val targetSize = Size(width, height).fitWithAspectRatio(currentSize.aspectRatio)
 
         //Keep aspect ratio
-        val scaleX = 1.0 / size.width * targetSize.width
-        val scaleY = 1.0 / size.height * targetSize.height
+        val scaleX = 1.0 / currentSize.width * targetSize.width
+        val scaleY = 1.0 / currentSize.height * targetSize.height
 
-        @px val deltaX = size.width * scaleX - width
-        @px val deltaY = size.height * scaleY - height
+        @px val deltaX = currentSize.width * scaleX - width
+        @px val deltaY = currentSize.height * scaleY - height
 
         paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
       }
@@ -330,7 +334,7 @@ interface Paintable {
     /**
      * The forced size. Does *not* correspond to the own size of the paintable ([size])
      */
-    forcedSize: @Zoomed Size
+    forcedSize: @Zoomed Size,
   ) {
     @px val currentBoundingBox = boundingBox(paintingContext)
     @px val size = currentBoundingBox.size

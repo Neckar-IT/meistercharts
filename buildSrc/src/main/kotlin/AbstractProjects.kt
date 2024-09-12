@@ -279,3 +279,16 @@ enum class ProjectType {
    */
   Other,
 }
+
+
+/**
+ * Returns true if the list contains a project with the same path as the given project.
+ */
+fun List<ConfiguredProject>.containsByPath(project: Project): Boolean {
+  val expectedPath = project.path
+  return containsByPath(expectedPath)
+}
+
+fun List<ConfiguredProject>.containsByPath(expectedProjectPath: String): Boolean {
+  return this.any { it.path == expectedProjectPath }
+}

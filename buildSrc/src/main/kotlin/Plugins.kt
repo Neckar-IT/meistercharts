@@ -7,7 +7,8 @@ object Plugins {
 
   const val versions: String = "com.github.ben-manes.versions"
 
-  const val shadow: String = "com.github.johnrengelman.shadow"
+  const val shadowOld: String = "com.github.johnrengelman.shadow"
+  const val shadow: String = "com.gradleup.shadow"
 
   const val nexusStaging: String = "io.codearte.nexus-staging"
 
@@ -46,10 +47,14 @@ object Plugins {
   const val jacoco: String = "org.gradle.jacoco"
 
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
+  const val verifyGitlabAccessToken: String = "it.neckar.verify.gitlab-access-token"
+
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
   const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
   const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
+  const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
+  const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
 
   /**
    * Configures python projects
@@ -185,9 +190,19 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.npmBundle: PluginDepende
 inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
   get() = id(Plugins.verifyMainClassExists)
 
+inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
+  get() = id(Plugins.verifyGitlabAccessToken)
+
 inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
 
+/**
+ * Use task tree like this:
+ *
+ * `gradle <task 1>...<task N> taskTree`
+ *
+ * see https://github.com/dorongold/gradle-task-tree for documentation
+ */
 inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
 
@@ -259,6 +274,12 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: Plugin
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
   get() = id(Plugins.generatePnpmWorkspaceYaml)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.skipDistForApplication: PluginDependencySpec
+  get() = id(Plugins.skipDistForApplication)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
+  get() = id(Plugins.skipShadowDistZipForShadowPlugin)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

@@ -19,6 +19,8 @@ package com.meistercharts.canvas.layout.cache
  * A cache for [LayoutVariable]s.
  * These will be reused for every layout pass.
  *
+ * Calls [LayoutVariable.reset] for each element when [reset] is called.
+ *
  * ATTENTION: This cache might contain more objects than requested!
  */
 open class LayoutVariablesObjectCache<T : LayoutVariable>(
@@ -29,11 +31,11 @@ open class LayoutVariablesObjectCache<T : LayoutVariable>(
    * The created objects are reused for each layout pass afterward.
    */
   factory: () -> T,
-) : AbstractObjectsCache<T>(factory) {
+) : AbstractObjectMultiCache<T>(factory) {
 
   override fun reset() {
     //only reset the values - that list has the correct size
-    //objectsStock might have additional objects - these are not used, therefore can be ignored safely
+    //objectsStock might have additional objects - these are not used, therefore, can be ignored safely
     values.forEachIndexed { index, _ ->
       values[index].reset()
     }

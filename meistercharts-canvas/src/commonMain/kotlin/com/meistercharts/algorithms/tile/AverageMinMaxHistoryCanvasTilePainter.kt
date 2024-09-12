@@ -23,7 +23,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.layout.cache.CoordinatesCache
+import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
 import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
 import com.meistercharts.color.RgbaColor
@@ -54,7 +54,7 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
   /**
    * Used to store the locations of the points to paint them later
    */
-  private val pointsCache = CoordinatesCache()
+  private val pointsCache = CoordinatesMultiCache()
 
   override fun paintDataSeries(
     paintingContext: LayerPaintingContext,

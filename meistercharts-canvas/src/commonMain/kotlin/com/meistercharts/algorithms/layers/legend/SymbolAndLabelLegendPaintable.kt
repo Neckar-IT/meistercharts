@@ -23,7 +23,7 @@ import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
-import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
+import com.meistercharts.canvas.layout.cache.BoundsMultiCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
@@ -44,7 +44,6 @@ import it.neckar.open.provider.SizedProvider1
 import it.neckar.open.provider.asSizedProvider
 import it.neckar.open.provider.fastForEachIndexed
 import com.meistercharts.style.Palette
-import it.neckar.open.provider.mapped
 import it.neckar.open.provider.resolved
 import it.neckar.open.unit.other.px
 
@@ -97,7 +96,7 @@ class SymbolAndLabelLegendPaintable(
     /**
      * Contains the symbol bounding boxes
      */
-    val symbolBoundingBoxes = BoundsLayoutCache()
+    val symbolBoundingBoxes = BoundsMultiCache()
 
     /**
      * The height of the text block

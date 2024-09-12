@@ -2,6 +2,7 @@ package it.neckar.open.kotlin.serializers
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.put
@@ -29,10 +30,27 @@ fun JsonObjectBuilder.putNotEmpty(key: String, buildJsonArray: JsonArray) {
 }
 
 /**
- * Pretty prints the json element
+ * JSON instance with pretty print enabled
+ */
+val JsonPretty: Json = Json {
+  defaultJsonConfiguration(true)
+}
+
+/**
+ * Pretty prints the JSON element
  */
 fun JsonElement.toStringPretty(): String {
-  return Json {
-    prettyPrint = true
-  }.encodeToString(JsonElement.serializer(), this)
+  return JsonPretty.encodeToString(JsonElement.serializer(), this)
+}
+
+/**
+ * Default properties for JSON Serialization
+ * */
+fun JsonBuilder.defaultJsonConfiguration(prettyPrintEnabled: Boolean = true) {
+  prettyPrint = prettyPrintEnabled
+  prettyPrintIndent = "  "
+  /**
+   * encode default properties of Serializable Classes
+   * */
+  encodeDefaults = true
 }

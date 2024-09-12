@@ -22,6 +22,7 @@ import it.neckar.open.collections.fastForEachIndexed
  * Contains a list of int.
  * This can be used to keep a sorted list of indices
  */
+@Deprecated("Should not be used anywhere. Use IntMultiCache instead.")
 class IntListCache : LayoutVariableWithSize {
   /**
    * Contains the values

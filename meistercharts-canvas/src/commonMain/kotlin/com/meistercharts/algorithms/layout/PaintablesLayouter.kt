@@ -19,12 +19,11 @@ import it.neckar.geometry.Orientation
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
-import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
+import com.meistercharts.canvas.layout.cache.ObjectMultiCache
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -71,13 +70,13 @@ class PaintablesLayouter(
     /**
      * Stores the upper left corner of each [Paintable] previously laid out
      */
-    val locationsTopLeft = CoordinatesCache()
+    val locationsTopLeft = CoordinatesMultiCache()
 
     /**
      * Contains the bounding boxes for each paintable.
      * The bounding boxes do *not* contain any translation from the layout process.
      */
-    val boundingBoxes = ObjectsCache(Rectangle.zero)
+    val boundingBoxes = ObjectMultiCache(Rectangle.zero)
 
     /**
      * The total size over *all* paintables

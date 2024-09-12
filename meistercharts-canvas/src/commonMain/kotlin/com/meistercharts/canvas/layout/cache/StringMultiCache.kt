@@ -20,7 +20,7 @@ import it.neckar.open.collections.fastForEachWithIndex
 /**
  * Caches string values
  */
-class StringsCache : AbstractObjectsCache<String>({
+class StringMultiCache : AbstractObjectMultiCache<String>({
   Uninitialized
 }) {
 

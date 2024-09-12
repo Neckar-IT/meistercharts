@@ -28,9 +28,9 @@ import com.meistercharts.annotations.ZIndex
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
-import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectsCache
+import com.meistercharts.canvas.layout.cache.BoundsMultiCache
+import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
+import com.meistercharts.canvas.layout.cache.ObjectMultiCache
 import com.meistercharts.canvas.layout.cache.ZIndexSortingCache
 import com.meistercharts.canvas.paintLocation
 import com.meistercharts.canvas.paintTextBox
@@ -100,20 +100,20 @@ class ValueAxisHudLayer(
     /**
      * Contains the coordinates for the HUD element
      */
-    override val coordinatesCache = @Window @MayBeNaN CoordinatesCache()
+    override val coordinatesMultiCache = @Window @MayBeNaN CoordinatesMultiCache()
 
-    override val anchorDirectionsCache = ObjectsCache(Direction.TopLeft)
+    override val anchorDirectionsCache = ObjectMultiCache(Direction.TopLeft)
 
     /**
      * Contains the labels
      */
-    override val labelsCache = ObjectsCache<List<String>>(emptyList())
+    override val labelsCache = ObjectMultiCache<List<String>>(emptyList())
 
     /**
      * ATTENTION: Filled in the *paint* method!
      * Must only be used after paint has been called (e.g. for mouse events)
      */
-    override val boundingBoxes: BoundsLayoutCache = BoundsLayoutCache()
+    override val boundingBoxes: BoundsMultiCache = BoundsMultiCache()
 
     override val zOrder = ZIndexSortingCache()
 
@@ -121,15 +121,15 @@ class ValueAxisHudLayer(
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
       //Prepare the caches
-      coordinatesCache.prepare(size)
+      coordinatesMultiCache.prepare(size)
       anchorDirectionsCache.prepare(size)
       labelsCache.prepare(size)
       zOrder.prepare(size)
       boundingBoxes.prepare(size)
 
       configuration.locations.fastForEachIndexed(paintingContext) { index: @HudElementIndex Int, x: @MayBeNaN @Window Double, y: @MayBeNaN @Window Double ->
-        coordinatesCache.x(index, x)
-        coordinatesCache.y(index, y)
+        coordinatesMultiCache.x(index, x)
+        coordinatesMultiCache.y(index, y)
 
         anchorDirectionsCache[index] = configuration.anchorDirections.valueAt(index)
         labelsCache[index] = configuration.labels.valueAt(index, paintingContext)
@@ -147,8 +147,8 @@ class ValueAxisHudLayer(
     paintingVariables.zOrder.fastForEach { value ->
       @HudElementIndex val index = value.index
 
-      @Window @MayBeNaN val x = paintingVariables.coordinatesCache.x(index)
-      @Window @MayBeNaN val y = paintingVariables.coordinatesCache.y(index)
+      @Window @MayBeNaN val x = paintingVariables.coordinatesMultiCache.x(index)
+      @Window @MayBeNaN val y = paintingVariables.coordinatesMultiCache.y(index)
 
       if (x.isFinite().not() || y.isFinite().not()) {
         //Skip if x or y are not finite
@@ -477,21 +477,21 @@ interface ValueAxisHudLayerPaintingVariables : PaintingVariables {
   /**
    * Contains the coordinates for the HUD element
    */
-  val coordinatesCache: CoordinatesCache
+  val coordinatesMultiCache: CoordinatesMultiCache
 
   /**
    * Cache for anchor directions
    */
-  val anchorDirectionsCache: ObjectsCache<Direction>
+  val anchorDirectionsCache: ObjectMultiCache<Direction>
 
   /**
    * Contains the labels
    */
-  val labelsCache: ObjectsCache<List<String>>
+  val labelsCache: ObjectMultiCache<List<String>>
 
   /**
    * ATTENTION: Filled in the *paint* method!
    * Must only be used after paint has been called (e.g. for mouse events)
    */
-  val boundingBoxes: BoundsLayoutCache
+  val boundingBoxes: BoundsMultiCache
 }

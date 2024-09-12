@@ -70,7 +70,7 @@ abstract class AbstractLayer : Layer {
    * Calls the [initialize] method if not already initialized
    */
   protected fun initializeIfNecessary(paintingContext: LayerPaintingContext) {
-    if (!initialized) {
+    if (initialized.not()) {
       initialize(paintingContext)
       initialized = true
     }

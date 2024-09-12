@@ -19,7 +19,6 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
 import it.neckar.geometry.Coordinates
@@ -32,7 +31,7 @@ import it.neckar.geometry.Direction
  */
 class BackgroundImageLayer(
   val configuration: Configuration = Configuration(),
-  additionalConfiguration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
@@ -54,18 +53,18 @@ class BackgroundImageLayer(
   }
 
   @ConfigurationDsl
-  class Configuration {
-    /**
-     * The color to be used as background
-     */
-    var background: ColorProvider = Theme.primaryBackgroundColor.provider()
-
+  class Configuration(
     /**
      * The optional background image that is painted in origin.
      * The paintable is *not* resized
      */
-    var backgroundImage: Paintable? = null
+    var backgroundImage: Paintable? = null,
 
+    /**
+     * The color to be used as a background
+     */
+    var background: ColorProvider = Theme.primaryBackgroundColor.provider(),
+  ) {
     /**
      * Switches to the primary background color
      */

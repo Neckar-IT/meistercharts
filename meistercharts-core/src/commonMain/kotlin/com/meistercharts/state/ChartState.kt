@@ -125,7 +125,7 @@ interface ChartState {
   /**
    * Returns the content viewport margin.
    * The content view port margin describes the margin *around* within the window that is kept free from the content.
-   * That area can be used for additional information (e.g. axis, labels, legends, toolbars...)
+   * That area can be used for additional information (e.g., axis, labels, legends, toolbars...)
    */
   val contentViewportMargin: @Zoomed Insets
 

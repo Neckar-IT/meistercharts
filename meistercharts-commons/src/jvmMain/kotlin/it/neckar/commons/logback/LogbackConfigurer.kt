@@ -33,6 +33,13 @@ object LogbackConfigurer {
     levelForNeckarIt: org.slf4j.event.Level,
   ) {
     configureLoggingConsoleOnly(levelForRoot)
+    setLevelForNeckarIt(levelForNeckarIt)
+  }
+
+  /**
+   * Sets the log level for Neckar IT classes
+   */
+  fun setLevelForNeckarIt(levelForNeckarIt: Level) {
     setLoggerLevel("it.neckar", levelForNeckarIt)
   }
 
@@ -67,6 +74,15 @@ object LogbackConfigurer {
    */
   fun configureLoggingConsoleAndFile(logFile: File, levelForRoot: org.slf4j.event.Level) {
     configureLoggingConsoleAndFile(logFile, levelForRoot.toLogback())
+  }
+
+  fun configureLoggingConsoleAndFile(
+    logFile: File,
+    levelForRoot: org.slf4j.event.Level,
+    levelForNeckarIt: org.slf4j.event.Level,
+  ) {
+    configureLoggingConsoleAndFile(logFile, levelForRoot.toLogback())
+    setLevelForNeckarIt(levelForNeckarIt)
   }
 
   /**

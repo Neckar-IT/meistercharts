@@ -33,6 +33,7 @@ object KotlinSettings {
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib
     "kotlin.io.path.ExperimentalPathApi", //java.nio.file.Path support
+    //"kotlin.uuid.ExperimentalUuidApi", //UUID support (since 2.0.20)
   )
 
   /**

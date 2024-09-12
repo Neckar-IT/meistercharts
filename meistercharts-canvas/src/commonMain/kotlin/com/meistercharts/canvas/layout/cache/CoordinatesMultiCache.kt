@@ -27,18 +27,18 @@ import it.neckar.open.provider.CoordinatesProvider1
  *
  * Is *NOT* thread safe!
  */
-class CoordinatesCache : LayoutVariableWithSize {
+class CoordinatesMultiCache : LayoutVariableWithSize {
   /**
    * The x locations
    */
   @PublishedApi
-  internal var xValues: @Window DoubleCache = DoubleCache()
+  internal var xValues: @Window DoubleMultiCache = DoubleMultiCache()
 
   /**
    * The y locations
    */
   @PublishedApi
-  internal var yValues: @Window DoubleCache = DoubleCache()
+  internal var yValues: @Window DoubleMultiCache = DoubleMultiCache()
 
   @Deprecated("Use prepare instead")
   override fun reset() {
@@ -65,6 +65,7 @@ class CoordinatesCache : LayoutVariableWithSize {
    * Sets the x and y values for the given index
    */
   fun set(index: Int, x: Double, y: Double) {
+    verifyIndex(index)
     this.xValues[index] = x
     this.yValues[index] = y
   }
@@ -149,15 +150,15 @@ class CoordinatesCache : LayoutVariableWithSize {
   fun asCoordinatesProvider(): @Window CoordinatesProvider {
     return object : CoordinatesProvider {
       override fun size(): Int {
-        return this@CoordinatesCache.size
+        return this@CoordinatesMultiCache.size
       }
 
       override fun xAt(index: Int): Double {
-        return this@CoordinatesCache.x(index)
+        return this@CoordinatesMultiCache.x(index)
       }
 
       override fun yAt(index: Int): Double {
-        return this@CoordinatesCache.y(index)
+        return this@CoordinatesMultiCache.y(index)
       }
     }
   }

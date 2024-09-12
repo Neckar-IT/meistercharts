@@ -150,6 +150,7 @@ class FixedContentAreaSize(val fixedSizeProvider: () -> @ContentArea Size) : Abs
   { _ -> fixedSizeProvider() }
 ) {
   constructor(fixedSize: @ContentArea Size) : this({ fixedSize })
+  constructor(width: @ContentArea Double, height: @ContentArea Double) : this(Size(width, height))
 }
 
 /**

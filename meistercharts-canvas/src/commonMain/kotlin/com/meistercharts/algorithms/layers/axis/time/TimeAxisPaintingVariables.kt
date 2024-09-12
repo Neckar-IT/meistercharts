@@ -25,8 +25,8 @@ import com.meistercharts.axis.time.TimeTickDistance
 import com.meistercharts.annotations.Domain
 import com.meistercharts.axis.time.DistanceMillis
 import it.neckar.open.unit.number.MayBeNaN
-import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.canvas.layout.cache.StringsCache
+import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.cache.StringMultiCache
 import it.neckar.geometry.Side
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
@@ -66,23 +66,23 @@ interface TimeAxisPaintingVariables : AxisPaintingVariables {
   /**
    * The domain values for the offset ticks
    */
-  val offsetTickDomainValues: @Domain @ms DoubleCache
+  val offsetTickDomainValues: @Domain @ms DoubleMultiCache
 
   /**
    * The formatted values for the offset ticks
    */
-  val offsetTicksFormatted: @Domain @ms StringsCache
+  val offsetTicksFormatted: @Domain @ms StringMultiCache
 
   /**
    * The domain values for the ticks.
    * Contains [Double.NaN] for all ticks that should not be painted - because they are contained within [offsetTickDomainValues]
    */
-  val tickDomainValues: @MayBeNaN @ms @Domain DoubleCache
+  val tickDomainValues: @MayBeNaN @ms @Domain DoubleMultiCache
 
   /**
    * The formatted ticks (same size as [tickDomainValues])
    */
-  val ticksFormatted: StringsCache
+  val ticksFormatted: StringMultiCache
 
 }
 
@@ -106,9 +106,9 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
   /**
    * The ticks for the offset
    */
-  override var offsetTickDomainValues: @Domain @ms DoubleCache = DoubleCache()
+  override var offsetTickDomainValues: @Domain @ms DoubleMultiCache = DoubleMultiCache()
 
-  override var offsetTicksFormatted: @Domain @ms StringsCache = StringsCache()
+  override var offsetTicksFormatted: @Domain @ms StringMultiCache = StringMultiCache()
 
   /**
    * The distance between the offset ticks
@@ -121,9 +121,9 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
   override var tickDistance: TimeTickDistance = DistanceYears.OneYear
 
 
-  override var tickDomainValues: @MayBeNaN @ms @Domain DoubleCache = DoubleCache()
+  override var tickDomainValues: @MayBeNaN @ms @Domain DoubleMultiCache = DoubleMultiCache()
 
-  override val ticksFormatted: StringsCache = StringsCache()
+  override val ticksFormatted: StringMultiCache = StringMultiCache()
 
   override fun reset() {
     super.reset()

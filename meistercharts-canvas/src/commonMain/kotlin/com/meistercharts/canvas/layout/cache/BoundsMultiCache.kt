@@ -32,30 +32,30 @@ import it.neckar.open.unit.number.MayBeNegative
  *
  * NOTE: For a single bounds object use [BoundsCache]
  */
-open class BoundsLayoutCache : LayoutVariableWithSize {
+open class BoundsMultiCache : LayoutVariableWithSize {
   /**
    * The x locations
    */
   @PublishedApi
-  internal var xValues: @Window DoubleCache = DoubleCache()
+  internal var xValues: @Window DoubleMultiCache = DoubleMultiCache()
 
   /**
    * The y locations
    */
   @PublishedApi
-  internal var yValues: @Window DoubleCache = DoubleCache()
+  internal var yValues: @Window DoubleMultiCache = DoubleMultiCache()
 
   /**
    * The widths
    */
   @PublishedApi
-  internal var widthValues: @Zoomed @MayBeNegative DoubleCache = DoubleCache()
+  internal var widthValues: @Zoomed @MayBeNegative DoubleMultiCache = DoubleMultiCache()
 
   /**
    * The heights
    */
   @PublishedApi
-  internal var heightValues: @Zoomed @MayBeNegative DoubleCache = DoubleCache()
+  internal var heightValues: @Zoomed @MayBeNegative DoubleMultiCache = DoubleMultiCache()
 
   override fun reset() {
     xValues.reset()
@@ -102,7 +102,7 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
     centerX: @Window Double,
     centerY: @Window Double,
     width: @Zoomed Double,
-    height: @Zoomed Double
+    height: @Zoomed Double,
   ) {
     x(index, centerX - width / 2.0)
     y(index, centerY - height / 2.0)
@@ -200,8 +200,8 @@ open class BoundsLayoutCache : LayoutVariableWithSize {
    */
   inline fun fastForEachIndexedReversed(
     action: (
-      index: Int, x: @Window Double, y: @Window Double, width: @MayBeNegative @Zoomed Double, height: @MayBeNegative @Zoomed Double
-    ) -> Unit
+      index: Int, x: @Window Double, y: @Window Double, width: @MayBeNegative @Zoomed Double, height: @MayBeNegative @Zoomed Double,
+    ) -> Unit,
   ) {
 
     xValues.fastForEachIndexedReversed { index, x ->

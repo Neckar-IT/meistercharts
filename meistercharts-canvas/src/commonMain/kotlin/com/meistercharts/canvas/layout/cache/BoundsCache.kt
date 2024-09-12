@@ -27,7 +27,7 @@ import it.neckar.geometry.Rectangle
  *
  * Is *NOT* thread safe!
  *
- * NOTE: For multiple bounds use [BoundsLayoutCache]
+ * NOTE: For multiple bounds use [BoundsMultiCache]
  */
 class BoundsCache : LayoutVariablesCache {
   /**

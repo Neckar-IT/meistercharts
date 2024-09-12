@@ -45,6 +45,9 @@ interface Layer {
    * This method is called first (before [paint]). It should/could be used to calculate the layout.
    * Do *NOT* paint anything on the painting context. Painting is only allowed in [paint].
    *
+   * The layout method should calculate the required variables to paint later - as @[com.meistercharts.annotations.Window].
+   * Usually the [com.meistercharts.calc.ChartCalculator] should be used in the [layout] method. And only in a few cases in the [paint] method.
+   *
    * It is allowed to modify the graphics context in this method: E.g. setting the font to calculate text widths etc.
    */
   fun layout(paintingContext: LayerPaintingContext) {}

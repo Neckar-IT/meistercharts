@@ -4,6 +4,7 @@ import it.neckar.docker.externalDockerImages
 import it.neckar.gradle.ansiConsole
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
 import org.gradle.api.GradleException
 import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.NamedDomainObjectSet
@@ -171,6 +172,13 @@ fun Project.parsePackageJson(): JsonElement {
   }
 
   return Json.parseToJsonElement(packageJson.readText())
+}
+
+/**
+ * Returns true if the package.json file contains the given script
+ */
+fun Project.packageJsonContainsScript(scriptName: String): Boolean {
+  return (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey(scriptName) == true)
 }
 
 /**

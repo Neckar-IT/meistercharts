@@ -32,7 +32,7 @@ import it.neckar.open.unit.other.Index
  * Caches double values in an array.
  *
  */
-class DoubleCache : LayoutVariableWithSize {
+class DoubleMultiCache : LayoutVariableWithSize {
   /**
    * Contains the values
    */
@@ -45,7 +45,7 @@ class DoubleCache : LayoutVariableWithSize {
   @Deprecated("Use prepare instead")
   override fun reset() {
     values.fastForEachIndexed { index, _ ->
-      values[index] = 0.0
+      values[index] = 0.0 //TODO change reset value to Double.NaN
     }
   }
 

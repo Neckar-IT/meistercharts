@@ -15,22 +15,7 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import it.neckar.open.collections.fastForEachWithIndex
-
 /**
- * Caches multiple objects - using an index
+ * Two dimensional coordinates cache.
  */
-class ObjectsCache<T>(val initialValue: T) : AbstractObjectsCache<T>({
-  initialValue
-}) {
-
-  override fun reset() {
-    values.fastForEachWithIndex { index, _ ->
-      values[index] = initialValue
-    }
-  }
-
-  operator fun set(index: Int, value: T) {
-    values[index] = value
-  }
-}
+class CoordinatesMulti2DCache : LayoutVariablesObjectCache<CoordinatesMultiCache>(::CoordinatesMultiCache)

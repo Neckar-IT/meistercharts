@@ -55,7 +55,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
-import com.meistercharts.canvas.layout.cache.DoubleCache
+import com.meistercharts.canvas.layout.cache.DoubleMultiCache
 import com.meistercharts.charts.support.CategoryAxisSupport
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
@@ -215,7 +215,7 @@ class BarChartGroupedGestalt constructor(
     valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
 
       private val paintingVariables = object : PaintingVariables {
-        val locations = @MayBeNaN DoubleCache()
+        val locations = @MayBeNaN DoubleMultiCache()
 
         override fun calculate(paintingContext: LayerPaintingContext) {
           val chartCalculator = paintingContext.chartCalculator

@@ -2,6 +2,7 @@ package it.neckar.open.serialization
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.kotlin.serializers.defaultJsonConfiguration
 import it.neckar.open.mongodb.Mongo
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.KSerializer
@@ -126,11 +127,7 @@ fun <T : Any> roundTripBson(
  */
 fun <T> roundTripBsonList(vararg objectsToSerialize: T, expectedJson: String?, serializer: KSerializer<T>) {
   val encoder = Json {
-    prettyPrint = false
-    /**
-     * encode default properties of Serializable Classes
-     * */
-    encodeDefaults = true
+    defaultJsonConfiguration(true)
   }
 
   val listSerializer = ListSerializer(serializer)

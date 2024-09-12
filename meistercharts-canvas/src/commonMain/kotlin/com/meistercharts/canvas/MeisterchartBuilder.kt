@@ -128,7 +128,7 @@ abstract class MeisterchartBuilder(
    * with the [com.meistercharts.zoom.ZoomAndTranslationSupport]
    *
    * If [enableZoomAndTranslation] is set to false, in nearly all cases it is necessary/useful to
-   * set the `resizeBehavior` to `ResetToDefaultsOnResize`
+   * set the [ChartSupport.windowResizeBehavior] to `[com.meistercharts.resize.ResetToDefaultsOnWindowResize]`
    *
    * @see zoomAndTranslationConfiguration
    *
@@ -199,7 +199,7 @@ abstract class MeisterchartBuilder(
       layerSupport.it()
     }
 
-    // Bind the resize behavior after(!) iterating through layerSupportConfigurations to ensure that we use the correct resizeBehavior
+    // Bind the resize behavior after(!) iterating through layerSupportConfigurations to ensure that we use the correct `windowResizeBehavior`
     contentAreaSizingStrategy.bindResize(chartSupport)
     onDispose(contentAreaSizingStrategy)
 

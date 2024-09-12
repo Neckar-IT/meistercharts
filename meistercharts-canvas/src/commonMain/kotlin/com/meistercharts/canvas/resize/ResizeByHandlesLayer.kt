@@ -26,7 +26,7 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
-import com.meistercharts.canvas.layout.cache.BoundsLayoutCache
+import com.meistercharts.canvas.layout.cache.BoundsMultiCache
 import com.meistercharts.canvas.paintable.ResizeHandlesPaintable
 import com.meistercharts.canvas.resizeHandlesSupport
 import com.meistercharts.events.EventConsumption
@@ -65,7 +65,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
    * Attention! The order matters! It is well known - within this class.
    * Do not depend on the order outside of this class (this might not be the same order as in the enum [Direction])
    */
-  private val handleBounds = BoundsLayoutCache()
+  private val handleBounds = BoundsMultiCache()
   private var handlesVisible = false
 
   val dragSupport: CanvasDragSupport = CanvasDragSupport().also {

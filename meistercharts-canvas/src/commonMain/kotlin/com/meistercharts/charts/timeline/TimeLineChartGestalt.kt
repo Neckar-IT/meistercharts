@@ -86,10 +86,10 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
-import com.meistercharts.canvas.layout.cache.DoubleCache
-import com.meistercharts.canvas.layout.cache.IntCache
-import com.meistercharts.canvas.layout.cache.ObjectsCache
-import com.meistercharts.canvas.layout.cache.StringsCache
+import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.cache.IntMultiCache
+import com.meistercharts.canvas.layout.cache.ObjectMultiCache
+import com.meistercharts.canvas.layout.cache.StringMultiCache
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
@@ -673,28 +673,28 @@ class TimeLineChartGestalt
      *
      * This size of this cache is used to get the number of labels
      */
-    val locationsYCache = @Window DoubleCache()
+    val locationsYCache = @Window DoubleMultiCache()
 
     /**
      * Contains the domain values (that are later used for formatting)
      */
     @Deprecated("Not used???")
-    val domainValuesCache = @Domain DoubleCache()
+    val domainValuesCache = @Domain DoubleMultiCache()
 
     /**
      * The label texts
      */
-    val labelsCache = StringsCache()
+    val labelsCache = StringMultiCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectMultiCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectsCache<Color>(Color.pink())
+    val labelTextColorCache = ObjectMultiCache<Color>(Color.pink())
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = configuration.actualVisibleDecimalSeriesIndices.size()
@@ -827,32 +827,32 @@ class TimeLineChartGestalt
      *
      * This size of this cache is used to get the number of labels
      */
-    val locationsYCache: @Window @MayBeNaN DoubleCache = DoubleCache()
+    val locationsYCache: @Window @MayBeNaN DoubleMultiCache = DoubleMultiCache()
 
     /**
      * Contains the history enums at the given location
      */
-    val historyEnumsCache = ObjectsCache(HistoryEnum.Boolean)
+    val historyEnumsCache = ObjectMultiCache(HistoryEnum.Boolean)
 
     /**
      * The enum set at the cross wire
      */
-    val valuesAtCrossWireCache: @HistoryEnumSetInt IntCache = IntCache()
+    val valuesAtCrossWireCache: @HistoryEnumSetInt IntMultiCache = IntMultiCache()
 
     /**
      * The translated labels
      */
-    val labelsCache = StringsCache()
+    val labelsCache = StringMultiCache()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectsCache(BoxStyle.modernBlue)
+    val boxStylesCache = ObjectMultiCache(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectsCache<Color>(Color.pink())
+    val labelTextColorCache = ObjectMultiCache<Color>(Color.pink())
 
     /**
      * Clears all labels

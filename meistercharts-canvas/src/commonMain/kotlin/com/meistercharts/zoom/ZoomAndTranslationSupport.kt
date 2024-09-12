@@ -20,13 +20,13 @@ import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.calc.ZoomLevelCalculator
-import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import com.meistercharts.state.MutableChartState
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import it.neckar.logging.Level
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
@@ -163,16 +163,22 @@ class ZoomAndTranslationSupport(
     }
 
     //Remember the location under the zoom center before applying the zoom change
-    val (@ContentAreaRelative x, @ContentAreaRelative y) = chartCalculator.window2contentAreaRelative(zoomCenter.x, zoomCenter.y)
+    @ContentAreaRelative val x = chartCalculator.window2contentAreaRelativeX(zoomCenter.x)
+    @ContentAreaRelative val y = chartCalculator.window2contentAreaRelativeY(zoomCenter.y)
 
     //ensure the limits of the zoom are respected
-    chartState.setZoom(zoomAndTranslationModifier.modifyZoom(Zoom(newZoomFactorX, newZoomFactorY), chartCalculator), axisSelection = axisSelection)
+    val newZoom = zoomAndTranslationModifier.modifyZoom(Zoom(newZoomFactorX, newZoomFactorY), chartCalculator)
+    chartState.setZoom(newZoom, axisSelection = axisSelection)
 
     //which relative value is now under the zoom center? Necessary to calculate the correction
-    val (@ContentAreaRelative x1, @ContentAreaRelative y1) = chartCalculator.window2contentAreaRelative(zoomCenter.x, zoomCenter.y)
+    @ContentAreaRelative val x1 = chartCalculator.window2contentAreaRelativeX(zoomCenter.x)
+    @ContentAreaRelative val y1 = chartCalculator.window2contentAreaRelativeY(zoomCenter.y)
 
     //Move the window so that the old content area relative is again placed under the zoom center
-    moveWindowRelative(x1 - x, y1 - y, reason = reason)
+    @ContentAreaRelative val deltaX = x1 - x
+    @ContentAreaRelative val deltaY = y1 - y
+
+    moveWindowRelative(deltaX, deltaY, reason = reason)
   }
 
   fun modifyZoom(

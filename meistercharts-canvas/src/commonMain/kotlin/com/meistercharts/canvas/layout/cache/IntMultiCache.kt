@@ -15,64 +15,69 @@
  */
 package com.meistercharts.canvas.layout.cache
 
-import it.neckar.geometry.RightTriangleType
+import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 
 /**
- * Caches double values in an array.
- *
+ * Contains a list of int.
+ * This can be used to keep a sorted list of indices
  */
-class RightTriangleTypeCache : LayoutVariableWithSize {
+class IntMultiCache : LayoutVariablesCache {
   /**
    * Contains the values
+   *
+   * Use this only for performance reasons.
+   * Altering this instance alters the cache, too.
    */
   @PublishedApi
-  internal var values: Array<RightTriangleType?> = emptyArray()
+  internal var values: IntArray = emptyIntArray()
+    private set
+
+  /**
+   * Resets this cache and ensures the given size
+   */
+  fun prepare(size: Int) {
+    ensureSize(size)
+    //It is important to reset *after* the resize
+    //because the reset implementation might use the size
+    reset()
+  }
 
   override fun reset() {
     values.forEachIndexed { index, _ ->
-      values[index] = null
+      values[index] = 0
     }
   }
 
   /**
    * Ensures the array has the given size
    */
-  override fun ensureSize(size: Int) {
+  fun ensureSize(size: Int) {
     if (values.size != size) {
-      values = Array(size) { null }
+      values = IntArray(size) { 0 }
     }
   }
 
-  override val size: Int
+  val size: Int
     get() = values.size
 
-  operator fun set(index: Int, value: RightTriangleType) {
+  operator fun set(index: Int, value: Int) {
     values[index] = value
   }
 
-  operator fun get(index: Int): RightTriangleType? {
+  /**
+   * Returns the n-th index
+   */
+  operator fun get(index: Int): Int {
     return values[index]
   }
 
-  inline fun fastForEachIndexed(callback: (index: Int, value: RightTriangleType?) -> Unit) {
+  inline fun fastForEachIndexed(callback: (index: Int, value: Int) -> Unit) {
     this.values.fastForEachIndexed(callback)
   }
 
-  inline fun fastForEachIndexedReversed(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
-    this.values.fastForEachIndexedReversed(callback)
-  }
-
-  inline fun fastForEach(callback: (value: RightTriangleType?) -> Unit) {
+  inline fun fastForEach(callback: (value: Int) -> Unit) {
     this.values.fastForEach(callback)
-  }
-
-  inline fun Array<RightTriangleType?>.fastForEachIndexedReversed(callback: (index: Int, value: RightTriangleType?, isFirst: Boolean) -> Unit) {
-    val currentSize = size
-
-    for (i in (currentSize - 1) downTo 0) {
-      callback(i, this[i], i == currentSize - 1)
-    }
   }
 }

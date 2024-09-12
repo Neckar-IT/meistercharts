@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test
 class LayoutVariableObjectCacheTest {
   @Test
   fun testIncreaseIfNecessary() {
-    val layoutObject: LayoutVariable = mockk() {
+    val layoutObject: LayoutVariable = mockk {
       every { reset() }.returns(Unit)
     }
 
@@ -66,7 +66,7 @@ class LayoutVariableObjectCacheTest {
 
   @Test
   fun testClearRecycle() {
-    val layoutObject: LayoutVariable = mockk() {
+    val layoutObject: LayoutVariable = mockk {
       every { reset() }.returns(Unit)
     }
 
@@ -304,15 +304,15 @@ class LayoutVariableObjectCacheTest {
  * Verifies the instances of the objects
  */
 private fun <T : LayoutVariable> LayoutVariablesObjectCache<T>.verifyInstancesMatch() {
-  assertThat(values.size).isLessThanOrEqualTo(objectsStock.size)
+  assertThat(values.size).isLessThanOrEqualTo(objectPool.size)
 
   values.fastForEachIndexed { index, value ->
-    assertThat(objectsStock[index]).isSameAs(value)
+    assertThat(objectPool[index]).isSameAs(value)
   }
 
-  objectsStock.fastForEachIndexed { index, value ->
+  objectPool.fastForEachIndexed { index, value ->
     if (index > 0) {
-      val previous = objectsStock[index - 1]
+      val previous = objectPool[index - 1]
       assertThat(previous).isNotSameAs(value)
     }
   }

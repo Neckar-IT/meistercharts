@@ -24,9 +24,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
-import com.meistercharts.canvas.layout.cache.CoordinatesCache
-import com.meistercharts.canvas.layout.cache.ObjectsCache
-import com.meistercharts.color.Color
+import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
+import com.meistercharts.canvas.layout.cache.ObjectMultiCache
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Side
@@ -64,14 +63,14 @@ class DirectionalLinesLayer(
     /**
      * Contains the coordinates for the HUD element
      */
-    override val startCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
+    override val startCoordinatesMultiCache = @Window @MayBeNaN CoordinatesMultiCache()
 
     /**
      * The coordinates where the line ends
      */
-    override val endCoordinatesCache = @Window @MayBeNaN CoordinatesCache()
+    override val endCoordinatesMultiCache = @Window @MayBeNaN CoordinatesMultiCache()
 
-    override val directionsCache = ObjectsCache(Direction.TopLeft)
+    override val directionsCache = ObjectMultiCache(Direction.TopLeft)
 
 
     override fun calculate(paintingContext: LayerPaintingContext) {
@@ -80,9 +79,9 @@ class DirectionalLinesLayer(
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
       //Prepare the caches
-      startCoordinatesCache.prepare(size)
+      startCoordinatesMultiCache.prepare(size)
       directionsCache.prepare(size)
-      endCoordinatesCache.prepare(size)
+      endCoordinatesMultiCache.prepare(size)
 
       //Calculate the min/max values for all lines
 
@@ -121,7 +120,7 @@ class DirectionalLinesLayer(
         val anchorGapX = direction.opposite().horizontalAlignment.calculateOffsetXForGap(configuration.anchorGapHorizontal.valueAt(index))
         val anchorGapY = direction.opposite().verticalAlignment.calculateOffsetYForGap(configuration.anchorGapVertical.valueAt(index))
 
-        startCoordinatesCache.set(index, x + anchorGapX, y + anchorGapY)
+        startCoordinatesMultiCache.set(index, x + anchorGapX, y + anchorGapY)
         //TODO check direction with gap!
 
         val endX: @Window Double = when (direction.horizontalAlignment) {
@@ -137,7 +136,7 @@ class DirectionalLinesLayer(
           VerticalAlignment.Bottom -> maxY
         }
 
-        endCoordinatesCache.set(index, endX, endY)
+        endCoordinatesMultiCache.set(index, endX, endY)
       }
     }
   }
@@ -237,7 +236,7 @@ class DirectionalLinesLayer(
 
       return DirectionalLinesLayer(
         Configuration(
-          locations = hudLayerPaintingProperties.coordinatesCache.asCoordinatesProvider().as1(),
+          locations = hudLayerPaintingProperties.coordinatesMultiCache.asCoordinatesProvider().as1(),
           directions = MultiProvider.invoke {
             //The anchor direction of the hud
             when (valueAxisLayer.configuration.side) {
@@ -304,17 +303,17 @@ class DirectionalLinesLayer(
     /**
      * Contains the coordinates for the HUD element
      */
-    val startCoordinatesCache: @Window @MayBeNaN CoordinatesCache
+    val startCoordinatesMultiCache: @Window @MayBeNaN CoordinatesMultiCache
 
     /**
      * The coordinates where the line ends
      */
-    val endCoordinatesCache: @Window @MayBeNaN CoordinatesCache
+    val endCoordinatesMultiCache: @Window @MayBeNaN CoordinatesMultiCache
 
     /**
      * The directions for the lines
      */
-    val directionsCache: ObjectsCache<Direction>
+    val directionsCache: ObjectMultiCache<Direction>
   }
 }
 
@@ -326,14 +325,14 @@ inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForE
   iterationOrder: IterationOrder,
   callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit,
 ) {
-  startCoordinatesCache.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
+  startCoordinatesMultiCache.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
     if (startX.isFinite().not() || startY.isFinite().not()) {
       //Skip if x or y are not finite
       return@fastForEachIndexed
     }
 
-    @Window @MayBeNaN val endX = endCoordinatesCache.x(index)
-    @Window @MayBeNaN val endY = endCoordinatesCache.y(index)
+    @Window @MayBeNaN val endX = endCoordinatesMultiCache.x(index)
+    @Window @MayBeNaN val endY = endCoordinatesMultiCache.y(index)
 
     if (endX.isFinite().not() || endY.isFinite().not()) {
       //Skip if x or y are not finite

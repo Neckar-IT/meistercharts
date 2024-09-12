@@ -15,11 +15,11 @@
  */
 package com.meistercharts.zoom
 
-import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.Distance
+import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.model.Zoom
+import it.neckar.geometry.Distance
 import it.neckar.open.unit.other.px
 
 /**
@@ -30,7 +30,7 @@ import it.neckar.open.unit.other.px
  *
  */
 class ContentAreaAlwaysBarelyVisibleTranslationModifier(
-  val delegate: ZoomAndTranslationModifier
+  val delegate: ZoomAndTranslationModifier,
 ) : ZoomAndTranslationModifier {
   /**
    * Modifies the min/max panning.
@@ -42,12 +42,20 @@ class ContentAreaAlwaysBarelyVisibleTranslationModifier(
     @Zoomed val minY = calculator.contentAreaRelative2zoomedY(-1.0)
 
     //TODO is this correct? What happens when the zoom is not 1.0?
-    @ContentArea val maxX = calculator.chartState.contentAreaWidth
-    @ContentArea val maxY = calculator.chartState.contentAreaHeight
+    @ContentArea val maxX = calculateMaxX(calculator)
+    @ContentArea val maxY = calculateMaxY(calculator)
 
     return delegate.modifyTranslation(translation, calculator)
       .withMin(minX, minY)
       .withMax(maxX, maxY)
+  }
+
+  internal fun calculateMaxX(calculator: ChartCalculator): @Zoomed Double {
+    return calculator.chartState.windowWidth
+  }
+
+  internal fun calculateMaxY(calculator: ChartCalculator): @Zoomed Double {
+    return calculator.chartState.windowHeight
   }
 
   override fun modifyZoom(zoom: Zoom, calculator: ChartCalculator): Zoom {

@@ -22,13 +22,14 @@ import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.kotlin.lang.pointIsLeftOfLine
 import it.neckar.open.unit.number.MayBeNegative
 
-class TriangleBoundsLayoutCache : BoundsLayoutCache() {
+class TriangleBoundsMultiCache : BoundsMultiCache() {
   /**
    * The x locations
    */
   @PublishedApi
-  internal var rightTriangleTypeValues: @Window RightTriangleTypeCache = RightTriangleTypeCache()
+  internal var rightTriangleTypeValues: @Window RightTriangleTypeMultiCache = RightTriangleTypeMultiCache()
 
+  @Deprecated("Use prepare instead")
   override fun reset() {
     super.reset()
     rightTriangleTypeValues.reset()
