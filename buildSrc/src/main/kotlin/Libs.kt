@@ -14,7 +14,7 @@ import kotlin.String
 public object Libs {
     public const val aopalliance: String = "aopalliance:aopalliance:_"
 
-    public const val s3: String = "aws.sdk.kotlin:s3:_"
+    public const val aws_sdk_kotlin_s3: String = "aws.sdk.kotlin:s3:_"
 
     public const val ca_cutterslade_analyze_gradle_plugin: String =
             "ca.cutterslade.analyze:ca.cutterslade.analyze.gradle.plugin:_"
@@ -56,6 +56,8 @@ public object Libs {
     public const val zjsonpatch: String = "com.flipkart.zjsonpatch:zjsonpatch:_"
 
     public const val clikt: String = "com.github.ajalt.clikt:clikt:_"
+
+    public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
 
     public const val docker_java: String = "com.github.docker-java:docker-java:_"
 
@@ -104,6 +106,8 @@ public object Libs {
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
 
+    public const val itext: String = "com.lowagie:itext:_"
+
     public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
@@ -143,6 +147,11 @@ public object Libs {
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
     public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
+
+    public const val ktor_swagger_ui: String = "io.github.smiley4:ktor-swagger-ui:_"
+
+    public const val detekt_gradle_plugin: String =
+            "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:_"
 
     public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
 
@@ -213,6 +222,8 @@ public object Libs {
     public const val micrometer_registry_prometheus: String =
             "io.micrometer:micrometer-registry-prometheus:_"
 
+    public const val io_minio_minio: String = "io.minio:minio:_"
+
     public const val mockk: String = "io.mockk:mockk:_"
 
     public const val measured: String = "io.nacular.measured:measured:_"
@@ -231,6 +242,8 @@ public object Libs {
     public const val javax_mail_api: String = "javax.mail:javax.mail-api:_"
 
     public const val mail: String = "javax.mail:mail:_"
+
+    public const val joda_time: String = "joda-time:joda-time:_"
 
     public const val me_champeau_jmh_gradle_plugin: String =
             "me.champeau.jmh:me.champeau.jmh.gradle.plugin:_"
@@ -314,6 +327,8 @@ public object Libs {
             "org.jetbrains.dokka:analysis-kotlin-descriptors:_"
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
+
+    public const val dokka_gradle_plugin: String = "org.jetbrains.dokka:dokka-gradle-plugin:_"
 
     public const val gfm_plugin: String = "org.jetbrains.dokka:gfm-plugin:_"
 
@@ -453,6 +468,12 @@ public object Libs {
     public const val org_openjfx_javafxplugin_gradle_plugin: String =
             "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"
 
+    public const val javafx_base: String = "org.openjfx:javafx-base:_"
+
+    public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
+
+    public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
+
     public const val opencv: String = "org.openpnp:opencv:_"
 
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
@@ -464,7 +485,7 @@ public object Libs {
 
     public const val junit_jupiter: String = "org.testcontainers:junit-jupiter:_"
 
-    public const val minio: String = "org.testcontainers:minio:_"
+    public const val org_testcontainers_minio: String = "org.testcontainers:minio:_"
 
     public const val mongodb: String = "org.testcontainers:mongodb:_"
 
@@ -473,6 +494,10 @@ public object Libs {
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
+
+    public const val swagger_ui: String = "org.webjars:swagger-ui:_"
+
+    public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"
 }

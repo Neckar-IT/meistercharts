@@ -89,6 +89,7 @@ object Plugins {
   const val springDependencyManagement: String = "io.spring.dependency-management"
 
   const val schemaGen: String = "com.javagen.schema-gen"
+
   const val node: String = "com.github.node-gradle.node"
   const val kover: String = "org.jetbrains.kotlinx.kover"
   const val analyze: String = "ca.cutterslade.analyze"

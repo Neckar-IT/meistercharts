@@ -16,8 +16,6 @@
 package com.meistercharts.canvas.layout.cache
 
 /**
- * Caches a list of bounds caches (two dimensional bounds cache).
- *
- * Does *not* change the size of the inner [BoundsMultiCache] on [prepare]
+ * Two dimensional string cache.
  */
-class StringModuleBounds2DCache : LayoutVariablesObjectCache<StringModuleBoundsMultiCache>(factory = { StringModuleBoundsMultiCache() })
+class StringMulti2DCache : LayoutVariablesObjectCache<StringMultiCache>(::StringMultiCache)
