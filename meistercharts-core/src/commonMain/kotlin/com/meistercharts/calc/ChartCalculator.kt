@@ -17,17 +17,6 @@
 
 package com.meistercharts.calc
 
-import it.neckar.geometry.AxisOrientationX
-import it.neckar.geometry.AxisOrientationY
-import com.meistercharts.state.contentViewportHeight
-import com.meistercharts.state.contentViewportWidth
-import com.meistercharts.tile.TileIndex
-import com.meistercharts.state.withAdditionalTranslation
-import com.meistercharts.state.withAxisOrientation
-import com.meistercharts.state.withContentAreaSize
-import com.meistercharts.state.withTranslation
-import com.meistercharts.state.withWindowSize
-import com.meistercharts.state.withZoom
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Domain
@@ -36,13 +25,24 @@ import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Distance
+import com.meistercharts.model.Zoom
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
-import com.meistercharts.model.Zoom
 import com.meistercharts.state.ChartState
+import com.meistercharts.state.contentViewportHeight
+import com.meistercharts.state.contentViewportWidth
+import com.meistercharts.state.withAdditionalTranslation
+import com.meistercharts.state.withAxisOrientation
+import com.meistercharts.state.withContentAreaSize
+import com.meistercharts.state.withTranslation
+import com.meistercharts.state.withWindowSize
+import com.meistercharts.state.withZoom
+import com.meistercharts.tile.TileIndex
 import com.meistercharts.time.TimeRange
+import it.neckar.geometry.AxisOrientationX
+import it.neckar.geometry.AxisOrientationY
+import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
@@ -50,83 +50,150 @@ import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms
 
 /**
- * Converts values for a charting components
+ * `ChartCalculator` is responsible for converting values between various coordinate systems
+ * used in chart rendering. These systems include abstract "Domain" values, the pixel-based
+ * "ContentArea" where the chart is drawn, zoom levels, and the visible "Window" area.
+ *
+ * It handles the necessary transformations for zoom, translation, and orientation, allowing
+ * chart components to map between these different spaces.
+ *
+ * The following coordinate systems are used:
+ *
+ * 1. **Domain**: The abstract range of values being plotted (e.g., time, temperature).
+ * 2. **DomainRelative**: The normalized position (0.0 to 1.0) within the Domain range.
+ * 3. **ContentArea**: The pixel-based area where the chart content is drawn.
+ * 4. **ContentAreaRelative**: The relative position (0.0 to 1.0) within the ContentArea.
+ * 5. **Zoomed**: Values in the ContentArea that have been scaled by zoom factors.
+ * 6. **Window**: The visible portion of the chart that is displayed on screen.
+ *
+ * # Main Responsibilities:
+ *
+ * - Convert between `Domain`, `ContentArea`, `Zoomed`, and `Window` values.
+ * - Support for transformations involving zoom levels and translations (panning).
+ * - Apply axis orientation to handle inverted axes.
+ * - Handle viewport restrictions, ensuring values are constrained to the visible window area.
+ *
+ * # Example transformations:
+ *
+ * - `domain2windowX(domainX, valueRange)`: Convert a domain X value to a window X coordinate.
+ * - `window2domainX(windowX, valueRange)`: Convert a window X coordinate back to the domain X value.
+ * - `domainRelative2zoomedX(domainRelativeX)`: Convert a relative domain X value to a zoomed X coordinate.
+ *
+ * This class also provides convenience methods to convert areas and distances between coordinate systems.
+ *
+ * @param chartState the current state of the chart, including size, zoom, and translations.
  *
  * @noinspection ClassWithTooManyMethods
  */
 open class ChartCalculator(val chartState: ChartState) {
 
   /**
-   * Creates a new instance that has a content area size override
+   * Creates a new `ChartCalculator` instance with an overridden content area size.
+   *
+   * @param sizeOverride the new size for the content area in pixels.
+   * @return a new `ChartCalculator` instance with the updated content area size.
    */
   fun withContentAreaSize(sizeOverride: @ContentArea Size): ChartCalculator {
     return withChartState(chartState.withContentAreaSize(sizeOverride))
   }
 
   /**
-   * Creates a new instance that has a window size override
+   * Creates a new `ChartCalculator` instance with an overridden window size.
+   *
+   * @param sizeOverride the new size for the window in pixels.
+   * @return a new `ChartCalculator` instance with the updated window size.
    */
   fun withWindowSize(sizeOverride: @Zoomed Size): ChartCalculator {
     return withChartState(chartState.withWindowSize(sizeOverride))
   }
 
   /**
-   * Creates a new instance whose chart state has the given translation [translationOverride]
-   * @see withAdditionalTranslation
+   * Creates a new `ChartCalculator` instance with an overridden translation.
+   *
+   * @param translationOverride the new translation to apply to the chart in zoomed units.
+   * @return a new `ChartCalculator` instance with the updated translation.
    */
   fun withTranslation(translationOverride: @Zoomed Distance): ChartCalculator {
     return withChartState(chartState.withTranslation(translationOverride))
   }
 
+  /**
+   * Creates a new `ChartCalculator` instance with an overridden zoom factor.
+   *
+   * @param zoomOverride the new zoom level to apply to the chart.
+   * @return a new `ChartCalculator` instance with the updated zoom level.
+   */
   fun withZoom(zoomOverride: Zoom): ChartCalculator {
     return withChartState(chartState.withZoom(zoomOverride))
   }
 
   /**
-   * Creates a new instance whose chart state has the additional translation [additionalTranslation]
-   * @see withTranslation
+   * Creates a new `ChartCalculator` instance with additional translation applied on top of
+   * the existing translation.
+   *
+   * @param additionalTranslation the additional translation to apply in zoomed units.
+   * @return a new `ChartCalculator` instance with the combined translation.
    */
   fun withAdditionalTranslation(additionalTranslation: @Zoomed Distance): ChartCalculator {
     return withChartState(chartState.withAdditionalTranslation(additionalTranslation))
   }
 
   /**
-   * Creates a new instance
+   * Creates a new `ChartCalculator` instance with overridden axis orientations.
+   *
+   * @param axisOrientationXOverride optional new orientation for the X-axis.
+   * @param axisOrientationYOverride optional new orientation for the Y-axis.
+   * @return a new `ChartCalculator` instance with updated axis orientations.
    */
   fun withAxisOrientation(
     axisOrientationXOverride: AxisOrientationX?,
-    axisOrientationYOverride: AxisOrientationY?
+    axisOrientationYOverride: AxisOrientationY?,
   ): ChartCalculator {
     return withChartState(chartState.withAxisOrientation(axisOrientationXOverride, axisOrientationYOverride))
   }
 
   /**
-   * Returns a new instance of the chart calculator
+   * Creates a new `ChartCalculator` instance with a new chart state.
+   *
+   * @param newChartState the updated chart state to use.
+   * @return a new `ChartCalculator` instance with the updated chart state.
    */
   fun withChartState(newChartState: ChartState): ChartCalculator {
     return ChartCalculator(newChartState)
   }
 
-  //
-  // Forward conversion: Domain to Window
-  //
-  // DomainRelative --> ContentAreaRelative --> ContentArea --> Zoomed --> Window
-  //
+  // Conversion Methods
 
-  // DomainRelative --> ContentAreaRelative
-
+  /**
+   * Converts a domain-relative X value to a content-area-relative X value.
+   *
+   * @param x the X value relative to the domain, where 0.0 is the start and 1.0 is the end.
+   * @return the X value relative to the content area.
+   */
   fun domainRelative2contentAreaRelativeX(@DomainRelative @pct x: Double): @ContentAreaRelative Double {
     return InternalCalculations.domainRelative2contentAreaRelative(x, chartState.axisOrientationX)
   }
 
+  /**
+   * Converts a domain-relative Y value to a content-area-relative Y value.
+   *
+   * @param y the Y value relative to the domain, where 0.0 is the start and 1.0 is the end.
+   * @return the Y value relative to the content area.
+   */
   fun domainRelative2contentAreaRelativeY(@DomainRelative @pct y: Double): @ContentAreaRelative Double {
     return InternalCalculations.domainRelative2contentAreaRelative(y, chartState.axisOrientationY)
   }
 
+  /**
+   * Converts domain-relative coordinates to content-area-relative coordinates.
+   *
+   * @param coordinates the coordinates relative to the domain.
+   * @return the coordinates relative to the content area.
+   */
   fun domainRelative2contentAreaRelative(@DomainRelative @pct coordinates: Coordinates): @ContentAreaRelative Coordinates {
     return Coordinates.of(
-      domainRelative2contentAreaRelativeX(coordinates.y),
-      domainRelative2contentAreaRelativeY(coordinates.x)
+      domainRelative2contentAreaRelativeX(coordinates.x),
+      domainRelative2contentAreaRelativeY(coordinates.y),
     )
   }
 
@@ -137,12 +204,22 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
-  // ContentAreaRelative --> ContentArea
-
+  /**
+   * Converts a content-area-relative X value to a pixel value in the content area.
+   *
+   * @param x the X value relative to the content area, where 0.0 is the start and 1.0 is the end.
+   * @return the X value in pixels.
+   */
   open fun contentAreaRelative2contentAreaX(@ContentAreaRelative @pct x: Double): @ContentArea Double {
     return InternalCalculations.contentAreaRelative2contentArea(x, chartState.contentAreaWidth)
   }
 
+  /**
+   * Converts a content-area-relative Y value to a pixel value in the content area.
+   *
+   * @param y the Y value relative to the content area, where 0.0 is the start and 1.0 is the end.
+   * @return the Y value in pixels.
+   */
   open fun contentAreaRelative2contentAreaY(@ContentAreaRelative @pct y: Double): @ContentArea Double {
     return InternalCalculations.contentAreaRelative2contentArea(y, chartState.contentAreaHeight)
   }
@@ -163,6 +240,12 @@ open class ChartCalculator(val chartState: ChartState) {
 
   // ContentArea --> Zoomed
 
+  /**
+   * Converts a content-area X value to a zoomed X value, applying the current zoom factor.
+   *
+   * @param x the X value in the content area in pixels.
+   * @return the zoomed X value.
+   */
   fun contentArea2zoomedX(@ContentArea @px x: Double): @Zoomed Double {
     return InternalCalculations.contentArea2zoomed(x, chartState.zoomX)
   }
@@ -187,6 +270,12 @@ open class ChartCalculator(val chartState: ChartState) {
 
   // Zoomed --> Window
 
+  /**
+   * Converts a zoomed X value to a window X value.
+   *
+   * @param x the X value after applying zoom, in pixels.
+   * @return the X value in the window in pixels.
+   */
   fun zoomed2windowX(@Zoomed @px x: Double): @Window Double {
     return InternalCalculations.zoomed2window(x, chartState.windowTranslation.x)
   }
@@ -331,6 +420,28 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  /**
+   * Converts a delta in content area X coordinates to window X coordinates.
+   *
+   * @param deltaX the change in X within the content area in pixels.
+   * @return the equivalent delta in window X coordinates.
+   */
+  fun contentAreaDelta2windowX(@ContentArea deltaX: Double): @Window Double {
+    val zoomedDeltaX = contentArea2zoomedX(deltaX)
+    return zoomed2windowX(zoomedDeltaX)
+  }
+
+  /**
+   * Converts a delta in window X coordinates to content area X coordinates.
+   *
+   * @param deltaX the change in X within the window in pixels.
+   * @return the equivalent delta in content area X coordinates.
+   */
+  fun windowDelta2contentAreaX(@Window deltaX: Double): @ContentArea Double {
+    val zoomedDeltaX = window2zoomedX(deltaX)
+    return zoomed2contentAreaX(zoomedDeltaX)
+  }
+
   // ContentAreaRelative --> (ContentArea --> Zoomed) --> Window
 
   fun contentAreaRelative2windowX(@ContentAreaRelative @pct x: Double): @Window @px Double {
@@ -368,6 +479,12 @@ open class ChartCalculator(val chartState: ChartState) {
 
   // DomainRelative --> (ContentAreaRelative --> ContentArea --> Zoomed) --> Window
 
+  /**
+   * Converts a domain-relative X value directly to a window X value.
+   *
+   * @param x the X value relative to the domain, where 0.0 is the start and 1.0 is the end.
+   * @return the X value in the window in pixels.
+   */
   fun domainRelative2windowX(@DomainRelative @pct x: Double): @Window @px Double {
     @ContentAreaRelative val contentAreaRelativeX = domainRelative2contentAreaRelativeX(x)
     return contentAreaRelative2windowX(contentAreaRelativeX)
@@ -927,6 +1044,55 @@ open class ChartCalculator(val chartState: ChartState) {
       return y
     }
     return fallback
+  }
+
+
+  //Additional methods. Untested!
+
+
+  /**
+   * Converts a window-relative X position (0.0 to 1.0) to a content-area-relative X position.
+   *
+   * @param relativeX the relative X position in the window, where 0.0 is the left edge and 1.0 is the right edge.
+   * @return the relative X position in the content area.
+   */
+  fun windowRelative2contentAreaRelativeX(@WindowRelative @pct relativeX: Double): @ContentAreaRelative Double {
+    val windowX = windowRelative2WindowX(relativeX)
+    return window2contentAreaRelativeX(windowX)
+  }
+
+  /**
+   * Converts a window-relative Y position (0.0 to 1.0) to a content-area-relative Y position.
+   *
+   * @param relativeY the relative Y position in the window, where 0.0 is the top edge and 1.0 is the bottom edge.
+   * @return the relative Y position in the content area.
+   */
+  fun windowRelative2contentAreaRelativeY(@WindowRelative @pct relativeY: Double): @ContentAreaRelative Double {
+    val windowY = windowRelative2WindowY(relativeY)
+    return window2contentAreaRelativeY(windowY)
+  }
+
+
+  /**
+   * Checks if a domain-relative X value is currently visible within the viewport.
+   *
+   * @param x the relative X value in the domain.
+   * @return true if the X value is visible in the current viewport.
+   */
+  fun isInViewportDomainRelativeX(@DomainRelative @pct x: Double, valueRange: ValueRange): Boolean {
+    val windowX = domainRelative2windowX(x)
+    return isInViewportX(windowX)
+  }
+
+  /**
+   * Checks if a domain-relative Y value is currently visible within the viewport.
+   *
+   * @param y the relative Y value in the domain.
+   * @return true if the Y value is visible in the current viewport.
+   */
+  fun isInViewportDomainRelativeY(@DomainRelative @pct y: Double, valueRange: ValueRange): Boolean {
+    val windowY = domainRelative2windowY(y)
+    return isInViewportY(windowY)
   }
 
 
