@@ -664,7 +664,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Rotates the canvas *clockwise*
    *
-   * For performance reasons [rotateRadians] with radians parameter should be preferred
+   * For performance reasons [rotateRadians] with radian parameter should be preferred
    */
   fun rotateDegrees(angleInDegrees: @deg Double) {
     rotateRadians(angleInDegrees.toRadians())
