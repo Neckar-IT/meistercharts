@@ -106,8 +106,6 @@ public object Libs {
 
     public const val jfoenix: String = "com.jfoenix:jfoenix:_"
 
-    public const val itext: String = "com.lowagie:itext:_"
-
     public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
     public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
