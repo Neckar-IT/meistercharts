@@ -1150,7 +1150,7 @@ class TimeLineChartGestalt
           layers.addLayer(multiValueAxisTopTitleLayer.visibleIf { valueAxisSupport.preferredAxisTitleLocation == AxisTitleLocation.AtTop })
 
           @PaintingOrder val hudLayersDelegateIndex = layers.addLayer(hudLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() })
-          layers.addLayerAt(thresholdLinesLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() }, valueAxesLayerIndex, hudLayersDelegateIndex + 1)
+          layers.addLayerAt(layer = thresholdLinesLayersDelegate.clipped { viewportSupport.decimalsAreaViewportClipMargin() }, paintingIndex = valueAxesLayerIndex, layoutIndex = hudLayersDelegateIndex + 1)
 
           //Interaction layers for thresholds
           layers.addLayer(thresholdInteractionLayers.first)

@@ -16,34 +16,37 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.Meistercharts
+import com.meistercharts.algorithms.painter.UrlPaintable
 import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.calc.DomainChartCalculator
 import com.meistercharts.calc.TileChartCalculator
 import com.meistercharts.calc.TimeChartCalculator
-import com.meistercharts.time.TimeRange
-import com.meistercharts.algorithms.painter.UrlPaintable
-import com.meistercharts.tile.TileIndex
+import com.meistercharts.calc.domainChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReasonBitSet
-import com.meistercharts.canvas.layer.LayerSupport
-import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.i18nSupport
+import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.canvas.pixelSnapSupport
 import com.meistercharts.canvas.textService
 import com.meistercharts.charts.ChartId
-import it.neckar.geometry.Size
+import com.meistercharts.loop.PaintingLoopIndex
+import com.meistercharts.range.LinearValueRange
 import com.meistercharts.state.ChartState
+import com.meistercharts.tile.TileIndex
+import com.meistercharts.time.TimeRange
+import it.neckar.datetime.minimal.TimeZone
+import it.neckar.geometry.Size
 import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.resolve
-import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
@@ -230,6 +233,13 @@ fun ChartState.timeChartCalculator(
 ): TimeChartCalculator {
   //TODO think about cache
   return TimeChartCalculator(this, contentAreaTimeRangeX)
+}
+
+fun ChartSupport.domainChartCalculator(
+  domainRangeX: LinearValueRange,
+  domainRangeY: LinearValueRange,
+): DomainChartCalculator {
+  return currentChartState.domainChartCalculator(domainRangeX, domainRangeY)
 }
 
 /**

@@ -746,12 +746,56 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
-  fun window2domain(@Window @px coordinates: Coordinates, valueRange: ValueRange): @Domain Coordinates {
+  fun window2domain(@Window @px coordinates: Coordinates, valueRangeX: ValueRange, valueRangeY: ValueRange): @Domain Coordinates {
     return Coordinates.of(
-      window2domainX(coordinates.x, valueRange),
-      window2domainY(coordinates.y, valueRange)
+      window2domainX(coordinates.x, valueRangeX),
+      window2domainY(coordinates.y, valueRangeY)
     )
   }
+
+  fun zoomed2domainDelta(@Window @px coordinates: Coordinates, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
+    return Coordinates.of(
+      zoomed2domainDeltaX(coordinates.x, valueRangeX),
+      zoomed2domainDeltaY(coordinates.y, valueRangeY)
+    )
+  }
+
+  /**
+   * Zoomed 2 domain delta
+   */
+  fun zoomed2domainDeltaX(@Zoomed @px x: Double, contentAreaDomainRange: LinearValueRange): @Domain Double {
+    @ContentAreaRelative val contentAreaRelative = zoomed2contentAreaRelativeX(x)
+    return contentAreaDomainRange.deltaToDomain(contentAreaRelative)
+  }
+
+  /**
+   * Zoomed 2 domain delta
+   */
+  fun zoomed2domainDeltaY(@Zoomed @px y: Double, contentAreaDomainRange: LinearValueRange): @Domain Double {
+    @ContentAreaRelative val contentAreaRelative = zoomed2contentAreaRelativeY(y)
+    return contentAreaDomainRange.deltaToDomain(contentAreaRelative)
+  }
+
+  /**
+   * Returns the currently visible value range - on the x axis
+   */
+  fun visibleDomainRangeXinWindow(contentAreaValueRange: LinearValueRange): LinearValueRange {
+    return TimeRange.fromUnsorted(
+      window2domainX(0.0, contentAreaValueRange),
+      window2domainX(chartState.windowWidth, contentAreaValueRange)
+    )
+  }
+
+  /**
+   * Returns the currently visible value range - on the y axis
+   */
+  fun visibleDomainRangeYinWindow(contentAreaValueRange: LinearValueRange): LinearValueRange {
+    return TimeRange.fromUnsorted(
+      window2domainY(0.0, contentAreaValueRange),
+      window2domainY(chartState.windowHeight, contentAreaValueRange)
+    )
+  }
+
 
 
   //  Zoomed --> (ContentArea) --> ContentAreaRelative

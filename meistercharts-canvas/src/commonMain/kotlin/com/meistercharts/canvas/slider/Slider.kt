@@ -87,9 +87,7 @@ class Slider(
      */
     var width: @Zoomed Double = Double.NaN
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       configuration.handlePaintable.updateState(state.state)
       val handleBoundingBox = configuration.handlePaintable.layout(paintingContext)
 

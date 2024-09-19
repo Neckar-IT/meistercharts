@@ -49,9 +49,7 @@ class LabelPaintable(
   private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     var label: String? = null
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       val gc = paintingContext.gc
       gc.font(configuration.font)
       val fontMetrics = gc.getFontMetrics()

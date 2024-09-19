@@ -39,9 +39,7 @@ class TextBoxPaintable(
   }
 
   private val paintingVariables = object : AbstractPaintablePaintingVariables() {
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       val gc = paintingContext.gc
       val chartSupport = paintingContext.chartSupport
 

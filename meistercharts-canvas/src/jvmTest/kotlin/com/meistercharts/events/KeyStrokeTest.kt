@@ -24,6 +24,18 @@ import org.junit.jupiter.api.Test
 
 class KeyStrokeTest {
   @Test
+  fun testPlusMinus() {
+    val plus = KeyCode(521)
+    val numPadPlus = KeyCode(107)
+
+    assertThat(numPadPlus).isNotEqualTo(plus)
+    assertThat(plus).isNotEqualTo(numPadPlus)
+
+    assertThat(KeyStroke(plus)).isEqualTo(KeyStroke(plus))
+    assertThat(KeyStroke(numPadPlus)).isEqualTo(KeyStroke(numPadPlus))
+  }
+
+  @Test
   fun testKeyCodeChar() {
     KeyCode(68).let {
       assertThat(it.code).isEqualTo(68)

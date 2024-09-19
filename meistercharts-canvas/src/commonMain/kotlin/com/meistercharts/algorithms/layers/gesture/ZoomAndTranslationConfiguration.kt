@@ -15,8 +15,8 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.MeisterChartsBuilderDsl
+import it.neckar.geometry.AxisSelection
 
 /**
  * Contains the configuration for the [ZoomAndTranslationLayer]
@@ -39,9 +39,19 @@ class ZoomAndTranslationConfiguration {
   var mouseWheelZoom: Boolean = true
 
   /**
+   * If enabled zooming is possible using +/- keys
+   */
+  var keyboardZoom: Boolean = true
+
+  /**
    * The mouse wheel zoom configuration
    */
   var mouseWheelZoomConfiguration: MouseWheelZoomConfiguration = MouseWheelZoomConfiguration()
+
+  /**
+   * The keyboard zoom configuration (e.g. the keys that are used)
+   */
+  var keyboardZoomConfiguration: KeyboardZoomConfiguration = KeyboardZoomConfiguration()
 
   /**
    * Whether to translate on (mouse) drag
@@ -97,6 +107,10 @@ class ZoomAndTranslationConfiguration {
 
     if (mouseWheelZoom) {
       zoomAndTranslationLayer.zoomOnMouseWheel(mouseWheelZoomConfiguration)
+    }
+
+    if (keyboardZoom) {
+      zoomAndTranslationLayer.zoomOnKeyDown(keyboardZoomConfiguration)
     }
 
     if (translateOnMouseDrag) {

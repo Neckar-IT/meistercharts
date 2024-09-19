@@ -16,9 +16,9 @@
 package com.meistercharts.svg
 
 import com.meistercharts.algorithms.painter.Path
+import com.meistercharts.resources.svg.SvgPath
 import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.kotlin.lang.toRadians
-import com.meistercharts.resources.svg.SvgPath
 import it.neckar.open.unit.other.deg
 import kotlin.jvm.JvmStatic
 
@@ -149,7 +149,7 @@ class SVGPathParser(private val svgPathAsString: String) {
     var hasDecimal = false
     while (currentPosition < length) {
       when (svgPathAsString[currentPosition]) {
-        '-', '+'                                         -> {
+        '-', '+' -> {
           if (!allowSign) {
             return currentPosition
           }
@@ -157,7 +157,7 @@ class SVGPathParser(private val svgPathAsString: String) {
         }
 
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> allowSign = false
-        'E', 'e'                                         -> {
+        'E', 'e' -> {
           if (hasExp) {
             return currentPosition
           }
@@ -167,7 +167,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           }
         }
 
-        '.'                                              -> {
+        '.' -> {
           if (hasExp || hasDecimal) {
             return currentPosition
           }
@@ -175,7 +175,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           allowSign = false
         }
 
-        else                                             -> return currentPosition
+        else -> return currentPosition
       }
       currentPosition++
     }

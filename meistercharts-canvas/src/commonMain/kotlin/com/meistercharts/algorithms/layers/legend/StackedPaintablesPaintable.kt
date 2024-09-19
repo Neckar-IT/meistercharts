@@ -63,9 +63,7 @@ class StackedPaintablesPaintable(
      */
     val layoutManager = PaintablesLayouter()
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       layoutManager.configuration.also {
         it.layoutOrientation = configuration.layoutOrientation
         it.horizontalAlignment = configuration.horizontalAlignment

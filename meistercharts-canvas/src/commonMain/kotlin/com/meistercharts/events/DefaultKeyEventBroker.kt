@@ -15,12 +15,12 @@
  */
 package com.meistercharts.events
 
-import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
 import it.neckar.events.KeyDownEvent
 import it.neckar.events.KeyTypeEvent
 import it.neckar.events.KeyUpEvent
+import it.neckar.open.kotlin.lang.consumeUntil
 
 /**
  * Handles key events. Offers a way to register listeners and call them on key events
@@ -35,7 +35,7 @@ class DefaultKeyEventBroker : KeyEventBroker {
   /**
    * Registers a lambda that is notified when a key has been pressed
    */
-  override fun onDown(handler: (KeyDownEvent) -> EventConsumption) {
+  override fun onDown(handler: KeyDownAction) {
     downCallbacks.add(handler)
   }
 
@@ -56,7 +56,7 @@ class DefaultKeyEventBroker : KeyEventBroker {
   /**
    * Registers a lambda that is notified when a key has been released
    */
-  override fun onUp(handler: (KeyUpEvent) -> EventConsumption) {
+  override fun onUp(handler: KeyUpAction) {
     upCallbacks.add(handler)
   }
 
@@ -77,7 +77,7 @@ class DefaultKeyEventBroker : KeyEventBroker {
   /**
    * Registers a lambda that is notified when a key has been typed
    */
-  override fun onType(handler: (KeyTypeEvent) -> EventConsumption) {
+  override fun onType(handler: KeyTypedAction) {
     typeCallbacks.add(handler)
   }
 

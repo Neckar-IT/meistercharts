@@ -76,9 +76,6 @@ interface LoopIndexAwarePaintingVariables : LoopIndexAware, PaintingVariables {
 
 /**
  * Abstract base class that automatically saves the loop index.
- * And offers methods to verify that [calculate] has been called.
- *
- * Subclasses must overwrite [calculate] - and call `super.calculate(paintingContext)`
  */
 abstract class AbstractPaintingVariables : LoopIndexAwarePaintingVariables {
   override var loopIndex: PaintingLoopIndex = PaintingLoopIndex.Unknown
@@ -87,7 +84,13 @@ abstract class AbstractPaintingVariables : LoopIndexAwarePaintingVariables {
     this.loopIndex = PaintingLoopIndex.Unknown
   }
 
-  override fun calculate(paintingContext: LayerPaintingContext) {
+  final override fun calculate(paintingContext: LayerPaintingContext) {
     this.loopIndex = paintingContext.loopIndex
+    performCalculation(paintingContext)
   }
+
+  /**
+   * Is called to perform the calculations while ensuring that the loop index has been updated
+   */
+  protected abstract fun performCalculation(paintingContext: LayerPaintingContext)
 }

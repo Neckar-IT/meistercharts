@@ -38,8 +38,7 @@ class RoundHandlePaintable(
   val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   private var paintingVariables = object : AbstractPaintablePaintingVariables() {
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       boundingBox = Rectangle.centered(configuration.diameter, configuration.diameter)
     }
   }

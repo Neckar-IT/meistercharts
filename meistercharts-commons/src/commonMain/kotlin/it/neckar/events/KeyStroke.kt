@@ -31,5 +31,11 @@ data class KeyStroke(
   fun description(): String {
     return "[${keyCode.code}] ${modifierCombination.description()}"
   }
+
+  companion object {
+    fun ctrl(keyCode: KeyCode): KeyStroke {
+      return KeyStroke(keyCode, ModifierCombination.Ctrl)
+    }
+  }
 }
 

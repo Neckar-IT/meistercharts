@@ -61,9 +61,7 @@ class VerticallyStackedLabelsPaintable(
     @px
     var rowHeightWithoutGap: Double = Double.NaN
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       val chartSupport = paintingContext.chartSupport
 
       val gc = chartSupport.canvas.gc

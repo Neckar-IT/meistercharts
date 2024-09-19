@@ -15,12 +15,20 @@
  */
 package com.meistercharts.algorithms.painter
 
+import com.meistercharts.canvas.FillRule
 import it.neckar.geometry.Coordinates
 
 /**
  * Represents a path that can be applied to a graphics context ([com.meistercharts.canvas.CanvasRenderingContext])
  */
 class Path : PathActions, SupportsPathActions {
+
+  override var fillRule: FillRule = FillRule.NonZero
+
+  override fun fillRule(fillRule: FillRule) {
+    this.fillRule = fillRule
+  }
+
   /**
    * The actions for the path
    */

@@ -154,9 +154,7 @@ class BalloonTooltipPaintable(
     var yTop: @px Double = Double.NaN
     var yBottom: @px Double = Double.NaN
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       contentBoundingBox = configuration.content.boundingBox(paintingContext)
       val contentSize = contentBoundingBox.size
       contentPadding = configuration.boxStyle.padding

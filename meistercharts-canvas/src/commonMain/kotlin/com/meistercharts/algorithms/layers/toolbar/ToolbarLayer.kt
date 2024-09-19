@@ -194,9 +194,7 @@ class ToolbarLayer(
      */
     var buttonsToPaint: SizedProvider<Button> = SizedProvider.empty()
 
-    override fun calculate(paintingContext: LayerPaintingContext) {
-      super.calculate(paintingContext)
-
+    override fun performCalculation(paintingContext: LayerPaintingContext) {
       val gc = paintingContext.gc
 
       anchorX = gc.findXWithAnchor(gc.width, configuration.gap, configuration.anchorDirection.horizontalAlignment)

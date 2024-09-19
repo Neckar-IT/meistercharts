@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.algorithms.painter
+package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.canvas.FillRule
+import it.neckar.events.KeyCode
+import it.neckar.events.KeyStroke
 
 /**
- * Represents a list of path actions that can be painted on the rendering context
+ * The configuration for keyboard zooming
  */
-interface PathActions {
+data class KeyboardZoomConfiguration(
   /**
-   * Returns the path actions
+   * The key stroke to zoom in
    */
-  val actions: List<PathAction>
+  val zoomInKeys: List<KeyStroke> = listOf(KeyStroke(KeyCode.Plus), KeyStroke(KeyCode.PlusNumPad)),
+  /**
+   * The key stroke to zoom out
+   */
+  val zoomOutKeys: List<KeyStroke> = listOf(KeyStroke(KeyCode.Minus), KeyStroke(KeyCode.MinusNumPad)),
 
   /**
-   * The (optional) fill rule for these path actions
+   * The key stroke that resets the zoom to the default
    */
-  val fillRule: FillRule?
-}
+  val resetZoomStrokes: List<KeyStroke> = listOf(KeyStroke.ctrl(KeyCode('0'))),
+)

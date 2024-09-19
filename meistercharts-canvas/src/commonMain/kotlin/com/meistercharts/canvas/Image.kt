@@ -40,6 +40,11 @@ data class Image
  * Use the platform dependent `create` methods instead
  */
 internal constructor(
+  /**
+   * The platform-specific image:
+   * * HTML: `HTMLImageElement`
+   * * JavaFX: `javafx.scene.image.Image`
+   */
   val data: Any,
   /**
    * The size of the image - may or may *not* be the natural size of the image

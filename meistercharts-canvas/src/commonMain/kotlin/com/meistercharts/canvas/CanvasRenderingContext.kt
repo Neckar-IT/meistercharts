@@ -45,6 +45,7 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.RightTriangleType
 import it.neckar.geometry.Size
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
@@ -584,8 +585,12 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   fun applyPathActions(pathActions: PathActions) {
     beginPath()
-    pathActions.actions.forEach {
+    pathActions.actions.fastForEach {
       pathAction(it)
+    }
+
+    pathActions.fillRule?.let {
+      fillRule(it)
     }
   }
 
@@ -651,6 +656,10 @@ interface CanvasRenderingContext : SupportsPathActions {
 
   fun translateToBottomLeft() {
     translate(0.0, height)
+  }
+
+  fun translateToBottomRight() {
+    translate(width, height)
   }
 
   fun translateToCenterX() {
@@ -1105,6 +1114,25 @@ enum class LocationType {
   Center
 }
 
+/**
+ * The fill rule for determining how to fill the interior with a path.
+ * It controls how the canvas decides which areas of a shape are inside the path and should be filled.
+ */
+enum class FillRule {
+  /**
+   * The non-zero winding rule, which is the default rule.
+   * This rule determines whether a point is inside a path by conceptually drawing a ray from the point in any direction to infinity.
+   * The number of time path segments cross the ray is counted, and if the result is non-zero (odd number of crossings), the point is inside.
+   */
+  NonZero,
+
+  /**
+   * The even-odd winding rule.
+   * This rule determines whether a point is inside a path by drawing a ray from the point to infinity.
+   * The path segments crossing the ray are counted, and if the number of crossings is odd, the point is inside the path.
+   */
+  EvenOdd,
+}
 /**
  * Calls the given action with a saved context
  */

@@ -1,5 +1,7 @@
 package it.neckar.geometry
 
+import it.neckar.open.formatting.intFormat
+
 /**
  * Represents a polygon shape.
  */
@@ -11,8 +13,9 @@ class Polygon(private val vertices: List<Coordinates>) : Shape {
   override val location: Coordinates
     get() = vertices.first()
 
-  val verticesSize: Int = vertices.size
+  val verticesCount: Int = vertices.size
 
+  //TODO store field
   override val size: Size
     get() {
       val minX = vertices.minOf { it.x }
@@ -25,6 +28,25 @@ class Polygon(private val vertices: List<Coordinates>) : Shape {
   override fun vertices(): List<Coordinates> = vertices
 
   override fun contains(coordinates: Coordinates): Boolean {
+    //simplified variant TODO: correct it
+    if (true) {
+      val minX = vertices.minOf { it.x }
+      val maxX = vertices.maxOf { it.x }
+      val minY = vertices.minOf { it.y }
+      val maxY = vertices.maxOf { it.y }
+
+      println("Comparing ${coordinates.format(intFormat)} within x ${minX..maxX}, y; ${minY..maxY}")
+
+      val inX = coordinates.x in minX..maxX
+      val inY = coordinates.y in minY..maxY
+
+      println("\tinX: $inX")
+      println("\tinY: $inY")
+
+      return inX &&
+        inY
+    }
+
     // Implement point-in-polygon algorithm (e.g., ray-casting algorithm)
     var result = false
     var j = vertices.size - 1

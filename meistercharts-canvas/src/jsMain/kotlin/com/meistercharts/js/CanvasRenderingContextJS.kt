@@ -24,6 +24,7 @@ import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.FillRule
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.calculateOffsetXForGap
@@ -40,7 +41,6 @@ import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontMetrics
 import com.meistercharts.font.eraseSoleSerifFamily
-import com.meistercharts.js.CanvasReadBackFrequency.Frequent
 import com.meistercharts.model.Zoom
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
@@ -60,16 +60,19 @@ import org.w3c.dom.ALPHABETIC
 import org.w3c.dom.BEVEL
 import org.w3c.dom.BOTTOM
 import org.w3c.dom.CENTER
+import org.w3c.dom.CanvasFillRule
 import org.w3c.dom.CanvasGradient
 import org.w3c.dom.CanvasImageSource
 import org.w3c.dom.CanvasLineJoin
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.CanvasTextBaseline
+import org.w3c.dom.EVENODD
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.LEFT
 import org.w3c.dom.MIDDLE
 import org.w3c.dom.MITER
+import org.w3c.dom.NONZERO
 import org.w3c.dom.RIGHT
 import org.w3c.dom.ROUND
 import org.w3c.dom.TOP
@@ -617,6 +620,15 @@ class CanvasRenderingContextJS(
     context.fillStyle = color.toHtml()
   }
 
+  override fun fillRule(fillRule: FillRule) {
+    context.fill(fillRule = fillRule.toHtml())
+  }
+
+  //Does not work in JavaFX, therefore not in common interface
+  fun clipRule(fillRule: FillRule) {
+    context.clip(fillRule = fillRule.toHtml())
+  }
+
   /**
    * Converts the paint to an HTML color
    */
@@ -710,6 +722,13 @@ class CanvasRenderingContextJS(
 
   companion object {
     private val logger = LoggerFactory.getLogger("com.meistercharts.js.CanvasRenderingContextJS")
+  }
+}
+
+private fun FillRule.toHtml(): CanvasFillRule {
+  return when (this) {
+    FillRule.EvenOdd -> CanvasFillRule.EVENODD
+    FillRule.NonZero -> CanvasFillRule.NONZERO
   }
 }
 

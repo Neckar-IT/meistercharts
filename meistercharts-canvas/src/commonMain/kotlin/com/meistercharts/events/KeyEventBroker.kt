@@ -28,15 +28,19 @@ interface KeyEventBroker {
   /**
    * Registers a lambda that is notified when a key has been pressed
    */
-  fun onDown(handler: (KeyDownEvent) -> EventConsumption)
+  fun onDown(handler: KeyDownAction)
 
   /**
    * Registers a lambda that is notified when a key has been released
    */
-  fun onUp(handler: (KeyUpEvent) -> EventConsumption)
+  fun onUp(handler: KeyUpAction)
 
   /**
    * Registers a lambda that is notified when a key has been typed
    */
-  fun onType(handler: (KeyTypeEvent) -> EventConsumption)
+  fun onType(handler: KeyTypedAction)
 }
+
+typealias KeyDownAction = (KeyDownEvent) -> EventConsumption
+typealias KeyUpAction = (KeyUpEvent) -> EventConsumption
+typealias KeyTypedAction = (KeyTypeEvent) -> EventConsumption

@@ -20,6 +20,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.AbstractCanvasRenderingContext
 import com.meistercharts.canvas.ArcType
 import com.meistercharts.canvas.Canvas
+import com.meistercharts.canvas.FillRule
 import com.meistercharts.canvas.Image
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.text.CanvasStringShortener
@@ -157,6 +158,9 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   }
 
   override fun clip(x: Double, y: Double, width: Double, height: Double) {
+  }
+
+  override fun fillRule(fillRule: FillRule) {
   }
 
   @px

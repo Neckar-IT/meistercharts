@@ -15,16 +15,15 @@
  */
 package com.meistercharts.algorithms.layers.gesture
 
-import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandlerBroker
 import com.meistercharts.canvas.events.CanvasTouchEventHandlerBroker
@@ -32,10 +31,9 @@ import com.meistercharts.events.DragAction
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
+import com.meistercharts.events.KeyDownAction
 import com.meistercharts.events.MouseDoubleClickAction
-import it.neckar.events.MouseDoubleClickEvent
 import com.meistercharts.events.MouseWheelAction
-import it.neckar.events.MouseWheelEvent
 import com.meistercharts.events.TouchDoubleTapAction
 import com.meistercharts.events.TouchPanAction
 import com.meistercharts.events.TouchPinchAction
@@ -43,10 +41,15 @@ import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
+import com.meistercharts.zoom.UpdateReason
+import com.meistercharts.zoom.ZoomAndTranslationSupport
+import it.neckar.events.KeyDownEvent
+import it.neckar.events.MouseDoubleClickEvent
+import it.neckar.events.MouseWheelEvent
+import it.neckar.geometry.AxisSelection
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
-import com.meistercharts.zoom.ZoomAndTranslationSupport
 
 /**
  * Zoom and translation layer that can be configured to handle different zoom and translation actions.
@@ -55,7 +58,7 @@ import com.meistercharts.zoom.ZoomAndTranslationSupport
  */
 class ZoomAndTranslationLayer(
   val zoomAndTranslationSupport: ZoomAndTranslationSupport,
-  configuration: ZoomAndTranslationLayer.() -> Unit = {}
+  configuration: ZoomAndTranslationLayer.() -> Unit = {},
 ) : AbstractLayer() {
   /**
    * This layer shall be notified as late as possible.
@@ -76,6 +79,13 @@ class ZoomAndTranslationLayer(
     }
     )
   }
+
+  override val keyEventHandler: CanvasKeyEventHandler = object : CanvasKeyEventHandler {
+    override fun onDown(event: KeyDownEvent, chartSupport: ChartSupport): EventConsumption {
+      return onKeyDownAction?.invoke(event) ?: return Ignored
+    }
+  }
+
 
   override val touchEventHandler: CanvasTouchEventHandlerBroker = CanvasTouchEventHandlerBroker()
 
@@ -109,6 +119,12 @@ class ZoomAndTranslationLayer(
         return touchPinchAction?.invoke(oldCenter, newCenter, oldDistanceBetweenTouches, newDistanceBetweenTouches, zoomFactorChangeX, zoomFactorChangeY) ?: Ignored
       }
     })
+  }
+
+  private var onKeyDownAction: KeyDownAction? = null
+
+  fun onKeyDownAction(action: KeyDownAction) {
+    this.onKeyDownAction = action
   }
 
   /**
@@ -238,7 +254,7 @@ fun ZoomAndTranslationLayer.zoomOnMouseWheel(
   /**
    * The configuration for the mouse wheel zoom
    */
-  config: MouseWheelZoomConfiguration = MouseWheelZoomConfiguration()
+  config: MouseWheelZoomConfiguration = MouseWheelZoomConfiguration(),
 ) {
   onMouseWheel { event ->
     if (event.delta + 0.0 == 0.0) {
@@ -255,6 +271,37 @@ fun ZoomAndTranslationLayer.zoomOnMouseWheel(
     }
     zoomAndTranslationSupport.modifyZoom(event.delta < 0, zoomAxis, event.coordinates, reason = UpdateReason.UserInteraction)
     Consumed
+  }
+}
+
+fun ZoomAndTranslationLayer.zoomOnKeyDown(
+  /**
+   * The configuration for the keyboard zoom
+   */
+  config: KeyboardZoomConfiguration = KeyboardZoomConfiguration(),
+) {
+  onKeyDownAction { event ->
+
+    when (event.keyStroke) {
+      in config.zoomInKeys -> {
+        zoomAndTranslationSupport.modifyZoom(zoomIn = true, axisSelection = AxisSelection.Both, reason = UpdateReason.UserInteraction)
+        Consumed
+      }
+
+      in config.zoomOutKeys -> {
+        zoomAndTranslationSupport.modifyZoom(zoomIn = false, axisSelection = AxisSelection.Both, reason = UpdateReason.UserInteraction)
+        Consumed
+      }
+
+      in config.resetZoomStrokes -> {
+        zoomAndTranslationSupport.resetToDefaults(axisSelection = AxisSelection.Both, reason = UpdateReason.UserInteraction)
+        Consumed
+      }
+
+      else -> {
+        Ignored
+      }
+    }
   }
 }
 
@@ -340,7 +387,7 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
  */
 fun Layers.addZoomAndTranslation(
   zoomAndTranslationSupport: ZoomAndTranslationSupport,
-  configuration: ZoomAndTranslationLayer.() -> Unit = {}
+  configuration: ZoomAndTranslationLayer.() -> Unit = {},
 ): ZoomAndTranslationLayer {
   return ZoomAndTranslationLayer(zoomAndTranslationSupport, configuration).apply {
     addLayer(this)

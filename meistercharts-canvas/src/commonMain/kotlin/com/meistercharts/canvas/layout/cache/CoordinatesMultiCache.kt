@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.annotations.Window
+import com.meistercharts.canvas.CanvasRenderingContext
 import it.neckar.open.collections.IterationOrder
 import it.neckar.open.provider.CoordinatesProvider
 import it.neckar.open.provider.CoordinatesProvider1
@@ -165,5 +166,14 @@ class CoordinatesMultiCache : LayoutVariableWithSize {
 
   fun asCoordinatesProvider1(): @Window CoordinatesProvider1<Any> {
     return asCoordinatesProvider().as1()
+  }
+}
+
+/**
+ * Adds all points to the path by calling [CanvasRenderingContext.lineTo] for each point
+ */
+fun CanvasRenderingContext.tracePath(coordinates: CoordinatesMultiCache) {
+  coordinates.fastForEachIndexed { _, x: @Window Double, y: @Window Double ->
+    lineTo(x, y)
   }
 }

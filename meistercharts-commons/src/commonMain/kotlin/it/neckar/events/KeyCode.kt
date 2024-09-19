@@ -47,9 +47,20 @@ data class KeyCode(
      */
     val Escape: KeyCode = KeyCode(0x1B)
 
-    val Home: KeyCode = KeyCode(36)
+    val Home: KeyCode = KeyCode(0x24)
 
 
-    val Digit1: KeyCode = KeyCode('1')
+    val Digit0: KeyCode = KeyCode(48)
+    val Digit1: KeyCode = KeyCode(49)
+
+    val Digit0NumPad: KeyCode = KeyCode(96)
+    val Digit1NumPad: KeyCode = KeyCode(97)
+
+
+    val Plus: KeyCode = KeyCode(0x209)
+    val PlusNumPad: KeyCode = KeyCode(0x6B)
+
+    val Minus: KeyCode = KeyCode(0x2D)
+    val MinusNumPad: KeyCode = KeyCode(0x6D)
   }
 }
