@@ -15,11 +15,19 @@
  */
 package com.meistercharts.resources.svg
 
+import com.meistercharts.algorithms.painter.Path
+import com.meistercharts.svg.SVGPathParser
 import kotlin.jvm.JvmInline
 
 /**
- * Represents a SVG path
+ * Represents an SVG path
  */
 @JvmInline
 value class SvgPath(val value: String) {
+  /**
+   * Parses the SVG path to a [Path] that can be painted on the canvas
+   */
+  fun parse(): Path {
+    return SVGPathParser(value).parse()
+  }
 }

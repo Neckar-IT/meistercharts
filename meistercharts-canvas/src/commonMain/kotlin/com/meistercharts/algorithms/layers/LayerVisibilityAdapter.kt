@@ -15,6 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.provider.BooleanProvider
 
 /**

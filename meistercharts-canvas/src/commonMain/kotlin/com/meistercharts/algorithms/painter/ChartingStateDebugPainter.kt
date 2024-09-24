@@ -16,7 +16,9 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Window
+import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.fillStyle
@@ -43,15 +45,33 @@ class ChartingStateDebugPainter {
    *
    * Attention: The given calculator usually does *NOT* correspond to the rendering context
    */
-  fun paintState(calculator: ChartCalculator, gc: CanvasRenderingContext, @px width: Double, @px height: Double) {
+  fun paintState(
+    /**
+     * The rendering context to paint on
+     */
+    gc: CanvasRenderingContext,
+    /**
+     * The calculator that is used to calculate the state.
+     * This calculator does *NOT* correspond to the provided rendering context
+     */
+    calculatorToVisualize: ChartCalculator,
+    /**
+     * The width of the canvas
+     */
+    @Zoomed @px canvasWidth: Double,
+    /**
+     * The height of the canvas
+     */
+    @Zoomed @px canvasHeight: Double,
+  ) {
 
     //Calculate the min/max edges for the content area
-    @ContentArea val contentAreaMin = calculator.contentAreaRelative2contentArea(Coordinates(0.0, 0.0))
-    @ContentArea val contentAreaMax = calculator.contentAreaRelative2contentArea(Coordinates(1.0, 1.0))
+    @ContentArea val contentAreaMin = calculatorToVisualize.contentAreaRelative2contentArea(Coordinates(0.0, 0.0))
+    @ContentArea val contentAreaMax = calculatorToVisualize.contentAreaRelative2contentArea(Coordinates(1.0, 1.0))
 
     //Calculate the min/max edges for the window
-    @ContentArea val windowMin = calculator.window2contentArea(Coordinates(0.0, 0.0))
-    @ContentArea val windowMax = calculator.window2contentArea(Coordinates(calculator.chartState.windowWidth, calculator.chartState.windowHeight))
+    @ContentArea val windowMin = calculatorToVisualize.window2contentArea(Coordinates(0.0, 0.0))
+    @ContentArea val windowMax = calculatorToVisualize.window2contentArea(Coordinates(calculatorToVisualize.chartState.windowWidth, calculatorToVisualize.chartState.windowHeight))
 
     //Calculate the max area that contains both the content and the window
     @ContentArea val minAll = Coordinates.minOf(contentAreaMin, windowMin)
@@ -73,11 +93,11 @@ class ChartingStateDebugPainter {
 
 
     //The factor that is used to convert view values
-    val factor = min(1 / (allDeltaX) * (width - viewPadding * 2), 1 / (allDeltaY) * (height - viewPadding * 2))
+    val factor = min(1 / (allDeltaX) * (canvasWidth - viewPadding * 2), 1 / (allDeltaY) * (canvasHeight - viewPadding * 2))
 
     //Draw the background
     gc.fillStyle(Color.white)
-    gc.fillRect(0.0, 0.0, width, height)
+    gc.fillRect(0.0, 0.0, canvasWidth, canvasHeight)
 
     //Draw the content area
     run {
@@ -87,12 +107,22 @@ class ChartingStateDebugPainter {
       @px val height = contentSize.y * factor
 
 
-      @Window val contentOriginInWindow = calculator.contentAreaRelative2window(0.0, 0.0)
-      @Window val contentSizeInWindow = calculator.contentAreaRelative2zoomed(1.0, 1.0)
+      @Window val contentAreaOriginInWindow = calculatorToVisualize.contentAreaRelative2window(0.0, 0.0)
+      @Zoomed val contentAreaSizeZoomed = calculatorToVisualize.contentAreaRelative2zoomed(1.0, 1.0)
 
       gc.saved { gc ->
         gc.translate(x, y)
-        paintArea(calculator, "View / Content", contentOriginInWindow, contentSizeInWindow, gc, width, height, Color.red(), contentAreaFill)
+        paintArea(
+          calculatorToVisualize = calculatorToVisualize,
+          label = "ContentArea",
+          coordinates = contentAreaOriginInWindow,
+          size = contentAreaSizeZoomed,
+          gc = gc,
+          width = width,
+          height = height,
+          stroke = Color.red(),
+          fill = contentAreaFill
+        )
 
         //Paint the y axis orientation arrow
         if (width > 80 && height > 50) {
@@ -101,7 +131,7 @@ class ChartingStateDebugPainter {
             gc.translate(8.0, 0.0)
 
             //Translate/rotate depending on the axis orientation
-            when (calculator.chartState.axisOrientationY) {
+            when (calculatorToVisualize.chartState.axisOrientationY) {
               AxisOrientationY.OriginAtTop    -> {
                 gc.translate(0.0, height)
                 gc.rotateDegrees(180.0)
@@ -121,7 +151,7 @@ class ChartingStateDebugPainter {
             gc.translate(0.0, height - 8.0)
 
             //Translate/rotate depending on the axis orientation
-            when (calculator.chartState.axisOrientationX) {
+            when (calculatorToVisualize.chartState.axisOrientationX) {
               AxisOrientationX.OriginAtLeft  -> {
                 gc.translate(100.0, 0.0)
                 gc.rotateDegrees(90.0)
@@ -148,12 +178,22 @@ class ChartingStateDebugPainter {
 
       gc.saved {
         gc.translate(x, y)
-        paintArea(calculator, "Window\nZF: ${calculator.chartState.zoomX.format(CurrentI18nConfiguration, 3)} / ${calculator.chartState.zoomY.format(CurrentI18nConfiguration, 3)}", Coordinates.origin, calculator.chartState.contentAreaSize, gc, width, height, Color.green(), windowFill)
+        paintArea(
+          calculatorToVisualize = calculatorToVisualize,
+          label = "Window\nZF: ${calculatorToVisualize.chartState.zoomX.format(CurrentI18nConfiguration, 3)} / ${calculatorToVisualize.chartState.zoomY.format(CurrentI18nConfiguration, 3)}",
+          coordinates = Coordinates.origin,
+          size = calculatorToVisualize.chartState.contentAreaSize,
+          gc = gc,
+          width = width,
+          height = height,
+          stroke = Color.green(),
+          fill = windowFill
+        )
       }
     }
   }
 
-  private fun paintArea(calculator: ChartCalculator, label: String, @Window coordinates: Coordinates, @Window size: Size, gc: CanvasRenderingContext, @px width: Double, @px height: Double, stroke: Color, fill: Color) {
+  private fun paintArea(calculatorToVisualize: ChartCalculator, label: String, @Window coordinates: Coordinates, @Zoomed size: Size, gc: CanvasRenderingContext, @px width: Double, @px height: Double, stroke: Color, fill: Color) {
     val x = 0.0
     val y = 0.0
 
@@ -171,7 +211,7 @@ class ChartingStateDebugPainter {
     gc.fillStyle(stroke)
     gc.fillText(label, x + width / 2.0, y + height / 2.0, Direction.Center)
 
-    @ContentArea val sizeInView = calculator.zoomed2contentAreaRelative(size)
+    @ContentAreaRelative val sizeInView = calculatorToVisualize.zoomed2contentAreaRelative(size)
 
     //Add x axis labels
     gc.strokeStyle(stroke)

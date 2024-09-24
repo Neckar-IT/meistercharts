@@ -58,6 +58,10 @@ class DomainChartCalculator(
     return domain2windowX(domain, domainRangeX)
   }
 
+  fun domain2contentAreaX(@Domain @ms domain: Double): @px @Window Double {
+    return domain2contentAreaX(domain, domainRangeX)
+  }
+
   fun visibleDomainRangeXinWindow(): LinearValueRange {
     return visibleDomainRangeXinWindow(domainRangeX)
   }
@@ -94,5 +98,5 @@ fun ChartState.domainChartCalculator(
   domainRangeX: LinearValueRange,
   domainRangeY: LinearValueRange,
 ): DomainChartCalculator {
-  return DomainChartCalculator(this, domainRangeX, domainRangeY)
+  return DomainChartCalculator(chartState = this, domainRangeX = domainRangeX, domainRangeY = domainRangeY)
 }

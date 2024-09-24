@@ -502,6 +502,22 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  fun domain2contentAreaX(@Domain x: Double, valueRange: ValueRange): @ContentArea Double {
+    return domainRelative2contentAreaX(valueRange.toDomainRelative(x))
+  }
+
+  fun domain2contentAreaY(@Domain y: Double, valueRange: ValueRange): @ContentArea Double {
+    return domainRelative2contentAreaY(valueRange.toDomainRelative(y))
+  }
+
+  fun domain2contentArea(@Domain coordinates: Coordinates, valueRangeX: ValueRange, valueRangeY: ValueRange): @ContentArea Coordinates {
+    return Coordinates.of(
+      domain2contentAreaX(coordinates.x, valueRangeX),
+      domain2contentAreaY(coordinates.y, valueRangeY)
+    )
+  }
+
+
   fun domain2windowX(@Domain x: Double, valueRange: ValueRange): @Window @px Double {
     @ContentArea val contentAreaX = domainRelative2contentAreaX(valueRange.toDomainRelative(x))
     return contentArea2windowX(contentAreaX)

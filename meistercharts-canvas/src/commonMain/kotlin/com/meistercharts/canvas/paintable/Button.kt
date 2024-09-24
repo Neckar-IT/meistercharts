@@ -229,14 +229,21 @@ data class ButtonState(
   val disabled: Boolean = !enabled
 
   /**
+   * Returns true if the button is hovered and selected
+   */
+  fun isHoverAndSelected(): Boolean {
+    return hover && selected
+  }
+
+  /**
    * Returns the simple button state
    */
   val simple: Simple
     get() {
       return when {
         pressed -> Simple.Pressed
-        hover   -> Simple.Hover
-        else    -> Simple.Default
+        hover -> Simple.Hover
+        else -> Simple.Default
       }
     }
 
@@ -337,15 +344,15 @@ class DefaultButtonColorProvider(
   private val pressedColor: Color,
   private val hoverColor: Color,
   private val focusedColor: Color,
-  private val defaultColor: Color
+  private val defaultColor: Color,
 ) : ButtonColorProvider {
   override fun invoke(buttonState: ButtonState): Color {
     return when {
       buttonState.disabled -> disabledColor
-      buttonState.pressed  -> pressedColor
-      buttonState.hover    -> hoverColor
-      buttonState.focused  -> focusedColor
-      else                 -> defaultColor
+      buttonState.pressed -> pressedColor
+      buttonState.hover -> hoverColor
+      buttonState.focused -> focusedColor
+      else -> defaultColor
     }
   }
 }
@@ -374,7 +381,7 @@ fun ButtonPaintableProvider.toButtonPainter(): ButtonPainter {
 open class DefaultButtonPainter(
   val text: TextKey?,
   private val buttonBackgroundColorProvider: ButtonColorProvider,
-  private val buttonForegroundColorProvider: ButtonColorProvider
+  private val buttonForegroundColorProvider: ButtonColorProvider,
 ) : ButtonPainter {
 
   override fun paint(paintingContext: LayerPaintingContext, state: ButtonState, width: Double, height: Double) {

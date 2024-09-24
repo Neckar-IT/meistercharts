@@ -80,18 +80,27 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
      * Wraps the given list into a [ListSizedProvider]
      */
     @JvmStatic
-    fun <T> forList(elements: List<T>): SizedProvider<T> {
-      when {
-        elements.isEmpty() -> {
-          return empty()
-        }
+    fun <T> forList(
+      /**
+       * The list that is used to provide the values.
+       * The list must not be modified while using the provider.
+       *
+       * This is a *live* list - the values are not copied.
+       */
+      liveElements: List<T>,
+    ): SizedProvider<T> {
+      return ListSizedProvider(liveElements)
+    }
 
-        elements.size == 1 -> {
-          return SingleElementSizedProvider(elements.first())
-        }
-
-        else -> return ListSizedProvider(elements)
-      }
+    @JvmStatic
+    fun <T> forListProvider(
+      /**
+       * Calls the provider for every access to the list.
+       * The list must not be modified while using the provider.
+       */
+      liveElements: () -> List<T>,
+    ): SizedProvider<T> {
+      return DelegatingListSizedProvider(liveElements)
     }
 
     /**
@@ -164,15 +173,30 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
 /**
  * Returns the values from the given list
  *
- * Attention: The list passed to this class must be immutable.
+ * Attention: The list passed to this class must not be modified while using this provider.
+ * Especially between calls to [size] and [valueAt]
  */
 open class ListSizedProvider<out T>(
-  private val values: List<T>,
+  private val liveValues: List<T>,
 ) : SizedProvider<T> {
-  override fun size(): Int = values.size
+  override fun size(): Int = liveValues.size
 
   override fun valueAt(index: Int): T {
-    return values[index]
+    return liveValues[index]
+  }
+}
+
+/**
+ * Size provider using a provider of lists.
+ * Calls the provider for every access to the list.
+ */
+open class DelegatingListSizedProvider<out T>(
+  private val liveValuesProvider: () -> List<T>,
+) : SizedProvider<T> {
+  override fun size(): Int = liveValuesProvider().size
+
+  override fun valueAt(index: Int): T {
+    return liveValuesProvider()[index]
   }
 }
 

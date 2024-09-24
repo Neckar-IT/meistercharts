@@ -26,13 +26,16 @@ data class KeyStroke(
   /**
    * The modifier combination
    */
-  val modifierCombination: ModifierCombination = ModifierCombination.None
+  val modifierCombination: ModifierCombination = ModifierCombination.None,
 ) {
   fun description(): String {
     return "[${keyCode.code}] ${modifierCombination.description()}"
   }
 
   companion object {
+    /**
+     * Creates a keystroke with `ctrl` modifier
+     */
     fun ctrl(keyCode: KeyCode): KeyStroke {
       return KeyStroke(keyCode, ModifierCombination.Ctrl)
     }

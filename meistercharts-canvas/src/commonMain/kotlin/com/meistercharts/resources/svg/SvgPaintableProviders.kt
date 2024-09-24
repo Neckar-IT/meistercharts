@@ -1,22 +1,7 @@
-/**
- * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.meistercharts.resources.svg
 
-import com.meistercharts.svg.SVGPathParser
 import it.neckar.geometry.Size
+import com.meistercharts.svg.SVGPathParser
 
 /**
  * Contains the SVG paths that can be used as paintables
@@ -26,6 +11,7 @@ import it.neckar.geometry.Size
  */
 object SvgPaintableProviders {
   val mapMarker: PathPaintableProvider = SVGPathParser.from(SvgPaths.mapMarker).parse().toProvider(Size.PX_24)
+  val arrow: PathPaintableProvider = SVGPathParser.from(SvgPaths.arrow).parse().toProvider(Size.PX_24)
   val autoScale: PathPaintableProvider = SVGPathParser.from(SvgPaths.autoScale).parse().toProvider(Size.PX_24)
   val delete: PathPaintableProvider = SVGPathParser.from(SvgPaths.delete).parse().toProvider(Size.PX_24)
   val drag: PathPaintableProvider = SVGPathParser.from(SvgPaths.drag).parse().toProvider(Size.PX_24)
@@ -43,12 +29,17 @@ object SvgPaintableProviders {
   val pause: PathPaintableProvider = SVGPathParser.from(SvgPaths.pause).parse().toProvider(Size.PX_24)
   val play: PathPaintableProvider = SVGPathParser.from(SvgPaths.play).parse().toProvider(Size.PX_24)
   val questionmark: PathPaintableProvider = SVGPathParser.from(SvgPaths.questionmark).parse().toProvider(Size.PX_24)
+  val redo: PathPaintableProvider = SVGPathParser.from(SvgPaths.redo).parse().toProvider(Size.PX_24)
   val resetZoom: PathPaintableProvider = SVGPathParser.from(SvgPaths.resetZoom).parse().toProvider(Size.PX_24)
   val rotate: PathPaintableProvider = SVGPathParser.from(SvgPaths.rotate).parse().toProvider(Size.PX_24)
+  val rotateLeft: PathPaintableProvider = SVGPathParser.from(SvgPaths.rotateLeft).parse().toProvider(Size.PX_24)
+  val rotateRight: PathPaintableProvider = SVGPathParser.from(SvgPaths.rotateRight).parse().toProvider(Size.PX_24)
+  val selectAll: PathPaintableProvider = SVGPathParser.from(SvgPaths.selectAll).parse().toProvider(Size.PX_24)
   val start: PathPaintableProvider = SVGPathParser.from(SvgPaths.start).parse().toProvider(Size.PX_24)
   val timestampsAbsolute: PathPaintableProvider = SVGPathParser.from(SvgPaths.timestampsAbsolute).parse().toProvider(Size.PX_24)
   val timestampsRelative: PathPaintableProvider = SVGPathParser.from(SvgPaths.timestampsRelative).parse().toProvider(Size.PX_24)
   val trash: PathPaintableProvider = SVGPathParser.from(SvgPaths.trash).parse().toProvider(Size.PX_24)
+  val undo: PathPaintableProvider = SVGPathParser.from(SvgPaths.undo).parse().toProvider(Size.PX_24)
   val visibility: PathPaintableProvider = SVGPathParser.from(SvgPaths.visibility).parse().toProvider(Size.PX_24)
   val warning: PathPaintableProvider = SVGPathParser.from(SvgPaths.warning).parse().toProvider(Size.PX_24)
   val yAxis: PathPaintableProvider = SVGPathParser.from(SvgPaths.yAxis).parse().toProvider(Size.PX_24)
@@ -57,6 +48,7 @@ object SvgPaintableProviders {
 
   fun all(): List<PathPaintableProvider> = listOf(
     mapMarker,
+    arrow,
     autoScale,
     delete,
     drag,
@@ -74,12 +66,17 @@ object SvgPaintableProviders {
     pause,
     play,
     questionmark,
+    redo,
     resetZoom,
     rotate,
+    rotateLeft,
+    rotateRight,
+    selectAll,
     start,
     timestampsAbsolute,
     timestampsRelative,
     trash,
+    undo,
     visibility,
     warning,
     yAxis,

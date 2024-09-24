@@ -113,6 +113,14 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T> {
     other.consumeImmediately { newValue -> this.value = newValue }
   }
 
+  fun <R> bindBidirectional(
+    other: ObservableObject<R>,
+    converterForward: (newValueToConvert: T, oldConvertedValue: R) -> R,
+    converterBack: (newValueToConvert: R, oldConvertedValue: T) -> T,
+  ) {
+    return bindBidirectionalMapped(other, converterForward, converterBack)
+  }
+
   /**
    * Binds two objects bidirectional - using converters.
    *
@@ -121,10 +129,10 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T> {
    * ATTENTION: The converter must work bidirectional - they must return objects that are equal to each other
    * @param R the other type
    */
-  fun <R> bindBidirectional(
+  fun <R> bindBidirectionalMapped(
     other: ObservableObject<R>,
     converterForward: (newValueToConvert: T, oldConvertedValue: R) -> R,
-    converterBack: (newValueToConvert: R, oldConvertedValue: T) -> T
+    converterBack: (newValueToConvert: R, oldConvertedValue: T) -> T,
   ) {
     //Copy value from this to other
     var updating = false

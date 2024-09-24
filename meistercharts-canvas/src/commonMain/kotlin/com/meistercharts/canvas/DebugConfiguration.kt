@@ -56,7 +56,7 @@ class DebugConfiguration {
     set(debugFeature, true)
   }
 
-  fun set(debugFeature: DebugFeature, enabled: Boolean) {
+  operator fun set(debugFeature: DebugFeature, enabled: Boolean) {
     if (enabled) {
       enabledFeaturesProperty.getAndSet {
         buildSet {
@@ -145,6 +145,11 @@ enum class DebugFeature {
    * If enabled the content viewport is visualized
    */
   ShowContentViewportDebug,
+
+  /**
+   * Shows information about the current ui state
+   */
+  ShowUiState,
 
   ;
 

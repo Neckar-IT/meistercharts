@@ -27,7 +27,7 @@ import com.meistercharts.canvas.paintable.Button
 /**
  * Offers a predefined and configured toolbar
  */
-class ToolbarGestalt(
+open class ToolbarGestalt(
   val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : ChartGestalt {

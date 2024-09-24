@@ -126,7 +126,7 @@ class SVGPathParser(private val svgPathAsString: String) {
     var canBeComma = allowComma
     while (currentPosition < length) {
       when (svgPathAsString[currentPosition]) {
-        ','                   -> {
+        ',' -> {
           if (!canBeComma) {
             return currentPosition
           }
@@ -136,7 +136,7 @@ class SVGPathParser(private val svgPathAsString: String) {
         ' ', '\t', '\r', '\n' -> {
         }
 
-        else                  -> return currentPosition
+        else -> return currentPosition
       }
       currentPosition++
     }
@@ -144,13 +144,15 @@ class SVGPathParser(private val svgPathAsString: String) {
   }
 
   private fun toNumberEnd(): Int {
+    val startingPosition = currentPosition
+
     var allowSign = true
     var hasExp = false
     var hasDecimal = false
     while (currentPosition < length) {
       when (svgPathAsString[currentPosition]) {
         '-', '+' -> {
-          if (!allowSign) {
+          if (allowSign.not()) {
             return currentPosition
           }
           allowSign = false
@@ -161,10 +163,8 @@ class SVGPathParser(private val svgPathAsString: String) {
           if (hasExp) {
             return currentPosition
           }
-          run {
-            allowSign = true
-            hasExp = allowSign
-          }
+          allowSign = true
+          hasExp = allowSign
         }
 
         '.' -> {
@@ -175,7 +175,12 @@ class SVGPathParser(private val svgPathAsString: String) {
           allowSign = false
         }
 
-        else -> return currentPosition
+        else -> {
+          if (startingPosition == currentPosition) {
+            throw IllegalStateException("Expected a number at position $currentPosition [${svgPathAsString[currentPosition]}]")
+          }
+          return currentPosition
+        }
       }
       currentPosition++
     }
@@ -213,7 +218,7 @@ class SVGPathParser(private val svgPathAsString: String) {
       this.allowComma = false
       when (val commandChar: Char = this.char) {
         //Move to absolute
-        'M'      -> {
+        'M' -> {
           x = this.fValue()
           y = this.fValue()
           path.moveTo(x, y)
@@ -229,14 +234,16 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Move to relative
-        'm'      -> {
+        'm' -> {
           if (elementCount > 0) {
+            //we have at least one element
             x = this.fValue() + lastX
             y = this.fValue() + lastY
             path.moveTo(x, y) // move relative
             lastX = x
             lastY = y
           } else {
+            //This is the *first* element
             x = this.fValue()
             y = this.fValue()
             path.moveTo(x, y)
@@ -246,14 +253,14 @@ class SVGPathParser(private val svgPathAsString: String) {
           while (this.nextIsNumber()) {
             x = this.fValue() + lastX
             y = this.fValue() + lastY
-            path.lineTo(this.fValue(), this.fValue()) // move relative
+            path.lineTo(x, y) // move relative
             lastX = x
             lastY = y
           }
           elementCount++
         }
         //Line to absolute
-        'L'      -> {
+        'L' -> {
           do {
             x = this.fValue()
             y = this.fValue()
@@ -264,7 +271,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Line to relative
-        'l'      -> {
+        'l' -> {
           do {
             x = this.fValue() + lastX
             y = this.fValue() + lastY
@@ -275,7 +282,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Horizontal line to absolute
-        'H'      -> {
+        'H' -> {
           do {
             x = this.fValue()
             path.lineTo(x, lastY)
@@ -284,7 +291,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Horizontal line to relative
-        'h'      -> {
+        'h' -> {
           do {
             x = this.fValue() + lastX
             path.lineTo(x, lastY) // move relative
@@ -293,7 +300,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Vertical line to absolute
-        'V'      -> {
+        'V' -> {
           do {
             y = this.fValue()
             path.lineTo(lastX, y)
@@ -302,7 +309,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Vertical line to relative
-        'v'      -> {
+        'v' -> {
           do {
             y = this.fValue() + lastY
             path.lineTo(lastX, y) // move relative
@@ -311,7 +318,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Quadratic curve to - absolute
-        'Q'      -> {
+        'Q' -> {
           do {
             c1x = this.fValue()
             c1y = this.fValue()
@@ -326,7 +333,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Quadratic curve to - relative
-        'q'      -> {
+        'q' -> {
           do {
             c1x = this.fValue() + lastX
             c1y = this.fValue() + lastY
@@ -341,7 +348,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Bezier curve to - absolute
-        'C'      -> {
+        'C' -> {
           do {
             c1x = this.fValue()
             c1y = this.fValue()
@@ -360,7 +367,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Bezier curve to - relative
-        'c'      -> {
+        'c' -> {
           do {
             c1x = this.fValue() + lastX
             c1y = this.fValue() + lastY
@@ -380,7 +387,7 @@ class SVGPathParser(private val svgPathAsString: String) {
         }
 
         //Smooth curve to - absolute
-        'S'      -> {
+        'S' -> {
           do {
             c2x = this.fValue()
             c2y = this.fValue()
@@ -400,7 +407,7 @@ class SVGPathParser(private val svgPathAsString: String) {
         }
 
         //Smooth curve to - relative
-        's'      -> {
+        's' -> {
           do {
             c2x = this.fValue() + lastX
             c2y = this.fValue() + lastY
@@ -420,7 +427,7 @@ class SVGPathParser(private val svgPathAsString: String) {
         }
 
         //Arc to - absolute
-        'A'      -> {
+        'A' -> {
           do {
             radiusX = this.fValue() //radius x
             radiusY = this.fValue() //radius y
@@ -447,7 +454,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
         //Arc to - relative
-        'a'      -> {
+        'a' -> {
           do {
             radiusX = this.fValue()
             radiusY = this.fValue()
@@ -470,7 +477,7 @@ class SVGPathParser(private val svgPathAsString: String) {
           elementCount++
         }
 
-        else     -> throw IllegalArgumentException("""invalid command ($commandChar) in SVG polygon at pos=${this.currentPosition}. Path: <$svgPathAsString>""")
+        else -> throw IllegalArgumentException("""invalid command ($commandChar) in SVG polygon at pos=${this.currentPosition}. Path: <$svgPathAsString>""")
       }
       this.allowComma = (false)
     }

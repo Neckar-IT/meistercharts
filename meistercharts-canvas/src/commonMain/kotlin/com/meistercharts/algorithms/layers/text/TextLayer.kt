@@ -141,6 +141,11 @@ class TextLayer(
       anchorPointProvider = DirectionBasedBasePointProvider(Direction.TopLeft, distance)
     }
 
+    fun bottomLeft(distance: Distance = Distance.of(20.0, -20.0)) {
+      anchorDirection = Direction.BottomLeft
+      anchorPointProvider = DirectionBasedBasePointProvider(Direction.BottomLeft, distance)
+    }
+
     /**
      * The anchor direction - describes where the text is painted relative to the base point
      */

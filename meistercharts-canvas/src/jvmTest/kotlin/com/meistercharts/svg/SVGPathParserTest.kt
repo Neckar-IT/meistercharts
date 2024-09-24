@@ -15,6 +15,8 @@
  */
 package com.meistercharts.svg
 
+import assertk.*
+import assertk.assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.w3c.dom.Document
@@ -25,6 +27,20 @@ import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 
 class SVGPathParserTest {
+  @Test
+  fun testArrowBug() {
+    val pathAsString = "m320-410 79-110h170L320-716v306ZM551-80 406-392 240-160v-720l560 440H516l144 309-109 51ZM399-520Z"
+    val parsed = SVGPathParser(pathAsString).parse()
+    assertThat(parsed.actions).hasSize(17)
+  }
+
+  @Test
+  fun testArrowBugWithSpaces2() {
+    val pathAsString = "m320 -410 79 -110 h170 L320-716 v306ZM551-80 406-392 240-160v-720l560 440H516l144 309-109 51ZM399-520Z"
+    val parsed = SVGPathParser(pathAsString).parse()
+    assertThat(parsed.actions).hasSize(17)
+  }
+
   @Disabled
   @Test
   fun testParsePath() {

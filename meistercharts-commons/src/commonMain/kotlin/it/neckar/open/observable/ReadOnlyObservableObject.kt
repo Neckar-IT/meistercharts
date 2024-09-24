@@ -84,6 +84,15 @@ interface ReadOnlyObservableObject<out T> : DependentObjectSupport {
     return intermediateObservable
   }
 
+  fun mapBoolean(function: (T) -> Boolean): ReadOnlyObservableBoolean {
+    val intermediateObservable = ObservableBoolean(function(value))
+
+    consume { newValue ->
+      intermediateObservable.value = function(newValue)
+    }
+    return intermediateObservable
+  }
+
   /**
    * Use this observable and another observable and map these two values into a new observable
    */
