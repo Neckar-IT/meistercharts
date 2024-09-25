@@ -27,6 +27,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReasonBitSet
+import com.meistercharts.canvas.LayerIndex
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.canvas.debug
@@ -81,6 +82,17 @@ data class LayerPaintingContext(
    * The painting loop index (will overflow after about 414 days).
    */
   val loopIndex: PaintingLoopIndex,
+
+  /**
+   * The index of the current layer during the layout phase. (Might be different to [layerPaintIndex])
+   */
+  val layerLayoutIndex: LayerIndex,
+
+  /**
+   * The index of the current layer - during painting
+   */
+  val layerPaintIndex: LayerIndex,
+
   /**
    * The dirty reasons
    */
@@ -161,6 +173,28 @@ data class LayerPaintingContext(
    * Contains the missing resources for the given frame
    */
   val missingResources: MissingResources = MissingResources()
+
+
+  /**
+   * Creates a new copy of this context with given [layerPaintIndex]
+   */
+  fun withLayoutIndex(layerIndexForLayout: LayerIndex): LayerPaintingContext {
+    return copy(layerLayoutIndex = layerIndexForLayout)
+  }
+
+  /**
+   * Creates a new copy of this context with given [layerPaintIndex]
+   */
+  fun withPaintIndex(layerIndex: LayerIndex): LayerPaintingContext {
+    return copy(layerPaintIndex = layerIndex)
+  }
+
+  /**
+   * Creates a copy of this [LayerPaintingContext] and replaces its graphics context
+   */
+  fun withGraphicsContext(gc: CanvasRenderingContext): LayerPaintingContext {
+    return copy(gc = gc)
+  }
 }
 
 /**

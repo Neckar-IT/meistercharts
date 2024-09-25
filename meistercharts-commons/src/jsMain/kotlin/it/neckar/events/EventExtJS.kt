@@ -245,6 +245,14 @@ fun TouchList.convert(boundingClientLocation: Coordinates): List<it.neckar.event
  * @param boundingClientLocation the location of the element (as returned by `getBoundingClientRect`) on which the touch event occurred
  */
 fun org.w3c.dom.Touch.convert(boundingClientLocation: Coordinates): it.neckar.events.Touch {
+  //TODO additional values
+  //https://developer.mozilla.org/en-US/docs/Web/API/Touch#touch_area
+  //
+  //Touch.radiusX
+  //Touch.radiusY
+  //Touch.rotationAngle
+  //Touch.force
+
   return it.neckar.events.Touch(
     TouchId(identifier),
     Coordinates(

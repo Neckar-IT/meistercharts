@@ -49,4 +49,11 @@ class DependentObjects : DependentObjectSupport {
   override fun removeDependentObject(key: Any): Any? {
     return dependentObjects.remove(key)
   }
+
+  /**
+   * Clears all dependent objects
+   */
+  override fun dispose() {
+    dependentObjects.clear()
+  }
 }

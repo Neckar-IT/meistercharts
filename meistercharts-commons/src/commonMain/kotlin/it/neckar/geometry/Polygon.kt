@@ -1,7 +1,5 @@
 package it.neckar.geometry
 
-import it.neckar.open.formatting.intFormat
-
 /**
  * Represents a polygon shape.
  */
@@ -35,13 +33,8 @@ class Polygon(private val vertices: List<Coordinates>) : Shape {
       val minY = vertices.minOf { it.y }
       val maxY = vertices.maxOf { it.y }
 
-      println("Comparing ${coordinates.format(intFormat)} within x ${minX..maxX}, y; ${minY..maxY}")
-
       val inX = coordinates.x in minX..maxX
       val inY = coordinates.y in minY..maxY
-
-      println("\tinX: $inX")
-      println("\tinY: $inY")
 
       return inX &&
         inY

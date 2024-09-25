@@ -352,7 +352,7 @@ class BalloonTooltipPaintable(
         paintingContext,
         x = paintingVariables.contentOffsetX,
         y = paintingVariables.contentOffsetY,
-        direction = Direction.TopLeft,
+        anchorDirection = Direction.TopLeft,
         gapHorizontal = 0.0,
         gapVertical = 0.0
       )

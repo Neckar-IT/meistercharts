@@ -60,7 +60,7 @@ class MovableCrossWireLayer(
   /**
    * The cursor property for the cross wire
    */
-  private val cursorProperty = configuration.mouseCursorSupport.cursorProperty(this).also {
+  private val cursorProperty = configuration.mouseCursorSupport.cursorProperty(this, MouseCursorSupport.Priority.Default).also {
     disposeSupport.onDispose {
       configuration.mouseCursorSupport.clearProperty(this)
     }

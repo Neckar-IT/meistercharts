@@ -21,29 +21,31 @@ import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.MouseEvent2CanvasHandler
 import com.meistercharts.canvas.layer.LayerSupport
-import it.neckar.open.collections.fastForEach
-import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
-import it.neckar.events.KeyDownEvent
 import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.KeyEventHandler
+import com.meistercharts.events.MouseEventBroker
+import com.meistercharts.events.PointerEventBroker
+import com.meistercharts.events.PointerEventHandler
+import com.meistercharts.events.TouchEventBroker
+import com.meistercharts.events.TouchEventHandler
+import com.meistercharts.events.register
+import com.meistercharts.loop.PaintingLoopIndex
+import it.neckar.events.KeyDownEvent
 import it.neckar.events.KeyTypeEvent
 import it.neckar.events.KeyUpEvent
 import it.neckar.events.MouseClickEvent
 import it.neckar.events.MouseDoubleClickEvent
 import it.neckar.events.MouseDownEvent
 import it.neckar.events.MouseDragEvent
-import com.meistercharts.events.MouseEventBroker
 import it.neckar.events.MouseMoveEvent
 import it.neckar.events.MouseUpEvent
 import it.neckar.events.MouseWheelEvent
 import it.neckar.events.PointerCancelEvent
 import it.neckar.events.PointerDownEvent
 import it.neckar.events.PointerEnterEvent
-import com.meistercharts.events.PointerEventBroker
-import com.meistercharts.events.PointerEventHandler
 import it.neckar.events.PointerLeaveEvent
 import it.neckar.events.PointerMoveEvent
 import it.neckar.events.PointerOutEvent
@@ -51,12 +53,10 @@ import it.neckar.events.PointerOverEvent
 import it.neckar.events.PointerUpEvent
 import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
-import com.meistercharts.events.TouchEventBroker
-import com.meistercharts.events.TouchEventHandler
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
-import com.meistercharts.events.register
-import com.meistercharts.loop.PaintingLoopIndex
+import it.neckar.open.collections.fastForEach
+import it.neckar.open.kotlin.lang.consumeUntil
 import it.neckar.open.unit.si.ms
 
 /**
@@ -66,7 +66,7 @@ class DefaultLayerSupport(
   /**
    * The canvas that is painted on
    */
-  override val chartSupport: ChartSupport
+  override val chartSupport: ChartSupport,
 ) : LayerSupport {
   /**
    * Contains the layers that are responsible for rendering the content
@@ -265,7 +265,7 @@ class DefaultLayerSupport(
    *
    * This method can be called often
    */
-  override fun markAsDirty(reason: DirtyReason ) {
+  override fun markAsDirty(reason: DirtyReason) {
     chartSupport.markAsDirty(reason)
   }
 
@@ -275,7 +275,16 @@ class DefaultLayerSupport(
   private val missingResourcesHandlers: MutableList<MissingResourcesHandler> = mutableListOf()
 
   override fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet) {
-    val paintingContext = LayerPaintingContext(chartSupport.canvas.gc, this, frameTimestamp, delta, paintingLoopIndex, dirtyReasons)
+    val paintingContext = LayerPaintingContext(
+      gc = chartSupport.canvas.gc,
+      layerSupport = this,
+      frameTimestamp = frameTimestamp,
+      frameTimestampDelta = delta,
+      loopIndex = paintingLoopIndex,
+      layerLayoutIndex = LayerIndex.unknown,
+      layerPaintIndex = LayerIndex.unknown,
+      dirtyReasons = dirtyReasons
+    )
 
     //Clear all painting properties *before* painting.
     //This is necessary to ensure the painting variables are calculated before they are used

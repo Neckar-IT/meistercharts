@@ -128,6 +128,14 @@ fun CanvasRenderingContext.findYWithAnchor(
   return verticalAlignment.findYWithAnchor(height, anchorGapVertical, this)
 }
 
+/**
+ * Calculates the x offset when painting a rectangle - depending on the horizontal alignment.
+ *
+ * Returns these values for a width of 100:
+ * * [HorizontalAlignment.Left] -> 0.0
+ * * [HorizontalAlignment.Center] -> -50.0
+ * * [HorizontalAlignment.Right] -> -100.0
+ */
 fun HorizontalAlignment.calculateOffsetXWithAnchor(
   /**
    * The width

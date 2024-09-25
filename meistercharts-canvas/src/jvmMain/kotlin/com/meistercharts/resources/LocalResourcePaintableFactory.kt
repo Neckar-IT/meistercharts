@@ -60,11 +60,11 @@ actual class LocalResourcePaintable actual constructor(
   }
 
   override fun paintInBoundingBox(
-    paintingContext: LayerPaintingContext, x: Double, y: Double, direction: Direction,
+    paintingContext: LayerPaintingContext, x: Double, y: Double, anchorDirection: Direction,
     gapHorizontal: Double, gapVertical: Double,
-    boundingBoxSize: Size, objectFit: ObjectFit
+    boundingBoxSize: Size, objectFit: ObjectFit,
   ) {
-    delegate.paintInBoundingBox(paintingContext, x, y, direction, gapHorizontal, gapVertical, boundingBoxSize, objectFit)
+    delegate.paintInBoundingBox(paintingContext, x, y, anchorDirection, gapHorizontal, gapVertical, boundingBoxSize, objectFit)
   }
 
   override fun paintInBoundingBox(

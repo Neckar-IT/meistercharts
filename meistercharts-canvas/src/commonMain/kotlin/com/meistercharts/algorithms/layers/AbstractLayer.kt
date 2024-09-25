@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.MouseCursor
+import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.mouseCursorSupport
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -83,9 +84,9 @@ abstract class AbstractLayer : Layer {
    */
   var ChartSupport.cursor: MouseCursor?
     get() {
-      return mouseCursorSupport.cursorProperty(this@AbstractLayer).value
+      return mouseCursorSupport.cursorProperty(this@AbstractLayer, MouseCursorSupport.Priority.Default).value
     }
     set(value) {
-      mouseCursorSupport.cursorProperty(this@AbstractLayer).value = value
+      mouseCursorSupport.cursorProperty(this@AbstractLayer, MouseCursorSupport.Priority.Default).value = value
     }
 }

@@ -28,6 +28,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.findXWithAnchor
 import com.meistercharts.canvas.findYWithAnchor
@@ -106,7 +107,7 @@ class ToolbarLayer(
     }
 
     // Show the hand cursor if any button is hovered
-    chartSupport.mouseCursorSupport.cursorProperty(this).bind(anyButtonHover.map {
+    chartSupport.mouseCursorSupport.cursorProperty(this, MouseCursorSupport.Priority.High).bind(anyButtonHover.map {
       if (it) {
         MouseCursor.Hand
       } else {

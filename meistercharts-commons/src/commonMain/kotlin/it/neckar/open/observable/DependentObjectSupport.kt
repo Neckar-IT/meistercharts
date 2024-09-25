@@ -1,5 +1,7 @@
 package it.neckar.open.observable
 
+import it.neckar.open.dispose.Disposable
+
 /**
  * Offers support for dependent objects that may be registered.
  * This can be used to avoid premature garbage collection.
@@ -7,7 +9,7 @@ package it.neckar.open.observable
  * Dependent objects can be registered at this instance and will be held forever.
  *
  */
-interface DependentObjectSupport {
+interface DependentObjectSupport : Disposable {
   /**
    * Adds a dependent object that is held by this instance to avoid premature garbage collection.
    *

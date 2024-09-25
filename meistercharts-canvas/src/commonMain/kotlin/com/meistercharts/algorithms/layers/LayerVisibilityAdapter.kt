@@ -15,8 +15,6 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.provider.BooleanProvider
 
 /**
@@ -65,6 +63,10 @@ open class LayerVisibilityAdapter<out T : Layer>(
     if (visibleCondition()) {
       super.paint(paintingContext)
     }
+  }
+
+  override fun toString(): String {
+    return description
   }
 }
 

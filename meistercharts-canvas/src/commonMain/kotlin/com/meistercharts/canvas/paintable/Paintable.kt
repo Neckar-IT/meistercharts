@@ -204,7 +204,7 @@ interface Paintable {
     paintingContext: LayerPaintingContext,
     @Zoomed x: Double = 0.0,
     @Zoomed y: Double = 0.0,
-    direction: Direction,
+    anchorDirection: Direction,
     gapHorizontal: Double = 0.0,
     gapVertical: Double = gapHorizontal,
     /**
@@ -216,7 +216,7 @@ interface Paintable {
      */
     objectFit: ObjectFit = ObjectFit.ContainNoGrow,
   ) {
-    paintInBoundingBox(paintingContext, x, y, direction, gapHorizontal, gapVertical, boundingBoxSize.width, boundingBoxSize.height, objectFit)
+    paintInBoundingBox(paintingContext, x, y, anchorDirection, gapHorizontal, gapVertical, boundingBoxSize.width, boundingBoxSize.height, objectFit)
   }
 
   /**

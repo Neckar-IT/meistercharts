@@ -19,14 +19,14 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
-import it.neckar.open.formatting.dateTimeFormat
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.formatting.dateTimeFormat
 
 /**
- * This layer debugs the paint events
+ * This logs the paint events
  */
-class PaintInfoDebugLayer : AbstractLayer() {
+class LogPaintEventsDebugLayer : AbstractLayer() {
   private val dateFormat = dateTimeFormat
 
   override val type: LayerType
@@ -45,7 +45,7 @@ class PaintInfoDebugLayer : AbstractLayer() {
   }
 
   companion object {
-    private val logger = LoggerFactory.getLogger("com.meistercharts.events.gesture.PinchGestureSupport")
+    private val logger = LoggerFactory.getLogger("com.meistercharts.algorithms.layers.debug.PaintInfoDebugLayer")
   }
 }
 
@@ -54,5 +54,5 @@ class PaintInfoDebugLayer : AbstractLayer() {
  * Registers a new paint info debug layer
  */
 fun Layers.addPaintInfoDebug() {
-  addLayer(PaintInfoDebugLayer())
+  addLayer(LogPaintEventsDebugLayer())
 }

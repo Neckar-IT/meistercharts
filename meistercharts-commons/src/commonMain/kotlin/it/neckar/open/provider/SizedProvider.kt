@@ -171,6 +171,23 @@ interface SizedProvider<out T> : MultiProvider<Any, T>, HasSize, SizedProvider1<
 }
 
 /**
+ * Returns the first element that matches the given filter
+ */
+inline fun <T> SizedProvider<T>.findFirst(filter: (T) -> Boolean): T? {
+  if (size() == 0) {
+    return null
+  }
+
+  this.fastForEach { value ->
+    if (filter(value)) {
+      return value
+    }
+  }
+
+  return null
+}
+
+/**
  * Returns the values from the given list
  *
  * Attention: The list passed to this class must not be modified while using this provider.

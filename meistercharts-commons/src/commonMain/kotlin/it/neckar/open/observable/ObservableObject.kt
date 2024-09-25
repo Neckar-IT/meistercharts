@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
 /**
  * An observable object that contains a value and can be observed
  */
-open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T> {
+open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T>, Disposable {
   /**
    * The current value
    */
@@ -191,13 +191,22 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T> {
       onChange()
     }
   }
+
+  /**
+   * Disposes the observable object:
+   * Removes all listeners
+   */
+  override fun dispose() {
+    valueChangeListeners.clear()
+    dependentObjects.dispose()
+  }
 }
 
 /**
  * Connects multiple observables using and
  */
 fun List<ReadOnlyObservableObject<Boolean>>.and(): ReadOnlyObservableObject<Boolean> {
-  require(!isEmpty()) {
+  require(isNotEmpty()) {
     "and must not be called on empty list"
   }
   return reduce {
@@ -211,7 +220,7 @@ fun List<ReadOnlyObservableObject<Boolean>>.and(): ReadOnlyObservableObject<Bool
  * Connects multiple observables using or
  */
 fun List<ReadOnlyObservableObject<Boolean>>.or(): ReadOnlyObservableObject<Boolean> {
-  require(!isEmpty()) {
+  require(isNotEmpty()) {
     "or must not be called on empty list"
   }
   return reduce {

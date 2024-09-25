@@ -182,6 +182,13 @@ class TextLayer(
     }
 
     /**
+     * Creates a new text layer that shows the lines
+     */
+    fun forLines(lines: LinesProvider, styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(lines, styleConfiguration)
+    }
+
+    /**
      * Creates a new text layer that has no text
      */
     fun empty(styleConfiguration: Configuration.() -> Unit = {}): TextLayer {

@@ -15,12 +15,14 @@
  */
 package com.meistercharts.algorithms.layers
 
+import com.meistercharts.canvas.LayerIndex
 import com.meistercharts.canvas.LayerPaintDuration
 import com.meistercharts.canvas.LayerPaintDurations
 import com.meistercharts.canvas.PaintingStats
 import com.meistercharts.canvas.saved
 import com.meistercharts.charts.ChartId
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.fastForEachIndexed
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 
@@ -256,9 +258,9 @@ class Layers(val chartId: ChartId) {
    */
   fun paintLayers(paintingContext: LayerPaintingContext) {
     //Layout first
-    layersListLayout.fastForEach { layerToLayout ->
+    layersListLayout.fastForEachIndexed { layerIndexForLayout, layerToLayout ->
       paintingContext.gc.saved {
-        layerToLayout.layout(paintingContext)
+        layerToLayout.layout(paintingContext.withLayoutIndex(LayerIndex(layerIndexForLayout)))
 
         /**
          * Test if super.layout() is called from all layers
@@ -272,9 +274,9 @@ class Layers(val chartId: ChartId) {
     }
 
     //Now paint all layers
-    layersListPainting.fastForEach { layerToPaint ->
+    layersListPainting.fastForEachIndexed { layerIndexForPaint, layerToPaint ->
       paintingContext.gc.saved {
-        layerToPaint.paint(paintingContext)
+        layerToPaint.paint(paintingContext.withPaintIndex(LayerIndex(layerIndexForPaint)))
       }
     }
   }

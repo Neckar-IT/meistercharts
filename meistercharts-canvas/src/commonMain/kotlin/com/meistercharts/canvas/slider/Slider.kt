@@ -21,6 +21,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MouseCursor
+import com.meistercharts.canvas.MouseCursorSupport
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRoundedRect
@@ -246,7 +247,7 @@ class Slider(
 
   }
 
-  private fun ChartSupport.cursor() = mouseCursorSupport.cursorProperty(this@Slider)
+  private fun ChartSupport.cursor() = mouseCursorSupport.cursorProperty(this@Slider, MouseCursorSupport.Priority.High)
 
   private fun onHandle(mouseCoordinates: Coordinates?): Boolean {
     if (mouseCoordinates == null) {
