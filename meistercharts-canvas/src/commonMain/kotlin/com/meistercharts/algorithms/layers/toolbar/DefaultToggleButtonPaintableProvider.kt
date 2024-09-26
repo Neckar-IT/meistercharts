@@ -27,12 +27,12 @@ class DefaultToggleButtonPaintableProvider(
   /**
    * Returns the paintable for the given size and fill
    */
-  val defaultPaintableResolver: ButtonPaintableResolver,
+  val unselectedPaintableResolver: ButtonPaintableResolver,
   /**
    * Returns the paintable for the selected state.
-   * If the same icon is used for selected and unselected states, this can be the same as [defaultPaintableResolver].
+   * If the same icon is used for selected and unselected states, this can be the same as [unselectedPaintableResolver].
    */
-  val selectedPaintableResolver: ButtonPaintableResolver = defaultPaintableResolver,
+  val selectedPaintableResolver: ButtonPaintableResolver = unselectedPaintableResolver,
 
   /**
    * Returns the size for the given state
@@ -55,7 +55,7 @@ class DefaultToggleButtonPaintableProvider(
     return if (buttonState.selected) {
       selectedPaintableResolver(size, fill)
     } else {
-      defaultPaintableResolver(size, fill)
+      unselectedPaintableResolver(size, fill)
     }
   }
 }

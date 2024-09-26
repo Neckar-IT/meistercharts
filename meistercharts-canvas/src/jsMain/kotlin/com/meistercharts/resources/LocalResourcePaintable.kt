@@ -15,11 +15,10 @@
  */
 package com.meistercharts.resources
 
-import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.UrlPaintable
+import com.meistercharts.canvas.paintable.AbstractDelegatingPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
@@ -28,27 +27,19 @@ import it.neckar.open.unit.other.px
  * Loads a local resource
  */
 actual class LocalResourcePaintable actual constructor(
-  val relativePath: Url,
+  actual val relativePath: Url,
   size: @px Size?,
 
   /**
    * The alignment point for the bounding box
    */
   actual val alignmentPoint: Coordinates,
-) : Paintable {
+) : Paintable, AbstractDelegatingPaintable() {
 
   /**
    * The paintable that is used
    */
-  val delegate: Paintable = if (size != null) UrlPaintable.fixedSize(relativePath, size, alignmentPoint) else UrlPaintable.naturalSize(relativePath, alignmentPoint)
-
-  actual override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
-    return delegate.boundingBox(paintingContext)
-  }
-
-  actual override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
-    delegate.paint(paintingContext, x, y)
-  }
+  override val delegate: Paintable = if (size != null) UrlPaintable.fixedSize(relativePath, size, alignmentPoint) else UrlPaintable.naturalSize(relativePath, alignmentPoint)
 
   actual fun withSize(size: Size): LocalResourcePaintable {
     return LocalResourcePaintable(relativePath, size, alignmentPoint)

@@ -15,24 +15,18 @@
  */
 package com.meistercharts.canvas.paintable
 
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import it.neckar.geometry.Rectangle
+import it.neckar.geometry.AxisSelection
 
 /**
  * Paints a paintable mirrored
  * Can invert over both or only one axis
  */
 class MirrorPaintable(
-  val delegate: Paintable,
-  val flippedAxisProvider: () -> AxisSelection
-) : Paintable {
-  override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
-    return delegate.boundingBox(paintingContext)
-  }
-
+  override val delegate: Paintable,
+  val flippedAxisProvider: () -> AxisSelection,
+) : Paintable, AbstractDelegatingPaintable() {
   //TODO implement layout! (if necessary)
-
   override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
     val flippedAxis = flippedAxisProvider()
     if (flippedAxis == AxisSelection.None) {

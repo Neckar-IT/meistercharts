@@ -15,14 +15,10 @@
  */
 package com.meistercharts.resources
 
-import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.canvas.paintable.ObjectFit
+import com.meistercharts.canvas.paintable.AbstractDelegatingPaintable
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.model.Anchoring
 import com.meistercharts.platform.jvm.MeisterchartsJvm
 import it.neckar.geometry.Coordinates
-import it.neckar.geometry.Direction
-import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.http.Url
 import it.neckar.open.unit.other.px
@@ -32,51 +28,12 @@ import it.neckar.open.unit.other.px
  * Loads a local resource
  */
 actual class LocalResourcePaintable actual constructor(
-  val relativePath: Url,
+  actual val relativePath: Url,
   size: @px Size?,
   actual val alignmentPoint: Coordinates,
-) : Paintable {
+) : Paintable, AbstractDelegatingPaintable() {
 
-  val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)
-
-  actual override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
-    return delegate.boundingBox(paintingContext)
-  }
-
-  actual override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
-    delegate.paint(paintingContext, x, y)
-  }
-
-  override fun paint(paintingContext: LayerPaintingContext, location: Coordinates) {
-    delegate.paint(paintingContext, location)
-  }
-
-  override fun paintInBoundingBox(paintingContext: LayerPaintingContext, anchoring: Anchoring, boundingBoxSize: Size, objectFit: ObjectFit) {
-    delegate.paintInBoundingBox(paintingContext, anchoring, boundingBoxSize, objectFit)
-  }
-
-  override fun paintInBoundingBox(paintingContext: LayerPaintingContext, location: Coordinates, direction: Direction, boundingBoxSize: Size, objectFit: ObjectFit) {
-    delegate.paintInBoundingBox(paintingContext, location, direction, boundingBoxSize, objectFit)
-  }
-
-  override fun paintInBoundingBox(
-    paintingContext: LayerPaintingContext, x: Double, y: Double, anchorDirection: Direction,
-    gapHorizontal: Double, gapVertical: Double,
-    boundingBoxSize: Size, objectFit: ObjectFit,
-  ) {
-    delegate.paintInBoundingBox(paintingContext, x, y, anchorDirection, gapHorizontal, gapVertical, boundingBoxSize, objectFit)
-  }
-
-  override fun paintInBoundingBox(
-    paintingContext: LayerPaintingContext, x: Double, y: Double, anchorDirection: Direction,
-    gapHorizontal: Double, gapVertical: Double, width: Double, height: Double, objectFit: ObjectFit
-  ) {
-    delegate.paintInBoundingBox(paintingContext, x, y, anchorDirection, gapHorizontal, gapVertical, width, height, objectFit)
-  }
-
-  override fun paintSizeForced(paintingContext: LayerPaintingContext, x: Double, y: Double, forcedSize: Size) {
-    delegate.paintSizeForced(paintingContext, x, y, forcedSize)
-  }
+  override val delegate: Paintable = MeisterchartsJvm.localResourcePaintableFactory.get(relativePath, size, alignmentPoint)
 
   actual fun withSize(size: Size): LocalResourcePaintable {
     return LocalResourcePaintable(relativePath, size, alignmentPoint)

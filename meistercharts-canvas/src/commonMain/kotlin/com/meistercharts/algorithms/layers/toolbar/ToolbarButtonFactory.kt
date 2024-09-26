@@ -80,7 +80,7 @@ class ToolbarButtonFactory(
     /**
      * Returns the paintable for a size and fill (e.g. `Icons::zoomIn`)
      */
-    paintableResolver: ButtonPaintableResolver,
+    buttonPaintableResolver: ButtonPaintableResolver,
     /**
      * The button priority
      */
@@ -90,7 +90,7 @@ class ToolbarButtonFactory(
      */
     action: (ButtonPressedEvent) -> Unit,
   ): Button {
-    val buttonPaintableProvider = DefaultButtonPaintableProvider(paintableResolver, sizeProvider, fillProvider)
+    val buttonPaintableProvider = DefaultButtonPaintableProvider(buttonPaintableResolver, sizeProvider, fillProvider)
     return button(buttonPaintableProvider::getPaintable, sizeProvider(ButtonState.default), priority, action)
   }
 
@@ -106,7 +106,7 @@ class ToolbarButtonFactory(
   ): Button {
     return button(
       buttonPaintableProvider = DefaultToggleButtonPaintableProvider(
-        defaultPaintableResolver = defaultPaintableResolver,
+        unselectedPaintableResolver = defaultPaintableResolver,
         selectedPaintableResolver = selectedPaintableResolver,
         sizeProvider = sizeProvider,
         fillProvider = fillProvider

@@ -307,7 +307,7 @@ interface Paintable {
 
   /**
    * Internal method: Do *not* call this method directly.
-   * Instead use one of the [paintInBoundingBox] methods.
+   * Instead, use one of the [paintInBoundingBox] methods.
    *
    * Paints the paintable within the given bounding box - the paintable must place itself exactly into this bounding box.
    * The paintable is *forced* to use the provided size.
@@ -315,7 +315,7 @@ interface Paintable {
    * The paintable has to resize itself accordingly.
    * The default implementation uses [CanvasRenderingContext#scale] to scale the paintable.
    *
-   * This method can be used if a paintable is not used as is, but instead it is placed in a bounding box
+   * This method can be used if a [Paintable] is not used as is, but instead it is placed in a bounding box
    */
   @Internal("Use paintInBoundingBox instead")
   fun paintSizeForced(
@@ -324,7 +324,7 @@ interface Paintable {
      */
     paintingContext: LayerPaintingContext,
     /**
-     * The x location of the bounding box (upper left corner)
+     * The x location of the bounding box (upper-left corner)
      */
     x: @px Double,
     /**
@@ -332,7 +332,7 @@ interface Paintable {
      */
     y: @px Double,
     /**
-     * The forced size. Does *not* correspond to the own size of the paintable ([size])
+     * The forced size. Does *not* correspond to the own size of the paintable (which is derived from [Paintable.boundingBox])
      */
     forcedSize: @Zoomed Size,
   ) {

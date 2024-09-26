@@ -9,6 +9,8 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import org.bson.BsonDateTime
+import org.bson.BsonTimestamp
 import org.bson.BsonValue
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
@@ -27,7 +29,7 @@ actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
   actual override fun serialize(encoder: Encoder, value: @ms Double) {
     when (encoder) {
       is BsonEncoder -> {
-        encoder.writer().writeDateTime(value.toLong())
+        encoder.encodeBsonValue(BsonDateTime(value.toLong()))
       }
 
       else -> {
@@ -39,7 +41,7 @@ actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
   actual override fun deserialize(decoder: Decoder): @ms Double {
     return when (decoder) {
       is BsonDecoder -> {
-        decoder.reader().readDateTime().toDouble()
+        decoder.decodeBsonValue().asDateTime().value.toDouble()
       }
 
       else -> {

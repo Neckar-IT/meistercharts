@@ -41,6 +41,11 @@ expect class LocalResourcePaintable(
 ) : Paintable {
 
   /**
+   * The relative path of the paintable
+   */
+  val relativePath: Url
+
+  /**
    * The alignment point for the bounding box.
    */
   val alignmentPoint: Coordinates
