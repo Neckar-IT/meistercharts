@@ -17,12 +17,13 @@ package com.meistercharts.canvas
 
 import assertk.*
 import assertk.assertions.*
-import it.neckar.geometry.Coordinates
 import com.meistercharts.events.DefaultMouseEventBroker
 import com.meistercharts.events.EventConsumption
+import it.neckar.events.MouseButton
 import it.neckar.events.MouseClickEvent
 import it.neckar.events.MouseDoubleClickEvent
 import it.neckar.events.MouseMoveEvent
+import it.neckar.geometry.Coordinates
 import org.junit.jupiter.api.Test
 
 internal class MouseInteractionHandlerTest {
@@ -81,7 +82,7 @@ internal class MouseInteractionHandlerTest {
     }
 
     assertThat(lastClickCoordinates).isNull()
-    handler.notifyClick(MouseClickEvent(1.0, Coordinates(1.0, 2.0)))
+    handler.notifyClick(MouseClickEvent(1.0, Coordinates(1.0, 2.0), MouseButton.Primary))
     assertThat(lastClickCoordinates).isEqualTo(Coordinates(1.0, 2.0))
   }
 
@@ -97,7 +98,7 @@ internal class MouseInteractionHandlerTest {
     }
 
     assertThat(lastClickCoordinates).isNull()
-    handler.notifyDoubleClick(MouseDoubleClickEvent(1.0, Coordinates(1.0, 2.0)))
+    handler.notifyDoubleClick(MouseDoubleClickEvent(1.0, Coordinates(1.0, 2.0), MouseButton.Primary))
     assertThat(lastClickCoordinates).isEqualTo(Coordinates(1.0, 2.0))
   }
 }

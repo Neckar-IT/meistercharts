@@ -17,8 +17,8 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
-import it.neckar.geometry.Coordinates
 import it.neckar.events.ModifierCombination
+import it.neckar.events.MouseButton
 import it.neckar.events.MouseClickEvent
 import it.neckar.events.MouseDoubleClickEvent
 import it.neckar.events.MouseDownEvent
@@ -27,6 +27,7 @@ import it.neckar.events.MouseEvent
 import it.neckar.events.MouseMoveEvent
 import it.neckar.events.MouseUpEvent
 import it.neckar.events.MouseWheelEvent
+import it.neckar.geometry.Coordinates
 import org.junit.jupiter.api.Test
 
 /**
@@ -45,7 +46,7 @@ class DefaultMouseEventBrokerTest {
     }
 
     assertThat(lastEvent).isNull()
-    MouseClickEvent(1.0, Coordinates.none).also {
+    MouseClickEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyClick(it)
       assertThat(lastEvent).isEqualTo(it)
     }
@@ -106,13 +107,13 @@ class DefaultMouseEventBrokerTest {
     assertThat(lastEvent).isNull()
 
     lastEvent = null
-    MouseClickEvent(1.0, Coordinates.none).also {
+    MouseClickEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyClick(it)
       assertThat(lastEvent).isEqualTo(it)
     }
 
     lastEvent = null
-    MouseDoubleClickEvent(1.0, Coordinates.none).also {
+    MouseDoubleClickEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyDoubleClick(it)
       assertThat(lastEvent).isEqualTo(it)
     }
@@ -130,19 +131,19 @@ class DefaultMouseEventBrokerTest {
     }
 
     lastEvent = null
-    MouseDragEvent(1.0, Coordinates.none).also {
+    MouseDragEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyDrag(it)
       assertThat(lastEvent).isEqualTo(it)
     }
 
     lastEvent = null
-    MouseDownEvent(1.0, Coordinates.none).also {
+    MouseDownEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyDown(it)
       assertThat(lastEvent).isEqualTo(it)
     }
 
     lastEvent = null
-    MouseUpEvent(1.0, Coordinates.none).also {
+    MouseUpEvent(1.0, Coordinates.none, MouseButton.Primary).also {
       broker.notifyUp(it)
       assertThat(lastEvent).isEqualTo(it)
     }

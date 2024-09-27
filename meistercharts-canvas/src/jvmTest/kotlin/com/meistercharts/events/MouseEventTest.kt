@@ -17,6 +17,7 @@ package com.meistercharts.events
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.events.MouseButton
 import it.neckar.geometry.Coordinates
 import it.neckar.events.MouseClickEvent
 import it.neckar.events.MouseDoubleClickEvent
@@ -33,7 +34,7 @@ import org.junit.jupiter.api.Test
 class MouseEventTest {
   @Test
   fun testMouseEventsCompilerCheckWhen() {
-    val event: MouseEvent = MouseClickEvent(1.0, Coordinates.origin)
+    val event: MouseEvent = MouseClickEvent(1.0, Coordinates.origin, MouseButton.Primary)
 
     val result = when (event) {
       is MouseMoveEvent -> "a"

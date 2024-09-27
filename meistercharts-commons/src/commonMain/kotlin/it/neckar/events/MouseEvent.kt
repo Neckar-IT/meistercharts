@@ -76,6 +76,7 @@ class MouseMoveEvent(
 class MouseDragEvent(
   @ms relativeTimestamp: Double,
   override val coordinates: @Window Coordinates,
+  val button: MouseButton,
   override val modifierCombination: ModifierCombination = ModifierCombination.None,
 ) : MouseEvent(relativeTimestamp) {
   override fun toString(): String {
@@ -93,6 +94,7 @@ class MouseClickEvent(
    * The coordinates of the click event
    */
   override val coordinates: @Window Coordinates,
+  val button: MouseButton,
   override val modifierCombination: ModifierCombination = ModifierCombination.None,
 ) : MouseEvent(relativeTimestamp) {
   override fun toString(): String {
@@ -106,6 +108,7 @@ class MouseDownEvent(
    * The coordinates of the press event
    */
   override val coordinates: @Window Coordinates,
+  val button: MouseButton,
   override val modifierCombination: ModifierCombination = ModifierCombination.None,
 ) : MouseEvent(relativeTimestamp) {
   override fun toString(): String {
@@ -119,6 +122,7 @@ class MouseUpEvent(
    * The coordinates of the release event
    */
   override val coordinates: @Window Coordinates,
+  val button: MouseButton,
   override val modifierCombination: ModifierCombination = ModifierCombination.None,
 ) : MouseEvent(relativeTimestamp) {
   override fun toString(): String {
@@ -135,6 +139,7 @@ class MouseDoubleClickEvent(
    * The coordinates of the double click event
    */
   override val coordinates: @Window Coordinates,
+  val button: MouseButton,
 
   /**
    * The modifier combination that is pressed during the scroll event

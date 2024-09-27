@@ -40,6 +40,7 @@ import convertRelease
 import convertStart
 import convertType
 import convertUp
+import extractButton
 import extractModifierCombination
 import it.neckar.events.MouseClickEvent
 import it.neckar.events.MouseDoubleClickEvent
@@ -359,7 +360,11 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     val isPrimaryButton = event.buttons.toInt() and 1 == 1
     if (isPrimaryButton) {
       // treat as drag event
-      MouseDragEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
+      MouseDragEvent(
+        event.timeStampAsDoubleWorkaround, event.offset(),
+        event.extractButton(),
+        event.extractModifierCombination()
+      ).let {
         mouseEvents.notifyDrag(it)
           .cancelIfConsumed(event)
       }
@@ -373,28 +378,34 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   }
 
   private fun notifyMouseDblClick(event: MouseEvent) {
-    MouseDoubleClickEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
+    MouseDoubleClickEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractButton(), event.extractModifierCombination()).let {
       mouseEvents.notifyDoubleClick(it)
         .cancelIfConsumed(event)
     }
   }
 
   private fun notifyMouseClick(event: MouseEvent) {
-    MouseClickEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
+    MouseClickEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractButton(), event.extractModifierCombination()).let {
       mouseEvents.notifyClick(it)
         .cancelIfConsumed(event)
     }
   }
 
   private fun notifyMouseDown(event: MouseEvent) {
-    MouseDownEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
+    //0 is the primary button
+    //1 is the middle button
+    //2 is the secondary button
+    //3 is the back button
+    //4 is the forward button
+
+    MouseDownEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractButton(), event.extractModifierCombination()).let {
       mouseEvents.notifyDown(it)
         .cancelIfConsumed(event)
     }
   }
 
   private fun notifyMouseUp(event: MouseEvent) {
-    MouseUpEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
+    MouseUpEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractButton(), event.extractModifierCombination()).let {
       mouseEvents.notifyUp(it)
         .cancelIfConsumed(event)
     }

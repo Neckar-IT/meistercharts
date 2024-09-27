@@ -19,6 +19,7 @@ import it.neckar.events.KeyStroke
 import it.neckar.events.KeyTypeEvent
 import it.neckar.events.KeyUpEvent
 import it.neckar.events.ModifierCombination
+import it.neckar.events.MouseButton
 import it.neckar.events.Pointer
 import it.neckar.events.PointerCancelEvent
 import it.neckar.events.PointerDownEvent
@@ -271,6 +272,21 @@ fun KeyboardEvent.extractModifierCombination(): ModifierCombination = ModifierCo
  * Extracts the modifiers
  */
 fun MouseEvent.extractModifierCombination(): ModifierCombination = ModifierCombination(shiftKey, ctrlKey, altKey, metaKey)
+
+/**
+ * Returns the mouse button
+ */
+fun MouseEvent.extractButton(): MouseButton {
+  return when (button) {
+    0.toShort() -> MouseButton.Primary
+    1.toShort() -> MouseButton.Middle
+    2.toShort() -> MouseButton.Secondary
+    4.toShort() -> MouseButton.Forward
+    5.toShort() -> MouseButton.Back
+    else -> throw IllegalArgumentException("Unknown mouse button: $button")
+  }
+}
+
 
 /**
  * Extracts the modifiers
