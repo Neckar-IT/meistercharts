@@ -776,6 +776,13 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  fun zoomed2domainDelta(@Window @px distance: Distance, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
+    return Coordinates.of(
+      zoomed2domainDeltaX(distance.x, valueRangeX),
+      zoomed2domainDeltaY(distance.y, valueRangeY)
+    )
+  }
+
   /**
    * Zoomed 2 domain delta
    */

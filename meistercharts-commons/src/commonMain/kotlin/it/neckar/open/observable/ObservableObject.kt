@@ -53,10 +53,14 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T>, Disp
     return dependentObjects.removeDependentObject(key)
   }
 
-  override fun consumeChanges(action: ConsumeChangesAction<T>): Disposable {
+  override fun consumeChanges(immediately: Boolean, action: ConsumeChangesAction<T>): Disposable {
     valueChangeListeners.add(action)
 
-    return Disposable { valueChangeListeners.remove(action) }
+    return Disposable { valueChangeListeners.remove(action) }.also {
+      if (immediately) {
+        action(value, value)
+      }
+    }
   }
 
   override fun consume(immediately: Boolean, action: ConsumeAction<T>): Disposable {

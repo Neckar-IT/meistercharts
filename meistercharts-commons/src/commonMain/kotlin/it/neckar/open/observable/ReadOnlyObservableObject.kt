@@ -6,58 +6,15 @@ import kotlin.reflect.KProperty
 
 
 /**
- * Consumes new values (but does not receive the old one)
- */
-typealias ConsumeAction<T> = (newValue: T) -> Unit
-
-/**
- * Consumes changes - old and new value are provided
- */
-typealias ConsumeChangesAction<T> = (oldValue: T, newValue: T) -> Unit
-
-
-/**
  * Observable object - read only view
  *
  */
-interface ReadOnlyObservableObject<out T> : DependentObjectSupport {
+interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSupport {
   /**
    * The current value of the observable object
    */
   val value: T
 
-  /**
-   * Registers an action that is called when the value is changed.
-   * This action is called initially if [immediately] is true (default is set to false).
-   * @return a dispose action to unregister the given action
-   */
-  fun consume(immediately: Boolean = false, action: ConsumeAction<T>): Disposable
-
-  /**
-   * Registers an action that is called immediately and when the value is changed
-   */
-  fun consumeImmediately(action: ConsumeAction<T>): Disposable {
-    return consume(true, action)
-  }
-
-  /**
-   * Registers an action that is called when the value has changed. The given action also gets the old value
-   * @return a dispose action to unregister the given action
-   */
-  fun consumeChanges(action: ConsumeChangesAction<T>): Disposable
-
-  /**
-   * Listener that is notified about value changes
-   */
-  @JavaFriendly
-  fun interface ChangeListener<in T> {
-    fun valueChanged(oldValue: T, newValue: T)
-  }
-
-  @JavaFriendly
-  fun addChangeListener(listener: ChangeListener<T>): Disposable {
-    return consumeChanges(listener::valueChanged)
-  }
 
   /**
    * Returns the value - used for delegation to a val:
@@ -115,7 +72,7 @@ interface ReadOnlyObservableObject<out T> : DependentObjectSupport {
  */
 fun <T, U, V, R> ReadOnlyObservableObject<T>.map(
   otherObservable1: ReadOnlyObservableObject<U>,
-  otherObservable2: ReadOnlyObservableObject<V>, function: (T, U, V) -> R
+  otherObservable2: ReadOnlyObservableObject<V>, function: (T, U, V) -> R,
 ): ReadOnlyObservableObject<R> {
   val intermediateObservable = ObservableObject(function(value, otherObservable1.value, otherObservable2.value))
 

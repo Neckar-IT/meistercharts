@@ -21,6 +21,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.state.ChartState
 import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Distance
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
@@ -84,6 +85,10 @@ class DomainChartCalculator(
 
   fun zoomed2domainDelta(@Zoomed @px coordinates: Coordinates): @Domain Coordinates {
     return zoomed2domainDelta(coordinates, domainRangeX, domainRangeY)
+  }
+
+  fun zoomed2domainDelta(@Zoomed @px distance: Distance): @Domain Coordinates {
+    return zoomed2domainDelta(distance, domainRangeX, domainRangeY)
   }
 
   fun visibleDomainRangeYinWindow(): LinearValueRange {

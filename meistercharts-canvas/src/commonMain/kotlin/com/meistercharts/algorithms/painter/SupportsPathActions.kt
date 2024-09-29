@@ -108,7 +108,7 @@ interface SupportsPathActions {
    */
   @Deprecated("use arcCenter instead")
   fun arcTo(radiusX: Double, radiusY: Double, @rad xAxisRotation: Double, largeArc: Boolean, sweep: Boolean, x: Double, y: Double) {
-    throw UnsupportedOperationException("")
+    throw UnsupportedOperationException("use arcCenter instead")
   }
 
   /**

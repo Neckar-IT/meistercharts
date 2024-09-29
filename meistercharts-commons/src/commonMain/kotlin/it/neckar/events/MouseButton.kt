@@ -32,6 +32,13 @@ enum class MouseButton {
   /**
    * Returns true if this button is the primary button
    */
+  fun isPrimary(): Boolean {
+    return this == Primary
+  }
+
+  /**
+   * Returns true if this button is the primary button
+   */
   fun isSecondary(): Boolean {
     return this == Secondary
   }
