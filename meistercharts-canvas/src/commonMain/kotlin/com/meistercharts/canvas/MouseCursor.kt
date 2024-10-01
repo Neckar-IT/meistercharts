@@ -68,6 +68,19 @@ enum class MouseCursor {
   ResizeNorthWest,
   ResizeEastWest,
   ResizeNorthSouth,
+
+  NotAllowed,
+  ZoomIn,
+  ZoomOut,
+  Help,
+  ContextMenu,
+  Pointer,
+  Progress,
+  Cell,
+  AllScroll,
+  ColResize,
+  RowResize,
+  NoDrop,
 }
 
 

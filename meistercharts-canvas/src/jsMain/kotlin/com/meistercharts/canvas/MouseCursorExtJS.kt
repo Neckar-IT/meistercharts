@@ -41,23 +41,17 @@ fun MouseCursor.toCss(): String {
     MouseCursor.ResizeNorthWest -> "nw-resize"
     MouseCursor.ResizeEastWest -> "ew-resize"
     MouseCursor.ResizeNorthSouth -> "ns-resize"
+    MouseCursor.NotAllowed -> "not-allowed"
+    MouseCursor.ZoomIn -> "zoom-in"
+    MouseCursor.ZoomOut -> "zoom-out"
+    MouseCursor.Help -> "help"
+    MouseCursor.ContextMenu -> "context-menu"
+    MouseCursor.Pointer -> "pointer"
+    MouseCursor.Progress -> "progress"
+    MouseCursor.Cell -> "cell"
+    MouseCursor.AllScroll -> "all-scroll"
+    MouseCursor.ColResize -> "col-resize"
+    MouseCursor.RowResize -> "row-resize"
+    MouseCursor.NoDrop -> "no-drop"
   }
 }
-
-/**
- * Contains a list of mouse cursors that are supported by JS but currently not by MeisterCharts
- */
-val additionalMouseCursorTypes = listOf(
-  "zoom-in",
-  "zoom-out",
-  "help",
-  "context-menu",
-  "pointer",
-  "progress",
-  "cell",
-  "not-allowed",
-  "all-scroll",
-  "col-resize",
-  "row-resize",
-  "no-drop"
-)

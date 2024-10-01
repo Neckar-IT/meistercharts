@@ -24,7 +24,7 @@ import it.neckar.open.collections.fastForEach
  * The `name` value is updated whenever the `inner` property is changed *and* the `name` property
  * change of the referenced object
  */
-fun <T, N> ObservableObject<T>.select(extractNested: (T) -> ReadOnlyObservableObject<N>): ReadOnlyObservableObject<N> {
+fun <T, N> ReadOnlyObservableObject<T>.select(extractNested: (T) -> ReadOnlyObservableObject<N>): ReadOnlyObservableObject<N> {
   //The currently nested value
   var currentNested: ReadOnlyObservableObject<N> = extractNested(value)
 
