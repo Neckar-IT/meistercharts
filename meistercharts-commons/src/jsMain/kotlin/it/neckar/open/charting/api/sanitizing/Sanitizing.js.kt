@@ -14,13 +14,6 @@ actual inline fun <reified T : Enum<T>> T.sanitize(): T {
   }
 
   try {
-    println("This: ")
-    console.dir(this)
-    console.log("after dir")
-    println("Done console.dir")
-    println("this: $this")
-    println("done printing this")
-
     return enumValueOf(this.toString())
   } catch (e: Throwable) {
     throwEnumConversionException(this, enumEntries(), e)

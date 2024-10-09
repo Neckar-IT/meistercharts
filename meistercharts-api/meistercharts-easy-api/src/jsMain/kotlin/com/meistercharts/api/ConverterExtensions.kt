@@ -18,7 +18,6 @@ package com.meistercharts.api
 import com.meistercharts.algorithms.layers.AxisTopTopTitleLayer
 import com.meistercharts.algorithms.layers.DomainRelativeGridLayer
 import com.meistercharts.algorithms.layers.GridLayer
-import com.meistercharts.algorithms.layers.HistoryEnumLayer.Companion.guessFillColor
 import com.meistercharts.algorithms.layers.axis.ConstantTicksProvider
 import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.axis.TickProvider
@@ -43,17 +42,16 @@ import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
-import com.meistercharts.design.Theme
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontWeight
-import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.style.Palette
 import it.neckar.datetime.minimal.TimeZone
+import it.neckar.elektromeister.rest.quote.ElektromeisterQuote
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
@@ -70,8 +68,9 @@ import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
-import it.neckar.open.provider.mapped
 import it.neckar.open.unit.other.px
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Contains conversion related methods
@@ -251,7 +250,7 @@ fun com.meistercharts.history.SamplingPeriod.toJs(): SamplingPeriod {
     com.meistercharts.history.SamplingPeriod.Every30Days,
     com.meistercharts.history.SamplingPeriod.Every90Days,
     com.meistercharts.history.SamplingPeriod.Every360Days,
-    -> throw UnsupportedOperationException("$this is not supported")
+      -> throw UnsupportedOperationException("$this is not supported")
   }
 }
 
@@ -273,6 +272,14 @@ fun com.meistercharts.time.TimeRange.toJs(): TimeRange {
   timeRange.asDynamic().start = start
   timeRange.asDynamic().end = end
   return timeRange
+}
+
+/**
+ * Converts the object to a plain JS object
+ */
+fun ElektromeisterQuote.toJs(): dynamic {
+  val json = Json.encodeToString(this)
+  return JSON.parse(json)
 }
 
 fun HistoryBucketDescriptor.toHistoryQueryDescriptorJs(): HistoryQueryDescriptor {

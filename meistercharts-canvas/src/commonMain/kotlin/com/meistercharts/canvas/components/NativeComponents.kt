@@ -15,13 +15,14 @@
  */
 package com.meistercharts.canvas.components
 
-import it.neckar.open.annotations.Experiment
 import com.meistercharts.annotations.Window
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Experiment
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose
 import it.neckar.open.observable.ObservableBoolean
+import it.neckar.open.observable.ObservableList
 import it.neckar.open.observable.ObservableObject
 
 /**
@@ -100,7 +101,7 @@ class ComboBox internal constructor(
    * The choices of the combo box.
    * Must contain *immutable* lists
    */
-  val choicesProperty: ObservableObject<List<Choice>> = ObservableObject(listOf())
+  val choicesProperty: ObservableList<Choice> = ObservableList.empty()
   var choices: List<Choice> by choicesProperty
 
   val selectedProperty: ObservableObject<Choice?> = ObservableObject(null)

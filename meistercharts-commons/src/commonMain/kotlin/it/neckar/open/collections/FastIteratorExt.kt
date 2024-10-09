@@ -482,7 +482,7 @@ inline fun <T> List<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (
     return fallbackValue
   }
 
-  var max = - Double.MAX_VALUE
+  var max = -Double.MAX_VALUE
   var n = 0
   while (n < currentSize) {
     max = callback(this[n++]).coerceAtLeast(max)
@@ -502,7 +502,7 @@ inline fun <T> Array<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: 
     return fallbackValue
   }
 
-  var max = - Double.MAX_VALUE
+  var max = -Double.MAX_VALUE
   var n = 0
   while (n < currentSize) {
     max = callback(this[n++]).coerceAtLeast(max)
@@ -518,6 +518,21 @@ inline fun <T> List<T>.fastSumBy(callback: (value: T) -> Double): Double {
   }
 
   var sum = 0.0
+  var n = 0
+  while (n < currentSize) {
+    sum += callback(this[n++])
+  }
+
+  return sum
+}
+
+inline fun <T> List<T>.fastSumByLong(callback: (value: T) -> Long): Long {
+  val currentSize = size
+  if (currentSize == 0) {
+    return 0
+  }
+
+  var sum = 0L
   var n = 0
   while (n < currentSize) {
     sum += callback(this[n++])

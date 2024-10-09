@@ -11,7 +11,6 @@ import kotlin.js.JsExport
 /**
  * Represents a URL (relative or absolute)
  */
-@JsExport
 @Serializable(with = UrlSerializer::class)
 sealed interface Url {
   /**

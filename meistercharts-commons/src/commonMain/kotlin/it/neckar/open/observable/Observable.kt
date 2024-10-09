@@ -17,33 +17,24 @@ typealias ConsumeChangesAction<T> = (oldValue: T, newValue: T) -> Unit
 /**
  * Represents an observable object.
  *
- * This interface only provides the ability to observe changes. It does not provide the ability to access the current value.
+ * This interface only provides the ability to observe changes.
+ * It does not provide the ability to access the current value.
+ *
+ * If the current value is required, use [ReadOnlyObservableObject] instead.
  */
 interface Observable<out T> {
-
   /**
-   * Registers an action that is called when the value is changed.
-   * This action is called initially if [immediately] is true (default is set to false).
+   * Registers an action that will be called when the value is changed.
    * @return a dispose action to unregister the given action
    */
-  fun consume(immediately: Boolean = false, action: ConsumeAction<T>): Disposable
+  fun consume(action: ConsumeAction<T>): Disposable
 
   /**
-   * Registers an action that is called immediately and when the value is changed
-   */
-  fun consumeImmediately(action: ConsumeAction<T>): Disposable {
-    return consume(immediately = true, action = action)
-  }
-
-  /**
-   * Registers an action that is called when the value has changed. The given action also gets the old value
+   * Registers an action that will be called when the value has changed. The given action also gets the old value (if available)
    * @return a dispose action to unregister the given action
    */
-  fun consumeChanges(immediately: Boolean = false, action: ConsumeChangesAction<T>): Disposable
+  fun consumeChanges(action: ConsumeChangesAction<T>): Disposable
 
-  fun consumeChangesImmediately(action: ConsumeChangesAction<T>): Disposable {
-    return consumeChanges(immediately = true, action = action)
-  }
 
   /**
    * Listener that is notified about value changes
@@ -53,8 +44,11 @@ interface Observable<out T> {
     fun valueChanged(oldValue: T, newValue: T)
   }
 
+  /**
+   * Registers a change listener that is notified about value changes
+   */
   @JavaFriendly
   fun addChangeListener(listener: ChangeListener<T>): Disposable {
-    return consumeChanges(false, listener::valueChanged)
+    return consumeChanges(listener::valueChanged)
   }
 }

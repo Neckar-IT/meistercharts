@@ -36,6 +36,7 @@ import it.neckar.events.TouchEndEvent
 import it.neckar.events.TouchId
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
+import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 import kotlin.reflect.KProperty0
@@ -117,12 +118,12 @@ class CanvasDragSupport {
    * Returns true if the event should be consumed
    */
   fun dragging(coordinates: Coordinates, eventTime: Double, chartSupport: ChartSupport): EventConsumption {
-    if (!preparedForDragging) {
+    if (preparedForDragging.not()) {
       //No mouse down detected
       return Ignored
     }
 
-    if (!dragging) {
+    if (dragging.not()) {
       //Start dragging
       dragging = true
       //updateDragLocation(coordinates, eventTime)
@@ -146,7 +147,7 @@ class CanvasDragSupport {
   }
 
   fun finishDragging(coordinates: Coordinates, chartSupport: ChartSupport): EventConsumption {
-    if (!dragging && !preparedForDragging) {
+    if (dragging.not() && preparedForDragging.not()) {
       //no dragging - ignore event
       return Ignored
     }
@@ -226,10 +227,10 @@ class CanvasDragSupport {
 /**
  * Creates a mouse event handler that can be used to update the drag handler
  */
-fun CanvasDragSupport.connectedMouseEventHandler(modifierCombination: ModifierCombination = ModifierCombination.None): CanvasMouseEventHandler {
+fun CanvasDragSupport.connectedMouseEventHandler(modifierCombination: () -> ModifierCombination = ModifierCombination.None.asProvider()): CanvasMouseEventHandler {
   return object : CanvasMouseEventHandler {
     override fun onDown(event: MouseDownEvent, chartSupport: ChartSupport): EventConsumption {
-      if (event.modifierCombination != modifierCombination) {
+      if (event.modifierCombination != modifierCombination()) {
         return Ignored
       }
 

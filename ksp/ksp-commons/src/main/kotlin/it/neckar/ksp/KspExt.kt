@@ -12,6 +12,7 @@ import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.KSModifierListOwner
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueParameter
@@ -264,3 +265,11 @@ fun KSClassDeclaration.implementsSealed(): Boolean {
     }
   }
 }
+
+/**
+ * Returns true if this declaration is external
+ */
+val KSModifierListOwner.isExternal: Boolean
+  get() {
+    return modifiers.contains(Modifier.EXTERNAL)
+  }

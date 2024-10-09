@@ -19,13 +19,11 @@ interface ObservableProperties : Observable<Any?> {
 
   fun consumeAllPropertiesChanges(action: ConsumeChangesAction<Any?>): Disposable
 
-  override fun consume(immediately: Boolean, action: ConsumeAction<Any?>): Disposable {
-    require(immediately.not()) { "immediately is not supported" }
+  override fun consume(action: ConsumeAction<Any?>): Disposable {
     return consumeAllProperties(action)
   }
 
-  override fun consumeChanges(immediately: Boolean, action: ConsumeChangesAction<Any?>): Disposable {
-    require(immediately.not()) { "immediately is not supported" }
+  override fun consumeChanges(action: ConsumeChangesAction<Any?>): Disposable {
     return consumeAllPropertiesChanges(action)
   }
 }

@@ -41,15 +41,18 @@ import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.CanvasTouchZoomAndPanSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
 import com.meistercharts.events.gesture.delegate
+import com.meistercharts.provider.delegate
 import com.meistercharts.zoom.UpdateReason
 import com.meistercharts.zoom.ZoomAndTranslationSupport
 import it.neckar.events.KeyDownEvent
+import it.neckar.events.ModifierCombination
 import it.neckar.events.MouseDoubleClickEvent
 import it.neckar.events.MouseWheelEvent
 import it.neckar.geometry.AxisSelection
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Zoom and translation layer that can be configured to handle different zoom and translation actions.
@@ -58,12 +61,12 @@ import it.neckar.geometry.Size
  */
 class ZoomAndTranslationLayer(
   val zoomAndTranslationSupport: ZoomAndTranslationSupport,
-  configuration: ZoomAndTranslationLayer.() -> Unit = {},
+  val configuration: Configuration = Configuration(),
 ) : AbstractLayer() {
   /**
    * This layer shall be notified as late as possible.
    * Or: All other layers should have the chance to consume events *before* the zoom and translation layer is called.
-   * Therefore we define the type as [LayerType.Content] and register as soon as possible.
+   * Therefore, we define the type as [LayerType.Content] and register as soon as possible.
    */
   override val type: LayerType = LayerType.Content
 
@@ -94,7 +97,7 @@ class ZoomAndTranslationLayer(
    */
   val dragSupport: CanvasDragSupport = CanvasDragSupport().also { dragSupport ->
     //touchEventHandler.delegate(dragSupport.connectedTouchEventHandler(2))
-    mouseEventHandler.delegate(dragSupport.connectedMouseEventHandler())
+    mouseEventHandler.delegate(dragSupport.connectedMouseEventHandler(configuration::translateOnMouseDragModifier.delegate()))
 
     //Delegate the drag events
     dragSupport.handle(::mouseDragAction.delegate())
@@ -206,11 +209,6 @@ class ZoomAndTranslationLayer(
     this.touchDoubleTapAction = action
   }
 
-  init {
-    //Applies the configuration
-    configuration()
-  }
-
   override fun paint(paintingContext: LayerPaintingContext) {
     //Do not paint anything
   }
@@ -225,6 +223,13 @@ class ZoomAndTranslationLayer(
    * This location is updated on every drag
    */
   var rubberBandCurrentLocation: @Window Coordinates? = null
+
+  class Configuration {
+    /**
+     * The modifier combination for panning
+     */
+    var translateOnMouseDragModifier: () -> ModifierCombination = ModifierCombination.None.asProvider()
+  }
 }
 
 /**
@@ -308,7 +313,9 @@ fun ZoomAndTranslationLayer.zoomOnKeyDown(
 /**
  * Enable translate on drag
  */
-fun ZoomAndTranslationLayer.translateOnMouseDrag(axis: AxisSelection = AxisSelection.Both) {
+fun ZoomAndTranslationLayer.translateOnMouseDrag(axis: AxisSelection = AxisSelection.Both, translateOnMouseDragModifier: () -> ModifierCombination = ModifierCombination.None.asProvider()) {
+  configuration.translateOnMouseDragModifier = translateOnMouseDragModifier
+
   onMouseDrag { distance ->
     zoomAndTranslationSupport.translateWindow(axis, distance.x, distance.y, reason = UpdateReason.UserInteraction)
     Consumed
@@ -389,7 +396,9 @@ fun Layers.addZoomAndTranslation(
   zoomAndTranslationSupport: ZoomAndTranslationSupport,
   configuration: ZoomAndTranslationLayer.() -> Unit = {},
 ): ZoomAndTranslationLayer {
-  return ZoomAndTranslationLayer(zoomAndTranslationSupport, configuration).apply {
+  val zoomAndTranslationLayer = ZoomAndTranslationLayer(zoomAndTranslationSupport, ZoomAndTranslationLayer.Configuration())
+  zoomAndTranslationLayer.configuration()
+  return zoomAndTranslationLayer.apply {
     addLayer(this)
 
     //add the rubber band visualization layer

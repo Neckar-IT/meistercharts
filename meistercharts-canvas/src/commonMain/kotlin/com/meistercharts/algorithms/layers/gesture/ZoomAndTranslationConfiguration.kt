@@ -16,7 +16,9 @@
 package com.meistercharts.algorithms.layers.gesture
 
 import com.meistercharts.canvas.MeisterChartsBuilderDsl
+import it.neckar.events.ModifierCombination
 import it.neckar.geometry.AxisSelection
+import it.neckar.open.kotlin.lang.asProvider
 
 /**
  * Contains the configuration for the [ZoomAndTranslationLayer]
@@ -57,6 +59,11 @@ class ZoomAndTranslationConfiguration {
    * Whether to translate on (mouse) drag
    */
   var translateOnMouseDrag: Boolean = true
+
+  /**
+   * The keyboard modifier combination for panning
+   */
+  var translateOnMouseDragModifier: ModifierCombination = ModifierCombination.None
 
   /**
    * Whether to translate on (touch screen) drag
@@ -114,7 +121,7 @@ class ZoomAndTranslationConfiguration {
     }
 
     if (translateOnMouseDrag) {
-      zoomAndTranslationLayer.translateOnMouseDrag(translateAxisSelection)
+      zoomAndTranslationLayer.translateOnMouseDrag(translateAxisSelection, translateOnMouseDragModifier.asProvider())
     }
 
     if (translateOnTouchDrag) {

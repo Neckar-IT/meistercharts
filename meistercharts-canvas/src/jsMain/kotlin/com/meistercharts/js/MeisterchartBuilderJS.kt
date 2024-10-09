@@ -26,9 +26,15 @@ class MeisterchartBuilderJS(
   description: String,
   chartId: ChartId = ChartId.next(),
 ) : MeisterchartBuilder(description, chartId = chartId) {
+
+  /**
+   * If set to `true` the context menu will be disabled
+   */
+  var disableContextMenu: Boolean = true
+
   init {
     //Enforce a repaint on resize
-    //The HTML5 canvas is cleared on resize - therefore a repaint is necessary to avoid flickering to white
+    //The HTML5 canvas is cleared on resize - therefore, a repaint is necessary to avoid flickering to white
     configure {
       chartSupport.canvas.sizeProperty.consume {
         chartSupport.markAsDirty(DirtyReason.ChartStateChanged)
@@ -37,7 +43,13 @@ class MeisterchartBuilderJS(
   }
 
   override fun build(): MeisterchartJS {
-    return (super.build() as MeisterchartJS)
+    return (super.build() as MeisterchartJS).also {
+      if (disableContextMenu) {
+        it.htmlCanvas.canvasElement.addEventListener("contextmenu", { event ->
+          event.preventDefault()
+        })
+      }
+    }
   }
 
   companion object {

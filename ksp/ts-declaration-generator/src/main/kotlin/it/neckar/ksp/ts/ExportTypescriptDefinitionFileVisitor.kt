@@ -17,9 +17,11 @@ import com.google.devtools.ksp.visitor.KSTopDownVisitor
 import it.neckar.ksp.format
 import it.neckar.ksp.isClassProperty
 import it.neckar.ksp.isDeprecated
+import it.neckar.ksp.isExternal
 import it.neckar.ksp.isTopLevelProperty
 import it.neckar.ksp.isValueClass
 import java.io.BufferedWriter
+
 
 /**
  * Creates the d.ts file declarations
@@ -190,7 +192,10 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
       return
     }
 
-    if (function.isAbstract) {
+    //Check if the parent declaration is "external"
+    val parentIsExternal = function.parentDeclaration?.isExternal ?: false
+    if (function.isAbstract && parentIsExternal.not()) {
+      logger.info("Skipping abstract function ${name.asString()}. parent external: $parentIsExternal")
       //Skip abstract functions
       return
     }

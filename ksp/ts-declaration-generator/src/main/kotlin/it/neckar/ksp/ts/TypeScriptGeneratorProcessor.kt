@@ -47,7 +47,7 @@ class TypeScriptGeneratorProcessor(val codeGenerator: CodeGenerator, val logger:
       "typeScriptFileName not set"
     }
 
-    codeGenerator.createNewFileByPath(Dependencies.ALL_FILES, typeScriptDefinitionFileName, extensionName = "")
+    codeGenerator.createNewFileByPath(dependencies = Dependencies.ALL_FILES, path = typeScriptDefinitionFileName, extensionName = "")
       .bufferedWriter().use { writer ->
         writer.appendLine("export as namespace $namespace;")
 
@@ -71,7 +71,7 @@ class TypeScriptGeneratorProcessor(val codeGenerator: CodeGenerator, val logger:
         }
       }
 
-    codeGenerator.createNewFileByPath(Dependencies.ALL_FILES, typeScriptFileName, extensionName = "")
+    codeGenerator.createNewFileByPath(dependencies = Dependencies.ALL_FILES, path = typeScriptFileName, extensionName = "")
       .bufferedWriter().use { writer ->
         val visitor = ExportTypescriptFileVisitor(writer, logger)
 

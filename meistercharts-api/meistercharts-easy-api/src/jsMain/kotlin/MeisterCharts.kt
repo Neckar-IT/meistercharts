@@ -21,6 +21,7 @@ import com.meistercharts.api.circular.CircularChart
 import com.meistercharts.api.compass.Compass
 import com.meistercharts.api.discrete.DiscreteTimelineChart
 import com.meistercharts.api.discrete.applyDiscreteTimelineChartEasyApiDefaults
+import com.meistercharts.api.elektromeister.ElektromeisterPocChart
 import com.meistercharts.api.histogram.Histogram
 import com.meistercharts.api.line.LineChartSimple
 import com.meistercharts.api.line.TimeLineChart
@@ -38,6 +39,10 @@ import com.meistercharts.charts.bullet.BulletChartGestalt
 import com.meistercharts.charts.refs.DiscreteTimelineChartGestalt
 import com.meistercharts.charts.timeline.TimeLineChartWithToolbarGestalt
 import com.meistercharts.design.setAsDefault
+import com.meistercharts.elektromeister.ElektromeisterDemoData
+import com.meistercharts.elektromeister.ElektromeisterMeisterchartsModel
+import com.meistercharts.elektromeister.ElektromeisterPocGestalt
+import com.meistercharts.elektromeister.model.toMutableFloorPlan
 import com.meistercharts.history.HistoryStorageQueryMonitor
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.withQueryMonitor
@@ -75,6 +80,62 @@ fun setDefaultTheme(themeId: ThemeId) {
 fun setDefaultI18nConfiguration(jsI18nConfiguration: I18nConfiguration) {
   jsI18nConfiguration.toModel().setAsDefault()
 }
+
+/**
+ * Creates the [ElektromeisterPocChart] as a child of the element with id [id].
+ * @see [createElektromeisterPocChartFromElement]
+ */
+@JsExport
+@JsName("createElektromeisterPocChartFromId")
+@Suppress("unused")
+fun createElektromeisterPocChartFromId(
+  id: String,
+): ElektromeisterPocChart {
+  val element = document.getElementById(id)
+  requireNotNull(element) { "failed to find the element with id $id" }
+  return createElektromeisterPocChartFromElement(element)
+}
+
+/**
+ * Creates the [ElektromeisterPocChart] as a child of [element].
+ * @see [createElektromeisterPocChart]h
+ */
+@JsExport
+@JsName("createElektromeisterPocChartFromElement")
+@Suppress("unused")
+fun createElektromeisterPocChartFromElement(
+  element: Element,
+): ElektromeisterPocChart {
+  val elektromeisterPocChart = createElektromeisterPocChart()
+  element.appendChild(elektromeisterPocChart.holder)
+  return elektromeisterPocChart
+}
+
+/**
+ * Creates the [ElektromeisterPocChart].
+ */
+@JsExport
+@JsName("createElektromeisterPocChart")
+@Suppress("unused")
+fun createElektromeisterPocChart(): ElektromeisterPocChart {
+  logger.debug { "create ElektromeisterPocChart" }
+  // The MeisterChartBuilder must be created before the gestalt to ensure that MeisterChartsPlatform is correctly initialized
+  val meisterChartBuilder = MeisterchartBuilderJS.create("ElektromeisterPocChart")
+  val gestalt = ElektromeisterPocGestalt(
+    ElektromeisterPocGestalt.Configuration(
+      model = ElektromeisterMeisterchartsModel(
+        floorPlan = ElektromeisterDemoData.floorPlan.toMutableFloorPlan(),
+        floorPlanImage = ElektromeisterPocGestalt.sampleFloorPlanImage,
+      )
+    ),
+  ).apply {
+    configure(meisterChartBuilder)
+  }
+
+  val meisterChart = meisterChartBuilder.build()
+  return ElektromeisterPocChart(gestalt, meisterChart)
+}
+
 
 /**
  * Creates the [BarChartStacked] as a child of the element with id [id].

@@ -1,13 +1,12 @@
 package it.neckar.open.observable
 
-import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import kotlin.reflect.KProperty
 
 /**
  * An observable object that contains a value and can be observed
  */
-open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T>, Disposable {
+open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyObservableObject<T>, Disposable {
   /**
    * The current value
    */
@@ -15,76 +14,8 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T>, Disp
     set(value) {
       val oldValue = field
       field = value
-      notifyListeners(oldValue, value)
+      notifyListenersIfChanged(oldValue, value)
     }
-
-  /**
-   * The listeners that are notified about changes
-   */
-  private val valueChangeListeners: MutableList<ConsumeChangesAction<T>> = mutableListOf()
-
-  /**
-   * Dependent objects - to avoid premature GC
-   */
-  private val dependentObjects: DependentObjects = DependentObjects()
-
-  /**
-   * Adds a dependent object that is kept
-   */
-  override fun addDependentObject(key: Any, dependentObject: Any) {
-    dependentObjects[key] = dependentObject
-  }
-
-  override fun addDependentObject(dependentObject: Any) {
-    dependentObjects[dependentObject] = dependentObject
-  }
-
-  /**
-   * Returns the dependent object for the given key - if there is one
-   */
-  override fun getDependentObject(key: Any): Any? {
-    return dependentObjects[key]
-  }
-
-  /**
-   * Removes the dependent object for the given key
-   */
-  override fun removeDependentObject(key: Any): Any? {
-    return dependentObjects.removeDependentObject(key)
-  }
-
-  override fun consumeChanges(immediately: Boolean, action: ConsumeChangesAction<T>): Disposable {
-    valueChangeListeners.add(action)
-
-    return Disposable { valueChangeListeners.remove(action) }.also {
-      if (immediately) {
-        action(value, value)
-      }
-    }
-  }
-
-  override fun consume(immediately: Boolean, action: ConsumeAction<T>): Disposable {
-    return consumeChanges { _: T, newValue: T -> action(newValue) }.also {
-      if (immediately) {
-        action(value)
-      }
-    }
-  }
-
-  /**
-   * Notifies the listeners about a value change.
-   * This method only notifies the listeners when the value has changed
-   */
-  private fun notifyListeners(oldValue: T, newValue: T) {
-    if (oldValue == newValue) {
-      //Nothing has changed, just return
-      return
-    }
-
-    valueChangeListeners.fastForEach {
-      it(oldValue, newValue)
-    }
-  }
 
   /**
    * Sets the value - used for delegation to a var:
@@ -194,15 +125,6 @@ open class ObservableObject<T>(initValue: T) : ReadOnlyObservableObject<T>, Disp
       value = newValue
       onChange()
     }
-  }
-
-  /**
-   * Disposes the observable object:
-   * Removes all listeners
-   */
-  override fun dispose() {
-    valueChangeListeners.clear()
-    dependentObjects.dispose()
   }
 }
 

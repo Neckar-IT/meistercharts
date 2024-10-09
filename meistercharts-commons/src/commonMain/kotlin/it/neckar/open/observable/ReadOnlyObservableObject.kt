@@ -1,12 +1,11 @@
 package it.neckar.open.observable
 
-import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.dispose.Disposable
 import kotlin.reflect.KProperty
 
 
 /**
- * Observable object - read only view
+ * Observable object - read-only view
  *
  */
 interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSupport {
@@ -23,29 +22,62 @@ interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSuppor
    * val name by nameProperty
    * ```
    *
-   * For a binding to a var look at [it.neckar.open.observable.ObservableObject.setValue(java.lang.Object, kotlin.reflect.KProperty<?>, T)]
+   * For a binding to a `var` look at [it.neckar.open.observable.ObservableObject.setValue(java.lang.Object, kotlin.reflect.KProperty<?>, T)]
    */
   operator fun getValue(thisRef: Any, property: KProperty<*>): T {
     return value
   }
 
   /**
+   * Registers an action that is called when the value is changed
+   */
+  fun consume(immediately: Boolean = false, action: ConsumeAction<T>): Disposable {
+    return consumeChanges(immediately = immediately) { _, newValue -> action(newValue) }
+  }
+
+  /**
+   * Registers an action that is called immediately (with the current value) and when the value is changed
+   */
+  fun consumeImmediately(action: ConsumeAction<T>): Disposable {
+    return consume(immediately = true, action = action)
+  }
+
+  fun consumeChanges(immediately: Boolean = false, action: ConsumeChangesAction<T>): Disposable {
+    return consumeChanges(action = action).also {
+      if (immediately) {
+        action(value, value)
+      }
+    }
+  }
+
+  /**
+   * Registers an action that is called immediately (with the current value) and when the value is changed
+   */
+  fun consumeChangesImmediately(action: ConsumeChangesAction<T>): Disposable {
+    return consumeChanges(immediately = true, action = action)
+  }
+
+  /**
    * Maps the value of the current observable object to another value
    */
-  fun <R> map(function: (T) -> R): ReadOnlyObservableObject<R> {
-    val intermediateObservable = ObservableObject(function(value))
+  fun <R> map(mapFunction: (T) -> R): ReadOnlyObservableObject<R> {
+    val intermediateObservable = ObservableObject(initValue = mapFunction(value))
 
     consume { newValue ->
-      intermediateObservable.value = function(newValue)
+      intermediateObservable.value = mapFunction(newValue)
     }
     return intermediateObservable
   }
 
-  fun mapBoolean(function: (T) -> Boolean): ReadOnlyObservableBoolean {
-    val intermediateObservable = ObservableBoolean(function(value))
+  /**
+   * Maps the value of the current observable object to a boolean.
+   * Returns a new observable boolean that is automatically updated.
+   */
+  fun mapBoolean(mapFunction: (T) -> Boolean): ReadOnlyObservableBoolean {
+    val intermediateObservable = ObservableBoolean(mapFunction(value))
 
     consume { newValue ->
-      intermediateObservable.value = function(newValue)
+      intermediateObservable.value = mapFunction(newValue)
     }
     return intermediateObservable
   }
