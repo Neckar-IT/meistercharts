@@ -137,6 +137,10 @@ interface Box {
     return Coordinates(right, bottom)
   }
 
+  fun center(): Coordinates {
+    return Coordinates(centerX, centerY)
+  }
+
   /**
    * Returns the coordinates for the given direction.
    * Top left returns 0.0/0.0
