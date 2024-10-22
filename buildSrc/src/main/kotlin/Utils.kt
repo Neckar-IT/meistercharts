@@ -1,8 +1,10 @@
+import KotlinX.Multik.api
 import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.plugins.jvm.JvmComponentDependencies
 import org.gradle.api.provider.Provider
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.JavaExec
@@ -15,6 +17,7 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
+import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
@@ -571,6 +574,204 @@ fun org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest.configureJsKarma
  */
 fun Long.formatAsMegaBytes(): String {
   return String.format("%,.2f", this / 1024.0 / 1024.0)
+}
+
+
+
+fun KotlinMultiplatformExtension.addAnnotationDependencies() {
+  this.sourceSets.jvmMain {
+    dependencies {
+      api(Libs.jsr305)
+      api(Libs.javax_inject)
+      api(Libs.javax_annotation_api)
+      api(Libs.annotations)
+    }
+  }
+}
+
+fun KotlinMultiplatformExtension.addKotlinDependencies() {
+  addAnnotationDependencies()
+  this.sourceSets.jsMain {
+    dependencies {
+      api(Libs.kotlin_js)
+    }
+  }
+}
+
+
+fun KotlinMultiplatformExtension.addKotlinTestDependencies() {
+  this.sourceSets.commonMain {
+    dependencies {
+      api(Libs.kotlin_test)
+      api(Libs.kotlin_test_common)
+      api(Libs.kotlin_test_annotations_common)
+
+      api(Libs.kotlin_reflect)
+
+      api(KotlinX.coroutines.core)
+      api(KotlinX.coroutines.test)
+
+      api(Libs.assertk)
+    }
+  }
+
+  this.sourceSets.jsMain {
+    dependencies {
+      api(Libs.kotlin_test_js)
+    }
+  }
+
+  this.sourceSets.jvmMain {
+    dependencies {
+      api(Libs.kotlin_test_junit5)
+      api(Libs.junit_jupiter_api)
+      api(Libs.junit_jupiter_engine)
+      api(Libs.junit_jupiter_params)
+
+      api(Libs.mockk)
+
+      api(Libs.commons_io)
+      api(Libs.commons_math3)
+
+      api(Libs.awaitility)
+      implementation(Libs.measured)
+    }
+  }
+}
+
+fun KotlinMultiplatformExtension.addKtorClientDependencies() {
+  this.sourceSets.commonMain {
+    dependencies {
+      api(Libs.kotlin_reflect)
+      api(KotlinX.coroutines.core)
+
+      api(Ktor.client.core)
+      api(Ktor.client.json)
+      api(Ktor.client.serialization)
+      api(Ktor.client.logging)
+
+      api(Ktor.plugins.websockets)
+
+      api(Libs.ktor_client_content_negotiation)
+      api(Libs.ktor_serialization_kotlinx)
+      api(Libs.ktor_serialization_kotlinx_json)
+    }
+  }
+
+  this.sourceSets.jvmMain {
+    dependencies {
+      api(Ktor.client.okHttp)
+    }
+  }
+}
+
+
+fun KotlinMultiplatformExtension.addKtorServerDependencies() {
+  this.sourceSets.jvmMain {
+    dependencies {
+      api(Ktor.server.core)
+      api(Ktor.server.netty)
+
+      api(KotlinX.coroutines.core)
+
+      api(Libs.ktor_server)
+      api(Libs.ktor_server_websockets)
+      api(Libs.ktor_server_auth)
+      api(Libs.ktor_server_locations)
+      api(Libs.ktor_server_metrics)
+      api(Ktor.server.callId)
+      api(Libs.ktor_server_conditional_headers)
+
+      api(Libs.ktor_serialization_kotlinx)
+      api(Libs.ktor_serialization_kotlinx_json)
+
+      api(Libs.logback_classic)
+    }
+  }
+}
+
+fun DependencyHandlerScope.addAnnotationDependencies() {
+  add("api", Libs.jsr305)
+  add("api", Libs.javax_inject)
+  add("api", Libs.javax_annotation_api)
+  add("api", Libs.annotations)
+}
+
+fun DependencyHandlerScope.addKotlinTestDependencies() {
+  add("api", Libs.kotlin_test)
+  add("api", Libs.kotlin_test_common)
+  add("api", Libs.kotlin_test_annotations_common)
+  add("api", Libs.kotlin_reflect)
+  add("api", Libs.assertk)
+  add("api", Libs.kotlinx_coroutines_core)
+  add("api", Libs.kotlinx_coroutines_test)
+  add("api", Libs.kotlin_test_junit5)
+  add("api", Libs.junit_jupiter_api)
+  add("api", Libs.junit_jupiter_engine)
+  add("api", Libs.junit_jupiter_params)
+  add("api", Libs.mockk)
+  add("api", Libs.commons_io)
+  add("api", Libs.commons_math3)
+  add("api", Libs.awaitility)
+  add("api", Libs.measured)
+}
+
+fun JvmComponentDependencies.addKotlinTestDependencies() {
+  api(Libs.kotlin_test)
+  api(Libs.kotlin_test_common)
+  api(Libs.kotlin_test_annotations_common)
+
+  api(Libs.kotlin_reflect)
+
+
+  api(Libs.assertk)
+  api(Libs.kotlinx_coroutines_core)
+  api(Libs.kotlinx_coroutines_test)
+
+
+  api(Libs.kotlin_test_junit5)
+  api(Libs.junit_jupiter_api)
+  api(Libs.junit_jupiter_engine)
+  api(Libs.junit_jupiter_params)
+
+  api(Libs.mockk)
+
+  api(Libs.commons_io)
+  api(Libs.commons_math3)
+
+  api(Libs.awaitility)
+  api(Libs.measured)
+}
+
+fun DependencyHandlerScope.addKtorClientDependencies() {
+  add("api", Libs.kotlin_reflect)
+  add("api", Libs.kotlinx_coroutines_core)
+  add("api", Libs.ktor_client_core)
+  add("api", Libs.ktor_client_json)
+  add("api", Libs.ktor_client_serialization)
+  add("api", Libs.ktor_client_logging)
+  add("api", Libs.ktor_websockets)
+  add("api", Libs.ktor_client_content_negotiation)
+  add("api", Libs.ktor_serialization_kotlinx)
+  add("api", Libs.ktor_serialization_kotlinx_json)
+  add("api", Libs.ktor_client_okhttp)
+}
+
+
+fun DependencyHandlerScope.addKtorServerDependencies() {
+  add("api", Libs.ktor_server_core)
+  add("api", Libs.ktor_server_netty)
+  add("api", Libs.kotlinx_coroutines_core)
+  add("api", Libs.ktor_server)
+  add("api", Libs.ktor_server_websockets)
+  add("api", Libs.ktor_server_auth)
+  add("api", Libs.ktor_server_locations)
+  add("api", Libs.ktor_server_metrics)
+  add("api", Libs.ktor_server_call_id)
+  add("api", Libs.ktor_server_conditional_headers)
+  add("api", Libs.ktor_serialization_kotlinx)
+  add("api", Libs.ktor_serialization_kotlinx_json)
+  add("api", Libs.logback_classic)
 }
 
 
