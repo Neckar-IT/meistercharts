@@ -39,6 +39,17 @@ enum class RightTriangleType {
   MissingCornerInSecondQuadrant,
   MissingCornerInThirdQuadrant,
   MissingCornerInFourthQuadrant,
+
+  ;
+
+  fun format(): String {
+    return when (this) {
+      MissingCornerInFirstQuadrant -> "Ecke fehlt links oben"
+      MissingCornerInSecondQuadrant -> "Ecke fehlt rechts uten"
+      MissingCornerInThirdQuadrant -> "Ecke fehlt links unten"
+      MissingCornerInFourthQuadrant -> "Ecke fehlt links oben"
+    }
+  }
 }
 
 /**
