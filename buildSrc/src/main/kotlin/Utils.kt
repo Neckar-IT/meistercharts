@@ -3,7 +3,6 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.plugins.jvm.JvmComponentDependencies
 import org.gradle.api.provider.Provider
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.JavaExec
@@ -16,7 +15,6 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
-import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
@@ -305,6 +303,14 @@ fun Project.withTask(name: String, block: (Task) -> Unit) {
 fun Project.configureToolchainJava8WithFx(): Provider<JavaCompiler> {
   //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
   return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ORACLE)
+}
+
+/**
+ * Configures a project to use Java 8 (not including JavaFX)
+ */
+fun Project.configureToolchainJava8(): Provider<JavaCompiler> {
+  //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
+  return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ADOPTIUM)
 }
 
 /**

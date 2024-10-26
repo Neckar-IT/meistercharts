@@ -40,6 +40,15 @@ abstract class AbstractProjects {
     return configureProject(path, ProjectType.KotlinJvm)
   }
 
+  protected fun jvm8(path: String): ConfiguredProject {
+    return configureProject(path, ProjectType.KotlinJvm8)
+  }
+
+  protected fun jvm8Fx(path: String): ConfiguredProject {
+    return configureProject(path, ProjectType.KotlinJvm8Fx)
+  }
+
+  //TODO introduce JVM version parameter
   protected fun multiPlatform(path: String): ConfiguredProject {
     return configureProject(path, ProjectType.KotlinMultiplatform)
   }
@@ -86,6 +95,14 @@ abstract class AbstractProjects {
 
   fun jvmProjects(): List<ConfiguredProject> {
     return configuredProjects.filter { it.type == ProjectType.KotlinJvm }
+  }
+
+  fun jvm8Projects(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinJvm8 }
+  }
+
+  fun jvm8FxProjects(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinJvm8Fx }
   }
 
   fun pnpmProjects(): List<ConfiguredProject> {
@@ -216,15 +233,6 @@ data class ConfiguredProject internal constructor(
     }
   }
 
-  /**
-   * Returns the project using this as resolver
-   */
-  context (Project) //currently not supported by kotlin-dsl + Gradle:
-  //https://github.com/gradle/gradle/issues/24221
-  fun projectWithContext(): Project {
-    return project(path)
-  }
-
   //TODO replace with context once supported
   fun project(): Project {
     return GradleContext.project(path)
@@ -245,9 +253,19 @@ data class ConfiguredProject internal constructor(
 
 enum class ProjectType {
   /**
-   * JVM project
+   * JVM project - with the current JDK version
    */
   KotlinJvm,
+
+  /**
+   * Represents an old JVM 8 project (without JavaFX)
+   */
+  KotlinJvm8,
+
+  /**
+   * JVM Project that uses JavaFX (Oracle JDK 8)
+   */
+  KotlinJvm8Fx,
 
   /**
    * Multiplatform project - usually contains JVM and JS code
