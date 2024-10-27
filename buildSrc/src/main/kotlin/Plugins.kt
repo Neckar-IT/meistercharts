@@ -55,6 +55,7 @@ object Plugins {
   const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
+  const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
 
   /**
    * Configures python projects
@@ -72,8 +73,8 @@ object Plugins {
    */
   const val licenseReport: String = "it.neckar.license-report"
 
-  const val licenseFormatBase = "com.github.hierynomus.license-base"
-  const val licenseFormat = "com.github.hierynomus.license"
+  const val licenseFormatBase: String = "com.github.hierynomus.license-base"
+  const val licenseFormat: String = "com.github.hierynomus.license"
 
   const val dependenciesReport: String = "it.neckar.dependencies-report"
   const val jibCli: String = "it.neckar.jib-cli-plugin"
@@ -281,6 +282,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.skipDistForApplication: 
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
   get() = id(Plugins.skipShadowDistZipForShadowPlugin)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
+  get() = id(Plugins.generateIgnoreProjectSets)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

@@ -9,7 +9,8 @@ import org.gradle.kotlin.dsl.project
 abstract class AbstractProjects {
 
   val disabledProjectsSupport: DisabledProjectsSupport = DisabledProjectsSupport.load(
-    GradleContext.rootProject.file("disabled-projects.json5")
+    disabledProjectsFile = GradleContext.rootProject.file("disabled-projects.json5"),
+    disabledOnMacOsFile = GradleContext.rootProject.file(".project-sets/${ProjectType.KotlinJvm8Fx.name}.json5"),
   )
 
   /**
@@ -93,36 +94,40 @@ abstract class AbstractProjects {
     return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }
   }
 
+  fun project(type: ProjectType): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == type }
+  }
+
   fun jvmProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinJvm }
+    return project(ProjectType.KotlinJvm)
   }
 
   fun jvm8Projects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinJvm8 }
+    return project(ProjectType.KotlinJvm8)
   }
 
   fun jvm8FxProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinJvm8Fx }
+    return project(ProjectType.KotlinJvm8Fx)
   }
 
   fun pnpmProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.PNPM }
+    return project(ProjectType.PNPM)
   }
 
   fun pythonProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.Python }
+    return project(ProjectType.Python)
   }
 
   fun ideaPluginProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.IdeaPlugin }
+    return project(ProjectType.IdeaPlugin)
   }
 
   fun intermediateProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.Intermediate }
+    return project(ProjectType.Intermediate)
   }
 
   fun otherProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.Other }
+    return project(ProjectType.Other)
   }
 }
 
