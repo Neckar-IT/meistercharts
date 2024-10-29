@@ -51,7 +51,6 @@ import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.style.Palette
 import it.neckar.datetime.minimal.TimeZone
-import it.neckar.elektromeister.rest.quote.ElektromeisterQuote
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
@@ -272,14 +271,6 @@ fun com.meistercharts.time.TimeRange.toJs(): TimeRange {
   timeRange.asDynamic().start = start
   timeRange.asDynamic().end = end
   return timeRange
-}
-
-/**
- * Converts the object to a plain JS object
- */
-fun ElektromeisterQuote.toJs(): dynamic {
-  val json = Json.encodeToString(this)
-  return JSON.parse(json)
 }
 
 fun HistoryBucketDescriptor.toHistoryQueryDescriptorJs(): HistoryQueryDescriptor {
