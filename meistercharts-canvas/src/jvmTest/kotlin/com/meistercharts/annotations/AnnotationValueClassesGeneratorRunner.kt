@@ -15,6 +15,8 @@
  */
 package com.meistercharts.annotations
 
+import java.util.Locale
+
 /**
  * Helper class that creates code that has been copied to ChartCalculator.
  * This helper should be no longer necessary
@@ -160,7 +162,7 @@ class Creator {
     val targetName = target.name
 
     return """fun ${sourceName}${usage.name}.to$targetName(): ${targetName}${usage.name} {
-      return ${targetName}${usage.name}(${sourceName.decapitalize()}2${targetName.decapitalize()}${usage.conversionMethodPostFix.toUpperCase()}(value))
+      return ${targetName}${usage.name}(${sourceName.decapitalize()}2${targetName.decapitalize()}${usage.conversionMethodPostFix.uppercase(Locale.getDefault())}(value))
     }
     """
   }

@@ -27,9 +27,15 @@ val KClass<*>.simpleNameWithEnclosing: String
   }
 
 /**
- * Returns the enum values for this class.
+ * Returns the enum entries for this class.
  */
-val <T : Any> KClass<T>.enumValues: Array<T>
+@Deprecated("Use enumEntries instead", ReplaceWith("enumEntries"))
+inline val <T : Any> KClass<T>.enumValues: Array<T>
+  get() {
+    return this.enumEntries
+  }
+
+val <T : Any> KClass<T>.enumEntries: Array<T>
   get() {
     return this.java.enumConstants ?: throw IllegalStateException("enumConstants is null for $this")
   }

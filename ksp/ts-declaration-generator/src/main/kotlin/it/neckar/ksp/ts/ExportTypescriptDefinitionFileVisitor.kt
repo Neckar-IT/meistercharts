@@ -18,6 +18,7 @@ import it.neckar.ksp.format
 import it.neckar.ksp.isClassProperty
 import it.neckar.ksp.isDeprecated
 import it.neckar.ksp.isExternal
+import it.neckar.ksp.isSynthetic
 import it.neckar.ksp.isTopLevelProperty
 import it.neckar.ksp.isValueClass
 import java.io.BufferedWriter
@@ -172,6 +173,11 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
     val name = function.simpleName
     logger.info("Visiting function ${name.asString()}")
 
+    if (function.isSynthetic) {
+      //Skip synthetic functions
+      return
+    }
+
     if (function.isDeprecated()) {
       //Skip deprecated functions
       return
@@ -246,6 +252,11 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
     val typeResolved = property.type.resolve()
     logger.info("Visiting property $simpleName with type ${typeResolved.declaration.simpleName.asString()}")
 
+    if (property.type.isSynthetic) {
+      //Skip synthetic properties
+      return
+    }
+
     if (property.isDeprecated()) {
       //Skip deprecated functions
       return
@@ -288,13 +299,11 @@ class ExportTypescriptDefinitionFileVisitor(val writer: BufferedWriter, val logg
     val typeName: String = TypeScriptTypeSupport.toTypescriptType(typeResolved, logger)
 
     require(data.isTopLevel().not()) {
-      "Top level properties are not supported: $typeName - ${property.qualifiedName?.asString() ?: property.simpleName.asString()} @ ${property.location.format()}"
+      "Top level properties are not supported: Type [$typeName] - Qualified name [${property.qualifiedName?.asString() ?: property.simpleName.asString()}] @ ${property.location.format()}"
     }
 
     writer.appendLine("${indentation}${simpleName}${TypeScriptTypeSupport.getOptionalMarker(typeResolved)}: ${typeName};")
   }
-
-
 }
 
 private data class ResolvedParameter(val parameterName: String, val typeName: String)

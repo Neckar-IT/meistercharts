@@ -10,8 +10,8 @@ expect inline fun <reified T : Enum<T>> T.sanitize(): T
 /**
  * Helper method that throws an exception
  */
-fun <E : Enum<E>> throwEnumConversionException(value: Enum<E>, enumValues: List<E>, e: Throwable?): Nothing {
-  throw SanitizingFailedException("Could not sanitize [$value] to Enum.\nPossible values: ${enumValues.joinToString(", ")}", e)
+fun <E : Enum<E>> throwEnumConversionException(value: Enum<E>, enumEntries: List<E>, e: Throwable?): Nothing {
+  throw SanitizingFailedException("Could not sanitize [$value] to Enum.\nPossible values: ${enumEntries.joinToString(", ")}", e)
 }
 
 /**
