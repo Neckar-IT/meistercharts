@@ -395,8 +395,6 @@ public object Libs {
 
     public const val kotlin_test_js: String = "org.jetbrains.kotlin:kotlin-test-js:_"
 
-    public const val kotlin_test_js_runner: String = "org.jetbrains.kotlin:kotlin-test-js-runner"
-
     public const val kotlin_test_junit5: String = "org.jetbrains.kotlin:kotlin-test-junit5:_"
 
     public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
