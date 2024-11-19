@@ -49,9 +49,31 @@ abstract class AbstractProjects {
     return configureProject(path, ProjectType.KotlinJvm8Fx)
   }
 
-  //TODO introduce JVM version parameter
-  protected fun multiPlatform(path: String): ConfiguredProject {
-    return configureProject(path, ProjectType.KotlinMultiplatform)
+  /**
+   * Creates a new multiplatform library - using Java 8
+   */
+  protected fun multiPlatform8(path: String): ConfiguredProject {
+    return multiPlatform(path, JvmType.Java8)
+  }
+
+  protected fun multiPlatformLts(path: String): ConfiguredProject {
+    return multiPlatform(path, JvmType.JavaLatestLTS)
+  }
+
+  /**
+   * Creates a new multiplatform library - using Java 8 with JavaFX
+   */
+  protected fun multiPlatform8Fx(path: String): ConfiguredProject {
+    return multiPlatform(path, JvmType.Java8Fx)
+  }
+
+  protected fun multiPlatform(path: String, jvmType: JvmType = JvmType.JavaLatestLTS): ConfiguredProject {
+    val type = when (jvmType) {
+      JvmType.JavaLatestLTS -> ProjectType.KotlinMultiplatformLatestLTS
+      JvmType.Java8 -> ProjectType.KotlinMultiplatformLatestJava8
+      JvmType.Java8Fx -> ProjectType.KotlinMultiplatformLatestJava8Fx
+    }
+    return configureProject(path, type)
   }
 
   protected fun pnpm(path: String): ConfiguredProject {
@@ -88,10 +110,18 @@ abstract class AbstractProjects {
   }
 
   /**
-   * Returns all multi platform projects
+   * Returns all multi platform projects for the current java version
    */
-  fun multiPlatformProjects(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }
+  fun multiPlatformProjectsLTS(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestLTS }
+  }
+
+  fun multiPlatformProjectsJava8(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestJava8 }
+  }
+
+  fun multiPlatformProjectsJava8Fx(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestJava8Fx }
   }
 
   fun project(type: ProjectType): List<ConfiguredProject> {
@@ -131,9 +161,11 @@ abstract class AbstractProjects {
   }
 }
 
-
+@Deprecated("Should not be required")
 fun Project.isMultiplatformProject(): Boolean {
-  return isOfType(ProjectType.KotlinMultiplatform)
+  return isOfType(ProjectType.KotlinMultiplatformLatestLTS)
+    || isOfType(ProjectType.KotlinMultiplatformLatestJava8Fx)
+    || isOfType(ProjectType.KotlinMultiplatformLatestJava8)
 }
 
 fun Project.isJvmProject(): Boolean {
@@ -275,7 +307,11 @@ enum class ProjectType {
   /**
    * Multiplatform project - usually contains JVM and JS code
    */
-  KotlinMultiplatform,
+  KotlinMultiplatformLatestLTS,
+
+  KotlinMultiplatformLatestJava8,
+
+  KotlinMultiplatformLatestJava8Fx,
 
   /**
    * JS project - build using pnpm

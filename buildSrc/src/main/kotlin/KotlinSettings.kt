@@ -27,13 +27,14 @@ object KotlinSettings {
     "kotlin.ExperimentalMultiplatform", //Multi-platform
     // "kotlinx.serialization.ExperimentalSerializationApi", //Seems to work only with free compiler args
 
-    //"kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines stuff
     //"kotlinx.coroutines.FlowPreview", //Coroutines stuff
     "kotlin.ExperimentalUnsignedTypes", //Unsigned Types
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib
     "kotlin.io.path.ExperimentalPathApi", //java.nio.file.Path support
-    //"kotlin.uuid.ExperimentalUuidApi", //UUID support (since 2.0.20)
+    "kotlin.uuid.ExperimentalUuidApi", //UUID support (since 2.0.20)
+    "kotlinx.serialization.ExperimentalSerializationApi", //Serialization
+    "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines
   )
 
   /**
@@ -45,7 +46,14 @@ object KotlinSettings {
 
   /**
    * Compiler arguments can be found here:
+   * For common:
+   * https://github.com/JetBrains/kotlin/blob/master/compiler/cli/cli-common/src/org/jetbrains/kotlin/cli/common/arguments/CommonCompilerArguments.kt
+   *
+   * For JS:
    * https://github.com/JetBrains/kotlin/blob/master/compiler/cli/cli-common/src/org/jetbrains/kotlin/cli/common/arguments/K2JSCompilerArguments.kt
+   *
+   * For JVM:
+   * https://github.com/JetBrains/kotlin/blob/master/compiler/cli/cli-common/src/org/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments.kt
    */
 
   /**
@@ -56,15 +64,8 @@ object KotlinSettings {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
 
-    //Only supported with 1.9.20
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
     add("-Xconsistent-data-class-copy-visibility") //Enable the new copy visibility)
-
-    if (false) {
-      //Not working with 1.9
-      add("-Xoptimize-generated-js") //Perform additional optimizations on the generated JS code
-      add("-Xfake-override-validator") //Enable the IR fake override validator.
-    }
 
     //
     // Old compiler settings, for documentation purposes
@@ -82,6 +83,15 @@ object KotlinSettings {
    */
   val additionalFreeCompilerArgsJS: List<String> = buildList {
     //add("-Xir-property-lazy-initialization") //enable lazy initialize for top level JS properties //ATTENTION: Does not work with kvision (https://github.com/rjaros/kvision/issues/231)
+
+    add("-Xfake-override-validator") //Enable the IR fake override validator.
+    add("-Xoptimize-generated-js") //Perform additional optimizations on the generated JS code
+
+    add("-Xtyped-arrays") //Translate primitive arrays into JS typed arrays.
+
+    //The bundle gets much larger :-( [2024-11-04 - Kotlin 2.0.21-beta2]
+    //add("-Xenable-extension-functions-in-externals") //Enable extension function members in external interfaces.
+    add("-Xir-dce-print-reachability-info") //Print reachability information about declarations to 'stdout' while performing DCE.
   }
 
   /**

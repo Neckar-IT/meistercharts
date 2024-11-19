@@ -3,14 +3,22 @@ import java.time.Instant
 
 description = "meistercharts.com"
 
+GradleContext.initialize(gradle)
+
+
 plugins {
-  id("org.jetbrains.kotlin.plugin.serialization") version "_" apply false
+//  id("org.jetbrains.kotlin.plugin.serialization") version "_" apply false
+  kotlinxSerialization apply false
+  dokka apply false
+  detekt apply false
+  generatePackageJson apply false
 }
 
 //Prepare the extra variables
 
 //These variables can be used in projects. They are defined as extension vals on Project in buildSrc/src/main/kotlin/Utils.kt
 val inIde: Boolean by extra(System.getProperty("idea.version") != null)
+val devContainerInformation by extra(DevContainerInformation.create())
 val ciInformation: GitlabCiInformation by extra(GitlabCiInformation.create())
 
 
@@ -170,22 +178,28 @@ allprojects {
     }
   }
 
-
-  ////for common
-  //extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
-  //
-  ////For JVM projects
-  //extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyKotlinConfiguration()
-  //
-  ////For JS projects
-  //extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>()?.applyKotlinConfiguration()
-  //
-  ////Opt in to experimental annotations - syntax for multi-platform projects
-  //extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyKotlinConfiguration()
-  //
-  ////Configure the version numbers
-  //configureNodeJsRootExtension()
 }
+
+
+configure(Projects.multiPlatformProjectsLTS()) {
+  if (this.enabled) {
+    logger.debug("Configuring multi-platform LTS project: ${this.path}")
+    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.JavaLatestLTS)
+  }
+}
+configure(Projects.multiPlatformProjectsJava8Fx()) {
+  if (this.enabled) {
+    logger.debug("Configuring multi-platform 8 FX project: ${this.path}")
+    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.Java8Fx)
+  }
+}
+configure(Projects.multiPlatformProjectsJava8()) {
+  if (this.enabled) {
+    logger.debug("Configuring multi-platform 8 project: ${this.path}")
+    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.Java8)
+  }
+}
+
 
 subprojects {
   //TODO configure kotlin

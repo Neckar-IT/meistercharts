@@ -1,0 +1,9 @@
+[
+  ":meistercharts-api:meistercharts-easy-api",
+  ":meistercharts-canvas",
+  ":meistercharts-commons",
+  ":meistercharts-test-commons",
+  ":meistercharts-core",
+  ":meistercharts-history:meistercharts-history-api",
+  ":meistercharts-history:meistercharts-history-core",
+]

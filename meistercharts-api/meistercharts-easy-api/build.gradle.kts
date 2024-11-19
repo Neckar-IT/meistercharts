@@ -1,4 +1,5 @@
 import it.neckar.gradle.npmbundle.CopyBundleContentTask
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 description = """Meistercharts - Easy API"""
 
@@ -6,18 +7,31 @@ plugins {
   kotlinMultiPlatform
   kotlinxSerialization
   npmBundle
+  generatePackageJson
 
   if (false) {
     generateTsDeclaration
   }
 }
 
-configureKotlin()
-configureToolchainJava17LTS()
-
 kotlin {
   js {
-    browser()
+    executableJsApplication(
+      varName = "meisterchartsEasyApi",
+      jsTargetType = JsTargetType.ES2015,
+      webpackModuleType = WebpackModuleType.ModernModule,
+      webpackModuleTypeForDev = WebpackModuleType.Var,
+      //jsTargetType = JsTargetType.ES2015,
+      //webpackModuleType = WebpackModuleType.ModernModule,
+      //webpackModuleTypeForDev = WebpackModuleType.ModernModule,
+    ) {
+      //Workaround to avoid
+      // java.lang.IllegalStateException: Cannot read properties of undefined (reading 'BarChartGrouped2')
+      // in jsBrowserDevelopmentWebpack
+
+      mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+    }
+
   }
   jvm {
   }
@@ -28,72 +42,30 @@ kotlin {
         api(project(Projects.meistercharts_core))
         api(project(Projects.meistercharts_history_core))
         api(project(Projects.meistercharts_canvas))
-
-        implementation(Libs.kotlinx_coroutines_core)
-        //api(project(meistercharts_version_info))
-        api(KotlinX.serialization.core)
       }
     }
 
     commonTest {
       dependencies {
-        implementation(Libs.kotlin_test_common)
-        implementation(Libs.kotlin_test_annotations_common)
-        implementation(Libs.assertk)
       }
     }
 
-    jvm().compilations["main"].defaultSourceSet {
+    jvmMain {
       dependencies {
-        implementation(Libs.kotlinx_coroutines_core)
-
-        //api(project(Projects.dependencies_sets_jvm_annotations))
-        //api(project(Projects.dependencies_sets_jvm_kotlin))
-        //api(project(Projects.open_annotations))
-        //api(project(Projects.open_commons_time))
       }
     }
 
-    val jvmTestsCommons by creating {
-      kotlin.srcDir(rootProject.file("meistercharts-test-commons/src/main/kotlin"))
-    }
 
-    jvm().compilations["test"].defaultSourceSet {
-      dependsOn(jvmTestsCommons)
-
+    jvmTest {
       dependencies {
-        implementation(Libs.kotlin_test)
-        implementation(Libs.kotlin_test_junit)
-
-        implementation(Libs.jackson_databind)
-
-        implementation(Libs.commons_io)
-        implementation(Libs.commons_lang3)
-        implementation(Libs.commons_math3)
-        implementation(Libs.logback_classic)
-        implementation(Libs.awaitility)
-        implementation(Libs.measured)
-
-        implementation(Libs.kotlin_reflect)
-        implementation(Libs.kotlin_test_junit)
-        implementation(KotlinX.coroutines.core)
-        implementation(KotlinX.coroutines.test)
-        implementation(Libs.mockk)
-
-        implementation(Libs.junit_jupiter_api)
-        implementation(Libs.junit_jupiter_params)
-        implementation(Libs.junit_jupiter_engine)
-
-        implementation(KotlinX.coroutines.core)
       }
     }
 
-    named("jsMain") {
+    jsMain {
       dependencies {
-        //implementation(project(Projects.open_unit_unit))
       }
     }
-    named("jsTest") {
+    jsTest {
       dependencies {
         implementation(Libs.kotlin_test)
       }

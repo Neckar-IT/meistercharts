@@ -31,3 +31,14 @@ fun interface Disposable {
     val noop: Disposable = Disposable { }
   }
 }
+
+/**
+ * Executes the block and disposes the disposable afterward
+ */
+inline fun Disposable.use(block: (Disposable) -> Unit) {
+  try {
+    block(this)
+  } finally {
+    dispose()
+  }
+}

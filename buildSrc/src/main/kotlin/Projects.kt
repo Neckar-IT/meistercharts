@@ -2,16 +2,15 @@
  *
  */
 object Projects : AbstractProjects() {
-  const val open_ksp_generating_ts_declaration = ":internal:open:ksp:ts-declaration-generator"
+  val meistercharts_commons: ConfiguredProject = multiPlatform8(":meistercharts-commons")
+  val meistercharts_test_commons: ConfiguredProject = multiPlatform8(":meistercharts-test-commons")
+  val meistercharts_core: ConfiguredProject = multiPlatform8(":meistercharts-core")
 
-  const val meistercharts_commons: String = ":meistercharts-commons"
-  const val meistercharts_core: String = ":meistercharts-core"
+  val meistercharts_history_core: ConfiguredProject = multiPlatform8(":meistercharts-history::meistercharts-history-core")
+  val meistercharts_history_api: ConfiguredProject = multiPlatform8(":meistercharts-history::meistercharts-history-api")
 
-  const val meistercharts_history_core: String = ":meistercharts-history::meistercharts-history-core"
-  const val meistercharts_history_api: String = ":meistercharts-history::meistercharts-history-api"
-
-  const val meistercharts_canvas: String = ":meistercharts-canvas"
-  const val meistercharts_easy_api: String = ":meistercharts-api:meistercharts-easy-api"
+  val meistercharts_canvas: ConfiguredProject = multiPlatform8(":meistercharts-canvas")
+  val meistercharts_api_easy: ConfiguredProject = multiPlatform8(":meistercharts-api:meistercharts-easy-api")
 }
 
 object ExternalProjects : AbstractProjects() {

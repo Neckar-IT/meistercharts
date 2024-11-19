@@ -26,8 +26,6 @@ public object Libs {
     public const val commonmark_ext_gfm_tables: String =
             "com.atlassian.commonmark:commonmark-ext-gfm-tables:_"
 
-    public const val uuid: String = "com.benasher44:uuid:_"
-
     public const val kaml: String = "com.charleskorn.kaml:kaml:_"
 
     public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
@@ -203,8 +201,6 @@ public object Libs {
 
     public const val ktor_server_core: String = "io.ktor:ktor-server-core:_"
 
-    public const val ktor_server_locations: String = "io.ktor:ktor-server-locations:_"
-
     public const val ktor_server_metrics: String = "io.ktor:ktor-server-metrics:_"
 
     public const val ktor_server_netty: String = "io.ktor:ktor-server-netty:_"
@@ -258,8 +254,6 @@ public object Libs {
 
     public const val jna: String = "net.java.dev.jna:jna:_"
 
-    public const val launch4j: String = "net.sf.launch4j:launch4j:_"
-
     public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
 
     public const val tornadofx: String = "no.tornado:tornadofx:_"
@@ -291,6 +285,9 @@ public object Libs {
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
 
     public const val awaitility: String = "org.awaitility:awaitility:_"
+
+    public const val org_barfuin_gradle_taskinfo_gradle_plugin: String =
+            "org.barfuin.gradle.taskinfo:org.barfuin.gradle.taskinfo.gradle.plugin:_"
 
     public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
 

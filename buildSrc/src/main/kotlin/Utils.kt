@@ -21,11 +21,14 @@ import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.webpack.WebpackDevtool
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import java.io.File
 import java.io.FileFilter
 import java.io.FileNotFoundException
@@ -79,7 +82,7 @@ fun PublishingExtension.configureMavenReposForPublish(project: Project) {
     maven {
       name = if (project.isProjectVersionSnapshot) "SonatypeOssSnapshots" else "SonatypeOssStaging"
       url = if (project.isProjectVersionSnapshot) {
-        project.uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        Repos.sonatype_snapshots
       } else {
         project.uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
       }
@@ -314,6 +317,25 @@ fun Project.configureToolchainJava8(): Provider<JavaCompiler> {
 }
 
 /**
+ * Configures the toolchain using the [JvmType] - as configured in the project.
+ */
+fun Project.configureToolchain(jvmType: JvmType) {
+  when (jvmType) {
+    JvmType.JavaLatestLTS -> {
+      configureToolchainJava21LTS()
+    }
+
+    JvmType.Java8 -> {
+      configureToolchainJava8()
+    }
+
+    JvmType.Java8Fx -> {
+      configureToolchainJava8WithFx()
+    }
+  }
+}
+
+/**
  * Java 17 is a LTS version
  * See https://en.wikipedia.org/wiki/Java_version_history for details
  * Usually one should use [configureToolchainJava21LTS] instead
@@ -405,7 +427,7 @@ fun JavaCompiler.toolsJarPath(): File {
 }
 
 /**
- * Configures the Kotlin config
+ * Configures the Kotlin config todo attempt to add flags here
  */
 fun Project.configureKotlin() {
   //Ensure that this is only called once for each project
@@ -419,14 +441,27 @@ fun Project.configureKotlin() {
     "Must not contain KotlinJsProjectExtension. Use multiplatform instead"
   }
 
+  tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
+    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs)
+  }
+
+  tasks.withType<KotlinJvmCompile> {
+    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+  }
+
+  tasks.withType<KotlinJsCompile> {
+    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJS)
+  }
+
+
   //for common
   extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
 
   //For JVM projects
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration()
+  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
 
   //For Multiplatform projects (JS and JVM)
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration()
+  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
 
   //Configure the version numbers
   configureNodeJsRootExtension()
@@ -498,60 +533,231 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
       languageSettings.enableLanguageFeature(it)
     }
 
-    languageSettings.progressiveMode = true
-    languageSettings.languageVersion = KotlinSettings.languageVersionAsString
-    languageSettings.apiVersion = KotlinSettings.apiVersionAsString
+    languageSettings {
+      progressiveMode = true
+      languageVersion = KotlinSettings.languageVersionAsString
+      apiVersion = KotlinSettings.apiVersionAsString
+}
   }
 }
 
 /**
  * Applies the kotlin configuration to the JVM target
  */
-fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration() {
+fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration(suppressWarnings: Boolean) {
   compilerOptions {
     languageVersion = KotlinSettings.languageVersion
     apiVersion = KotlinSettings.apiVersion
     progressiveMode = true
     optIn = KotlinSettings.optInExperimentalAnnotations
     javaParameters = true
+    this.suppressWarnings = suppressWarnings
   }
 
   applyKotlinConfiguration()
 }
 
 /**
+ * Configures the Kotlin JS target to produce an executable JS browser application.
+ * This application can be embedded using a simple script tag in an HTML file.
+ *
+ * The main function is called when the application is loaded.
+ */
+fun KotlinJsTargetDsl.executableJsApplication(
+  /**
+   * The name of the variable that is used to access the library in the browser.
+   * Is used to register the library in the global scope.
+   */
+  varName: String,
+
+  /**
+   * THe js target type - default is ES5
+   */
+  jsTargetType: JsTargetType = JsTargetType.ES5,
+
+  /**
+   * The module type that is used for the webpack configuration.
+   */
+  webpackModuleType: WebpackModuleType = WebpackModuleType.Window,
+
+  /**
+   * The module type that is used for the webpack configuration for dev.
+   */
+  webpackModuleTypeForDev: WebpackModuleType = WebpackModuleType.Window,
+
+  /**
+   * Optional configuration for the webpack task.
+   * Can be used to add additional configuration to the webpack task.
+   *
+   * Use with care!
+   * It should not be necessary in most cases
+   */
+  additionalRunTaskWebpackConfig: KotlinWebpack.() -> Unit = {},
+) {
+  require(varName.isNotBlank()) {
+    "varName must not be blank"
+  }
+
+  binaries.executable()
+
+  browser {
+    runTask {
+      webpackModuleType.configure(this, varName)
+      additionalRunTaskWebpackConfig()
+    }
+
+    webpackTask {
+      webpackModuleType.configure(this, varName)
+    }
+  }
+
+  //Workaround for problem when executing `gradle build jsBrowserDevelopmentWebpack` since Gradle 8.3
+  run {
+    val tasks = project.tasks
+
+    //These tasks are only available if binaries.executable() is called in the project itself
+    val jsBrowserProductionWebpack = tasks.findByName("jsBrowserProductionWebpack").requireNotNull() as KotlinWebpack
+    val jsBrowserDevelopmentWebpack = tasks.findByName("jsBrowserDevelopmentWebpack").requireNotNull() as KotlinWebpack
+    val jsDevelopmentExecutableCompileSync = tasks.findByName("jsDevelopmentExecutableCompileSync").requireNotNull()
+    val jsProductionExecutableCompileSync = tasks.findByName("jsProductionExecutableCompileSync").requireNotNull()
+    val jsBrowserDevelopmentRun = tasks.findByName("jsBrowserDevelopmentRun").requireNotNull() as KotlinWebpack
+
+    //Add these artificial deps to work around issue
+    jsBrowserProductionWebpack.mustRunAfter(jsDevelopmentExecutableCompileSync)
+    jsBrowserProductionWebpack.mustRunAfter(jsProductionExecutableCompileSync)
+
+    jsBrowserDevelopmentWebpack.mustRunAfter(jsDevelopmentExecutableCompileSync)
+    jsBrowserDevelopmentWebpack.mustRunAfter(jsProductionExecutableCompileSync)
+
+    jsBrowserDevelopmentRun.mustRunAfter(jsDevelopmentExecutableCompileSync)
+    jsBrowserDevelopmentRun.mustRunAfter(jsProductionExecutableCompileSync)
+
+
+    webpackModuleType.configure(jsBrowserProductionWebpack, varName)
+    webpackModuleTypeForDev.configure(jsBrowserDevelopmentWebpack, varName)
+    webpackModuleTypeForDev.configure(jsBrowserDevelopmentWebpack, varName)
+  }
+
+  project.tasks.withType<KotlinJsCompile>().configureEach {
+    compilerOptions {
+      target = jsTargetType.value
+      //target = "es2015"
+    }
+  }
+}
+
+/**
+ * The target for [KotlinJsCompile] tasks
+ */
+enum class JsTargetType(val value: String) {
+  /**
+   * This is the default value
+   */
+  ES5("es5"),
+
+  /**
+   * Should provide additional features:
+   * https://kotlinlang.org/docs/js-project-setup.html#support-for-es2015-features
+   */
+  ES2015("es2015"),
+}
+
+enum class WebpackModuleType {
+  Var {
+    override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
+      kotlinWebpack.output.library = varName
+      kotlinWebpack.output.libraryTarget = "var"
+      kotlinWebpack.devtool = "source-map"
+    }
+  },
+  Window {
+    override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
+      kotlinWebpack.output.library = varName
+      kotlinWebpack.output.libraryTarget = "window"
+      kotlinWebpack.devtool = "source-map"
+    }
+  },
+  Umd {
+    override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
+      kotlinWebpack.output.library = varName
+      kotlinWebpack.output.libraryTarget = "umd"
+      kotlinWebpack.devtool = "source-map"
+    }
+  },
+  Umd2 {
+    override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
+      kotlinWebpack.output.library = varName
+      kotlinWebpack.output.libraryTarget = "umd2"
+      kotlinWebpack.devtool = "source-map"
+    }
+  },
+  ModernModule {
+    override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
+      kotlinWebpack.output.library = null // do *not* set a library name
+      kotlinWebpack.output.libraryTarget = "modern-module"
+      kotlinWebpack.devtool = "source-map"
+    }
+  };
+
+  abstract fun configure(kotlinWebpack: KotlinWebpack, varName: String)
+}
+
+/**
  * Applies the (default) configuration for multiplatform projects.
  * Registers both JVM and JS projects
  */
-fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
+fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: Project, suppressWarnings: Boolean = true) {
+  applyDefaultHierarchyTemplate()
+  applyKotlinConfiguration()
+
+  compilerOptions {
+    this.suppressWarnings = suppressWarnings
+  }
+
   //Add an JVM configuration
   jvm {
   }
 
   //Add the JS configuration
   js {
-    binaries.executable()
+    useEsModules() //if enabled, "*.mjs" files are generated in build/compileSync/js/main/productionExecutable/kotlin
+
+    //Only relevant if `binaries.executable()` is set in the project itself
+    generateTypeScriptDefinitions()
 
     browser {
       configureJsKarma()
 
+      webpackTask {
+        output.library = null //necessary when using modern-module
+        output.libraryTarget = "modern-module"
+      }
+
       commonWebpackConfig {
-        devtool = WebpackDevtool.SOURCE_MAP
+        //devtool = WebpackDevtool.SOURCE_MAP
 
         cssSupport {
           enabled = true //enable CSS support for all tasks (https://kotlinlang.org/docs/js-project-setup.html#building-executables)
         }
-      }
 
-      webpackTask {
-        sourceMaps = true
+        //Required for "modern-module" support
+        experiments.add("outputModule")
       }
     }
   }
 
-  applyDefaultHierarchyTemplate()
+  //
+  // Configure JS modules
+  //
 
-  applyKotlinConfiguration()
+  //Configure JS Compile tasks to use ES2015 modules
+  //It seems necessary to configure this *after* calling useEsModules() on the JS target (to avoid overwriting with "es5")
+  project.tasks.withType<KotlinJsCompile>().configureEach {
+    compilerOptions {
+      // https://kotlinlang.org/docs/js-project-setup.html#support-for-es2015-features
+      target = "es2015"
+    }
+  }
 }
 
 /**

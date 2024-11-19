@@ -61,75 +61,46 @@ val createVersionConstantsTasks: Task = task("createVersionConstants") {
   }
 }
 
-configureKotlin()
-configureToolchainJava17LTS()
+repositories {
+  mavenCentral()
+}
 
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       kotlin.srcDir(createVersionConstantsTasks)
 
       dependencies {
         implementation(Libs.kotlinx_coroutines_core)
         api(KotlinX.serialization.core)
         api(KotlinX.serialization.json)
+
+        api(Libs.kotlin_reflect)
+        api(Libs.commons_io)
       }
     }
 
-    commonTest {
-      dependencies {
-        implementation(Libs.kotlin_test_common)
-        implementation(Libs.kotlin_test_annotations_common)
-      }
-    }
-
-    jvm().compilations["main"].defaultSourceSet {
+    jvmMain {
       dependencies {
         api(Libs.jsr305)
-        implementation(Libs.kotlinx_coroutines_core)
-        //api(project(Projects.dependencies_sets_jvm_annotations))
-        //api(project(Projects.dependencies_sets_jvm_kotlin))
-        //api(project(Projects.open_annotations))
-        //api(project(Projects.open_commons_time))
-        api(Libs.slf4j_api)
-        api(Libs.commons_io)
         api(Libs.logback_classic)
-        api(Libs.kotlin_reflect)
         implementation(Libs.commons_lang3)
+        api(Libs.bson_kotlinx)
+        api(Libs.javax_inject)
+        api(Libs.commons_codec)
+        api(Libs.jackson_databind)
+        api(Libs.jsonassert)
+
       }
     }
 
-    jvm().compilations["test"].defaultSourceSet {
-      dependencies {
-        //implementation(project(":meistercharts-test-commons"))
-        implementation(Libs.kotlin_test)
-        implementation(Libs.kotlin_test_junit)
-        //implementation(project(Projects.dependencies_sets_jvm_kotlin_test))
-        //implementation(project(Projects.open_commons_test_utils))
-        //implementation(project(Projects.open_commons_javafx_test_utils))
-        //implementation(project(Projects.open_commons_kotlinx_serialization_test_utils))
-        //
-        implementation(Libs.controlsfx)
-        implementation(Libs.miglayout_javafx)
-        implementation(Libs.commons_io)
-        implementation(Libs.commons_math3)
-        implementation(Libs.mockk)
-        implementation(Libs.logback_classic)
-        implementation(Libs.awaitility)
-        implementation(Libs.measured)
-      }
-    }
 
-    js().compilations["main"].defaultSourceSet {
+
+    jsMain {
       dependencies {
         api(Libs.kotlin_js)
-        //implementation(project(Projects.open_unit_unit))
       }
     }
-    js().compilations["test"].defaultSourceSet {
-      dependencies {
-        //implementation(project(Projects.dependencies_sets_js_kotlin_test))
-      }
-    }
+
   }
 }

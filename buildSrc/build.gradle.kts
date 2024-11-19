@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "1.9.20"
+val kotlinVersion: String = "2.1.0-Beta2"
 
 plugins {
   `kotlin-dsl`
@@ -21,45 +21,48 @@ idea {
   }
 }
 
+// Must be called within afterEvaluate to overwrite settings from the `kotlin-dsl` plugin
+// https://handstandsam.com/2022/04/13/using-the-kotlin-dsl-gradle-plugin-forces-kotlin-1-4-compatibility/
+// Currently the free compiler args are *not* supported: //https://github.com/gradle/gradle/issues/24221
+afterEvaluate {
+  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+    kotlinOptions {
+      languageVersion = "2.1"
+      apiVersion = "2.1"
+      javaParameters = true
+      jvmTarget = "21"
+      options.freeCompilerArgs.add("-progressive")
+      options.freeCompilerArgs.add("-opt-in=kotlin.ExperimentalStdlibApi")
+    }
+  }
+}
+
+
 dependencies {
   implementation("com.google.guava:guava:_")
-  implementation("commons-io:commons-io:_")
+
   implementation("org.apache.commons:commons-compress:_")
   implementation("org.apache.commons:commons-lang3:_")
 
-  implementation("com.github.cretz.kastree:kastree-ast-jvm:_")
-  implementation("com.github.cretz.kastree:kastree-ast-psi:_")
-  implementation("io.gitlab.arturbosch.detekt:detekt-psi-utils:_")
-  implementation("io.gitlab.arturbosch.detekt:detekt-parser:_")
-
-  //Enforce version numbers for Kotlin - transitive dependencies
-  implementation(kotlin("compiler-embeddable", "_"))
-  implementation(Kotlin.stdlib.common)
-  implementation(Kotlin.stdlib.jdk8)
-  implementation(Kotlin.stdlib.jdk7)
-  implementation(kotlin("reflect", "_"))
-
-  implementation(kotlin("compiler-embeddable", "_"))
-  implementation(kotlin("scripting-compiler-embeddable", "_"))
-  implementation(kotlin("klib-commonizer-embeddable", "_"))
-
-  implementation("com.google.devtools.ksp:symbol-processing-api:_")
-  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:_")
-
   implementation(KotlinX.serialization.json)
-
   implementation(kotlin("gradle-plugin", kotlinVersion))
 
-  //Avoid Class not found exception related to JNA
-  implementation("net.java.dev.jna:jna:_")
+  implementation("com.fasterxml.jackson.core:jackson-core:_")
+  implementation("com.fasterxml.jackson.core:jackson-databind:_")
+  implementation("com.github.jengelman.gradle.plugins:shadow:_")
+  implementation("com.github.node-gradle:gradle-node-plugin:_")
+  implementation("io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin:_")
 
   testImplementation(Testing.junit.jupiter.api)
-  testRuntimeOnly(Testing.junit.jupiter.engine)
-  testImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
 }
 
 gradlePlugin {
   plugins {
+    register("GenerateIconsPlugin") {
+      id = "it.neckar.generate-icons"
+      implementationClass = "it.neckar.gradle.icons.GenerateIconsPlugin"
+    }
+
     register("GenerateTypeScriptDefinitionsPlugin") {
       id = "it.neckar.generate-ts-declaration"
       implementationClass = "it.neckar.gradle.tsdefinition.GenerateTypeScriptDefinitionsPlugin"
@@ -78,7 +81,7 @@ gradlePlugin {
     }
     register("GeneratePackageJsonPlugin") {
       id = "it.neckar.repos.generate-package-json"
-      implementationClass = "it.neckar.gradle.packagejson.GeneratePackageJsonPlugin"
+      implementationClass = "it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin"
     }
     register("InstallPnpmDependencyPlugin") {
       id = "it.neckar.repos.install-pnpm-dependency"
@@ -98,3 +101,4 @@ tasks.withType<Test>()
       isFailOnNoMatchingTests = false
     }
   }
+

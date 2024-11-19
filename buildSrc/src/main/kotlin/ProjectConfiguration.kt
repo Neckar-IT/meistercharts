@@ -1,0 +1,625 @@
+@file:Suppress("UNUSED_VARIABLE")
+
+import com.github.gradle.node.NodeExtension
+import com.github.gradle.node.pnpm.task.PnpmInstallTask
+import com.github.gradle.node.pnpm.task.PnpmTask
+import com.github.gradle.node.task.NodeSetupTask
+import de.fayard.refreshVersions.core.versionFor
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import it.neckar.gradle.ansiConsole
+import it.neckar.gradle.console
+import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
+import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
+import kotlinx.serialization.json.jsonObject
+import org.gradle.api.GradleException
+import org.gradle.api.Project
+import org.gradle.api.tasks.Delete
+import org.gradle.api.tasks.Exec
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.api.tasks.bundling.Jar
+import org.gradle.api.tasks.bundling.Zip
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.assign
+import org.gradle.kotlin.dsl.attributes
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.getByName
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilation
+import org.jetbrains.kotlin.gradle.targets.js.npm.PackageJson
+import java.io.ByteArrayOutputStream
+
+
+/**
+ * Contains common code to configure a project
+ */
+object ProjectConfiguration {
+
+  /**
+   * Configures a JVM project using JDK 8
+   */
+  fun configureJvm8(project: Project) {
+    with(project) {
+      configureJvmCommon()
+      configureToolchainJava8()
+    }
+  }
+
+  /**
+   * Configures a JVM project using JDK 8 - with JavaFX (Oracle)
+   */
+  fun configureJvm8Fx(project: Project) {
+    with(project) {
+      configureJvmCommon()
+      configureToolchainJava8WithFx()
+    }
+  }
+
+  /**
+   * Configures a JVM project - with the current LTS Java version
+   */
+  fun configureJvm(project: Project) {
+    with(project) {
+      configureJvmCommon()
+      configureToolchainJava21LTS()
+    }
+  }
+
+  private fun Project.configureJvmCommon() {
+    run {
+      //Ensure there are no "invalid" source directories - this might happen when a project has been converted from a multiplatform project
+      //Verify that the directory is empty
+      requireDirectoryEmpty("src/commonMain/kotlin")
+      requireDirectoryEmpty("src/jsMain/kotlin")
+      requireDirectoryEmpty("src/jvmMain/kotlin")
+      requireDirectoryEmpty("src/jvmTest/resources")
+      requireDirectoryEmpty("src/jsTest/resources")
+    }
+
+    apply(plugin = Plugins.java)
+    apply(plugin = Plugins.javaLibrary)
+    apply(plugin = Plugins.kotlinJvm)
+    apply(plugin = Plugins.dokka)
+    apply(plugin = Plugins.detekt)
+
+    configureKotlin()
+
+    configureJunit()
+
+    //Create sources jar
+    (extensions.findByName("sourceSets") as SourceSetContainer?)?.let {
+      tasks.register<Jar>("sourcesJar") {
+        group = "Build"
+        description = "Assembles the sources jar."
+
+        dependsOn("jar")
+        from(it.getByName<SourceSet>("main").allSource)
+        archiveClassifier.set("sources")
+      }
+      tasks.register<Jar>("javadocJar") {
+        group = "Build"
+        description = "Assembles the javadoc/dokka jar."
+
+        dependsOn("jar")
+        from(tasks.named("dokkaHtml"))
+        archiveClassifier.set("javadoc")
+      }
+
+      artifacts {
+        //archives(tasks.getByName("sourcesJar"))
+        add("archives", tasks.named("sourcesJar"))
+        //Results in a NPE
+        //archives(tasks.getByName("javadocJar"))
+      }
+    }
+
+    tasks.named<Jar>("jar") {
+      manifest {
+        attributes(
+          "Created-By" to "Neckar IT GmbH",
+          "Project" to project.name,
+
+          //  //"Version" to "${project.version}", //not very useful at the moment
+          //
+          //  "Revision" to gitDescribe,
+          //  "Revision-Date" to gitCommitDate,
+          //  "Git-Hash" to gitCommit,
+          //
+          //  //"Built-Date" to buildDate, //forces rebuild because it changes every time
+        )
+      }
+    }
+
+    /**
+     * Alias: Allows a call to `gradle sourcesJar` at the root
+     */
+    tasks.register("jvmSourcesJar") {
+      dependsOn("sourcesJar")
+    }
+
+    configureDetekt {
+      source.setFrom(
+        files(
+          "src/main/kotlin",
+          "src/main/java",
+        )
+      )
+    }
+
+  }
+
+  fun configureMultiPlatform(project: Project, jvmType: JvmType) {
+    with(project) {
+
+      run {
+        //Ensure there are no "forgotten" source directories - this might happen when a project is converted from a JVM or JS project
+        //Verify that the directory is empty
+        requireDirectoryEmpty("src/main/kotlin")
+        requireDirectoryEmpty("src/main/java")
+        requireDirectoryEmpty("src/main/resources")
+        requireDirectoryEmpty("src/test/kotlin")
+        requireDirectoryEmpty("src/test/java")
+        requireDirectoryEmpty("src/test/resources")
+      }
+
+      //Report generation is not yet working
+      apply(plugin = Plugins.kotlinMultiPlatform)
+      apply(plugin = Plugins.dokka)
+      apply(plugin = Plugins.detekt)
+
+      //tasks.register<Jar>("javadocJar") {
+      //  group = "Build"
+      //  description = "Assembles the javadoc/dokka jar."
+      //
+      //  dependsOn("build")
+      //  from(tasks.named<DokkaTask>("dokka"))
+      //  archiveClassifier.set("javadoc")
+      //}
+
+      configureKotlin()
+      configureJunit()
+
+      //Ensure the extension exist
+      requireNotNull(extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension::class.java))
+
+      //Default toolchain for multiplatform projects
+
+      configureToolchain(jvmType)
+
+      configureDetekt {
+        source.setFrom(
+          files(
+            "src/commonMain/kotlin",
+            "src/jsMain/kotlin",
+            "src/jvmMain/kotlin",
+          )
+        )
+      }
+
+      project.tasks.register("printSourceSets") {
+        doLast {
+          val ansiConsole = console
+
+          logger.lifecycle("------------------------------------------------------------")
+          logger.lifecycle(ansiConsole.green("Source Sets:"))
+          logger.lifecycle("------------------------------------------------------------")
+
+          val kotlinMultiplatformExtension: KotlinMultiplatformExtension = project.extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension::class.java)
+
+          kotlinMultiplatformExtension.sourceSets.all {
+            logger.lifecycle(ansiConsole.orange(name))
+
+            logger.lifecycle("  ${ansiConsole.gray("Source Dirs:")}")
+            this.kotlin.srcDirs.forEach {
+              logger.lifecycle("    ${ansiConsole.white(it.relativeTo(project.projectDir))}")
+            }
+
+            logger.lifecycle("  ${ansiConsole.gray("Resource Dirs:")}")
+            this.resources.srcDirs.forEach {
+              logger.lifecycle("    ${ansiConsole.white(it.relativeTo(project.projectDir))}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Configuration for python projects
+   */
+  fun configurePython(project: Project) {
+    /**
+     * The python configuration plugin is applied
+     */
+    project.plugins.apply(Plugins.python)
+  }
+
+  /**
+   * Applies the default pnpm configuration.
+   * Both for the root project *and* the pnpm projects
+   */
+  internal fun configureDefaultPnpm(project: Project) {
+    with(project) {
+      plugins.apply(Plugins.base)
+      plugins.apply(Plugins.node)
+
+      //Disable unused tasks
+      listOf("npmInstall", "npmSetup", "yarn", "yarnSetup").forEach {
+        tasks.named(it).configure {
+          enabled = false
+        }
+      }
+
+      extensions.getByType<NodeExtension>().let { nodeExtension ->
+        nodeExtension.yarnWorkDir.set(layout.buildDirectory.dir("node/yarn"))
+        nodeExtension.pnpmWorkDir.set(layout.buildDirectory.dir("node/pnpm"))
+        nodeExtension.npmWorkDir.set(layout.buildDirectory.dir("node/npm"))
+
+        nodeExtension.download = true
+        nodeExtension.version = versionFor("version.npm.node") //Node
+        nodeExtension.pnpmVersion = versionFor("version.npm.pnpm") //PNPM
+      }
+
+      val pnpmInstall = tasks.named("pnpmInstall", PnpmInstallTask::class) {
+        dependsOn(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName) //Generate the package.json first
+      }
+
+      tasks.named<Delete>("clean") {
+        delete("dist", "build", "node_modules", ".astro", ".gradle")
+      }
+
+      tasks.register<Exec>("printPnpmVersion") {
+        // Setze das Kommando, um die PNPM-Version zu überprüfen
+        commandLine("pnpm", "--version")
+
+        val out = ByteArrayOutputStream()
+        standardOutput = out
+
+        doLast {
+          logger.lifecycle("PNPM: ${console.green(out.toString().trim())}")
+        }
+      }
+
+      tasks.register<Exec>("verifyPnpmVersion") {
+        val out = ByteArrayOutputStream()
+        standardOutput = out
+
+        // Setze das Kommando, um die PNPM-Version zu überprüfen
+        commandLine("pnpm", "--version")
+
+        doLast {
+          val nodeExtension = this.project.extensions.getByType<com.github.gradle.node.NodeExtension>()
+
+          val actualPnpmVersion = out.toString().trim()
+          val expectedPnpmVersion = nodeExtension.pnpmVersion.get()
+
+          logger.lifecycle("            Actual | Expected")
+          logger.lifecycle("------------------------------------------------------------")
+
+          if (actualPnpmVersion == expectedPnpmVersion) {
+            logger.lifecycle(console.blue("PNPM: ✓ ${console.green(out.toString().trim())}"))
+          } else {
+            logger.lifecycle("PNPM:      ${console.orange("✗")} ${console.orange(out.toString().trim())} | ${console.blue(expectedPnpmVersion.trim())}")
+            logger.lifecycle("Execute ${console.blue("npm install  -g pnpm")}")
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Configures the pnpm root project
+   */
+  fun configurePnpmRoot(project: Project) {
+    with(project) {
+      configureDefaultPnpm(project)
+
+      project.plugins.apply(Plugins.generatePackageJson)
+      project.plugins.apply(Plugins.installPnpmDependency)
+      project.plugins.apply(Plugins.generatePnpmWorkspaceYaml)
+
+      val pnpmInstallTask = tasks.named("pnpmInstall")
+      pnpmInstallTask.configure {
+        outputs.upToDateWhen { false } //Always execute the task. Necessary because the node_modules folders in the subprojects are not detected automatically
+        doNotTrackState("pnpm manages the state itself")
+
+        //Ensure the workspace.yaml file is generated before the `pnpmInstall` task is executed (in the root project)
+        dependsOn(tasks.named(GeneratePnpmWorkspaceYamlPlugin.GenerateWorkspaceYamlTaskName))
+      }
+
+      //Add dependencies
+      pnpmInstallTask.configure {
+        //This npm bundle content is part of the pnpm workspace. It is necessary to build before calling pnpm install
+        //dependsOn(":internal:open:meistercharts:meistercharts-api:meistercharts-easy-api:npmBundleDevelopment")
+        dependsOn(project(Projects.meistercharts_api_easy).tasks.getByName(it.neckar.gradle.npmbundle.NpmBundlePlugin.NpmBundleTaskName))
+        dependsOn(project(Projects.meistercharts_api_easy).tasks.getByName(it.neckar.gradle.npmbundle.NpmBundlePlugin.NpmBundleDevelopmentTaskName))
+      }
+
+      //Special task for update versions - must be called after the versions.properties file has been updated
+      tasks.register("updateYarnLock") {
+        group = "Pnpm"
+        description = "Updates the yarn.lock files - for Kotlin an PNPM"
+
+        dependsOn(":kotlinUpgradeYarnLock")
+        dependsOn(pnpmInstallTask)
+      }
+
+      tasks.register("createNvmConfiguration") {
+        group = "Pnpm"
+        description = "Creates the .nvmrc file"
+
+        doLast {
+          file(".nvmrc").writeText("v" + versionFor("version.npm.node"))
+
+          file("tools/nvm/install.sh").let { installShFile ->
+            installShFile.writeText(
+              //language=bash
+              """
+              #!/usr/bin/env sh
+
+              set -e
+
+              nvm install
+              nvm use
+
+              npm install -g pnpm@${versionFor("version.npm.pnpm")}
+            """.trimIndent()
+            )
+
+            installShFile.setExecutable(true)
+          }
+        }
+      }.also {
+        pnpmInstallTask.configure {
+          dependsOn(it)
+        }
+      }
+    }
+  }
+
+  /**
+   * Configures a PNPM project - *not* the root project
+   */
+  fun configurePnpm(project: Project) {
+    with(project) {
+      run {
+        //Ensure there are no "invalid" source directories - this might happen when a project is converted from a multiplatform project
+        //Verify that the directory is empty
+        requireDirectoryEmpty("src/commonMain/kotlin")
+        requireDirectoryEmpty("src/jsMain/kotlin")
+        requireDirectoryEmpty("src/jvmMain/kotlin")
+        requireDirectoryEmpty("src/jvmTest/resources")
+        requireDirectoryEmpty("src/jsTest/resources")
+        requireDirectoryEmpty("src/main/kotlin")
+        requireDirectoryEmpty("src/main/java")
+        requireDirectoryEmpty("src/main/resources")
+        requireDirectoryEmpty("src/test/kotlin")
+        requireDirectoryEmpty("src/test/java")
+        requireDirectoryEmpty("src/test/resources")
+      }
+
+      //Configure IntelliJ IDEA
+      extensions.getByType<org.gradle.plugins.ide.idea.model.IdeaModel>().apply {
+        module {
+          sourceDirs.add(project.file("src"))
+          sourceDirs.add(project.file(".ladle"))
+          testSources.from(project.file("tests"))
+          testSources.from(project.file("mock"))
+        }
+      }
+
+      configureDefaultPnpm(project)
+
+      /**
+       * Apply the package.json generator plugin to be able to generate the package.json file with the correct version numbers
+       */
+      project.plugins.apply(Plugins.generatePackageJson)
+      project.plugins.apply(Plugins.installPnpmDependency)
+
+      //Ensure the package.json file is generated before the `pnpmInstall` task is executed (in the root project)
+      rootProject.tasks.named("pnpmInstall").configure {
+        dependsOn(tasks.named(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName))
+      }
+
+      //Disable the pnpmInstall task for *this* project
+      val warningTask = tasks.register("pnpmInstall - do not use") {
+        group = "Pnpm"
+        description = "use pnpmInstall at root project instead"
+
+        doLast {
+          logger.lifecycle(ansiConsole.yellow("-------------------------------------------------------------------"))
+          logger.lifecycle(ansiConsole.yellow("pnpmInstall is disabled for this project. Use :pnpmInstall instead."))
+          logger.lifecycle(ansiConsole.yellow("-------------------------------------------------------------------"))
+        }
+      }
+
+      val verifyProjectConfiguration = tasks.register("verifyProjectConfiguration") {
+        description = "Verifies the configuration of the project"
+
+        doLast {
+          val tsConfig = file("tsconfig.json")
+          if (tsConfig.isFile.not()) {
+            logger.error(ansiConsole.red("Missing ${tsConfig.absolutePath}. A tsconfig.json file is required for each PNPM project."))
+            throw GradleException("Expected ${tsConfig.absolutePath} to be a file")
+          }
+        }
+      }
+
+      //Skip the pnpmInstall task in the project, delegate to the root project
+      tasks.named("pnpmInstall").configure {
+        dependsOn(":pnpmInstall", warningTask, verifyProjectConfiguration)
+        enabled = false
+      }
+
+      run {
+        //TODO disable both tasks and use the binaries from the root project
+
+        tasks.named("pnpmSetup").configure {
+          dependsOn(":pnpmSetup", verifyProjectConfiguration)
+        }
+        tasks.named<NodeSetupTask>("nodeSetup").configure {
+          dependsOn(":nodeSetup", verifyProjectConfiguration)
+        }
+      }
+
+      val pnpmRunBuild: TaskProvider<PnpmTask> = tasks.register<PnpmTask>("pnpmRunBuild") {
+        description = "Executes `pnpm run build`"
+
+        dependsOn(":pnpmInstall", verifyProjectConfiguration) //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey("build") == true)
+        }
+
+        args.set(listOf("run", "build"))
+
+        //Disable output if *info* is not enabled
+        //if (logger.isInfoEnabled.not()) {
+        //  execOverrides {
+        //    standardOutput = stdOutByteArray
+        //    errorOutput = errOutByteArray
+        //  }
+        //}
+
+        doFirst {
+          //ensure node_modules exists
+          val dir = file("node_modules")
+          require(dir.isDirectory) {
+            "Expected ${dir.absolutePath} to be a directory. Maybe :pnpmInstall didn't run?"
+          }
+        }
+
+        doLast {
+          val distDir = file("dist")
+
+          if (distDir.isDirectory.not()) {
+            logger.error(ansiConsole.red("Expected ${distDir.absolutePath} to be a directory"))
+            throw GradleException("Expected ${distDir.absolutePath} to be a directory")
+          }
+
+          distDir.listFiles().let { files ->
+            if (files == null) {
+              logger.error(ansiConsole.red("Expected ${distDir.absolutePath} to contain files - but could not list"))
+              throw GradleException("Expected ${distDir.absolutePath} to contain files - but could not list")
+            }
+
+            //Ensure that the dist directory contains at least 2 files, else the build is considered failed
+            val expectedMinFileCount = 2
+            if (files.size < expectedMinFileCount) {
+              logger.error(ansiConsole.red("Expected ${distDir.absolutePath} to contain at least $expectedMinFileCount files. But only got ${files.size}"))
+              throw GradleException("Expected ${distDir.absolutePath} to contain at least $expectedMinFileCount files. But only got ${files.size}")
+            }
+          }
+        }
+      }
+
+      val buildTask = tasks.named("build") {
+        dependsOn(pnpmRunBuild)
+      }
+
+      tasks.register<PnpmTask>("jsRun") {
+        description = "Executes `pnpm run dev`"
+        group = "Pnpm"
+
+        dependsOn(buildTask)
+        args.set(listOf("run", "dev"))
+      }
+
+      tasks.register<PnpmTask>("pnpmLint") {
+        description = "Executes `pnpm run lint`"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall") //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          packageJsonContainsScript("lint")
+        }
+
+        args.set(listOf("run", "lint"))
+      }
+
+      tasks.register<PnpmTask>("pnpmTest") {
+        description = "Executes `pnpm run test`"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall") //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          packageJsonContainsScript("test")
+        }
+
+        args.set(listOf("run", "test"))
+      }
+
+      /**
+       * Therefore, it is necessary to update the configuration
+       */
+      tasks.named<Zip>("zipDistributions") {
+        from("dist")
+
+        doLast {
+          val outputFile = file("build/distributions.zip")
+          require(outputFile.isFile) {
+            "Expected ${outputFile.absolutePath} to be a file"
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Throws an exception if the provided directory is not empty
+   */
+  private fun Project.requireDirectoryEmpty(relativePath: String) {
+    val dir = file(relativePath)
+
+    require(dir.listFiles().isNullOrEmpty()) {
+      "$relativePath must be empty in ${project.path} (${dir.absolutePath})"
+    }
+  }
+}
+
+fun Project.configureDetekt(additionalConfig: DetektExtension.() -> Unit) {
+  extensions.getByType(DetektExtension::class.java).apply {
+    config.from(rootProject.files("config/detekt/detekt.yml"))
+
+    parallel = true
+    buildUponDefaultConfig = true
+    //autoCorrect = true
+
+    additionalConfig()
+  }
+
+  plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
+    tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) {
+      reports {
+        //xml.required.set(true)
+        html.required.set(true)
+      }
+    }
+  }
+
+  //Remove detekt from check task
+  tasks.named("check") {
+    this.setDependsOn(this.dependsOn.filterNot {
+      it is TaskProvider<*> && it.name.contains("detekt")
+    })
+  }
+}
+
+/**
+ * Executes the given [function] on the [packageJson] object for the "main" compilation target.
+ */
+fun KotlinJsTargetDsl.packageJson(function: PackageJson.() -> Unit) {
+  val kotlinJsIrCompilation: KotlinJsIrCompilation = compilations["main"]
+  kotlinJsIrCompilation.packageJson(function)
+}

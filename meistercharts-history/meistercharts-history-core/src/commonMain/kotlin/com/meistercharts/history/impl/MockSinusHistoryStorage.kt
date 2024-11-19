@@ -72,3 +72,24 @@ fun createSinusChunk(descriptor: HistoryBucketDescriptor): HistoryChunk {
     )
   }
 }
+
+
+fun createSimpleChunk(descriptor: HistoryBucketDescriptor): HistoryChunk {
+  val timestampsCount = descriptor.bucketRange.entriesCount
+  @ms val distance = descriptor.bucketRange.samplingPeriod.distance
+
+  return historyConfiguration {
+    decimalDataSeries(DataSeriesId(10), TextKey("val1", "Value 1"), HistoryUnit("kg"))
+    decimalDataSeries(DataSeriesId(11), TextKey("val2", "Value 2"), HistoryUnit("cm"))
+    decimalDataSeries(DataSeriesId(12), TextKey("val3", "Value 3"), HistoryUnit.None)
+  }.chunk(timestampsCount) { timestampIndex ->
+    @ms val timestamp = descriptor.start + distance * timestampIndex.value
+    @Suppress("DEPRECATION")
+    addDecimalValues(
+      timestamp, 1.0 + timestampsCount, 2.0 + timestampsCount, 3.0 + timestampsCount
+    )
+  }
+}
+
+
+

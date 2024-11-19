@@ -54,3 +54,13 @@ fun File.symlinkTo(target: File) {
 
   Files.createSymbolicLink(linkPath, targetPath)
 }
+
+fun <T> T?.requireNotNull(lazyMessage: () -> Any): T {
+  requireNotNull(this, lazyMessage)
+  return this
+}
+
+fun <T> T?.requireNotNull(): T {
+  requireNotNull(this)
+  return this
+}

@@ -27,10 +27,12 @@ import org.junit.jupiter.api.Test
 class SlippyMapTest {
   @Test
   fun testConversions() {
-    assertThat(MapCoordinates.neckarIt.latitude.toDomainRelativeY()).isEqualTo(0.3458895530415205)
-    assertThat(MapCoordinates.neckarIt.longitude.toDomainRelativeX()).isEqualTo(0.5251412897611111)
+    val tolerance = 1e-10
 
-    assertThat(MapCoordinates.neckarIt.latitude2DomainRelative()).isEqualTo(0.3458895530415205)
-    assertThat(MapCoordinates.neckarIt.longitude2DomainRelative()).isEqualTo(0.5251412897611111)
+    assertThat(MapCoordinates.neckarIt.latitude.toDomainRelativeY()).isCloseTo(0.3458895530415205, tolerance)
+    assertThat(MapCoordinates.neckarIt.longitude.toDomainRelativeX()).isCloseTo(0.5251412897611111, tolerance)
+
+    assertThat(MapCoordinates.neckarIt.latitude2DomainRelative()).isCloseTo(0.3458895530415205, tolerance)
+    assertThat(MapCoordinates.neckarIt.longitude2DomainRelative()).isCloseTo(0.5251412897611111, tolerance)
   }
 }

@@ -36,6 +36,7 @@ object Plugins {
 
   const val npmBundle: String = "it.neckar.npm-bundle"
   const val taskTree: String = "com.dorongold.task-tree"
+  const val taskInfo: String = "org.barfuin.gradle.taskinfo"
   const val detekt: String = "io.gitlab.arturbosch.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
 
@@ -207,6 +208,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository:
  */
 inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.taskInfo: PluginDependencySpec
+  get() = id(Plugins.taskInfo)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.detekt: PluginDependencySpec
   get() = id(Plugins.detekt)
