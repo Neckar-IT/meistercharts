@@ -537,7 +537,7 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
       progressiveMode = true
       languageVersion = KotlinSettings.languageVersionAsString
       apiVersion = KotlinSettings.apiVersionAsString
-}
+    }
   }
 }
 
@@ -552,6 +552,7 @@ fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration(suppressWarnings: Bool
     optIn = KotlinSettings.optInExperimentalAnnotations
     javaParameters = true
     this.suppressWarnings = suppressWarnings
+    extraWarnings = true
   }
 
   applyKotlinConfiguration()
@@ -712,6 +713,7 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
 
   compilerOptions {
     this.suppressWarnings = suppressWarnings
+    extraWarnings = true
   }
 
   //Add an JVM configuration

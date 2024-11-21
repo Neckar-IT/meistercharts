@@ -1,12 +1,10 @@
 package it.neckar.docker
 
-import GradleContext
 import it.neckar.docker.ExternalDockerImages.variableName
 import it.neckar.projects.common.DockerImageDescriptor
+import it.neckar.projects.common.DockerImageDescriptorWithoutTag
 import it.neckar.projects.common.DockerRegistry
 import org.gradle.api.internal.TaskInputsInternal
-import java.io.File
-import java.util.Properties
 
 /**
  * Contains the version numbers for all (external) docker containers
@@ -14,43 +12,38 @@ import java.util.Properties
  * Call `gradle printExternalDockerImages` to print all variables`
  */
 object ExternalDockerImages {
-  /**
-   * Contains the version numbers from nameComponent to tag/version
-   */
-  internal val versionNumbersMap = loadVersionPropertiesFile()
-
-  val MongoDb: DockerImageDescriptor = create("mongo")
-  val Postgres: DockerImageDescriptor = create("postgres")
-  val Traefik: DockerImageDescriptor = create("traefik")
+  val MongoDb: DockerImageDescriptorWithoutTag = create("mongo")
+  val Postgres: DockerImageDescriptorWithoutTag = create("postgres")
+  val Traefik: DockerImageDescriptorWithoutTag = create("traefik")
 
   /**
    * This image (including registry) is suggested by the official keycloak guide: https://www.keycloak.org/getting-started/getting-started-dock
    */
-  val Keycloak: DockerImageDescriptor = create(DockerRegistry.Quay, "keycloak/keycloak")
+  val Keycloak: DockerImageDescriptorWithoutTag = create(DockerRegistry.Quay, "keycloak/keycloak")
 
-  val Gatus: DockerImageDescriptor = create(nameComponent = "twinproduction/gatus")
-  val Prometheus: DockerImageDescriptor = create(nameComponent = "prom/prometheus")
-  val PrometheusNodeExporter: DockerImageDescriptor = create(registry = DockerRegistry.Quay, nameComponent = "prometheus/node-exporter")
-  val PromPushgateway: DockerImageDescriptor = create(nameComponent = "prom/pushgateway")
-  val PromAlertmanager: DockerImageDescriptor = create(nameComponent = "prom/alertmanager")
-  val GrafanaLoki: DockerImageDescriptor = create(nameComponent = "grafana/loki")
-  val Grafana: DockerImageDescriptor = create(nameComponent = "grafana/grafana-oss")
-  val Umami: DockerImageDescriptor = create(registry = DockerRegistry.Ghcr, nameComponent = "umami-software/umami")
-  val Watchtower: DockerImageDescriptor = create(nameComponent = "containrrr/watchtower")
-  val Vaultwarden: DockerImageDescriptor = create(nameComponent = "vaultwarden/server")
-  val Rclone: DockerImageDescriptor = create(nameComponent = "rclone/rclone")
+  val Gatus: DockerImageDescriptorWithoutTag = create(nameComponent = "twinproduction/gatus")
+  val Prometheus: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/prometheus")
+  val PrometheusNodeExporter: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Quay, nameComponent = "prometheus/node-exporter")
+  val PromPushgateway: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/pushgateway")
+  val PromAlertmanager: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/alertmanager")
+  val GrafanaLoki: DockerImageDescriptorWithoutTag = create(nameComponent = "grafana/loki")
+  val Grafana: DockerImageDescriptorWithoutTag = create(nameComponent = "grafana/grafana-oss")
+  val Umami: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Ghcr, nameComponent = "umami-software/umami")
+  val Watchtower: DockerImageDescriptorWithoutTag = create(nameComponent = "containrrr/watchtower")
+  val Vaultwarden: DockerImageDescriptorWithoutTag = create(nameComponent = "vaultwarden/server")
+  val Rclone: DockerImageDescriptorWithoutTag = create(nameComponent = "rclone/rclone")
 
   /**
    * Returns the name of the variable that is used to reference the image
    */
-  fun variableName(descriptor: DockerImageDescriptor): String {
+  fun variableName(descriptor: DockerImageDescriptorWithoutTag): String {
     return "$VariableNamePrefix${descriptor.nameComponent}"
   }
 
   /**
    * Contains all entries
    */
-  val entries: List<DockerImageDescriptor> = listOf(
+  val entries: List<DockerImageDescriptorWithoutTag> = listOf(
     MongoDb,
     Postgres,
     Traefik,
@@ -68,59 +61,53 @@ object ExternalDockerImages {
     Rclone,
   )
 
-  internal fun create(nameComponent: String): DockerImageDescriptor {
+  internal fun create(nameComponent: String): DockerImageDescriptorWithoutTag {
     return create(DockerRegistry.DockerHub, nameComponent)
   }
 
-  internal fun create(registry: DockerRegistry, nameComponent: String): DockerImageDescriptor {
-    val version = versionNumbersMap[nameComponent] ?: throw IllegalArgumentException(
-      "No version number / tag found for [$nameComponent].\n" +
-        "Please add an entry to the version.docker.properties file:\n" +
-        "   $nameComponent=1.2.3"
-    )
-    return DockerImageDescriptor.create(registry, nameComponent, version)
+  internal fun create(registry: DockerRegistry, nameComponent: String): DockerImageDescriptorWithoutTag {
+    return DockerImageDescriptorWithoutTag.create(registry, nameComponent)
   }
 
   /**
    * Returns the image for the given name component
    */
-  fun get(nameComponent: String): DockerImageDescriptor {
+  fun get(nameComponent: String): DockerImageDescriptorWithoutTag {
     return entries.firstOrNull { it.nameComponent == nameComponent } ?: throw IllegalArgumentException("No docker image found for [$nameComponent]")
   }
 
-  const val VariableNamePrefix: String = "docker-image::"
-
   /**
-   * Loads the version properties file
+   * Creates a new list with all image descriptors including the provided tags
    */
-  private fun loadVersionPropertiesFile(): Map<String, String> {
-    //Fallback to load the file directly - for unit tests
-    val propertiesFile = GradleContext.rootProjectOrNull()?.file("version.docker.properties") ?: File("../version.docker.properties")
-
-    require(propertiesFile.exists()) { "File not found: ${propertiesFile.absolutePath}" }
-
-    val properties = propertiesFile.inputStream().use { input ->
-      Properties().apply {
-        load(input)
-      }
-    }
-
-    return properties.entries.associate { it.key.toString() to it.value.toString() }
+  fun withTag(dockerImageTags: ExternalDockerImageTags): List<DockerImageDescriptor> {
+    return entries.map { it.withTag(dockerImageTags) }
   }
+
+  const val VariableNamePrefix: String = "docker-image::"
 }
 
 /**
  * Adds all external docker images as properties to the task
  */
 fun TaskInputsInternal.externalDockerImages() {
-  properties(ExternalDockerImages.entries)
+  val tags = ExternalDockerImageTags.loadFromDockerVersionProperties()
+  properties(ExternalDockerImages.entries, tags)
 }
+
 
 /**
  * Adds all external docker images as properties to the task
  */
-fun TaskInputsInternal.properties(values: List<DockerImageDescriptor>) {
+fun TaskInputsInternal.properties(values: List<DockerImageDescriptorWithoutTag>, tags: ExternalDockerImageTags) {
+  println("-------")
+  println("ExternalDockerImages: $values")
+  println("ExternalDockerImages.versionNumbersMap: ${tags}")
+  println("-------")
+
   properties(values.associate {
-    variableName(it) to it.fqName
+    val withTag = it.withTag(tags)
+
+    println("Adding property ${ExternalDockerImages.variableName(it)} with value ${withTag.fqName}")
+    variableName(it) to withTag.fqName
   })
 }

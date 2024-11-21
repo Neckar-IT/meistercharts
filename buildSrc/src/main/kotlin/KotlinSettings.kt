@@ -65,7 +65,11 @@ object KotlinSettings {
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
 
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
-    add("-Xconsistent-data-class-copy-visibility") //Enable the new copy visibility)
+    add("-Xconsistent-data-class-copy-visibility") //Enable the new copy visibility
+    add("-Xnon-local-break-continue") //Non local break and continue
+
+
+    add("-Xsuppress-warning=NOTHING_TO_INLINE") //Suppress warnings globally!
 
     //
     // Old compiler settings, for documentation purposes

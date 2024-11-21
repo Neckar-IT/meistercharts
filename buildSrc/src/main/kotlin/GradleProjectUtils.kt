@@ -198,10 +198,13 @@ fun Task.onlyIfPropertyTrue(propertyName: String) {
  * Filters all (external) docker image variables
  */
 fun AbstractCopyTask.filterAllExternalDockerImages() {
+  val dockerImageTags = it.neckar.docker.ExternalDockerImageTags.loadFromDockerVersionProperties()
+  val withTag = ExternalDockerImages.withTag(dockerImageTags)
+
   filter { line ->
     var currentLine = line;
 
-    ExternalDockerImages.entries.forEach { dockerImageDescriptor ->
+    withTag.forEach { dockerImageDescriptor ->
       val variableName = ExternalDockerImages.variableName(dockerImageDescriptor)
       val oldValue = "\${${variableName}}"
       currentLine = currentLine.replace(oldValue, dockerImageDescriptor.fqName)

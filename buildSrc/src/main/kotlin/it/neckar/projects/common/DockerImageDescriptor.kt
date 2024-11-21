@@ -3,16 +3,7 @@ package it.neckar.projects.common
 /**
  * Describes a docker image
  */
-interface DockerImageDescriptor {
-  /**
-   * The repository of the image
-   */
-  val registry: DockerRegistry
-
-  /**
-   * The name component of the image
-   */
-  val nameComponent: String
+interface DockerImageDescriptor : DockerImageDescriptorWithoutTag {
 
   /**
    * The tag of the image - if there is one
@@ -73,6 +64,11 @@ interface DockerImageDescriptor {
     override val nameComponent: String,
     override val tag: String,
   ) : DockerImageDescriptor {
+
+    override fun withTag(tag: String): DockerImageDescriptor {
+      return copy(tag = tag)
+    }
+
     override fun toString(): String {
       return fqName
     }

@@ -7,6 +7,7 @@ import org.gradle.api.invocation.Gradle
 object GradleContext {
   fun initialize(gradle: Gradle) {
     this.gradle = gradle
+    callbacks.forEach { it(gradle) }
   }
 
   /**
@@ -40,5 +41,14 @@ object GradleContext {
    */
   fun project(path: String): Project {
     return gradle.rootProject.project(path)
+  }
+
+  private val callbacks = mutableListOf<(gradle: Gradle) -> Unit>()
+
+  /**
+   * Registers a callback called when the Gradle instance has been initialized
+   */
+  fun onGradleInitialized(callback: (gradle: Gradle) -> Unit) {
+    callbacks.add(callback)
   }
 }
