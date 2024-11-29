@@ -70,6 +70,7 @@ object KotlinSettings {
 
 
     add("-Xsuppress-warning=NOTHING_TO_INLINE") //Suppress warnings globally!
+    add("-Xmulti-dollar-interpolation") //Multi Dollar Interpolation (https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation)
 
     //
     // Old compiler settings, for documentation purposes

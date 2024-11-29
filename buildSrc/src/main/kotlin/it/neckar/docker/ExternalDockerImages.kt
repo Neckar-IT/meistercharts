@@ -99,15 +99,8 @@ fun TaskInputsInternal.externalDockerImages() {
  * Adds all external docker images as properties to the task
  */
 fun TaskInputsInternal.properties(values: List<DockerImageDescriptorWithoutTag>, tags: ExternalDockerImageTags) {
-  println("-------")
-  println("ExternalDockerImages: $values")
-  println("ExternalDockerImages.versionNumbersMap: ${tags}")
-  println("-------")
-
   properties(values.associate {
     val withTag = it.withTag(tags)
-
-    println("Adding property ${ExternalDockerImages.variableName(it)} with value ${withTag.fqName}")
     variableName(it) to withTag.fqName
   })
 }
