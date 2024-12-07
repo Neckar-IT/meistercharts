@@ -44,6 +44,12 @@ expect fun guessInCIEnvironment(): Boolean
 expect fun guessDebugging(): Boolean
 
 /**
+ * Returns true, if the debug process should wait.
+ * This is useful to keep the process running until the final state has been debugged (e.g., keeping the testcontainers online)
+ */
+expect fun shouldWaitInDebugMode(): Boolean
+
+/**
  * Guesses the environment mode
  */
 expect fun guessEnvironmentMode(): EnvironmentMode

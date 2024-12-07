@@ -37,6 +37,11 @@ actual fun guessEnvironmentMode(): EnvironmentMode {
   return EnvironmentMode.Dev
 }
 
+actual fun shouldWaitInDebugMode(): Boolean {
+  return true
+}
+
+
 /**
  * Copied from
  * https://github.com/Kotlin/js-externals/blob/master/externals/react-native/v0/src/index.global.kt
@@ -48,7 +53,6 @@ actual fun guessEnvironmentMode(): EnvironmentMode {
 
 
 internal val NODE_ENV: dynamic = js("process.env.NODE_ENV")
-
 
 val nodeEnvIsProduction: Boolean
   get() = NODE_ENV === "production"
