@@ -160,11 +160,11 @@ class HistoryFileStorageTest {
       val parts: List<String> = fileName.split("/")
       assertThat(parts.size).isEqualTo(5)
 
-      assertThat(dateTimeFormat.format(parts[1].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("29.11.2019 04:00:00")
-      assertThat(dateTimeFormat.format(parts[2].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020 15:10:00")
-      assertThat(dateTimeFormat.format(parts[3].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020 17:30:00")
+      assertThat(dateTimeFormat.format(parts[1].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("29.11.2019, 04:00:00")
+      assertThat(dateTimeFormat.format(parts[2].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020, 15:10:00")
+      assertThat(dateTimeFormat.format(parts[3].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020, 17:30:00")
 
-      assertThat(dateTimeFormat.format(parts[4].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020 17:30:32")
+      assertThat(dateTimeFormat.format(parts[4].toLong().toDouble(), I18nConfiguration.GermanyUTC)).isEqualTo("19.02.2020, 17:30:32")
     }
   }
 

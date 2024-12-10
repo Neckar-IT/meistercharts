@@ -27,8 +27,9 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.openjfx.gradle.JavaFXModule
 import java.io.File
 import java.io.FileFilter
 import java.io.FileNotFoundException
@@ -301,8 +302,24 @@ fun Project.withTask(name: String, block: (Task) -> Unit) {
 }
 
 /**
+ * Configures JavaFX for this project
+ */
+fun Project.configureJavaFX(modules: List<JavaFXModule> = listOf(JavaFXModule.CONTROLS)) {
+  plugins.apply(Plugins.javafx)
+
+  val javaFxOptions: org.openjfx.gradle.JavaFXOptions = extensions.getByType(org.openjfx.gradle.JavaFXOptions::class.java)
+
+  val javaPluginExtension = extensions.getByType(JavaPluginExtension::class.java)
+  val languageVersion = javaPluginExtension.toolchain.languageVersion.get()
+
+  javaFxOptions.version = languageVersion.asInt().toString()
+  javaFxOptions.modules = modules.map { it.moduleName }
+}
+
+/**
  * Configures a project to use Oracle Java 8 (including Java FX)
  */
+@Deprecated("no longer supported. Update to 21")
 fun Project.configureToolchainJava8WithFx(): Provider<JavaCompiler> {
   //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
   return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ORACLE)
@@ -311,6 +328,7 @@ fun Project.configureToolchainJava8WithFx(): Provider<JavaCompiler> {
 /**
  * Configures a project to use Java 8 (not including JavaFX)
  */
+@Deprecated("no longer supported. Update to 21")
 fun Project.configureToolchainJava8(): Provider<JavaCompiler> {
   //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
   return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ADOPTIUM)
@@ -323,14 +341,6 @@ fun Project.configureToolchain(jvmType: JvmType) {
   when (jvmType) {
     JvmType.JavaLatestLTS -> {
       configureToolchainJava21LTS()
-    }
-
-    JvmType.Java8 -> {
-      configureToolchainJava8()
-    }
-
-    JvmType.Java8Fx -> {
-      configureToolchainJava8WithFx()
     }
   }
 }

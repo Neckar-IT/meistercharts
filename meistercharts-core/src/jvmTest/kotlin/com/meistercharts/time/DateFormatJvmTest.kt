@@ -63,30 +63,30 @@ class DateFormatJvmTest {
 
   @Test
   fun dateTimeFormat() {
-    assertThat(dateTimeFormat.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.2021 23:46:11")
-    assertThat(dateTimeFormat.format(now, englishBerlin)).isEqualTo("Mar 14, 2021 11:46:11 PM")
-    assertThat(dateTimeFormat.format(now, englishTokyo)).isEqualTo("Mar 15, 2021 7:46:11 AM")
+    assertThat(dateTimeFormat.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.2021, 23:46:11")
+    assertThat(dateTimeFormat.format(now, englishBerlin)).isEqualTo("Mar 14, 2021, 11:46:11 PM")
+    assertThat(dateTimeFormat.format(now, englishTokyo)).isEqualTo("Mar 15, 2021, 7:46:11 AM")
   }
 
   @Test
   fun dateTimeFormatShort() {
-    assertThat(dateTimeFormatShort.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.21 23:46")
-    assertThat(dateTimeFormatShort.format(now, englishBerlin)).isEqualTo("3/14/21 11:46 PM")
-    assertThat(dateTimeFormatShort.format(now, englishTokyo)).isEqualTo("3/15/21 7:46 AM")
+    assertThat(dateTimeFormatShort.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.21, 23:46")
+    assertThat(dateTimeFormatShort.format(now, englishBerlin)).isEqualTo("3/14/21, 11:46 PM")
+    assertThat(dateTimeFormatShort.format(now, englishTokyo)).isEqualTo("3/15/21, 7:46 AM")
   }
 
   @Test
   fun dateTimeFormatWithMillis() {
-    assertThat(dateTimeFormatWithMillis.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.2021 23:46:11.002")
-    assertThat(dateTimeFormatWithMillis.format(now, englishBerlin)).isEqualTo("Mar 14, 2021 11:46:11.002 PM")
-    assertThat(dateTimeFormatWithMillis.format(now, englishTokyo)).isEqualTo("Mar 15, 2021 7:46:11.002 AM")
+    assertThat(dateTimeFormatWithMillis.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.2021, 23:46:11.002")
+    assertThat(dateTimeFormatWithMillis.format(now, englishBerlin)).isEqualTo("Mar 14, 2021, 11:46:11.002 PM")
+    assertThat(dateTimeFormatWithMillis.format(now, englishTokyo)).isEqualTo("Mar 15, 2021, 7:46:11.002 AM")
   }
 
   @Test
   fun dateTimeFormatShortWithMillis() {
-    assertThat(dateTimeFormatShortWithMillis.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.21 23:46:11.002")
-    assertThat(dateTimeFormatShortWithMillis.format(now, englishBerlin)).isEqualTo("3/14/21 11:46:11.002 PM")
-    assertThat(dateTimeFormatShortWithMillis.format(now, englishTokyo)).isEqualTo("3/15/21 7:46:11.002 AM")
+    assertThat(dateTimeFormatShortWithMillis.format(now, I18nConfiguration.Germany)).isEqualTo("14.03.21, 23:46:11.002")
+    assertThat(dateTimeFormatShortWithMillis.format(now, englishBerlin)).isEqualTo("3/14/21, 11:46:11.002 PM")
+    assertThat(dateTimeFormatShortWithMillis.format(now, englishTokyo)).isEqualTo("3/15/21, 7:46:11.002 AM")
   }
 
   @Test
@@ -106,15 +106,15 @@ class DateFormatJvmTest {
   @Test
   fun timeFormat() {
     assertThat(timeFormat.format(now, I18nConfiguration.Germany)).isEqualTo("23:46:11")
-    assertThat(timeFormat.format(now, englishBerlin)).isEqualTo("11:46:11 PM")
-    assertThat(timeFormat.format(now, englishTokyo)).isEqualTo("7:46:11 AM")
+    assertThat(timeFormat.format(now, englishBerlin)).isEqualTo("11:46:11 PM")
+    assertThat(timeFormat.format(now, englishTokyo)).isEqualTo("7:46:11 AM")
   }
 
   @Test
   fun timeFormatWithMillis() {
     assertThat(timeFormatWithMillis.format(now, I18nConfiguration.Germany)).isEqualTo("23:46:11.002")
-    assertThat(timeFormatWithMillis.format(now, englishBerlin)).isEqualTo("11:46:11.002 PM")
-    assertThat(timeFormatWithMillis.format(now, englishTokyo)).isEqualTo("7:46:11.002 AM")
+    assertThat(timeFormatWithMillis.format(now, englishBerlin)).isEqualTo("11:46:11.002 PM")
+    assertThat(timeFormatWithMillis.format(now, englishTokyo)).isEqualTo("7:46:11.002 AM")
   }
 
   @Test

@@ -40,27 +40,6 @@ import java.io.ByteArrayOutputStream
  * Contains common code to configure a project
  */
 object ProjectConfiguration {
-
-  /**
-   * Configures a JVM project using JDK 8
-   */
-  fun configureJvm8(project: Project) {
-    with(project) {
-      configureJvmCommon()
-      configureToolchainJava8()
-    }
-  }
-
-  /**
-   * Configures a JVM project using JDK 8 - with JavaFX (Oracle)
-   */
-  fun configureJvm8Fx(project: Project) {
-    with(project) {
-      configureJvmCommon()
-      configureToolchainJava8WithFx()
-    }
-  }
-
   /**
    * Configures a JVM project - with the current LTS Java version
    */

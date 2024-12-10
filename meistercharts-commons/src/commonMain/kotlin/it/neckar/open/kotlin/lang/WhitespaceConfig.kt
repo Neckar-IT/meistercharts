@@ -9,7 +9,7 @@ enum class WhitespaceConfig(
    */
   val space: Char,
   /**
-   * Used for small spaces (e.g. between amount and unit)
+   * Used for small spaces (e.g., between amount and unit)
    */
   val smallSpace: Char,
 ) {

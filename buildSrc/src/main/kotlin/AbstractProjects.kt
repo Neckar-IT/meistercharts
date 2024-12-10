@@ -10,7 +10,7 @@ abstract class AbstractProjects {
 
   val disabledProjectsSupport: DisabledProjectsSupport = DisabledProjectsSupport.load(
     disabledProjectsFile = GradleContext.rootProject.file("disabled-projects.json5"),
-    disabledOnMacOsFile = GradleContext.rootProject.file(".project-sets/${ProjectType.KotlinJvm8Fx.name}.json5"),
+    disabledOnMacOsFile = GradleContext.rootProject.file(".project-sets/${ProjectType.KotlinJvm.name}.json5"),
   )
 
   /**
@@ -41,37 +41,13 @@ abstract class AbstractProjects {
     return configureProject(path, ProjectType.KotlinJvm)
   }
 
-  protected fun jvm8(path: String): ConfiguredProject {
-    return configureProject(path, ProjectType.KotlinJvm8)
-  }
-
-  protected fun jvm8Fx(path: String): ConfiguredProject {
-    return configureProject(path, ProjectType.KotlinJvm8Fx)
-  }
-
-  /**
-   * Creates a new multiplatform library - using Java 8
-   */
-  protected fun multiPlatform8(path: String): ConfiguredProject {
-    return multiPlatform(path, JvmType.Java8)
-  }
-
   protected fun multiPlatformLts(path: String): ConfiguredProject {
     return multiPlatform(path, JvmType.JavaLatestLTS)
   }
 
-  /**
-   * Creates a new multiplatform library - using Java 8 with JavaFX
-   */
-  protected fun multiPlatform8Fx(path: String): ConfiguredProject {
-    return multiPlatform(path, JvmType.Java8Fx)
-  }
-
   protected fun multiPlatform(path: String, jvmType: JvmType = JvmType.JavaLatestLTS): ConfiguredProject {
     val type = when (jvmType) {
-      JvmType.JavaLatestLTS -> ProjectType.KotlinMultiplatformLatestLTS
-      JvmType.Java8 -> ProjectType.KotlinMultiplatformLatestJava8
-      JvmType.Java8Fx -> ProjectType.KotlinMultiplatformLatestJava8Fx
+      JvmType.JavaLatestLTS -> ProjectType.KotlinMultiplatform
     }
     return configureProject(path, type)
   }
@@ -113,15 +89,7 @@ abstract class AbstractProjects {
    * Returns all multi platform projects for the current java version
    */
   fun multiPlatformProjectsLTS(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestLTS }
-  }
-
-  fun multiPlatformProjectsJava8(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestJava8 }
-  }
-
-  fun multiPlatformProjectsJava8Fx(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformLatestJava8Fx }
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }
   }
 
   fun project(type: ProjectType): List<ConfiguredProject> {
@@ -130,14 +98,6 @@ abstract class AbstractProjects {
 
   fun jvmProjects(): List<ConfiguredProject> {
     return project(ProjectType.KotlinJvm)
-  }
-
-  fun jvm8Projects(): List<ConfiguredProject> {
-    return project(ProjectType.KotlinJvm8)
-  }
-
-  fun jvm8FxProjects(): List<ConfiguredProject> {
-    return project(ProjectType.KotlinJvm8Fx)
   }
 
   fun pnpmProjects(): List<ConfiguredProject> {
@@ -163,9 +123,7 @@ abstract class AbstractProjects {
 
 @Deprecated("Should not be required")
 fun Project.isMultiplatformProject(): Boolean {
-  return isOfType(ProjectType.KotlinMultiplatformLatestLTS)
-    || isOfType(ProjectType.KotlinMultiplatformLatestJava8Fx)
-    || isOfType(ProjectType.KotlinMultiplatformLatestJava8)
+  return isOfType(ProjectType.KotlinMultiplatform)
 }
 
 fun Project.isJvmProject(): Boolean {
@@ -290,28 +248,14 @@ data class ConfiguredProject internal constructor(
 
 enum class ProjectType {
   /**
-   * JVM project - with the current JDK version
+   * JVM project - with the latest LTS JDK version
    */
   KotlinJvm,
 
   /**
-   * Represents an old JVM 8 project (without JavaFX)
-   */
-  KotlinJvm8,
-
-  /**
-   * JVM Project that uses JavaFX (Oracle JDK 8)
-   */
-  KotlinJvm8Fx,
-
-  /**
    * Multiplatform project - usually contains JVM and JS code
    */
-  KotlinMultiplatformLatestLTS,
-
-  KotlinMultiplatformLatestJava8,
-
-  KotlinMultiplatformLatestJava8Fx,
+  KotlinMultiplatform,
 
   /**
    * JS project - build using pnpm

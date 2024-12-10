@@ -76,8 +76,6 @@ public object Libs {
 
     public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
 
-    public const val rxkotlinfx: String = "com.github.thomasnield:rxkotlinfx:_"
-
     public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
 
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
@@ -110,8 +108,6 @@ public object Libs {
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
 
-    public const val okhttp: String = "com.squareup.okhttp3:okhttp:_"
-
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
     public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
@@ -141,8 +137,6 @@ public object Libs {
             "io.codearte.nexus-staging:io.codearte.nexus-staging.gradle.plugin:_"
 
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
-
-    public const val kohttp: String = "io.github.rybalkinsd:kohttp:_"
 
     public const val ktor_swagger_ui: String = "io.github.smiley4:ktor-swagger-ui:_"
 
@@ -255,8 +249,6 @@ public object Libs {
     public const val jna: String = "net.java.dev.jna:jna:_"
 
     public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
-
-    public const val tornadofx: String = "no.tornado:tornadofx:_"
 
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
@@ -457,9 +449,6 @@ public object Libs {
     public const val jmh_generator_annprocess: String = "org.openjdk.jmh:jmh-generator-annprocess:_"
 
     public const val jmh_generator_bytecode: String = "org.openjdk.jmh:jmh-generator-bytecode:_"
-
-    public const val org_openjfx_javafxplugin_gradle_plugin: String =
-            "org.openjfx.javafxplugin:org.openjfx.javafxplugin.gradle.plugin:_"
 
     public const val javafx_base: String = "org.openjfx:javafx-base:_"
 
