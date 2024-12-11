@@ -43,7 +43,7 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
         target.file("package.template.json")
       }
 
-      targetFile.convention(target.layout.projectDirectory.file("package.generated.json")) //generate the package.json in the *same* directory to avoid problems with relative paths (e.g., pnpm)
+      targetFile.convention(target.layout.projectDirectory.file(PackageGeneratedJsonFileName)) //generate the package.json in the *same* directory to avoid problems with relative paths (e.g., pnpm)
       packageJsonSymLinkFile.convention(target.layout.projectDirectory.file("package.json"))
 
       moduleName.set(target.name)
@@ -59,6 +59,11 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
       version.set(extension.version)
     }
 
+    //Delete file on clean
+    target.tasks.named<Delete>("clean") {
+      delete(generatePackageJsonTask.targetFile)
+    }
+
     //Update the clean task to delete the generated package.json file
     target.tasks.named<Delete>("clean") {
       delete(generatePackageJsonTask.targetFile)
@@ -67,6 +72,8 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
 
   companion object {
     const val GeneratePackageJsonTaskName: String = "generatePackageJson"
+
+    private const val PackageGeneratedJsonFileName = "package.generated.json"
   }
 }
 
