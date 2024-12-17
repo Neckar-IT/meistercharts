@@ -68,4 +68,7 @@ org.testcontainers:*
     ^^^^^^^^^^^^^^
 
 aws.sdk.kotlin:*
-^^^^^^^^^^^^^^
+^^^.^^^.^^^^^^
+
+org.jetbrains.dokka:*
+^^^.^^^^^^^^^.^^^^^

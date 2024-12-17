@@ -138,8 +138,6 @@ public object Libs {
 
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
-    public const val ktor_swagger_ui: String = "io.github.smiley4:ktor-swagger-ui:_"
-
     public const val detekt_gradle_plugin: String =
             "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:_"
 
@@ -315,8 +313,6 @@ public object Libs {
 
     public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
 
-    public const val dokka_gradle_plugin: String = "org.jetbrains.dokka:dokka-gradle-plugin:_"
-
     public const val gfm_plugin: String = "org.jetbrains.dokka:gfm-plugin:_"
 
     public const val gfm_template_processing_plugin: String =
@@ -478,8 +474,6 @@ public object Libs {
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
-
-    public const val swagger_ui: String = "org.webjars:swagger-ui:_"
 
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 

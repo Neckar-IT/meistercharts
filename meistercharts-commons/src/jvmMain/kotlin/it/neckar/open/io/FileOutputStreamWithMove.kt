@@ -7,7 +7,7 @@ import java.nio.file.Files
 /**
  * Writes to a temporary file and moves to the target file name on [close]
  */
-class FileOutputStreamWithMove constructor(val file: File) : FilterOutputStream(null) {
+class FileOutputStreamWithMove(val file: File) : FilterOutputStream(null) {
   /**
    * Whether the stream has been closed already
    */
