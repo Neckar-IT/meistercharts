@@ -1,8 +1,11 @@
 package it.neckar.geometry
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents a polygon shape.
  */
+@Serializable
 class Polygon(private val vertices: List<Coordinates>) : Shape {
   init {
     require(vertices.size >= 3) { "A polygon must have at least 3 vertices" }
@@ -97,5 +100,18 @@ class Polygon(private val vertices: List<Coordinates>) : Shape {
 
   override fun doesNotOverlap(other: Shape): Boolean {
     return overlaps(other).not()
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Polygon) return false
+
+    if (vertices != other.vertices) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    return vertices.hashCode()
   }
 }
