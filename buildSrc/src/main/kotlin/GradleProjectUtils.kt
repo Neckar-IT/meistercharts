@@ -48,6 +48,7 @@ fun String.projectPath2FileName(suffix: String = ""): String {
 /**
  * Converts a project path to a file name with the given suffix. Adds "cedarsoft." to the string.
  */
+@Deprecated("Needs update related to cedarsoft in path")
 fun String.projectPath2FileNameWithCedarsoft(suffix: String = ""): String {
   return projectPath2FileName(suffix).replace("closed", "cedarsoft").replace("open.", "cedarsoft.open.")
 }
@@ -62,6 +63,7 @@ fun Project.findSourcesJar(sourcesJarTaskName: String = "sourcesJar"): File? {
 /**
  * Copies the sources jar of the given project to the given target dir
  */
+@Deprecated("Needs update related to cedarsoft in path")
 fun Project.copySourcesJarToDir(
   targetDir: File,
   sourcesJarTaskName: String = "jvmSourcesJar",
@@ -84,6 +86,7 @@ fun File.ensureExists(taskNameToCreate: String) {
  * Converts a component identifier to a file name.
  * This method can be used when copying dependencies
  */
+@Deprecated("Needs update related to cedarsoft in path")
 fun ComponentIdentifier.toFileName(suffix: String = ""): String {
   return when (val identifier = this) {
     is ProjectComponentIdentifier -> identifier.projectPath.projectPath2FileNameWithCedarsoft(suffix)

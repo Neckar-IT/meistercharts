@@ -87,7 +87,7 @@ data class DockerRegistry(
 
   companion object {
     val DockerHub: DockerRegistry = DockerRegistry("docker.io")
-    val NeckarIT: DockerRegistry = DockerRegistry("registry.git.cedarsoft.com/cedarsoft/com.cedarsoft.monorepo")
+    val NeckarIT: DockerRegistry = DockerRegistry("registry.git.neckar.it/neckarit/neckar-hub")
 
     /**
      * Repository managed by Red Hat

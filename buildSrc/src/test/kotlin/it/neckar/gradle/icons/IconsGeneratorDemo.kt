@@ -13,12 +13,12 @@ import java.io.File
 class IconsGeneratorDemo {
   @Test
   internal fun testBasic() {
-    val svgFiles = File("/home/johannes/projects/com.cedarsoft.monorepo/internal/closed/charting/algorithms/src/icons/material").listSvgFilesRecursively().baseNames()
+    val svgFiles = File("/home/johannes/projects/neckar-hub/internal/closed/charting/algorithms/src/icons/material").listSvgFilesRecursively().baseNames()
     println(GeneratePaintableObject(svgFiles, "BasicIcons", "da.package").create())
   }
 }
 
 fun main() {
-  val svgFiles = File("/home/johannes/projects/com.cedarsoft.monorepo/internal/closed/charting/algorithms/src/icons/material").listSvgFilesRecursively()
+  val svgFiles = File("/home/johannes/projects/neckar-hub/internal/closed/charting/algorithms/src/icons/material").listSvgFilesRecursively()
   println(GenerateSvgPaths(svgFiles, "SvgPaths", "da.package").create())
 }

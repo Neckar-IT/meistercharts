@@ -50,6 +50,8 @@ object ProjectConfiguration {
     }
   }
 
+  private var dokkaEnabled = false
+
   private fun Project.configureJvmCommon() {
     run {
       //Ensure there are no "invalid" source directories - this might happen when a project has been converted from a multiplatform project
@@ -64,7 +66,9 @@ object ProjectConfiguration {
     apply(plugin = Plugins.java)
     apply(plugin = Plugins.javaLibrary)
     apply(plugin = Plugins.kotlinJvm)
-    apply(plugin = Plugins.dokka)
+    if (dokkaEnabled) {
+      apply(plugin = Plugins.dokka)
+    }
     apply(plugin = Plugins.detekt)
 
     configureKotlin()
@@ -86,7 +90,9 @@ object ProjectConfiguration {
         description = "Assembles the javadoc/dokka jar."
 
         dependsOn("jar")
-        from(tasks.named("dokkaHtml"))
+        if (dokkaEnabled) {
+          from(tasks.named("dokkaHtml"))
+        }
         archiveClassifier.set("javadoc")
       }
 
@@ -149,7 +155,9 @@ object ProjectConfiguration {
 
       //Report generation is not yet working
       apply(plugin = Plugins.kotlinMultiPlatform)
-      apply(plugin = Plugins.dokka)
+      if (dokkaEnabled) {
+        apply(plugin = Plugins.dokka)
+      }
       apply(plugin = Plugins.detekt)
 
       //tasks.register<Jar>("javadocJar") {
