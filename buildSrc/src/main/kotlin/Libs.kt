@@ -305,29 +305,6 @@ public object Libs {
 
     public const val im4java: String = "org.im4java:im4java:_"
 
-    public const val all_modules_page_plugin: String =
-            "org.jetbrains.dokka:all-modules-page-plugin:_"
-
-    public const val analysis_kotlin_descriptors: String =
-            "org.jetbrains.dokka:analysis-kotlin-descriptors:_"
-
-    public const val dokka_base: String = "org.jetbrains.dokka:dokka-base:_"
-
-    public const val gfm_plugin: String = "org.jetbrains.dokka:gfm-plugin:_"
-
-    public const val gfm_template_processing_plugin: String =
-            "org.jetbrains.dokka:gfm-template-processing-plugin:_"
-
-    public const val javadoc_plugin: String = "org.jetbrains.dokka:javadoc-plugin:_"
-
-    public const val jekyll_plugin: String = "org.jetbrains.dokka:jekyll-plugin:_"
-
-    public const val jekyll_template_processing_plugin: String =
-            "org.jetbrains.dokka:jekyll-template-processing-plugin:_"
-
-    public const val org_jetbrains_dokka_gradle_plugin: String =
-            "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin:_"
-
     public const val org_jetbrains_intellij_gradle_plugin: String =
             "org.jetbrains.intellij:org.jetbrains.intellij.gradle.plugin:_"
 
