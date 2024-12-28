@@ -59,6 +59,9 @@ class CircularChartGestalt(
 
   val circularChartLayer: CircularChartLayer = CircularChartLayer(CircularChartLayer.Configuration(configuration::relativeValuesProvider.delegate())) {
   }
+  val colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by circularChartLayer.configuration::segmentsColorProvider.also {
+    it.set(createDefaultColorsProvider())
+  }
 
   val legendLayer: CircularChartLegendLayer = CircularChartLegendLayer(configuration::absoluteValuesProvider.delegate()) {
     font = FontDescriptorFragment(16.0)
@@ -68,7 +71,7 @@ class CircularChartGestalt(
     configuration.additionalConfiguration()
 
     legendLayer.configuration.segmentsLabelProvider = createDefaultLabelProvider()
-    legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(configuration::colorsProvider.delegate())
+    legendLayer.configuration.segmentsImageProvider = createDefaultImageProvider(colorsProvider)
 
     configureBuilder {
       FixedChartGestalt(Insets.of(75.0)).configure(it)
@@ -98,11 +101,7 @@ class CircularChartGestalt(
      * Provides the *relative* values that are used to calculate the size of the segments
      */
     var relativeValuesProvider: @Domain @pct DoublesProvider = absoluteValuesProvider.toRelative(),
-  ) {
-    var colorsProvider: MultiProvider<CircularChartLegendLayer.CircleSegmentIndex, Color> by circularChartLayer.configuration::segmentsColorProvider.also {
-      it.set(createDefaultColorsProvider())
-    }
-  }
+  )
 
   companion object {
     /**

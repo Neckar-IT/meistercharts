@@ -44,7 +44,7 @@ data class FontFamily(
    */
   fun isProbablyDefaultSerifFamily(): Boolean {
     return family == "serif" || //Firefox
-      family == "Times New Roman" //Chrome
+      family == TimesNewRoman.family //Chrome
     //TODO safari
   }
 
@@ -53,25 +53,25 @@ data class FontFamily(
     val Arial: FontFamily = FontFamily("Arial")
     val Verdana: FontFamily = FontFamily("Verdana")
     val Tahoma: FontFamily = FontFamily("Tahoma")
-    val TrebuchetMS: FontFamily = FontFamily("Trebuchet MS")
+    val TrebuchetMS: FontFamily = FontFamily("'Trebuchet MS'")
 
     //Serif families
-    val TimesNewRoman: FontFamily = FontFamily("Times New Roman")
+    val TimesNewRoman: FontFamily = FontFamily("'Times New Roman'")
     val Palatino: FontFamily = FontFamily("Palatino")
     val Georgia: FontFamily = FontFamily("Georgia")
     val Garamond: FontFamily = FontFamily("Garamond")
 
 
     //Monospaced
-    val CourierNew: FontFamily = FontFamily("Courier New")
-    val LucidaConsole: FontFamily = FontFamily("Lucida Console")
+    val CourierNew: FontFamily = FontFamily("'Courier New'")
+    val LucidaConsole: FontFamily = FontFamily("'Lucida Console'")
 
     //Cursive
-    val BrushScriptMT: FontFamily = FontFamily("Brush Script MT")
+    val BrushScriptMT: FontFamily = FontFamily("'Brush Script MT'")
 
 
-    val FontAwesome6Free: FontFamily = FontFamily("Font Awesome 6 Free")
-    val FontAwesome6Brands: FontFamily = FontFamily("Font Awesome 6 Brands")
+    val FontAwesome6Free: FontFamily = FontFamily("'Font Awesome 6 Free'")
+    val FontAwesome6Brands: FontFamily = FontFamily("'Font Awesome 6 Brands'")
 
     @Deprecated("use FontAwesome6Free or FontAwesome6Brands instead")
     val FontAwesome: FontFamily = FontFamily("FontAwesome")

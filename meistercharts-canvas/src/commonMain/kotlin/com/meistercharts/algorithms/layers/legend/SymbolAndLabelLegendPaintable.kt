@@ -119,8 +119,6 @@ class SymbolAndLabelLegendPaintable(
     }
 
     override fun performCalculation(paintingContext: LayerPaintingContext) {
-      reset() //TODO is this necessary? Should already been called
-
       val chartSupport = paintingContext.chartSupport
 
       val gc = chartSupport.canvas.gc
