@@ -123,6 +123,15 @@ public object Libs {
 
     public const val fontawesomefx: String = "de.jensd:fontawesomefx:_"
 
+    public const val compiler_plugin: String = "de.jensklingenberg.ktorfit:compiler-plugin:_"
+
+    public const val de_jensklingenberg_ktorfit_gradle_plugin: String =
+            "de.jensklingenberg.ktorfit:de.jensklingenberg.ktorfit.gradle.plugin:_"
+
+    public const val ktorfit_ksp: String = "de.jensklingenberg.ktorfit:ktorfit-ksp:_"
+
+    public const val ktorfit_lib: String = "de.jensklingenberg.ktorfit:ktorfit-lib:_"
+
     public const val de_undercouch_download_gradle_plugin: String =
             "de.undercouch.download:de.undercouch.download.gradle.plugin:_"
 

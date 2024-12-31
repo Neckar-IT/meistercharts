@@ -1,11 +1,14 @@
 package it.neckar.open.http
 
+import it.neckar.open.http.UrlPattern.Relative0
+import it.neckar.open.http.UrlPattern.Relative1
 import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlin.uuid.Uuid
 
 
 /**
@@ -39,6 +42,14 @@ sealed interface Url {
     @JsExport.Ignore
     inline fun relative(url: String): Relative {
       return Relative(url)
+    }
+
+    /**
+     * Creates a relative URL template
+     */
+    @JsExport.Ignore
+    inline fun template(url: String): Relative0 {
+      return Relative0(url)
     }
 
     @JsExport.Ignore
@@ -137,19 +148,15 @@ sealed interface Url {
   }
 
   /**
-   * Allows appending a relative URL
+   * Allows appending a relative URL to this.
    */
   @JsExport.Ignore
   interface RelativeAppender<T : RelativeAppender<T>> : Url {
     operator fun plus(toAppend: Relative): T
     operator fun plus(toAppend: String): T
 
-    /**
-     * Appends an HTTP parameter to the URL.
-     * Wraps the parameter in curly braces.
-     */
-    operator fun plus(imagePathBase64: UrlParameterName): T {
-      return plus("{${imagePathBase64.value}}")
+    operator fun plus(toAppend: Uuid): T {
+      return plus(toAppend.toString())
     }
   }
 
@@ -266,6 +273,14 @@ sealed interface Url {
       return Relative(appendUrlStrings(value, toAppend))
     }
 
+    /**
+     * Appends an HTTP parameter to the URL.
+     * Wraps the parameter in curly braces.
+     */
+    operator fun plus(imagePathBase64: UrlParameterName): Relative1 {
+      return Relative1(appendUrlStrings(value, imagePathBase64.asUrlPatternParameter()), imagePathBase64)
+    }
+
     override fun toString(): String {
       return value
     }
@@ -278,7 +293,7 @@ sealed interface Url {
  *
  * This method should be used exclusively to concatenate URL parts.
  */
-internal fun appendUrlStrings(value: String, toAppend: String): String {
+fun appendUrlStrings(value: String, toAppend: String): String {
   if (value.isEmpty()) {
     return toAppend
   }

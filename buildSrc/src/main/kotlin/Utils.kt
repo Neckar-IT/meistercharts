@@ -633,6 +633,9 @@ fun KotlinJsTargetDsl.executableJsApplication(
     val jsProductionExecutableCompileSync = tasks.findByName("jsProductionExecutableCompileSync").requireNotNull()
     val jsBrowserDevelopmentRun = tasks.findByName("jsBrowserDevelopmentRun").requireNotNull() as KotlinWebpack
 
+    //Find KSP extension and add dependencies between tasks - if necessary
+    project.fixKspTaskDependencies()
+
     //Add these artificial deps to work around issue
     jsBrowserProductionWebpack.mustRunAfter(jsDevelopmentExecutableCompileSync)
     jsBrowserProductionWebpack.mustRunAfter(jsProductionExecutableCompileSync)
@@ -642,7 +645,6 @@ fun KotlinJsTargetDsl.executableJsApplication(
 
     jsBrowserDevelopmentRun.mustRunAfter(jsDevelopmentExecutableCompileSync)
     jsBrowserDevelopmentRun.mustRunAfter(jsProductionExecutableCompileSync)
-
 
     webpackModuleType.configure(jsBrowserProductionWebpack, varName)
     webpackModuleTypeForDev.configure(jsBrowserDevelopmentWebpack, varName)
