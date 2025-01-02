@@ -88,6 +88,10 @@ sealed interface Url {
      * HTTP url to localhost
      */
     val localhostHttp: Absolute = Url.absolute("http://localhost")
+
+    val localhostHttp80: Absolute = localhostHttp(80)
+
+    fun localhostHttp(port: Int = 80): Absolute = Url.absolute("http://localhost:$port")
   }
 
   /**
