@@ -19,7 +19,7 @@ object KotlinSettings {
    * Can be used to configure Kotlin extensions directly
    */
   val optInExperimentalAnnotations: List<String> = listOf(
-    "kotlin.ExperimentalStdlibApi", //additional methods in the std lib (e.g. buildList{})
+    "kotlin.ExperimentalStdlibApi", //additional methods in the std lib
     "kotlin.time.ExperimentalTime", //support for duration and other time related classes
     "kotlin.contracts.ExperimentalContracts", //allows the definition of contracts (e.g. how often a lambda is called in a method)
     "kotlin.experimental.ExperimentalTypeInference", //type inference
@@ -29,6 +29,7 @@ object KotlinSettings {
 
     //"kotlinx.coroutines.FlowPreview", //Coroutines stuff
     "kotlin.ExperimentalUnsignedTypes", //Unsigned Types
+    "kotlin.io.path.ExperimentalPathApi",
 
     "kotlin.io.encoding.ExperimentalEncodingApi", //Base64 encoding lib
     "kotlin.io.path.ExperimentalPathApi", //java.nio.file.Path support

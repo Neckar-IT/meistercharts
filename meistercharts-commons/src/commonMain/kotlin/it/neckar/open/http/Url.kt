@@ -14,6 +14,7 @@ import kotlin.uuid.Uuid
 /**
  * Represents a URL (relative or absolute)
  */
+@JsExport
 @Serializable(with = UrlSerializer::class)
 sealed interface Url {
   /**

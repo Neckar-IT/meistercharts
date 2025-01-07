@@ -1,3 +1,4 @@
+import it.neckar.gradle.ansiConsole
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
@@ -192,6 +193,7 @@ fun Project.isSandboxProject(): Boolean {
 /**
  * Represents a configured Gradle project
  */
+@ConsistentCopyVisibility
 data class ConfiguredProject internal constructor(
   /**
    * The path of the project
@@ -218,9 +220,10 @@ data class ConfiguredProject internal constructor(
     try {
       return resolver.project(path)
     } catch (e: org.gradle.api.UnknownProjectException) {
-      println("Could not find project $path - is it disabled?: $disabled")
-      println("Check disabled-projects.json if the project has been disabled!")
-      println("Try `gradle clean build --no-configuration-cache --no-daemon --no-build-cache` to force recompilation")
+      println("Could not find project ${resolver.ansiConsole.red(path)} - is it disabled?: $disabled")
+      println("* Check disabled-projects.json if the project has been disabled!")
+      println("* Check settings.gradle.kts if the project has been added")
+      println("Try ${resolver.ansiConsole.orange("gradle clean build --no-configuration-cache --no-daemon --no-build-cache")} to force recompilation")
       throw e
     } catch (e: Exception) {
       println("Unexpected exception of type ${e.javaClass.simpleName} while resolving project $path - is it disabled?: $disabled")

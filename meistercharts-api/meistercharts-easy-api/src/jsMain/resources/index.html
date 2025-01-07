@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MeisterCharts minimal examples</title>
+</head>
+<body>
+
+<h1>JS API examples</h1>
+<div id="meisterchart-stacked-bar" style="width: 1200px; height: 800px; background-color: azure"></div>
+<div id="meisterchart-compass" style="width: 1200px; height: 800px; background-color: azure"></div>
+
+<!--Execute `gradle build -t` to build the file-->
+
+<script type="module">
+  import { createBarChartStackedFromId, createCompassFromId, createCircularChartFromId } from "./meistercharts-easy-api.js";
+
+  createBarChartStackedFromId("meisterchart-stacked-bar");
+  createCompassFromId("meisterchart-compass");
+
+</script>
+
+</body>
+</html>
