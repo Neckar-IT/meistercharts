@@ -121,7 +121,7 @@ class ThreadExtension @JvmOverloads constructor(
         for (ignored in 0..9) {
           try {
             Thread.sleep(10)
-          } catch (ignore: InterruptedException) {
+          } catch (_: InterruptedException) {
             return remainingThreads
           }
 

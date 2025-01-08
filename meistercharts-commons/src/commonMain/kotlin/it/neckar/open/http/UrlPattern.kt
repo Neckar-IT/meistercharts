@@ -85,21 +85,10 @@ interface UrlPattern {
      */
     override operator fun plus(toAppend: UrlPattern): Relative
 
-    /**
-     * Resolves this pattern to a URL by replacing the parameters with the given values.
-     *
-     * It is necessary to provide all parameter values.
-     */
-    fun resolve(vararg parameterValues: Pair<UrlParameterName, String>): Url.Relative {
-      return resolve(parameterValues.associate { it.first to it.second })
-    }
 
-    /**
-     * Appends the given values to the URL in order of the parameter names.
-     * When calling this method, all parameters must be provided.
-     */
-    fun resolve(vararg parameterValues: String): Url.Relative {
-      return resolve(parameterValues.toList())
+    @Deprecated("Do not use this method. Use resolve() with the correct amount of parameters instead.", level = DeprecationLevel.HIDDEN)
+    fun resolve(vararg parameterValues: Any): Url.Relative {
+      throw UnsupportedOperationException("Keep as hint, that this signature is a bad idea")
     }
 
     /**
@@ -114,11 +103,9 @@ interface UrlPattern {
      */
     fun resolve(parameterValues: Map<UrlParameterName, String>): Url.Relative
 
-    /**
-     * Resolves this pattern to a URL by replacing the parameters with the given values.
-     */
+    @Deprecated("Do not use this method. Use resolve() with the correct amount of parameters instead.", level = DeprecationLevel.HIDDEN)
     fun resolve(vararg parameterValues: Uuid): Url.Relative {
-      return resolve(parameterValues.map { it.toString() })
+      throw UnsupportedOperationException("Keep as hint, that this signature is a bad idea")
     }
   }
 

@@ -76,9 +76,9 @@ class SwingMemoryLeakVerifier<T> {
       try {
         EventQueue.invokeAndWait(NoOp()) // Wait for the AWT event queue to have completed processing
         Thread.sleep(GC_SLEEP_TIME.toLong())
-      } catch (ignore: InterruptedException) {
+      } catch (_: InterruptedException) {
         // Ignore any interrupts and just try again...
-      } catch (ignore: InvocationTargetException) {
+      } catch (_: InvocationTargetException) {
       }
     }
     assertThat(objectUnderTest, "object should not exist after $MAX_GC_ITERATIONS collections").isNull()

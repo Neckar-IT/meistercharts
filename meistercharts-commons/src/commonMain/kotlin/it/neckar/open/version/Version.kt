@@ -241,7 +241,7 @@ constructor(
     fun parseOrFallback(version: String, fallback: Version): Version {
       return try {
         parse(version)
-      } catch (ignore: IllegalArgumentException) {
+      } catch (_: IllegalArgumentException) {
         fallback
       }
     }
@@ -253,7 +253,7 @@ constructor(
     fun parseOrNull(version: String): Version? {
       return try {
         parse(version)
-      } catch (ignore: IllegalArgumentException) {
+      } catch (_: IllegalArgumentException) {
         null
       }
     }

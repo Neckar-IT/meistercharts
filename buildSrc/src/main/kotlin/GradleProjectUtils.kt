@@ -158,7 +158,7 @@ fun Configuration.findDirectProjectDependencies(): List<Project> {
 fun <T> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObjectProvider<T>? {
   return try {
     this.named(name)
-  } catch (ignore: UnknownDomainObjectException) {
+  } catch (_: UnknownDomainObjectException) {
     null
   }
 }

@@ -1,7 +1,5 @@
 package it.neckar.open.http
 
-import it.neckar.open.http.UrlPattern.Relative0
-import it.neckar.open.http.UrlPattern.Relative1
 import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
@@ -49,8 +47,14 @@ sealed interface Url {
      * Creates a relative URL template
      */
     @JsExport.Ignore
-    inline fun template(url: String): Relative0 {
-      return Relative0(url)
+    inline fun pattern(url: String): UrlPattern.Relative0 {
+      return UrlPattern.Relative0(url)
+    }
+
+    @Deprecated("Inline")
+    @JsExport.Ignore
+    inline fun template(url: String): UrlPattern.Relative0 {
+      return pattern(url)
     }
 
     @JsExport.Ignore
@@ -282,8 +286,8 @@ sealed interface Url {
      * Appends an HTTP parameter to the URL.
      * Wraps the parameter in curly braces.
      */
-    operator fun plus(imagePathBase64: UrlParameterName): Relative1 {
-      return Relative1(appendUrlStrings(value, imagePathBase64.asUrlPatternParameter()), imagePathBase64)
+    operator fun plus(imagePathBase64: UrlParameterName): UrlPattern.Relative1 {
+      return UrlPattern.Relative1(appendUrlStrings(value, imagePathBase64.asUrlPatternParameter()), imagePathBase64)
     }
 
     override fun toString(): String {

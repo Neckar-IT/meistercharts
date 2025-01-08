@@ -111,7 +111,7 @@ object JsonUtils {
       }.writeTree(tree)
 
       out.toString()
-    } catch (ignore: Exception) {
+    } catch (_: Exception) {
       //Do not format if it is not possible...
       json.toString()
     }

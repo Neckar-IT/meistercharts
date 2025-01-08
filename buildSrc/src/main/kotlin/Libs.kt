@@ -108,10 +108,6 @@ public object Libs {
 
     public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
 
-    public const val okhttp: String = "com.squareup.okhttp3:okhttp:_"
-
-    public const val kotlinpoet_jvm: String = "com.squareup:kotlinpoet-jvm:_"
-
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
     public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
