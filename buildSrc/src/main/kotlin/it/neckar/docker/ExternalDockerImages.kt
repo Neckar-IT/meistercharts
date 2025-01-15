@@ -32,6 +32,8 @@ object ExternalDockerImages {
   val Watchtower: DockerImageDescriptorWithoutTag = create(nameComponent = "containrrr/watchtower")
   val Vaultwarden: DockerImageDescriptorWithoutTag = create(nameComponent = "vaultwarden/server")
   val Rclone: DockerImageDescriptorWithoutTag = create(nameComponent = "rclone/rclone")
+  val Wordpress: DockerImageDescriptorWithoutTag = create(nameComponent = "wordpress")
+  val Mysql: DockerImageDescriptorWithoutTag = create(nameComponent = "mysql")
 
   /**
    * Returns the name of the variable that is used to reference the image
@@ -59,6 +61,8 @@ object ExternalDockerImages {
     Vaultwarden,
     Watchtower,
     Rclone,
+    Wordpress,
+    Mysql
   )
 
   internal fun create(nameComponent: String): DockerImageDescriptorWithoutTag {
