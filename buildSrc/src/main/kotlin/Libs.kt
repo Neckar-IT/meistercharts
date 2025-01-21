@@ -112,8 +112,6 @@ public object Libs {
 
     public const val assertk: String = "com.willowtreeapps.assertk:assertk:_"
 
-    public const val commons_cli: String = "commons-cli:commons-cli:_"
-
     public const val commons_codec: String = "commons-codec:commons-codec:_"
 
     public const val commons_io: String = "commons-io:commons-io:_"
@@ -253,8 +251,6 @@ public object Libs {
 
     public const val jna: String = "net.java.dev.jna:jna:_"
 
-    public const val svg2ico: String = "net.sourceforge.svg2ico:svg2ico:_"
-
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
     public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
@@ -301,8 +297,6 @@ public object Libs {
     public const val sdk_client: String = "org.eclipse.milo:sdk-client:_"
 
     public const val sdk_server: String = "org.eclipse.milo:sdk-server:_"
-
-    public const val freemarker: String = "org.freemarker:freemarker:_"
 
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
 
