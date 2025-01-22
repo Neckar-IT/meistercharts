@@ -405,6 +405,8 @@ public object Libs {
 
     public const val jfxtras_all: String = "org.jfxtras:jfxtras-all:_"
 
+  public const val jline_terminal_jansi: String = "org.jline:jline-terminal-jansi:_"
+
     public const val jsoup: String = "org.jsoup:jsoup:_"
 
     public const val junit_jupiter_api: String = "org.junit.jupiter:junit-jupiter-api:_"

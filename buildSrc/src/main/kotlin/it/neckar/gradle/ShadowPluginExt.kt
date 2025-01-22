@@ -8,6 +8,10 @@ fun com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter.exclude
   exclude(dependency(Libs.kotlin_reflect.removeSuffix(":_")))
 }
 
+fun com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter.excludeLogback() {
+  exclude(dependency(Libs.logback_classic.removeSuffix(":_")))
+}
+
 fun com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter.excludeJNA() {
   exclude(dependency(Libs.jna.removeSuffix(":_")))
 }

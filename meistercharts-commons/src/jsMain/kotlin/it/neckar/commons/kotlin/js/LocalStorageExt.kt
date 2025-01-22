@@ -31,7 +31,7 @@ object LocalStorageSupport {
     val valueAsString = window.localStorage.getItem(key.value)
     //console.log("loading $key from local storage --> ", valueAsString)
 
-    if (valueAsString != null) {
+    if (valueAsString != null && valueAsString != "null") {
       return try {
         localStorageEncoder.decodeFromString(serializer, valueAsString)
       } catch (e: Exception) {
