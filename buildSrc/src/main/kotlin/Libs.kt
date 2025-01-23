@@ -405,7 +405,7 @@ public object Libs {
 
     public const val jfxtras_all: String = "org.jfxtras:jfxtras-all:_"
 
-  public const val jline_terminal_jansi: String = "org.jline:jline-terminal-jansi:_"
+    public const val jline_terminal_jansi: String = "org.jline:jline-terminal-jansi:_"
 
     public const val jsoup: String = "org.jsoup:jsoup:_"
 
