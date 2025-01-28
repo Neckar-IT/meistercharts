@@ -18,7 +18,6 @@ package com.meistercharts.algorithms.painter.stripe.enums
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.BinaryPainter
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
@@ -26,7 +25,7 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 
 /**
- * Fills rectangles
+ * Uses the fill and stroke settings of the context, so set the colors before calling BooleanEnumStripePainter.paint()
  */
 class BooleanEnumStripePainter(
   additionalConfiguration: Configuration.() -> Unit = {},
@@ -102,7 +101,6 @@ class BooleanEnumStripePainter(
 
   override fun finishPainting(paintingContext: LayerPaintingContext) {
     super.finishPainting(paintingContext)
-
     binaryPainter.finish(paintingContext.gc)
   }
 

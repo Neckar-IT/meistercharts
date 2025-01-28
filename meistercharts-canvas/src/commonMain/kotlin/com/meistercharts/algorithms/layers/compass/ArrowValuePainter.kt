@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
@@ -42,7 +43,7 @@ class ArrowValuePainter(
     @rad val currentValue = (startAngle + domainRelative * extendWithRotationDirection)
     gc.lineWidth = style.pointerLineWidth
     gc.stroke(style.pointerColor)
-
+    gc.fill(Color.transparent)
     val end = PolarCoordinates(radius, currentValue).toCartesian()
 
     gc.translate(end.x, end.y)

@@ -15,8 +15,6 @@
  */
 package com.meistercharts.algorithms.painter
 
-import com.meistercharts.color.Color
-import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import it.neckar.open.unit.other.px
 
@@ -31,9 +29,9 @@ protected constructor(
   snapYValues: Boolean
 ) : AbstractPainter(snapXValues, snapYValues), XYPainter {
   /**
-   * The stroke color for the line
+   * The stroke color for the line, nullable so that it can be overwritten by using the painting context
    */
-  var stroke: ColorProvider = Color.black
+  var stroke: ColorProviderNullable = { null }
 
   /**
    * The shadow color

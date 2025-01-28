@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
-import com.meistercharts.design.Theme
+import com.meistercharts.design.CurrentTheme
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.model.Insets
@@ -37,6 +37,7 @@ import it.neckar.geometry.RotationDirection
 import it.neckar.geometry.Size
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.kotlin.lang.asProvider
+import it.neckar.open.kotlin.lang.round
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.asDoubleProvider
@@ -113,8 +114,8 @@ class PuristicCompassGestalt(
 
       //Adjust font-size in accordance with window height which is approximately the diameter of the compass.
       chartSupport.rootChartState.windowSizeProperty.consumeImmediately {
-        valueLayer.configuration.font = Theme.mainValueLabelFont.provider()
-        subValueLayer.configuration.font = Theme.subValueLabelFont.provider()
+        valueLayer.configuration.font = CurrentTheme.h1.withSize(FontSize((it.height * 0.1).round())).asProvider()
+        subValueLayer.configuration.font = CurrentTheme.h1.withSize(FontSize((it.height * 0.04).round())).asProvider()
         subValueLayer.configuration.margin = Insets.onlyTop(it.height * 0.5)
       }
 

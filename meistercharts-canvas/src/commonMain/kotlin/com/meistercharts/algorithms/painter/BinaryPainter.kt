@@ -18,7 +18,6 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.annotations.Window
 import com.meistercharts.calc.ChartingUtils
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.strokeStyle
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
 import it.neckar.open.unit.other.px
@@ -137,7 +136,10 @@ class BinaryPainter(
       gc.translate(-shadowOffsetX, -shadowOffsetY)
     }
 
-    gc.strokeStyle(stroke)
+    if (stroke.get() != null) {
+      gc.strokeStyle((stroke.get() ?: return).toRgba())
+    }
+
     gc.stroke(path)
   }
 
