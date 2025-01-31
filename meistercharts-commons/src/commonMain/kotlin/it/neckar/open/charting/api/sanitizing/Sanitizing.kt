@@ -76,5 +76,13 @@ fun <T> Array<T>.sanitize(): Array<T> {
   return this
 }
 
-class SanitizingFailedException(message: String, cause: Throwable? = null) : Exception(message, cause) {
+fun <T> List<T>.sanitize(): List<T> {
+  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  if (this is List<T>) return this
+  if (this is ArrayList<T>) return this
+  @Suppress("USELESS_IS_CHECK")
+  if (this is Array<T>) return (this as Array<T>).sanitize().toList()
+  throw SanitizingFailedException("Could not sanitize [$this] to List<T>")
 }
+
+class SanitizingFailedException(message: String, cause: Throwable? = null) : Exception(message, cause)

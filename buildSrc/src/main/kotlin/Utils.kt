@@ -683,6 +683,10 @@ enum class WebpackModuleType {
       kotlinWebpack.devtool = "source-map"
     }
   },
+
+  /**
+   * Seems to work fine, when running a Kotlin application that is just initialized/started by a single JS statement
+   */
   Window {
     override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
       kotlinWebpack.output.library = varName
@@ -704,6 +708,10 @@ enum class WebpackModuleType {
       kotlinWebpack.devtool = "source-map"
     }
   },
+
+  /**
+   * Seems to work when using the generated code as TypeScript module.
+   */
   ModernModule {
     override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
       kotlinWebpack.output.library = null // do *not* set a library name
