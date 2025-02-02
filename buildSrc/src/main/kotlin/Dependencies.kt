@@ -73,6 +73,11 @@ fun KotlinMultiplatformExtension.addAnnotationDependencies(scope: Scope = Scope.
 }
 
 
+fun DependencyHandlerScope.addKotlinDependencies() {
+  //Do nothing,
+  //Keep for symmetry
+}
+
 /**
  * Add Kotlin related dependencies to the project
  */
