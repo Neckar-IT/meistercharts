@@ -77,7 +77,7 @@ fun Project.copySourcesJarToDir(
 
 
 fun File.ensureExists(taskNameToCreate: String) {
-  if (!exists()) {
+  if (exists().not()) {
     throw GradleException("File <${this.absolutePath}> does not exist. Run `gradle $taskNameToCreate` for all projects before")
   }
 }

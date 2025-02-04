@@ -3,6 +3,7 @@ package it.neckar.open.http
 import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
+import it.neckar.projects.common.Port
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -94,9 +95,11 @@ sealed interface Url {
      */
     val localhostHttp: Absolute = absolute("http://localhost/")
 
-    val localhostHttp80: Absolute = localhostHttp(80)
+    val localhostHttp80: Absolute = localhostHttp(Port.HTTP)
 
-    fun localhostHttp(port: Int = 80): Absolute = absolute("http://localhost:$port/")
+    fun localhostHttp(port: Int = Port.HTTP.value): Absolute = absolute("http://localhost:$port/")
+
+    fun localhostHttp(port: Port = Port.HTTP): Absolute = absolute("http://localhost:$port/")
   }
 
   /**

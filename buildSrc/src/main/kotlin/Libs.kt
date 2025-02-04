@@ -74,6 +74,8 @@ public object Libs {
     public const val com_github_hierynomus_license_gradle_plugin: String =
             "com.github.hierynomus.license:com.github.hierynomus.license.gradle.plugin:_"
 
+  public const val loki_logback_appender: String = "com.github.loki4j:loki-logback-appender:_"
+
     public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
 
     public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
@@ -238,10 +240,6 @@ public object Libs {
 
     public const val me_champeau_jmh_gradle_plugin: String =
             "me.champeau.jmh:me.champeau.jmh.gradle.plugin:_"
-
-    public const val mattermost_models: String = "net.bis5.mattermost4j:mattermost-models:_"
-
-    public const val mattermost4j_core: String = "net.bis5.mattermost4j:mattermost4j-core:_"
 
     public const val image4j: String = "net.ifok.image:image4j:_"
 

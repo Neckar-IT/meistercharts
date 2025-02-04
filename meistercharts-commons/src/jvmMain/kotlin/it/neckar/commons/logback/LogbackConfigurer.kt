@@ -2,6 +2,7 @@ package it.neckar.commons.logback
 
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
@@ -13,6 +14,11 @@ import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy
 import ch.qos.logback.core.spi.FilterReply
 import ch.qos.logback.core.util.FileSize
 import ch.qos.logback.core.util.StatusPrinter
+import com.github.loki4j.logback.AbstractHttpSender.BasicAuth
+import com.github.loki4j.logback.JavaHttpSender
+import com.github.loki4j.logback.JsonEncoder
+import com.github.loki4j.logback.Loki4jAppender
+import it.neckar.commons.logback.LogbackConfigurer.configureLoggingConsoleOnly
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.io.File
@@ -82,6 +88,27 @@ object LogbackConfigurer {
     levelForNeckarIt: org.slf4j.event.Level,
   ) {
     configureLoggingConsoleAndFile(logFile, levelForRoot.toLogback())
+    setLevelForNeckarIt(levelForNeckarIt)
+  }
+
+  /**
+   * Adds the console appender and the loki appender.
+   * Removes all other appenders
+   */
+  fun configureLoggingConsoleAndLoki(
+    lokiServerConfiguration: LokiServerConfiguration = LokiServerConfiguration.NeckarIT,
+    app: String,
+    hostname: String,
+    levelForRoot: org.slf4j.event.Level,
+    levelForNeckarIt: org.slf4j.event.Level,
+    lokiAppenderConfig: Loki4jAppender.() -> Unit = {},
+  ) {
+    clearExistingAppenders()
+    addConsoleAppender()
+
+    addLokiAppender(lokiServerConfiguration = lokiServerConfiguration, app = app, hostname = hostname, lokiAppenderConfig = lokiAppenderConfig)
+
+    setRootLoggerLevel(levelForRoot)
     setLevelForNeckarIt(levelForNeckarIt)
   }
 
@@ -263,6 +290,44 @@ object LogbackConfigurer {
     })
 
     startAppenderAndAddToRoot(loggerContext, appender)
+  }
+
+  /**
+   * Adds a loki appender
+   */
+  fun addLokiAppender(lokiServerConfiguration: LokiServerConfiguration, app: String, hostname: String, lokiAppenderConfig: Loki4jAppender.() -> Unit) {
+    val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+
+    val loki4jAppender = Loki4jAppender()
+    loki4jAppender.name = "LOKI"
+    loki4jAppender.context = loggerContext
+    loki4jAppender.lokiAppenderConfig()
+
+    if (false) {
+      loki4jAppender.setMetricsEnabled(true) //TODO check?
+    }
+
+    loki4jAppender.setHttp(JavaHttpSender().also {
+      it.setAuth(BasicAuth().also {
+        it.setUsername(lokiServerConfiguration.username)
+        it.setPassword(lokiServerConfiguration.password)
+      })
+      it.url = lokiServerConfiguration.lokiServerUrl.toString()
+    })
+
+    loki4jAppender.setFormat(JsonEncoder().apply {
+      setMessage(PatternLayout().also {
+        it.pattern = "l=%level c=%logger{30} t=%thread | %msg %ex" //copied from com.github.loki4j.logback.AbstractLoki4jEncoder.DEFAULT_MSG_PATTERN
+      })
+
+      label.setPattern("app=${app},host=${hostname},logger=%logger")
+    })
+    loki4jAppender.setVerbose(true)
+
+    loki4jAppender.start()
+
+    val rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME)
+    rootLogger.addAppender(loki4jAppender)
   }
 
   private fun startAppenderAndAddToRoot(loggerContext: LoggerContext, appender: OutputStreamAppender<ILoggingEvent>) {
