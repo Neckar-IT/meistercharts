@@ -138,6 +138,7 @@ value class DirtyReason(val value: Int) {
       ActiveElementUpdated -> "ActiveElementUpdated"
       Animation -> "Animation"
       Visibility -> "Visibility"
+      VirtualTimePaused -> "VirtualTimePaused"
       Initial -> "Initial"
       Unknown -> "Unknown"
       else -> "$value"
@@ -180,6 +181,8 @@ value class DirtyReason(val value: Int) {
 
     val Visibility: DirtyReason = DirtyReason(0b0000000_00000000_00010000_00000000)
 
+    val VirtualTimePaused: DirtyReason = DirtyReason(0b0000000_00000000_00001000_00000000)
+
     /**
      * Used for the initial repaint - or if painting has been enabled again
      */
@@ -201,7 +204,7 @@ value class DirtyReason(val value: Int) {
      */
     @Boxed
     val entries: List<DirtyReason> = listOf(
-      ActiveElementUpdated, Animation, ChartStateChanged, ConfigurationChanged, DataUpdated, Initial, ResourcesLoaded, Tooltip, UiStateChanged, Unknown, UserInteraction, Visibility
+      ActiveElementUpdated, Animation, ChartStateChanged, ConfigurationChanged, DataUpdated, Initial, ResourcesLoaded, Tooltip, UiStateChanged, Unknown, UserInteraction, VirtualTimePaused, Visibility
     )
 
     /**
@@ -223,7 +226,8 @@ value class DirtyReason(val value: Int) {
       UiStateChanged to "UiStateChanged",
       Unknown to "Unknown",
       UserInteraction to "UserInteraction",
-      Visibility to "Visibility"
+      Visibility to "Visibility",
+      VirtualTimePaused to "VirtualTimePaused"
     )
   }
 }

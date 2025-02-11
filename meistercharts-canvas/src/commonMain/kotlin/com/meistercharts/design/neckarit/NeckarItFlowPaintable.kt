@@ -35,7 +35,8 @@ class NeckarItFlowPaintable(
   /**
    * The size of the flow
    */
-  val size: @px Size
+  val size: @px Size,
+
 ) : Paintable {
   val boundingBox: Rectangle = Rectangle(Coordinates.none, size)
 
@@ -47,25 +48,26 @@ class NeckarItFlowPaintable(
     val gc = paintingContext.gc
     gc.translate(x, y)
     val chartCalculator = paintingContext.chartCalculator
+    val timestamp =  paintingContext.frameTimestamp
 
     gc.stroke(NeckarItFlow.colorShape0)
     gc.fill(NeckarItFlow.colorShape0)
-    @DomainRelative val segment0 = NeckarItFlow.shape0(paintingContext.frameTimestamp)
+    @DomainRelative val segment0 = NeckarItFlow.shape0(timestamp)
     gc.paintBezierCurveRect(segment0)
 
     gc.stroke(NeckarItFlow.colorShape1)
     gc.fill(NeckarItFlow.colorShape1)
-    @DomainRelative val segment1 = NeckarItFlow.shape1(paintingContext.frameTimestamp)
+    @DomainRelative val segment1 = NeckarItFlow.shape1(timestamp)
     gc.paintBezierCurveRect(segment1)
 
     gc.stroke(NeckarItFlow.colorShape2)
     gc.fill(NeckarItFlow.colorShape2)
-    @DomainRelative val segment2 = NeckarItFlow.shape2(paintingContext.frameTimestamp)
+    @DomainRelative val segment2 = NeckarItFlow.shape2(timestamp)
     gc.paintBezierCurveRect(segment2)
 
     gc.stroke(NeckarItFlow.colorShape3)
     gc.fill(NeckarItFlow.colorShape3)
-    @DomainRelative val segment3 = NeckarItFlow.shape3(paintingContext.frameTimestamp)
+    @DomainRelative val segment3 = NeckarItFlow.shape3(timestamp)
     gc.paintBezierCurveRect(segment3)
 
     //if (showControlPoints) {

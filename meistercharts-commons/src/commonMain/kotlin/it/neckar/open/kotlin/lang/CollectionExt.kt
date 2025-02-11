@@ -111,6 +111,16 @@ fun <T> MutableList<T>.deleteFromStartUntilMaxSize(maxSize: Int) {
 }
 
 /**
+ * Adds the element, and removes elements from the start until the max size has been reached
+ */
+fun <T> MutableList<T>.addWithMaxSize(element: T, limit: Int) {
+  add(element)
+  while (size > limit) {
+    removeAt(0)
+  }
+}
+
+/**
  * Sets  the element as last element. Replaces the last element!
  */
 fun <E> MutableList<E>.setLast(element: E) {

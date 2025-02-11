@@ -74,7 +74,7 @@ public object Libs {
     public const val com_github_hierynomus_license_gradle_plugin: String =
             "com.github.hierynomus.license:com.github.hierynomus.license.gradle.plugin:_"
 
-  public const val loki_logback_appender: String = "com.github.loki4j:loki-logback-appender:_"
+    public const val loki_logback_appender: String = "com.github.loki4j:loki-logback-appender:_"
 
     public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
 
