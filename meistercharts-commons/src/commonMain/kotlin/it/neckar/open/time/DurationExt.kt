@@ -47,7 +47,7 @@ fun Duration.formatWithoutMillis(): String {
 
 fun Duration.formatPersonDays(personDayDuration: Duration = 8.hours, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   val days = (this / personDayDuration).toIntCeil()
-  return "${days}${whitespaceConfig.smallSpace}Personentage"
+  return "${days}${whitespaceConfig.smallSpace}Personentage${whitespaceConfig.smallSpace}(à ${personDayDuration.formatHourAndMinutes()})"
 }
 
 /**

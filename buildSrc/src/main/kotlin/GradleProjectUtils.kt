@@ -122,15 +122,11 @@ fun Project.findAllProjectDependencies(
   foundProjects: MutableSet<Project> = mutableSetOf(),
   visitedProjects: MutableSet<Project> = mutableSetOf(),
 ): Set<Project> {
-  if (this in visitedProjects) {
-    return foundProjects
-  }
+  if (this in visitedProjects) return foundProjects
   visitedProjects.add(this)
 
   configurationNames.forEach { configurationName ->
-    val configuration = configurations.findByName(configurationName)
-
-    if (configuration != null) {
+    configurations.findByName(configurationName)?.let { configuration ->
       val directDependencies = configuration.findDirectProjectDependencies()
       foundProjects.addAll(directDependencies)
 
@@ -205,7 +201,7 @@ fun AbstractCopyTask.filterAllExternalDockerImages() {
   val withTag = ExternalDockerImages.withTag(dockerImageTags)
 
   filter { line ->
-    var currentLine = line;
+    var currentLine = line
 
     withTag.forEach { dockerImageDescriptor ->
       val variableName = ExternalDockerImages.variableName(dockerImageDescriptor)

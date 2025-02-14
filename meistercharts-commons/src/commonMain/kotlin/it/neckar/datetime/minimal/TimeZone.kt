@@ -1,8 +1,11 @@
 package it.neckar.datetime.minimal
 
+import kotlin.js.JsExport
+
 /**
  * Represents a time zone
  */
+@JsExport
 data class TimeZone(val zoneId: String) {
   init {
     require(zoneId.isNotEmpty()) {
