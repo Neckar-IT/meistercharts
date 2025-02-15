@@ -1,5 +1,6 @@
 package it.neckar.open.http
 
+import it.neckar.open.annotations.TsExport
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -8,6 +9,7 @@ import kotlin.jvm.JvmInline
  */
 @JvmInline
 @Serializable
+@TsExport
 value class UrlParameterName(val value: String) {
   override fun toString(): String {
     return asUrlPatternParameter()
