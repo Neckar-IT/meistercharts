@@ -11,6 +11,40 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
+/**
+ * Tests deserialization
+ */
+fun <T> testDeserialization(
+  serializer: KSerializer<T>,
+  expected: T,
+
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
+  },
+
+  //language=JSON
+  json: () -> String,
+): T {
+  val encoder = Json {
+    defaultJsonConfiguration(true)
+  }
+
+  return testDeserialization(encoder, serializer, json(), comparisonCheck, expected)
+}
+
+fun <T> testDeserialization(
+  serializer: KSerializer<T>,
+  expected: T,
+
+  comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+    assertThat(deserialized).isEqualTo(originalObject)
+  },
+
+  //language=JSON
+  json: String,
+): T {
+  return testDeserialization(serializer, expected, comparisonCheck) { json }
+}
 
 /**
  * Tests serialization round trip
@@ -91,6 +125,10 @@ fun <T> _roundTrip(
     JsonUtils.assertJsonEquals(expectedJson, json)
   }
 
+  return testDeserialization(encoder, serializer, json, comparisonCheck, objectToSerialize)
+}
+
+private fun <T> testDeserialization(encoder: Json, serializer: KSerializer<T>, json: String, comparisonCheck: ComparisonCheck<T>, objectToSerialize: T): T {
   val deserialized = encoder.decodeFromString(serializer, json)
   comparisonCheck(deserialized, objectToSerialize)
 

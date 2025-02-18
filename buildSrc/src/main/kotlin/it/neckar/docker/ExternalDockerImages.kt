@@ -1,9 +1,10 @@
 package it.neckar.docker
 
 import it.neckar.docker.ExternalDockerImages.variableName
-import it.neckar.projects.common.DockerImageDescriptor
-import it.neckar.projects.common.DockerImageDescriptorWithoutTag
-import it.neckar.projects.common.DockerRegistry
+import it.neckar.projects.common.docker.DockerImageDescriptor
+import it.neckar.projects.common.docker.DockerImageDescriptorWithoutTag
+import it.neckar.projects.common.docker.DockerRegistry
+import it.neckar.projects.common.docker.DockerRepository
 import org.gradle.api.internal.TaskInputsInternal
 
 /**
@@ -12,34 +13,34 @@ import org.gradle.api.internal.TaskInputsInternal
  * Call `gradle printExternalDockerImages` to print all variables`
  */
 object ExternalDockerImages {
-  val MongoDb: DockerImageDescriptorWithoutTag = create("mongo")
-  val Postgres: DockerImageDescriptorWithoutTag = create("postgres")
-  val Traefik: DockerImageDescriptorWithoutTag = create("traefik")
+  val MongoDb: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "mongo")
+  val Postgres: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "postgres")
+  val Traefik: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "traefik")
 
   /**
    * This image (including registry) is suggested by the official keycloak guide: https://www.keycloak.org/getting-started/getting-started-dock
    */
   val Keycloak: DockerImageDescriptorWithoutTag = create(DockerRegistry.Quay, "keycloak/keycloak")
 
-  val Gatus: DockerImageDescriptorWithoutTag = create(nameComponent = "twinproduction/gatus")
-  val Prometheus: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/prometheus")
-  val PrometheusNodeExporter: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Quay, nameComponent = "prometheus/node-exporter")
-  val PromPushgateway: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/pushgateway")
-  val PromAlertmanager: DockerImageDescriptorWithoutTag = create(nameComponent = "prom/alertmanager")
-  val GrafanaLoki: DockerImageDescriptorWithoutTag = create(nameComponent = "grafana/loki")
-  val Grafana: DockerImageDescriptorWithoutTag = create(nameComponent = "grafana/grafana-oss")
-  val Umami: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Ghcr, nameComponent = "umami-software/umami")
-  val Watchtower: DockerImageDescriptorWithoutTag = create(nameComponent = "containrrr/watchtower")
-  val Vaultwarden: DockerImageDescriptorWithoutTag = create(nameComponent = "vaultwarden/server")
-  val Rclone: DockerImageDescriptorWithoutTag = create(nameComponent = "rclone/rclone")
-  val Wordpress: DockerImageDescriptorWithoutTag = create(nameComponent = "wordpress")
-  val Mysql: DockerImageDescriptorWithoutTag = create(nameComponent = "mysql")
+  val Gatus: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "twinproduction/gatus")
+  val Prometheus: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "prom/prometheus")
+  val PrometheusNodeExporter: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Quay, repositoryAsString = "prometheus/node-exporter")
+  val PromPushgateway: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "prom/pushgateway")
+  val PromAlertmanager: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "prom/alertmanager")
+  val GrafanaLoki: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "grafana/loki")
+  val Grafana: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "grafana/grafana-oss")
+  val Umami: DockerImageDescriptorWithoutTag = create(registry = DockerRegistry.Ghcr, repositoryAsString = "umami-software/umami")
+  val Watchtower: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "containrrr/watchtower")
+  val Vaultwarden: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "vaultwarden/server")
+  val Rclone: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "rclone/rclone")
+  val Wordpress: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "wordpress")
+  val Mysql: DockerImageDescriptorWithoutTag = createDefault(repositoryAsString = "mysql")
 
   /**
    * Returns the name of the variable that is used to reference the image
    */
   fun variableName(descriptor: DockerImageDescriptorWithoutTag): String {
-    return "$VariableNamePrefix${descriptor.nameComponent}"
+    return "$VariableNamePrefix${descriptor.repository}"
   }
 
   /**
@@ -65,19 +66,19 @@ object ExternalDockerImages {
     Mysql
   )
 
-  internal fun create(nameComponent: String): DockerImageDescriptorWithoutTag {
-    return create(DockerRegistry.DockerHub, nameComponent)
+  internal fun createDefault(repositoryAsString: String): DockerImageDescriptorWithoutTag {
+    return create(DockerRegistry.DockerHub, repositoryAsString)
   }
 
-  internal fun create(registry: DockerRegistry, nameComponent: String): DockerImageDescriptorWithoutTag {
-    return DockerImageDescriptorWithoutTag.create(registry, nameComponent)
+  internal fun create(registry: DockerRegistry, repositoryAsString: String): DockerImageDescriptorWithoutTag {
+    return DockerImageDescriptorWithoutTag.create(registry, DockerRepository(repositoryAsString))
   }
 
   /**
    * Returns the image for the given name component
    */
-  fun get(nameComponent: String): DockerImageDescriptorWithoutTag {
-    return entries.firstOrNull { it.nameComponent == nameComponent } ?: throw IllegalArgumentException("No docker image found for [$nameComponent]")
+  fun get(repository: DockerRepository): DockerImageDescriptorWithoutTag {
+    return entries.firstOrNull { it.repository == repository } ?: throw IllegalArgumentException("No docker image found for [$repository]")
   }
 
   /**

@@ -113,8 +113,6 @@ object Plugins {
   const val ksp: String = "com.google.devtools.ksp"
   const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
   const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
-
-  const val ktorFit: String = "de.jensklingenberg.ktorfit"
 }
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
@@ -276,9 +274,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDepende
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: PluginDependencySpec
   get() = id(Plugins.kspSerialization)
-
-inline val org.gradle.plugin.use.PluginDependenciesSpec.ktorFit: PluginDependencySpec
-  get() = id(Plugins.ktorFit)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: PluginDependencySpec
   get() = id(Plugins.openapiValidator)
