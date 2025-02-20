@@ -15,9 +15,12 @@
  */
 package it.neckar.geometry
 
+import kotlin.js.JsExport
+
 /**
  * The alignment (e.g. of a multi line text)
  */
+@JsExport
 enum class HorizontalAlignment {
   Left,
   Center,

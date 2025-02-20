@@ -15,11 +15,14 @@
  */
 package it.neckar.geometry
 
+import kotlin.js.JsExport
+
 /**
  * Describes a direction
  *
  * Attention: The order of the direction should *not* matter.
  */
+@JsExport
 enum class Direction(
   val verticalAlignment: VerticalAlignment,
   val horizontalAlignment: HorizontalAlignment
@@ -43,6 +46,7 @@ enum class Direction(
   /**
    * Returns the direction with the given vertical alignment
    */
+  @JsExport.Ignore
   fun with(verticalAlignment: VerticalAlignment): Direction {
     return get(verticalAlignment, this.horizontalAlignment)
   }
@@ -50,6 +54,7 @@ enum class Direction(
   /**
    * Returns the opposite anchor direction
    */
+  @JsExport.Ignore
   fun opposite(): Direction {
     return when (this) {
       Center         -> Center
@@ -70,6 +75,7 @@ enum class Direction(
   /**
    * Returns the opposite if the given boolean is true
    */
+  @JsExport.Ignore
   fun oppositeIf(useOpposite: Boolean): Direction {
     if (useOpposite) {
       return opposite()
@@ -78,6 +84,7 @@ enum class Direction(
     return this
   }
 
+  @JsExport.Ignore
   companion object {
     /**
      * All directions apart from the base-line directions

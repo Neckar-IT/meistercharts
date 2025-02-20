@@ -7,6 +7,7 @@ import it.neckar.projects.common.Port
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlin.js.JsName
 import kotlin.uuid.Uuid
 
 
@@ -14,6 +15,7 @@ import kotlin.uuid.Uuid
  * Represents a URL (relative or absolute)
  */
 @JsExport
+@JsName("Url")
 @Serializable(with = UrlSerializer::class)
 sealed interface Url {
   /**

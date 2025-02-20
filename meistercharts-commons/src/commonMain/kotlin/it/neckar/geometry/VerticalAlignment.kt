@@ -15,9 +15,12 @@
  */
 package it.neckar.geometry
 
+import kotlin.js.JsExport
+
 /**
  * The vertical alignment
  */
+@JsExport
 enum class VerticalAlignment {
   Top,
   Center,

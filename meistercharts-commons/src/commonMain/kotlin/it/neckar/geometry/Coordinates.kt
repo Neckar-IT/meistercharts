@@ -29,6 +29,7 @@ import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
 import it.neckar.open.unit.si.rad
 import kotlinx.serialization.Serializable
+import kotlin.js.JsExport
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import kotlin.math.abs
@@ -47,17 +48,21 @@ import kotlin.math.sqrt
  *
  */
 @Serializable
+@JsExport
 data class Coordinates(
   val x: Double,
   val y: Double,
 ) {
 
+  @JsExport.Ignore
   constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
+  @JsExport.Ignore
   fun plus(deltaX: Double, deltaY: Double): Coordinates {
     return of(x + deltaX, y + deltaY)
   }
 
+  @JsExport.Ignore
   fun coerceAtLeast(minimum: Coordinates): Coordinates {
     return of(
       x.coerceAtLeast(minimum.x),
@@ -65,6 +70,7 @@ data class Coordinates(
     )
   }
 
+  @JsExport.Ignore
   fun coerceAtMost(maximum: Coordinates): Coordinates {
     return of(
       x.coerceAtMost(maximum.x),
@@ -72,6 +78,7 @@ data class Coordinates(
     )
   }
 
+  @JsExport.Ignore
   fun coerceIn(minimum: Coordinates, maximumX: Double, maximumY: Double): Coordinates {
     return of(
       x.coerceIn(minimum.x, maximumX),
@@ -82,6 +89,7 @@ data class Coordinates(
   /**
    * Adds the given vector and returns the resulting coordinate
    */
+  @JsExport.Ignore
   operator fun plus(vector: Distance): Coordinates {
     if (vector.isZero()) {
       return this
@@ -93,26 +101,32 @@ data class Coordinates(
   /**
    * Adds the given size and returns the resulting coordinate
    */
+  @JsExport.Ignore
   operator fun plus(size: Size): Coordinates {
     return of(x + size.width, y + size.height)
   }
 
+  @JsExport.Ignore
   fun withMax(maxX: Double, maxY: Double): Coordinates {
     return of(min(x, maxX), min(y, maxY))
   }
 
+  @JsExport.Ignore
   fun withMin(minX: Double, minY: Double): Coordinates {
     return of(max(x, minX), max(y, minY))
   }
 
+  @JsExport.Ignore
   fun withX(value: Double): Coordinates {
     return of(value, y)
   }
 
+  @JsExport.Ignore
   fun withY(value: Double): Coordinates {
     return of(x, value)
   }
 
+  @JsExport.Ignore
   override fun toString(): String {
     return "$x/$y"
   }
@@ -120,6 +134,7 @@ data class Coordinates(
   /**
    * Calculates the distance from the given coordinate to this coordinate
    */
+  @JsExport.Ignore
   fun delta(other: Coordinates): Distance {
     return Distance.of(x - other.x, y - other.y)
   }
@@ -129,6 +144,7 @@ data class Coordinates(
    *
    * The returned distance is guaranteed to have positive values.
    */
+  @JsExport.Ignore
   fun deltaAbsolute(other: Coordinates): Distance {
     return Distance.of(abs(x - other.x), abs(y - other.y))
   }
@@ -136,10 +152,12 @@ data class Coordinates(
   /**
    * Subtracts the given coordinate from this
    */
+  @JsExport.Ignore
   operator fun minus(other: Distance): Coordinates {
     return minus(other.x, other.y)
   }
 
+  @JsExport.Ignore
   fun minus(deltaX: Double, deltaY: Double): Coordinates {
     return of(x - deltaX, y - deltaY)
   }
@@ -147,6 +165,7 @@ data class Coordinates(
   /**
    * Calculates the delta between two coordinates
    */
+  @JsExport.Ignore
   operator fun minus(other: Coordinates): Distance {
     return Distance.of(x - other.x, y - other.y)
   }
@@ -157,19 +176,27 @@ data class Coordinates(
    * Attention: Results the result as coordinates.
    * This is probably not the method you are looking for!
    */
+  @JsExport.Ignore
   fun minusAsCoordinates(other: Coordinates): Coordinates {
     return of(x - other.x, y - other.y)
   }
 
+  @JsExport.Ignore
   operator fun plus(that: Coordinates): Coordinates = Coordinates(x + that.x, y + that.y)
 
+  @JsExport.Ignore
   operator fun times(that: Coordinates): Coordinates = Coordinates(x * that.x, y * that.y)
+  @JsExport.Ignore
   operator fun times(scale: Double): Coordinates = Coordinates(x * scale, y * scale)
+  @JsExport.Ignore
   fun times(scaleX: Double, scaleY: Double): Coordinates = Coordinates(x * scaleX, y * scaleY)
 
+  @JsExport.Ignore
   operator fun div(that: Coordinates): Coordinates = Coordinates(x / that.x, y / that.y)
+  @JsExport.Ignore
   operator fun div(scale: Double): Coordinates = Coordinates(x / scale, y / scale)
 
+  @JsExport.Ignore
   fun crossProduct(p1: Coordinates, p2: Coordinates): Double {
     return (p1.x - this.x) * (p2.y - this.y) - (p1.y - this.y) * (p2.x - this.x)
   }
@@ -178,6 +205,7 @@ data class Coordinates(
   /**
    * Computes the center between these [Coordinates] and [other]
    */
+  @JsExport.Ignore
   fun center(other: Coordinates): Coordinates {
     return Coordinates(
       0.5 * (this.x + other.x),
@@ -189,6 +217,7 @@ data class Coordinates(
    *  Computes [PolarCoordinates] from [Coordinates].
    *  @see <a href="https://en.wikipedia.org/wiki/Polar_coordinate_system#Converting_between_polar_and_Cartesian_coordinates">Wikipedia</a>
    */
+  @JsExport.Ignore
   fun toPolar(): PolarCoordinates {
     return PolarCoordinates(sqrt(x * x + y * y), atan2(y, x))
   }
@@ -196,6 +225,7 @@ data class Coordinates(
   /**
    * Formats the coordinates
    */
+  @JsExport.Ignore
   fun format(format: CachedNumberFormat = decimalFormat): String {
     return "${format.format(x)}/${format.format(y)}"
   }
@@ -203,6 +233,7 @@ data class Coordinates(
   /**
    * Returns true if this coordinate is close to the given coordinate.
    */
+  @JsExport.Ignore
   fun isCloseTo(other: Coordinates, deltaX: Double, deltaY: Double = deltaX): Boolean {
     return x.betweenInclusive(other.x - deltaX, other.x + deltaX)
         &&
@@ -214,6 +245,7 @@ data class Coordinates(
    *
    * Returns this size as percentage of the base size
    */
+  @JsExport.Ignore
   fun normalize(base: Size): @pct Coordinates {
     return of(
       1.0 / base.width * x,
@@ -224,14 +256,17 @@ data class Coordinates(
   /**
    * Calculates the distance from this and the other coordinates
    */
+  @JsExport.Ignore
   fun distanceTo(target: Coordinates): Double {
     return distanceTo(target.x, target.y)
   }
 
+  @JsExport.Ignore
   fun distanceToPoint(target: Coordinates): Double {
     return distanceTo(target)
   }
 
+  @JsExport.Ignore
   fun distanceTo(targetX: Double, targetY: Double): Double {
     return distance(x, y, targetX, targetY)
   }
@@ -239,6 +274,7 @@ data class Coordinates(
   /**
    * Calculates the distance of this coordinate to a line segment that is defined by start/end
    */
+  @JsExport.Ignore
   fun distanceToLine(lineStartX: Double, lineStartY: Double, lineEndX: Double, lineEndY: Double): Double {
     if (lineStartX == lineEndX && lineStartY == lineEndY) {
       //If the line has the same start and end
@@ -261,6 +297,7 @@ data class Coordinates(
     }
   }
 
+  @JsExport.Ignore
   fun distanceToLine(lineStart: Coordinates, lineEnd: Coordinates): Double {
     return distanceToLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y)
   }
@@ -268,6 +305,7 @@ data class Coordinates(
   /**
    * Returns the coordinates % the given values
    */
+  @JsExport.Ignore
   fun mod(modX: Double, modY: @mm Double): Coordinates {
     require(modX.isPositive()) { "Invalid modX: $modX" }
     require(modY.isPositive()) { "Invalid modY: $modY" }
@@ -275,6 +313,7 @@ data class Coordinates(
     return (Coordinates(x % modX, y % modY))
   }
 
+  @JsExport.Ignore
   fun isFinite(): Boolean {
     return x.isFinite() && y.isFinite()
   }
@@ -283,6 +322,7 @@ data class Coordinates(
    * Helper function to rotate a point around a pivot.
    * Positive values rotate counter-clockwise, negative values rotate clockwise
    */
+  @JsExport.Ignore
   fun rotateAround(pivot: Coordinates, angleDegrees: @deg Double): Coordinates {
     @rad val radians = angleDegrees.toRadians()
 
@@ -296,6 +336,7 @@ data class Coordinates(
     return Coordinates(rotatedX, rotatedY)
   }
 
+  @JsExport.Ignore
   companion object {
     @JvmField
     val origin: Coordinates = Coordinates(0, 0)
@@ -359,18 +400,22 @@ data class Coordinates(
 /**
  * Returns true if this coordinates lies within a rectangle defined by the given location and size
  */
+@JsExport.Ignore
 fun Coordinates.within(location: Coordinates, size: @Zoomed Size): Boolean {
   return within(location, location + size)
 }
 
+@JsExport.Ignore
 fun Coordinates.within(start: Coordinates, end: Coordinates): Boolean {
   return within(start.x, start.y, end.x, end.y)
 }
 
+@JsExport.Ignore
 fun Coordinates.within(startX: Double, startY: Double, endX: Double, endY: Double): Boolean {
   return x.betweenInclusive(startX, endX) && y.betweenInclusive(startY, endY)
 }
 
+@JsExport.Ignore
 fun Coordinates.withinSized(startX: Double, startY: Double, width: Double, height: Double): Boolean {
   return x.betweenInclusive(startX, startX + width) && y.betweenInclusive(startY, startY + height)
 }
@@ -378,6 +423,7 @@ fun Coordinates.withinSized(startX: Double, startY: Double, width: Double, heigh
 /**
  * Returns true of the [Coordinates] are perpendicular either above or below the line segment defined by the given two points
  */
+@JsExport.Ignore
 fun Coordinates.isPerpendicularToLineSegment(lineSegmentStartX: Double, lineSegmentStartY: Double, lineSegmentEndX: Double, lineSegmentEndY: Double): Boolean {
   //If the line segment is only a single point, any other point is perpendicular
   if (lineSegmentStartX == lineSegmentEndX && lineSegmentStartY == lineSegmentEndY) return true
@@ -393,10 +439,12 @@ fun Coordinates.isPerpendicularToLineSegment(lineSegmentStartX: Double, lineSegm
   return x.betweenInclusive(adjustedStartX, adjustedEndX)
 }
 
+@JsExport.Ignore
 fun Coordinates.isPerpendicularToLineSegment(lineSegmentStart: Coordinates, lineSegmentEnd: Coordinates): Boolean {
   return isPerpendicularToLineSegment(lineSegmentStart.x, lineSegmentStart.y, lineSegmentEnd.x, lineSegmentEnd.y)
 }
 
+@JsExport.Ignore
 fun getSlopeBetweenPoints(point1X: Double, point1Y: Double, point2X: Double, point2Y: Double): Double {
   return (point2Y - point1Y) / (point2X - point1X)
 }
@@ -411,6 +459,7 @@ fun getSlopeBetweenPoints(point1X: Double, point1Y: Double, point2X: Double, poi
  *
  * @return the angle in degrees
  */
+@JsExport.Ignore
 fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Double {
   val d1 = distanceTo(p1)
   val d2 = distanceTo(p2)
@@ -421,6 +470,7 @@ fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Do
 /**
  * Sorts the coordinates in a clockwise order.
  */
+@JsExport.Ignore
 fun List<Coordinates>.inCssOrder(): List<Coordinates> {
   // Calculate the center of the quadrilateral
   val centerX = sumOf { it.x } / size.toDouble()
@@ -434,6 +484,7 @@ fun List<Coordinates>.inCssOrder(): List<Coordinates> {
  * Calculates the convex hull enclosing the given points
  * Uses Andrew's monotone chain algorithm https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
  */
+@JsExport.Ignore
 fun convexHull(points: List<Coordinates>): Hull {
   if (points.size <= 1) return Hull(points)
   val sortedPoints = points.sortedWith(compareBy({ it.x }, { it.y }))
@@ -461,12 +512,14 @@ fun convexHull(points: List<Coordinates>): Hull {
 }
 
 @Serializable
+@JsExport.Ignore
 data class Hull(val coordinates: List<Coordinates>)
 
 /**
  * Calculates the smallest rectangle that encloses the given convex hull
  * Uses rotating calipers algorithm https://en.wikipedia.org/wiki/Rotating_calipers
  */
+@JsExport.Ignore
 fun rotatingCalipers(hull: Hull): Quadrilateral {
   val coordinates = hull.coordinates
   var minArea = Double.MAX_VALUE

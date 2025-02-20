@@ -1,3 +1,4 @@
+
 import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
@@ -468,10 +469,10 @@ fun Project.configureKotlin() {
   extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
 
   //For JVM projects
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
+  extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
 
   //For Multiplatform projects (JS and JVM)
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
+  extensions.findByType<KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
 
   //Configure the version numbers
   configureNodeJsRootExtension()
@@ -481,7 +482,7 @@ fun Project.configureKotlin() {
  * Returns true if this is a multiplatform project
  */
 fun Project.isMultiplatform(): Boolean {
-  return extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>() != null
+  return extensions.findByType<KotlinMultiplatformExtension>() != null
 }
 
 /**
@@ -718,7 +719,9 @@ enum class WebpackModuleType {
       kotlinWebpack.output.libraryTarget = "modern-module"
       kotlinWebpack.devtool = "source-map"
     }
-  };
+  },
+
+  ;
 
   abstract fun configure(kotlinWebpack: KotlinWebpack, varName: String)
 }

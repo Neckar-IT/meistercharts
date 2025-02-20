@@ -55,8 +55,6 @@ public object Libs {
 
     public const val clikt: String = "com.github.ajalt.clikt:clikt:_"
 
-    public const val rxjava2_extras: String = "com.github.davidmoten:rxjava2-extras:_"
-
     public const val docker_java: String = "com.github.docker-java:docker-java:_"
 
     public const val docker_java_transport_httpclient5: String =
@@ -142,9 +140,6 @@ public object Libs {
 
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
-    public const val detekt_gradle_plugin: String =
-            "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:_"
-
     public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
 
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
@@ -212,8 +207,6 @@ public object Libs {
     public const val micrometer_registry_prometheus: String =
             "io.micrometer:micrometer-registry-prometheus:_"
 
-    public const val io_minio_minio: String = "io.minio:minio:_"
-
     public const val mockk: String = "io.mockk:mockk:_"
 
     public const val measured: String = "io.nacular.measured:measured:_"
@@ -233,12 +226,8 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
-    public const val joda_time: String = "joda-time:joda-time:_"
-
     public const val me_champeau_jmh_gradle_plugin: String =
             "me.champeau.jmh:me.champeau.jmh.gradle.plugin:_"
-
-    public const val image4j: String = "net.ifok.image:image4j:_"
 
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
@@ -421,12 +410,6 @@ public object Libs {
 
     public const val jmh_generator_bytecode: String = "org.openjdk.jmh:jmh-generator-bytecode:_"
 
-    public const val javafx_base: String = "org.openjfx:javafx-base:_"
-
-    public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
-
-    public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
-
     public const val opencv: String = "org.openpnp:opencv:_"
 
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
@@ -438,7 +421,7 @@ public object Libs {
 
     public const val junit_jupiter: String = "org.testcontainers:junit-jupiter:_"
 
-    public const val org_testcontainers_minio: String = "org.testcontainers:minio:_"
+    public const val minio: String = "org.testcontainers:minio:_"
 
     public const val mongodb: String = "org.testcontainers:mongodb:_"
 
