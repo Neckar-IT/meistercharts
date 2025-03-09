@@ -302,7 +302,9 @@ fun DependencyHandler.addKtorClientDependencies(scope: Scope) {
   add(configurationName, Libs.ktor_client_json)
   add(configurationName, Libs.ktor_client_serialization)
   add(configurationName, Libs.ktor_client_logging)
-  add(configurationName, Libs.ktor_websockets)
+  if (false) {
+    add(configurationName, Libs.ktor_websockets)
+  }
   add(configurationName, Libs.ktor_client_content_negotiation)
   add(configurationName, Libs.ktor_serialization_kotlinx)
   add(configurationName, Libs.ktor_serialization_kotlinx_json)

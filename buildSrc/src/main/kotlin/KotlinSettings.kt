@@ -73,6 +73,8 @@ object KotlinSettings {
     add("-Xsuppress-warning=NOTHING_TO_INLINE") //Suppress warnings globally!
     add("-Xmulti-dollar-interpolation") //Multi Dollar Interpolation (https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation)
 
+    add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
+
     //
     // Old compiler settings, for documentation purposes
     //
@@ -97,7 +99,10 @@ object KotlinSettings {
 
     //The bundle gets much larger :-( [2024-11-04 - Kotlin 2.0.21-beta2]
     //add("-Xenable-extension-functions-in-externals") //Enable extension function members in external interfaces.
+
+    //ATTENTION! Only activate in pairs!!!
     add("-Xir-dce-print-reachability-info") //Print reachability information about declarations to 'stdout' while performing DCE.
+    add("-Xir-dce") //Is *required* to be set in combination with -Xir-dce-print-reachability-info
   }
 
   /**
