@@ -220,13 +220,13 @@ data class ConfiguredProject internal constructor(
     try {
       return resolver.project(path)
     } catch (e: org.gradle.api.UnknownProjectException) {
-      println("Could not find project ${resolver.ansiConsole.red(path)} - is it disabled?: $disabled")
-      println("* Check disabled-projects.json if the project has been disabled!")
-      println("* Check settings.gradle.kts if the project has been added")
-      println("Try ${resolver.ansiConsole.orange("gradle clean build --no-configuration-cache --no-daemon --no-build-cache")} to force recompilation")
+      resolver.logger.warn("Could not find project ${resolver.ansiConsole.red(path)} - is it disabled?: $disabled")
+      resolver.logger.warn("* Check disabled-projects.json if the project has been disabled!")
+      resolver.logger.warn("* Check settings.gradle.kts if the project has been added")
+      resolver.logger.warn("Try ${resolver.ansiConsole.orange("gradle clean build --no-configuration-cache --no-daemon --no-build-cache")} to force recompilation")
       throw e
     } catch (e: Exception) {
-      println("Unexpected exception of type ${e.javaClass.simpleName} while resolving project $path - is it disabled?: $disabled")
+      resolver.logger.error("Unexpected exception of type ${e.javaClass.simpleName} while resolving project $path - is it disabled?: $disabled")
       throw e
     }
   }

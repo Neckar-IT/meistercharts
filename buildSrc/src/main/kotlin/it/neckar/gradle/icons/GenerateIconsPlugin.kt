@@ -117,7 +117,7 @@ open class CreateBasicIconsDeclarationTask() : DefaultTask() {
 
     //Create the basic icons file - if configured
     basicIconsFile.orNull?.let {
-      println("Creating basic icons file @ $it")
+      logger.info("Creating basic icons file @ $it")
       val objectName = it.asFile.nameWithoutExtension.toCamelCase().capitalize()
 
       val content = GeneratePaintableObject(iconBaseNames, objectName, guessPackageName(it)).create()
@@ -132,7 +132,7 @@ open class CreateBasicIconsDeclarationTask() : DefaultTask() {
      * Creates the svg paths object - if configured
      */
     svgPathsFile.orNull?.let {
-      println("Creating svg paths file @ $it")
+      logger.info("Creating svg paths file @ $it")
       val objectName = it.asFile.nameWithoutExtension.toCamelCase().capitalize()
       val content = GenerateSvgPaths(svgFiles, objectName, guessPackageName(it)).create()
       it.asFile.outputStream().use { output ->
@@ -145,7 +145,7 @@ open class CreateBasicIconsDeclarationTask() : DefaultTask() {
      * Creates the svg paintable providers object - requires the svg paths file
      */
     svgPaintableProvidersFile.orNull?.let {
-      println("Creating svg paintables file @ $it")
+      logger.info("Creating svg paintables file @ $it")
       val objectName = it.asFile.nameWithoutExtension.toCamelCase().capitalize()
       val content = GenerateSvgPathsProviders(iconBaseNames, objectName, guessPackageName(it)).create()
       it.asFile.outputStream().use { output ->
