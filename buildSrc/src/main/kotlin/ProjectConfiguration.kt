@@ -318,6 +318,13 @@ object ProjectConfiguration {
 
         //Ensure the workspace.yaml file is generated before the `pnpmInstall` task is executed (in the root project)
         dependsOn(tasks.named(GeneratePnpmWorkspaceYamlPlugin.GenerateWorkspaceYamlTaskName))
+
+        //Ensure that the package.json files are generated before the `pnpmInstall` task is executed (in the root project)
+        project.subprojects{
+          this.tasks.findNamed(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)?.let {
+            dependsOn(it)
+          }
+        }
       }
 
       //Add dependencies
