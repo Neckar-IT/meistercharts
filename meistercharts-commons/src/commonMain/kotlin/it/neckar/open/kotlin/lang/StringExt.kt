@@ -388,8 +388,8 @@ fun String?.ifBlank(defaultValue: String): String {
  * Returns this string or null if this string is empty
  */
 fun String?.nullIfEmpty(): String? {
-  return this.takeIf {
-    !it.isNullOrEmpty()
+  return takeUnless {
+    it.isNullOrEmpty()
   }
 }
 
@@ -397,8 +397,8 @@ fun String?.nullIfEmpty(): String? {
  * Returns this string or null if this string is blank
  */
 fun String?.nullIfBlank(): String? {
-  return this.takeIf {
-    !it.isNullOrBlank()
+  return takeUnless {
+    it.isNullOrBlank()
   }
 }
 

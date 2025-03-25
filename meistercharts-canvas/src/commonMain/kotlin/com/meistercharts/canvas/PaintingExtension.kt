@@ -28,7 +28,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.color.get
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
-import com.meistercharts.model.*
+import com.meistercharts.model.BorderRadius
+import com.meistercharts.model.Insets
 import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
@@ -980,7 +981,7 @@ fun CanvasRenderingContext.paintTextBox(
     boxStyle,
     textColor,
     maxStringWidth,
-    textBoxSizeAdjustment
+    textBoxSizeAdjustment,
   )
 }
 

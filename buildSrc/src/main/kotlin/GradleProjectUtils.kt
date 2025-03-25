@@ -22,8 +22,23 @@ import java.io.File
 
 
 /**
+ * Returns true, if this is the root project
+ */
+fun Project.isRootProject(): Boolean {
+  return this.path == this.rootProject.path
+}
+
+/**
+ * Returns the fqName of the given project that can be used for file names (e.g., jar files)
+ *
+ * Example:
+ * - :internal:open:common.kotlin-lang -> neckarIT-internal-open-common-kotlin-lang
  *
  */
+fun Project.pathAsBaseFileName(): String {
+  val rootProjectName = rootProject.name
+  return rootProjectName + "-" + this.path.trimStart(':').replace(':', '-')
+}
 
 //White list of all deps that provide annotations
 val annotations: Set<String> = setOf("annotations", "jsr305", "unit")
@@ -116,27 +131,37 @@ fun Project.hasPlugin(kotlinMultiPlatform: String): Boolean {
 /**
  * Returns all project dependencies (including transitive dependencies)
  * for the configurations with the given names.
+ *
+ * Does *not* include the project itself.
  */
 fun Project.findAllProjectDependencies(
+  /**
+   * The configuration names to search for
+   */
   configurationNames: List<String>,
-  foundProjects: MutableSet<Project> = mutableSetOf(),
-  visitedProjects: MutableSet<Project> = mutableSetOf(),
+  /**
+   * Contains a list of already visited project paths that will be skipped
+   */
+  alreadyVisitedProjectPaths: MutableSet<String> = mutableSetOf(),
 ): Set<Project> {
-  if (this in visitedProjects) return foundProjects
-  visitedProjects.add(this)
+  //Add the own path to the already visited projects, return if the path was already visited
+  if (alreadyVisitedProjectPaths.add(this.path).not()) return emptySet()
 
-  configurationNames.forEach { configurationName ->
-    configurations.findByName(configurationName)?.let { configuration ->
-      val directDependencies = configuration.findDirectProjectDependencies()
-      foundProjects.addAll(directDependencies)
+  //Find the projects for the given configuration names
+  val found = configurationNames.flatMap { configurationName ->
+    val configuration = configurations.findByName(configurationName)
 
-      directDependencies.forEach { project ->
-        foundProjects.addAll(project.findAllProjectDependencies(configurationNames, foundProjects, visitedProjects))
-      }
-    }
+    configuration
+      ?.findDirectProjectDependencies()
+      ?.flatMap { it.findAllProjectDependencies(configurationNames, alreadyVisitedProjectPaths) + it }
+      ?: emptyList()
   }
 
-  return foundProjects
+  //Project.equals() is not implemented correctly, it is necessary to filter the projects by path manually
+  return found
+    .groupBy { it.path }
+    .map { (_, dependencies) -> dependencies.first() }
+    .toSet()
 }
 
 /**

@@ -1,9 +1,9 @@
 package it.neckar.open.formatting
 
+import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.collections.cache
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
-import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.unit.number.PositiveOrZero
 import kotlin.js.Date
 

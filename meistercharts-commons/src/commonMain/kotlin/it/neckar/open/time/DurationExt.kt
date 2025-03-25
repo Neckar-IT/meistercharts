@@ -11,6 +11,9 @@ import kotlin.time.Duration.Companion.seconds
  *
  */
 
+val Duration.inWholeWeeks: Long
+  get() = inWholeDays / 7
+
 /**
  * Formats the duration as "hours:minutes"
  */
@@ -43,6 +46,57 @@ fun Duration.formatMinutes(whitespaceConfig: WhitespaceConfig = WhitespaceConfig
  */
 fun Duration.formatWithoutMillis(): String {
   return this.inWholeSeconds.seconds.toString()
+}
+
+/**
+ * Formats the duration in a nice, human-readable way (e.g. "vor 3 Tagen")
+ * @param whitespaceConfig the whitespace configuration
+ * @return the formatted string or null if the duration longer than 4 weeks
+ */
+fun Duration.formatHumanized(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String? {
+  return if (inWholeMilliseconds < 0) "in der Zukunft"
+  else if (inWholeMilliseconds < 1000) "gerade eben"
+  else if (inWholeSeconds < 60) buildString {
+    append("vor")
+    append(whitespaceConfig.space)
+    append(inWholeSeconds)
+    append(whitespaceConfig.space)
+    append("Sekunde")
+    if (inWholeSeconds > 1) append("n")
+  }
+  else if (inWholeMinutes < 60) buildString {
+    append("vor")
+    append(whitespaceConfig.space)
+    append(inWholeMinutes)
+    append(whitespaceConfig.space)
+    append("Minute")
+    if (inWholeMinutes > 1) append("n")
+  }
+  else if (inWholeHours < 24) buildString {
+    append("vor")
+    append(whitespaceConfig.space)
+    append(inWholeHours)
+    append(whitespaceConfig.space)
+    append("Stunde")
+    if (inWholeHours > 1) append("n")
+  }
+  else if (inWholeDays < 7) buildString {
+    append("vor")
+    append(whitespaceConfig.space)
+    append(inWholeDays)
+    append(whitespaceConfig.space)
+    append("Tag")
+    if (inWholeDays > 1) append("en")
+  }
+  else if (inWholeWeeks < 4) buildString {
+    append("vor")
+    append(whitespaceConfig.space)
+    append(inWholeWeeks)
+    append(whitespaceConfig.space)
+    append("Woche")
+    if (inWholeWeeks > 1) append("n")
+  }
+  else null
 }
 
 fun Duration.formatPersonDays(personDayDuration: Duration = 8.hours, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {

@@ -50,6 +50,32 @@ object ProjectConfiguration {
     }
   }
 
+  /**
+   * Configures KSP processor projects (JVM projects)
+   */
+  fun configureKspProcessor(project: Project) {
+    with(project) {
+      configureJvmCommon()
+      configureToolchainJava21LTS()
+
+      project.afterEvaluate {
+        val projectDependencies = findAllProjectDependencies(listOf("api", "runtimeClasspath", "compileOnly"))
+
+        val notAllowedProjectDependencies = projectDependencies
+          .filter { it != project } //skip this project
+          .filter { it.isKspProcessorProject().not() } //skip all KSP processor projects
+          .filter {
+            //Allowlist of projects that are allowed to be dependencies of KSP processor projects (annotations)
+            Projects.allowedDependenciesForKspProcessingProjectPaths.contains(it.path).not()
+          }
+
+        if (notAllowedProjectDependencies.isNotEmpty()) {
+          throw GradleException("Project dependencies not allowed for KSP processor project [${project.path}]: but has ${notAllowedProjectDependencies.map { it.path }}")
+        }
+      }
+    }
+  }
+
   private var dokkaEnabled = false
 
   private fun Project.configureJvmCommon() {

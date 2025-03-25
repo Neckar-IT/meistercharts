@@ -42,6 +42,10 @@ abstract class AbstractProjects {
     return configureProject(path, ProjectType.KotlinJvm)
   }
 
+  protected fun kspProcessor(path: String): ConfiguredProject {
+    return configureProject(path, ProjectType.KspProcessor)
+  }
+
   protected fun multiPlatformLts(path: String): ConfiguredProject {
     return multiPlatform(path, JvmType.JavaLatestLTS)
   }
@@ -101,6 +105,10 @@ abstract class AbstractProjects {
     return project(ProjectType.KotlinJvm)
   }
 
+  fun kspProcessorProjects(): List<ConfiguredProject> {
+    return project(ProjectType.KspProcessor)
+  }
+
   fun pnpmProjects(): List<ConfiguredProject> {
     return project(ProjectType.PNPM)
   }
@@ -129,6 +137,10 @@ fun Project.isMultiplatformProject(): Boolean {
 
 fun Project.isJvmProject(): Boolean {
   return isOfType(ProjectType.KotlinJvm)
+}
+
+fun Project.isKspProcessorProject(): Boolean {
+  return isOfType(ProjectType.KspProcessor)
 }
 
 /**
@@ -254,6 +266,11 @@ enum class ProjectType {
    * JVM project - with the latest LTS JDK version
    */
   KotlinJvm,
+
+  /**
+   * Projects that contain a KSP processor
+   */
+  KspProcessor,
 
   /**
    * Multiplatform project - usually contains JVM and JS code

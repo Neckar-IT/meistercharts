@@ -4,7 +4,10 @@ import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.toIntFloor
+import it.neckar.open.time.formatHumanized
+import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Formats a date and/or time
@@ -96,6 +99,14 @@ val dateTimeFormatWithMillis: CachedDateTimeFormat = DateTimeFormatWithMillis().
  * A format for a date and a time with millis (short date format)
  */
 val dateTimeFormatShortWithMillis: CachedDateTimeFormat = DateTimeFormatShortWithMillis().cached()
+
+/**
+ * Formats a date in a nice, human-readable way (e.g "gestern", "vor 5 Minuten")
+ */
+fun humanizedDate(@ms timestamp: Double, i18nConfiguration: I18nConfiguration, now: @ms Double = nowMillis(), whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+  val timeSince = (now - timestamp).milliseconds
+  return timeSince.formatHumanized() ?: "seit${whitespaceConfig.space}${dateFormat.format(timestamp, i18nConfiguration, whitespaceConfig)}"
+}
 
 /**
  * Formats a date-time in accordance to the ISO format 8601 (https://en.wikipedia.org/wiki/ISO_8601)

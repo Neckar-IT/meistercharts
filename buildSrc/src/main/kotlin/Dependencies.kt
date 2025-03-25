@@ -148,7 +148,9 @@ fun KotlinMultiplatformExtension.addKotlinTestDependencies(scope: Scope = Scope.
 object KtorClient {
   val commons: KotlinSourceSet.() -> Unit = {
     dependencies {
-      api(Libs.kotlin_reflect) //TODO why???
+      if (false) {
+        api(Libs.kotlin_reflect) //TODO why???
+      }
       api(KotlinX.coroutines.core)
 
       api(Ktor.client.core)
@@ -156,7 +158,9 @@ object KtorClient {
       api(Ktor.client.serialization)
       api(Ktor.client.logging)
 
-      api(Ktor.plugins.websockets)
+      if (false) {
+        api(Ktor.plugins.websockets)
+      }
 
       api(Libs.ktor_client_content_negotiation)
       api(Libs.ktor_serialization_kotlinx)

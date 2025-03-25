@@ -27,6 +27,14 @@ val KClass<*>.simpleNameWithEnclosing: String
   }
 
 /**
+ * Returns the simple name - throws an exception if it is null.
+ */
+val KClass<*>.simpleNameNonNull: String
+  get() {
+    return this.simpleName ?: throw IllegalStateException("simpleName is null for $this")
+  }
+
+/**
  * Returns the enum entries for this class.
  */
 @Deprecated("Use enumEntries instead", ReplaceWith("enumEntries"))
@@ -149,4 +157,12 @@ fun KType.isNothing(): Boolean {
 
 fun KType.isNotNothing(): Boolean {
   return isNothing().not()
+}
+
+/**
+ * Returns the (simple) annotation name for the given annotation class.
+ * E.g., for @JvmStatic, this returns "JvmStatic"
+ */
+inline fun <reified T : Annotation> getAnnotationName(): String {
+  return T::class.simpleName ?: throw IllegalStateException("Could not find the simple name for ${T::class}")
 }

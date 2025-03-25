@@ -25,6 +25,10 @@ data class I18nConfiguration(
   var timeZone: TimeZone,
 ) {
 
+  override fun toString(): String {
+    return "I18nConfiguration(textLocale=$textLocale, formatLocale=$formatLocale, timeZone=$timeZone)"
+  }
+
   companion object {
     /**
      * Convenience constructor emulation - useful when refactoring

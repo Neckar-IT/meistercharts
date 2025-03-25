@@ -28,7 +28,7 @@ object Plugins {
   const val download: String = "de.undercouch.download"
 
   const val generateIcons: String = "it.neckar.generate-icons"
-  const val projectConfig: String = "it.neckar.project.config"
+  const val sourceCodeFromBuildSrc: String = "it.neckar.source-code-from-build-src"
 
   const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
 
@@ -57,6 +57,8 @@ object Plugins {
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
+  const val generateTypesList: String = "it.neckar.generation.types-list"
+  const val typesListCollector: String = "it.neckar.generation.types-list-collector"
 
   /**
    * Configures python projects
@@ -163,8 +165,8 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormatBase: Plugi
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.projectConfig: PluginDependencySpec
-  get() = id(Plugins.projectConfig)
+inline val org.gradle.plugin.use.PluginDependenciesSpec.sourceCodeFromBuildSrc: PluginDependencySpec
+  get() = id(Plugins.sourceCodeFromBuildSrc)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
   get() = id(Plugins.generateTsDeclaration)
@@ -289,6 +291,12 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.skipShadowDistZipForShad
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
   get() = id(Plugins.generateIgnoreProjectSets)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTypesList: PluginDependencySpec
+  get() = id(Plugins.generateTypesList)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.typesListCollector: PluginDependencySpec
+  get() = id(Plugins.typesListCollector)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

@@ -132,11 +132,11 @@ open class FontDescriptorFragment @JvmOverloads constructor(
    */
   fun isEmpty(): Boolean {
     return family == null
-      && size == null
-      && weight == null
-      && style == null
-      && variant == null
-      && genericFamily == null
+        && size == null
+        && weight == null
+        && style == null
+        && variant == null
+        && genericFamily == null
   }
 
   /**
