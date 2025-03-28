@@ -73,7 +73,10 @@ object KotlinSettings {
     add("-Xsuppress-warning=NOTHING_TO_INLINE") //Suppress warnings globally!
     add("-Xmulti-dollar-interpolation") //Multi Dollar Interpolation (https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation)
 
-    add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
+    if (languageVersion >= KotlinVersion.KOTLIN_2_2) {
+      //Kotlin 2.2 required
+      add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
+    }
 
     //
     // Old compiler settings, for documentation purposes
