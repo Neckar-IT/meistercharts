@@ -29,6 +29,8 @@ import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
 import it.neckar.open.unit.si.rad
 import kotlinx.serialization.Serializable
+import kotlin.js.JsExport
+import kotlin.js.JsName
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import kotlin.math.abs
@@ -46,12 +48,14 @@ import kotlin.math.sqrt
  * Represents a coordinate
  *
  */
+@JsExport
 @Serializable
 data class Coordinates(
   val x: Double,
   val y: Double,
 ) {
 
+  @JsExport.Ignore
   constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
   fun plus(deltaX: Double, deltaY: Double): Coordinates {
@@ -82,6 +86,7 @@ data class Coordinates(
   /**
    * Adds the given vector and returns the resulting coordinate
    */
+  @JsExport.Ignore
   operator fun plus(vector: Distance): Coordinates {
     if (vector.isZero()) {
       return this
@@ -93,6 +98,7 @@ data class Coordinates(
   /**
    * Adds the given size and returns the resulting coordinate
    */
+  @JsName("plusSize")
   operator fun plus(size: Size): Coordinates {
     return of(x + size.width, y + size.height)
   }
@@ -136,6 +142,7 @@ data class Coordinates(
   /**
    * Subtracts the given coordinate from this
    */
+  @JsName("minusDistance")
   operator fun minus(other: Distance): Coordinates {
     return minus(other.x, other.y)
   }
@@ -147,6 +154,7 @@ data class Coordinates(
   /**
    * Calculates the delta between two coordinates
    */
+  @JsName("minusCoordinates")
   operator fun minus(other: Coordinates): Distance {
     return Distance.of(x - other.x, y - other.y)
   }
@@ -161,13 +169,23 @@ data class Coordinates(
     return of(x - other.x, y - other.y)
   }
 
+  @JsName("plusCoordinates")
+  @Deprecated("It does not make sense to add coordinates. Use plus(Distance) instead")
   operator fun plus(that: Coordinates): Coordinates = Coordinates(x + that.x, y + that.y)
 
+  @JsExport.Ignore
+  @Deprecated("Does not make any sense")
   operator fun times(that: Coordinates): Coordinates = Coordinates(x * that.x, y * that.y)
+
+  @JsExport.Ignore
   operator fun times(scale: Double): Coordinates = Coordinates(x * scale, y * scale)
+
   fun times(scaleX: Double, scaleY: Double): Coordinates = Coordinates(x * scaleX, y * scaleY)
 
+  @Deprecated("Does not make any sense")
+  @JsExport.Ignore
   operator fun div(that: Coordinates): Coordinates = Coordinates(x / that.x, y / that.y)
+
   operator fun div(scale: Double): Coordinates = Coordinates(x / scale, y / scale)
 
   fun crossProduct(p1: Coordinates, p2: Coordinates): Double {
@@ -205,8 +223,8 @@ data class Coordinates(
    */
   fun isCloseTo(other: Coordinates, deltaX: Double, deltaY: Double = deltaX): Boolean {
     return x.betweenInclusive(other.x - deltaX, other.x + deltaX)
-        &&
-        y.betweenInclusive(other.y - deltaY, other.y + deltaY)
+      &&
+      y.betweenInclusive(other.y - deltaY, other.y + deltaY)
   }
 
   /**
@@ -224,6 +242,7 @@ data class Coordinates(
   /**
    * Calculates the distance from this and the other coordinates
    */
+  @JsName("distanceToCoordinates")
   fun distanceTo(target: Coordinates): Double {
     return distanceTo(target.x, target.y)
   }
@@ -261,6 +280,7 @@ data class Coordinates(
     }
   }
 
+  @JsName("distanceToLineCoordinates")
   fun distanceToLine(lineStart: Coordinates, lineEnd: Coordinates): Double {
     return distanceToLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y)
   }

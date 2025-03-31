@@ -34,6 +34,9 @@ fun Project.isRootProject(): Boolean {
  * Example:
  * - :internal:open:common.kotlin-lang -> neckarIT-internal-open-common-kotlin-lang
  *
+ *
+ * ATTENTION: The same implementation is used in `it.neckar.ksp.ts.model.TsModuleReference`
+ * When changing this implementation, please also change the other implementation accordingly!
  */
 fun Project.pathAsBaseFileName(): String {
   val rootProjectName = rootProject.name

@@ -1,5 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
+import Plugins.generateTypesList
 import org.gradle.plugin.use.PluginDependencySpec
 
 object Plugins {
@@ -28,7 +29,7 @@ object Plugins {
   const val download: String = "de.undercouch.download"
 
   const val generateIcons: String = "it.neckar.generate-icons"
-  const val sourceCodeFromBuildSrc: String = "it.neckar.source-code-from-build-src"
+  const val provideSourceCodeFromBuildSrc: String = "it.neckar.source-code-from-build-src"
 
   const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
 
@@ -58,6 +59,11 @@ object Plugins {
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
+
+  /**
+   * Collects the types-list (from dependencies or subprojects).
+   * Does *NOT* generate the types-list for the project. Use [generateTypesList] instead!
+   */
   const val typesListCollector: String = "it.neckar.generation.types-list-collector"
 
   /**
@@ -114,6 +120,10 @@ object Plugins {
 
   const val ksp: String = "com.google.devtools.ksp"
   const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
+
+  /**
+   * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
+   */
   const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
 }
 
@@ -165,8 +175,12 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormatBase: Plugi
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)
 
+@Deprecated("use provideSourceCodeFromBuildSrc instead", replaceWith = ReplaceWith("provideSourceCodeFromBuildSrc"))
 inline val org.gradle.plugin.use.PluginDependenciesSpec.sourceCodeFromBuildSrc: PluginDependencySpec
-  get() = id(Plugins.sourceCodeFromBuildSrc)
+  get() = id(Plugins.provideSourceCodeFromBuildSrc)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.provideSourceCodeFromBuildSrc: PluginDependencySpec
+  get() = id(Plugins.provideSourceCodeFromBuildSrc)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
   get() = id(Plugins.generateTsDeclaration)

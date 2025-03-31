@@ -102,6 +102,8 @@ sealed interface Url {
     fun localhostHttp(port: Int = Port.HTTP.value): Absolute = absolute("http://localhost:$port/")
 
     fun localhostHttp(port: Port = Port.HTTP): Absolute = absolute("http://localhost:$port/")
+
+    fun http(host: String, port: Port = Port.HTTP): Absolute = absolute("http://$host:$port/")
   }
 
   /**
