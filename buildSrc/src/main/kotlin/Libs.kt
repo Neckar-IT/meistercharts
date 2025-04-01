@@ -435,8 +435,6 @@ public object Libs {
 
     public const val update4j: String = "org.update4j:update4j:_"
 
-    public const val swagger_ui: String = "org.webjars:swagger-ui:_"
-
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
     public const val xmlunit: String = "xmlunit:xmlunit:_"

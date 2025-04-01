@@ -870,6 +870,7 @@ val Project.gitDescribe: String
 /**
  * The current build date
  */
+@Deprecated("use buildDateDay instead to allow for better caching")
 val Project.buildDate: String
   get() {
     return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")

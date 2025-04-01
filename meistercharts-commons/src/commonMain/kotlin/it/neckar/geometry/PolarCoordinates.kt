@@ -16,6 +16,7 @@
 package it.neckar.geometry
 
 import it.neckar.open.unit.si.rad
+import kotlin.js.JsExport
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -23,14 +24,15 @@ import kotlin.math.sin
 /**
  * Represents polar coordinates
  */
+@JsExport
 data class PolarCoordinates(
   val r: Double,
-  val theta: @rad Double
+  val theta: @rad Double,
 ) {
 
   /**
    *  Computes [Coordinates] from [PolarCoordinates]
-   *  @see <a href="https://en.wikipedia.org/wiki/Polar_coordinate_system#Converting_between_polar_and_Cartesian_coordinates">Wikipedia</a>
+   *  @see <a href="https://en.wikipedia.org/wiki/Polar_coordinate_system#Converting_between_po lar_and_Cartesian_coordinates">Wikipedia</a>
    */
   fun toCartesian(): Coordinates {
     return Coordinates(toCartesianX(r, theta), toCartesianY(r, theta))

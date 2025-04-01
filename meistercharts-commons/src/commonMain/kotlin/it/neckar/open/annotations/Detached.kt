@@ -1,7 +1,7 @@
 package it.neckar.open.annotations
 
 /**
- * Describes elements that are detached (e.g. elements that are not added to the DOM yet)
+ * Describes elements that are detached (e.g., elements that are not added to the DOM yet)
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(

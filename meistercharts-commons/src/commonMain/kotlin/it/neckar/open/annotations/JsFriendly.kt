@@ -1,10 +1,9 @@
 package it.neckar.open.annotations
 
-
 /**
- * Marks Kotlin code as Java-friendly.
+ * Marks Kotlin code as JS friendly.
  *
- * Such code might seem unnecessary but simplifies Java calls into Kotlin code.
+ * Such code might seem unnecessary but simplifies JS calls into Kotlin code.
  *
  */
 @Retention(AnnotationRetention.SOURCE)
@@ -26,4 +25,4 @@ package it.neckar.open.annotations
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-annotation class JavaFriendly
+annotation class JsFriendly
