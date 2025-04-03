@@ -40,6 +40,7 @@ object Plugins {
   const val taskInfo: String = "org.barfuin.gradle.taskinfo"
   const val detekt: String = "io.gitlab.arturbosch.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
+  const val pnpmKotlinInterop: String = "it.neckar.gradle.pnpm.kotlin-interop"
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
 
@@ -311,6 +312,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTypesList: Plugi
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.typesListCollector: PluginDependencySpec
   get() = id(Plugins.typesListCollector)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
+  get() = id(Plugins.pnpmKotlinInterop)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

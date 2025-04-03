@@ -21,7 +21,7 @@ abstract class AbstractProjects {
   private val path2project = mutableMapOf<String, ConfiguredProject>()
 
   protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
-    require(path2project[path] == null) { "Project $path already configured" }
+    require(findOrNull(path) == null) { "Project $path already configured" }
 
     val disabled = disabledProjectsSupport.isDisabled(path)
     if (disabled && projectType == ProjectType.PNPM) {
@@ -81,17 +81,27 @@ abstract class AbstractProjects {
    * Returns the configured project for the given [project]
    */
   fun find(project: Project): ConfiguredProject {
-    val path = project.path
-    return path2project[path] ?: throw IllegalStateException("Project $path not found")
+    return find(project.path)
+  }
+
+  fun find(path: String): ConfiguredProject {
+    return findOrNull(path) ?: throw IllegalStateException("Project $path not found")
   }
 
   fun findOrNull(project: Project): ConfiguredProject? {
-    val path = project.path
+    return findOrNull(project.path)
+  }
+
+  /**
+   * Returns the configured project for the given [path].
+   * Returns null if the project is not found.
+   */
+  fun findOrNull(path: String): ConfiguredProject? {
     return path2project[path]
   }
 
   /**
-   * Returns all multi platform projects for the current java version
+   * Returns all multi-platform projects for the current java version
    */
   fun multiPlatformProjectsLTS(): List<ConfiguredProject> {
     return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }

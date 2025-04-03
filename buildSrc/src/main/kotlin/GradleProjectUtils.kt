@@ -43,7 +43,7 @@ fun Project.pathAsBaseFileName(): String {
   return rootProjectName + "-" + this.path.trimStart(':').replace(':', '-')
 }
 
-//White list of all deps that provide annotations
+//Allowed-list of all deps that provide annotations
 val annotations: Set<String> = setOf("annotations", "jsr305", "unit")
 
 /**

@@ -32,7 +32,10 @@ import org.w3c.dom.HTMLDivElement
 /**
  * JavaScript implementation for [Meisterchart]
  */
-class MeisterchartJS(
+@JsExport
+class MeisterchartJS
+@JsExport.Ignore
+constructor(
   override val chartSupport: ChartSupport,
   override val description: String,
 ) : Meisterchart {
@@ -87,12 +90,14 @@ class MeisterchartJS(
    *
    * Do *NOT* add the html canvas directly. Instead, add the [holder]
    */
+  @JsExport.Ignore
   val htmlCanvas: CanvasJS
     get() = chartSupport.canvas as CanvasJS
 
   /**
    * Contains the native components
    */
+  @JsExport.Ignore
   val nativeComponents: NativeComponentsJS = NativeComponentsJS(chartSupport).also { nativeComponents ->
     holder.appendChild(nativeComponents.div)
     chartSupport.onDispose {

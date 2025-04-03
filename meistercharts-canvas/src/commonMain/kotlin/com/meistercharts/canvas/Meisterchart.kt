@@ -18,14 +18,17 @@ package com.meistercharts.canvas
 import com.meistercharts.canvas.layer.LayerSupport
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.OnDispose
+import kotlin.js.JsExport
 
 /**
  * The(!) MeisterChart interface
  */
+@JsExport
 interface Meisterchart : Disposable, OnDispose {
   /**
    * The [ChartSupport] for this chart
    */
+  @JsExport.Ignore
   val chartSupport: ChartSupport
 
   /**
@@ -37,6 +40,7 @@ interface Meisterchart : Disposable, OnDispose {
   /**
    * Helper method that returns the [LayerSupport] of the chart
    */
+  @JsExport.Ignore
   val layerSupport: LayerSupport
     get() {
       return chartSupport.layerSupport
@@ -53,6 +57,7 @@ interface Meisterchart : Disposable, OnDispose {
   /**
    * Marks the canvas as dirty
    */
+  @JsExport.Ignore
   fun markAsDirty(reason: DirtyReason) {
     chartSupport.markAsDirty(reason)
   }
