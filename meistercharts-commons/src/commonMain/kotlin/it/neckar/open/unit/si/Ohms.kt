@@ -15,11 +15,11 @@
  */
 package it.neckar.open.unit.si
 
-import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.ElectricResistance
 import it.neckar.open.unit.Definition
 import it.neckar.open.unit.Name
 import it.neckar.open.unit.Symbol
+import it.neckar.open.unit.Unit
+import it.neckar.open.unit.quantity.ElectricResistance
 
 /**
  *
@@ -46,11 +46,11 @@ import it.neckar.open.unit.Symbol
 @Suppress("ClassName")
 @Unit
 @ElectricResistance
-@Name("ohm")
+@Name("Ohm")
 @SiDerivedUnit(A::class, V::class)
-@Symbol(ohm.SYMBOL)
+@Symbol(Ohms.SYMBOL)
 @Definition("V/A", "J/s*A²")
-annotation class ohm {
+annotation class Ohms {
   companion object {
     const val SYMBOL: String = "Ω"
   }
