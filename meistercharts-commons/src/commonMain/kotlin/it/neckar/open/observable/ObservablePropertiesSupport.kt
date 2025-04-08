@@ -31,7 +31,9 @@ open class ObservablePropertiesSupport(
 
   override fun consumeAllPropertiesChanges(action: ConsumeChangesAction<Any?>): Disposable {
     valueChangeListeners.add(action)
-    return Disposable { valueChangeListeners.remove(action) }
+    return Disposable {
+      valueChangeListeners.remove(action)
+    }
   }
 
   /**
