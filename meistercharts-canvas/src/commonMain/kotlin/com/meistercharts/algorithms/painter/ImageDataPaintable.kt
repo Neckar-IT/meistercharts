@@ -18,15 +18,21 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Rectangle
+import it.neckar.geometry.Size
 import it.neckar.open.http.Url
+import it.neckar.open.unit.other.px
 
 /**
  * A Paintable that is able to paint images with inline base64 encoded content.
  * The URI is expected to start with "data:image"
  */
 //TODO this class does probably only work for JS
-class ImageDataPaintable(data: Url.DataScheme) : Paintable {
-  val delegate: Paintable = UrlPaintable.naturalSize(data) //TODO this looks stupid, but should be ok
+class ImageDataPaintable(data: Url.DataScheme, fixedSize: @px Size? = null) : Paintable {
+  val delegate: UrlPaintable = if (fixedSize != null) {
+    UrlPaintable.fixedSize(data, fixedSize)
+  } else {
+    UrlPaintable.naturalSize(data) //TODO this looks stupid, but should be ok
+  }
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return delegate.boundingBox(paintingContext)

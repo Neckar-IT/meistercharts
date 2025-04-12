@@ -176,10 +176,6 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormatBase: Plugi
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)
 
-@Deprecated("use provideSourceCodeFromBuildSrc instead", replaceWith = ReplaceWith("provideSourceCodeFromBuildSrc"))
-inline val org.gradle.plugin.use.PluginDependenciesSpec.sourceCodeFromBuildSrc: PluginDependencySpec
-  get() = id(Plugins.provideSourceCodeFromBuildSrc)
-
 inline val org.gradle.plugin.use.PluginDependenciesSpec.provideSourceCodeFromBuildSrc: PluginDependencySpec
   get() = id(Plugins.provideSourceCodeFromBuildSrc)
 
