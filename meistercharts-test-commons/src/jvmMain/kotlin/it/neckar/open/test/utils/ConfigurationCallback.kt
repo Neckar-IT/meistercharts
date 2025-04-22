@@ -2,7 +2,7 @@ package it.neckar.open.test.utils
 
 interface ConfigurationCallback<T, A : Annotation> {
   /**
-   * Returns the old value that has been set originally.
+   * Returns the original (currently set) value.
    * This method is called first - the returned value is stored and reset later.
    */
   fun getOriginalValue(): T

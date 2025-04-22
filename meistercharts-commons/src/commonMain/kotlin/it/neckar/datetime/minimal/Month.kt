@@ -40,6 +40,24 @@ value class Month(val value: Int) : Comparable<Month> {
     return (1 until value).sumOf { Month(it).daysInMonth(year).value }
   }
 
+  fun format(): String {
+    return when (value) {
+      1 -> "Januar"
+      2 -> "Februar"
+      3 -> "März"
+      4 -> "April"
+      5 -> "Mai"
+      6 -> "Juni"
+      7 -> "Juli"
+      8 -> "August"
+      9 -> "September"
+      10 -> "Oktober"
+      11 -> "November"
+      12 -> "Dezember"
+      else -> throw IllegalArgumentException("Invalid month: $this")
+    }
+  }
+
   companion object {
     val January: Month = Month(1)
     val February: Month = Month(2)

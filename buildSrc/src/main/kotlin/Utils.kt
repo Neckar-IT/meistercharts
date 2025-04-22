@@ -1,4 +1,3 @@
-
 import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
@@ -466,7 +465,7 @@ fun Project.configureKotlin() {
 
 
   //for common
-  extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonProjectExtension>()?.applyKotlinConfiguration()
+  this.extensions.findByType<KotlinProjectExtension>()?.applyKotlinConfiguration()
 
   //For JVM projects
   extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)

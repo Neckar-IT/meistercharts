@@ -24,10 +24,9 @@ import it.neckar.open.unit.other.px
 
 /**
  * A Paintable that is able to paint images with inline base64 encoded content.
- * The URI is expected to start with "data:image"
  */
 //TODO this class does probably only work for JS
-class ImageDataPaintable(data: Url.DataScheme, fixedSize: @px Size? = null) : Paintable {
+class ImageDataPaintable(data: Url, fixedSize: @px Size? = null) : Paintable {
   val delegate: UrlPaintable = if (fixedSize != null) {
     UrlPaintable.fixedSize(data, fixedSize)
   } else {

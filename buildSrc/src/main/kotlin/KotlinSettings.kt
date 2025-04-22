@@ -7,15 +7,11 @@ object KotlinSettings {
   val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
   val languageVersionAsString: String = languageVersion.version
 
-  /**
-   * Currently updating to 2.0 does nto work with KSP
-   * https://github.com/google/ksp/issues/1536
-   */
   val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
   val apiVersionAsString: String = apiVersion.version
 
   /**
-   * Contains the annotations we opted in.
+   * Contains the annotations we opted in for.
    * Can be used to configure Kotlin extensions directly
    */
   val optInExperimentalAnnotations: List<String> = listOf(
@@ -36,6 +32,8 @@ object KotlinSettings {
     "kotlin.uuid.ExperimentalUuidApi", //UUID support (since 2.0.20)
     "kotlinx.serialization.ExperimentalSerializationApi", //Serialization
     "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines
+    "kotlin.concurrent.atomics.ExperimentalAtomicApi", //Atomic support (since 2.1.20)
+    "kotlin.time.ExperimentalTime", //Time support (since 2.1.20)
   )
 
   /**

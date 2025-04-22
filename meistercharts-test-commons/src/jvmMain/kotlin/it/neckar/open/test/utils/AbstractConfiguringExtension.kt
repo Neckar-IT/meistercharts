@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtensionContext
  *
  */
 abstract class AbstractConfiguringExtension<T, A : Annotation> protected constructor(
+  /**
+   * The type of the object that is configured
+   */
   storedObjectType: Class<T>,
   enumType: Class<A>,
   key: String,

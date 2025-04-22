@@ -13,7 +13,7 @@ data class LocalDate(
   val year: Year,
   val month: Month,
   val dayOfMonth: DayOfMonth,
-) : Comparable<LocalDate> {
+) : Comparable<LocalDate?> {
 
   /**
    * Calculates the months since the start of the epoch
@@ -112,8 +112,9 @@ data class LocalDate(
     return LocalDate(year + yearsToAdd, month, dayOfMonth)
   }
 
-  override fun compareTo(other: LocalDate): Int {
+  override fun compareTo(other: LocalDate?): Int {
     return when {
+      other == null -> 1
       this.year.value != other.year.value -> this.year.value - other.year.value
       this.month.value != other.month.value -> this.month.value - other.month.value
       else -> this.dayOfMonth.value - other.dayOfMonth.value
