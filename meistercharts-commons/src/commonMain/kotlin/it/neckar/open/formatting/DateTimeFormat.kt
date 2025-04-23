@@ -220,7 +220,9 @@ expect class DateTimeFormatShortWithMillis() : DateTimeFormat {
 
 
 /**
- * Formats millis as UTC. Uses [dateTimeFormatUTC] - with cache
+ * Formats millis as UTC. Uses [dateTimeFormatUTC] - with cache.
+ *
+ * Use [parseUtc] to parse the date again
  */
 fun @ms Double.formatUtc(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   if (this.isNaN()) {
