@@ -1,5 +1,6 @@
 package it.neckar.open.time
 
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.toIntCeil
 import it.neckar.open.kotlin.lang.toIntFloor
@@ -111,4 +112,18 @@ fun Iterable<Duration>.sum(): Duration {
   var duration: Duration = Duration.ZERO
   this.forEach { duration += it }
   return duration
+}
+
+/**
+ * Calculates the average of the durations.
+ * Will return [Duration.ZERO] if the list is empty
+ */
+fun List<Duration>.average(): Duration {
+  if (this.isEmpty()) {
+    return Duration.ZERO
+  }
+
+  var duration: Duration = Duration.ZERO
+  this.fastForEach { duration += it }
+  return duration / this.size.toDouble()
 }

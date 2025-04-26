@@ -198,7 +198,7 @@ sealed interface Url {
       require(
         containsSchemeDelimiter(value)
       ) {
-        "An absolute URL must start with one of the allowed prefixes but was [$value]"
+        "An absolute URL must start with a schema and contain [$SchemaDelimiter] but was [$value]"
       }
     }
 
@@ -222,10 +222,12 @@ sealed interface Url {
     }
 
     companion object {
+      private const val SchemaDelimiter = "://"
+
       /**
        * Checks if the URL contains a scheme delimiter (e.g. "://")
        */
-      fun containsSchemeDelimiter(url: String): Boolean = url.contains("://")
+      fun containsSchemeDelimiter(url: String): Boolean = url.contains(SchemaDelimiter)
     }
   }
 
