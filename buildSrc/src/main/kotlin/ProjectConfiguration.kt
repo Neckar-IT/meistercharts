@@ -199,7 +199,7 @@ object ProjectConfiguration {
       configureJunit()
 
       //Ensure the extension exist
-      requireNotNull(extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension::class.java))
+      requireNotNull(extensions.getByType(KotlinMultiplatformExtension::class.java))
 
       //Default toolchain for multiplatform projects
 
@@ -223,7 +223,7 @@ object ProjectConfiguration {
           logger.lifecycle(ansiConsole.green("Source Sets:"))
           logger.lifecycle("------------------------------------------------------------")
 
-          val kotlinMultiplatformExtension: KotlinMultiplatformExtension = project.extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension::class.java)
+          val kotlinMultiplatformExtension: KotlinMultiplatformExtension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
 
           kotlinMultiplatformExtension.sourceSets.all {
             logger.lifecycle(ansiConsole.orange(name))
@@ -307,7 +307,7 @@ object ProjectConfiguration {
         commandLine("pnpm", "--version")
 
         doLast {
-          val nodeExtension = this.project.extensions.getByType<com.github.gradle.node.NodeExtension>()
+          val nodeExtension = this.project.extensions.getByType<NodeExtension>()
 
           val actualPnpmVersion = out.toString().trim()
           val expectedPnpmVersion = nodeExtension.pnpmVersion.get()
@@ -564,6 +564,20 @@ object ProjectConfiguration {
         }
 
         args.set(listOf("run", "lint"))
+      }
+
+      tasks.register<PnpmTask>("pnpmLintFix") {
+        description = "Executes `pnpm run lint`"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall") //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          packageJsonContainsScript("lint")
+        }
+
+        args.set(listOf("run", "lint", "--fix"))
       }
 
       tasks.register<PnpmTask>("pnpmTest") {

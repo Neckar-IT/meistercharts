@@ -17,6 +17,7 @@ package com.meistercharts.map
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.maps.Example
 import com.meistercharts.maps.MapCoordinates
 import com.meistercharts.maps.latitude2DomainRelative
 import com.meistercharts.maps.longitude2DomainRelative
@@ -29,10 +30,10 @@ class SlippyMapTest {
   fun testConversions() {
     val tolerance = 1e-10
 
-    assertThat(MapCoordinates.neckarIt.latitude.toDomainRelativeY()).isCloseTo(0.3458895530415205, tolerance)
-    assertThat(MapCoordinates.neckarIt.longitude.toDomainRelativeX()).isCloseTo(0.5251412897611111, tolerance)
+    assertThat(MapCoordinates.Companion.Example.neckarIt.latitude.toDomainRelativeY()).isCloseTo(0.3458895530415205, tolerance)
+    assertThat(MapCoordinates.Companion.Example.neckarIt.longitude.toDomainRelativeX()).isCloseTo(0.5251412897611111, tolerance)
 
-    assertThat(MapCoordinates.neckarIt.latitude2DomainRelative()).isCloseTo(0.3458895530415205, tolerance)
-    assertThat(MapCoordinates.neckarIt.longitude2DomainRelative()).isCloseTo(0.5251412897611111, tolerance)
+    assertThat(MapCoordinates.Companion.Example.neckarIt.latitude2DomainRelative()).isCloseTo(0.3458895530415205, tolerance)
+    assertThat(MapCoordinates.Companion.Example.neckarIt.longitude2DomainRelative()).isCloseTo(0.5251412897611111, tolerance)
   }
 }

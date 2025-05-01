@@ -3,6 +3,11 @@ package it.neckar.open.test.utils
 import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.kotlin.lang.removeWhitespaces
 import it.neckar.open.kotlin.lang.toBase64
@@ -171,3 +176,31 @@ fun Assert<ByteArray>.isEqualTo(expected: ByteArray): Unit = given { actual ->
 private fun String.getRelevantLines() = lineSequence()
   .map { it.trim().trimIndent() }
   .filter { it.isNotBlank() }
+
+
+/**
+ * Compares both objects. If they are not equal, the JSON representation is compared.
+ *
+ * This method is very useful for complex objects and simplify debugging.
+ */
+fun <T> Assert<T>.isEqualToUsingJson(
+  expected: T,
+) {
+  given { current ->
+    if (current == expected) {
+      return
+    }
+
+    assertThat(objectMapper.writeValueAsString(current)).isJsonEqualTo(
+      objectMapper.writeValueAsString(expected),
+    )
+  }
+}
+
+
+private val objectMapper = ObjectMapper().apply {
+  registerModule(kotlinModule())
+  registerModule(Jdk8Module())
+  registerModule(JavaTimeModule())
+  registerModule(ParameterNamesModule())
+}

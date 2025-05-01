@@ -35,12 +35,12 @@ data class RouteMapCoordinates(
   companion object {
     @Suppress("SpellCheckingInspection")
     val fromNeckarItToLizergy: RouteMapCoordinates = RouteMapCoordinates(
-      startMapCoordinates = MapCoordinates.neckarIt,
-      destinationMapCoordinates = MapCoordinates.lizergy
+      startMapCoordinates = MapCoordinates.Companion.Example.neckarIt,
+      destinationMapCoordinates = MapCoordinates.Companion.Example.lizergy
     )
     val fromEmmendingenToLizergy: RouteMapCoordinates = RouteMapCoordinates(
-      startMapCoordinates = MapCoordinates.emmendingen,
-      destinationMapCoordinates = MapCoordinates.lizergy
+      startMapCoordinates = MapCoordinates.Companion.Example.emmendingen,
+      destinationMapCoordinates = MapCoordinates.Companion.Example.lizergy
     )
   }
 }
