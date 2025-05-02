@@ -1,5 +1,6 @@
 package it.neckar.open.kotlin.serializers
 
+import it.neckar.open.kotlin.lang.requireNotNull
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -12,7 +13,27 @@ import kotlinx.serialization.json.JsonPrimitive
  *
  * Inspired by https://github.com/Kotlin/kotlinx.serialization/issues/296
  */
-object AnySerializer : KSerializer<Any?> {
+object AnySerializer : KSerializer<Any> {
+  private val delegateSerializer = JsonPrimitive.serializer()
+
+  override val descriptor: SerialDescriptor = delegateSerializer.descriptor
+
+  override fun serialize(encoder: Encoder, value: Any) {
+    encoder.encodeSerializableValue(delegateSerializer, value.toJsonPrimitive())
+  }
+
+  override fun deserialize(decoder: Decoder): Any {
+    val jsonPrimitive = decoder.decodeSerializableValue(delegateSerializer)
+    return jsonPrimitive.toAnyValue().requireNotNull { "Expected non-null value but got null" }
+  }
+}
+
+/**
+ * Converts "any" value to JSON.
+ *
+ * Inspired by https://github.com/Kotlin/kotlinx.serialization/issues/296
+ */
+object AnyNullableSerializer : KSerializer<Any?> {
   private val delegateSerializer = JsonPrimitive.serializer()
 
   override val descriptor: SerialDescriptor = delegateSerializer.descriptor
@@ -27,9 +48,8 @@ object AnySerializer : KSerializer<Any?> {
   }
 }
 
-
 /**
- * Converts well known values to JsonPrimitives
+ * Converts well-known values to JsonPrimitives
  */
 private fun Any?.toJsonPrimitive(): JsonPrimitive {
   return when (this) {

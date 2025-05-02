@@ -19,7 +19,6 @@ import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
-import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.Configuration
 import com.meistercharts.algorithms.painter.LabelPainter2
 import com.meistercharts.algorithms.painter.LabelPlacement
 import com.meistercharts.annotations.Window
@@ -61,12 +60,12 @@ class CrossWireLayer(
   /**
    * Can be configured to background (if necessary)
    */
-  override val type: LayerType = LayerType.Content
+  override val type: LayerType = LayerType.Content,
 ) : AbstractLayer() {
 
   constructor(
     valueLabelsProvider: ValueLabelsProvider,
-    currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String = { _, _ -> TODO("not implemented yet") },
+    currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String? = { _, crosswireLocation -> null },
     additionalConfiguration: Configuration .() -> Unit = {},
   ) : this(Configuration(valueLabelsProvider, currentLocationLabelTextProvider), additionalConfiguration)
 
@@ -110,7 +109,7 @@ class CrossWireLayer(
 
     var valueLabelPlacement: LabelPlacement = LabelPlacement.OnRightSide
 
-    var currentLocationLabelText: String = ""
+    var currentLocationLabelText: String? = null
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       wireLocation = configuration.locationX(paintingContext)
@@ -122,7 +121,7 @@ class CrossWireLayer(
       currentLocationLabelText = if (configuration.showCurrentLocationLabel) {
         configuration.currentLocationLabelTextProvider(paintingContext, wireLocation)
       } else {
-        ""
+        null
       }
     }
   }
@@ -158,26 +157,26 @@ class CrossWireLayer(
       gc.strokeLine(0.0, chartCalculator.contentViewportMinY(), 0.0, chartCalculator.contentViewportMaxY())
     }
 
+    //Paint the location-label first!
     if (configuration.showCurrentLocationLabel) {
-      gc.saved {
+      val currentLocationLabelText = paintingVariables.currentLocationLabelText
+      if (currentLocationLabelText != null) {
+        gc.saved {
+          gc.font(configuration.currentLocationLabelFont)
 
-        //Paint the location-label first!
-        val currentLocationLabelText = paintingVariables.currentLocationLabelText
+          configuration.currentLocationLabelAnchorPoint(paintingContext).let { anchorPointTranslation ->
+            gc.translate(anchorPointTranslation.x, anchorPointTranslation.y)
+          }
 
-        gc.font(configuration.currentLocationLabelFont)
-
-        configuration.currentLocationLabelAnchorPoint(paintingContext).let { anchorPointTranslation ->
-          gc.translate(anchorPointTranslation.x, anchorPointTranslation.y)
+          gc.paintTextBox(
+            line = currentLocationLabelText,
+            anchorDirection = configuration.currentLocationLabelAnchorDirection,
+            anchorGapHorizontal = 0.0,
+            anchorGapVertical = 0.0,
+            boxStyle = configuration.currentLocationLabelBoxStyle,
+            textColor = configuration.currentLocationLabelTextColor()
+          )
         }
-
-        gc.paintTextBox(
-          line = currentLocationLabelText,
-          anchorDirection = configuration.currentLocationLabelAnchorDirection,
-          anchorGapHorizontal = 0.0,
-          anchorGapVertical = 0.0,
-          boxStyle = configuration.currentLocationLabelBoxStyle,
-          textColor = configuration.currentLocationLabelTextColor()
-        )
       }
     }
 
@@ -243,9 +242,12 @@ class CrossWireLayer(
     var valueLabelsProvider: ValueLabelsProvider,
 
     /**
-     * Provides the label for the current location
+     * Provides the label for the current location.
+     * This is painted on top of the cross-wire.
      */
-    var currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String = { _, _ -> TODO("not implemented yet") },
+    var currentLocationLabelTextProvider: (paintingContext: LayerPaintingContext, crossWireLocation: @Window Double) -> String? = { _, crosswireLocation ->
+      null
+    },
   ) {
     /**
      * The location of the cross wire itself

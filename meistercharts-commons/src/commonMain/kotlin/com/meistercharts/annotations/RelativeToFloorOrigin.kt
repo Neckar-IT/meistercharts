@@ -26,5 +26,4 @@ import it.neckar.open.unit.other.pct
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-@pct
 annotation class RelativeToFloorOrigin

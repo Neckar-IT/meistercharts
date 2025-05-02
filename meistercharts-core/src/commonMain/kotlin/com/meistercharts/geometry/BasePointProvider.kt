@@ -48,16 +48,26 @@ fun interface BasePointProvider {
  */
 class DirectionBasedBasePointProvider(
   /**
-   * The direction that describes the side/corner of the bounding box
-   */
-  val direction: Direction,
-  /**
    * The translation that is added to calculate the base point
    */
-  val translation: Distance = Distance.zero
+  val translation: Distance = Distance.zero,
+
+  /**
+   * The direction that describes the side/corner of the bounding box
+   */
+  val direction: () -> Direction,
 ) : BasePointProvider {
+
+  constructor(
+    direction: Direction,
+    translation: Distance = Distance.zero,
+  ) : this(
+    translation = translation,
+    direction = { direction }
+  )
+
   override fun calculateBasePoint(boundingBox: Rectangle): Coordinates {
-    return boundingBox.findCoordinates(direction).plus(translation)
+    return boundingBox.findCoordinates(direction()).plus(translation)
   }
 }
 
@@ -66,7 +76,7 @@ class DirectionBasedBasePointProvider(
  */
 class RelativeBasePointProvider(
   val xPercentage: @pct Double,
-  val yPercentage: @pct Double
+  val yPercentage: @pct Double,
 ) : BasePointProvider {
   override fun calculateBasePoint(boundingBox: Rectangle): Coordinates {
     return boundingBox.findCoordinatesRelative(xPercentage, yPercentage)
