@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.Layers.PaintingOrder
 import com.meistercharts.algorithms.layers.axis.MultiValueAxisLayer
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
+import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.range.ValueRange
 import it.neckar.open.provider.asSizedProvider
@@ -168,6 +169,6 @@ inline fun ValueAxisSupport<Unit>.getValueAxisLayer(): ValueAxisLayer {
   return this.getAxisLayer(Unit)
 }
 
-inline fun ValueAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: (() -> Boolean)? = null) {
+inline fun ValueAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null) {
   this.addLayers(layerSupport, Unit, visibleCondition)
 }

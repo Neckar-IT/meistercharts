@@ -115,7 +115,7 @@ abstract class AbstractAxisSupport<Key, AxisLayer : AbstractAxisLayer> {
   /**
    * Adds all layers for the provided key
    */
-  fun addLayers(layerSupport: LayerSupport, key: Key, visibleCondition: (() -> Boolean)? = null) {
+  fun addLayers(layerSupport: LayerSupport, key: Key, visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null) {
     layerSupport.layers.addLayer(getAxisLayer(key).visibleIf(false, visibleCondition))
     layerSupport.layers.addLayer(getTopTitleLayer(key).visibleIf { isTitleAtTopComputed(key) })
   }

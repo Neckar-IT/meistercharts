@@ -33,6 +33,7 @@ import com.meistercharts.algorithms.layers.clipped
 import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
@@ -196,7 +197,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
 
       valueAxisSupport.addLayers(this, Unit)
 
-      layers.addAboveBackground(gridLayer.visibleIf(configuration.showGridProperty))
+      layers.addAboveBackground(gridLayer.visibleIfWithState(configuration.showGridProperty))
       layers.addLayer(categoryLayer.clipped {
         /*
          * Only clip the sides where the axes are.

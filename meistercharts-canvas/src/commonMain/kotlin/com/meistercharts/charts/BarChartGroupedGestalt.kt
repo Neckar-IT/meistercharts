@@ -43,6 +43,7 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer
 import com.meistercharts.algorithms.layers.crosswire.LabelPlacementStrategy
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.painter.LabelPlacement
 import com.meistercharts.algorithms.tooltip.balloon.BalloonTooltipLayer
@@ -439,8 +440,8 @@ class BarChartGroupedGestalt constructor(
       layers.addClearBackground()
       layers.addFillCanvasBackground()
 
-      layers.addAboveBackground(gridLayer.visibleIf(style.showGridProperty))
-      layers.addLayer(toolbarInteractionLayer.visibleIf(style.showTooltipsProperty))
+      layers.addAboveBackground(gridLayer.visibleIfWithState(style.showGridProperty))
+      layers.addLayer(toolbarInteractionLayer.visibleIfWithState(style.showTooltipsProperty))
 
       valueAxisSupport.addLayers(this)
       thresholdsSupport.addLayers(this)

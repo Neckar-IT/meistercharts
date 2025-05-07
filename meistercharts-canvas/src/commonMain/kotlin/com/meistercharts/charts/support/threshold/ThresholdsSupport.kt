@@ -16,10 +16,10 @@
 package com.meistercharts.charts.support.threshold
 
 import com.meistercharts.algorithms.layers.DirectionalLinesLayer
-import com.meistercharts.algorithms.layers.axis.HudElementIndex
-import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
+import com.meistercharts.algorithms.layers.axis.HudElementIndex
+import com.meistercharts.algorithms.layers.axis.HudLabelsProvider
 import com.meistercharts.algorithms.layers.axis.ValueAxisHudLayer
 import com.meistercharts.algorithms.layers.axis.ValueAxisLayer
 import com.meistercharts.algorithms.layers.axis.hudLayer
@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.axis.mouseOverInteractions
 import com.meistercharts.algorithms.layers.mouseOverInteractions
 import com.meistercharts.algorithms.layers.visibleIf
 import com.meistercharts.annotations.Domain
+import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.charts.support.ValueAxisForKeyProvider
 import com.meistercharts.charts.support.ValueAxisSupport
@@ -123,7 +124,7 @@ class ThresholdsSupport<Key>(
   /**
    * Adds all layers for the provided key
    */
-  fun addLayers(layerSupport: LayerSupport, key: Key, visibleCondition: (() -> Boolean)? = null): LayerAddResult<Key> {
+  fun addLayers(layerSupport: LayerSupport, key: Key, visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null): LayerAddResult<Key> {
     val hudLayer = getHudLayer(key)
     val hudLayerVisibilityLayer = hudLayer.visibleIf(false, visibleCondition)
     layerSupport.layers.addLayer(hudLayerVisibilityLayer)
@@ -308,7 +309,7 @@ inline fun ThresholdsSupport<Unit>.getThresholdLinesLayer(): DirectionalLinesLay
  * Adds the hud and thresholds lines layer.
  * For a single value axis! Uses [Unit] as key.
  */
-inline fun ThresholdsSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: (() -> Boolean)? = null) {
+inline fun ThresholdsSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null) {
   val result = this.addLayers(layerSupport, Unit, visibleCondition)
 
   //Create the interaction layers

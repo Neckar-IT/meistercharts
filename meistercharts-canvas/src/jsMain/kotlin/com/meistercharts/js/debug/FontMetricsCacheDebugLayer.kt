@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.toggleShortcut
-import com.meistercharts.algorithms.layers.visible
+import com.meistercharts.algorithms.layers.visibleWithState
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
@@ -102,7 +102,7 @@ class FontMetricsCacheDebugLayer(
 fun Layers.addFontMetricsDebugLayer() {
   addLayer(
     FontMetricsCacheDebugLayer()
-      .visible(true)
+      .visibleWithState(true)
       .toggleShortcut(KeyStroke(KeyCode('F'), ModifierCombination.CtrlShiftAlt))
   )
 }

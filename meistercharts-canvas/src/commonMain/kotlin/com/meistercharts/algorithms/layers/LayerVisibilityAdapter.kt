@@ -15,7 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
-import it.neckar.open.provider.BooleanProvider
+import com.meistercharts.canvas.ChartSupport
+import it.neckar.open.provider.BooleanProvider1
 
 /**
  * Holds an [Layer] delegate and paints it depending on value of visible property
@@ -25,42 +26,30 @@ open class LayerVisibilityAdapter<out T : Layer>(
   /**
    * The visibility condition. If it returns true, the layer is visible
    */
-  val visibleCondition: () -> Boolean,
+  val visibleCondition: (chartSupport: ChartSupport) -> Boolean,
   /**
-   * If set to true the events will be delegated, even if the layer is invisible
+   * If set to `true` the events will be delegated, even if the layer is invisible
    */
   val delegateEventsIfInvisible: Boolean = false,
-) : DelegatingLayer<T>(delegate = delegate,
-  delegateEventsCondition = BooleanProvider {
-    delegateEventsIfInvisible || visibleCondition()
+) : DelegatingLayer<T>(
+  delegate = delegate,
+
+  delegateEventsCondition = BooleanProvider1 {
+    delegateEventsIfInvisible || visibleCondition(it)
   }
 ) {
-  /**
-   * If the layer is visible
-   */
-  @Deprecated("do not use?")
-  open val visible: Boolean
-    get() {
-      return visibleCondition()
-    }
 
   override val description: String
     get() = "VisibilityAdapter{${delegate.description}}"
 
-  /**
-   * Returns true if the events should be delegated at the moment, false otherwise
-   */
-  @Deprecated("no longer required")
-  private fun delegateEvents() = delegateEventsIfInvisible || visible
-
   override fun layoutDelegate(paintingContext: LayerPaintingContext) {
-    if (visibleCondition()) {
+    if (visibleCondition(paintingContext.chartSupport)) {
       super.layoutDelegate(paintingContext)
     }
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {
-    if (visibleCondition()) {
+    if (visibleCondition(paintingContext.chartSupport)) {
       super.paint(paintingContext)
     }
   }
@@ -73,18 +62,17 @@ open class LayerVisibilityAdapter<out T : Layer>(
 /**
  * Wraps the layer and only shows it if the given condition returns true
  */
-fun <T : Layer> T.visibleIf(delegateEventsIfInvisible: Boolean = false, visibleCondition: () -> Boolean): LayerVisibilityAdapter<T> {
+fun <T : Layer> T.visibleIf(delegateEventsIfInvisible: Boolean = false, visibleCondition: (chartSupport: ChartSupport) -> Boolean): LayerVisibilityAdapter<T> {
   return LayerVisibilityAdapter(this, visibleCondition, delegateEventsIfInvisible)
 }
 
 /**
  * Only wraps the layer in a [LayerVisibilityAdapter] if the provided [visibleCondition] is not null
  */
-fun Layer.visibleIf(delegateEventsIfInvisible: Boolean = false, visibleCondition: (() -> Boolean)?): Layer {
+fun Layer.visibleIf(delegateEventsIfInvisible: Boolean = false, visibleCondition: ((chartSupport: ChartSupport) -> Boolean)?): Layer {
   if (visibleCondition == null) {
     return this
   }
 
   return visibleIf(delegateEventsIfInvisible, visibleCondition)
 }
-

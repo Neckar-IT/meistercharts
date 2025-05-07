@@ -160,6 +160,10 @@ enum class DebugFeature {
     return enabled(paintingContext.debug)
   }
 
+  fun enabled(chartSupport: ChartSupport): Boolean {
+    return enabled(chartSupport.debug)
+  }
+
   /**
    * Returns true if this debug feature is enabled in the given debug configuration
    */

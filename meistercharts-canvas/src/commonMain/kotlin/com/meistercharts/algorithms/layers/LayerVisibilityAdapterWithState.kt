@@ -34,10 +34,11 @@ class LayerVisibilityAdapterWithState<out T : Layer>(
 ) : LayerVisibilityAdapter<T>(delegate, {
   visibleProperty.get()
 }, delegateEventsIfInvisible) {
+
   /**
    * If the layer is visible
    */
-  override var visible: Boolean by visibleProperty
+  var visible: Boolean by visibleProperty
 
   override val description: String
     get() = "VisibilityAdapterWithState{${delegate.description}}"
@@ -57,7 +58,7 @@ class LayerVisibilityAdapterWithState<out T : Layer>(
 /**
  * Wraps the layer into an [LayerVisibilityAdapter]
  */
-fun <T : Layer> T.visibleIf(visibleProperty: ObservableBoolean = ObservableBoolean(true), delegateEventsIfInvisible: Boolean = false): LayerVisibilityAdapterWithState<T> {
+fun <T : Layer> T.visibleIfWithState(visibleProperty: ObservableBoolean = ObservableBoolean(true), delegateEventsIfInvisible: Boolean = false): LayerVisibilityAdapterWithState<T> {
   return LayerVisibilityAdapterWithState(this, visibleProperty, delegateEventsIfInvisible)
 }
 
@@ -65,7 +66,7 @@ fun <T : Layer> T.visibleIf(visibleProperty: ObservableBoolean = ObservableBoole
 /**
  * Wraps the layer into an [LayerVisibilityAdapter]
  */
-fun <T : Layer> T.visible(initialVisibility: Boolean): LayerVisibilityAdapterWithState<T> {
+fun <T : Layer> T.visibleWithState(initialVisibility: Boolean): LayerVisibilityAdapterWithState<T> {
   return LayerVisibilityAdapterWithState(this).also {
     it.visible = initialVisibility
   }

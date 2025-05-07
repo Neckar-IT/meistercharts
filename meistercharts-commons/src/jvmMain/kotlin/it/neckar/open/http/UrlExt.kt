@@ -9,6 +9,10 @@ import javax.imageio.ImageIO
  * Converts to a [java.net.URL]
  */
 fun Url.toURL(): URL {
+  if (this is Url.DataScheme) {
+    throw IllegalArgumentException("Cannot convert data scheme to URL")
+  }
+
   return URL(value)
 }
 

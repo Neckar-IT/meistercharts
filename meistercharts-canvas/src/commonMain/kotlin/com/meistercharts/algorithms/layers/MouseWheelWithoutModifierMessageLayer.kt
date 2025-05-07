@@ -173,7 +173,7 @@ class MouseWheelWithoutModifierMessageLayer(
           textService[it, i18nConfiguration]
         }
       }, additionalConfiguration)
-        .visibleIf(visible, true)
+        .visibleIfWithState(visible, true)
         .autoHideAfter(2500.milliseconds)
       return layer
     }

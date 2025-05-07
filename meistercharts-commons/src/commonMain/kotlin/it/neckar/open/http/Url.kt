@@ -113,7 +113,12 @@ sealed interface Url {
   @Serializable(with = UrlSerializer.DataScheme::class)
   @SerialName("data")
   @JsExport.Ignore
-  data class DataScheme(override val value: String) : Url {
+  data class DataScheme(
+    /**
+     * Base64 encoded data
+     */
+    override val value: String,
+  ) : Url {
     init {
       require(value.startsWith("data:")) {
         "The URL must start with data: but was [$value]"
@@ -160,6 +165,16 @@ sealed interface Url {
 
     override fun toString(): String {
       return value
+    }
+
+    companion object {
+      fun image(bytes: ByteArray, imageFormat: String): DataScheme {
+        return DataScheme("data:image/$imageFormat;base64,${bytes.toBase64()}")
+      }
+
+      fun png(bytes: ByteArray): DataScheme {
+        return image(bytes, "png")
+      }
     }
   }
 

@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.legend.LegendLayer
 import com.meistercharts.algorithms.layers.slippymap.PaintableOnSlippyMap
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.canvas.paintable.Paintable
@@ -85,7 +86,7 @@ class MapWithPaintablesGestalt(
 
     meisterChartBuilder.configure {
       layers.addLayer(paintablesLayer)
-      layers.addLayer(legendLayer.visibleIf(configuration.showLegendProperty))
+      layers.addLayer(legendLayer.visibleIfWithState(configuration.showLegendProperty))
 
       layers.addVersionNumberHidden()
     }

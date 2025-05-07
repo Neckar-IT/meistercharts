@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toggleShortcut
-import com.meistercharts.algorithms.layers.visible
+import com.meistercharts.algorithms.layers.visibleWithState
 import com.meistercharts.color.Color
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.geometry.DirectionBasedBasePointProvider
@@ -61,7 +61,7 @@ private fun versionNumberLayer(anchorDirection: Direction = Direction.TopRight):
  */
 fun Layers.addVersionNumberHidden(anchorDirection: Direction = Direction.TopRight) {
   val layer = versionNumberLayer(anchorDirection)
-    .visible(false)
+    .visibleWithState(false)
     .toggleShortcut(KeyStroke(KeyCode('V'), ModifierCombination.CtrlAlt))
 
   this.addLayer(layer)

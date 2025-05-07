@@ -27,6 +27,7 @@ import com.meistercharts.algorithms.layers.createGrid
 import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.ConfigurationDsl
@@ -130,7 +131,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
 
         layers.addLayer(paintableTranslateRotateLayer)
 
-        layers.addLayer(domainAxisMarkersLayer.visibleIf(configuration.paintDomainAxisMarkersProperty))
+        layers.addLayer(domainAxisMarkersLayer.visibleIfWithState(configuration.paintDomainAxisMarkersProperty))
 
         layers.addVersionNumberHidden()
       }

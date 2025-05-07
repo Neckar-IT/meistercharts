@@ -50,6 +50,7 @@ import com.meistercharts.algorithms.layers.debug.addVersionNumberHidden
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.algorithms.layers.timeChartCalculator
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.algorithms.layout.BoxIndex
 import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.painter.DirectLinePainter
@@ -1163,16 +1164,16 @@ class TimeLineChartGestalt
             totalHeightRequiredForEnumsLayer() > 0.0
           })
 
-          layers.addLayer(timeAxisLayer.visibleIf(configuration.showTimeAxisProperty))
+          layers.addLayer(timeAxisLayer.visibleIfWithState(configuration.showTimeAxisProperty))
           layers.addLayer(crossWireLayerDecimalValues.clipped {
             //Do not paint behind the enum layer
             viewportSupport.decimalsAreaViewportClipMargin()
-          }.visibleIf(configuration.showCrossWireProperty))
+          }.visibleIfWithState(configuration.showCrossWireProperty))
 
           layers.addLayer(crossWireLayerEnumValues.clipped {
             //Do not paint behind the decimals and timeline layer
             viewportSupport.enumsAreaViewportMargin(it.height)
-          }.visibleIf(configuration.showCrossWireProperty))
+          }.visibleIfWithState(configuration.showCrossWireProperty))
 
           layers.addTilesDebugLayer(chartSupport.debug)
 

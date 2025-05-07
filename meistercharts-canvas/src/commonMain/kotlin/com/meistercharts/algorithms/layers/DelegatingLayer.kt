@@ -43,7 +43,7 @@ import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
-import it.neckar.open.provider.BooleanProvider
+import it.neckar.open.provider.BooleanProvider1
 
 /**
  * Base class for delegating layers that delegate to a *single* other layer
@@ -54,7 +54,7 @@ abstract class DelegatingLayer<out T : Layer>(
    * If the check is provided, the lambda will be called for every event.
    * The events are only delegated if the condition returns true.
    */
-  val delegateEventsCondition: BooleanProvider = BooleanProvider.True,
+  val delegateEventsCondition: BooleanProvider1<ChartSupport> = BooleanProvider1.True(),
 ) : AbstractLayer() {
 
   override val type: LayerType = delegate.type
@@ -76,8 +76,8 @@ abstract class DelegatingLayer<out T : Layer>(
     delegate.paint(paintingContext)
   }
 
-  private fun delegateEvents(): Boolean {
-    return delegateEventsCondition()
+  private fun delegateEvents(chartSupport: ChartSupport): Boolean {
+    return delegateEventsCondition(chartSupport)
   }
 
   /**
@@ -85,49 +85,49 @@ abstract class DelegatingLayer<out T : Layer>(
    */
   override val mouseEventHandler: CanvasMouseEventHandler = object : CanvasMouseEventHandler {
     override fun onClick(event: MouseClickEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onClick(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onDown(event: MouseDownEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onDown(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onUp(event: MouseUpEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onUp(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onDoubleClick(event: MouseDoubleClickEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onDoubleClick(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onMove(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onDrag(event: MouseDragEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onDrag(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onWheel(event: MouseWheelEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.mouseEventHandler?.onWheel(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
@@ -136,21 +136,21 @@ abstract class DelegatingLayer<out T : Layer>(
 
   override val keyEventHandler: CanvasKeyEventHandler = object : CanvasKeyEventHandler {
     override fun onDown(event: KeyDownEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.keyEventHandler?.onDown(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onUp(event: KeyUpEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.keyEventHandler?.onUp(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onType(event: KeyTypeEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.keyEventHandler?.onType(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
@@ -160,56 +160,56 @@ abstract class DelegatingLayer<out T : Layer>(
   @Deprecated("Pointer events are not supported")
   override val pointerEventHandler: CanvasPointerEventHandler = object : CanvasPointerEventHandler {
     override fun onOver(event: PointerOverEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onOver(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onEnter(event: PointerEnterEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onEnter(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onDown(event: PointerDownEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onDown(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onMove(event: PointerMoveEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onMove(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onUp(event: PointerUpEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onUp(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onCancel(event: PointerCancelEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onCancel(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onOut(event: PointerOutEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onOut(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onLeave(event: PointerLeaveEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.pointerEventHandler?.onLeave(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
@@ -218,28 +218,28 @@ abstract class DelegatingLayer<out T : Layer>(
 
   override val touchEventHandler: CanvasTouchEventHandler = object : CanvasTouchEventHandler {
     override fun onStart(event: TouchStartEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.touchEventHandler?.onStart(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onEnd(event: TouchEndEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.touchEventHandler?.onEnd(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onMove(event: TouchMoveEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.touchEventHandler?.onMove(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored
     }
 
     override fun onCancel(event: TouchCancelEvent, chartSupport: ChartSupport): EventConsumption {
-      if (delegateEvents()) {
+      if (delegateEvents(chartSupport)) {
         return delegate.touchEventHandler?.onCancel(event, chartSupport) ?: EventConsumption.Ignored
       }
       return EventConsumption.Ignored

@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.layers.MultipleLayersDelegatingLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryAxisLayer
 import com.meistercharts.algorithms.layers.barchart.CategoryLayer
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
+import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.model.category.createCategoryLabelsProvider
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.provider.SizedLabelsProvider
@@ -156,7 +157,7 @@ inline fun CategoryAxisSupport<Unit>.getAxisLayer(): CategoryAxisLayer {
   return this.getAxisLayer(Unit)
 }
 
-inline fun CategoryAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: (() -> Boolean)? = null) {
+inline fun CategoryAxisSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null) {
   this.addLayers(layerSupport, Unit, visibleCondition)
 }
 

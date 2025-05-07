@@ -26,6 +26,7 @@ import com.meistercharts.algorithms.layers.slippymap.SlippyMapProvider
 import com.meistercharts.algorithms.layers.text.TextLayer
 import com.meistercharts.algorithms.layers.toolbar.ToolbarLayer
 import com.meistercharts.algorithms.layers.visibleIf
+import com.meistercharts.algorithms.layers.visibleIfWithState
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.MeisterchartBuilder
@@ -131,8 +132,8 @@ class MapGestalt(
         layers.addClearBackground()
         layers.addFillCanvasBackground()
         layers.addLayer(slippyMapLayer)
-        layers.addLayer(legalNoticeLayer.visibleIf(configuration.showCopyrightMarkerProperty))
-        layers.addLayer(toolbarLayer.visibleIf(configuration.showToolbarProperty))
+        layers.addLayer(legalNoticeLayer.visibleIfWithState(configuration.showCopyrightMarkerProperty))
+        layers.addLayer(toolbarLayer.visibleIfWithState(configuration.showToolbarProperty))
 
         layers.addMouseWheelWithoutModifierHint(listOf(MouseWheelWithoutModifierMessageLayer.textKeyUseCtrlZoom))
       }
