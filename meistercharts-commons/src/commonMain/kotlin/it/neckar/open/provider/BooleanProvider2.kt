@@ -12,8 +12,8 @@ fun interface BooleanProvider2<P1, P2> {
   operator fun invoke(param1: P1, param2: P2): @NotBoxed Boolean
 
   companion object {
-    private val True: BooleanProvider = BooleanProvider { true }
-    private val False: BooleanProvider = BooleanProvider { false }
+    private val True: BooleanProvider2<Any?, Any?> = BooleanProvider2 { _, _ -> true }
+    private val False: BooleanProvider2<Any?, Any?> = BooleanProvider2 { _, _ -> false }
 
     fun <P1, P2> True(): BooleanProvider2<P1, P2> {
       return True as BooleanProvider2<P1, P2>
