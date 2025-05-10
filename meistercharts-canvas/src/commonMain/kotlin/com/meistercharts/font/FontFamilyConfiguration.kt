@@ -22,7 +22,7 @@ data class FontFamilyConfiguration(
   /**
    * The (optional) font family.
    */
-  override val family: FontFamily? = null,
+  override val families: List<FontFamily>? = null,
   /**
    * The *required* generic family. Is used as fallback
    */
@@ -54,5 +54,5 @@ inline fun FontFamily.withSansSerif(): FontFamilyConfiguration {
  * Appends a generic family to the font family.
  */
 fun FontFamily.withGenericFontFamily(genericFamily: GenericFontFamily): FontFamilyConfiguration {
-  return FontFamilyConfiguration(this, genericFamily)
+  return FontFamilyConfiguration(listOf(this), genericFamily)
 }

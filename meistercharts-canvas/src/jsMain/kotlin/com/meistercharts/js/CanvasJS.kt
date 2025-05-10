@@ -570,8 +570,16 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   /**
    * Takes a snapshot using the physical size
    */
-  fun takeSnapshotPhysicalSize(): Image {
-    requireOffScreenCanvas()
+  fun takeSnapshotPhysicalSize(
+    /**
+     * Allows using the main canvas element instead of the off-screen canvas.
+     * This should only be required for tests - usually the off-screen canvas should be used to create snapshots.
+     */
+    allowMainCanvas: Boolean = false,
+  ): Image {
+    if (allowMainCanvas.not()) {
+      requireOffScreenCanvas()
+    }
 
     return Image.create(canvasElement, Size(physicalWidth, physicalHeight))
   }

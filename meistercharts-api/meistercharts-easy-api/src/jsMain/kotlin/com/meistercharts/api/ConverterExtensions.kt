@@ -35,8 +35,9 @@ import com.meistercharts.algorithms.painter.stripe.enums.EnumAggregationMode
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.canvas.paintable.Paintable
-import com.meistercharts.canvas.parseCssFontFamily
+import com.meistercharts.canvas.parseCssFontFamilies
 import com.meistercharts.canvas.parseCssFontStyle
+import com.meistercharts.canvas.parseCssGenericFontFamily
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.charts.OverflowIndicatorPainter
 import com.meistercharts.charts.support.threshold.ThresholdsSupport
@@ -68,8 +69,6 @@ import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
 import it.neckar.open.unit.other.px
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 /**
  * Contains conversion related methods
@@ -319,8 +318,12 @@ fun FontStyle?.toFontDescriptorFragment(): FontDescriptorFragment {
   var descriptorFragment = FontDescriptorFragment.empty
 
   family?.let {
-    parseCssFontFamily(it)?.let { fontFamily ->
-      descriptorFragment = descriptorFragment.withFamily(fontFamily)
+    parseCssFontFamilies(it)?.let { fontFamilies ->
+      descriptorFragment = descriptorFragment.withFamilies(fontFamilies)
+    }
+
+    parseCssGenericFontFamily(it)?.let { genericFontFamily ->
+      descriptorFragment = descriptorFragment.withGenericFamily(genericFontFamily)
     }
   }
 

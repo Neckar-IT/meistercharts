@@ -27,12 +27,13 @@ import it.neckar.open.annotations.TestOnly
  */
 data class FontFamily(
   /**
-   * The (complete) font family string. Might contain multiple font families separated by ","
+   * The (complete) font family string. Does not support multiple families.
    */
   val family: String,
 ) {
   init {
-    require(family.isNotBlank()) { "family must not be blank" }
+    require(family.isNotEmpty()) { "family must not be blank" }
+    require(family.trim() == family) { "Trim the family string" }
   }
 
   override fun toString(): String {
@@ -53,28 +54,34 @@ data class FontFamily(
     val Arial: FontFamily = FontFamily("Arial")
     val Verdana: FontFamily = FontFamily("Verdana")
     val Tahoma: FontFamily = FontFamily("Tahoma")
-    val TrebuchetMS: FontFamily = FontFamily("'Trebuchet MS'")
+    val TrebuchetMS: FontFamily = FontFamily("Trebuchet MS")
 
     //Serif families
-    val TimesNewRoman: FontFamily = FontFamily("'Times New Roman'")
+    val TimesNewRoman: FontFamily = FontFamily("Times New Roman")
     val Palatino: FontFamily = FontFamily("Palatino")
     val Georgia: FontFamily = FontFamily("Georgia")
     val Garamond: FontFamily = FontFamily("Garamond")
 
 
     //Monospaced
-    val CourierNew: FontFamily = FontFamily("'Courier New'")
-    val LucidaConsole: FontFamily = FontFamily("'Lucida Console'")
+    val CourierNew: FontFamily = FontFamily("Courier New")
+    val LucidaConsole: FontFamily = FontFamily("Lucida Console")
 
     //Cursive
-    val BrushScriptMT: FontFamily = FontFamily("'Brush Script MT'")
+    val BrushScriptMT: FontFamily = FontFamily("Brush Script MT")
 
 
-    val FontAwesome6Free: FontFamily = FontFamily("'Font Awesome 6 Free'")
-    val FontAwesome6Brands: FontFamily = FontFamily("'Font Awesome 6 Brands'")
+    val FontAwesome6Free: FontFamily = FontFamily("Font Awesome 6 Free")
+
+    val FontAwesome6Brands: FontFamily = FontFamily("Font Awesome 6 Brands")
 
     @Deprecated("use FontAwesome6Free or FontAwesome6Brands instead")
     val FontAwesome: FontFamily = FontFamily("FontAwesome")
+
+    val Oswald: FontFamily = FontFamily("Oswald")
+    val OpenSans: FontFamily = FontFamily("Open Sans")
+    val MaterialIcons: FontFamily = FontFamily("Material Icons")
+
 
     /**
      * Contains some of the most common font families
@@ -94,6 +101,8 @@ data class FontFamily(
       BrushScriptMT,
       FontAwesome6Free,
       FontAwesome6Brands,
+      Oswald,
+      OpenSans,
     )
   }
 }

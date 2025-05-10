@@ -47,13 +47,17 @@ abstract class AbstractCanvas(
    * Checks that this canvas is of type [CanvasType.OffScreen]
    */
   fun requireOffScreenCanvas() {
-    require(type == CanvasType.OffScreen)
+    require(type == CanvasType.OffScreen) {
+      "Expected OffScreenCanvas but was $type"
+    }
   }
 
   /**
    * Checks that this canvas is of type [CanvasType.Main]
    */
   fun requireMainCanvas() {
-    require(type == CanvasType.Main)
+    require(type == CanvasType.Main) {
+      "Expected MainCanvas but was $type"
+    }
   }
 }

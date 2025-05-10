@@ -135,6 +135,10 @@ class CanvasRenderingContextJS(
     return this.canvas.canvasElement.font().eraseSoleSerifFamily().withDefaultValues()
   }
 
+  fun canvasJsFontString():String{
+    return context.font
+  }
+
   override fun clip(x: Double, y: Double, width: Double, height: Double) {
     context.beginPath()
     context.rect(x, y, width, height)

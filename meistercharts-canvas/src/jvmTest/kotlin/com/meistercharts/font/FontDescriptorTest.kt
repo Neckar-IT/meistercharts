@@ -43,11 +43,49 @@ class FontDescriptorTest {
     assertThat(FontDescriptor.L.combineWith(FontDescriptor.Default)).isEqualTo(FontDescriptor.Default)
   }
 
+
+  @Test
+  fun testFontDescriptorFamilyHtmlString() {
+    assertThat(
+      FontDescriptor(
+        families = listOf(FontFamily.Oswald),
+      ).toHtmlFontString()
+    ).isEqualTo(""""Oswald",sans-serif""")
+
+    assertThat(
+      FontDescriptor(
+        families = listOf(),
+      ).toHtmlFontString()
+    ).isEqualTo("""sans-serif""")
+
+    assertThat(
+      FontDescriptor(
+        families = null,
+      ).toHtmlFontString()
+    ).isEqualTo("""sans-serif""")
+
+    assertThat(
+      FontDescriptor(
+        families = listOf(FontFamily.Oswald, FontFamily.Arial, FontFamily.TimesNewRoman),
+      ).toHtmlFontString()
+    ).isEqualTo(""""Oswald","Arial","Times New Roman",sans-serif""")
+  }
+
+  @Test
+  fun testMultipleFontDescriptorFamiliesHtmlString() {
+    val descriptor = FontDescriptor(
+      families = listOf(FontFamily.Oswald, FontFamily.TimesNewRoman, FontFamily.OpenSans),
+      genericFamily = GenericFontFamily.SystemUi
+    )
+    assertThat(descriptor.toHtmlFontString()).isEqualTo(""""Oswald","Times New Roman","Open Sans",system-ui""")
+  }
+
+
   @Test
   internal fun testFragmentCombine() {
     FontDescriptor.Default.combineWith(FontDescriptorFragment(size = FontSize(17.0))).also {
       assertThat(it.size.size).isEqualTo(17.0)
-      assertThat(it.family).isEqualTo(FontDescriptor.Default.family)
+      assertThat(it.families).isEqualTo(FontDescriptor.Default.families)
     }
   }
 }

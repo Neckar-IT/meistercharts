@@ -35,4 +35,27 @@ enum class GenericFontFamily(val keyword: String) {
   Emoji("emoji"),
   Math("math"),
   Fangsong("fangsong"),
+
+  ;
+
+
+  companion object {
+    /**
+     * Returns true if the provided string represents a generic family
+     */
+    fun isGenericFamily(family: String): Boolean {
+      return entries.any { it.keyword == family }
+    }
+
+    fun valueOf(keyword: String): GenericFontFamily {
+      return valueOfOrNull(keyword) ?: throw IllegalArgumentException("Unknown generic family [$keyword]")
+    }
+
+    /**
+     * Returns the generic font family - or returns null if the provided string does not represent a generic family
+     */
+    fun valueOfOrNull(keyword: String): GenericFontFamily? {
+      return entries.firstOrNull { it.keyword == keyword }
+    }
+  }
 }

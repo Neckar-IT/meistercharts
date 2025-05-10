@@ -75,10 +75,7 @@ fun FontDescriptor.convertToHtmlFontString(): HtmlFontString {
   val htmlFontVariant = variant.toHtmlFontVariantString()
   val htmlFontSize = "${size.size}px"
 
-  val fontFamiliesString: String = when (family) {
-    null -> genericFamily.keyword
-    else -> "${family.family}, ${genericFamily.keyword}"
-  }
+  val fontFamiliesString: String = this.toHtmlFontString()
 
   //https://developer.mozilla.org/en-US/docs/Web/CSS/font
   return "$htmlFontStyle $htmlFontVariant $htmlFontWeight $htmlFontSize $fontFamiliesString".also {

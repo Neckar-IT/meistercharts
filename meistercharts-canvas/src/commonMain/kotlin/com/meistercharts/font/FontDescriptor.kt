@@ -27,13 +27,17 @@ typealias FontDescriptorFragmentProvider = () -> FontDescriptorFragment
 class FontDescriptor(
   /**
    * The font family - if set.
-   * If null, the [genericFamily] is used.
+   * If null or empty, the [genericFamily] is used.
    */
-  override val family: FontFamily? = null,
+  override val families: List<FontFamily>? = null,
   override val size: FontSize = FontSize.Default,
   override val weight: FontWeight = FontWeight.Normal,
   override val style: FontStyle = FontStyle.Normal,
   override val variant: FontVariant = FontVariant.Normal,
+  /**
+   * The generic font family that is used if no font family is set.
+   * The genric font family must always be set.
+   */
   override val genericFamily: GenericFontFamily = GenericFontFamily.SansSerif,
 ) : FontDescriptorFragment() {
 
@@ -43,16 +47,43 @@ class FontDescriptor(
     weight: FontWeight = FontWeight.Normal,
     style: FontStyle = FontStyle.Normal,
     variant: FontVariant = FontVariant.Normal,
-  ) : this(fontFamilyConfiguration.family, size, weight, style, variant, fontFamilyConfiguration.genericFamily)
+  ) : this(fontFamilyConfiguration.families, size, weight, style, variant, fontFamilyConfiguration.genericFamily)
 
   companion object {
     val Default: FontDescriptor = FontDescriptor(size = FontSize.Default)
     val L: FontDescriptor = FontDescriptor(size = FontSize.L)
     val XL: FontDescriptor = FontDescriptor(size = FontSize.XL)
+
+    operator fun invoke(
+      family: FontFamily? = null,
+      size: FontSize = FontSize.Default,
+      weight: FontWeight = FontWeight.Normal,
+      style: FontStyle = FontStyle.Normal,
+      variant: FontVariant = FontVariant.Normal,
+      genericFamily: GenericFontFamily = GenericFontFamily.SansSerif,
+
+      ): FontDescriptor {
+
+      val families: List<FontFamily>? = family?.let { listOf(it) }
+      return FontDescriptor(families = families, size = size, weight = weight, style = style, variant = variant, genericFamily = genericFamily)
+    }
   }
 
   override fun toString(): String {
-    return "FontDescriptor(family=$family, size=$size, weight=$weight, style=$style, variant=$variant, genericFamily=$genericFamily)"
+    return "FontDescriptor(families=$families, size=$size, weight=$weight, style=$style, variant=$variant, genericFamily=$genericFamily)"
+  }
+
+  /**
+   * returns a string formatted for usage in a css file.
+   * @return String, eg: "oswald" or for multiple font families: "oswald","Open Sans". Includes the generic font.
+   */
+  fun toHtmlFontString(): String {
+    if (families.isNullOrEmpty()) {
+      return genericFamily.keyword
+    }
+
+    val fontPartLabel = families.map { """"${it.family}"""" }
+    return (fontPartLabel + genericFamily.keyword).joinToString(",")
   }
 }
 
@@ -71,7 +102,7 @@ fun FontDescriptor.combineWith(moreImportant: FontDescriptorFragment?): FontDesc
     return moreImportant
   }
 
-  val combinedFamily = moreImportant.family ?: family
+  val combinedFamily = moreImportant.families ?: families
   val combinedSize = moreImportant.size ?: size
   val combinedWeight = moreImportant.weight ?: weight
   val combinedStyle = moreImportant.style ?: style
@@ -95,7 +126,7 @@ fun FontDescriptorFragment.combineWith(moreImportant: FontDescriptorFragment?): 
     return moreImportant
   }
 
-  val combinedFamily = moreImportant.family ?: family
+  val combinedFamily = moreImportant.families ?: families
   val combinedSize = moreImportant.size ?: size
   val combinedWeight = moreImportant.weight ?: weight
   val combinedStyle = moreImportant.style ?: style
@@ -109,7 +140,7 @@ fun FontDescriptorFragment.combineWith(moreImportant: FontDescriptorFragment?): 
  * Contains parts of a font
  */
 open class FontDescriptorFragment @JvmOverloads constructor(
-  open val family: FontFamily? = null,
+  open val families: List<FontFamily>? = null,
   open val size: FontSize? = null,
   open val weight: FontWeight? = null,
   open val style: FontStyle? = null,
@@ -125,18 +156,18 @@ open class FontDescriptorFragment @JvmOverloads constructor(
     weight: FontWeight? = null,
     style: FontStyle? = null,
     variant: FontVariant? = null,
-  ) : this(familyConfiguration.family, size, weight, style, variant, familyConfiguration.genericFamily)
+  ) : this(familyConfiguration.families, size, weight, style, variant, familyConfiguration.genericFamily)
 
   /**
    * Returns true if all properties are null
    */
   fun isEmpty(): Boolean {
-    return family == null
-        && size == null
-        && weight == null
-        && style == null
-        && variant == null
-        && genericFamily == null
+    return families == null
+      && size == null
+      && weight == null
+      && style == null
+      && variant == null
+      && genericFamily == null
   }
 
   /**
@@ -147,48 +178,72 @@ open class FontDescriptorFragment @JvmOverloads constructor(
   }
 
   /**
+   * Creates a copy of this [FontDescriptorFragment] with the given [families]. Can contain multiple [FontFamily].
+   */
+  fun withFamilies(families: List<FontFamily>?): FontDescriptorFragment {
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
+  }
+
+  /**
    * Creates a copy of this [FontDescriptorFragment] with the given [family]
    */
-  fun withFamily(family: FontFamily?): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+  fun withFamily(family: FontFamily): FontDescriptorFragment {
+    return FontDescriptorFragment(listOf(family), size, weight, style, variant, genericFamily)
   }
 
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [size]
    */
   fun withSize(size: FontSize): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
   }
 
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [weight]
    */
   fun withWeight(weight: FontWeight): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
   }
 
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [style]
    */
   fun withStyle(style: FontStyle): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
   }
 
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [variant]
    */
   fun withVariant(variant: FontVariant): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
   }
 
   /**
    * Creates a copy of this [FontDescriptorFragment] with the given [genericFamily]
    */
   fun withGenericFamily(genericFamily: GenericFontFamily): FontDescriptorFragment {
-    return FontDescriptorFragment(family, size, weight, style, variant, genericFamily)
+    return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
   }
 
   companion object {
+    /**
+     * Creates a new instance using a single [FontFamily] and the given parameters.
+     */
+    operator fun invoke(
+      family: FontFamily? = null,
+      size: FontSize? = null,
+      weight: FontWeight? = null,
+      style: FontStyle? = null,
+      variant: FontVariant? = null,
+      genericFamily: GenericFontFamily? = null,
+    ): FontDescriptorFragment {
+
+      val families: List<FontFamily>? = family?.let { listOf(it) }
+      return FontDescriptorFragment(families, size, weight, style, variant, genericFamily)
+    }
+
+
     /**
      * An empty font descriptor fragment
      */
@@ -206,7 +261,7 @@ open class FontDescriptorFragment @JvmOverloads constructor(
     if (this === other) return true
     if (other !is FontDescriptorFragment) return false
 
-    if (family != other.family) return false
+    if (families != other.families) return false
     if (size != other.size) return false
     if (weight != other.weight) return false
     if (style != other.style) return false
@@ -217,7 +272,7 @@ open class FontDescriptorFragment @JvmOverloads constructor(
   }
 
   override fun hashCode(): Int {
-    var result = family?.hashCode() ?: 0
+    var result = families?.hashCode() ?: 0
     result = 31 * result + (size?.hashCode() ?: 0)
     result = 31 * result + (weight?.hashCode() ?: 0)
     result = 31 * result + (style?.hashCode() ?: 0)
@@ -227,7 +282,7 @@ open class FontDescriptorFragment @JvmOverloads constructor(
   }
 
   override fun toString(): String {
-    return "FontDescriptorFragment($family, ${size?.size}, ${weight?.weight}, $style, $variant, $genericFamily)"
+    return "FontDescriptorFragment($families, ${size?.size}, ${weight?.weight}, $style, $variant, $genericFamily)"
   }
 }
 
@@ -236,16 +291,20 @@ open class FontDescriptorFragment @JvmOverloads constructor(
  * * the unconfigured default font of the browser
  * * a serif font
  *
- * This will return a new instance with the family set to null.
+ * This will return a new instance with the family set to null.e
  */
 fun FontDescriptorFragment.eraseSoleSerifFamily(): FontDescriptorFragment {
-  family?.isProbablyDefaultSerifFamily()?.let {
-    return withFamily(null)
-  }
-
-  if (family?.family == "serif" || family?.family == "Times New Roman") {
-    return withFamily(null)
+  if (hasSoleSerifFamily()) {
+    return withFamilies(null)
   }
   return this
+}
+
+/**
+ * Returns true if this font descriptor fragment has a single family and that family is a serif family
+ */
+fun FontDescriptorFragment.hasSoleSerifFamily(): Boolean {
+  return families?.size == 1
+    && families?.first()?.isProbablyDefaultSerifFamily() == true
 }
 

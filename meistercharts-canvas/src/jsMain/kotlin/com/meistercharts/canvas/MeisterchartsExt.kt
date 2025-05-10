@@ -21,9 +21,11 @@ import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontStyle
 import com.meistercharts.font.FontVariant
 import com.meistercharts.font.FontWeight
+import com.meistercharts.font.GenericFontFamily
 import it.neckar.geometry.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.kotlin.lang.stripQuotes
 import it.neckar.open.unit.other.px
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -84,10 +86,11 @@ fun HTMLElement.font(): FontDescriptorFragment {
 
   return FontDescriptorFragment(
     size = parseCssFontSize(cssFontSize),
-    family = parseCssFontFamily(cssFontFamily),
+    families = parseCssFontFamilies(cssFontFamily),
     weight = parseCssFontWeight(cssFontWeight),
     style = parseCssFontStyle(cssFontStyle),
-    variant = parseCssFontVariant(cssFontVariant)
+    variant = parseCssFontVariant(cssFontVariant),
+    genericFamily = parseCssGenericFontFamily(cssFontFamily)
   )
 }
 
@@ -119,20 +122,50 @@ fun parseCssFontSize(fontSize: String): FontSize? {
 }
 
 /**
- * Parses the given CSS font-family and returns a [FontFamily]
+ * Parses the given CSS font-family string and returns a [FontFamily], excluding any generic font families.
  */
-fun parseCssFontFamily(fontFamily: String): FontFamily? {
-  try {
-    val trimmedFontFamily = fontFamily.trim()
-    if (trimmedFontFamily.isBlank()) {
+fun parseCssFontFamilies(fontFamiliesString: String): List<FontFamily>? {
+  return try {
+    val fontNames = fontFamiliesString
+      .split(",")
+      .map { it.stripQuotes().trim() }
+      .filter { it.isNotBlank() }
+      .filter { GenericFontFamily.isGenericFamily(it).not() }
+
+    if (fontNames.isEmpty()) return null
+
+    fontNames.map { name -> FontFamily(name) }
+  } catch (e: Exception) {
+    logger.warn("Failed to parse font family from <$fontFamiliesString>", e)
+    null
+  }
+}
+
+
+/**
+ * Parses and returns a [GenericFontFamily] from a CSS font-family string, if present.
+ * Assumes the generic font family is the last entry, as per CSS standards: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family
+ */
+fun parseCssGenericFontFamily(fontFamilyString: String): GenericFontFamily? {
+  return try {
+    val lastEntry = fontFamilyString
+      .split(",")
+      .lastOrNull()
+      ?.stripQuotes()
+      ?.trim()
+
+    if (lastEntry == null) {
       return null
     }
-    return FontFamily(trimmedFontFamily)
+
+    return GenericFontFamily.valueOfOrNull(lastEntry)
   } catch (e: Exception) {
-    logger.warn("failed to parse font family from <$fontFamily>: $e")
+    logger.warn("Failed to parse generic font family from <$fontFamilyString>", e)
+    null
   }
-  return null
 }
+
+
 
 /**
  * Parses the given CSS font-weight and returns a [FontWeight]

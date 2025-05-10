@@ -19,6 +19,8 @@ import com.meistercharts.canvas.paintable.ButtonColorProvider
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorMapperNullable
 import com.meistercharts.color.RgbaColor
+import com.meistercharts.design.Theme.Companion.primaryBackgroundColor
+import com.meistercharts.design.Theme.Companion.secondaryBackgroundColor
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.font.FontSize
 import com.meistercharts.font.FontWeight
@@ -301,7 +303,7 @@ interface Theme {
      * The font for a slogan
      */
     val sloganFont: ThemeKey<FontDescriptorFragment> = ThemeKey("slogan.font") {
-      FontDescriptorFragment(family = it.h1.family, size = FontSize(170.0), weight = FontWeight.ExtraLight)
+      FontDescriptorFragment(families = it.h1.families, genericFamily = it.h1.genericFamily, size = FontSize(170.0), weight = FontWeight.ExtraLight)
     }
 
     /**
