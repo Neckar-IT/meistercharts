@@ -3,6 +3,7 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Provider
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.JavaExec
@@ -19,14 +20,15 @@ import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.openjfx.gradle.JavaFXModule
@@ -452,15 +454,16 @@ fun Project.configureKotlin() {
   }
 
   tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
-    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs)
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
   }
 
   tasks.withType<KotlinJvmCompile> {
-    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+    compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
   }
 
   tasks.withType<KotlinJsCompile> {
-    compilerOptions.freeCompilerArgs.addAll(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJS)
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJS)
   }
 
 
@@ -472,9 +475,15 @@ fun Project.configureKotlin() {
 
   //For Multiplatform projects (JS and JVM)
   extensions.findByType<KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
+}
 
-  //Configure the version numbers
-  configureNodeJsRootExtension()
+/**
+ * Adds all elements that are not already in the list
+ */
+private fun ListProperty<String>.addAllDistinct(elements: List<String>) {
+  val newElements = get().toMutableSet()
+  newElements.addAll(elements)
+  set(newElements)
 }
 
 /**
@@ -488,13 +497,13 @@ fun Project.isMultiplatform(): Boolean {
  * Configures the node and webpack CLI version to use the version provided by the refreshVersions plugin
  */
 fun Project.configureNodeJsRootExtension() {
-  afterEvaluate {
-    rootProject.extensions.findByType(NodeJsRootExtension::class)?.apply {
-      version = versionFor("version.npm.node")
-      versions.webpackCli.version = versionFor("version.npm.webpack-cli")
+  allprojects {
+    project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin> {
+      project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().version = versionFor("version.npm.node")
     }
   }
 }
+
 
 /**
  * Configures JUnit

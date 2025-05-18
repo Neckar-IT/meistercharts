@@ -121,6 +121,7 @@ object Plugins {
 
   const val ksp: String = "com.google.devtools.ksp"
   const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
+  const val tailwind: String = "it.neckar.tailwind"
 
   /**
    * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
@@ -311,6 +312,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.typesListCollector: Plug
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
   get() = id(Plugins.pnpmKotlinInterop)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.tailwind: PluginDependencySpec
+  get() = id(Plugins.tailwind)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")

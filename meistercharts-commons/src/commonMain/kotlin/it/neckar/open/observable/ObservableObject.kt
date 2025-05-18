@@ -12,6 +12,10 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
    */
   override var value: T = initValue
     set(value) {
+      if (calledFromBind.not()) {
+        requireNotBound()
+      }
+
       val oldValue = field
       field = value
       notifyListenersIfChanged(oldValue, value)
@@ -29,7 +33,7 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
   }
 
   /**
-   * Compatibility to JavaFX properties
+   * Required for compatibility to JavaFX properties
    */
   fun get(): T {
     return value
@@ -95,6 +99,11 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
   }
 
   /**
+   * Is set to true if the value is set from a bound value
+   */
+  private var calledFromBind: Boolean = false
+
+  /**
    * Binds this [ObservableObject] to [other].
    *
    * Copies the value from [other] to this initially
@@ -102,7 +111,43 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
    * For a bidirectional binding see [bindBidirectional]
    */
   fun bind(other: ReadOnlyObservableObject<T>) {
-    other.consumeImmediately { newValue -> this.value = newValue }
+    requireNotBound()
+    other.consumeImmediately { newValue ->
+      updateFromBinding(newValue)
+    }
+    isBound = true
+  }
+
+  /**
+   * Is set to true if this observable is bound to another observable (*not* bidirectional)
+   */
+  var isBound: Boolean = false
+    private set
+
+  /**
+   * Calls the given function with the new value - from a binding!
+   */
+  fun updateFromBinding(newValue: T) {
+    calledFromBind = true
+    try {
+      this.value = newValue
+    } finally {
+      calledFromBind = false
+    }
+  }
+
+  /**
+   * Marks this observable as bound (*not* bidirectional)
+   */
+  fun markAsBound() {
+    requireNotBound()
+    isBound = true
+  }
+
+  private fun requireNotBound() {
+    check(isBound.not()) {
+      "This observable is bound to another observable"
+    }
   }
 
   override fun toString(): String {

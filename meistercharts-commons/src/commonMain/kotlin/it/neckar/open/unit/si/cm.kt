@@ -15,11 +15,12 @@
  */
 package it.neckar.open.unit.si
 
-import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.Length
 import it.neckar.open.unit.Name
 import it.neckar.open.unit.Symbol
+import it.neckar.open.unit.Unit
+import it.neckar.open.unit.prefix.Prefix
 import it.neckar.open.unit.prefix.centi
+import it.neckar.open.unit.quantity.Length
 
 /**
  *

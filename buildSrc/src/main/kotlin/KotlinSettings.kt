@@ -4,10 +4,10 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
  * Kotlin settings
  */
 object KotlinSettings {
-  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
+  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2
   val languageVersionAsString: String = languageVersion.version
 
-  val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
+  val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2
   val apiVersionAsString: String = apiVersion.version
 
   /**
@@ -34,6 +34,8 @@ object KotlinSettings {
     "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines
     "kotlin.concurrent.atomics.ExperimentalAtomicApi", //Atomic support (since 2.1.20)
     "kotlin.time.ExperimentalTime", //Time support (since 2.1.20)
+
+    //ExperimentalAnnotationsInMetadata TODO enable for 2.2
   )
 
   /**
@@ -62,18 +64,20 @@ object KotlinSettings {
   val freeCompilerArgs: List<String> = buildList {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
     add("-progressive") //Advanced compiler checks that are not always backwards compatible within a major version of Kotlin
+    add("-Wextra") //Additional compiler checks
 
     add("-Xexpect-actual-classes") //Enable expected/actual for classes/interfaces (https://youtrack.jetbrains.com/issue/KT-61573)
     add("-Xconsistent-data-class-copy-visibility") //Enable the new copy visibility
     add("-Xnon-local-break-continue") //Non local break and continue
 
 
-    add("-Xsuppress-warning=NOTHING_TO_INLINE") //Suppress warnings globally!
+    add("-Xwarning-level=NOTHING_TO_INLINE:disabled") //Suppress warnings for NOTHING_TO_INLINE globally!
     add("-Xmulti-dollar-interpolation") //Multi Dollar Interpolation (https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation)
 
     if (languageVersion >= KotlinVersion.KOTLIN_2_2) {
       //Kotlin 2.2 required
       add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
+      add("-Xcontext-parameters") //Context Parameters
     }
 
     //
@@ -85,6 +89,7 @@ object KotlinSettings {
     //add("-XXLanguage:+EnumEntries") //Enable enum entries (https://youtrack.jetbrains.com/issue/KT-54621/Preview-of-Enum.entries-modern-and-performant-replacement-for-Enum.values)
     //Use value classes instead
     //add("-Xinline-classes") //Enable inline classes
+    //add("-Xsuppress-warning=NOTHING_TO_INLINE") //Old suppress warning until 2.1.20
   }
 
   /**
@@ -112,5 +117,7 @@ object KotlinSettings {
   val additionalFreeCompilerArgsJVM: List<String> = buildList {
     add("-Xjvm-default=all") //Enable generation of default methods in interfaces
     add("-Xjsr305=strict") //Strict null checks for kotlin projects
+
+    add("-Xannotations-in-metadata") //Annotations in meta data
   }
 }

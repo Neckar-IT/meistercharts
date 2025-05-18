@@ -22,15 +22,15 @@ import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationConfigurati
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationLayer
 import com.meistercharts.algorithms.layers.gesture.addZoomAndTranslation
 import com.meistercharts.algorithms.layers.visibleIf
-import it.neckar.geometry.AxisSelection
 import com.meistercharts.calc.ZoomLevelCalculator
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.charts.ChartGestaltConfiguration
 import com.meistercharts.charts.ChartId
-import it.neckar.geometry.Orientation
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
+import it.neckar.geometry.AxisSelection
+import it.neckar.geometry.Orientation
 import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.OnDispose
@@ -207,7 +207,8 @@ abstract class MeisterchartBuilder(
   }
 
   /**
-   * Configure
+   * Configure the [LayerSupport] of the chart.
+   * The [configuration]s are called before the chart is built.
    */
   @ChartGestaltConfiguration
   fun configure(configuration: LayerSupport.() -> Unit) {
@@ -215,11 +216,17 @@ abstract class MeisterchartBuilder(
     layerSupportConfigurations += configuration
   }
 
+  /**
+   * Java-friendly version of [configure]
+   */
   @JavaFriendly
   fun interface ChartCanvasConfigurer {
     fun configure(layerSupport: LayerSupport)
   }
 
+  /**
+   * Java-friendly version of [configure]
+   */
   @JavaFriendly
   fun configure(configurer: ChartCanvasConfigurer) {
     configure(configurer::configure)
@@ -229,16 +236,30 @@ abstract class MeisterchartBuilder(
 
   /**
    * The dispose actions that have been registered at the builder.
-   * These will be moved to the build MeisterCharts
+   * These will be moved to the build MeisterCharts.
+   *
+   * The will be called when the chart is disposed.
    */
   private val disposeActions = mutableListOf<() -> Unit>()
 
   /**
-   * Registers a dispose action that will be called when the build [Meisterchart] object has been be disposed.
+   * Registers a dispose action that will be called when the build [Meisterchart] object has been disposed.
    * Is *not* called, when the builder is finished
    */
   override fun onDispose(action: () -> Unit) {
     disposeActions += action
+  }
+
+  /**
+   * Actions that will be called after the chart has been created.
+   */
+  private val postCreationActions = mutableListOf<(meisterchart: Meisterchart) -> Unit>()
+
+  /**
+   * Registers an action that will be called after the chart has been created.
+   */
+  fun onChartCreated(action: (meisterchart: Meisterchart) -> Unit) {
+    postCreationActions += action
   }
 
   /**
@@ -249,6 +270,12 @@ abstract class MeisterchartBuilder(
     hasBeenBuilt = true
 
     val chartSupport = createChartSupport()
-    return meisterchartFactory.createChart(chartSupport, description)
+
+    return meisterchartFactory.createChart(chartSupport, description).also { meisterchart ->
+      //Call the post-creation actions
+      postCreationActions.fastForEach { action ->
+        action(meisterchart)
+      }
+    }
   }
 }

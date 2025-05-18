@@ -22,7 +22,7 @@ package it.neckar.open.unit
  * Represents a unit
  *
  */
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.ANNOTATION_CLASS,
@@ -36,7 +36,6 @@ package it.neckar.open.unit
   AnnotationTarget.PROPERTY_GETTER,
   AnnotationTarget.PROPERTY_SETTER,
   AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )

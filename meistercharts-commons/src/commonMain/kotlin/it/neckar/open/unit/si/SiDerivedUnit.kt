@@ -20,7 +20,7 @@ import kotlin.reflect.KClass
 
 /**
  */
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.ANNOTATION_CLASS,
@@ -34,9 +34,8 @@ import kotlin.reflect.KClass
   AnnotationTarget.PROPERTY_GETTER,
   AnnotationTarget.PROPERTY_SETTER,
   AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-annotation class SiDerivedUnit(vararg val value: KClass<out Annotation> = emptyArray())
+annotation class SiDerivedUnit(vararg val value: KClass<out Annotation> = [])

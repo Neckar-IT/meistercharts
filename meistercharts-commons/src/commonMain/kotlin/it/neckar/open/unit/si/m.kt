@@ -26,7 +26,7 @@ import it.neckar.open.unit.quantity.Length
  *
  *
  */
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.ANNOTATION_CLASS,
@@ -40,7 +40,7 @@ import it.neckar.open.unit.quantity.Length
   AnnotationTarget.PROPERTY_GETTER,
   AnnotationTarget.PROPERTY_SETTER,
   AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
+  //AnnotationTarget.EXPRESSION,
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )
