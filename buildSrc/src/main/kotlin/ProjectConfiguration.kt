@@ -563,7 +563,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("lint")
         }
 
-        args.set(listOf("run", "lint", "--fix"))
+        args.set(listOf("run", "lint"))
       }
 
       tasks.register<PnpmTask>("pnpmLintFix") {
