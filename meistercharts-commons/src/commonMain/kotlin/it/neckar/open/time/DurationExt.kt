@@ -9,9 +9,8 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 /**
- *
+ * Returns the duration in hole weeks (at least 7 days)
  */
-
 val Duration.inWholeWeeks: Long
   get() = inWholeDays / 7
 
@@ -37,13 +36,15 @@ fun Duration.formatHourAndMinutes(whitespaceConfig: WhitespaceConfig = Whitespac
   return "${hours}${whitespaceConfig.smallSpace}h${whitespaceConfig.space}${remainingMinutes.toString().padStart(2, '0')}${whitespaceConfig.smallSpace}min"
 }
 
+/**
+ * Formats the duration as "123512 min"
+ */
 fun Duration.formatMinutes(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   return "$inWholeMinutes${whitespaceConfig.smallSpace}min"
 }
 
 /**
  * Formats the duration as string - without milliseconds
-
  */
 fun Duration.formatWithoutMillis(): String {
   return this.inWholeSeconds.seconds.toString()
@@ -100,9 +101,17 @@ fun Duration.formatHumanized(whitespaceConfig: WhitespaceConfig = WhitespaceConf
   else null
 }
 
-fun Duration.formatPersonDays(personDayDuration: Duration = 8.hours, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+/**
+ * Formats the duration as "14 Personentage (à 8h)"
+ */
+fun Duration.formatPersonDays(personDayDuration: Duration = 8.hours, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking, personDaysString: String = PersonDatyStrings.German): String {
   val days = (this / personDayDuration).toIntCeil()
-  return "${days}${whitespaceConfig.smallSpace}Personentage${whitespaceConfig.smallSpace}(à ${personDayDuration.formatHourAndMinutes()})"
+  return "${days}${whitespaceConfig.smallSpace}$personDaysString${whitespaceConfig.smallSpace}(à ${personDayDuration.formatHourAndMinutes()})"
+}
+
+object PersonDatyStrings {
+  const val German: String = "Personentage"
+  const val English: String = "person-days"
 }
 
 /**

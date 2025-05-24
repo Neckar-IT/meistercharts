@@ -233,6 +233,8 @@ public object Libs {
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
 
+    public const val jna: String = "net.java.dev.jna:jna:_"
+
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
     public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
@@ -273,6 +275,12 @@ public object Libs {
     public const val controlsfx: String = "org.controlsfx:controlsfx:_"
 
     public const val fest_reflect: String = "org.easytesting:fest-reflect:_"
+
+    public const val dictionary_reader: String = "org.eclipse.milo:dictionary-reader:_"
+
+    public const val sdk_client: String = "org.eclipse.milo:sdk-client:_"
+
+    public const val sdk_server: String = "org.eclipse.milo:sdk-server:_"
 
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
 
@@ -402,6 +410,8 @@ public object Libs {
 
     public const val jmh_generator_bytecode: String = "org.openjdk.jmh:jmh-generator-bytecode:_"
 
+    public const val opencv: String = "org.openpnp:opencv:_"
+
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
     public const val slf4j_api: String = "org.slf4j:slf4j-api:_"
@@ -422,6 +432,8 @@ public object Libs {
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
+
+    public const val update4j: String = "org.update4j:update4j:_"
 
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
