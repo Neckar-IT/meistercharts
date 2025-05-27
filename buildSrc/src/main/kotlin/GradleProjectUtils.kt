@@ -1,3 +1,4 @@
+
 import com.google.common.io.Files
 import it.neckar.docker.ExternalDockerImages
 import it.neckar.docker.externalDockerImages
@@ -18,6 +19,7 @@ import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.tasks.AbstractCopyTask
+import org.gradle.process.ExecOutput
 import java.io.File
 
 
@@ -251,4 +253,35 @@ fun AbstractCopyTask.filterExternalDockerImages() {
   doFirst {
     filterAllExternalDockerImages()
   }
+}
+
+/**
+ * Returns the standard output as a string - throws an exception if the execution failed
+ */
+fun ExecOutput.standardOutputAsStringOnSuccess(): String {
+  return standardOutputAsBytesOnSuccess().decodeToString()
+}
+
+/**
+ * Returns the standard output as bytes - throws an exception if the execution failed
+ */
+fun ExecOutput.standardOutputAsBytesOnSuccess(): ByteArray {
+  val result = result.get()
+  result.rethrowFailure()
+
+  return standardOutput.asBytes.get()
+}
+
+/**
+ * Returns the error output as a string
+ */
+fun ExecOutput.errorOutputAsString(): String {
+  return errorOutputAsBytes().decodeToString()
+}
+
+/**
+ * Returns the error output as bytes
+ */
+fun ExecOutput.errorOutputAsBytes(): ByteArray {
+  return standardError.asBytes.get()
 }
