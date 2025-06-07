@@ -59,7 +59,7 @@ abstract class AbstractObjectMultiCache<T>(
   /**
    * Returns true if the cache has no elements
    */
-  fun isEmpty(): Boolean {
+  override fun isEmpty(): Boolean {
     return values.isEmpty()
   }
 

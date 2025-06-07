@@ -34,6 +34,15 @@ inline fun <T> T?.checkNotNull(lazyMessage: () -> Any = { "Must not be null" }):
   return checkNotNull(this, lazyMessage)
 }
 
+inline fun <T> T?.requireNotNull(message: String): T {
+  contract {
+    returns() implies (this@requireNotNull != null)
+  }
+  return requireNotNull(this) {
+    message
+  }
+}
+
 inline fun <T> T?.requireNotNull(lazyMessage: () -> Any = { "Must not be null" }): T {
   contract {
     returns() implies (this@requireNotNull != null)

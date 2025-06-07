@@ -60,6 +60,8 @@ object Plugins {
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
+  const val dockerRefreshTags: String = "it.neckar.docker.refresh-tags"
+  const val runDockerServices: String = "it.neckar.docker.services"
 
   /**
    * Collects the types-list (from dependencies or subprojects).
@@ -88,6 +90,7 @@ object Plugins {
 
   const val dependenciesReport: String = "it.neckar.dependencies-report"
   const val jibCli: String = "it.neckar.jib-cli-plugin"
+  const val jibService: String = "it.neckar.jib-service"
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
@@ -149,6 +152,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinxSerialization: Pl
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.jibCli: PluginDependencySpec
   get() = id(Plugins.jibCli)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.jibService: PluginDependencySpec
+  get() = id(Plugins.jibService)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.shadow: PluginDependencySpec
   get() = id(Plugins.shadow)
@@ -212,6 +218,12 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyGitlabAccessToken:
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
+  get() = id(Plugins.dockerRefreshTags)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.runDockerServices: PluginDependencySpec
+  get() = id(Plugins.runDockerServices)
 
 /**
  * Use task tree like this:

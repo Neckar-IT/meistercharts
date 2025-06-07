@@ -61,6 +61,7 @@ interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSuppor
    * Maps the value of the current observable object to another value
    */
   fun <R> map(mapFunction: (T) -> R): ReadOnlyObservableObject<R> {
+    //This method cannot be pushed down, since the value is required
     val intermediateObservable = ObservableObject(initValue = mapFunction(value))
 
     consume { newValue ->

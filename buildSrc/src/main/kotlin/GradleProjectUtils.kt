@@ -1,7 +1,7 @@
 
 import com.google.common.io.Files
 import it.neckar.docker.ExternalDockerImages
-import it.neckar.docker.externalDockerImages
+import it.neckar.docker.variableName
 import it.neckar.gradle.ansiConsole
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -93,7 +93,10 @@ fun Project.copySourcesJarToDir(
   }
 }
 
-
+/**
+ * Throws an exception if the file does not exist.
+ * The error message contains the given task name to create the file.
+ */
 fun File.ensureExists(taskNameToCreate: String) {
   if (exists().not()) {
     throw GradleException("File <${this.absolutePath}> does not exist. Run `gradle $taskNameToCreate` for all projects before")
@@ -107,7 +110,9 @@ fun File.ensureExists(taskNameToCreate: String) {
 fun ComponentIdentifier.toFileName(suffix: String = ""): String {
   return when (val identifier = this) {
     is ProjectComponentIdentifier -> identifier.projectPath.projectPath2FileNameWithNeckarIT(suffix)
-    is ModuleComponentIdentifier -> "${identifier.group}.${identifier.module}$suffix.jar"
+    is ModuleComponentIdentifier -> {
+      "${identifier.group}.${identifier.module}$suffix-${identifier.version}.jar"
+    }
     else -> throw IllegalArgumentException("identifier invalid $identifier::class")
   }
 }
@@ -224,15 +229,12 @@ fun Task.onlyIfPropertyTrue(propertyName: String) {
  * Filters all (external) docker image variables
  */
 fun AbstractCopyTask.filterAllExternalDockerImages() {
-  val dockerImageTags = it.neckar.docker.ExternalDockerImageTags.loadFromDockerVersionProperties()
-  val withTag = ExternalDockerImages.withTag(dockerImageTags)
-
   filter { line ->
     var currentLine = line
 
-    withTag.forEach { dockerImageDescriptor ->
-      val variableName = ExternalDockerImages.variableName(dockerImageDescriptor)
-      val oldValue = "\${${variableName}}"
+    ExternalDockerImages.entries.forEach { dockerImageDescriptor ->
+      val variableName = dockerImageDescriptor.variableName()
+      val oldValue = $$"${$$variableName}"
       currentLine = currentLine.replace(oldValue, dockerImageDescriptor.fqName)
     }
 
@@ -247,9 +249,6 @@ fun AbstractCopyTask.filterAllExternalDockerImages() {
  * No necessity to call any other methods.
  */
 fun AbstractCopyTask.filterExternalDockerImages() {
-  //Adds the versions for external docker images as input
-  inputs.externalDockerImages()
-
   doFirst {
     filterAllExternalDockerImages()
   }

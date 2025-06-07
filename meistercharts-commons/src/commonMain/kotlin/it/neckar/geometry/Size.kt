@@ -62,6 +62,10 @@ data class Size(
     return of(width + deltaWidth, height + deltaHeight)
   }
 
+  operator fun plus(additionalSize: Size): Size {
+    return of(width + additionalSize.width, height + additionalSize.height)
+  }
+
   operator fun plus(distance: Distance): Size {
     return of(width + distance.x, height + distance.y)
   }
@@ -354,6 +358,11 @@ data class Size(
     val one: Size = Size(1.0, 1.0)
     val half: Size = Size(0.5, 0.5)
 
+    val PX_4: Size = both(4.0)
+    val PX_6: Size = both(6.0)
+    val PX_8: Size = both(8.0)
+    val PX_10: Size = both(10.0)
+    val PX_12: Size = both(12.0)
     val PX_16: Size = both(16.0)
     val PX_24: Size = both(24.0)
     val PX_30: Size = both(30.0)

@@ -454,7 +454,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * @param width the width
    * @param height the height
    */
-  fun strokeOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
+  fun strokeOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 
   fun strokeOvalOrigin(@Window origin: Coordinates, @px @Zoomed size: Size) {
     strokeOvalOrigin(origin.x, origin.y, size.width, size.height)
@@ -463,7 +463,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Appends an oval to the current path
    */
-  fun ovalCenter(@Window @px centerX: Double, @Window @px centerY: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
+  fun ovalCenter(@Window @px centerX: Double, @Window @px centerY: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 
   /**
    * Strokes an oval
@@ -472,7 +472,10 @@ interface CanvasRenderingContext : SupportsPathActions {
    * @param width the width
    * @param height the height
    */
-  fun strokeOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
+  fun strokeOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width) {
+    ovalCenter(x, y, width, height)
+    stroke()
+  }
 
   fun strokeOvalCenter(@Window center: Coordinates, @px @Zoomed size: Size) {
     strokeOvalCenter(center.x, center.y, size.width, size.height)
@@ -489,7 +492,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * @param width the width
    * @param height the height
    */
-  fun fillOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
+  fun fillOvalOrigin(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 
   fun fillOvalOrigin(@Window origin: Coordinates, @px @Zoomed size: Size) {
     fillOvalOrigin(origin.x, origin.y, size.width, size.height)

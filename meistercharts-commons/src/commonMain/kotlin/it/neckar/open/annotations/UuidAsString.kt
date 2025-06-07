@@ -1,12 +1,11 @@
-package com.meistercharts.annotations
-
-import it.neckar.open.unit.other.pct
+package it.neckar.open.annotations
 
 /**
- * Marks values that are placed relative to the floor origin.
+ * Marks a string that is a UUID.
  *
- * Domain relative: 0.0/0.0 is the top left of the floor
+ * Sometimes it is necessary to use a UUID as a string, e.g., for TypeScript interoperability.
  */
+@MustBeDocumented
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.CLASS,
@@ -25,5 +24,4 @@ import it.neckar.open.unit.other.pct
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )
-@MustBeDocumented
-annotation class RelativeToFloorOrigin
+annotation class UuidAsString()

@@ -51,10 +51,13 @@ interface SupportsPathActions {
 
   /**
    * Adds a line to the current path.
-   * If the current path is empty moveTo will automatically be used
+   * If the current path is empty, [moveTo] will automatically be used instead.
    */
   fun lineTo(x: Double, y: Double)
 
+  /**
+   * Adds a quadratic curve to the current path
+   */
   fun quadraticCurveTo(control: Coordinates, endPoint: Coordinates) {
     quadraticCurveTo(control.x, control.y, endPoint.x, endPoint.y)
   }

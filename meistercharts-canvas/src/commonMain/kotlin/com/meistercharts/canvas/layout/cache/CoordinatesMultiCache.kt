@@ -17,7 +17,9 @@ package com.meistercharts.canvas.layout.cache
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.geometry.Coordinates
 import it.neckar.open.collections.IterationOrder
+import it.neckar.open.collections.fastForEachWithIndex
 import it.neckar.open.provider.CoordinatesProvider
 import it.neckar.open.provider.CoordinatesProvider1
 
@@ -108,6 +110,18 @@ class CoordinatesMultiCache : LayoutVariableWithSize {
    */
   fun y(index: Int): Double {
     return this.yValues[index]
+  }
+
+  /**
+   * Sets all points to the cache. Automatically prepares the cache to the size of the given elements.
+   *
+   * ATTENTION: Do *not* create new instances of [Coordinates] to be able to call this method
+   */
+  fun setAll(elements: List<Coordinates>) {
+    prepare(elements.size)
+    elements.fastForEachWithIndex { index, coordinates ->
+      set(index, coordinates.x, coordinates.y)
+    }
   }
 
   /**

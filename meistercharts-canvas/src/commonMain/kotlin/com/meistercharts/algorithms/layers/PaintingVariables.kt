@@ -51,6 +51,9 @@ interface LoopIndexAware {
    */
   val loopIndex: PaintingLoopIndex
 
+  /**
+   * Verifies that calculate has been called for the current loop index
+   */
   fun verifyLoopIndex(paintingContext: LayerPaintingContext) {
     verifyLoopIndex(paintingContext.loopIndex)
   }

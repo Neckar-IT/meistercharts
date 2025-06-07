@@ -166,8 +166,24 @@ data class RgbaColor(
 /**
  * With alpha
  */
-fun RgbaColorProvider.withAlpha(newAlpha: @pct Double): RgbaColorProvider {
+inline fun RgbaColorProvider.withAlpha(newAlpha: @pct Double): RgbaColorProvider {
   return {
     this().withAlpha(newAlpha)
+  }
+}
+
+/**
+ * Creates a lighter color by adding white.
+ * The tintFactor is a percentage value (0.0..1.0) that indicates how much white should be added.
+ */
+inline fun RgbaColorProvider.lighter(tintFactor: @pct Double): RgbaColorProvider {
+  return {
+    this().lighter(tintFactor)
+  }
+}
+
+inline fun RgbaColorProvider.darker(shadeFactor: @pct Double): RgbaColorProvider {
+  return {
+    this().darker(shadeFactor)
   }
 }

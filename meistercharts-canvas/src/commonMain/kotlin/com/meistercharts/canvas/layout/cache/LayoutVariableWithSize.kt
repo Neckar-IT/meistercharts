@@ -64,4 +64,8 @@ interface LayoutVariableWithSize : LayoutVariable {
    * Initially, this value is (usually) 0
    */
   val size: Int
+
+  fun isEmpty(): Boolean {
+    return size == 0
+  }
 }

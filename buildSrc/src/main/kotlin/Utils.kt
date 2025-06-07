@@ -513,7 +513,6 @@ fun Project.configureJunit() {
     useJUnitPlatform {
       includeEngines(
         "junit-jupiter", //JUnit 5 engine
-        "junit-vintage" //runs old JUnit 4 tests within JUnit 5
       )
     }
 

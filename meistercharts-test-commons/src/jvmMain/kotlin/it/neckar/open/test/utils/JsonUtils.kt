@@ -35,10 +35,12 @@ import assertk.assertions.support.*
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.http.Url
 import it.neckar.open.kotlin.lang.padEndMaxLength
 import it.neckar.open.resources.getResourceSafe
+import it.neckar.open.test.utils.matchers.asObjectNode
 import org.skyscreamer.jsonassert.JSONCompare
 import org.skyscreamer.jsonassert.JSONCompareMode
 import java.io.StringWriter
@@ -138,6 +140,34 @@ fun Assert<String>.isJsonEqualTo(
   given { current ->
     JsonUtils.assertJsonEquals(expectedJsonString, current, actualTreeModifier)
   }
+}
+
+/**
+ * Removes all properties that start with the given prefix.
+ * This is useful to remove properties that are not relevant for the comparison, such as "x-source-location".
+ *
+ * Modifies the current node in place.
+ *
+ * Recursively removes all properties that start with the given prefix from the current node and all child nodes.
+ */
+fun JsonNode.removePropertiesStartingWith(prefix: String) {
+  if (this is ObjectNode) {
+    val keysToRemove = asObjectNode()
+      .properties()
+      .asSequence()
+      .map { it.key }
+      .filter { it.startsWith(prefix) }
+      .toList()
+
+    this.remove(keysToRemove)
+  }
+
+  //Call recursively for all child nodes
+  properties()
+    .asSequence()
+    .map { it.value }
+    //.filterIsInstance<JsonNode>()
+    .forEach { it.removePropertiesStartingWith(prefix) }
 }
 
 /**

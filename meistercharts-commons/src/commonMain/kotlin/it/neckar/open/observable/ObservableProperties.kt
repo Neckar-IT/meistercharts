@@ -13,7 +13,6 @@ interface ObservableProperties : Observable<Any?> {
    */
   fun consumeAllProperties(action: ConsumeAction<Any?>): Disposable {
     return consumeAllPropertiesChanges { _, newValue ->
-      println("consumeAllProperties: newValue: $newValue")
       action(newValue)
     }
   }

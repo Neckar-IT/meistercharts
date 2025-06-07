@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Represents a polygon shape.
  */
 @Serializable
-class Polygon(private val vertices: List<Coordinates>) : Shape {
+data class Polygon(private val vertices: List<Coordinates>) : Shape {
   init {
     require(vertices.size >= 3) { "A polygon must have at least 3 vertices" }
   }
@@ -14,45 +14,106 @@ class Polygon(private val vertices: List<Coordinates>) : Shape {
   override val location: Coordinates
     get() = vertices.first()
 
-  val verticesCount: Int = vertices.size
+  val verticesCount: Int
+    get() = vertices.size
 
-  //TODO store field
-  override val size: Size
+  val boundingBox: Rectangle
     get() {
       val minX = vertices.minOf { it.x }
       val maxX = vertices.maxOf { it.x }
       val minY = vertices.minOf { it.y }
       val maxY = vertices.maxOf { it.y }
-      return Size(maxX - minX, maxY - minY)
+      return Rectangle(Coordinates.of(minX, minY), Size(maxX - minX, maxY - minY))
+    }
+
+  //TODO store field
+  override val size: Size
+    get() = boundingBox.size
+
+  /**
+   * Whether the polygon is convex or not.
+   * A polygon is convex if all its interior angles are less than 180 degrees.
+   * This is determined by checking the sign of the cross product of each triplet of consecutive vertices.
+   * If the sign changes, the polygon is concave.
+   * If the sign remains the same for all triplets, the polygon is convex.
+   * * Note: This method assumes that the vertices are ordered in a consistent manner (clockwise or counter-clockwise).
+   * * @return true if the polygon is convex, false if it is concave
+   * * Reference: https://en.wikipedia.org/wiki/Convex_polygon#Convexity_checking
+   */
+  val isConvex: Boolean
+    get() {
+      if (vertices.size == 3) return true // Triangles are always convex
+      var sign = 0
+      for (vertexIndex in vertices.indices) {
+        val p1 = vertices[vertexIndex]
+        val p2 = vertices[(vertexIndex + 1) % vertices.size]
+        val p3 = vertices[(vertexIndex + 2) % vertices.size]
+
+        val crossProduct = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
+        if (crossProduct != 0.0) {
+          if (sign == 0) {
+            sign = if (crossProduct > 0) 1 else -1
+          } else if ((crossProduct > 0 && sign < 0) || (crossProduct < 0 && sign > 0)) {
+            return false // Sign change detected, polygon is not convex
+          }
+        }
+      }
+      return true // No sign change detected, polygon is convex
+    }
+
+  val isConcave: Boolean
+    get() = !isConvex
+
+  /**
+   * Calculates the perimeter of the polygon by summing the lengths of its edges.
+   */
+  val perimeter: Double
+    get() {
+      var perimeter = 0.0
+      for (i in vertices.indices) {
+        val nextIndex = (i + 1) % vertices.size
+        val deltaX = vertices[nextIndex].x - vertices[i].x
+        val deltaY = vertices[nextIndex].y - vertices[i].y
+        perimeter += kotlin.math.sqrt(deltaX * deltaX + deltaY * deltaY)
+      }
+      return perimeter
+    }
+
+  /**
+   * Calculates the area of the polygon using the shoelace formula.
+   * https://en.wikipedia.org/wiki/Shoelace_formula
+   */
+  val area: Double
+    get() {
+      var area = 0.0
+      for (vertexIndex in 0 until vertices.size) {
+        val nextVertexIndex = (vertexIndex + 1) % vertices.size
+        val vertex = vertices[vertexIndex]
+        val nextVertex = vertices[nextVertexIndex]
+        area += vertex.x * nextVertex.y - nextVertex.x * vertex.y
+      }
+      return kotlin.math.abs(area) / 2.0
     }
 
   override fun vertices(): List<Coordinates> = vertices
 
   override fun contains(coordinates: Coordinates): Boolean {
     //simplified variant TODO: correct it
-    if (true) {
-      val minX = vertices.minOf { it.x }
-      val maxX = vertices.maxOf { it.x }
-      val minY = vertices.minOf { it.y }
-      val maxY = vertices.maxOf { it.y }
-
-      val inX = coordinates.x in minX..maxX
-      val inY = coordinates.y in minY..maxY
-
-      return inX &&
-        inY
-    }
-
+    if (true) return boundingBox.contains(coordinates)
+    //if (boundingBox.contains(coordinates).not()) return false
     // Implement point-in-polygon algorithm (e.g., ray-casting algorithm)
     var result = false
-    var j = vertices.size - 1
-    for (i in vertices.indices) {
-      if (vertices[i].y > coordinates.y != vertices[j].y > coordinates.y &&
-        coordinates.x < (vertices[j].x - vertices[i].x) * (coordinates.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x
+    var previousVertexIndex = vertices.size - 1
+    for (vertexIndex in vertices.indices) {
+      val vertex = vertices[vertexIndex]
+      val previousVertex = vertices[previousVertexIndex]
+      // Check if the point is on the edge
+      if ((vertex.y > coordinates.y) != (previousVertex.y > coordinates.y) &&
+        (coordinates.x < (previousVertex.x - vertex.x) * (coordinates.y - vertex.y) / (previousVertex.y - vertex.y) + vertex.x)
       ) {
         result = !result
       }
-      j = i
+      previousVertexIndex = vertexIndex
     }
     return result
   }

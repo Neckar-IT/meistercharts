@@ -46,10 +46,16 @@ open class ObservablePropertiesSupport(
   }
 
   companion object {
+    /**
+     * Creates a new [ObservablePropertiesSupport] instance with the given properties.
+     */
     operator fun invoke(vararg properties: Observable<*>): ObservablePropertiesSupport {
       return ObservablePropertiesSupport(properties.toList())
     }
 
+    /**
+     * Creates a new [ObservablePropertiesSupport] instance with the given properties.
+     */
     operator fun invoke(vararg properties: ObservableProperties): ObservablePropertiesSupport {
       return ObservablePropertiesSupport(
         properties.toList()
@@ -66,8 +72,14 @@ open class ObservablePropertiesSupport(
     }
   }
 
+  /**
+   * Builder for [ObservablePropertiesSupport].
+   */
   class Builder() {
-    val observables: MutableList<Observable<*>> = mutableListOf<Observable<*>>()
+    /**
+     * The list of observables that should be observed.
+     */
+    val observables: MutableList<Observable<*>> = mutableListOf()
 
     fun build(): ObservablePropertiesSupport {
       return ObservablePropertiesSupport(observables)
@@ -90,9 +102,11 @@ open class ObservablePropertiesSupport(
       this.observables.add(observableList)
     }
 
+    /**
+     * Adds a single observable to the support
+     */
     fun addObservable(observable: Observable<*>) {
       this.observables.add(observable)
     }
-
   }
 }
