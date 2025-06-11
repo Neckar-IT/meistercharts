@@ -59,6 +59,10 @@ class DomainChartCalculator(
     return domain2windowX(domain, domainRangeX)
   }
 
+  fun domain2window(@Domain @ms domain: Coordinates): @px @Window Coordinates {
+    return domain2window(domain, domainRangeX, domainRangeY)
+  }
+
   fun domain2contentAreaX(@Domain @ms domain: Double): @px @Window Double {
     return domain2contentAreaX(domain, domainRangeX)
   }
