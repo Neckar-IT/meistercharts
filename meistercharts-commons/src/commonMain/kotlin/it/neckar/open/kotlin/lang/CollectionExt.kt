@@ -1,6 +1,7 @@
 package it.neckar.open.kotlin.lang
 
 import com.meistercharts.annotations.Domain
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.other.pct
 
 /**
@@ -151,4 +152,24 @@ fun <E> List<E>.withElementAt(index: Int, element: E): List<E> {
 
 fun <E> LinkedHashSet<E>.removeFirst() {
   remove(first())
+}
+
+
+/**
+ * Filters the collection by the given filters.
+ */
+fun <T> Collection<T>.filterAll(filterMatchers: List<(T) -> Boolean>): Collection<T> {
+  if (filterMatchers.isEmpty()) {
+    return this
+  }
+
+  return filter { element ->
+    filterMatchers.fastForEach { matcher ->
+      if (matcher(element).not()) {
+        return@filter false
+      }
+    }
+
+    return@filter true
+  }
 }
