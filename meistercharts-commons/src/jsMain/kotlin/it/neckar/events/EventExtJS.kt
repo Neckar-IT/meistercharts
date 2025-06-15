@@ -281,9 +281,9 @@ fun MouseEvent.extractButton(): MouseButton {
     0.toShort() -> MouseButton.Primary
     1.toShort() -> MouseButton.Middle
     2.toShort() -> MouseButton.Secondary
-    4.toShort() -> MouseButton.Forward
-    5.toShort() -> MouseButton.Back
-    else -> throw IllegalArgumentException("Unknown mouse button: $button")
+    3.toShort() -> MouseButton.Forward
+    4.toShort() -> MouseButton.Back
+    else -> MouseButton.Other
   }
 }
 

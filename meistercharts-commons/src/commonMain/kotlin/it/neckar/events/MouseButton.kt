@@ -27,8 +27,13 @@ enum class MouseButton {
   /**
    * The "forward" mouse button
    */
-  Forward;
+  Forward,
 
+  /**
+   * Represents another mouse button that is not one of the predefined ones
+   */
+  Other,
+  ;
   /**
    * Returns true if this button is the primary button
    */
