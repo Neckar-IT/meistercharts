@@ -11,6 +11,9 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.kotlin.lang.removeWhitespaces
 import it.neckar.open.kotlin.lang.toBase64
+import kotlinx.coroutines.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.function.Executable
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -203,4 +206,28 @@ private val objectMapper = ObjectMapper().apply {
   registerModule(Jdk8Module())
   registerModule(JavaTimeModule())
   registerModule(ParameterNamesModule())
+}
+
+private typealias SuspendExecutableCollection = Collection<suspend () -> Unit>
+
+/**
+ * Asserts that all suspend functions in the given collection can be executed without throwing an exception.
+ *
+ * This is useful for testing collections of suspend functions.
+ */
+inline fun assertAllSuspend(executables: SuspendExecutableCollection, checkForPlausibleSize: Boolean = true) {
+  require(executables.isNotEmpty()) { "The collection of suspend functions must not be empty" }
+  if (checkForPlausibleSize) {
+    require(executables.size > 1) { "The collection of suspend functions should contain at least two elements. Did you use map correctly?" }
+  }
+
+  Assertions.assertAll(executables.convert())
+}
+
+fun SuspendExecutableCollection.convert(): List<Executable> = map { suspendExecutable ->
+  Executable({
+    runBlocking {
+      suspendExecutable()
+    }
+  })
 }
