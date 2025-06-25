@@ -231,3 +231,8 @@ fun SuspendExecutableCollection.convert(): List<Executable> = map { suspendExecu
     }
   })
 }
+
+inline fun <reified T> Assert<List<T>>.containsExactlyList(expectedElements: List<T>) {
+  this.containsExactly(*expectedElements.toTypedArray())
+
+}
