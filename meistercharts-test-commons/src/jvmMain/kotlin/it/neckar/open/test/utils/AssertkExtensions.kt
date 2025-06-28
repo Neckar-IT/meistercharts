@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
+import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.kotlin.lang.removeWhitespaces
 import it.neckar.open.kotlin.lang.toBase64
@@ -234,5 +235,14 @@ fun SuspendExecutableCollection.convert(): List<Executable> = map { suspendExecu
 
 inline fun <reified T> Assert<List<T>>.containsExactlyList(expectedElements: List<T>) {
   this.containsExactly(*expectedElements.toTypedArray())
+}
 
+inline fun <reified T> Assert<List<T>>.containsExactlyInAnyOrderList(expectedElements: List<T>) {
+  hasSize(expectedElements.size)
+
+  all {
+    expectedElements.fastForEach {
+      contains(it)
+    }
+  }
 }
