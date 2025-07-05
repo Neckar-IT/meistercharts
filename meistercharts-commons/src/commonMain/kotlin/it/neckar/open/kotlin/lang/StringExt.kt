@@ -540,3 +540,53 @@ fun String.substringBetween(start: String, end: String): String {
 fun String.removeWhitespaces(): String {
   return this.replace("\\s".toRegex(), "")
 }
+
+/**
+ * Converts this string to kebab case.
+ * E.g. "myVariableName" becomes "my-variable-name"
+ */
+fun String.toKebabCase(): String {
+  return this.trim()
+    .replace(Regex("([a-z])([A-Z])"), "$1-$2") // camelCase to camel-Case
+    .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1-$2") // ALLCAPS followed by Capitalized
+    .replace(Regex("([a-zA-Z])([0-9])"), "$1-$2").replace(Regex("([0-9])([a-zA-Z])"), "$1-$2") // Add separators between letters and digits (both directions)
+    .replace(Regex("[\\s_]+"), "-") // spaces and underscores to dash
+    .replace(Regex("[^a-zA-Z0-9-]"), "") // remove other symbols
+    .lowercase()
+    .replace(Regex("-+"), "-") // collapse multiple dashes
+    .trim('-') // remove leading/trailing dashes
+}
+
+/**
+ * Converts this string to snake case.
+ * E.g. "myVariableName" becomes "my_variable_name"
+ */
+fun String.toSnakeCase(): String {
+  return this.trim()
+    .replace(Regex("([a-z\\d])([A-Z])"), "$1_$2") // camelCase to snake_case
+    .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1_$2") // ABBR followed by Title
+    .replace(Regex("[-\\s]+"), "_") // dashes and spaces to underscore
+    .replace(Regex("[^a-zA-Z0-9_]"), "") // remove other symbols
+    .lowercase()
+    .replace(Regex("_+"), "_") // collapse multiple underscores
+    .trim('_') // remove leading/trailing underscores
+}
+
+/**
+ * Converts this string to camel case.
+ * E.g. "my_variable_name" becomes "myVariableName"
+ */
+fun String.toCamelCase(): String {
+  return this.trim()
+    .replace(Regex("([a-z\\d])([A-Z])"), "$1 $2") // separate camelCase boundaries
+    .replace(Regex("([A-Z]+)([A-Z][a-z])"), "$1 $2") // ALLCAPS boundaries
+    .replace(Regex("[_\\-\\s]+"), " ") // normalize all separators to space
+    .lowercase()
+    .split(" ")
+    .filter { it.isNotBlank() }
+    .mapIndexed { index, word ->
+      if (index == 0) word
+      else word.replaceFirstChar { it.uppercase() }
+    }
+    .joinToString("")
+}
