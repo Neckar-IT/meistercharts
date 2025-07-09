@@ -10,6 +10,7 @@ import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.console
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
+import it.neckar.gradle.python.PythonPluginExtension
 import kotlinx.serialization.json.jsonObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -250,7 +251,46 @@ object ProjectConfiguration {
     /**
      * The python configuration plugin is applied
      */
-    project.plugins.apply(Plugins.python)
+    with(project) {
+      plugins.apply(Plugins.python)
+
+      extensions.getByType<PythonPluginExtension>().apply {
+        //This is the default python executable required for all AI projects
+        pythonExecutable.set("python3.12")
+      }
+    }
+  }
+
+  fun configurePythonRoot(project: Project) {
+    with(project) {
+      require(project.rootProject == project) {
+        "This method must only be called on the root project"
+      }
+
+      tasks.register("createPythonVersionFile") {
+        group = "Python"
+        description = "Creates the .python-version file"
+
+        doLast {
+          file(".python-version").writeText(PythonSettings.Version)
+
+          file("tools/pyenv/install.sh").let { installShFile ->
+            installShFile.parentFile.mkdirs() //Ensure the parent directory exists
+
+            installShFile.writeText(
+              //language=bash
+              """
+              #!/usr/bin/env sh
+              set -e
+              pyenv install ${PythonSettings.Version}
+            """.trimIndent()
+            )
+
+            installShFile.setExecutable(true)
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -331,6 +371,10 @@ object ProjectConfiguration {
    */
   fun configurePnpmRoot(project: Project) {
     with(project) {
+      require(project.rootProject == project) {
+        "This method must only be called on the root project"
+      }
+
       configureDefaultPnpm(project)
 
       project.plugins.apply(Plugins.generatePackageJson)
