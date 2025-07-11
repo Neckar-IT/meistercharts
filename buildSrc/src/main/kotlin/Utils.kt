@@ -530,6 +530,7 @@ fun Project.configureJunit() {
       showExceptions = true
       showCauses = true
       showStackTraces = true
+      showStandardStreams = false //do not show standard streams (stdout/stderr) by default
     }
 
     //Set the JVM properties for the tests
