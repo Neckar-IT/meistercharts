@@ -600,7 +600,7 @@ object ProjectConfiguration {
         description = "Executes `pnpm run lint`"
         group = "Pnpm"
 
-        dependsOn(":pnpmInstall") //implicit dependency to generatePackageJson
+        dependsOn(":pnpmInstall", "build") //implicit dependency to generatePackageJson
 
         onlyIf {
           //Check if there is a build script referenced
@@ -614,7 +614,7 @@ object ProjectConfiguration {
         description = "Executes `pnpm run lint`"
         group = "Pnpm"
 
-        dependsOn(":pnpmInstall") //implicit dependency to generatePackageJson
+        dependsOn(":pnpmInstall", "build") //implicit dependency to generatePackageJson
 
         onlyIf {
           //Check if there is a build script referenced
