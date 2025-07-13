@@ -138,6 +138,8 @@ public object Libs {
     public const val io_codearte_nexus_staging_gradle_plugin: String =
             "io.codearte.nexus-staging:io.codearte.nexus-staging.gradle.plugin:_"
 
+    public const val dotenv_kotlin: String = "io.github.cdimascio:dotenv-kotlin:_"
+
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
     public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
