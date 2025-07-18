@@ -291,7 +291,8 @@ open class FontDescriptorFragment @JvmOverloads constructor(
  * * the unconfigured default font of the browser
  * * a serif font
  *
- * This will return a new instance with the family set to null.e
+ * This will return a new instance with the family set to null.
+ * Any FontDescriptorFragment with exactly one FontFamily which contains "Serif" will be set to null!
  */
 fun FontDescriptorFragment.eraseSoleSerifFamily(): FontDescriptorFragment {
   if (hasSoleSerifFamily()) {

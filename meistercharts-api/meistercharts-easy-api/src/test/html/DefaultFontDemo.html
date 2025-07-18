@@ -1,0 +1,66 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+</style>
+<body>
+<h1>Canvas & Body with default fonts</h1>
+
+<p>
+  This is a demo for figuring out which default font is used in the canvas and body
+</p>
+<p>
+  <canvas id="canvas" width="50" height="50" style="width:50px;height:50px;border:1px solid black;"></canvas>
+</p>
+<p id="font-p"></p>
+<button onclick="copyFontParagraph()">Copy</button>
+
+<script type="text/javascript">
+  const ctx = document.getElementById("canvas").getContext("2d");
+  const body = document.body;
+
+  const bodyStyle = window.getComputedStyle(body);
+
+  const fontFamily = bodyStyle.getPropertyValue("font-family");
+  const fontSize = bodyStyle.getPropertyValue("font-size");
+  const fontWeight = bodyStyle.getPropertyValue("font-weight");
+
+  const currentDate = new Date();
+
+  const para = document.getElementById("font-p");
+
+  function paint() {
+    ctx.fillStyle = "beige";
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+
+    ctx.fillStyle = "black";
+  }
+
+  paint()
+
+  para.innerText =
+    "current date: " + currentDate + " \n \n" +
+    "Canvas font: " + "\n" +
+    ctx.font.toString() + "\n \n" +
+    "Computed body font:" + "\n " +
+    "font-family: <" + fontFamily + ">" + "\n " +
+    "font-size: <" + fontSize + ">" + "\n " +
+    "font-weight: <" + fontWeight + ">";
+
+  function copyFontParagraph() {
+    const text = document.getElementById("font-p").innerText;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        alert("Copied to clipboard!");
+      })
+      .catch(err => {
+        alert("Failed to copy: " + err);
+      });
+  }
+
+
+</script>
+
+</body>
+</html>

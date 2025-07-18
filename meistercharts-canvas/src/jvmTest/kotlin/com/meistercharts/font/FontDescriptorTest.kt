@@ -80,6 +80,40 @@ class FontDescriptorTest {
     assertThat(descriptor.toHtmlFontString()).isEqualTo(""""Oswald","Times New Roman","Open Sans",system-ui""")
   }
 
+  @Test
+  fun testFontDescriptorEmptyFamiliesHtmlString() {
+    val descriptor = FontDescriptor(
+      families = listOf(),
+      genericFamily = GenericFontFamily.SystemUi
+    )
+    assertThat(descriptor.toHtmlFontString()).isEqualTo("""system-ui""")
+  }
+
+  @Test
+  fun testFontDescriptorNullFamiliesHtmlString() {
+    val descriptor = FontDescriptor(
+      families = null,
+      genericFamily = GenericFontFamily.SystemUi
+    )
+    assertThat(descriptor.toHtmlFontString()).isEqualTo("""system-ui""")
+  }
+
+  @Test
+  fun testFontDescriptorEraseSoleSerif() {
+    val descriptorFragment = FontDescriptor(
+      families = listOf(FontFamily.TimesNewRoman),
+      genericFamily = GenericFontFamily.SystemUi
+    ).eraseSoleSerifFamily()
+
+    val descriptorFragmentDiffSerif = FontDescriptor(
+      families = listOf(FontFamily("serif")),
+      genericFamily = GenericFontFamily.SystemUi
+    ).eraseSoleSerifFamily()
+
+    assertThat(descriptorFragment.families).isNull()
+    assertThat(descriptorFragmentDiffSerif.families).isNull()
+  }
+
 
   @Test
   internal fun testFragmentCombine() {
