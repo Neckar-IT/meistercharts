@@ -73,6 +73,10 @@ abstract class AbstractProjects {
     return configureProject(path, ProjectType.Intermediate)
   }
 
+  protected fun parent(path: String): ConfiguredProject {
+    return configureProject(path, ProjectType.ProjectParent)
+  }
+
   protected fun other(path: String): ConfiguredProject {
     return configureProject(path, ProjectType.Other)
   }
@@ -115,6 +119,10 @@ abstract class AbstractProjects {
     return project(ProjectType.KotlinJvm)
   }
 
+  fun parents(): List<ConfiguredProject> {
+    return project(ProjectType.ProjectParent)
+  }
+
   fun kspProcessorProjects(): List<ConfiguredProject> {
     return project(ProjectType.KspProcessor)
   }
@@ -147,6 +155,10 @@ fun Project.isMultiplatformProject(): Boolean {
 
 fun Project.isJvmProject(): Boolean {
   return isOfType(ProjectType.KotlinJvm)
+}
+
+fun Project.isParentProject(): Boolean {
+  return isOfType(ProjectType.ProjectParent)
 }
 
 fun Project.isKspProcessorProject(): Boolean {
@@ -303,9 +315,16 @@ enum class ProjectType {
   IdeaPlugin,
 
   /**
+   * Represents a project parent (not the Gradle root).
+   * A project parent is used to merge things related to one project (e.g. deployment or kover reports)
+   */
+  ProjectParent,
+
+  /**
    * Intermediate project - does not have any configuration
    */
   Intermediate,
+
 
   /**
    * Another project - does not have any (common) configuration

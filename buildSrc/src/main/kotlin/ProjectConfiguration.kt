@@ -11,6 +11,7 @@ import it.neckar.gradle.console
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
 import it.neckar.gradle.python.PythonPluginExtension
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import kotlinx.serialization.json.jsonObject
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -41,6 +42,13 @@ import java.io.ByteArrayOutputStream
  * Contains common code to configure a project
  */
 object ProjectConfiguration {
+  fun configureParentProject(project: Project) {
+    with(project) {
+      apply(plugin = Plugins.kover)
+      mergeKoverReports()
+    }
+  }
+
   /**
    * Configures a JVM project - with the current LTS Java version
    */
@@ -97,6 +105,7 @@ object ProjectConfiguration {
       apply(plugin = Plugins.dokka)
     }
     apply(plugin = Plugins.detekt)
+    apply(plugin = Plugins.kover)
 
     configureKotlin()
 
@@ -164,6 +173,8 @@ object ProjectConfiguration {
       )
     }
 
+    configureKover {
+    }
   }
 
   fun configureMultiPlatform(project: Project, jvmType: JvmType) {
@@ -186,6 +197,7 @@ object ProjectConfiguration {
         apply(plugin = Plugins.dokka)
       }
       apply(plugin = Plugins.detekt)
+      apply(plugin = Plugins.kover)
 
       //tasks.register<Jar>("javadocJar") {
       //  group = "Build"
@@ -214,6 +226,9 @@ object ProjectConfiguration {
             "src/jvmMain/kotlin",
           )
         )
+      }
+
+      configureKover {
       }
 
       project.tasks.register("printSourceSets") {
@@ -700,4 +715,13 @@ fun Project.configureDetekt(additionalConfig: DetektExtension.() -> Unit) {
 fun KotlinJsTargetDsl.packageJson(function: PackageJson.() -> Unit) {
   val kotlinJsIrCompilation: KotlinJsIrCompilation = compilations["main"]
   kotlinJsIrCompilation.packageJson(function)
+}
+
+/**
+ * Configures the Kover plugin for "normal" projects.
+ * The configuration is applied to the [KoverProjectExtension].
+ */
+fun Project.configureKover(additionalConfig: KoverProjectExtension.() -> Unit) {
+  val koverProjectExtension = extensions.getByType<KoverProjectExtension>()
+  koverProjectExtension.additionalConfig()
 }

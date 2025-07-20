@@ -1,4 +1,3 @@
-
 import com.google.common.io.Files
 import it.neckar.docker.ExternalDockerImages
 import it.neckar.docker.variableName
@@ -19,6 +18,7 @@ import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.tasks.AbstractCopyTask
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.process.ExecOutput
 import java.io.File
 
@@ -283,4 +283,26 @@ fun ExecOutput.errorOutputAsString(): String {
  */
 fun ExecOutput.errorOutputAsBytes(): ByteArray {
   return standardError.asBytes.get()
+}
+
+/**
+ * Configure this project to merge the kover reports
+ */
+fun Project.mergeKoverReports() {
+  var addedKoverDependenciesCount = 0
+  dependencies {
+    subprojects {
+      if (plugins.hasPlugin(Plugins.kover)) {
+        //Add "kover" dependency to allow merging the kover reports
+        //This is the same as `kover(project("my-sub-project"))`
+        add("kover", this)
+        addedKoverDependenciesCount++
+      }
+    }
+  }
+
+  require(addedKoverDependenciesCount > 0) {
+    "No kover dependencies added for project $path. " +
+      "Please ensure that the subprojects have the kover plugin applied and that they are configured correctly."
+  }
 }
