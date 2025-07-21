@@ -35,7 +35,6 @@ import it.neckar.open.kotlin.lang.checkNotNull
 import org.apache.commons.io.IOUtils
 import java.io.DataInputStream
 import java.net.URL
-import java.security.GeneralSecurityException
 import java.security.KeyFactory
 import java.security.Signature
 import java.security.cert.CertificateFactory
@@ -43,44 +42,24 @@ import java.security.cert.X509Certificate
 import java.security.interfaces.RSAPrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import javax.crypto.Cipher
-import javax.inject.Inject
 
 /**
- * X509 Support
+ * X509 Support provides methods to cipher, decipher, sign and verify signatures using an X509 certificate and an optional private key.
  *
+ * This class can be instantiated with a private key or without one
  */
-open class X509Support
-/**
- * Creates a new x509 support
- *
- * @param certificate the certificate
- * @param privateKey  the (optional) private key
- */
-@JvmOverloads constructor(
+open class X509Support(
   /**
-   * Returns the certificate
-   *
-   * @return the certificate
+   * The certificate
    */
   val certificate: X509Certificate,
+  /**
+   * The private key - if available.
+   *
+   * Some methods require the private key to be available, e.g. signing.
+   */
   private val privateKey: RSAPrivateKey? = null
 ) {
-  /**
-   * Creates a new X509 support without any signing capabilities
-   *
-   * @param certificate the certificate
-   */
-  constructor(certificate: URL) : this(certificate, null)
-
-  /**
-   * Creates a new X509 support
-   *
-   * @param certificate the certificate
-   * @param privateKey  the private key (if available)
-   */
-  @Inject
-  constructor(@CertificateUrl certificate: URL, @PrivateKeyUrl privateKey: URL?) : this(readCertificate(certificate), readPrivateKey(privateKey))
-
   /**
    * Returns whether the private key is available
    *
@@ -90,15 +69,9 @@ open class X509Support
     get() = privateKey != null
 
   /**
-   *
-   * cipher
-   *
-   * @param plainText an array of byte.
-   * @return an array of byte.
-   *
-   * @throws GeneralSecurityException
-   * if any.
+   * Calculates the cipher text for the given plain text using the private key.
    */
+  @RequiresPrivateKey
   fun cipher(plainText: ByteArray): ByteArray {
     val cipher = Cipher.getInstance(RSA)
     cipher.init(Cipher.ENCRYPT_MODE, getPrivateKey())
@@ -106,11 +79,7 @@ open class X509Support
   }
 
   /**
-   *
-   * decipher
-   *
-   * @param bytes an array of byte.
-   * @return an array of byte.
+   * Deciphers the given byte array using the certificate.
    */
   fun decipher(bytes: ByteArray): ByteArray {
     val cipher = Cipher.getInstance(RSA)
@@ -119,12 +88,9 @@ open class X509Support
   }
 
   /**
-   *
-   * sign
-   *
-   * @param plainText an array of byte.
-   * @return a it.neckar.open.crypt.Signature object.
+   * Calculates the signature for the given plain text using the private key.
    */
+  @RequiresPrivateKey
   fun sign(plainText: ByteArray): it.neckar.open.crypt.Signature {
     val signature = Signature.getInstance(SHA_256_WITH_RSA)
     signature.initSign(getPrivateKey())
@@ -134,12 +100,7 @@ open class X509Support
   }
 
   /**
-   *
-   * verifySignature
-   *
-   * @param plainText an array of byte.
-   * @param signature a it.neckar.open.crypt.Signature object.
-   * @return a boolean.
+   * Verifies the signature for the given plain text using the certificate.
    */
   fun verifySignature(plainText: ByteArray, signature: it.neckar.open.crypt.Signature): Boolean {
     val sign = Signature.getInstance(SHA_256_WITH_RSA)
@@ -150,9 +111,8 @@ open class X509Support
 
   /**
    * Returns the private key (if there is one)
-   *
-   * @return the private key
    */
+  @RequiresPrivateKey
   fun getPrivateKey(): RSAPrivateKey {
     return privateKey.checkNotNull { "Private key not available" }
   }
@@ -161,6 +121,16 @@ open class X509Support
     const val RSA: String = "RSA"
     const val SHA_256_WITH_RSA: String = "SHA256withRSA"
     private const val X_509_CERTIFICATE_TYPE = "X.509"
+
+    /**
+     * Creates a new instance of [X509Support] using the given certificate and private key urls.
+     */
+    operator fun invoke(
+      @CertificateUrl certificateUrl: URL,
+      @PrivateKeyUrl privateKeyUrl: URL? = null
+    ): X509Support {
+      return X509Support(readCertificate(certificateUrl), readPrivateKey(privateKeyUrl))
+    }
 
     /**
      * Reads a private key form a url
@@ -175,8 +145,8 @@ open class X509Support
       }
 
       //We have an url --> return it
-      DataInputStream(privateKeyUrl.openStream()).use { `in` ->
-        val keyBytes = IOUtils.toByteArray(`in`)
+      DataInputStream(privateKeyUrl.openStream()).use { inputStream ->
+        val keyBytes = IOUtils.toByteArray(inputStream)
         val keyFactory = KeyFactory.getInstance(RSA)
 
         val privSpec = PKCS8EncodedKeySpec(keyBytes)
@@ -191,11 +161,16 @@ open class X509Support
      * @return the certificate
      */
     fun readCertificate(certificateUrl: URL): X509Certificate {
-      //Read the cert
-      DataInputStream(certificateUrl.openStream()).use { `in` ->
+      //Read the certificate from the url
+      DataInputStream(certificateUrl.openStream()).use { inputStream ->
         val cf = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
-        return cf.generateCertificate(`in`) as X509Certificate
+        return cf.generateCertificate(inputStream) as X509Certificate
       }
     }
+
+    /**
+     * Annotation to mark a method that requires a private key to be available.
+     */
+    annotation class RequiresPrivateKey
   }
 }

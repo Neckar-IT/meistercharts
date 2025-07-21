@@ -3,16 +3,15 @@ package it.neckar.open.test.utils
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.collections.fastForEach
-import it.neckar.open.crypt.Algorithm
 import it.neckar.open.crypt.Hash
-import it.neckar.open.crypt.HashCalculator
+import it.neckar.open.crypt.HashAlgorithm
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.TrueFileFilter
 import java.io.File
 
 object AssertFileUtils {
   @JvmStatic
-  fun assertFileByHashes(fileUnderTest: File, algorithm: Algorithm, vararg expectedHashesAsHex: String) {
+  fun assertFileByHashes(fileUnderTest: File, algorithm: HashAlgorithm, vararg expectedHashesAsHex: String) {
     val expectedHashes = Array(expectedHashesAsHex.size) {
       val expectedHashAsHex = expectedHashesAsHex[it]
       Hash.fromHex(algorithm, expectedHashAsHex)
@@ -45,7 +44,7 @@ object AssertFileUtils {
 
   @JvmStatic
   fun assertFileByHash(path: String, expected: Hash, fileUnderTest: File) {
-    val actual = HashCalculator.calculate(expected.algorithm, fileUnderTest)
+    val actual = expected.algorithm.calculate(file = fileUnderTest)
     if (expected == actual) {
       return  //everything went fine
     }
@@ -66,7 +65,7 @@ object AssertFileUtils {
   fun assertFileByHash(path: String, expectedHashes: Iterable<Hash>, fileUnderTest: File) {
     val actualHashes: MutableCollection<Hash> = ArrayList()
     for (expected in expectedHashes) {
-      val actual = HashCalculator.calculate(expected.algorithm, fileUnderTest)
+      val actual = expected.algorithm.calculate(file = fileUnderTest)
       actualHashes.add(actual)
       if (expected == actual) {
         return  //everything went fine

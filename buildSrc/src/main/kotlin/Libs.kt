@@ -340,9 +340,6 @@ public object Libs {
 
     public const val kotlin_test_junit5: String = "org.jetbrains.kotlin:kotlin-test-junit5:_"
 
-    public const val org_jetbrains_kotlinx_kover_gradle_plugin: String =
-            "org.jetbrains.kotlinx.kover:org.jetbrains.kotlinx.kover.gradle.plugin:_"
-
     public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
 
     public const val kotlinx_coroutines_core: String =

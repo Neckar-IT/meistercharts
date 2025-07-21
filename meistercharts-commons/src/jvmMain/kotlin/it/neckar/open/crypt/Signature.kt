@@ -33,16 +33,15 @@ package it.neckar.open.crypt
 
 /**
  * Represents a signature
- *
  */
 class Signature(bytes: ByteArray) {
-
+  /**
+   * The byte array representing the signature
+   */
   private val bytes: ByteArray = bytes.clone()
 
   /**
-   * Returns the byte array representing the signature
-   *
-   * @return the byte array
+   * Returns the byte array representing the signature (cloned to prevent modification)
    */
   fun getBytes(): ByteArray {
     return bytes.clone()
@@ -57,13 +56,5 @@ class Signature(bytes: ByteArray) {
 
   override fun hashCode(): Int {
     return bytes.contentHashCode()
-  }
-
-  companion object {
-    /**
-     * Null signature
-     */
-    @JvmStatic
-    val NULL: Signature = Signature(ByteArray(0))
   }
 }

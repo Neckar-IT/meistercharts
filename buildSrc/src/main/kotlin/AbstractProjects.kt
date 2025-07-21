@@ -146,6 +146,80 @@ abstract class AbstractProjects {
   fun otherProjects(): List<ConfiguredProject> {
     return project(ProjectType.Other)
   }
+
+  /**
+   * Configures the projects based on the provided project.
+   * Call this method in your "root" build script to configure all projects.
+   */
+  fun configureProjects(baseProject: Project) {
+    /**
+     * Configuration for the multi-platform projects
+     */
+    baseProject.configure(multiPlatformProjectsLTS()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring multi-platform LTS project: ${this.path}")
+        ProjectConfiguration.configureMultiPlatform(this.getProject(baseProject), JvmType.JavaLatestLTS)
+      }
+    }
+
+    baseProject.configure(kspProcessorProjects()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring KSP processor project: ${this.path}")
+        ProjectConfiguration.configureKspProcessor(this.getProject(baseProject))
+      }
+    }
+
+    baseProject.configure(pnpmProjects()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring pnpm project: ${this.path}")
+        ProjectConfiguration.configurePnpm(this.getProject(baseProject))
+      }
+    }
+
+    baseProject.configure(pythonProjects()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring python project: ${this.path}")
+        ProjectConfiguration.configurePython(this.getProject(baseProject))
+      }
+    }
+
+    /**
+     * Configuration for the Java projects
+     */
+    baseProject.configure(jvmProjects()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring jvm project: ${this.path}")
+        ProjectConfiguration.configureJvm(this.getProject(baseProject))
+      }
+    }
+
+    /**
+     * Configuration for all IntelliJ IDEA Plugin projects
+     */
+    baseProject.configure(ideaPluginProjects()) {
+      if (this.enabled) {
+        //  configureKotlin()
+        //  configureToolchainJava8WithFx()
+      }
+    }
+
+    baseProject.configure(intermediateProjects()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring intermediate project: ${this.path}")
+        //No configuration
+      }
+    }
+
+    /**
+     * ATTENTION: Call this *after* the other projects have been configured
+     */
+    baseProject.configure(parents()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring parent project: ${this.path}")
+        ProjectConfiguration.configureParentProject(this.getProject(baseProject))
+      }
+    }
+  }
 }
 
 @Deprecated("Should not be required")

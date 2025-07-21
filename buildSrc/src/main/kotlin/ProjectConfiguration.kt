@@ -45,6 +45,8 @@ object ProjectConfiguration {
   fun configureParentProject(project: Project) {
     with(project) {
       apply(plugin = Plugins.kover)
+      apply(plugin = Plugins.publishTestReportToGitlabPages)
+
       mergeKoverReports()
     }
   }
@@ -106,6 +108,7 @@ object ProjectConfiguration {
     }
     apply(plugin = Plugins.detekt)
     apply(plugin = Plugins.kover)
+    apply(plugin = Plugins.publishTestReportToGitlabPages)
 
     configureKotlin()
 
@@ -198,6 +201,8 @@ object ProjectConfiguration {
       }
       apply(plugin = Plugins.detekt)
       apply(plugin = Plugins.kover)
+
+      apply(plugin = Plugins.publishTestReportToGitlabPages)
 
       //tasks.register<Jar>("javadocJar") {
       //  group = "Build"

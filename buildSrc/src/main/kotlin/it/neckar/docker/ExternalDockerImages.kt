@@ -19,6 +19,7 @@ object ExternalDockerImages {
   val DockerIoPromPrometheus: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoPromPrometheus.withTag( ExternalDockerImageTags.DockerIoPromPrometheus )
   val DockerIoPromPushgateway: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoPromPushgateway.withTag( ExternalDockerImageTags.DockerIoPromPushgateway )
   val DockerIoRcloneRclone: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoRcloneRclone.withTag( ExternalDockerImageTags.DockerIoRcloneRclone )
+  val DockerIoSeleniumStandaloneChrome: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoSeleniumStandaloneChrome.withTag( ExternalDockerImageTags.DockerIoSeleniumStandaloneChrome )
   val DockerIoTraefik: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoTraefik.withTag( ExternalDockerImageTags.DockerIoTraefik )
   val DockerIoTwinproductionGatus: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoTwinproductionGatus.withTag( ExternalDockerImageTags.DockerIoTwinproductionGatus )
   val DockerIoVaultwardenServer: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoVaultwardenServer.withTag( ExternalDockerImageTags.DockerIoVaultwardenServer )
@@ -43,6 +44,7 @@ object ExternalDockerImages {
     DockerIoPromPrometheus,
     DockerIoPromPushgateway,
     DockerIoRcloneRclone,
+    DockerIoSeleniumStandaloneChrome,
     DockerIoTraefik,
     DockerIoTwinproductionGatus,
     DockerIoVaultwardenServer,

@@ -516,6 +516,9 @@ fun Project.configureJunit() {
       )
     }
 
+    //Enable HTML reports
+    reports.html.required.set(true)
+
     filter {
       includeTestsMatching("*Test")
       includeTestsMatching("*Tests")

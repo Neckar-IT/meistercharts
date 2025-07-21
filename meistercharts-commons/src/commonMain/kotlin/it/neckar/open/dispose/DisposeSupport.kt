@@ -44,7 +44,7 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
   }
 
   /**
-   * Throws an exception, if has already been disposed.
+   * Throws an exception, if this has already been disposed.
    * Only relevant if the [mode] is set to [Mode.SingleDispose]
    */
   private fun verifyNotDisposed() {

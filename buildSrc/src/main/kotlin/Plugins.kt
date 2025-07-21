@@ -63,6 +63,8 @@ object Plugins {
   const val dockerRefreshTags: String = "it.neckar.docker.refresh-tags"
   const val runDockerServices: String = "it.neckar.docker.services"
 
+  const val publishTestReportToGitlabPages: String = "it.neckar.publish.gitlab-pages"
+
   /**
    * Collects the types-list (from dependencies or subprojects).
    * Does *NOT* generate the types-list for the project. Use [generateTypesList] instead!
@@ -218,6 +220,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyGitlabAccessToken:
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.publishTestReportToGitlabPages: PluginDependencySpec
+  get() = id(Plugins.publishTestReportToGitlabPages)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
   get() = id(Plugins.dockerRefreshTags)

@@ -52,7 +52,7 @@ val annotations: Set<String> = setOf("annotations", "jsr305", "unit")
  * Returns true if the given identifier describes a annotation dependency
  */
 fun ComponentArtifactIdentifier.isAnnotationDependency(): Boolean {
-  return annotations.asSequence()
+  return annotations
     .any { toSkipPart ->
       displayName.contains(toSkipPart)
     }

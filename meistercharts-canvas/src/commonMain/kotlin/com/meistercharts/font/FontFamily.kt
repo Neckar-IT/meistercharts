@@ -47,8 +47,9 @@ data class FontFamily(
    */
   fun isProbablyDefaultSerifFamily(): Boolean {
     return family == "serif" || //Firefox
-      family == TimesNewRoman.family //Chrome
-    //TODO safari
+      family == TimesNewRoman.family || //Chrome
+      family == "-webkit-standard" || // Safari (works like serif generic font for firefox)
+      family == "Times" // MacOS Chrome
   }
 
   companion object {

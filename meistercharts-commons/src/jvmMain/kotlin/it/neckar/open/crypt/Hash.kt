@@ -43,7 +43,7 @@ class Hash(
   /**
    * The algorithm used to calculate the hash value
    */
-  val algorithm: Algorithm,
+  val algorithm: HashAlgorithm,
   /**
    * The hash value
    */
@@ -93,7 +93,7 @@ class Hash(
      * @return the hash
      */
     @JvmStatic
-    fun fromHex(algorithm: Algorithm, valueAsHex: String): Hash {
+    fun fromHex(algorithm: HashAlgorithm, valueAsHex: String): Hash {
       try {
         return Hash(algorithm, Hex.decodeHex(valueAsHex.toCharArray()))
       } catch (e: DecoderException) {
