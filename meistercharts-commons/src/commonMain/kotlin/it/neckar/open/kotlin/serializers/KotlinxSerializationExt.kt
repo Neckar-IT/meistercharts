@@ -51,9 +51,6 @@ fun SerialDescriptor.getElementDescriptorByName(name: String): SerialDescriptor 
 
 /**
  * Throws an exception if this type should not be used for serialization
- *
- * Returns false, if:
- * * this implements a sealed interface
  */
 expect fun <S : Any> KClass<S>.verifyPlausibleForSerialization(): Unit
 

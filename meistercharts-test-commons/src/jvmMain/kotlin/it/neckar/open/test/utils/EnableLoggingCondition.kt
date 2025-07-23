@@ -1,5 +1,6 @@
 package it.neckar.open.test.utils
 
+import ch.qos.logback.classic.Level
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -7,13 +8,13 @@ import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
 /**
- * Disables logging for tests
+ * Enables logging for tests (overrides [DisableLoggingCondition]).
  */
-class DisableLoggingCondition : BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
+class EnableLoggingCondition : BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
   var originalLevelsAll: LoggingTestSupport.OriginalLevels? = null
 
   override fun beforeAll(context: ExtensionContext?) {
-    originalLevelsAll = LoggingTestSupport.forceLoggingLevel()
+    originalLevelsAll = LoggingTestSupport.forceLoggingLevel(level = Level.INFO)
   }
 
   override fun afterAll(context: ExtensionContext?) {
@@ -25,7 +26,7 @@ class DisableLoggingCondition : BeforeEachCallback, AfterEachCallback, BeforeAll
   var originalLevelsEach: LoggingTestSupport.OriginalLevels? = null
 
   override fun beforeEach(context: ExtensionContext?) {
-    originalLevelsEach = LoggingTestSupport.forceLoggingLevel()
+    originalLevelsEach = LoggingTestSupport.forceLoggingLevel(level = Level.INFO)
   }
 
   override fun afterEach(context: ExtensionContext?) {

@@ -49,6 +49,7 @@ import java.nio.charset.Charset
 import javax.annotation.Nonnull
 
 /**
+ * JSON Utils for comparing JSON strings or files.
  */
 object JsonUtils {
   @JvmStatic
@@ -62,7 +63,7 @@ object JsonUtils {
   fun assertJsonEquals(
     expected: String?, actual: String?,
     /**
-     * is called for the actual tree. Can be used to modify the tree inline - before comparing
+     * Is called for the actual tree. Can be used to modify the tree inline - before comparing
      */
     actualTreeModifier: JsonNode.() -> Unit = {},
   ) {
@@ -100,6 +101,9 @@ object JsonUtils {
     }
   }
 
+  /**
+   * Formats the given JSON string.
+   */
   @JvmStatic
   @Nonnull
   fun formatJson(json: String?): String {
@@ -120,6 +124,9 @@ object JsonUtils {
   }
 }
 
+/**
+ * Compares the given string with the expected JSON file.
+ */
 fun Assert<String>.isJsonEqualTo(
   expectedJsonUrl: Url,
   actualTreeModifier: JsonNode.() -> Unit = {},
@@ -197,11 +204,18 @@ fun Assert<String>.isOpenApiEqualTo(
   }
 }
 
+/**
+ * Removes the "x-source-location" from the current node and all child nodes.
+ * This is useful to simplify comparing open-api files.
+ *
+ * Modifies the current node in place.
+ */
 fun JsonNode.removeSourceLocation() {
   if (this.isObject) {
     val iterator = this.fields()
     while (iterator.hasNext()) {
       val next = iterator.next()
+      //This is the same key as in [it.neckar.rest.openapi.SourceRef::SourceInfo]
       if (next.key == "x-source-location") {
         //val oldValue = next.value.asText()
         //val parts = oldValue.split(":")

@@ -40,11 +40,13 @@ val KClass<*>.simpleNameNonNull: String
 @Deprecated("Use enumEntries instead", ReplaceWith("enumEntries"))
 inline val <T : Any> KClass<T>.enumValues: Array<T>
   get() {
+    require(this.isEnum) { "[$this] is not an enum class" }
     return this.enumEntries
   }
 
 val <T : Any> KClass<T>.enumEntries: Array<T>
   get() {
+    require(this.isEnum) { "[$this] is not an enum class" }
     return this.java.enumConstants ?: throw IllegalStateException("enumConstants is null for $this")
   }
 

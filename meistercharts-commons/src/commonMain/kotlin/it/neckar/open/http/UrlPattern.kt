@@ -63,6 +63,13 @@ interface UrlPattern {
     fun relative(value: String, parameterNames: List<UrlParameterName>): Relative {
       return RelativeMulti(value, parameterNames)
     }
+
+    /**
+     * Creates a new instance of the builder
+     */
+    fun builder(): Builder {
+      return Builder()
+    }
   }
 
 
@@ -106,6 +113,10 @@ interface UrlPattern {
     @Deprecated("Do not use this method. Use resolve() with the correct amount of parameters instead.", level = DeprecationLevel.HIDDEN)
     fun resolve(vararg parameterValues: Uuid): Url.Relative {
       throw UnsupportedOperationException("Keep as hint, that this signature is a bad idea")
+    }
+
+    fun toBuilder(): Builder {
+      return Builder.of(this)
     }
   }
 
@@ -469,5 +480,47 @@ interface UrlPattern {
     }
   }
 
+  /**
+   * Builder for URL patterns
+   */
+  class Builder {
+    /**
+     * The string value of the URL.
+     * Must contain the parameter names in "{}" notation (e.g., "foobar/{uuid}").
+     */
+    private var value: String = ""
 
+    /**
+     * Returns the parameter names that are part of the [value].
+     * Might be empty.
+     */
+    private val parameterNames = mutableListOf<UrlParameterName>()
+
+    fun append(segment: String): Builder {
+      return (build() + segment).toBuilder()
+    }
+
+    fun append(parameterName: UrlParameterName): Builder {
+      return (build().plus(parameterName)).toBuilder()
+    }
+
+    fun build(): Relative {
+      return when (parameterNames.size) {
+        0 -> Relative0(value)
+        1 -> Relative1(value, parameterNames[0])
+        2 -> Relative2(value, parameterNames[0], parameterNames[1])
+        3 -> Relative3(value, parameterNames[0], parameterNames[1], parameterNames[2])
+        else -> relative(value = value, parameterNames = parameterNames)
+      }
+    }
+
+    companion object {
+      fun of(relative: Relative): Builder {
+        return Builder().apply {
+          value = relative.value
+          parameterNames.addAll(relative.parameterNames)
+        }
+      }
+    }
+  }
 }

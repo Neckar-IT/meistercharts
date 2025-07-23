@@ -10,15 +10,15 @@ import org.slf4j.LoggerFactory
 class LoggingTestSupport {
   companion object {
     /**
-     * Disables logging for all loggers.
+     * Forces the logging level of all loggers to the given level.
      */
-    fun disableLogging(minLevel: Level = Level.ERROR): OriginalLevels {
+    fun forceLoggingLevel(level: Level = Level.ERROR): OriginalLevels {
       val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
 
       val originalLevels = loggerContext.getLoggerList().filter { it.level != null }.associate { it.name to it.level }
       loggerContext.getLoggerList().forEach {
         if (it.level != null) {
-          it.level = minLevel
+          it.level = level
         }
       }
 

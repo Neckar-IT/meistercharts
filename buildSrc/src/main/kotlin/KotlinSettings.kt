@@ -13,6 +13,8 @@ object KotlinSettings {
   /**
    * Contains the annotations we opted in for.
    * Can be used to configure Kotlin extensions directly
+   *
+   * Look at: https://github.com/JetBrains/kotlin/blob/master/compiler/arguments/src/org/jetbrains/kotlin/arguments/description/CommonCompilerArguments.kt
    */
   val optInExperimentalAnnotations: List<String> = listOf(
     "kotlin.ExperimentalStdlibApi", //additional methods in the std lib
@@ -34,7 +36,6 @@ object KotlinSettings {
     "kotlinx.coroutines.ExperimentalCoroutinesApi", //Coroutines
     "kotlin.concurrent.atomics.ExperimentalAtomicApi", //Atomic support (since 2.1.20)
     "kotlin.time.ExperimentalTime", //Time support (since 2.1.20)
-
     //ExperimentalAnnotationsInMetadata TODO enable for 2.2
   )
 
@@ -60,6 +61,8 @@ object KotlinSettings {
   /**
    * The free compiler args that must be used to configure the Kotlin compiler tasks.
    * These args are used for both JS and JVM
+   *
+   * See https://github.com/JetBrains/kotlin/blob/master/compiler/arguments/src/org/jetbrains/kotlin/arguments/description/CommonCompilerArguments.kt for a list of all available compiler arguments
    */
   val freeCompilerArgs: List<String> = buildList {
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" }) //Opt in to the experimental features we are using
@@ -74,11 +77,21 @@ object KotlinSettings {
     add("-Xwarning-level=NOTHING_TO_INLINE:disabled") //Suppress warnings for NOTHING_TO_INLINE globally!
     add("-Xmulti-dollar-interpolation") //Multi Dollar Interpolation (https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation)
 
-    if (languageVersion >= KotlinVersion.KOTLIN_2_2) {
-      //Kotlin 2.2 required
-      add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
-      add("-Xcontext-parameters") //Context Parameters
-    }
+    //Does not work with KSP Tests (it.neckar.ksp.KspExtKtTest) at the moment
+    //add("-Xnested-type-aliases") //Enable nested type aliases (https://kotlinlang.org/docs/type-aliases.html)
+
+    add("-Xannotation-target-all") //Enable experimental language support for @all: annotation use-site target
+
+    //Kotlin 2.2 required
+    add("-Xannotation-default-target=param-property") //Annotations default updated (https://youtrack.jetbrains.com/issue/KT-73255)
+    add("-Xcontext-parameters") //Context Parameters
+
+
+    //Kotlin 2.2.20 required
+    //add("-Xallow-condition-implies-returns-contracts") //Allow contracts that specify a limited conditional returns postcondition
+    //add("-Xallow-holdsin-contract") //Allow contracts that specify a condition that holds true inside a lambda argument
+    //add("-Xallow-contracts-on-more-functions") //Allow contracts on some operators and accessors, and allow checks for erased types
+    //add("-Xallow-reified-type-in-catch") //Allow 'catch' parameters to have reified types
 
     //
     // Old compiler settings, for documentation purposes

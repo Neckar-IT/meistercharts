@@ -243,6 +243,8 @@ public object Libs {
 
     public const val commons_math3: String = "org.apache.commons:commons-math3:_"
 
+    public const val commons_text: String = "org.apache.commons:commons-text:_"
+
     public const val pdfbox: String = "org.apache.pdfbox:pdfbox:_"
 
     public const val poi: String = "org.apache.poi:poi:_"
@@ -262,6 +264,8 @@ public object Libs {
 
     public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
+
+    public const val evo_inflector: String = "org.atteo:evo-inflector:_"
 
     public const val awaitility: String = "org.awaitility:awaitility:_"
 

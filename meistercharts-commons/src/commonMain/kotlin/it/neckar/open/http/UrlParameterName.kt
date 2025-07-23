@@ -10,7 +10,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 @Serializable
 @TsExport
-value class UrlParameterName(val value: String) {
+value class UrlParameterName(val value: String) : UrlPathSegment {
   override fun toString(): String {
     return asUrlPatternParameter()
   }
