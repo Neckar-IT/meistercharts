@@ -230,9 +230,6 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
-    public const val me_champeau_jmh_gradle_plugin: String =
-            "me.champeau.jmh:me.champeau.jmh.gradle.plugin:_"
-
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
@@ -242,8 +239,6 @@ public object Libs {
     public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
 
     public const val commons_math3: String = "org.apache.commons:commons-math3:_"
-
-    public const val commons_text: String = "org.apache.commons:commons-text:_"
 
     public const val pdfbox: String = "org.apache.pdfbox:pdfbox:_"
 
@@ -264,8 +259,6 @@ public object Libs {
 
     public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
-
-    public const val evo_inflector: String = "org.atteo:evo-inflector:_"
 
     public const val awaitility: String = "org.awaitility:awaitility:_"
 
@@ -400,12 +393,6 @@ public object Libs {
 
     public const val mongodb_driver_kotlin_coroutine: String =
             "org.mongodb:mongodb-driver-kotlin-coroutine:_"
-
-    public const val jmh_core: String = "org.openjdk.jmh:jmh-core:_"
-
-    public const val jmh_generator_annprocess: String = "org.openjdk.jmh:jmh-generator-annprocess:_"
-
-    public const val jmh_generator_bytecode: String = "org.openjdk.jmh:jmh-generator-bytecode:_"
 
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
