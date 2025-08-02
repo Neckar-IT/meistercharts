@@ -1,8 +1,14 @@
 package it.neckar.open.kotlin.lang
 
+import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.javaField
 
 /**
  * Returns true if this is an interface.
@@ -167,4 +173,75 @@ fun KType.isNotNothing(): Boolean {
  */
 inline fun <reified T : Annotation> getAnnotationName(): String {
   return T::class.simpleName ?: throw IllegalStateException("Could not find the simple name for ${T::class}")
+}
+
+/**
+ * Returns the (qualified) annotation name for the given annotation class.
+ */
+fun KClass<*>.findAnnotationByName(qualifiedName: String): Annotation? {
+  return annotations.firstOrNull { it.annotationClass.qualifiedName == qualifiedName }
+}
+
+inline fun <reified T: Annotation> KClass<*>.findAnnotationByName(): Annotation? {
+  return findAnnotationByName(T::class.qualifiedName.requireNotNull { "Could not find qualified name for ${T::class}" })
+}
+
+/**
+ * Finds the property for the given constructor parameter
+ */
+fun <TYPE : Any> KClass<TYPE>.getBackingProperty(constructorParameter: KParameter): KProperty1<TYPE, *> {
+  return getProperty(valName = constructorParameter.name.requireNotNull { "Name not found for $constructorParameter" })
+}
+
+/**
+ * Returns the property for the given name.
+ */
+fun <TYPE : Any> KClass<TYPE>.getProperty(valName: String): KProperty1<TYPE, *> {
+  return findProperty(valName)
+    ?: throw IllegalArgumentException("Could not find callable for parameter [$valName] in class [${simpleNameNonNull}]. Available members: ${this.members.joinToString { it.name }}")
+}
+
+/**
+ * Finds the property for the given name.
+ * Returns null if no property is found.
+ */
+fun <TYPE : Any> KClass<TYPE>.findProperty(valName: String): KProperty1<TYPE, *>? {
+  return memberProperties
+    .firstOrNull { it.name == valName }
+    ?.also {
+      it.isAccessible = true
+    }
+}
+
+/**
+ * Returns true if the property is marked as transient.
+ */
+fun KProperty1<out Any, *>.isTransient(): Boolean {
+  val javaField = javaField.requireNotNull { "Could not find javaField for $this" }
+  return Modifier.isTransient(javaField.modifiers)
+}
+
+/**
+ * Returns true if the property has a backing field.
+ * This is the case if it is not a val with a custom getter or a var with a custom getter/setter.
+ */
+val KProperty1<out Any, *>.hasBackingField: Boolean
+  get() {
+    return this.javaField != null
+  }
+
+/**
+ * Returns the value of the property for the given instance.
+ */
+fun KProperty1<out Any, *>.getValueForced(instance: Any): Any? {
+  @Suppress("UNCHECKED_CAST")
+  this as KProperty1<Any, *>
+  this.isAccessible = true //Make sure we can access the property
+
+  if (isConst) {
+    //For const properties, we can call the getter directly
+    return this.getter.call()
+  }
+
+  return this.get(instance)
 }

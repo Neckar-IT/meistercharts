@@ -29,6 +29,23 @@ val SerialKind.isPrimitive: Boolean
     }
   }
 
+@OptIn(ExperimentalSerializationApi::class)
+val SerialKind.toPrimitiveType: KClass<*>?
+  get() {
+    return when (this) {
+      PrimitiveKind.BOOLEAN -> Boolean::class
+      PrimitiveKind.BYTE -> Byte::class
+      PrimitiveKind.CHAR -> Char::class
+      PrimitiveKind.DOUBLE -> Double::class
+      PrimitiveKind.FLOAT -> Float::class
+      PrimitiveKind.INT -> Int::class
+      PrimitiveKind.LONG -> Long::class
+      PrimitiveKind.SHORT -> Short::class
+      PrimitiveKind.STRING -> String::class
+      else -> null
+    }
+  }
+
 
 /**
  * Returns the required element names for this descriptor
@@ -61,6 +78,13 @@ expect fun <S : Any> KClass<S>.verifyPlausibleForSerialization(): Unit
  */
 fun SerialDescriptor.isPrimitive(): Boolean {
   return this.kind.isPrimitive
+}
+
+/**
+ * Returns the primitive type of this descriptor if it is a primitive serializer.
+ */
+fun SerialDescriptor.toPrimitiveType(): KClass<*>? {
+  return this.kind.toPrimitiveType
 }
 
 /**

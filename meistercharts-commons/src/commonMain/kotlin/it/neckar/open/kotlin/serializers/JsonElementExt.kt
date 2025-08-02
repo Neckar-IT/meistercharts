@@ -17,6 +17,12 @@ fun JsonObjectBuilder.putNotNull(key: String, value: String?) {
   }
 }
 
+fun JsonObjectBuilder.putNotNull(key: String, element: JsonElement?) {
+  if (element != null) {
+    put(key, element)
+  }
+}
+
 fun JsonObjectBuilder.putNotNull(key: String, value: Boolean?) {
   if (value != null) {
     put(key, value)
