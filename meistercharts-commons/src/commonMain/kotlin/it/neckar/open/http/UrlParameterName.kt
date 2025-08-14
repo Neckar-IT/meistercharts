@@ -26,7 +26,7 @@ value class UrlParameterName(val value: String) : UrlPathSegment {
     val uuid: UrlParameterName = UrlParameterName("uuid")
     val verbose: UrlParameterName = UrlParameterName("verbose")
 
-    val sortBy: UrlParameterName = UrlParameterName("sort-by")
-    val sortOrder: UrlParameterName = UrlParameterName("sort-order")
+    val sortBy: UrlParameterName = UrlParameterName("sortBy")
+    val sortOrder: UrlParameterName = UrlParameterName("sortOrder")
   }
 }

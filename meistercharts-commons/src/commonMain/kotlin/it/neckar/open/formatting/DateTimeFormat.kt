@@ -7,6 +7,7 @@ import it.neckar.open.kotlin.lang.toIntFloor
 import it.neckar.open.time.formatHumanized
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
+import it.neckar.time.Millis
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -218,6 +219,10 @@ expect class DateTimeFormatShortWithMillis() : DateTimeFormat {
   override fun format(timestamp: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String
 }
 
+
+fun @ms Millis.formatUtc(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+  return this.millis.formatUtc(whitespaceConfig)
+}
 
 /**
  * Formats millis as UTC. Uses [dateTimeFormatUTC] - with cache.

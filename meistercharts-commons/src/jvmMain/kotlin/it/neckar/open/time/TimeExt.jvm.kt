@@ -40,7 +40,7 @@ val utcDateTimeFormat: DateTimeFormatter = DateTimeFormatterBuilder()
   .appendPattern("ss")
   .appendLiteral(".")
   .appendPattern("SSS")
-  .appendLiteral('Z')
+  .appendOffset("+HH:MM", "Z")
   .toFormatter()
 
 

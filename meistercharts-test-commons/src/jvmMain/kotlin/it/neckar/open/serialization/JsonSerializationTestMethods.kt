@@ -46,6 +46,28 @@ fun <T> testDeserialization(
   return testDeserialization(serializer, expected, comparisonCheck) { json }
 }
 
+inline fun <reified T> testSerialization(
+  objectToSerialize: T,
+
+  serializer: KSerializer<T> = serializer(),
+  serializersModule: SerializersModule = EmptySerializersModule(),
+
+  //comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
+  //  assertThat(deserialized).isEqualTo(originalObject)
+  //},
+
+  //language=JSON
+  json: () -> String,
+) {
+
+  val encoder = Json {
+    this.serializersModule = serializersModule
+    this.defaultJsonConfiguration(true)
+  }
+
+  testSerialization(objectToSerialize = objectToSerialize, encoder = encoder, serializer = serializer, json())
+}
+
 /**
  * Tests serialization round trip
  */
@@ -118,14 +140,18 @@ fun <T> _roundTrip(
   comparisonCheck: ComparisonCheck<T>,
   expectedJson: String?,
 ): T {
+  val json = testSerialization(objectToSerialize, encoder, serializer, expectedJson)
+  return testDeserialization(encoder, serializer, json, comparisonCheck, objectToSerialize)
+}
+
+fun <T> testSerialization(objectToSerialize: T, encoder: Json, serializer: KSerializer<T>, expectedJson: String?): String {
   val json = encoder.encodeToString(serializer, objectToSerialize)
 
   //println("JSON length: ${json.toByteArray().size}")
   expectedJson?.let {
     JsonUtils.assertJsonEquals(expectedJson, json)
   }
-
-  return testDeserialization(encoder, serializer, json, comparisonCheck, objectToSerialize)
+  return json
 }
 
 private fun <T> testDeserialization(encoder: Json, serializer: KSerializer<T>, json: String, comparisonCheck: ComparisonCheck<T>, objectToSerialize: T): T {

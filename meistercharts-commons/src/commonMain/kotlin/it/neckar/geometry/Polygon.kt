@@ -99,8 +99,16 @@ data class Polygon(private val vertices: List<Coordinates>) : Shape {
 
   override fun contains(coordinates: Coordinates): Boolean {
     //simplified variant TODO: correct it
-    if (true) return boundingBox.contains(coordinates)
-    //if (boundingBox.contains(coordinates).not()) return false
+    return boundingBox.contains(coordinates)
+  }
+
+  /**
+   * Checks if the polygon contains the given coordinates using the ray-casting algorithm.
+   * This method works correctly with irregular polygons, including concave ones.
+   * But it is less precise around the edges and corners of the polygon due to floating-point arithmetic.
+   */
+  fun containsRayCast(coordinates: Coordinates): Boolean {
+    if (boundingBox.contains(coordinates).not()) return false
     // Implement point-in-polygon algorithm (e.g., ray-casting algorithm)
     var result = false
     var previousVertexIndex = vertices.size - 1
@@ -111,7 +119,7 @@ data class Polygon(private val vertices: List<Coordinates>) : Shape {
       if ((vertex.y > coordinates.y) != (previousVertex.y > coordinates.y) &&
         (coordinates.x < (previousVertex.x - vertex.x) * (coordinates.y - vertex.y) / (previousVertex.y - vertex.y) + vertex.x)
       ) {
-        result = !result
+        result = result.not()
       }
       previousVertexIndex = vertexIndex
     }
