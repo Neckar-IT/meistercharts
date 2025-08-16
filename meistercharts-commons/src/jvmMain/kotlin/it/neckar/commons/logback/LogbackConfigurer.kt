@@ -2,7 +2,6 @@ package it.neckar.commons.logback
 
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
@@ -14,10 +13,10 @@ import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy
 import ch.qos.logback.core.spi.FilterReply
 import ch.qos.logback.core.util.FileSize
 import ch.qos.logback.core.util.StatusPrinter
-import com.github.loki4j.logback.AbstractHttpSender.BasicAuth
-import com.github.loki4j.logback.JavaHttpSender
-import com.github.loki4j.logback.JsonEncoder
+import com.github.loki4j.logback.JsonLayout
 import com.github.loki4j.logback.Loki4jAppender
+import com.github.loki4j.logback.PipelineConfigAppenderBase
+import com.github.loki4j.logback.PipelineConfigAppenderBase.HttpCfg
 import it.neckar.commons.logback.LogbackConfigurer.configureLoggingConsoleOnly
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
@@ -307,21 +306,17 @@ object LogbackConfigurer {
       loki4jAppender.setMetricsEnabled(true) //TODO check?
     }
 
-    loki4jAppender.setHttp(JavaHttpSender().also {
-      it.setAuth(BasicAuth().also {
-        it.setUsername(lokiServerConfiguration.username)
-        it.setPassword(lokiServerConfiguration.password)
+    loki4jAppender.setHttp(HttpCfg().also { cfg ->
+      cfg.setAuth(PipelineConfigAppenderBase.BasicAuth().also {auth ->
+        auth.setUsername(lokiServerConfiguration.username)
+        auth.setPassword(lokiServerConfiguration.password)
       })
-      it.url = lokiServerConfiguration.lokiServerUrl.toString()
+      cfg.setUrl(lokiServerConfiguration.lokiServerUrl.toString())
     })
 
-    loki4jAppender.setFormat(JsonEncoder().apply {
-      setMessage(PatternLayout().also {
-        it.pattern = "l=%level c=%logger{30} t=%thread | %msg %ex" //copied from com.github.loki4j.logback.AbstractLoki4jEncoder.DEFAULT_MSG_PATTERN
-      })
+    loki4jAppender.setMessage(JsonLayout())
 
-      label.setPattern("app=${app},host=${hostname},logger=%logger")
-    })
+    loki4jAppender.setLabels("app=${app}\nhost=${hostname}\nlogger=%logger")
     loki4jAppender.setVerbose(true)
 
     loki4jAppender.start()

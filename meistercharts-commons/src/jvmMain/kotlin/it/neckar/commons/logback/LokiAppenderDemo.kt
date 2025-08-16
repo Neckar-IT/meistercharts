@@ -1,5 +1,6 @@
 package it.neckar.commons.logback
 
+import it.neckar.commons.logback.loki.configureBatch
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import org.slf4j.event.Level
@@ -10,16 +11,19 @@ fun main() {
 
   LogbackConfigurer.configureLoggingConsoleAndLoki(
     app = "loki-appender-demo-app",
-    hostname = "silver",
+    hostname = "test 123",
     levelForRoot = Level.INFO,
     levelForNeckarIt = Level.DEBUG
   ) {
-    setBatchTimeoutMs(1000)
+    configureBatch {
+      setTimeoutMs(1000)
+    }
   }
 
   LokiAppenderDemo().runLoggingDemo()
   Thread.sleep(5000)
 }
+
 
 /**
  *
