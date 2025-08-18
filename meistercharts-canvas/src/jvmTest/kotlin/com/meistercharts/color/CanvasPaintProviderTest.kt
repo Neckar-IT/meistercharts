@@ -18,7 +18,7 @@ package com.meistercharts.color
 import assertk.*
 import assertk.assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
+import kotlin.test.assertFailsWith
 
 class CanvasPaintProviderTest {
   @Test
@@ -29,35 +29,23 @@ class CanvasPaintProviderTest {
     assertThat(Color.rgb(7, 8, 255)).isEqualTo(Color.web("#0708FF").toRgba())
     assertThat(Color.rgba(7, 8, 255, 0.5)).isEqualTo(Color.web("rgba(7,8,255,0.5)").toRgba())
 
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(7, 8, 256)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(7, 8, -1)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(7, 256, 8)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(7, -1, 30)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(256, 8, 30)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
-    try {
+    assertFailsWith<IllegalArgumentException> {
       Color.rgb(-1, 8, 30)
-      fail("no exception?")
-    } catch (ignore: IllegalArgumentException) {
     }
   }
 

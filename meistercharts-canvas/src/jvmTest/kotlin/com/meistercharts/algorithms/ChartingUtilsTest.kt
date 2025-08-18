@@ -21,6 +21,7 @@ import com.meistercharts.calc.ChartingUtils
 import it.neckar.open.kotlin.lang.ifNaN
 import it.neckar.open.kotlin.lang.or0ifNaN
 import org.junit.jupiter.api.Test
+import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 internal class ChartingUtilsTest {
@@ -36,10 +37,8 @@ internal class ChartingUtilsTest {
 
   @Test
   internal fun lineWithin() {
-    try {
+    assertFailsWith<IllegalArgumentException> {
       ChartingUtils.lineWithin(0.0, 2.0, 1.0, 0.5)
-      fail("IllegalArgumentException expected because min > max")
-    } catch (e: IllegalArgumentException) {
     }
 
     // max - min < lineWidth

@@ -17,14 +17,14 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRange
 import com.meistercharts.history.impl.historyChunk
+import com.meistercharts.time.TimeRange
+import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
-import it.neckar.open.test.utils.VirtualTime
-import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.open.test.utils.DisableLogging
+import it.neckar.open.test.utils.VirtualTime
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
@@ -162,10 +162,8 @@ class HistoryBucketDescriptorTest {
 
   @Test
   internal fun testIt() {
-    try {
+    assertFailure {
       HistoryBucketDescriptor.forRange(0.0, Double.MAX_VALUE, SamplingPeriod.EveryTenMillis.toHistoryBucketRange())
-      fail("Where is the exception?")
-    } catch (e: Exception) {
     }
   }
 
