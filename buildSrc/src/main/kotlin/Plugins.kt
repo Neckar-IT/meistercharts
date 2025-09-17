@@ -114,6 +114,7 @@ object Plugins {
 
   const val secretsLoader: String = "it.neckar.secrets-loader"
   const val openapiValidator: String = "it.neckar.openapi.validator"
+  const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
 
   @Deprecated("Does not seem to work")
   const val ssh: String = "online.colaba.ssh"
@@ -308,6 +309,9 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: Plugin
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: PluginDependencySpec
   get() = id(Plugins.openapiValidator)
+
+inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig: PluginDependencySpec
+  get() = id(Plugins.openapiGenerationConfig)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
   get() = id(Plugins.generatePnpmWorkspaceYaml)

@@ -12,16 +12,35 @@ import java.io.File
  */
 class LocalResourceUpdateSupport(
   /**
-   * The source of the resource file that is verified
+   * The file that is verified
    */
-  val resourceSource: ResourceSource,
+  val file: File,
+
+  val generateIfNotExists: Boolean = false,
 ) {
+
+  private val generationSupport: LocalResourceGenerationSupport = LocalResourceGenerationSupport(file)
+
+  init {
+    if (generateIfNotExists) {
+      //Create the file as soon as possible to detect file related problems asap
+      if (file.exists().not()) {
+        file.parentFile?.mkdirs()
+        require(file.createNewFile()) {
+          "Could not create file: ${file.absolutePath}"
+        }
+      }
+    }
+
+    //Ensure the file exists, fail immediately if not
+    file.requireIsFile()
+  }
 
   /**
    * Returns the content of the resource file
    */
   fun loadResourceContentAsString(): String {
-    return resourceSource.loadResourceContentAsString()
+    return file.readText()
   }
 
   /**
@@ -46,7 +65,13 @@ class LocalResourceUpdateSupport(
 
       if (ExecutionEnvironment.inCI.not()) {
         //save the new content - if *not* in CI
-        resourceSource.writeText(updatedContentProvider())
+        println("#######################")
+        println("#######################")
+        println("Writing updated content to file: ${file.absolutePath}")
+        println("#######################")
+        println("#######################")
+
+        generationSupport.generate(updatedContentProvider)
       }
 
       throw e
@@ -91,63 +116,5 @@ class LocalResourceUpdateSupport(
         expectedString
       }
     )
-  }
-
-  companion object {
-    /**
-     * Creates a new instance that updates the provided file if necessary
-     */
-    operator fun invoke(file: File, generateIfNotExists: Boolean = false): LocalResourceUpdateSupport {
-      val fileSource = ResourceSource.FileSource(file, generateIfNotExists)
-
-      return LocalResourceUpdateSupport(fileSource)
-    }
-  }
-
-  /**
-   * Interface that defines the source of a resource file.
-   */
-  sealed interface ResourceSource {
-    /**
-     * Loads the content of the resource file as a string.
-     */
-    fun loadResourceContentAsString(): String
-
-    /**
-     * Writes the updated content to the resource file.
-     * This method is only called if the content does not match the expected content.
-     */
-    fun writeText(updatedContent: String)
-
-    /**
-     * A [ResourceSource] that reads from a file.
-     */
-    class FileSource(val file: File, generateIfNotExists: Boolean) : ResourceSource {
-      init {
-        if (generateIfNotExists) {
-          if (file.exists().not()) {
-            require(file.createNewFile()) {
-              "Could not create file: ${file.absolutePath}"
-            }
-          }
-        }
-
-        file.requireIsFile()
-      }
-
-      override fun loadResourceContentAsString(): String {
-        return file.readText()
-      }
-
-      override fun writeText(updatedContent: String) {
-        println("#######################")
-        println("#######################")
-        println("Writing updated content to file: ${file.absolutePath}")
-        println("#######################")
-        println("#######################")
-
-        file.writeText(updatedContent)
-      }
-    }
   }
 }

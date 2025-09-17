@@ -354,6 +354,14 @@ data class ConfiguredProject internal constructor(
   fun task(taskName: String): String {
     return "$path:$taskName"
   }
+
+  /**
+   * Returns the "build" task name for this project
+   */
+  val buildTask: String
+    get() {
+      return task("build")
+    }
 }
 
 
