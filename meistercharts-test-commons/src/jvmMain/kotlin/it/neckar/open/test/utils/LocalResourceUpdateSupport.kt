@@ -3,7 +3,7 @@ package it.neckar.open.test.utils
 import assertk.*
 import com.fasterxml.jackson.databind.JsonNode
 import it.neckar.open.file.requireIsFile
-import it.neckar.open.kotlin.lang.ExecutionEnvironment
+import it.neckar.runtime.context.RuntimeContext
 import java.io.File
 
 /**
@@ -63,7 +63,7 @@ class LocalResourceUpdateSupport(
       compare(storedContent)
     } catch (e: java.lang.AssertionError) {
 
-      if (ExecutionEnvironment.inCI.not()) {
+      if (RuntimeContext.inCI.not()) {
         //save the new content - if *not* in CI
         println("#######################")
         println("#######################")
