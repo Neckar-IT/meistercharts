@@ -19,10 +19,10 @@ import javax.annotation.Nonnull
 class VirtualNowProviderExtension : AbstractResourceProvidingExtension<VirtualNowProvider>(VirtualNowProvider::class.java), BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
 
   private val configuringSupport: ConfiguringSupport<NowProvider, VirtualTime> = ConfiguringSupport(
-    NowProvider::class.java,
-    VirtualTime::class.java,
-    "virtualTime",
-    object : ConfigurationCallback<NowProvider, VirtualTime> {
+    storedObjectType = NowProvider::class.java,
+    annotationType = VirtualTime::class.java,
+    key = "virtualTime",
+    configuringStrategy = object : ConfiguringStrategy<NowProvider, VirtualTime> {
       override fun getOriginalValue(): NowProvider {
         return nowProvider
       }

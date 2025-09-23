@@ -1,7 +1,7 @@
 package it.neckar.runtime.detection
 
 /**
- * Constants for runtime context environment keys.
+ * Constants for system property keys.
  */
 object RuntimeContextSys {
   /**

@@ -8,6 +8,10 @@ package it.neckar.runtime.context
  *
  * Created once during application bootstrap and treated as read-only
  * throughout the application's lifetime.
+ *
+ * ## Initialization
+ * * JVM: `RuntimeContext.initializeFromEnvironment(...)`. See `RuntimeContextEnv` for the environment keys that are used.
+ * * JS: To Be Done
  */
 data class RuntimeContext<HostType: ServiceHost>(
   /**

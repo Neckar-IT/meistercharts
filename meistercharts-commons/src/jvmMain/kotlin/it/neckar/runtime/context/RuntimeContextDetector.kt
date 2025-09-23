@@ -78,7 +78,11 @@ object RuntimeContextDetector {
    * Resolves the execution environment profile from system properties or environment variables.
    */
   private fun resolveProfile(source: Source): ExecutionEnvironment? {
-    val raw = resolveString(source, RuntimeContextSys.KEY_RUNTIME_EXECUTION_ENVIRONMENT_SYS, RuntimeContextEnv.KEY_RUNTIME_EXECUTION_ENVIRONMENT_ENV)
+    val raw = resolveString(
+      source = source,
+      systemPropertiesKey = RuntimeContextSys.KEY_RUNTIME_EXECUTION_ENVIRONMENT_SYS,
+      envKey = RuntimeContextEnv.KEY_RUNTIME_EXECUTION_ENVIRONMENT_ENV
+    )
     return raw?.let { parseEnumRelaxed<ExecutionEnvironment>(it) }
   }
 

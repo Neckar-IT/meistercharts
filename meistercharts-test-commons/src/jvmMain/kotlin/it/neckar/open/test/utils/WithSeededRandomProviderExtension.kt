@@ -47,7 +47,7 @@ class WithSeededRandomProviderExtension : AbstractConfiguringExtension<Random, R
   Random::class.java,
   RandomWithSeed::class.java,
   "random",
-  object : ConfigurationCallback<Random, RandomWithSeed> {
+  object : ConfiguringStrategy<Random, RandomWithSeed> {
     override fun getOriginalValue(): Random {
       return random
     }

@@ -1,6 +1,11 @@
 package it.neckar.open.test.utils
 
-interface ConfigurationCallback<T, A : Annotation> {
+/**
+ * Strategy for [ConfiguringSupport].
+ *
+ * Provides and sets values
+ */
+interface ConfiguringStrategy<T, A : Annotation> {
   /**
    * Returns the original (currently set) value.
    * This method is called first - the returned value is stored and reset later.
@@ -14,7 +19,9 @@ interface ConfigurationCallback<T, A : Annotation> {
 
   /**
    * Is called with the value that shall be applied.
-   * Is called twice. Once before the test is run with the new value. Once after the test has run with the old value
+   * Is called twice:
+   * * Before the test is run with the new value.
+   * * After the test has run with the old value
    */
   fun applyValue(value: T)
 }

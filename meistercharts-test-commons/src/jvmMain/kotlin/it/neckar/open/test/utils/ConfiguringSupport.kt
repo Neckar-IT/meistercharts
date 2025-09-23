@@ -1,5 +1,6 @@
 package it.neckar.open.test.utils
 
+import it.neckar.open.lang.orNull
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.util.Optional
 import javax.annotation.Nonnull
@@ -32,21 +33,35 @@ import javax.annotation.Nonnull
  * ```
  */
 class ConfiguringSupport<T, A : Annotation>(
-  private val storedObjectType: Class<T>,
+  /**
+   * The type of the stored object - used for the store retrieval
+   */
+  private val storedObjectType: Class<out T>,
+  /**
+   * The annotation type that is used to fetch configuration values
+   */
   private val annotationType: Class<A>,
+  /**
+   * The key that is used to store the original value in the store
+   */
   private val key: String,
-  private val callback: ConfigurationCallback<T, A>
+  /**
+   * Contains logic to extract and apply the values
+   */
+  private val configuringStrategy: ConfiguringStrategy<T, A>,
 ) {
 
   /**
-   * Returns the configured value - if there is an annotation present, and extract returned a value
+   * Returns the configured value - if there is an annotation present, and extract returned a value.
+   * Else returns null.
    */
-  fun getConfiguredValue(context: ExtensionContext): Optional<T> {
-    return context.element
+  fun getConfiguredValue(context: ExtensionContext): T? {
+    val map = context.element
       .flatMap { annotatedElement -> Optional.ofNullable(annotatedElement.getAnnotation(annotationType)) }
       .map {
-        callback.extract(it)
+        configuringStrategy.extract(it)
       }
+    return map.orNull()
   }
 
   /**
@@ -78,18 +93,33 @@ class ConfiguringSupport<T, A : Annotation>(
   }
 
 
+  /**
+   * Common before method that is called from [beforeAll] and [beforeEach]
+   */
   private fun before(context: ExtensionContext, scope: Scope) {
-    val configuredValue = getConfiguredValue(context).orElse(null) ?: return
+    val configuredValue = getConfiguredValue(context) ?: return
 
-    val originalValue = callback.getOriginalValue()
+    val originalValue = configuringStrategy.getOriginalValue()
     context.getStore(ExtensionContext.Namespace.GLOBAL).put(createStoreKey(scope), originalValue)
-    callback.applyValue(configuredValue)
+
+    //Apply the configured value
+    configuringStrategy.applyValue(configuredValue)
   }
 
+  /**
+   * Common after method that is called from [afterAll] and [afterEach] - restores the original value
+   */
   private fun after(@Nonnull context: ExtensionContext, @Nonnull scope: Scope) {
-    context.getStore(ExtensionContext.Namespace.GLOBAL)[createStoreKey(scope), storedObjectType]?.let { callback.applyValue(it) }
+    val store = context.getStore(ExtensionContext.Namespace.GLOBAL)
+    val originalValue = store[createStoreKey(scope), storedObjectType] ?: return
+
+    //Restore the original value
+    configuringStrategy.applyValue(originalValue)
   }
 
+  /**
+   * Creates the store key for the given scope
+   */
   private fun createStoreKey(scope: Scope): String {
     return "${scope.name}.$key"
   }

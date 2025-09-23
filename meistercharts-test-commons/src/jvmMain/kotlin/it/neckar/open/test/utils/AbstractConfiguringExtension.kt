@@ -20,7 +20,7 @@ abstract class AbstractConfiguringExtension<T, A : Annotation> protected constru
   /**
    * The callback
    */
-  callback: ConfigurationCallback<T, A>
+  callback: ConfiguringStrategy<T, A>
 ) : BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
 
   private val configuringSupport: ConfiguringSupport<T, A> = ConfiguringSupport(storedObjectType, enumType, key, callback)

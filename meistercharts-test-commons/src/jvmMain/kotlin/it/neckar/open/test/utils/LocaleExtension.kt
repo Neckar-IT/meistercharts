@@ -41,7 +41,7 @@ class LocaleExtension : AbstractConfiguringExtension<Locale, WithLocale>(
   Locale::class.java,
   WithLocale::class.java,
   "locale",
-  object : ConfigurationCallback<Locale, WithLocale> {
+  object : ConfiguringStrategy<Locale, WithLocale> {
     override fun getOriginalValue(): Locale {
       return Locale.getDefault()
     }
