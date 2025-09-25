@@ -48,6 +48,13 @@ data class RuntimeContext<HostType: ServiceHost>(
   val debugMode: Boolean,
 ) {
 
+  /**
+   * Returns true if the runtime context has not been initialized
+   */
+  fun isInitialValue(): Boolean {
+    return this === initialValue
+  }
+
   companion object {
     /**
      * Technical execution environment — where/how the application process is running.
@@ -116,6 +123,13 @@ data class RuntimeContext<HostType: ServiceHost>(
         }
         return field
       }
+
+    /**
+     * Returns true if the runtime context has been initialized to a value different from the initial fallback value.
+     */
+    fun isInitialized(): Boolean {
+      return current.isInitialValue().not()
+    }
 
     /**
      * Initializes the current runtime context.

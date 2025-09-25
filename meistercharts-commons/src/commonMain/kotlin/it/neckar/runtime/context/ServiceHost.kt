@@ -9,7 +9,7 @@ interface ServiceHost {
   /**
    * The hostname of the service.
    */
-  val hostname: String
+  val hostname: Hostname
 
   /**
    * The deployment stage of the service.
@@ -25,15 +25,28 @@ interface ServiceHost {
    * Used as a default/fallback for standalone tools
    */
   object Localhost : ServiceHost, ServiceHostRegistry<Localhost> {
-    override val hostname: String
-      get() = "localhost"
+    override val hostname: Hostname
+      get() = Hostname.localhost
 
     override val executionEnvironment: ExecutionEnvironment = ExecutionEnvironment.LocalDev
 
     override val deploymentStage: DeploymentStage = DeploymentStage.Development
 
-    override fun findByHostname(hostname: String?): Localhost {
+    override fun findByHostname(hostname: Hostname?): Localhost {
       return this
+    }
+  }
+
+  /**
+   * Simple implementation of a service host
+   */
+  data class Simple(
+    override val hostname: Hostname,
+    override val deploymentStage: DeploymentStage = DeploymentStage.Development,
+    override val executionEnvironment: ExecutionEnvironment = ExecutionEnvironment.LocalDev,
+  ) : ServiceHost {
+    override fun toString(): String {
+      return "ServiceHost(hostname='$hostname', deploymentStage=$deploymentStage, executionEnvironment=$executionEnvironment)"
     }
   }
 }

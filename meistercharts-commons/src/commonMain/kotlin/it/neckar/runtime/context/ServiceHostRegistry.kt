@@ -11,5 +11,5 @@ interface ServiceHostRegistry<out T: ServiceHost> {
    * Returns a host by the hostname.
    * Should return a default host if the hostname is null or empty.
    */
-  fun findByHostname(hostname: String?): T
+  fun findByHostname(hostname: Hostname?): T
 }

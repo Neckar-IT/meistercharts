@@ -48,8 +48,17 @@ object CookiesSupport {
    * Deletes the cookie with the given name
    */
   fun deleteAllCookiesForKey(cookieName: CookieName) {
-    document.cookie.split(';').forEach { token: String ->
+    document.cookie.split(';')
+      .map { it.trim() }
+      .filter { it.isNotBlank() }
+      .forEach { token: String ->
       val splitToken = token.split("=")
+        if (splitToken.size != 2) {
+          //Invalid cookie - ignore
+          console.error("Invalid Cookie token [$token]. Could not split token at '='")
+          return@forEach
+        }
+
       val key = splitToken[0].trim()
       val value = splitToken[1].trim()
 

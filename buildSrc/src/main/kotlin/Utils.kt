@@ -941,7 +941,7 @@ val Project.ciJobToken: String
     require(ciJobToken.isNullOrBlank().not()) {
       "CI_JOB_TOKEN is blank"
     }
-    return ciJobToken ?: throw IllegalStateException("CI_JOB_TOKEN is null")
+    return ciJobToken
   }
 
 /**

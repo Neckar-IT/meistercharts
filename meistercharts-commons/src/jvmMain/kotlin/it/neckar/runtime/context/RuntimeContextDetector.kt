@@ -59,7 +59,7 @@ object RuntimeContextDetector {
 
     //Resolve the host name
     val hostNameRaw = forcedHostName ?: resolveString(source, RuntimeContextSys.KEY_SERVICE_HOST_SYS, RuntimeContextEnv.KEY_SERVICE_HOST_ENV)
-    val serviceHost = forcedHost ?: serviceHostRegistry.findByHostname(hostNameRaw)
+    val serviceHost = forcedHost ?: serviceHostRegistry.findByHostname(Hostname.nullable(hostNameRaw))
 
     val debugging = guessDebugging()
     val inUnitTest = guessInUnitTestEnvironment()
