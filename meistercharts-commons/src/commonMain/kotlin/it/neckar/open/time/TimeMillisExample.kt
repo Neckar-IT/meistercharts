@@ -1,0 +1,43 @@
+package it.neckar.open.time
+
+import it.neckar.open.unit.si.ms
+
+/**
+ * Contains examples for time in milliseconds (as doubles)
+ */
+@Suppress("ObjectPropertyName")
+object TimeMillisExample {
+  val _2020_05_21_15_00_41_500: @ms Double = 1.5900732415E12.also {
+    require(it.formatUtcForDebug() == "2020-05-21T15:00:41.500Z")
+  }
+
+  val _2019_01_07_15_45_19_123_987_345_678_901: @ms Double = 1546875919_123.987_345_678_901.also {
+    require(it.formatUtcForDebug() == "2019-01-07T15:45:19.123Z")
+  }
+
+  val _2022_07_29_09_38_04_141: @ms Double = 1659080284141.0.also {
+    require(it.formatUtcForDebug() == "2022-07-29T07:38:04.141Z")
+  }
+
+  val _2019_01_07_10_11_59_123: @ms Double = 1.546855919123123E12.also {
+    require(it.formatUtcForDebug() == "2019-01-07T10:11:59.123Z")
+  }
+
+  val _2020_05_21_15_00_41_500B: @ms Double = 1.5900732415E12.also {
+    require(it.formatUtcForDebug() == "2020-05-21T15:00:41.500Z")
+  }
+
+  val _2024_02_28_13_44_17_500B: @ms Double = 1.7261234575E12.also {
+    require(it.formatUtcForDebug() == "2024-09-12T06:44:17.500Z")
+  }
+
+
+  val entries: List<@ms Double> = listOf(
+    _2020_05_21_15_00_41_500,
+    _2019_01_07_15_45_19_123_987_345_678_901,
+    _2022_07_29_09_38_04_141,
+    _2019_01_07_10_11_59_123,
+    _2020_05_21_15_00_41_500B,
+    _2024_02_28_13_44_17_500B
+  )
+}

@@ -93,6 +93,7 @@ inline fun <reified T> roundTrip(
   noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
+  //language=JSON
   noinline expectedJsonProvider: () -> String?,
 ): T {
   val encoder: Json = Json {

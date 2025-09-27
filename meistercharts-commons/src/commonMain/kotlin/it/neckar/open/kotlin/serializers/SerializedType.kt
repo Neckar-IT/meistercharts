@@ -6,10 +6,10 @@ import kotlin.reflect.KClass
 
 /**
  * Annotates a class to be a serializer for a specific type.
- * This is required if [kotlinx.serialization.SerialName] is used.
+ * Should be used together with [kotlinx.serialization.SerialName] to allow KSP plugins to detect the "real" type that is being serialized.
  */
 @OptIn(ExperimentalSerializationApi::class)
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-annotation class SerializerFor(val type: KClass<*>)
+annotation class SerializedType(val type: KClass<*>)
