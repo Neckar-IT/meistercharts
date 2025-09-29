@@ -1,6 +1,7 @@
 @file:Suppress("SpellCheckingInspection")
 
 import Plugins.generateTypesList
+import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 object Plugins {
@@ -64,6 +65,8 @@ object Plugins {
   const val runDockerServices: String = "it.neckar.docker.services"
 
   const val publishToGitlabPages: String = "it.neckar.publish.gitlab-pages"
+  const val sslCertGen: String = "com.fuseanalytics.gradle.sslcertgen"
+  const val certificates: String = "it.neckar.ssl.certificates"
 
   /**
    * Collects the types-list (from dependencies or subprojects).
@@ -135,100 +138,100 @@ object Plugins {
   const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
 }
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
+inline val PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
   get() = id(Plugins.kotlinJvm)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.java: PluginDependencySpec
+inline val PluginDependenciesSpec.java: PluginDependencySpec
   get() = id(Plugins.java)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.javaLibrary: PluginDependencySpec
+inline val PluginDependenciesSpec.javaLibrary: PluginDependencySpec
   get() = id(Plugins.javaLibrary)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.dokka: PluginDependencySpec
+inline val PluginDependenciesSpec.dokka: PluginDependencySpec
   get() = id(Plugins.dokka)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinMultiPlatform: PluginDependencySpec
+inline val PluginDependenciesSpec.kotlinMultiPlatform: PluginDependencySpec
   get() = id(Plugins.kotlinMultiPlatform)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kotlinxSerialization: PluginDependencySpec
+inline val PluginDependenciesSpec.kotlinxSerialization: PluginDependencySpec
   get() = id(Plugins.kotlinxSerialization)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.jibCli: PluginDependencySpec
+inline val PluginDependenciesSpec.jibCli: PluginDependencySpec
   get() = id(Plugins.jibCli)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.jibService: PluginDependencySpec
+inline val PluginDependenciesSpec.jibService: PluginDependencySpec
   get() = id(Plugins.jibService)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.shadow: PluginDependencySpec
+inline val PluginDependenciesSpec.shadow: PluginDependencySpec
   get() = id(Plugins.shadow)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.launch4j: PluginDependencySpec
+inline val PluginDependenciesSpec.launch4j: PluginDependencySpec
   get() = id(Plugins.launch4j)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.download: PluginDependencySpec
+inline val PluginDependenciesSpec.download: PluginDependencySpec
   get() = id(Plugins.download)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.nexusStaging: PluginDependencySpec
+inline val PluginDependenciesSpec.nexusStaging: PluginDependencySpec
   get() = id(Plugins.nexusStaging)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.versions: PluginDependencySpec
+inline val PluginDependenciesSpec.versions: PluginDependencySpec
   get() = id(Plugins.versions)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseReport: PluginDependencySpec
+inline val PluginDependenciesSpec.licenseReport: PluginDependencySpec
   get() = id(Plugins.licenseReport)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormat: PluginDependencySpec
+inline val PluginDependenciesSpec.licenseFormat: PluginDependencySpec
   get() = id(Plugins.licenseFormat)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.licenseFormatBase: PluginDependencySpec
+inline val PluginDependenciesSpec.licenseFormatBase: PluginDependencySpec
   get() = id(Plugins.licenseFormatBase)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIcons: PluginDependencySpec
+inline val PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.provideSourceCodeFromBuildSrc: PluginDependencySpec
+inline val PluginDependenciesSpec.provideSourceCodeFromBuildSrc: PluginDependencySpec
   get() = id(Plugins.provideSourceCodeFromBuildSrc)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
+inline val PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
   get() = id(Plugins.generateTsDeclaration)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.gitLabDb: PluginDependencySpec
+inline val PluginDependenciesSpec.gitLabDb: PluginDependencySpec
   get() = id(Plugins.gitLabDb)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.asciidoctor: PluginDependencySpec
+inline val PluginDependenciesSpec.asciidoctor: PluginDependencySpec
   get() = id(Plugins.asciidoctor)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
+inline val PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
   get() = id(Plugins.asciidoctorPdf)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
+inline val PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
   get() = id(Plugins.generatePackageJson)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
+inline val PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
   get() = id(Plugins.installPnpmDependency)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.plantUml: PluginDependencySpec
+inline val PluginDependenciesSpec.plantUml: PluginDependencySpec
   get() = id(Plugins.plantUml)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.npmBundle: PluginDependencySpec
+inline val PluginDependenciesSpec.npmBundle: PluginDependencySpec
   get() = id(Plugins.npmBundle)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
+inline val PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
   get() = id(Plugins.verifyMainClassExists)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
+inline val PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
   get() = id(Plugins.verifyGitlabAccessToken)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
+inline val PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.publishToGitlabPages: PluginDependencySpec
+inline val PluginDependenciesSpec.publishToGitlabPages: PluginDependencySpec
   get() = id(Plugins.publishToGitlabPages)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
+inline val PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
   get() = id(Plugins.dockerRefreshTags)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.runDockerServices: PluginDependencySpec
+inline val PluginDependenciesSpec.runDockerServices: PluginDependencySpec
   get() = id(Plugins.runDockerServices)
 
 /**
@@ -238,106 +241,112 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.runDockerServices: Plugi
  *
  * see https://github.com/dorongold/gradle-task-tree for documentation
  */
-inline val org.gradle.plugin.use.PluginDependenciesSpec.taskTree: PluginDependencySpec
+inline val PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.taskInfo: PluginDependencySpec
+inline val PluginDependenciesSpec.taskInfo: PluginDependencySpec
   get() = id(Plugins.taskInfo)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.detekt: PluginDependencySpec
+inline val PluginDependenciesSpec.detekt: PluginDependencySpec
   get() = id(Plugins.detekt)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.jmh: PluginDependencySpec
+inline val PluginDependenciesSpec.jmh: PluginDependencySpec
   get() = id(Plugins.jmh)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.pdfOverview: PluginDependencySpec
+inline val PluginDependenciesSpec.pdfOverview: PluginDependencySpec
   get() = id(Plugins.pdfOverview)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.consoleReporter: PluginDependencySpec
+inline val PluginDependenciesSpec.consoleReporter: PluginDependencySpec
   get() = id(Plugins.consoleReporter)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.node: PluginDependencySpec
+inline val PluginDependenciesSpec.node: PluginDependencySpec
   get() = id(Plugins.node)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kvision: PluginDependencySpec
+inline val PluginDependenciesSpec.kvision: PluginDependencySpec
   get() = id(Plugins.kvision)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.jib: PluginDependencySpec
+inline val PluginDependenciesSpec.jib: PluginDependencySpec
   get() = id(Plugins.jib)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.intellij: PluginDependencySpec
+inline val PluginDependenciesSpec.intellij: PluginDependencySpec
   get() = id(Plugins.intellij)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.springBoot: PluginDependencySpec
+inline val PluginDependenciesSpec.springBoot: PluginDependencySpec
   get() = id(Plugins.springBoot)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.python: PluginDependencySpec
+inline val PluginDependenciesSpec.python: PluginDependencySpec
   get() = id(Plugins.python)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.springDependencyManagement: PluginDependencySpec
+inline val PluginDependenciesSpec.springDependencyManagement: PluginDependencySpec
   get() = id(Plugins.springDependencyManagement)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.schemaGen: PluginDependencySpec
+inline val PluginDependenciesSpec.schemaGen: PluginDependencySpec
   get() = id(Plugins.schemaGen)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kover: PluginDependencySpec
+inline val PluginDependenciesSpec.kover: PluginDependencySpec
   get() = id(Plugins.kover)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.dependenciesReport: PluginDependencySpec
+inline val PluginDependenciesSpec.dependenciesReport: PluginDependencySpec
   get() = id(Plugins.dependenciesReport)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.javafx: PluginDependencySpec
+inline val PluginDependenciesSpec.javafx: PluginDependencySpec
   get() = id(Plugins.javafx)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.analyze: PluginDependencySpec
+inline val PluginDependenciesSpec.analyze: PluginDependencySpec
   get() = id(Plugins.analyze)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
+inline val PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
   get() = id(Plugins.copyResourcesFromDependencies)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.secretsLoader: PluginDependencySpec
+inline val PluginDependenciesSpec.sslCertGen: PluginDependencySpec
+  get() = id(Plugins.sslCertGen)
+
+inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
   get() = id(Plugins.secretsLoader)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.ksp: PluginDependencySpec
+inline val PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kspBoxing: PluginDependencySpec
+inline val PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.kspSerialization: PluginDependencySpec
+inline val PluginDependenciesSpec.kspSerialization: PluginDependencySpec
   get() = id(Plugins.kspSerialization)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiValidator: PluginDependencySpec
+inline val PluginDependenciesSpec.openapiValidator: PluginDependencySpec
   get() = id(Plugins.openapiValidator)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig: PluginDependencySpec
   get() = id(Plugins.openapiGenerationConfig)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
+inline val PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
   get() = id(Plugins.generatePnpmWorkspaceYaml)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.skipDistForApplication: PluginDependencySpec
+inline val PluginDependenciesSpec.skipDistForApplication: PluginDependencySpec
   get() = id(Plugins.skipDistForApplication)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
+inline val PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
   get() = id(Plugins.skipShadowDistZipForShadowPlugin)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
+inline val PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
   get() = id(Plugins.generateIgnoreProjectSets)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.generateTypesList: PluginDependencySpec
+inline val PluginDependenciesSpec.generateTypesList: PluginDependencySpec
   get() = id(Plugins.generateTypesList)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.typesListCollector: PluginDependencySpec
+inline val PluginDependenciesSpec.typesListCollector: PluginDependencySpec
   get() = id(Plugins.typesListCollector)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
+inline val PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
   get() = id(Plugins.pnpmKotlinInterop)
 
-inline val org.gradle.plugin.use.PluginDependenciesSpec.tailwind: PluginDependencySpec
+inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
   get() = id(Plugins.tailwind)
+
+inline val PluginDependenciesSpec.certificates: PluginDependencySpec
+  get() = id(Plugins.certificates)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")
-inline val org.gradle.plugin.use.PluginDependenciesSpec.ssh: PluginDependencySpec
+inline val PluginDependenciesSpec.ssh: PluginDependencySpec
   get() = id(Plugins.ssh)

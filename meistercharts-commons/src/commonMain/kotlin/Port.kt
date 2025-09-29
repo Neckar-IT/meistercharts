@@ -7,6 +7,10 @@ import kotlin.jvm.JvmInline
  */
 @JvmInline
 value class Port(val value: Int) {
+  operator fun plus(value: Int): Port {
+    return Port(this.value + value)
+  }
+
   override fun toString(): String {
     return value.toString()
   }

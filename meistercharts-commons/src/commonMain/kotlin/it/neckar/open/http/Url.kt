@@ -234,6 +234,10 @@ sealed interface Url {
       return plus(toAppend.value)
     }
 
+    fun withoutProtocol(): String {
+      return value.substringAfter(SchemaDelimiter)
+    }
+
     override fun toString(): String {
       return value
     }

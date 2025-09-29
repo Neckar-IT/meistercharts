@@ -174,6 +174,9 @@ public object Libs {
 
     public const val ktor_http: String = "io.ktor:ktor-http:_"
 
+    public const val ktor_network_tls_certificates: String =
+            "io.ktor:ktor-network-tls-certificates:_"
+
     public const val ktor_serialization_jackson: String = "io.ktor:ktor-serialization-jackson:_"
 
     public const val ktor_serialization_kotlinx: String = "io.ktor:ktor-serialization-kotlinx:_"
@@ -267,6 +270,8 @@ public object Libs {
 
     public const val org_barfuin_gradle_taskinfo_gradle_plugin: String =
             "org.barfuin.gradle.taskinfo:org.barfuin.gradle.taskinfo.gradle.plugin:_"
+
+    public const val bcpkix_jdk18on: String = "org.bouncycastle:bcpkix-jdk18on:_"
 
     public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
 

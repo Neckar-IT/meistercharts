@@ -32,4 +32,11 @@ enum class ExecutionEnvironment {
   fun inCi(): Boolean {
     return this == CI
   }
+
+  /**
+   * Returns true if this is [LocalDev]
+   */
+  fun isLocalDev(): Boolean {
+    return this == LocalDev
+  }
 }

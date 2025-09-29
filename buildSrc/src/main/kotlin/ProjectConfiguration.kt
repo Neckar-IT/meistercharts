@@ -11,6 +11,7 @@ import it.neckar.gradle.console
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
 import it.neckar.gradle.python.PythonPluginExtension
+import it.neckar.gradle.ssl.mkcert.CertificatesPlugin
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import kotlinx.serialization.json.jsonObject
 import org.gradle.api.GradleException
@@ -505,6 +506,7 @@ object ProjectConfiguration {
        */
       project.plugins.apply(Plugins.generatePackageJson)
       project.plugins.apply(Plugins.installPnpmDependency)
+      project.plugins.apply(Plugins.certificates)
 
       //Ensure the package.json file is generated before the `pnpmInstall` task is executed (in the root project)
       rootProject.tasks.named("pnpmInstall").configure {
@@ -556,6 +558,7 @@ object ProjectConfiguration {
         description = "Executes `pnpm run build`"
 
         dependsOn(":pnpmInstall", verifyProjectConfiguration) //implicit dependency to generatePackageJson
+        dependsOn(CertificatesPlugin.GenerateCertTaskName) //Create the certificate early - at least necessary for vite projects
 
         onlyIf {
           //Check if there is a build script referenced

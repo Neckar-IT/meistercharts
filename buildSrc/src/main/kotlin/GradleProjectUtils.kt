@@ -42,6 +42,11 @@ fun Project.isRootProject(): Boolean {
  */
 fun Project.pathAsBaseFileName(): String {
   val rootProjectName = rootProject.name
+
+  if (this.isRootProject()) {
+    return rootProjectName
+  }
+
   return rootProjectName + "-" + this.path.trimStart(':').replace(':', '-')
 }
 
