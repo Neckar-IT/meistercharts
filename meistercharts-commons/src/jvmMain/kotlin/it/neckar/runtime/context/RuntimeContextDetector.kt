@@ -1,5 +1,6 @@
 package it.neckar.runtime.context
 
+import it.neckar.open.net.HostnameSupport
 import it.neckar.runtime.detection.RuntimeContextEnv
 import it.neckar.runtime.detection.RuntimeContextSys
 import java.lang.management.ManagementFactory
@@ -43,30 +44,30 @@ object RuntimeContextDetector {
 
     forcedExecutionEnvironment: ExecutionEnvironment? = null,
     forcedState: DeploymentStage? = null,
-    forcedHostName: String? = null,
+    forcedHostName: Hostname? = null,
     forcedHost: HostType? = null,
   ): RuntimeContext<HostType> {
+
+    //Resolve the host
+    val hostname = forcedHostName ?: resolveHostname(source) ?: guessHostName()
+    val serviceHost = forcedHost ?: serviceHostRegistry.findByHostname(hostname)
 
     //Get the execution environment profile
     val executionEnvironment: ExecutionEnvironment = forcedExecutionEnvironment ?: if (guessInCIEnvironment()) {
       ExecutionEnvironment.CI
     } else {
-      resolveProfile(source) ?: ExecutionEnvironment.LocalDev
+      resolveProfile(source) ?: serviceHost.executionEnvironment
     }
 
     //Get the deployment stage
-    val stage = forcedState ?: resolveStage(source) ?: DeploymentStage.Development
-
-    //Resolve the host name
-    val hostNameRaw = forcedHostName ?: resolveString(source, RuntimeContextSys.KEY_SERVICE_HOST_SYS, RuntimeContextEnv.KEY_SERVICE_HOST_ENV)
-    val serviceHost = forcedHost ?: serviceHostRegistry.findByHostname(Hostname.nullable(hostNameRaw))
+    val deploymentStage = forcedState ?: resolveStage(source) ?: serviceHost.deploymentStage
 
     val debugging = guessDebugging()
     val inUnitTest = guessInUnitTestEnvironment()
 
     return RuntimeContext<HostType>(
       executionEnvironment = executionEnvironment,
-      stage = stage,
+      stage = deploymentStage,
       host = serviceHost,
 
       debugMode = debugging,
@@ -75,10 +76,17 @@ object RuntimeContextDetector {
   }
 
   /**
+   * Returns the hostname of the current device
+   */
+  private fun guessHostName(): Hostname? {
+    return HostnameSupport.guess()
+  }
+
+  /**
    * Resolves the execution environment profile from system properties or environment variables.
    */
   private fun resolveProfile(source: Source): ExecutionEnvironment? {
-    val raw = resolveString(
+    val raw = resolveStringFromSystemOrEnv(
       source = source,
       systemPropertiesKey = RuntimeContextSys.KEY_RUNTIME_EXECUTION_ENVIRONMENT_SYS,
       envKey = RuntimeContextEnv.KEY_RUNTIME_EXECUTION_ENVIRONMENT_ENV
@@ -90,14 +98,21 @@ object RuntimeContextDetector {
    * Resolves the deployment stage from system properties or environment variables.
    */
   private fun resolveStage(source: Source): DeploymentStage? {
-    val raw = resolveString(source, RuntimeContextSys.KEY_DEPLOYMENT_STAGE_SYS, RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV)
+    val raw = resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_DEPLOYMENT_STAGE_SYS, RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV)
     return raw?.let { parseEnumRelaxed<DeploymentStage>(it) }
+  }
+
+  /**
+   * Resolves the hostname from system properties or environments
+   */
+  private fun resolveHostname(source: Source): Hostname? {
+    return Hostname.nullable(resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_DEPLOYMENT_STAGE_SYS, RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV))
   }
 
   /**
    * Helper function to resolve a string value from system properties or environment variables.
    */
-  private fun resolveString(source: Source, systemPropertiesKey: String, envKey: String): String? {
+  private fun resolveStringFromSystemOrEnv(source: Source, systemPropertiesKey: String, envKey: String): String? {
     return source.systemProperties[systemPropertiesKey] ?: source.environment[envKey]
   }
 
@@ -126,7 +141,7 @@ fun <HostType: ServiceHost> RuntimeContext.Companion.initializeFromEnvironment(
 
   forcedExecutionEnvironment: ExecutionEnvironment? = null,
   forcedDeploymentStage: DeploymentStage? = null,
-  forcedHostName: String? = null,
+  forcedHostName: Hostname? = null,
 ): RuntimeContext<HostType> {
   return RuntimeContextDetector.detectFromEnvironment(
     serviceHostRegistry = serviceHostRegistry,

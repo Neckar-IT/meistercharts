@@ -11,6 +11,12 @@ enum class ExecutionEnvironment {
   LocalDev,
 
   /**
+   * Executable JAR running directly on a server or VM,
+   * without containerization or orchestration.
+   */
+  Standalone,
+
+  /**
    * Running inside a Docker container without orchestration (e.g., `docker run` locally or on a server).
    */
   Docker,
