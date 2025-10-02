@@ -145,6 +145,12 @@ public object Libs {
 
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
+    public const val detekt_api: String = "io.gitlab.arturbosch.detekt:detekt-api:_"
+
+    public const val detekt_parser: String = "io.gitlab.arturbosch.detekt:detekt-parser:_"
+
+    public const val detekt_psi_utils: String = "io.gitlab.arturbosch.detekt:detekt-psi-utils:_"
+
     public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
 
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"

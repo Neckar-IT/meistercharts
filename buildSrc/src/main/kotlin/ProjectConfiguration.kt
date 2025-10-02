@@ -177,6 +177,13 @@ object ProjectConfiguration {
       )
     }
 
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+      // exclude generated code (does not seem to work)
+      exclude("build/generated/**")
+      exclude("**/build/generated/**")
+      exclude("**/build/**")
+    }
+
     configureKover {
     }
   }
