@@ -12,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class DisableLoggingCondition : BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
   var originalLevelsAll: LoggingTestSupport.OriginalLevels? = null
 
-  override fun beforeAll(context: ExtensionContext?) {
+  override fun beforeAll(context: ExtensionContext) {
     originalLevelsAll = LoggingTestSupport.forceLoggingLevel()
   }
 
-  override fun afterAll(context: ExtensionContext?) {
+  override fun afterAll(context: ExtensionContext) {
     originalLevelsAll?.let {
       LoggingTestSupport.enableLogging(it)
     }
@@ -24,11 +24,11 @@ class DisableLoggingCondition : BeforeEachCallback, AfterEachCallback, BeforeAll
 
   var originalLevelsEach: LoggingTestSupport.OriginalLevels? = null
 
-  override fun beforeEach(context: ExtensionContext?) {
+  override fun beforeEach(context: ExtensionContext) {
     originalLevelsEach = LoggingTestSupport.forceLoggingLevel()
   }
 
-  override fun afterEach(context: ExtensionContext?) {
+  override fun afterEach(context: ExtensionContext) {
     originalLevelsEach?.let {
       LoggingTestSupport.enableLogging(it)
     }
