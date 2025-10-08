@@ -15,13 +15,12 @@
  */
 package com.meistercharts.timer
 
-import com.meistercharts.canvas.timer.CanvasBasedTimerImplementation
-import it.neckar.open.kotlin.lang.fastFor
-import it.neckar.open.test.utils.VirtualTime
-import it.neckar.open.time.VirtualNowProvider
 import assertk.*
 import assertk.assertions.*
-
+import com.meistercharts.canvas.timer.CanvasBasedTimerImplementation
+import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.test.utils.WithVirtualTime
+import it.neckar.open.time.VirtualNowProvider
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.seconds
@@ -30,7 +29,7 @@ class CanvasBasedTimerSupportTest {
 
   private val timerSupport = CanvasBasedTimerImplementation()
 
-  @VirtualTime
+  @WithVirtualTime
   @Test
   fun `delay function calls the callback after the delay`(nowProvider: VirtualNowProvider) {
     var wasCalled = false
@@ -52,7 +51,7 @@ class CanvasBasedTimerSupportTest {
     assertTrue(wasCalled, "The callback should have been called after the delay")
   }
 
-  @VirtualTime
+  @WithVirtualTime
   @Test
   fun `repeat function calls the callback multiple times`(nowProvider: VirtualNowProvider) {
     var callCount = 0
@@ -78,7 +77,7 @@ class CanvasBasedTimerSupportTest {
     assertThat(callCount).isEqualTo(2)
   }
 
-  @VirtualTime
+  @WithVirtualTime
   @Test
   fun `delay function calls all callbacks after their respective delays`(nowProvider: VirtualNowProvider) {
     val callbacksCalled = mutableListOf<Boolean>()

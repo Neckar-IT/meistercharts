@@ -23,7 +23,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
 import it.neckar.open.kotlin.lang.abs
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.test.utils.WithVirtualTime
 import it.neckar.open.time.ClockNowProvider
 import it.neckar.open.time.RealClockTime
 import it.neckar.open.time.VirtualNowProvider
@@ -35,7 +35,7 @@ import kotlin.time.Duration.Companion.days
 /**
  *
  */
-@VirtualTime
+@WithVirtualTime
 class VirtualNowProviderTest {
   @Test
   fun testUpdateWithInitial10000() {
@@ -113,12 +113,12 @@ class VirtualNowProviderTest {
 
   @Test
   fun testPlus(virtualNowProvider: VirtualNowProvider) {
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow)
 
     virtualNowProvider.advanceBy(100.0)
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow + 100.0)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow + 100.0)
 
     virtualNowProvider.advanceBy(0.0)
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(VirtualTime.defaultNow + 100.0)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow + 100.0)
   }
 }

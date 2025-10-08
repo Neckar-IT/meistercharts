@@ -18,14 +18,14 @@ package com.meistercharts.history.downsampling
 import assertk.*
 import assertk.assertions.*
 import assertk.assertions.support.*
-import com.meistercharts.time.TimeRange
-import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.HistoryBucketRange
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.DisableLogging
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.test.utils.WithVirtualTime
 import it.neckar.open.test.utils.first
 import it.neckar.open.test.utils.last
 import it.neckar.open.unit.si.ms
@@ -82,7 +82,7 @@ class DownSamplingServiceTest {
     }
 
     @ms val duration = 1000.0 * 60 * 10
-    downSamplingService.createJobs(TimeRanges.of(TimeRange.fromStartAndDuration(VirtualTime.defaultNow, duration)), HistoryBucketRange.TenMinutes).let {
+    downSamplingService.createJobs(TimeRanges.of(TimeRange.fromStartAndDuration(WithVirtualTime.defaultNow, duration)), HistoryBucketRange.TenMinutes).let {
       assertThat(it).hasSize(2)
 
       (it.first().refreshRange as RefreshPartially).let {

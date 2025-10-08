@@ -32,6 +32,9 @@ class JsonScriptTagSupport(
     return decode<T>(getJsonContentById(id))
   }
 
+  /**
+   * Decodes the given JSON string
+   */
   inline fun <reified T> decode(jsonString: String): T = json.decodeFromString<T>(jsonString)
 
   /**

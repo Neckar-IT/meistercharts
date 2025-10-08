@@ -17,8 +17,6 @@ package com.meistercharts.history.cleanup
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRange
-import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
@@ -30,10 +28,12 @@ import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.downsampling.RefreshPartially
 import com.meistercharts.history.impl.createSinusChunk
-import it.neckar.open.kotlin.lang.fastFor
+import com.meistercharts.time.TimeRange
+import com.meistercharts.time.TimeRanges
 import it.neckar.open.formatting.formatUtc
+import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.test.utils.DisableLogging
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.test.utils.WithVirtualTime
 import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.Test
 
@@ -51,7 +51,7 @@ class HistoryCleanupDownSamplingBugTest {
     val downSamplingService = historyStorage.downSamplingService
 
 
-    val firstDescriptorStart = VirtualTime.defaultNow.also {
+    val firstDescriptorStart = WithVirtualTime.defaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 

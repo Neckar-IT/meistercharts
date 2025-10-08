@@ -18,6 +18,8 @@ import com.github.loki4j.logback.Loki4jAppender
 import com.github.loki4j.logback.PipelineConfigAppenderBase
 import com.github.loki4j.logback.PipelineConfigAppenderBase.HttpCfg
 import it.neckar.commons.logback.LogbackConfigurer.configureLoggingConsoleOnly
+import it.neckar.runtime.context.Hostname
+import it.neckar.runtime.context.RuntimeContext
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.io.File
@@ -92,20 +94,29 @@ object LogbackConfigurer {
 
   /**
    * Adds the console appender and the loki appender.
-   * Removes all other appenders
+   * Removes all other appenders.
+   *
+   * Attention: If necessary provide a value for [lokiEnabled] - by default, the loki appender is only enabled in production environments
    */
   fun configureLoggingConsoleAndLoki(
     lokiServerConfiguration: LokiServerConfiguration = LokiServerConfiguration.NeckarIT,
     app: String,
-    hostname: String,
-    levelForRoot: org.slf4j.event.Level,
-    levelForNeckarIt: org.slf4j.event.Level,
+    hostname: Hostname = RuntimeContext.host.hostname,
+    levelForRoot: org.slf4j.event.Level = Level.INFO,
+    levelForNeckarIt: org.slf4j.event.Level = Level.INFO,
+    /**
+     * Whether the loki appender should be enabled.
+     * By default, the loki appender is only enabled in production environments
+     */
+    lokiEnabled: Boolean = RuntimeContext.executionEnvironment.isProduction(),
     lokiAppenderConfig: Loki4jAppender.() -> Unit = {},
   ) {
     clearExistingAppenders()
     addConsoleAppender()
 
-    addLokiAppender(lokiServerConfiguration = lokiServerConfiguration, app = app, hostname = hostname, lokiAppenderConfig = lokiAppenderConfig)
+    if (lokiEnabled) {
+      addLokiAppender(lokiServerConfiguration = lokiServerConfiguration, app = app, hostname = hostname, lokiAppenderConfig = lokiAppenderConfig)
+    }
 
     setRootLoggerLevel(levelForRoot)
     setLevelForNeckarIt(levelForNeckarIt)
@@ -294,7 +305,7 @@ object LogbackConfigurer {
   /**
    * Adds a loki appender
    */
-  fun addLokiAppender(lokiServerConfiguration: LokiServerConfiguration, app: String, hostname: String, lokiAppenderConfig: Loki4jAppender.() -> Unit) {
+  fun addLokiAppender(lokiServerConfiguration: LokiServerConfiguration, app: String, hostname: Hostname, lokiAppenderConfig: Loki4jAppender.() -> Unit) {
     val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
 
     val loki4jAppender = Loki4jAppender()

@@ -38,9 +38,11 @@ object MeisterChartsVersion {
   /**
    * The build date (only day - not the time)
    */
-  val buildDateDay: String = VersionInformation.buildDateDay
+  val buildDate: String = VersionInformation.buildDate
 
-  val gitCommit: String = VersionInformation.gitCommit
+  val gitHash: String = VersionInformation.gitHash
+
+  val gitHashShort: String = VersionInformation.gitHashShort
 
 
   /**
@@ -48,6 +50,6 @@ object MeisterChartsVersion {
    */
   val versionAsStringVerbose: String
     get() {
-      return "$version ($gitCommit)"
+      return "$version ($gitHash)"
     }
 }

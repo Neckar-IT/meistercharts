@@ -149,14 +149,9 @@ object ProjectConfiguration {
         attributes(
           "Created-By" to "Neckar IT GmbH",
           "Project" to project.name,
-
-          //  //"Version" to "${project.version}", //not very useful at the moment
-          //
-          //  "Revision" to gitDescribe,
-          //  "Revision-Date" to gitCommitDate,
-          //  "Git-Hash" to gitCommit,
-          //
-          //  //"Built-Date" to buildDate, //forces rebuild because it changes every time
+          BuildInfoVars.BuildDate.value to buildDate,
+          BuildInfoVars.GitHash.value to gitHash,
+          BuildInfoVars.GitHashShort.value to gitHashShort,
         )
       }
     }

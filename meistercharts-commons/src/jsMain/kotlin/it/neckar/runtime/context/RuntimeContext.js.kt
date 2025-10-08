@@ -7,6 +7,7 @@ actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
     host = ServiceHost.Localhost,
     inUnitTest = false, //currently unknown in JS
     debugMode = false, //currently unknown in JS
+    initialValue = true,
   )
 }
 

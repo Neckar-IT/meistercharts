@@ -14,20 +14,20 @@ import javax.annotation.Nonnull
 
 /**
  * Extension that provides the virtual now provider as parameter.
- * Use [VirtualTime] at the class/method and add [VirtualNowProvider] to the test method parameters
+ * Use [WithVirtualTime] at the class/method and add [VirtualNowProvider] to the test method parameters
  */
 class VirtualNowProviderExtension : AbstractResourceProvidingExtension<VirtualNowProvider>(VirtualNowProvider::class.java), BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
 
-  private val configuringSupport: ConfiguringSupport<NowProvider, VirtualTime> = ConfiguringSupport(
+  private val configuringSupport: ConfiguringSupport<NowProvider, WithVirtualTime> = ConfiguringSupport(
     storedObjectType = NowProvider::class.java,
-    annotationType = VirtualTime::class.java,
+    annotationType = WithVirtualTime::class.java,
     key = "virtualTime",
-    configuringStrategy = object : ConfiguringStrategy<NowProvider, VirtualTime> {
+    configuringStrategy = object : ConfiguringStrategy<NowProvider, WithVirtualTime> {
       override fun getOriginalValue(): NowProvider {
         return nowProvider
       }
 
-      override fun extract(annotation: VirtualTime): NowProvider {
+      override fun extract(annotation: WithVirtualTime): NowProvider {
         return VirtualNowProvider(annotation.value)
       }
 
@@ -63,7 +63,7 @@ class VirtualNowProviderExtension : AbstractResourceProvidingExtension<VirtualNo
       return true
     }
 
-    return parameterContext.parameter.isAnnotationPresent(VirtualTime::class.java)
+    return parameterContext.parameter.isAnnotationPresent(WithVirtualTime::class.java)
   }
 
   override fun convertResourceForParameter(@Nonnull parameter: Parameter, @Nonnull resource: VirtualNowProvider): Any {

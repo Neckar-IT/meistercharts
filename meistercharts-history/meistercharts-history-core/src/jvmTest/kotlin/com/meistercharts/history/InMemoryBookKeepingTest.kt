@@ -17,14 +17,14 @@ package com.meistercharts.history
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.time.TimeRange
 import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
 import com.meistercharts.history.downsampling.DownSamplingDirtyRangesCollector
 import com.meistercharts.history.impl.createSinusChunk
+import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.test.utils.DisableLogging
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.test.utils.WithVirtualTime
 import org.junit.jupiter.api.Test
 
 
@@ -50,7 +50,7 @@ internal class InMemoryBookKeepingTest {
 
   @Test
   fun testFixBounds() {
-    val timestamp = VirtualTime.defaultNow.also {
+    val timestamp = WithVirtualTime.defaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 
@@ -111,7 +111,7 @@ internal class InMemoryBookKeepingTest {
 
   private fun addAndDownSample(historyStorage: InMemoryHistoryStorage) {
     val samplingPeriod: SamplingPeriod = SamplingPeriod.EveryHundredMillis
-    val startTimestamp = VirtualTime.defaultNow.also {
+    val startTimestamp = WithVirtualTime.defaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 

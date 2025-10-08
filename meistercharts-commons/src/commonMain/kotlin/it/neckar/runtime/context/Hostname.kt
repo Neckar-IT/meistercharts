@@ -1,11 +1,13 @@
 package it.neckar.runtime.context
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
  * Represents a hostname
  */
 @JvmInline
+@Serializable
 value class Hostname(val value: String) {
   init {
     require(value.isNotBlank()) { "Hostname must not be blank" }

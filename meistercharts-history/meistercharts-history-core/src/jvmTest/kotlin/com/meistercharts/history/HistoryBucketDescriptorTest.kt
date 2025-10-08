@@ -24,7 +24,7 @@ import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.serialization.roundTrip
 import it.neckar.open.test.utils.DisableLogging
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.test.utils.WithVirtualTime
 import it.neckar.open.time.millis2Instant
 import it.neckar.open.time.toDoubleMillis
 import it.neckar.open.unit.si.ms
@@ -129,7 +129,7 @@ class HistoryBucketDescriptorTest {
   @Test
   fun testForRange() {
     @ms val duration = 1000.0 * 60 * 10
-    val timeRange = TimeRange.fromStartAndDuration(VirtualTime.defaultNow, duration)
+    val timeRange = TimeRange.fromStartAndDuration(WithVirtualTime.defaultNow, duration)
 
     HistoryBucketDescriptor.forRange(timeRange.start, timeRange.end, HistoryBucketRange.TenMinutes).let {
       assertThat(timeRange.start.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")

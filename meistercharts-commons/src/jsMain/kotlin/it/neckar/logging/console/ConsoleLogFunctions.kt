@@ -123,9 +123,8 @@ data class ConsoleLogFunctions(val prefix: String) {
   }
 
   fun version(): Any? {
-    println("Build Date Day: ${VersionInformation.buildDateDay}")
-    println("Git Commit: ${VersionInformation.gitCommit}")
-    println("Git Describe: ${VersionInformation.gitDescribe}")
+    println("Build Date: ${VersionInformation.buildDate}")
+    println("Git Commit: ${VersionInformation.gitHash}")
     return null
   }
 }

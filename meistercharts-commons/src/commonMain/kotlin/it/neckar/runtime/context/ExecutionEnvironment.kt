@@ -35,6 +35,13 @@ enum class ExecutionEnvironment {
   CI,
   ;
 
+  /**
+   * Returns `true`, if this is a production-like environment ([Standalone], [Docker], [Kubernetes])
+   */
+  fun isProduction(): Boolean {
+    return this == Standalone || this == Docker || this == Kubernetes
+  }
+
   fun inCi(): Boolean {
     return this == CI
   }

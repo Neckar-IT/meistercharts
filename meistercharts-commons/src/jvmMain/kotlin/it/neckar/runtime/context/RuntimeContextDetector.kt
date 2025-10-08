@@ -72,6 +72,7 @@ object RuntimeContextDetector {
 
       debugMode = debugging,
       inUnitTest = inUnitTest,
+      initialValue = false,
     )
   }
 
@@ -251,5 +252,6 @@ actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
     host = ServiceHost.Localhost,
     inUnitTest = inUnitTest,
     debugMode = debugging,
+    initialValue = true,
   )
 }

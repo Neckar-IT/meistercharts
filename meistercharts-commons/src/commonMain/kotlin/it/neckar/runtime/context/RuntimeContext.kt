@@ -46,13 +46,18 @@ data class RuntimeContext<HostType: ServiceHost>(
    * Can be used to relax timeouts or enable verbose logging.
    */
   val debugMode: Boolean,
+
+  /**
+   * If this is the initial value, this is set to true
+   */
+  val initialValue: Boolean,
 ) {
 
   /**
    * Returns true if the runtime context has not been initialized
    */
   fun isInitialValue(): Boolean {
-    return this === initialValue
+    return initialValue
   }
 
   companion object {
@@ -108,7 +113,11 @@ data class RuntimeContext<HostType: ServiceHost>(
     /**
      * The initial value that is set during application startup.
      */
-    private val initialValue = getInitialValue()
+    private val initialValue = getInitialValue().also {
+      require(it.isInitialValue()) {
+        "The initial value of the runtime context must have initialValue=true"
+      }
+    }
 
     /**
      * The current runtime context.
@@ -118,7 +127,7 @@ data class RuntimeContext<HostType: ServiceHost>(
     var current: RuntimeContext<*> = initialValue
       internal set
       get() {
-        if (field == initialValue && initialValue.inUnitTest.not()) {
+        if (field.isInitialValue() && initialValue.inUnitTest.not()) {
           println("Warning: The current runtime context is still the fallback context. Call `RuntimeContext.initializeFromEnvironment(serviceHostRegistry)`")
         }
         return field

@@ -19,18 +19,18 @@ object VersionInformation {
   /**
    * The build date (only day - not the time)
    */
-  val buildDateDay: String = VersionConstants.buildDateDay
+  val buildDate: String = VersionConstants.buildDate
 
-  val gitCommit: String = VersionConstants.gitCommit
+  val gitHash: String = VersionConstants.gitHash
 
-  val gitDescribe: String = VersionConstants.gitDescribe
+  val gitHashShort: String = VersionConstants.gitHashShort
 
   /**
    * Verbose version string that contains the git information
    */
   val versionAsStringVerbose: String
     get() {
-      return "$version ($gitCommit)"
+      return "$version ($gitHash)"
     }
 }
 

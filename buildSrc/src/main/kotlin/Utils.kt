@@ -857,42 +857,38 @@ val Project.onMainBranch: Boolean
 /**
  * Returns the sha1 of the current git commit
  */
+@Deprecated("use gitHash instead", ReplaceWith("gitHash"))
 val Project.gitCommit: String
   get() {
-    return rootProject.extra.get("gitCommit") as? String ?: throw IllegalStateException("Could not find gitCommit in extra")
+    return gitHash
   }
 
 /**
- * The date of the current git commit
+ * Returns the sha1 of the current git commit
  */
-val Project.gitCommitDate: String
+val Project.gitHash: String
   get() {
-    return rootProject.extra.get("gitCommitDate") as? String ?: throw IllegalStateException("Could not find gitCommitDate in extra")
+    return rootProject.extra.get("gitHash") as? String ?: throw IllegalStateException("Could not find gitHash in extra")
+  }
+
+val Project.gitHashShort: String
+  get() {
+    return rootProject.extra.get("gitHashShort") as? String ?: throw IllegalStateException("Could not find gitHashShort in extra")
   }
 
 /**
- * Describes the current git commit
+ * The date and time of the current git commit
  */
-val Project.gitDescribe: String
+val Project.gitCommitDateTime: String
   get() {
-    return rootProject.extra.get("gitDescribe") as? String ?: throw IllegalStateException("Could not find gitDescribe in extra")
+    return rootProject.extra.get("gitCommitDateTime") as? String ?: throw IllegalStateException("Could not find gitCommitDateTime in extra")
   }
-
-/**
- * The current build date
- */
-@Deprecated("use buildDateDay instead to allow for better caching")
-val Project.buildDate: String
-  get() {
-    return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")
-  }
-
 /**
  * The current build date - without time
  */
-val Project.buildDateDay: String
+val Project.buildDate: String
   get() {
-    return rootProject.extra.get("buildDateDay") as? String ?: throw IllegalStateException("Could not find buildDateDay in extra")
+    return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")
   }
 
 /**

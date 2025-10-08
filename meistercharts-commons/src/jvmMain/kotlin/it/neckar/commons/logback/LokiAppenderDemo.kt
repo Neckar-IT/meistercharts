@@ -3,6 +3,7 @@ package it.neckar.commons.logback
 import it.neckar.commons.logback.loki.configureBatch
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.runtime.context.Hostname
 import org.slf4j.event.Level
 
 
@@ -11,7 +12,8 @@ fun main() {
 
   LogbackConfigurer.configureLoggingConsoleAndLoki(
     app = "loki-appender-demo-app",
-    hostname = "test 123",
+    hostname = Hostname("test 123"),
+    lokiEnabled = true, //force enabled, even in the local development context
     levelForRoot = Level.INFO,
     levelForNeckarIt = Level.DEBUG
   ) {

@@ -15,6 +15,12 @@ object HostnameSupport {
     return null
   }
 
+  val FallbackHost: Hostname = Hostname("unknown-host")
+
+  fun guessOrFallback(): Hostname {
+    return guess() ?: FallbackHost
+  }
+
   fun guessFromInetAddress(): Hostname? {
     try {
       val host = InetAddress.getLocalHost().hostName

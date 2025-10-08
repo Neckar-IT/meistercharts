@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @ExtendWith(VirtualNowProviderExtension::class)
-annotation class VirtualTime(val value: @ms Double = defaultNow) {
+annotation class WithVirtualTime(val value: @ms Double = defaultNow) {
 
   companion object {
     /**

@@ -24,9 +24,9 @@ import com.meistercharts.history.InMemoryBookKeeping
 import com.meistercharts.history.InMemoryHistoryStorage
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.createSinusChunk
-import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.test.utils.VirtualTime
+import it.neckar.open.kotlin.lang.fastFor
+import it.neckar.open.test.utils.WithVirtualTime
 import org.junit.jupiter.api.Test
 
 class HistoryCleanupServiceTest {
@@ -37,7 +37,7 @@ class HistoryCleanupServiceTest {
     val cleanupService = historyStorage.historyCleanupService
     val bookKeeping: InMemoryBookKeeping = historyStorage.bookKeeping
 
-    val start = VirtualTime.defaultNow
+    val start = WithVirtualTime.defaultNow
     val samplingPeriod = SamplingPeriod.EveryHundredMillis
     val historyBucketRange = samplingPeriod.toHistoryBucketRange()
 
