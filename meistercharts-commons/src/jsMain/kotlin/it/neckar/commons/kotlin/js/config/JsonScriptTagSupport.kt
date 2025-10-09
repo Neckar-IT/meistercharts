@@ -20,7 +20,7 @@ class JsonScriptTagSupport(
   /**
    * The JSON parser used to parse the JSON data
    */
-  val json: Json = Json,
+  val jsonDecoder: Json,
 ) {
 
   /**
@@ -35,7 +35,7 @@ class JsonScriptTagSupport(
   /**
    * Decodes the given JSON string
    */
-  inline fun <reified T> decode(jsonString: String): T = json.decodeFromString<T>(jsonString)
+  inline fun <reified T> decode(jsonString: String): T = jsonDecoder.decodeFromString<T>(jsonString)
 
   /**
    * Returns the JSON content from the script tag with the given ID
