@@ -59,6 +59,33 @@ fun SerialDescriptor.requiredElementNames(): List<String> {
 }
 
 /**
+ * Returns all element names that are non-nullable
+ */
+fun SerialDescriptor.nonNullableElementNames(): List<String> {
+  return elementNames.filterIndexed { index, _ ->
+    isElementNullable(index).not()
+  }
+}
+
+/**
+ * Returns all element names that are non-nullable and required (no default value)
+ */
+@OptIn(ExperimentalSerializationApi::class)
+fun SerialDescriptor.nonNullableAndRequiredElementNames(): List<String> {
+  return elementNames.filterIndexed { index, _ ->
+    isElementNullable(index).not() && isElementOptional(index).not()
+  }
+}
+
+/**
+ * Returns true if the element with the given index is nullable
+ */
+fun SerialDescriptor.isElementNullable(index: Int): Boolean {
+  val elementDescriptor = getElementDescriptor(index)
+  return elementDescriptor.isNullable
+}
+
+/**
  * Returns the serial descriptor for the element with the given name
  */
 @OptIn(ExperimentalSerializationApi::class)

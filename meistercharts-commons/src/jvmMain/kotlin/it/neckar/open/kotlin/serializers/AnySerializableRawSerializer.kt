@@ -53,7 +53,19 @@ object AnySerializableRawSerializer : KSerializer<Any> {
   /**
    * Encodes the provided object to a JsonElement
    */
-  fun encodeToJsonElement(elementToEncode: Any): JsonElement {
-    return Json.encodeToJsonElement(AnySerializableRawSerializer, elementToEncode)
+  fun encodeToJsonElement(elementToEncode: Any, includeOptionals: Boolean = false): JsonElement {
+    val json: Json = if (includeOptionals) {
+      Json {
+        encodeDefaults = true
+        explicitNulls = true
+      }
+    } else {
+      Json {
+        encodeDefaults = false
+        explicitNulls = false
+      }
+    }
+
+    return json.encodeToJsonElement(AnySerializableRawSerializer, elementToEncode)
   }
 }

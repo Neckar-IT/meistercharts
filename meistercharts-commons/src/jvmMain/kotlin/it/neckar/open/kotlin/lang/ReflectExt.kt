@@ -17,7 +17,29 @@ import kotlin.reflect.jvm.javaField
  */
 val KClass<*>.isInterface: Boolean get() = this.java.isInterface
 
-val KClass<*>.isEnum: Boolean get() = this.java.isEnum
+/**
+ * Returns true if this is an enum class.
+ *
+ * Think about using [asEnumClassOrNull] to help with casting.
+ */
+fun KClass<*>.isEnum(): Boolean {
+  return this.java.isEnum
+}
+
+/**
+ * Casts this KClass to an enum class or returns null if it is not an enum class.
+ */
+@Suppress("UNCHECKED_CAST")
+fun KClass<*>.asEnumClassOrNull(): KClass<out Enum<*>>? {
+  return if (this.isEnum()) this as KClass<out Enum<*>> else null
+}
+
+/**
+ * Casts this KClass to an enum class or throws an exception if it is not an enum class.
+ */
+fun KClass<*>.asEnumClass(): KClass<out Enum<*>> {
+  return asEnumClassOrNull() ?: throw IllegalArgumentException("Class [$this] is not an enum class")
+}
 
 val KClass<*>.isObject: Boolean get() = this.objectInstance != null
 
@@ -44,15 +66,18 @@ val KClass<*>.simpleNameNonNull: String
  * Returns the enum entries for this class.
  */
 @Deprecated("Use enumEntries instead", ReplaceWith("enumEntries"))
-inline val <T : Any> KClass<T>.enumValues: Array<T>
+inline val <T : Any> KClass<T>.enumValues: Array<out Enum<*>>
   get() {
-    require(this.isEnum) { "[$this] is not an enum class" }
-    return this.enumEntries
+    require(this.isEnum()) { "[$this] is not an enum class" }
+    return asEnumClass().enumEntries
   }
 
-val <T : Any> KClass<T>.enumEntries: Array<T>
+/**
+ * Returns the enum entries for this class.
+ */
+val <T : Enum<T>> KClass<T>.enumEntries: Array<T>
   get() {
-    require(this.isEnum) { "[$this] is not an enum class" }
+    require(this.isEnum()) { "[$this] is not an enum class" }
     return this.java.enumConstants ?: throw IllegalStateException("enumConstants is null for $this")
   }
 
