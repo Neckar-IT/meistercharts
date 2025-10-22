@@ -63,6 +63,6 @@ fun createPrettyJsonFormat(): Json {
     serializersModule = SerializersModule {
     }
 
-    defaultJsonConfiguration(true)
+    defaultJsonConfiguration(encodeDefaults = true, prettyPrintEnabled = true)
   }
 }

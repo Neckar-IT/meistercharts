@@ -1,5 +1,6 @@
 package it.neckar.open.http
 
+import it.neckar.open.annotations.serialization.SerializedType
 import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
@@ -114,6 +115,7 @@ sealed interface Url {
    */
   @Serializable(with = UrlSerializer.DataScheme::class)
   @SerialName("data")
+  @SerializedType(DataScheme::class)
   @JsExport.Ignore
   data class DataScheme(
     /**
@@ -210,6 +212,7 @@ sealed interface Url {
   @JsExport.Ignore
   @Serializable(with = UrlSerializer.Absolute::class)
   @SerialName("absolute")
+  @SerializedType(Absolute::class)
   data class Absolute(override val value: String) : Url, RootRelativeAppender<Absolute> {
     init {
       require(
@@ -258,6 +261,7 @@ sealed interface Url {
   @JsExport.Ignore
   @Serializable(with = UrlSerializer.RootRelative::class)
   @SerialName("rootRelative")
+  @SerializedType(RootRelative::class)
   data class RootRelative(override val value: String) : RelativeAppender<RootRelative> {
     init {
       require(value.startsWith("/")) {
@@ -291,6 +295,7 @@ sealed interface Url {
   @JsExport.Ignore
   @Serializable(with = UrlSerializer.Relative::class)
   @SerialName("relative")
+  @SerializedType(Relative::class)
   data class Relative(override val value: String) : RelativeAppender<Relative> {
     init {
       require(value.startsWith("https").not()) {

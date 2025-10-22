@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.serialization.SerializedType
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.i18n.TextKey
@@ -68,6 +69,7 @@ sealed interface ReferenceEntriesDataMap {
    */
   @Serializable
   @SerialName("Empty")
+  @SerializedType(Empty::class)
   data object Empty : ReferenceEntriesDataMap {
     override fun get(id: ReferenceEntryId): ReferenceEntryData? {
       return null
@@ -79,6 +81,7 @@ sealed interface ReferenceEntriesDataMap {
    */
   @Serializable
   @SerialName("Generated")
+  @SerializedType(Generated::class)
   data object Generated : ReferenceEntriesDataMap {
     private val cache = cache<ReferenceEntryId, ReferenceEntryData>("ReferenceEntriesDataMap.generated", 100)
 
@@ -96,6 +99,7 @@ sealed interface ReferenceEntriesDataMap {
  */
 @Serializable
 @SerialName("Default")
+@SerializedType(DefaultReferenceEntriesDataMap::class)
 data class DefaultReferenceEntriesDataMap(
   /**
    * Contains the entries for each object value id

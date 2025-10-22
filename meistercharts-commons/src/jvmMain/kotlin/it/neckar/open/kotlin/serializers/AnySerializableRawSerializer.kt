@@ -57,12 +57,10 @@ object AnySerializableRawSerializer : KSerializer<Any> {
     val json: Json = if (includeOptionals) {
       Json {
         encodeDefaults = true
-        explicitNulls = true
       }
     } else {
       Json {
         encodeDefaults = false
-        explicitNulls = false
       }
     }
 
