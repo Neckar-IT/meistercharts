@@ -151,6 +151,8 @@ public object Libs {
 
     public const val detekt_psi_utils: String = "io.gitlab.arturbosch.detekt:detekt-psi-utils:_"
 
+    public const val konform: String = "io.konform:konform:_"
+
     public const val ktor_client_apache: String = "io.ktor:ktor-client-apache:_"
 
     public const val ktor_client_auth: String = "io.ktor:ktor-client-auth:_"
