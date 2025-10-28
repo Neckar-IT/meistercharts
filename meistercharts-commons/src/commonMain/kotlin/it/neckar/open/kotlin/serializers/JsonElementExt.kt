@@ -53,13 +53,18 @@ fun JsonElement.toStringPretty(): String {
  * Default properties for JSON Serialization
  * */
 fun JsonBuilder.defaultJsonConfiguration(
+  /**
+   * If true, default values are encoded. If false, they are omitted.
+   * When using OpenAPI, this must be disabled to avoid issues with required properties that are *not null*
+   */
   encodeDefaults: Boolean,
+  /**
+   * Pretty print enabled
+   */
   prettyPrintEnabled: Boolean,
 ) {
   prettyPrint = prettyPrintEnabled
   prettyPrintIndent = "  "
-  /**
-   * Do not encode defaults - the frontend expects undefined values for missing values
-   */
+
   this.encodeDefaults = encodeDefaults
 }

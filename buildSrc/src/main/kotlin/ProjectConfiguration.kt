@@ -649,6 +649,35 @@ object ProjectConfiguration {
         args.set(listOf("run", "lint", "--fix"))
       }
 
+      tasks.register<PnpmTask>("pnpmPrettier") {
+        description = "Executes `pnpm run prettier`"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall", "build") //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          packageJsonContainsScript("prettier")
+        }
+
+        args.set(listOf("run", "prettier"))
+      }
+
+      tasks.register<PnpmTask>("pnpmPrettierFix") {
+        description = "Executes `pnpm run prettier:fix`"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall", "build") //implicit dependency to generatePackageJson
+
+        onlyIf {
+          //Check if there is a build script referenced
+          packageJsonContainsScript("prettier:fix")
+        }
+
+        args.set(listOf("run", "prettier:fix"))
+      }
+
+
       tasks.register<PnpmTask>("pnpmTest") {
         description = "Executes `pnpm run test`"
         group = "Pnpm"
