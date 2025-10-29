@@ -6,6 +6,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.WhitespaceConfig
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.unit.currency.EUR
+import it.neckar.open.unit.currency.ct
 
 /**
  * Format for numbers
@@ -168,6 +169,13 @@ fun @EUR Int.formatEuroCents(i18nConfiguration: I18nConfiguration = DefaultI18nC
  */
 fun @EUR Double.formatEuro(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
   return decimalFormat2digits.format(this, i18nConfiguration, whitespaceConfig) + "${whitespaceConfig.smallSpace}€"
+}
+
+/**
+ * Formats a *cent* value (with two decimals)
+ */
+fun @ct Double.formatCents(i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
+  return decimalFormat2digits.format(this, i18nConfiguration, whitespaceConfig) + "${whitespaceConfig.smallSpace}ct"
 }
 
 fun Double.prettyFormat(numberOfDecimals: Int = 2, useGrouping: Boolean = true, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {

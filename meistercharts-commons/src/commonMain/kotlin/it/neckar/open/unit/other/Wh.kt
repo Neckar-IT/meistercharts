@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.unit.currency
+package it.neckar.open.unit.other
 
+import it.neckar.open.unit.Definition
 import it.neckar.open.unit.Name
+import it.neckar.open.unit.Symbol
 import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.Currency
+import it.neckar.open.unit.quantity.Power
 
 /**
  *
@@ -41,9 +43,14 @@ import it.neckar.open.unit.quantity.Currency
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-@Suppress("ClassName")
 @Unit
-@Currency
-@Name("Cent")
-annotation class Cent {
+@Power
+@Name("watt-hours")
+@Symbol(Wh.SYMBOL)
+@Definition("W·h", "J·s", "N·m·s", "kg·m²/s²")
+annotation class Wh {
+  companion object {
+    const val SYMBOL: String = "Wh"
+  }
+
 }
