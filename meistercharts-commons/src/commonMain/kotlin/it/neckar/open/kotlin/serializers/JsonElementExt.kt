@@ -39,7 +39,7 @@ fun JsonObjectBuilder.putNotEmpty(key: String, buildJsonArray: JsonArray) {
  * JSON instance with pretty print enabled
  */
 val JsonPretty: Json = Json {
-  defaultJsonConfiguration(encodeDefaults = true, prettyPrintEnabled = true)
+  defaultJsonConfiguration(inclusionStrategy = JsonInclusionStrategy.SkipDefaultsIncludeNulls, prettyPrintEnabled = true)
 }
 
 /**
@@ -54,10 +54,9 @@ fun JsonElement.toStringPretty(): String {
  * */
 fun JsonBuilder.defaultJsonConfiguration(
   /**
-   * If true, default values are encoded. If false, they are omitted.
-   * When using OpenAPI, this must be disabled to avoid issues with required properties that are *not null*
+   * Defines which values are encoded
    */
-  encodeDefaults: Boolean,
+  inclusionStrategy: JsonInclusionStrategy,
   /**
    * Pretty print enabled
    */
@@ -66,5 +65,7 @@ fun JsonBuilder.defaultJsonConfiguration(
   prettyPrint = prettyPrintEnabled
   prettyPrintIndent = "  "
 
-  this.encodeDefaults = encodeDefaults
+  this.encodeDefaults = inclusionStrategy.encodeDefaults
+  this.explicitNulls = inclusionStrategy.explicitNulls
 }
+
