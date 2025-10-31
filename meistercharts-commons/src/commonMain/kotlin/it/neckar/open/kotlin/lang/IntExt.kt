@@ -54,3 +54,10 @@ inline fun <V> Int.fastMap(mapper: (value: Int) -> V): List<V> {
   }
   return targetList
 }
+
+/**
+ * Checks whether this version is close to the given major version.
+ */
+fun Int.isCloseTo(expectedValue: Int, maxDelta: Int): Boolean {
+  return this >= (expectedValue - maxDelta) && this <= (expectedValue + maxDelta)
+}
