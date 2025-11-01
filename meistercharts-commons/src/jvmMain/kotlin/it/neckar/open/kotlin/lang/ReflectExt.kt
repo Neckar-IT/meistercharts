@@ -17,6 +17,11 @@ import kotlin.reflect.jvm.javaField
  */
 val KClass<*>.isInterface: Boolean get() = this.java.isInterface
 
+val KClass<*>.isCollection: Boolean
+  get() {
+    return Collection::class.java.isAssignableFrom(this.java)
+  }
+
 /**
  * Returns true if this is an enum class.
  *

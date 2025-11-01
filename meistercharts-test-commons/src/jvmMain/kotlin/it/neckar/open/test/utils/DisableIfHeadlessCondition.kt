@@ -12,12 +12,15 @@ import java.awt.GraphicsEnvironment
  */
 class DisableIfHeadlessCondition : ExecutionCondition {
   override fun evaluateExecutionCondition(context: ExtensionContext): ConditionEvaluationResult {
-    val optional = AnnotationUtils.findAnnotation(context.element, DisableIfHeadless::class.java)
-    return if (optional.isPresent) {
-      if (GraphicsEnvironment.isHeadless()) {
-        DISABLED_HEADLESS
-      } else ENABLED_NOT_HEADLESS
-    } else ENABLED_BY_DEFAULT
+    val disableIfHeadlessAnnotation = AnnotationUtils.findAnnotation(context.element, DisableIfHeadless::class.java)
+
+    if (disableIfHeadlessAnnotation.isPresent.not()) return ENABLED_BY_DEFAULT
+
+    return if (GraphicsEnvironment.isHeadless()) {
+      DISABLED_HEADLESS
+    } else {
+      ENABLED_NOT_HEADLESS
+    }
   }
 
   companion object {

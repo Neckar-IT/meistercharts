@@ -99,8 +99,8 @@ object Plugins {
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
+  const val asciidoctorGems: String = "org.asciidoctor.jvm.gems"
 
-  const val plantUml: String = "com.cosminpolifronie.gradle.plantuml"
   const val kvision: String = "kvision"
   const val jib: String = "com.google.cloud.tools.jib"
 
@@ -204,14 +204,14 @@ inline val PluginDependenciesSpec.asciidoctor: PluginDependencySpec
 inline val PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
   get() = id(Plugins.asciidoctorPdf)
 
+inline val PluginDependenciesSpec.asciidoctorGems: PluginDependencySpec
+  get() = id(Plugins.asciidoctorGems)
+
 inline val PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
   get() = id(Plugins.generatePackageJson)
 
 inline val PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
   get() = id(Plugins.installPnpmDependency)
-
-inline val PluginDependenciesSpec.plantUml: PluginDependencySpec
-  get() = id(Plugins.plantUml)
 
 inline val PluginDependenciesSpec.npmBundle: PluginDependencySpec
   get() = id(Plugins.npmBundle)
