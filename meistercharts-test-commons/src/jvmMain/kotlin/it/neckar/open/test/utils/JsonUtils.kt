@@ -141,6 +141,7 @@ fun Assert<String>.isJsonEqualTo(
  * Whitespaces are ignored.
  */
 fun Assert<String>.isJsonEqualTo(
+  //language=json
   expectedJsonString: String,
   actualTreeModifier: JsonNode.() -> Unit = {},
 ) {

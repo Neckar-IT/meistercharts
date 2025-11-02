@@ -28,9 +28,6 @@ public object Libs {
 
     public const val kaml: String = "com.charleskorn.kaml:kaml:_"
 
-    public const val com_cosminpolifronie_gradle_plantuml_gradle_plugin: String =
-            "com.cosminpolifronie.gradle.plantuml:com.cosminpolifronie.gradle.plantuml.gradle.plugin:_"
-
     public const val com_dorongold_task_tree_gradle_plugin: String =
             "com.dorongold.task-tree:com.dorongold.task-tree.gradle.plugin:_"
 
@@ -273,8 +270,17 @@ public object Libs {
     public const val org_asciidoctor_jvm_convert_gradle_plugin: String =
             "org.asciidoctor.jvm.convert:org.asciidoctor.jvm.convert.gradle.plugin:_"
 
+    public const val org_asciidoctor_jvm_gems_gradle_plugin: String =
+            "org.asciidoctor.jvm.gems:org.asciidoctor.jvm.gems.gradle.plugin:_"
+
     public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
             "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
+
+    public const val asciidoctorj: String = "org.asciidoctor:asciidoctorj:_"
+
+    public const val asciidoctorj_diagram: String = "org.asciidoctor:asciidoctorj-diagram:_"
+
+    public const val asciidoctorj_pdf: String = "org.asciidoctor:asciidoctorj-pdf:_"
 
     public const val awaitility: String = "org.awaitility:awaitility:_"
 
@@ -434,6 +440,8 @@ public object Libs {
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
 
     public const val snakeyaml: String = "org.yaml:snakeyaml:_"
+
+    public const val asciidoctor_diagram: String = "rubygems:asciidoctor-diagram:_"
 
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"
 
