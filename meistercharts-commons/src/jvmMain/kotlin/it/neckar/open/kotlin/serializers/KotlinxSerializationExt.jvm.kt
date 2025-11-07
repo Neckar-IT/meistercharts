@@ -1,8 +1,11 @@
 package it.neckar.open.kotlin.serializers
 
+import it.neckar.open.annotations.serialization.SerializedType
 import it.neckar.open.kotlin.lang.asKClass
 import it.neckar.open.kotlin.lang.isSealed
+import it.neckar.open.kotlin.reflect.classForName
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.allSupertypes
@@ -27,4 +30,19 @@ actual fun <S : Any> KClass<S>.verifyPlausibleForSerialization() {
  */
 fun <T : Any> KClass<T>.findSerialName(): String? {
   return findAnnotations(SerialName::class).firstOrNull()?.value
+}
+
+/**
+ * Returns the KClass that is guessed from the serial descriptor
+ */
+actual fun SerialDescriptor.guessClass(): KClass<*> {
+  val guessClassName = guessClassName()
+  return classForName(guessClassName)
+}
+
+actual fun SerialDescriptor.guessClassName(): String {
+  return annotations
+    .filterIsInstance<SerializedType>()
+    .firstOrNull()?.type?.qualifiedName
+    ?: serialName
 }

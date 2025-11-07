@@ -124,3 +124,14 @@ fun KClass<*>.isSerializedAsPrimitive(): Boolean {
   return serializerOrNull()?.descriptor?.isPrimitive() ?: false
 }
 
+
+/**
+ * Guesses the class name for this serial descriptor.
+ *
+ */
+expect fun SerialDescriptor.guessClassName(): String
+
+/**
+ * Returns the KClass that is guessed from the serial descriptor
+ */
+expect fun SerialDescriptor.guessClass(): KClass<*>

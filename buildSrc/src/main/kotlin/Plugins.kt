@@ -130,6 +130,8 @@ object Plugins {
 
   const val ksp: String = "com.google.devtools.ksp"
   const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
+  const val specHarvest: String = "it.neckar.ksp.spec-harvest"
+
   const val tailwind: String = "it.neckar.tailwind"
 
   /**
@@ -309,6 +311,9 @@ inline val PluginDependenciesSpec.ksp: PluginDependencySpec
 
 inline val PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
+
+inline val PluginDependenciesSpec.specHarvest: PluginDependencySpec
+  get() = id(Plugins.specHarvest)
 
 inline val PluginDependenciesSpec.kspSerialization: PluginDependencySpec
   get() = id(Plugins.kspSerialization)

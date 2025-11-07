@@ -76,6 +76,7 @@ object ProjectConfiguration {
         val notAllowedProjectDependencies = projectDependencies
           .filter { it != project } //skip this project
           .filter { it.isKspProcessorProject().not() } //skip all KSP processor projects
+          .filter { it.path.startsWith(":internal:open:ksp").not() } //skip all ksp related projects (e.g. model)
           .filter {
             //Allowlist of projects that are allowed to be dependencies of KSP processor projects (annotations)
             Projects.allowedDependenciesForKspProcessingProjectPaths.contains(it.path).not()
