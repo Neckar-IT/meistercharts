@@ -15,11 +15,11 @@
  */
 package it.neckar.open.unit.si
 
-import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.Power
 import it.neckar.open.unit.Definition
 import it.neckar.open.unit.Name
 import it.neckar.open.unit.Symbol
+import it.neckar.open.unit.Unit
+import it.neckar.open.unit.quantity.Power
 
 /**
  * Represents a watt
@@ -47,7 +47,7 @@ import it.neckar.open.unit.Symbol
 @MustBeDocumented
 @Unit
 @Power
-@Name("watt")
+@Name("Watt")
 @SiDerivedUnit(J::class, s::class)
 @Symbol(W.SYMBOL)
 @Definition("J/s", "N*m/s", "kg*m²/s³", "VA")

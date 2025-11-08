@@ -590,3 +590,26 @@ fun String.toCamelCase(): String {
     }
     .joinToString("")
 }
+
+/**
+ * Joins two optional strings appropriately.
+ *
+ * Returns:
+ * * `null` if both strings are `null` or blank.
+ * * first if `second` is `null` or blank
+ * * second if `first` is `null` or blank
+ * * `first<delimiter>second` otherwise
+ */
+fun joinStrings(
+  first: String?,
+  second: String?,
+  delimiter: String = " ",
+): String? {
+  if (first.isNullOrBlank()) {
+    return second
+  }
+  if (second.isNullOrBlank()) {
+    return first
+  }
+  return "$first$delimiter$second"
+}

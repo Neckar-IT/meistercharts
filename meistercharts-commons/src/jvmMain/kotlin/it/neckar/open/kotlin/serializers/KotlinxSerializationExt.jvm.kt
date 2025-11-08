@@ -46,3 +46,10 @@ actual fun SerialDescriptor.guessClassName(): String {
     .firstOrNull()?.type?.qualifiedName
     ?: serialName
 }
+
+/**
+ * Returns true if the class is annotated as serializable
+ */
+fun KClass<*>.isAnnotatedAsSerializable(): Boolean {
+  return findAnnotations(kotlinx.serialization.Serializable::class).isNotEmpty()
+}
