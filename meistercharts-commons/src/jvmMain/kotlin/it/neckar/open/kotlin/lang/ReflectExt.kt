@@ -102,6 +102,13 @@ fun KType.asKClass(): KClass<*> {
 }
 
 /**
+ * Returns true if this type has any star projections
+ */
+fun KType.hasAnyStarProjection(): Boolean {
+  return this.arguments.any { it.type == null }
+}
+
+/**
  * Returns all ancestors
  */
 fun KClass<*>.getAllAncestors(): Set<KType> {
@@ -229,6 +236,22 @@ fun <TYPE : Any> KClass<TYPE>.getBackingProperty(constructorParameter: KParamete
 fun <TYPE : Any> KClass<TYPE>.getProperty(valName: String): KProperty1<TYPE, *> {
   return findProperty(valName)
     ?: throw IllegalArgumentException("Could not find callable for parameter [$valName] in class [${simpleNameNonNull}]. Available members: ${this.members.joinToString { it.name }}")
+}
+
+/**
+ * Returns the value of the property for the given instance.
+ */
+fun <T : Any> T.getPropertyValueForced(propertyName: String): Any? {
+  val clazz = this::class
+
+  val property = clazz.getProperty(propertyName)
+  return property.getValueForced(this)
+}
+
+fun <T : Any> T.findPropertyValueForced(propertyName: String): Any? {
+  val clazz = this::class
+  val property = clazz.findProperty(propertyName) ?: return null
+  return property.getValueForced(this)
 }
 
 /**

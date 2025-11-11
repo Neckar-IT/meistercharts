@@ -201,6 +201,9 @@ fun <T> Assert<T>.isEqualToUsingJson(
   }
 }
 
+fun dumpAsJson(obj: Any): String {
+  return objectMapper.writeValueAsString(obj)
+}
 
 private val objectMapper = ObjectMapper().apply {
   registerModule(kotlinModule())

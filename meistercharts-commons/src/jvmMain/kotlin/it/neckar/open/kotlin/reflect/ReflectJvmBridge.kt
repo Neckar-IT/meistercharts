@@ -35,10 +35,61 @@ fun fqNameToClassForName(fqName: String): String {
 }
 
 /**
+ * Kotlin’s public collection types have JVM implementations in `java.util.*`. When we deserialize
+ * a descriptor we only see the Kotlin FQCN (`kotlin.collection.ArrayList`, typo included), so we
+ * keep a lookup table that forwards those names to the actual runtime classes `Class.forName`
+ * understands.
+ */
+private val kotlinCollectionClassMappings: Map<String, KClass<*>> = mapOf(
+  "kotlin.collections.List" to List::class,
+  "kotlin.collections.MutableList" to MutableList::class,
+  "kotlin.collections.Collection" to Collection::class,
+  "kotlin.collections.MutableCollection" to MutableCollection::class,
+  "kotlin.collections.Set" to Set::class,
+  "kotlin.collections.MutableSet" to MutableSet::class,
+  "kotlin.collections.Map" to Map::class,
+  "kotlin.collections.MutableMap" to MutableMap::class,
+  "kotlin.collections.Iterable" to Iterable::class,
+  "kotlin.collections.MutableIterable" to MutableIterable::class,
+  "kotlin.collections.Iterator" to Iterator::class,
+  "kotlin.collections.MutableIterator" to MutableIterator::class,
+  "kotlin.collections.ListIterator" to ListIterator::class,
+  "kotlin.collections.MutableListIterator" to MutableListIterator::class,
+  "kotlin.collections.ArrayList" to List::class,
+  "kotlin.collections.HashSet" to Set::class,
+  "kotlin.collections.LinkedHashSet" to Set::class,
+  "kotlin.collections.HashMap" to MutableMap::class,
+  "kotlin.collections.LinkedHashMap" to MutableMap::class
+)
+
+/**
  * Creates a new KClass instance for the given fully qualified class name.
  */
 fun classForName(className: String): KClass<*> {
-  val fqNameWithoutNullable = className.removeSuffix("?")   //Remove the potential nullable suffix
-  val name = fqNameToClassForName(fqNameWithoutNullable)
-  return Class.forName(name).kotlin
+  if (className.contains("<") || className.contains(">")) {
+    throw IllegalArgumentException("Generic types are not supported: $className")
+  }
+
+  val normalized = className
+    .removeSuffix("?")
+    .replace("kotlin.collection.", "kotlin.collections.")
+
+  kotlinCollectionClassMappings[normalized]?.let { return it }
+
+  return when (normalized) {
+    "kotlin.String" -> String::class
+    "kotlin.Int" -> Int::class
+    "kotlin.Long" -> Long::class
+    "kotlin.Short" -> Short::class
+    "kotlin.Byte" -> Byte::class
+    "kotlin.Float" -> Float::class
+    "kotlin.Double" -> Double::class
+    "kotlin.Boolean" -> Boolean::class
+    "kotlin.Char" -> Char::class
+    "kotlin.Unit" -> Unit::class
+    else -> {
+      val name = fqNameToClassForName(normalized)
+      Class.forName(name).kotlin
+    }
+  }
 }
