@@ -425,15 +425,17 @@ public object Libs {
     public const val org_springframework_boot_gradle_plugin: String =
             "org.springframework.boot:org.springframework.boot.gradle.plugin:_"
 
-    public const val junit_jupiter: String = "org.testcontainers:testcontainers-junit-jupiter:_"
-
-    public const val minio: String = "org.testcontainers:testcontainers-minio:_"
-
-    public const val mongodb: String = "org.testcontainers:testcontainers-mongodb:_"
-
-    public const val selenium: String = "org.testcontainers:testcontainers-selenium:_"
-
     public const val testcontainers: String = "org.testcontainers:testcontainers:_"
+
+    public const val testcontainers_junit_jupiter: String =
+            "org.testcontainers:testcontainers-junit-jupiter:_"
+
+    public const val testcontainers_minio: String = "org.testcontainers:testcontainers-minio:_"
+
+    public const val testcontainers_mongodb: String = "org.testcontainers:testcontainers-mongodb:_"
+
+    public const val testcontainers_selenium: String =
+            "org.testcontainers:testcontainers-selenium:_"
 
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 
