@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.neckar.open.unit.si
+package it.neckar.open.unit.time
 
 import it.neckar.open.unit.Name
 import it.neckar.open.unit.Symbol
 import it.neckar.open.unit.Unit
-import it.neckar.open.unit.quantity.Energy
+import it.neckar.open.unit.quantity.Time
 
-/**
- *
- */
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.CLASS,
@@ -42,13 +39,13 @@ import it.neckar.open.unit.quantity.Energy
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-@Suppress("ClassName")
 @Unit
-@Energy
-@Name("kilowatt-hour per kilowatt peak and year")
-@Symbol(kWh_kWp_a.SYMBOL)
-annotation class kWh_kWp_a {
+@Time
+@Symbol(Months.SYMBOL)
+@Name("Months")
+annotation class Months {
   companion object {
-    const val SYMBOL: String = "kWh per kWp and year"
+    const val SYMBOL: String = "mo"
   }
 }
+

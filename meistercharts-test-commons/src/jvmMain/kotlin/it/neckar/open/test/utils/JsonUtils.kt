@@ -146,7 +146,7 @@ fun Assert<String>.isJsonEqualTo(
   actualTreeModifier: JsonNode.() -> Unit = {},
 ) {
   given { current ->
-    JsonUtils.assertJsonEquals(expectedJsonString, current, actualTreeModifier)
+    JsonUtils.assertJsonEquals(expected = expectedJsonString, actual = current, actualTreeModifier = actualTreeModifier)
   }
 }
 

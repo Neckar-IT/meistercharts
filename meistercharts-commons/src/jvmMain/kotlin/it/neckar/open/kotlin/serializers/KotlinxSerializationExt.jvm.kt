@@ -61,7 +61,6 @@ fun KClass<*>.isAnnotatedAsSerializable(): Boolean {
   return findAnnotations(kotlinx.serialization.Serializable::class).isNotEmpty()
 }
 
-
 /**
  * Returns the type descriptors for the type parameters of this descriptor - if there are any
  */

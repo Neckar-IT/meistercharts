@@ -20,9 +20,6 @@ import it.neckar.open.unit.Symbol
 import it.neckar.open.unit.Unit
 import it.neckar.open.unit.quantity.Energy
 
-/**
- *
- */
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.CLASS,
@@ -45,10 +42,10 @@ import it.neckar.open.unit.quantity.Energy
 @Suppress("ClassName")
 @Unit
 @Energy
-@Name("kilowatt-hour per kilowatt peak and year")
-@Symbol(kWh_kWp_a.SYMBOL)
-annotation class kWh_kWp_a {
+@Name("kilowatt-hour per watt peak and year")
+@Symbol(kWh_Wp_a.SYMBOL)
+annotation class kWh_Wp_a {
   companion object {
-    const val SYMBOL: String = "kWh per kWp and year"
+    const val SYMBOL: String = "kWh per Wp and year"
   }
 }

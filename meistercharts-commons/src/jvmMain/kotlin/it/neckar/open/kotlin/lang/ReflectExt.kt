@@ -1,10 +1,12 @@
 package it.neckar.open.kotlin.lang
 
+import it.neckar.open.kotlin.lang.isInterface
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeParameter
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -60,6 +62,36 @@ val KClass<*>.simpleNameWithEnclosing: String
   }
 
 /**
+ * Returns the simple name of this type, including generics and nullability.
+ */
+val KType.simpleNameWithEnclosing: String
+  get() {
+    val classifier = this.classifier.requireNotNull { "Classifier is null for $this" }
+
+    val baseName = when (classifier) {
+      is KClass<*> -> classifier.simpleNameWithEnclosing
+      is KTypeParameter -> classifier.name
+      else -> classifier.toString()
+    }
+
+    val generics = if (arguments.isEmpty()) {
+      ""
+    } else {
+      arguments.joinToString(prefix = "<", postfix = ">") { projection ->
+        projection.type?.simpleNameWithEnclosing ?: "*"
+      }
+    }
+
+    val nullableSuffix = if (isMarkedNullable) "?" else ""
+
+    return buildString {
+      append(baseName)
+      append(generics)
+      append(nullableSuffix)
+    }
+  }
+
+/**
  * Returns the simple name - throws an exception if it is null.
  */
 val KClass<*>.simpleNameNonNull: String
@@ -91,6 +123,21 @@ val <T : Enum<T>> KClass<T>.enumEntries: Array<T>
  */
 fun KType.isSealed(): Boolean {
   return asKClass().isSealed
+}
+
+/**
+ * Returns true if this type has a sealed parent (interface or parent class)
+ */
+fun KType.hasSealedSuperType(): Boolean {
+  return asKClass().hasSealedSuperType()
+}
+
+/**
+ * Returns true if this class has a sealed parent (interface or parent class)
+ */
+fun KClass<*>.hasSealedSuperType(): Boolean {
+  //It should be enough to only check the direct supertypes
+  return this.supertypes.any { it.isSealed() }
 }
 
 /**
@@ -297,4 +344,43 @@ fun KProperty1<out Any, *>.getValueForced(instance: Any): Any? {
   }
 
   return this.get(instance)
+}
+
+fun KType.isValueClass(): Boolean {
+  return this.asKClass().isValue
+}
+
+fun KType.isEnum(): Boolean = this.asKClass().isEnum()
+fun KType.isObject(): Boolean = this.asKClass().isObject
+fun KType.isInterface(): Boolean = this.asKClass().isInterface
+fun KType.isCollection(): Boolean = this.asKClass().isCollection
+
+/**
+ * Calls toString to get the type name
+ */
+fun KType.getTypeName(): String {
+  return toString()
+}
+
+/**
+ * Returns the simple type name of the type.
+ */
+fun KType.getSimpleTypeName(): String {
+  val rawName = getTypeName()
+  val hasGenerics = rawName.contains("<") || rawName.contains(">")
+
+  return if (hasGenerics) {
+    val base = (classifier as KClass<*>).simpleNameWithEnclosing
+    val genericsPart = rawName
+      .substringBetween("<", ">")
+      .split(",")
+      .joinToString(",") { part ->
+        val trimmed = part.trim()
+        val shortName = trimmed.substringAfterLast('.')
+        shortName
+      }
+    "$base<$genericsPart>"
+  } else {
+    (classifier as KClass<*>).simpleNameWithEnclosing
+  }
 }
