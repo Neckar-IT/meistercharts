@@ -67,6 +67,7 @@ object Plugins {
   const val publishToGitlabPages: String = "it.neckar.publish.gitlab-pages"
   const val sslCertGen: String = "com.fuseanalytics.gradle.sslcertgen"
   const val certificates: String = "it.neckar.ssl.certificates"
+  const val endpointsAnnotator: String = "it.neckar.endpoints-annotator"
 
   /**
    * Collects the types-list (from dependencies or subprojects).
@@ -350,6 +351,9 @@ inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
   get() = id(Plugins.certificates)
+
+inline val PluginDependenciesSpec.endpointsAnnotator: PluginDependencySpec
+  get() = id(Plugins.endpointsAnnotator)
 
 @Suppress("DEPRECATION")
 @Deprecated("Does not seem to work")
