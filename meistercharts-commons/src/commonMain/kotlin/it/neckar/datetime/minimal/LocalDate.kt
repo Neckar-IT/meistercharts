@@ -1,5 +1,6 @@
 package it.neckar.datetime.minimal
 
+import it.neckar.datetime.minimal.io.LocalDateSerializer
 import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
 
@@ -8,7 +9,7 @@ import kotlinx.serialization.Serializable
  *
  * Attention: This is a very minimalistic implementation without any special checks.
  */
-@Serializable
+@Serializable(with = LocalDateSerializer::class)
 data class LocalDate(
   val year: Year,
   val month: Month,
@@ -132,6 +133,20 @@ data class LocalDate(
       dayOfMonth: Int,
     ): LocalDate {
       return LocalDate(Year(year), Month(month), DayOfMonth(dayOfMonth))
+    }
+
+    /**
+     * Parses a date in the format YYYY-MM-DD
+     */
+    fun parse(decodeString: String): LocalDate {
+      val parts = decodeString.split("-")
+      require(parts.size == 3) {
+        "Invalid date format: $decodeString"
+      }
+      val year = parts[0].toInt()
+      val month = parts[1].toInt()
+      val dayOfMonth = parts[2].toInt()
+      return LocalDate(year, month, dayOfMonth)
     }
   }
 }
