@@ -1,12 +1,13 @@
 package it.neckar.open.kotlin.lang
 
-import it.neckar.open.kotlin.lang.isInterface
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -97,6 +98,14 @@ val KType.simpleNameWithEnclosing: String
 val KClass<*>.simpleNameNonNull: String
   get() {
     return this.simpleName ?: throw IllegalStateException("simpleName is null for $this")
+  }
+
+/**
+ * Returns the qualified name - throws an exception if it is null.
+ */
+val KClass<*>.qualifiedNameNonNull: String
+  get() {
+    return this.qualifiedName ?: throw IllegalStateException("qualifiedName is null for $this")
   }
 
 /**
@@ -383,4 +392,22 @@ fun KType.getSimpleTypeName(): String {
   } else {
     (classifier as KClass<*>).simpleNameWithEnclosing
   }
+}
+
+/**
+ * Returns true if the visibility is private
+ */
+fun KVisibility.isPrivate(): Boolean {
+  return this == KVisibility.PRIVATE
+}
+
+/**
+ * Returns true if this property is public
+ */
+fun KProperty<*>.isPublic(): Boolean {
+  return visibility == KVisibility.PUBLIC
+}
+
+fun KProperty<*>.isInternalOrPublic(): Boolean {
+  return visibility == KVisibility.PUBLIC || visibility == KVisibility.INTERNAL
 }

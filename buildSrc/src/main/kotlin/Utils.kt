@@ -268,13 +268,13 @@ val Process.text: String
  * Returns the gitlab access token - from environment or gradle.properties file
  */
 fun Project.getGitlabAccessToken(): String? {
-  val fromEnv: String? = System.getenv("GITLAB_PUSH_ACCESS_TOKEN")
+  val fromEnv: String? = System.getenv("GITLAB_CONTAINER_ACCESS_TOKEN")
 
   if (fromEnv != null) {
     return fromEnv
   }
 
-  return properties["GITLAB_PUSH_ACCESS_TOKEN"] as String?
+  return properties["GITLAB_CONTAINER_ACCESS_TOKEN"] as String?
 }
 
 
