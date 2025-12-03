@@ -7,9 +7,7 @@ import it.neckar.open.unit.si.ms
  */
 @Suppress("ObjectPropertyName")
 object TimeMillisExample {
-  val _2020_05_21_15_00_41_500: @ms Double = 1.5900732415E12.also {
-    require(it.formatUtcForDebug() == "2020-05-21T15:00:41.500Z")
-  }
+  const val _2020_05_21_15_00_41_500: @ms Double = 1.5900732415E12
 
   val _2019_01_07_15_45_19_123_987_345_678_901: @ms Double = 1546875919_123.987_345_678_901.also {
     requireMatchesFormattedUtc(it, "2019-01-07T15:45:19.123Z")
@@ -34,6 +32,17 @@ object TimeMillisExample {
   val _2026_04_24_03_10_00_000Z: @ms Double = 1_777_000_200_000.0.also {
     requireMatchesFormattedUtc(it, "2026-04-24T03:10:00.000Z")
   }
+
+  init {
+    require(_2020_05_21_15_00_41_500.formatUtcForDebug() == "2020-05-21T15:00:41.500Z")
+    require(_2019_01_07_15_45_19_123_987_345_678_901.formatUtcForDebug() == "2019-01-07T15:45:19.123Z")
+    require(_2022_07_29_09_38_04_141Z.formatUtcForDebug() == "2022-07-29T07:38:04.141Z")
+    require(_2019_01_07_10_11_59_123Z.formatUtcForDebug() == "2019-01-07T10:11:59.123Z")
+    require(_2020_05_21_15_00_41_500Z.formatUtcForDebug() == "2020-05-21T15:00:41.500Z")
+    require(_2024_09_12_06_44_17_500Z.formatUtcForDebug() == "2024-09-12T06:44:17.500Z")
+    require(_2026_04_24_03_10_00_000Z.formatUtcForDebug() == "2026-04-24T03:10:00.000Z")
+  }
+
 
   val entries: List<@ms Double> = listOf(
     _2020_05_21_15_00_41_500,
