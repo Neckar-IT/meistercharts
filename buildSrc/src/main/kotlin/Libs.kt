@@ -267,15 +267,6 @@ public object Libs {
 
     public const val batik_transcoder: String = "org.apache.xmlgraphics:batik-transcoder:_"
 
-    public const val org_asciidoctor_jvm_convert_gradle_plugin: String =
-            "org.asciidoctor.jvm.convert:org.asciidoctor.jvm.convert.gradle.plugin:_"
-
-    public const val org_asciidoctor_jvm_gems_gradle_plugin: String =
-            "org.asciidoctor.jvm.gems:org.asciidoctor.jvm.gems.gradle.plugin:_"
-
-    public const val org_asciidoctor_jvm_pdf_gradle_plugin: String =
-            "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin:_"
-
     public const val asciidoctorj: String = "org.asciidoctor:asciidoctorj:_"
 
     public const val asciidoctorj_diagram: String = "org.asciidoctor:asciidoctorj-diagram:_"
