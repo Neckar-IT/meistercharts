@@ -441,8 +441,6 @@ public object Libs {
 
     public const val threeten_extra: String = "org.threeten:threeten-extra:_"
 
-    public const val snakeyaml: String = "org.yaml:snakeyaml:_"
-
     public const val asciidoctor_diagram: String = "rubygems:asciidoctor-diagram:_"
 
     public const val software_amazon_awssdk_s3: String = "software.amazon.awssdk:s3:_"

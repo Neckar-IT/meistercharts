@@ -100,6 +100,7 @@ object Plugins {
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
   const val asciidoctorGems: String = "org.asciidoctor.jvm.gems"
+  const val neckarItAsciidoctor: String = "it.neckar.asciidoctor"
 
   const val kvision: String = "kvision"
   const val jib: String = "com.google.cloud.tools.jib"
@@ -199,6 +200,9 @@ inline val PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
 
 inline val PluginDependenciesSpec.gitLabDb: PluginDependencySpec
   get() = id(Plugins.gitLabDb)
+
+inline val PluginDependenciesSpec.neckarItAsciidoctor: PluginDependencySpec
+  get() = id(Plugins.neckarItAsciidoctor)
 
 inline val PluginDependenciesSpec.asciidoctor: PluginDependencySpec
   get() = id(Plugins.asciidoctor)
