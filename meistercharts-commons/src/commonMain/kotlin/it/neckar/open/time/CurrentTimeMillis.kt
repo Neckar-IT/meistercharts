@@ -2,6 +2,7 @@ package it.neckar.open.time
 
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.si.ms
+import kotlin.time.Instant
 
 /**
  * Returns the current time in millis.
@@ -12,6 +13,13 @@ import it.neckar.open.unit.si.ms
  */
 fun nowMillis(): @ms @IsFinite Double {
   return nowProvider.nowMillis()
+}
+
+/**
+ * Returns the current time as Instant
+ */
+fun now(): @ms @IsFinite Instant {
+  return nowMillis().toInstant()
 }
 
 /**

@@ -5,6 +5,7 @@ import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
 import it.neckar.projects.common.Port
+import it.neckar.runtime.context.Hostname
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -104,9 +105,15 @@ sealed interface Url {
 
     fun localhostHttp(port: Port = Port.HTTP): Absolute = absolute("http://localhost:$port/")
 
+    @Suppress("HttpUrlsUsage")
     fun http(host: String, port: Port = Port.HTTP): Absolute = absolute("http://$host:$port/")
 
+    @Suppress("HttpUrlsUsage")
+    fun http(host: Hostname, port: Port = Port.HTTP): Absolute = absolute("http://$host:$port/")
+
     fun https(host: String, port: Port = Port.HTTPS): Absolute = absolute("https://$host:$port/")
+
+    fun https(host: Hostname, port: Port = Port.HTTPS): Absolute = absolute("https://$host:$port/")
   }
 
   /**
