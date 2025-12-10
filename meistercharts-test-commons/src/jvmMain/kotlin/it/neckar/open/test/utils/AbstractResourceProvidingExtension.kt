@@ -15,7 +15,10 @@ import javax.annotation.Nonnull
  * Abstract base class for extensions that provide a resource
  *
  */
-abstract class AbstractResourceProvidingExtension<T>(
+abstract class AbstractResourceProvidingExtension<T : Any>(
+  /**
+   * The resource type that is provided by this extension
+   */
   val resourceType: Class<T>,
 ) : ParameterResolver, AfterTestExecutionCallback, TestInstancePostProcessor {
 
@@ -30,17 +33,17 @@ abstract class AbstractResourceProvidingExtension<T>(
   }
 
   /**
-   * Creates a resource
+   * Creates a resource from the context
    */
   @Suppress("UNCHECKED_CAST")
   protected fun getResource(extensionContext: ExtensionContext, key: Member): T {
     val map: MutableMap<Member, T> = getStore(extensionContext)
-      .getOrComputeIfAbsent(
+      .computeIfAbsent(
         extensionContext.testClass.get(), { ConcurrentHashMap<Member, T>() },
         MutableMap::class.java as Class<MutableMap<Member, T>>
-      ) as MutableMap<Member, T>
+      )
 
-    return map.computeIfAbsent(key) { member: Member? -> createResource(extensionContext) }
+    return map.computeIfAbsent(key) { _: Member? -> createResource(extensionContext) }
   }
 
   /**
@@ -63,7 +66,8 @@ abstract class AbstractResourceProvidingExtension<T>(
   }
 
   /**
-   * Converts the given resource to an object for the parameter - based on the type and annotations of the parameter
+   * This method is called for each method parameter. It must convert the resource to the required parameter type.
+   * The converted values are then passed to the test method.
    */
   protected abstract fun convertResourceForParameter(parameter: Parameter, resource: T): Any
 

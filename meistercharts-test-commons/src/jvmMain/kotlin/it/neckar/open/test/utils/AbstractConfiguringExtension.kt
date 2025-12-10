@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
  * Abstract base class for extensions that configure stuff and revert it after the tests
  *
  */
-abstract class AbstractConfiguringExtension<T, A : Annotation> protected constructor(
+abstract class AbstractConfiguringExtension<T: Any, A : Annotation> protected constructor(
   /**
    * The type of the object that is configured
    */

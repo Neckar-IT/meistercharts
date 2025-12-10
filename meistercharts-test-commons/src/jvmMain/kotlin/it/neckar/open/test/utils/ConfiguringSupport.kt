@@ -32,7 +32,7 @@ import javax.annotation.Nonnull
  * }
  * ```
  */
-class ConfiguringSupport<T, A : Annotation>(
+class ConfiguringSupport<T: Any, A : Annotation>(
   /**
    * The type of the stored object - used for the store retrieval
    */

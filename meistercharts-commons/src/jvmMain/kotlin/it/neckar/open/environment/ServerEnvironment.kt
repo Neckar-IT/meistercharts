@@ -22,7 +22,7 @@ object ServerEnvironment {
     }
   }
 
-  fun getServerRootUrl(): Url.Absolute? {
+  fun getServerRootUrl(): Url.Absolute {
     return findServerRootUrl().requireNotNull {
       "The server root URL is not set. Please set the environment variable $SERVER_ROOT_URL"
     }

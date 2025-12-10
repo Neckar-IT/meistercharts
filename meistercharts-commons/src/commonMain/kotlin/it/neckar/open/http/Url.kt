@@ -244,8 +244,86 @@ sealed interface Url {
       return plus(toAppend.value)
     }
 
+    /**
+     * Returns the protocol part of the URL (e.g. "https")
+     */
+    fun protocol(): String {
+      return value.substringBefore(SchemaDelimiter)
+    }
+
+    /**
+     * Returns the URL without the protocol part
+     */
     fun withoutProtocol(): String {
       return value.substringAfter(SchemaDelimiter)
+    }
+
+    /**
+     * Returns the URL without the path part
+     */
+    fun withoutPath(): String {
+      return protocol() + SchemaDelimiter + withoutProtocol().substringBefore("/")
+    }
+
+    /**
+     * Returns the protocol and host part of the URL (without port)
+     */
+    fun protocolAndHost(): String {
+      return "${protocol()}://${hostPart()}"
+    }
+
+    /**
+     * Returns the host part of the URL (without protocol and without port)
+     */
+    fun hostPart(): String {
+      return withoutProtocol().substringBefore(":").substringBefore("/")
+    }
+
+    /**
+     * Returns the host part with port (if available)
+     */
+    fun hostPartWithPort(): String {
+      return withoutProtocol().substringBefore("/")
+    }
+
+    /**
+     * Returns true if the URL has an explicit port specified.
+     */
+    fun hasExplicitPort(): Boolean {
+      return withoutProtocol().contains(":")
+    }
+
+    /**
+     * Returns the path part of the URL (starts with "/")
+     */
+    fun pathPart(): String {
+      return withoutProtocol().substringAfter("/", "")
+    }
+
+    /**
+     * Forces the provided port on the URL.
+     */
+    fun withForcedPort(port: Port): Absolute {
+      return Absolute("${protocol()}://${hostPart()}:$port/${pathPart()}")
+    }
+
+    /**
+     * Returns the port.
+     * Guesses the port based on the protocol if no explicit port is defined.
+     */
+    fun port(): Port {
+      val hostPartWithPort = hostPartWithPort()
+
+      if (hostPartWithPort.contains(":")) {
+        val portString = hostPartWithPort.substringAfter(":").substringBefore("/")
+        return Port(portString.toInt())
+      }
+
+      return when (protocol().lowercase()) {
+        "http" -> Port.HTTP
+        "https" -> Port.HTTPS
+        else -> throw IllegalStateException("Cannot guess port for protocol [${protocol()}] in URL [$value]")
+      }
     }
 
     override fun toString(): String {
@@ -321,6 +399,13 @@ sealed interface Url {
      * Appends something to the URL
      */
     override operator fun plus(toAppend: String): Relative {
+      // Check if we're trying to append a path after a query parameter or fragment
+      if ((value.contains("?") || value.contains("#"))
+          && !toAppend.startsWith("?")
+          && !toAppend.startsWith("&")
+          && !toAppend.startsWith("#")) {
+        throw IllegalArgumentException("Cannot append path segment [$toAppend] after query parameter or fragment in [$value]")
+      }
       return Relative(appendUrlStrings(value, toAppend))
     }
 
@@ -343,6 +428,12 @@ sealed interface Url {
  * Adds a "/" between the two parts if necessary.
  *
  * This method should be used exclusively to concatenate URL parts.
+ *
+ * Special handling:
+ * - Query parameters (starting with ?) are appended directly
+ * - Additional query parameters (starting with &) are appended directly
+ * - Fragment identifiers (starting with #) are appended directly
+ * - Multiple slashes at boundaries are normalized to a single slash
  */
 fun appendUrlStrings(value: String, toAppend: String): String {
   if (value.isEmpty()) {
@@ -352,20 +443,26 @@ fun appendUrlStrings(value: String, toAppend: String): String {
     return value
   }
 
-  if (toAppend.startsWith("?")) {
+  // Query parameters, additional query parameters, and fragments should be appended directly without slash
+  if (toAppend.startsWith("?") || toAppend.startsWith("&") || toAppend.startsWith("#")) {
     return value + toAppend
   }
 
-  val endsWithSlash = value.endsWith("/")
-  val startsWithSlash = toAppend.startsWith("/")
+  // Normalize multiple slashes at the boundary
+  // Remove all trailing slashes from value and all leading slashes from toAppend
+  val valueTrimmed = value.trimEnd('/')
+  val toAppendTrimmed = toAppend.trimStart('/')
 
-  if (endsWithSlash && startsWithSlash) {
-    return value + toAppend.substring(1)
+  if (valueTrimmed.isEmpty()) {
+    // If value was just slashes, keep one slash
+    return if (toAppendTrimmed.isEmpty()) "/" else "/$toAppendTrimmed"
   }
 
-  if (endsWithSlash || startsWithSlash) {
-    return value + toAppend
+  if (toAppendTrimmed.isEmpty()) {
+    // If toAppend was just slashes, return value without trailing slashes
+    return valueTrimmed
   }
 
-  return "$value/$toAppend"
+  // Join with exactly one slash
+  return "$valueTrimmed/$toAppendTrimmed"
 }
