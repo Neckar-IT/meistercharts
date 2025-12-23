@@ -134,6 +134,7 @@ object Plugins {
   const val specHarvest: String = "it.neckar.ksp.spec-harvest"
 
   const val tailwind: String = "it.neckar.tailwind"
+  const val linksSiteGenerate: String = "it.neckar.links-site-generate"
 
   /**
    * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
@@ -351,6 +352,9 @@ inline val PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
 
 inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
   get() = id(Plugins.tailwind)
+
+inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
+  get() = id(Plugins.linksSiteGenerate)
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
   get() = id(Plugins.certificates)
