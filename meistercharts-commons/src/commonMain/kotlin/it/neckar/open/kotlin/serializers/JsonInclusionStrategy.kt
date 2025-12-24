@@ -1,5 +1,7 @@
 package it.neckar.open.kotlin.serializers
 
+import kotlinx.serialization.json.Json
+
 /**
  * Defines how values are included when serializing objects to JSON.
  *
@@ -49,6 +51,18 @@ enum class JsonInclusionStrategy(
     explicitNulls = false,
   ),
   ;
+
+  /**
+   * Creates a [Json] instance with the current inclusion strategy
+   */
+  fun json(prettyPrint: Boolean = true, prettyPrintIndent: String = "  "): Json {
+    return Json {
+      this.prettyPrint = prettyPrint
+      this.prettyPrintIndent = prettyPrintIndent
+      this.encodeDefaults = this@JsonInclusionStrategy.encodeDefaults
+      this.explicitNulls = this@JsonInclusionStrategy.explicitNulls
+    }
+  }
 
   companion object {
     /**

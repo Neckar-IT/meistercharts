@@ -2,6 +2,7 @@ package it.neckar.open.serialization
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.kotlin.serializers.JsonInclusionStrategy
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -17,16 +18,15 @@ import kotlinx.serialization.serializer
 fun <T> testDeserialization(
   serializer: KSerializer<T>,
   expected: T,
-
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
-
   //language=JSON
   json: () -> String,
 ): T {
   val encoder = Json {
-    defaultJsonConfiguration(true)
+    defaultJsonConfiguration(true, inclusionStrategy)
   }
 
   return testDeserialization(encoder, serializer, json(), comparisonCheck, expected)
@@ -35,34 +35,27 @@ fun <T> testDeserialization(
 fun <T> testDeserialization(
   serializer: KSerializer<T>,
   expected: T,
-
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
-
   //language=JSON
   json: String,
 ): T {
-  return testDeserialization(serializer, expected, comparisonCheck) { json }
+  return testDeserialization(serializer, expected, inclusionStrategy, comparisonCheck) { json }
 }
 
 inline fun <reified T> testSerialization(
   objectToSerialize: T,
-
   serializer: KSerializer<T> = serializer(),
   serializersModule: SerializersModule = EmptySerializersModule(),
-
-  //comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
-  //  assertThat(deserialized).isEqualTo(originalObject)
-  //},
-
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   //language=JSON
   json: () -> String,
 ) {
-
   val encoder = Json {
     this.serializersModule = serializersModule
-    this.defaultJsonConfiguration(true)
+    this.defaultJsonConfiguration(true, inclusionStrategy)
   }
 
   testSerialization(objectToSerialize = objectToSerialize, encoder = encoder, serializer = serializer, json())
@@ -75,12 +68,13 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T>,
   serializersModule: SerializersModule = EmptySerializersModule(),
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
 ) {
-  roundTrip(objectToSerialize, serializer, serializersModule, comparisonCheck) { expectedJson }
+  roundTrip(objectToSerialize, serializer, serializersModule, inclusionStrategy, comparisonCheck) { expectedJson }
 }
 
 /**
@@ -90,6 +84,7 @@ inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
   serializersModule: SerializersModule = EmptySerializersModule(),
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   noinline comparisonCheck: ComparisonCheck<T> = { deserialized, originalObject ->
     assertThat(deserialized).isEqualTo(originalObject)
   },
@@ -98,7 +93,7 @@ inline fun <reified T> roundTrip(
 ): T {
   val encoder: Json = Json {
     this.serializersModule = serializersModule
-    this.defaultJsonConfiguration(true)
+    this.defaultJsonConfiguration(true, inclusionStrategy)
   }
 
   return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck, expectedJsonProvider)
@@ -117,7 +112,7 @@ inline fun <reified T> roundTrip(
 }
 
 /**
- * Returns the deserialize object
+ * Returns the deserialized object
  */
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
@@ -136,7 +131,8 @@ inline fun <reified T> roundTrip(
 
 @Suppress("FunctionName")
 fun <T> _roundTrip(
-  encoder: Json, serializer: KSerializer<T>,
+  encoder: Json,
+  serializer: KSerializer<T>,
   objectToSerialize: T,
   comparisonCheck: ComparisonCheck<T>,
   expectedJson: String?,
@@ -165,9 +161,14 @@ private fun <T> testDeserialization(encoder: Json, serializer: KSerializer<T>, j
 /**
  * Serializes a list of objects
  */
-fun <T> roundTripList(vararg objectsToSerialize: T, expectedJson: String?, serializer: KSerializer<T>) {
+fun <T> roundTripList(
+  vararg objectsToSerialize: T,
+  expectedJson: String?,
+  serializer: KSerializer<T>,
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
+) {
   val encoder = Json {
-    defaultJsonConfiguration(true)
+    defaultJsonConfiguration(true, inclusionStrategy)
   }
 
   val listSerializer = ListSerializer(serializer)
@@ -181,7 +182,7 @@ fun <T> roundTripList(vararg objectsToSerialize: T, expectedJson: String?, seria
     JsonUtils.assertJsonEquals(expectedJson, json)
   }
 
-  val deserialized = Json.decodeFromString(listSerializer, json)
+  val deserialized = encoder.decodeFromString(listSerializer, json)
   assertThat(deserialized).isEqualTo(objectsToSerializeList)
 }
 
@@ -195,11 +196,15 @@ typealias ComparisonCheck<T> = (deserialized: T, originalObject: T) -> Unit
 /**
  * Copied from `JsonElementExtKt`
  */
-fun JsonBuilder.defaultJsonConfiguration(prettyPrintEnabled: Boolean = true) {
+fun JsonBuilder.defaultJsonConfiguration(
+  prettyPrintEnabled: Boolean = true,
+  /**
+   * Defines how values are included when serializing objects to JSON.
+   */
+  inclusionStrategy: JsonInclusionStrategy,
+) {
   prettyPrint = prettyPrintEnabled
   prettyPrintIndent = "  "
-  /**
-   * encode default properties of Serializable Classes
-   * */
-  encodeDefaults = true
+  encodeDefaults = inclusionStrategy.encodeDefaults
+  explicitNulls = inclusionStrategy.explicitNulls
 }

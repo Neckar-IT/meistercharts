@@ -3,22 +3,24 @@ package it.neckar.open.serialization
 import assertk.*
 import com.fasterxml.jackson.databind.JsonNode
 import it.neckar.open.http.Url
+import it.neckar.open.kotlin.serializers.JsonInclusionStrategy
 import it.neckar.open.resources.getResourceSafe
 import it.neckar.open.test.utils.JsonUtils
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 /**
  *
  */
-fun Assert<kotlinx.serialization.json.JsonObject>.isJsonEqualTo(
+fun Assert<JsonObject>.isJsonEqualTo(
   expectedJsonUrl: Url,
   actualTreeModifier: JsonNode.() -> Unit = {},
 ) {
   isJsonEqualTo(javaClass.getResourceSafe(expectedJsonUrl).readText(), actualTreeModifier)
 }
 
-fun Assert<kotlinx.serialization.json.JsonObject>.isJsonEqualTo(
+fun Assert<JsonObject>.isJsonEqualTo(
   expectedJsonString: String,
   actualTreeModifier: JsonNode.() -> Unit = {},
 ) {
@@ -32,7 +34,10 @@ fun Assert<kotlinx.serialization.json.JsonObject>.isJsonEqualTo(
  * JSON instance with pretty print enabled
  */
 private val JsonPretty: Json = Json {
-  defaultJsonConfiguration(true)
+  defaultJsonConfiguration(
+    prettyPrintEnabled = true,
+    inclusionStrategy = JsonInclusionStrategy.Default,
+  )
 }
 
 /**
