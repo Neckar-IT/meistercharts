@@ -5,8 +5,8 @@ actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
     executionEnvironment = ExecutionEnvironment.LocalDev,
     stage = DeploymentStage.Development,
     host = ServiceHost.Localhost,
-    inUnitTest = false, //currently unknown in JS
-    debugMode = false, //currently unknown in JS
+    inUnitTest = false, // Browser apps don't run in unit tests
+    debugMode = false, // Not detectable in browser
     initialValue = true,
   )
 }
