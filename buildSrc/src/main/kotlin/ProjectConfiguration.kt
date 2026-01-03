@@ -151,6 +151,7 @@ object ProjectConfiguration {
           "Created-By" to "Neckar IT GmbH",
           "Project" to project.name,
           BuildInfoVars.BuildDate.value to buildDate,
+          BuildInfoVars.GitCommitDateTime.value to gitCommitDateTime,
           BuildInfoVars.GitHash.value to gitHash,
           BuildInfoVars.GitHashShort.value to gitHashShort,
         )

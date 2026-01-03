@@ -21,8 +21,19 @@ object VersionInformation {
    */
   val buildDate: String = VersionConstants.buildDate
 
+  /**
+   * The git commit date and time (ISO 8601 format)
+   */
+  val gitCommitDateTime: String = VersionConstants.gitCommitDateTime
+
+  /**
+   * The git hash of the current commit
+   */
   val gitHash: String = VersionConstants.gitHash
 
+  /**
+   * The short git hash of the current commit
+   */
   val gitHashShort: String = VersionConstants.gitHashShort
 
   /**
