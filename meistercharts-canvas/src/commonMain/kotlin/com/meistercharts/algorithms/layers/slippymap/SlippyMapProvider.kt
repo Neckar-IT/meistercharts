@@ -69,14 +69,15 @@ interface SlippyMapProvider {
  * Creates a [SlippyMapProvider] that delegates all calls to the current value of this property.
  */
 fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
+  val property = this
   return object : SlippyMapProvider {
     override fun url(tileIndex: TileIndex, zoom: Int): Url {
-      return get().url(tileIndex, zoom)
+      return property.get().url(tileIndex, zoom)
     }
 
     override val legalNotice: String?
       get() {
-        return get().legalNotice
+        return property.get().legalNotice
       }
   }
 }

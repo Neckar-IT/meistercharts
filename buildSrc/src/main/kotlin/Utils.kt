@@ -597,7 +597,7 @@ fun KotlinJsTargetDsl.executableJsApplication(
   /**
    * THe js target type - default is ES5
    */
-  jsTargetType: JsTargetType = JsTargetType.ES5,
+  jsTargetType: JsTargetType = JsTargetType.ES2015,
 
   /**
    * The module type that is used for the webpack configuration.
@@ -608,6 +608,13 @@ fun KotlinJsTargetDsl.executableJsApplication(
    * The module type that is used for the webpack configuration for dev.
    */
   webpackModuleTypeForDev: WebpackModuleType = WebpackModuleType.Window,
+
+  /**
+   * Controls test execution for projects using ES modules (ModernModule).
+   * - [JsTestMode.Disabled]: Tests are disabled
+   * - [JsTestMode.NodeJs]: Tests run in Node.js with Mocha (supports ES modules natively)
+   */
+  testMode: JsTestMode = JsTestMode.NodeJs,
 
   /**
    * Optional configuration for the webpack task.
@@ -624,6 +631,8 @@ fun KotlinJsTargetDsl.executableJsApplication(
 
   binaries.executable()
 
+  val usesEsModules = webpackModuleType == WebpackModuleType.ModernModule || webpackModuleTypeForDev == WebpackModuleType.ModernModule
+
   browser {
     runTask {
       webpackModuleType.configure(this, varName)
@@ -633,7 +642,31 @@ fun KotlinJsTargetDsl.executableJsApplication(
     webpackTask {
       webpackModuleType.configure(this, varName)
     }
+
+    // Disable browser tests for ES modules - Karma cannot execute ESM
+    // For browser-specific tests (Canvas, DOM), use WebpackModuleType.Window instead
+    testTask {
+      enabled = false
+    }
+
+    // Enable outputModule experiment for webpack when using ES modules
+    if (usesEsModules) {
+      commonWebpackConfig {
+        experiments.add("outputModule")
+      }
+    }
   }
+
+
+  // Configure Node.js tests when NodeJs test mode is selected
+  if (testMode == JsTestMode.NodeJs) {
+    nodejs {
+      testTask {
+        useMocha()
+      }
+    }
+  }
+
 
   //Workaround for problem when executing `gradle build jsBrowserDevelopmentWebpack` since Gradle 8.3
   run {
@@ -670,6 +703,42 @@ fun KotlinJsTargetDsl.executableJsApplication(
       //target = "es2015"
     }
   }
+
+  // Register a convenient 'run' task as alias for jsBrowserProductionRun
+  if (project.tasks.findByName("run") == null) {
+    project.tasks.register("run") {
+      group = "application"
+      description = "Runs the JS browser application in production mode (alias for jsBrowserProductionRun)"
+      dependsOn("jsBrowserProductionRun")
+    }
+  }
+}
+
+/**
+ * Controls how tests are executed for JS projects using ES modules (ModernModule).
+ *
+ * ## Important Limitation
+ * Browser tests (Karma) are NOT compatible with ES modules (ModernModule) because:
+ * 1. Karma cannot execute ESM syntax
+ * 2. The Kotlin/JS plugin automatically enables `outputModule` webpack experiment
+ *
+ * For projects needing browser-specific tests (Canvas, DOM), use [WebpackModuleType.Window]
+ * instead of [WebpackModuleType.ModernModule].
+ */
+enum class JsTestMode {
+  /**
+   * Tests are disabled. Use this for backwards compatibility or when tests are not needed.
+   */
+  Disabled,
+
+  /**
+   * Tests run in Node.js using Mocha.
+   * Node.js has native ES module support, making it ideal for testing ES module code.
+   *
+   * Note: Browser-specific APIs (Canvas, DOM, localStorage, etc.) are NOT available.
+   * For Canvas tests, consider using the `canvas` npm package as a polyfill.
+   */
+  NodeJs,
 }
 
 /**
@@ -724,6 +793,7 @@ enum class WebpackModuleType {
 
   /**
    * Seems to work when using the generated code as TypeScript module.
+   * Note: This requires experiments.outputModule to be enabled in commonWebpackConfig
    */
   ModernModule {
     override fun configure(kotlinWebpack: KotlinWebpack, varName: String) {
@@ -763,7 +833,9 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
     generateTypeScriptDefinitions()
 
     browser {
-      configureJsKarma()
+      // Disable JS browser tests - Karma cannot execute ES modules
+      // JS tests run in Node.js with Mocha instead (see nodejs block below)
+      configureJsKarma(disableTests = true)
 
       webpackTask {
         output.library = null //necessary when using modern-module
@@ -779,6 +851,14 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
 
         //Required for "modern-module" support
         experiments.add("outputModule")
+      }
+    }
+
+    // Enable Node.js tests with Mocha - Node.js supports ES modules natively
+    // Note: Browser-specific APIs (Canvas, DOM) are not available in Node.js
+    nodejs {
+      testTask {
+        useMocha()
       }
     }
   }
@@ -798,11 +878,17 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
 }
 
 /**
- * Configures JS test runner using karma
+ * Configures JS test runner using karma.
+ * Note: When ES modules are used (via useEsModules()), Karma tests are disabled
+ * because Karma doesn't support ES module syntax.
  */
-fun org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl.configureJsKarma() {
+fun org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsBrowserDsl.configureJsKarma(disableTests: Boolean = false) {
   testTask {
-    configureJsKarma()
+    if (disableTests) {
+      enabled = false
+    } else {
+      configureJsKarma()
+    }
   }
 }
 

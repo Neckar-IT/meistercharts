@@ -119,13 +119,14 @@ fun <R, P1> DoublesProvider1<P1>.mapped(function: DoubleMapFunction<R>): SizedPr
  * Returns a [MultiProvider] that delegates all calls to the current value of this property
  */
 fun <P1> KProperty0<DoublesProvider1<P1>>.delegate(): DoublesProvider1<P1> {
+  val property = this
   return object : DoublesProvider1<P1> {
     override fun size(param1: P1): Int {
-      return get().size(param1)
+      return property.get().size(param1)
     }
 
     override fun valueAt(index: Int, param1: P1): Double {
-      return get().valueAt(index, param1)
+      return property.get().valueAt(index, param1)
     }
   }
 }

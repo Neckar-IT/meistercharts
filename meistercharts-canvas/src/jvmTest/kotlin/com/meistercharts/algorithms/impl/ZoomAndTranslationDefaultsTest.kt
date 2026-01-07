@@ -78,6 +78,6 @@ class ZoomAndTranslationDefaultsTest {
 }
 
 private fun Assert<Size>.isZero() = given { actual ->
-  if (actual.isZero()) return
+  if (actual.isZero()) return@given
   expected("to be zero but was <$actual>")
 }

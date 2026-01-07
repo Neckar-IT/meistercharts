@@ -20,11 +20,12 @@ interface BooleanValuesProvider : HasSize {
  * Returns a delegate that uses the current value of this property to delegate all calls.
  */
 fun KProperty0<BooleanValuesProvider>.delegate(): BooleanValuesProvider {
+  val property = this
   return object : BooleanValuesProvider {
-    override fun size(): Int = get().size()
+    override fun size(): Int = property.get().size()
 
     override fun valueAt(index: Int): @Boxed Boolean {
-      return get().valueAt(index)
+      return property.get().valueAt(index)
     }
   }
 }

@@ -95,9 +95,9 @@ fun KotlinMultiplatformExtension.addKotlinDependencies() {
 
 object Tests {
   /**
-   * Can be used to add test dependencies to a source set
+   * Test dependencies using api() - for test-utility projects that export test functionality
    */
-  val testDepsCommon: KotlinSourceSet.() -> Unit = {
+  val testDepsCommonApi: KotlinSourceSet.() -> Unit = {
     dependencies {
       api(Libs.kotlin_test)
       api(Libs.kotlin_test_common)
@@ -112,13 +112,13 @@ object Tests {
     }
   }
 
-  val testDepsJs: KotlinSourceSet.() -> Unit = {
+  val testDepsJsApi: KotlinSourceSet.() -> Unit = {
     dependencies {
       api(Libs.kotlin_test_js)
     }
   }
 
-  val testDepsJvm: KotlinSourceSet.() -> Unit = {
+  val testDepsJvmApi: KotlinSourceSet.() -> Unit = {
     dependencies {
       api(Libs.kotlin_test_junit5)
       api(Libs.junit_jupiter_api)
@@ -131,26 +131,78 @@ object Tests {
       api(Libs.commons_math3)
 
       api(Libs.awaitility)
+      api(Libs.measured)
+    }
+  }
+
+  /**
+   * Test dependencies using implementation() - for test source sets in regular projects
+   */
+  val testDepsCommonImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      implementation(Libs.kotlin_test)
+      implementation(Libs.kotlin_test_common)
+      implementation(Libs.kotlin_test_annotations_common)
+
+      implementation(Libs.kotlin_reflect)
+
+      implementation(KotlinX.coroutines.core)
+      implementation(KotlinX.coroutines.test)
+
+      implementation(Libs.assertk)
+    }
+  }
+
+  val testDepsJsImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      implementation(Libs.kotlin_test_js)
+    }
+  }
+
+  val testDepsJvmImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      implementation(Libs.kotlin_test_junit5)
+      implementation(Libs.junit_jupiter_api)
+      implementation(Libs.junit_jupiter_engine)
+      implementation(Libs.junit_jupiter_params)
+
+      implementation(Libs.mockk)
+
+      implementation(Libs.commons_io)
+      implementation(Libs.commons_math3)
+
+      implementation(Libs.awaitility)
       implementation(Libs.measured)
     }
   }
 }
 
 /**
- * Adds the test dependencies to the project
+ * Adds the test dependencies to the project.
+ * - Scope.Test: Uses implementation() - for test source sets in regular projects
+ * - Scope.Main: Uses api() - for test-utility projects that export test functionality
  */
 fun KotlinMultiplatformExtension.addKotlinTestDependencies(scope: Scope = Scope.Test) {
-  common(scope, Tests.testDepsCommon)
-  js(scope, Tests.testDepsJs)
-  jvm(scope, Tests.testDepsJvm)
+  when (scope) {
+    Scope.Main -> {
+      // Test-utility projects need api() to export dependencies transitively
+      common(scope, Tests.testDepsCommonApi)
+      js(scope, Tests.testDepsJsApi)
+      jvm(scope, Tests.testDepsJvmApi)
+    }
+    Scope.Test -> {
+      // Regular projects should use implementation() in test source sets
+      common(scope, Tests.testDepsCommonImpl)
+      js(scope, Tests.testDepsJsImpl)
+      jvm(scope, Tests.testDepsJvmImpl)
+    }
+  }
 }
 
 object KtorClient {
-  val commons: KotlinSourceSet.() -> Unit = {
+  // Main source set versions using api()
+  val commonsApi: KotlinSourceSet.() -> Unit = {
     dependencies {
-      if (false) {
-        api(Libs.kotlin_reflect) //TODO why???
-      }
       api(KotlinX.coroutines.core)
 
       api(Ktor.client.core)
@@ -158,36 +210,71 @@ object KtorClient {
       api(Ktor.client.serialization)
       api(Ktor.client.logging)
 
-      if (false) {
-        api(Ktor.plugins.websockets)
-      }
-
       api(Libs.ktor_client_content_negotiation)
       api(Libs.ktor_serialization_kotlinx)
       api(Libs.ktor_serialization_kotlinx_json)
     }
   }
 
-  val js: KotlinSourceSet.() -> Unit = {
+  val jsApi: KotlinSourceSet.() -> Unit = {
     dependencies {
       //Nothing to add at the moment
     }
   }
 
-  val jvm: KotlinSourceSet.() -> Unit = {
+  val jvmApi: KotlinSourceSet.() -> Unit = {
     dependencies {
       api(Ktor.client.okHttp)
+    }
+  }
+
+  // Test source set versions using implementation()
+  val commonsImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      implementation(KotlinX.coroutines.core)
+
+      implementation(Ktor.client.core)
+      implementation(Ktor.client.json)
+      implementation(Ktor.client.serialization)
+      implementation(Ktor.client.logging)
+
+      implementation(Libs.ktor_client_content_negotiation)
+      implementation(Libs.ktor_serialization_kotlinx)
+      implementation(Libs.ktor_serialization_kotlinx_json)
+    }
+  }
+
+  val jsImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      //Nothing to add at the moment
+    }
+  }
+
+  val jvmImpl: KotlinSourceSet.() -> Unit = {
+    dependencies {
+      implementation(Ktor.client.okHttp)
     }
   }
 }
 
 /**
- * Adds the ktor client dependencies
+ * Adds the ktor client dependencies.
+ * - Scope.Main: Uses api() - for exposing dependencies transitively
+ * - Scope.Test: Uses implementation() - for test source sets
  */
 fun KotlinMultiplatformExtension.addKtorClientDependencies(scope: Scope) {
-  common(scope, KtorClient.commons)
-  js(scope, KtorClient.js)
-  jvm(scope, KtorClient.jvm)
+  when (scope) {
+    Scope.Main -> {
+      common(scope, KtorClient.commonsApi)
+      js(scope, KtorClient.jsApi)
+      jvm(scope, KtorClient.jvmApi)
+    }
+    Scope.Test -> {
+      common(scope, KtorClient.commonsImpl)
+      js(scope, KtorClient.jsImpl)
+      jvm(scope, KtorClient.jvmImpl)
+    }
+  }
 }
 
 object KtorServer {

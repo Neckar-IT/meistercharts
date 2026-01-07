@@ -85,9 +85,6 @@ public object Libs {
     public const val symbol_processing_api: String =
             "com.google.devtools.ksp:symbol-processing-api:_"
 
-    public const val symbol_processing_cmdline: String =
-            "com.google.devtools.ksp:symbol-processing-cmdline:_"
-
     public const val guava: String = "com.google.guava:guava:_"
 
     public const val guice_multibindings: String =
@@ -320,6 +317,9 @@ public object Libs {
 
     public const val org_jetbrains_kotlin_plugin_serialization_gradle_plugin: String =
             "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:_"
+
+    public const val kotlin_build_tools_compat: String =
+            "org.jetbrains.kotlin:kotlin-build-tools-compat:_"
 
     public const val kotlin_build_tools_impl: String =
             "org.jetbrains.kotlin:kotlin-build-tools-impl"

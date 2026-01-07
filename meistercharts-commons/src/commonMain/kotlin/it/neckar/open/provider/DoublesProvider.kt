@@ -266,12 +266,13 @@ class ToRelativeValuesProvider(val delegate: DoublesProvider) : DoublesProvider 
  * Returns a [DoublesProvider] that delegates to the current value of this property
  */
 fun KProperty0<DoublesProvider>.delegate(): DoublesProvider {
+  val property = this
   return object : DoublesProvider {
-    override fun size(): Int = get().size()
+    override fun size(): Int = property.get().size()
 
     override
     fun valueAt(index: Int): @Boxed Double {
-      return get().valueAt(index)
+      return property.get().valueAt(index)
     }
   }
 }

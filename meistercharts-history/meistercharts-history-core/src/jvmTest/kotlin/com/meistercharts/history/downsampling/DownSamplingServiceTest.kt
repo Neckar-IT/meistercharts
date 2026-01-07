@@ -158,11 +158,11 @@ class DownSamplingServiceTest {
 }
 
 private fun Assert<DownSamplingJob>.isRefreshPartially() = given {
-  if (it.refreshRange is RefreshPartially) return
+  if (it.refreshRange is RefreshPartially) return@given
   expected("Expected to be RefreshPartially but was <${it.refreshRange::class}>")
 }
 
 private fun Assert<DownSamplingJob>.isRefreshCompletely() = given {
-  if (it.refreshRange is RefreshCompletely) return
+  if (it.refreshRange is RefreshCompletely) return@given
   expected("Expected to be RefreshCompletely but was <${it.refreshRange::class}>")
 }

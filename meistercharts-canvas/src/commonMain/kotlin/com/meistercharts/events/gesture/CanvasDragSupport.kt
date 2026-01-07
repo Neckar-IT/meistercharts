@@ -317,17 +317,18 @@ fun CanvasDragSupport.connectedTouchEventHandler(
  * Returns a delegate that uses the current value of this property to delegate all calls.
  */
 fun KProperty0<CanvasDragSupport.Handler?>.delegate(): CanvasDragSupport.Handler {
+  val property = this
   return object : CanvasDragSupport.Handler {
     override fun isDraggingAllowedFromHere(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): Boolean {
-      return get()?.isDraggingAllowedFromHere(source, location, chartSupport) ?: false
+      return property.get()?.isDraggingAllowedFromHere(source, location, chartSupport) ?: false
     }
 
     override fun onDrag(source: CanvasDragSupport, location: Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
-      return get()?.onDrag(source, location, distance, deltaTime, chartSupport) ?: Ignored
+      return property.get()?.onDrag(source, location, distance, deltaTime, chartSupport) ?: Ignored
     }
 
     override fun onFinish(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): EventConsumption {
-      return get()?.onFinish(source, location, chartSupport) ?: Ignored
+      return property.get()?.onFinish(source, location, chartSupport) ?: Ignored
     }
   }
 }

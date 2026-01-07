@@ -101,14 +101,15 @@ fun CategoryModel.createCategoryLabelsProvider(): SizedLabelsProvider {
  * Returns a labels provider that returns the labels for the current value of this property
  */
 fun KProperty0<CategorySeriesModel>.createCategoryLabelsProvider(): SizedLabelsProvider {
+  val property = this
   return object : SizedLabelsProvider {
     override fun size(param1: TextService, param2: I18nConfiguration): Int {
-      return get().numberOfCategories
+      return property.get().numberOfCategories
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun valueAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return get().categoryNameAt(CategoryIndex(index), textService, i18nConfiguration)
+      return property.get().categoryNameAt(CategoryIndex(index), textService, i18nConfiguration)
     }
   }
 }
@@ -117,27 +118,28 @@ fun KProperty0<CategorySeriesModel>.createCategoryLabelsProvider(): SizedLabelsP
  * Creates a [CategorySeriesModel] that delegates all calls to the current value of this property.
  */
 fun KProperty0<CategorySeriesModel>.delegate(): CategorySeriesModel {
+  val property = this
   return object : CategorySeriesModel {
     override val numberOfCategories: Int
       get() {
-        return get().numberOfCategories
+        return property.get().numberOfCategories
       }
 
     override val numberOfSeries: Int
       get() {
-        return get().numberOfSeries
+        return property.get().numberOfSeries
       }
 
     override fun valueAt(categoryIndex: CategoryIndex, seriesIndex: SeriesIndex): @Domain @MayBeNaN Double {
-      return get().valueAt(categoryIndex, seriesIndex)
+      return property.get().valueAt(categoryIndex, seriesIndex)
     }
 
     override fun categoryNameAt(categoryIndex: CategoryIndex, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return get().categoryNameAt(categoryIndex, textService, i18nConfiguration)
+      return property.get().categoryNameAt(categoryIndex, textService, i18nConfiguration)
     }
 
     override fun isEmpty(): Boolean {
-      return get().isEmpty()
+      return property.get().isEmpty()
     }
   }
 }

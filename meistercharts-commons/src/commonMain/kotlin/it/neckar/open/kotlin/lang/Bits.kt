@@ -44,7 +44,7 @@ fun Short.reverseBytes(): Short {
 }
 
 /** Reverses the bytes of [this] [Char]: AABB -> BBAA */
-fun Char.reverseBytes(): Char = this.toShort().reverseBytes().toChar()
+fun Char.reverseBytes(): Char = this.toShort().reverseBytes().toInt().toChar()
 
 /** Reverses the bytes of [this] [Int]: AABBCCDD -> DDCCBBAA */
 fun Int.reverseBytes(): Int {

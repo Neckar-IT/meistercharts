@@ -128,7 +128,7 @@ fun Assert<String>.isEqualComparingLinesTrim(expected: String): Unit = given { a
  */
 fun Assert<String>.isEqualIgnoringWhitespacesEmptyLines(expected: String) = given { actual ->
   if (expected == actual) {
-    return
+    return@given
   }
 
   //Left is expected
@@ -147,7 +147,7 @@ fun Assert<String>.isEqualIgnoringWhitespacesEmptyLines(expected: String) = give
       }
       .toList()
   ) {
-    return
+    return@given
   }
 
   //Find the first failing line

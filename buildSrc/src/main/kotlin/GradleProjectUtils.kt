@@ -164,7 +164,7 @@ fun Project.findAllProjectDependencies(
     val configuration = configurations.findByName(configurationName)
 
     configuration
-      ?.findDirectProjectDependencies()
+      ?.findDirectProjectDependencies(this)
       ?.flatMap { it.findAllProjectDependencies(configurationNames, alreadyVisitedProjectPaths) + it }
       ?: emptyList()
   }
@@ -179,16 +179,16 @@ fun Project.findAllProjectDependencies(
 /**
  * Returns all project dependencies for the configuration
  */
-fun Configuration.findDirectProjectDependencies(): List<Project> {
+fun Configuration.findDirectProjectDependencies(project: Project): List<Project> {
   return allDependencies
     .filterIsInstance<ProjectDependency>()
-    .map { it.dependencyProject }
+    .map { project.project(it.path) }
 }
 
 /**
  * Returns the named object or null
  */
-fun <T> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObjectProvider<T>? {
+fun <T : Any> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObjectProvider<T>? {
   return try {
     this.named(name)
   } catch (_: UnknownDomainObjectException) {

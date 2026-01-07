@@ -330,13 +330,14 @@ typealias DomainRelativeValueProvider = (chartCalculator: ChartCalculator) -> @D
  * Returns a delegate that uses the current value of this property to delegate all calls.
  */
 fun KProperty0<ZoomAndTranslationDefaults>.delegate(): ZoomAndTranslationDefaults {
+  val property = this
   return object : ZoomAndTranslationDefaults {
     override fun defaultZoom(chartCalculator: ChartCalculator): Zoom {
-      return get().defaultZoom(chartCalculator)
+      return property.get().defaultZoom(chartCalculator)
     }
 
     override fun defaultTranslation(chartCalculator: ChartCalculator): Distance {
-      return get().defaultTranslation(chartCalculator)
+      return property.get().defaultTranslation(chartCalculator)
     }
   }
 }
