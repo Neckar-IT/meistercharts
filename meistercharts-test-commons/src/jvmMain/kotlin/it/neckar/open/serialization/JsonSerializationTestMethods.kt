@@ -194,7 +194,7 @@ typealias ComparisonCheck<T> = (deserialized: T, originalObject: T) -> Unit
 
 
 /**
- * Copied from `JsonElementExtKt`
+ * Configures JSON settings for serialization tests.
  */
 fun JsonBuilder.defaultJsonConfiguration(
   prettyPrintEnabled: Boolean = true,

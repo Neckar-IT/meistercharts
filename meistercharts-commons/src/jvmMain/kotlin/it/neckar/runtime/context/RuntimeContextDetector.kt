@@ -218,19 +218,36 @@ fun guessInCIEnvironment(): Boolean {
  * for debugging purposes (e.g., before clearing caches, starting critical operations, etc.).
  */
 fun shouldWaitInDebugMode(): Boolean {
-  val debugWaitValue = System.getenv(DebugWaitHelpDisableParameter)
-  return debugWaitValue?.toBoolean() != false
+  System.getProperty(DebugWaitParameterName)?.let { debugWaitValueFromSystem ->
+    return debugWaitValueFromSystem.toBoolean()
+  }
+
+  System.getenv(DebugWaitParameterName)?.let { debugWaitValue ->
+    return debugWaitValue.toBoolean()
+  }
+
+  return false;
 }
 
+/**
+ * Enables waiting in debug mode by setting the appropriate system property.
+ *
+ * This function sets the system property defined by [DebugWaitParameterName] to "true",
+ * which can be used to control behavior in debug mode, such as pausing execution for debugging.
+ *
+ * ATTENTION: Do *not* check in this call - it is only for local debugging purposes!
+ */
+fun enableWaitInDebugMode() {
+  System.setProperty(DebugWaitParameterName, "true")
+}
 
 /**
  * Constant for the DEBUG_WAIT environment variable
  *
- * See [DebugWaitHelpDisableMessage] for more information on how to enable/disable this feature
+ * See [DebugWaitHelpEnableMessage] for more information on how to enable/disable this feature
  */
-const val DebugWaitHelpDisableParameter: String = "debugWait"
-const val DebugWaitHelpDisableMessage: String = "Add Environment variable '${DebugWaitHelpDisableParameter}=false' to disable waiting in debug mode (in IntelliJ Run Configuration)"
-
+const val DebugWaitParameterName: String = "debugWait"
+const val DebugWaitHelpEnableMessage: String = "Add Environment variable or system property '${DebugWaitParameterName}=true' to enable waiting in debug mode (in IntelliJ Run Configuration)"
 
 /**
  * Fallback runtime context for local development.

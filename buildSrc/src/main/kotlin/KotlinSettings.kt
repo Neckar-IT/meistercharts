@@ -78,7 +78,7 @@ object KotlinSettings {
 
     add("-Xwarning-level=NOTHING_TO_INLINE:disabled") //Suppress warnings for NOTHING_TO_INLINE globally!
 
-    //Does not work with KSP Tests (it.neckar.ksp.KspExtKtTest) at the moment
+    //Does not work with KSP Tests (it.neckar.ksp.KspExtKtTest) at the moment (Kotlin 2.2.0)
     //add("-Xnested-type-aliases") //Enable nested type aliases (https://kotlinlang.org/docs/type-aliases.html)
 
     add("-Xannotation-target-all") //Enable experimental language support for @all: annotation use-site target

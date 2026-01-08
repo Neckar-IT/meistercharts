@@ -39,7 +39,7 @@ fun JsonObjectBuilder.putNotEmpty(key: String, buildJsonArray: JsonArray) {
  * JSON instance with pretty print enabled
  */
 val JsonPretty: Json = Json {
-  defaultJsonConfiguration(inclusionStrategy = JsonInclusionStrategy.SkipDefaultsIncludeNulls, prettyPrintEnabled = true)
+  defaultJsonConfiguration(inclusionStrategy = JsonInclusionStrategy.SkipDefaultsIncludeNulls)
 }
 
 /**
@@ -50,17 +50,17 @@ fun JsonElement.toStringPretty(): String {
 }
 
 /**
- * Default properties for JSON Serialization
- * */
+ * Default properties for JSON Serialization.
+ */
 fun JsonBuilder.defaultJsonConfiguration(
-  /**
-   * Defines which values are encoded
-   */
-  inclusionStrategy: JsonInclusionStrategy,
   /**
    * Pretty print enabled
    */
-  prettyPrintEnabled: Boolean,
+  prettyPrintEnabled: Boolean = true,
+  /**
+   * Defines which values are encoded
+   */
+  inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
 ) {
   prettyPrint = prettyPrintEnabled
   prettyPrintIndent = "  "

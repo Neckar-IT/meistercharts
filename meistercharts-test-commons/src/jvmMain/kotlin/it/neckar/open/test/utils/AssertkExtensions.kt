@@ -41,7 +41,7 @@ fun <T> Assert<T>.value(): T {
  *
  */
 fun Assert<AtomicBoolean>.isFalse(): Unit = given {
-  if (!it.get()) return
+  if (it.get().not()) return
   expected("false")
 }
 
@@ -51,7 +51,7 @@ fun Assert<AtomicBoolean>.isTrue(): Unit = given {
 }
 
 fun Assert<File>.doesNotExist(): Unit = given { actual ->
-  if (!actual.exists()) return
+  if (actual.exists().not()) return
   expected("to not exist")
 }
 
@@ -246,6 +246,23 @@ inline fun <reified T> Assert<List<T>>.containsExactlyInAnyOrderList(expectedEle
   all {
     expectedElements.fastForEach {
       contains(it)
+    }
+  }
+}
+
+/**
+ * Asserts that the list does not contain null elements
+ */
+fun <T> Assert<List<T>?>.doesNotContainNull() {
+  given { actual ->
+    if (actual == null) {
+      fail("List is null")
+    } else {
+      actual.fastForEachIndexed { index, element ->
+        if (element == null) {
+          fail("Element at index $index is null")
+        }
+      }
     }
   }
 }

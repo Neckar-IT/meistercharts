@@ -9,6 +9,10 @@ import it.neckar.open.unit.si.ms
 object TimeMillisExample {
   const val _2020_05_21_15_00_41_500: @ms Double = 1.5900732415E12
 
+  val _2023_11_15_12_00_00_000: @ms Double = 1700049600000.0.also {
+    requireMatchesFormattedUtc(it, "2023-11-15T12:00:00.000Z")
+  }
+
   val _2019_01_07_15_45_19_123_987_345_678_901: @ms Double = 1546875919_123.987_345_678_901.also {
     requireMatchesFormattedUtc(it, "2019-01-07T15:45:19.123Z")
   }

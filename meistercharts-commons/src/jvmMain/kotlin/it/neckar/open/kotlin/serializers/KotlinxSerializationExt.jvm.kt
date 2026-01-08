@@ -3,6 +3,7 @@ package it.neckar.open.kotlin.serializers
 import it.neckar.open.annotations.serialization.SerializedType
 import it.neckar.open.kotlin.lang.asKClass
 import it.neckar.open.kotlin.lang.findPropertyValueForced
+import it.neckar.open.kotlin.lang.getAllSealedSubclasses
 import it.neckar.open.kotlin.lang.isSealed
 import it.neckar.open.kotlin.reflect.classForName
 import kotlinx.serialization.KSerializer
@@ -34,6 +35,23 @@ actual fun <S : Any> KClass<S>.verifyPlausibleForSerialization() {
  */
 fun <T : Any> KClass<T>.findSerialName(): String? {
   return findAnnotations(SerialName::class).firstOrNull()?.value
+}
+
+/**
+ * Returns all discriminator values from the @SerialName annotations of all sealed subclasses.
+ * This is useful for creating filter parameters that match discriminator values of a sealed class hierarchy.
+ *
+ * @return List of serial names from all concrete (non-interface) subclasses
+ * @throws IllegalArgumentException if this class is not sealed
+ * @throws IllegalStateException if any subclass is missing a @SerialName annotation
+ */
+fun <T : Any> KClass<T>.getDiscriminatorValues(): List<String> {
+  require(isSealed) { "[$this] must be sealed to extract discriminator values" }
+
+  return getAllSealedSubclasses()
+    .map { subclass ->
+      subclass.findSerialName() ?: throw IllegalStateException("Subclass [${subclass.simpleName}] of sealed type [$simpleName] is missing @SerialName annotation")
+    }
 }
 
 /**

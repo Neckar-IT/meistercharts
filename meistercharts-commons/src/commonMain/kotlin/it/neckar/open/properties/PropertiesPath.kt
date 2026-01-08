@@ -59,6 +59,6 @@ data class PropertiesPath<T>(
 /**
  * Creates a new [PropertiesPath] by adding the given child property to the current property.
  */
-operator fun <Parent, Child, ValueType> KProperty1<out Parent, Child>.plus(childProperty: KProperty1<out Child, ValueType>): PropertiesPath<ValueType> {
+operator fun <Parent, Child, ValueType> KProperty1<Parent, Child?>.plus(childProperty: KProperty1<Child, ValueType>): PropertiesPath<ValueType> {
   return PropertiesPath(this).plus(property = childProperty)
 }

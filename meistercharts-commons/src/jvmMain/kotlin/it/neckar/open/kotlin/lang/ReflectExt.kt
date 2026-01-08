@@ -1,5 +1,6 @@
 package it.neckar.open.kotlin.lang
 
+import it.neckar.reflect.ClassName
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
@@ -108,6 +109,11 @@ val KClass<*>.qualifiedNameNonNull: String
     return this.qualifiedName ?: throw IllegalStateException("qualifiedName is null for $this")
   }
 
+val KClass<*>.className: ClassName
+  get() {
+    return ClassName(qualifiedNameNonNull)
+  }
+
 /**
  * Returns the enum entries for this class.
  */
@@ -121,7 +127,7 @@ inline val <T : Any> KClass<T>.enumValues: Array<out Enum<*>>
 /**
  * Returns the enum entries for this class.
  */
-val <T : Enum<T>> KClass<T>.enumEntries: Array<T>
+actual val <T : Enum<T>> KClass<T>.enumEntries: Array<T>
   get() {
     require(this.isEnum()) { "[$this] is not an enum class" }
     return this.java.enumConstants ?: throw IllegalStateException("enumConstants is null for $this")
@@ -180,16 +186,26 @@ fun KClass<*>.getAllAncestors(): Set<KType> {
  * Returns all *subclasses* of this sealed interface.
  * Including subclasses of subinterfaces.
  *
- * Does *not* include sealed interfaces or sealed classes.
+ * Does *not* include (sealed) interfaces or sealed (abstract) classes.
  */
 fun <T : Any> KClass<T>.getAllSealedSubclasses(): List<KClass<out T>> {
   require(this.isSealed) { "[$this] must be sealed" }
 
   return sealedSubclasses.flatMap {
-    if (it.isSealed) {
-      it.getAllSealedSubclasses()
-    } else {
-      listOf(it)
+    when {
+      it.isSealed -> {
+        //Return only the subclasses of the sealed class/interface, not the sealed class
+        it.getAllSealedSubclasses()
+      }
+
+      it.isInterface -> {
+        //Interfaces are not included
+        emptyList()
+      }
+
+      else -> {
+        listOf(it)
+      }
     }
   }
 }

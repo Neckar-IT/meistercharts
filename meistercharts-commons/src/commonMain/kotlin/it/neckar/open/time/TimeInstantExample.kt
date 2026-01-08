@@ -9,6 +9,8 @@ import kotlin.time.Instant
 object TimeInstantExample {
   val _2020_05_21_15_00_41_500: Instant = TimeMillisExample._2020_05_21_15_00_41_500.toInstant()
 
+  val _2023_11_15_12_00_00_000: Instant = TimeMillisExample._2023_11_15_12_00_00_000.toInstant()
+
   val _2019_01_07_15_45_19_123_987_345_678_901: Instant = TimeMillisExample._2019_01_07_15_45_19_123_987_345_678_901.toInstant().also {
     requireMatchesFormattedUtc(it, "2019-01-07T15:45:19.123Z")
   }
