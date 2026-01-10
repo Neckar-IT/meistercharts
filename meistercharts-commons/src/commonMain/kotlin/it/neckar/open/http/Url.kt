@@ -105,15 +105,47 @@ sealed interface Url {
 
     fun localhostHttp(port: Port = Port.HTTP): Absolute = absolute("http://localhost:$port/")
 
+    /**
+     * Creates an HTTP URL. Standard port (80) is omitted for cleaner output.
+     */
     @Suppress("HttpUrlsUsage")
-    fun http(host: String, port: Port = Port.HTTP): Absolute = absolute("http://$host:$port/")
+    fun http(host: String, port: Port = Port.HTTP): Absolute {
+      return if (port.value == 80) absolute("http://$host") else absolute("http://$host:$port")
+    }
 
+    /**
+     * Creates an HTTP URL. Standard port (80) is omitted for cleaner output.
+     */
     @Suppress("HttpUrlsUsage")
-    fun http(host: Hostname, port: Port = Port.HTTP): Absolute = absolute("http://$host:$port/")
+    fun http(host: Hostname, port: Port = Port.HTTP): Absolute {
+      return if (port.value == 80) absolute("http://$host") else absolute("http://$host:$port")
+    }
 
-    fun https(host: String, port: Port = Port.HTTPS): Absolute = absolute("https://$host:$port/")
+    /**
+     * Creates an HTTPS URL. Standard port (443) is omitted for cleaner output.
+     */
+    fun https(host: String, port: Port = Port.HTTPS): Absolute {
+      return if (port.value == 443) absolute("https://$host") else absolute("https://$host:$port")
+    }
 
-    fun https(host: Hostname, port: Port = Port.HTTPS): Absolute = absolute("https://$host:$port/")
+    /**
+     * Creates an HTTPS URL. Standard port (443) is omitted for cleaner output.
+     */
+    fun https(host: Hostname, port: Port = Port.HTTPS): Absolute {
+      return if (port.value == 443) absolute("https://$host") else absolute("https://$host:$port")
+    }
+
+    /**
+     * Creates a URL from scheme, host, and port.
+     * For http/https, standard ports (80/443) are omitted for cleaner output.
+     */
+    fun from(scheme: String, host: String, port: Port): Absolute {
+      return when (scheme) {
+        "http" -> http(host, port)
+        "https" -> https(host, port)
+        else -> absolute("$scheme://$host:${port.value}")
+      }
+    }
   }
 
   /**

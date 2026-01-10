@@ -22,7 +22,11 @@ import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.si.rad
 
 /**
- * Converts a domain value to an angle (rad)
+ * Converts a domain value to an angle in radians.
+ *
+ * This function maps a domain value to an angular position, useful for circular charts like pie or gauge charts.
+ * The angle is calculated by converting the domain value to a relative position (0.0 to 1.0) within the value range,
+ * then scaling it by the rotation extent and adding it to the start angle.
  */
 fun domain2rad(
   value: @Domain Double,
