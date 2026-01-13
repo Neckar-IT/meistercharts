@@ -56,6 +56,7 @@ object Plugins {
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
   const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
+  const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"
   const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
@@ -216,6 +217,9 @@ inline val PluginDependenciesSpec.asciidoctorGems: PluginDependencySpec
 
 inline val PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
   get() = id(Plugins.generatePackageJson)
+
+inline val PluginDependenciesSpec.generateAuditReport: PluginDependencySpec
+  get() = id(Plugins.generateAuditReport)
 
 inline val PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
   get() = id(Plugins.installPnpmDependency)

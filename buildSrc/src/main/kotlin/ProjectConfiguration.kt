@@ -635,6 +635,34 @@ object ProjectConfiguration {
         }
 
         args.set(listOf("run", "lint"))
+
+        //Capture output to display on failure
+        ignoreExitValue = true //handle the exit value ourselves
+        val stdOut = ByteArrayOutputStream()
+        val stdErr = ByteArrayOutputStream()
+
+        execOverrides {
+          standardOutput = stdOut
+          errorOutput = stdErr
+        }
+
+        doLast {
+          val exitValue = result?.exitValue ?: 0
+          if (exitValue != 0) {
+            val stdOutContent = stdOut.toString(Charsets.UTF_8)
+            val stdErrContent = stdErr.toString(Charsets.UTF_8)
+
+            if (stdOutContent.isNotBlank()) {
+              logger.error("stdout:\n$stdOutContent")
+            }
+            if (stdErrContent.isNotBlank()) {
+              logger.error("stderr:\n$stdErrContent")
+            }
+
+            logger.error("pnpmLint failed with exit code $exitValue")
+            throw GradleException("pnpmLint failed with exit code $exitValue")
+          }
+        }
       }
 
       tasks.register<PnpmTask>("pnpmLintFix") {
@@ -663,6 +691,34 @@ object ProjectConfiguration {
         }
 
         args.set(listOf("run", "prettier"))
+
+        //Capture output to display on failure
+        ignoreExitValue = true //handle the exit value ourselves
+        val stdOut = ByteArrayOutputStream()
+        val stdErr = ByteArrayOutputStream()
+
+        execOverrides {
+          standardOutput = stdOut
+          errorOutput = stdErr
+        }
+
+        doLast {
+          val exitValue = result?.exitValue ?: 0
+          if (exitValue != 0) {
+            val stdOutContent = stdOut.toString(Charsets.UTF_8)
+            val stdErrContent = stdErr.toString(Charsets.UTF_8)
+
+            if (stdOutContent.isNotBlank()) {
+              logger.error("stdout:\n$stdOutContent")
+            }
+            if (stdErrContent.isNotBlank()) {
+              logger.error("stderr:\n$stdErrContent")
+            }
+
+            logger.error("pnpmPrettier failed with exit code $exitValue")
+            throw GradleException("pnpmPrettier failed with exit code $exitValue")
+          }
+        }
       }
 
       tasks.register<PnpmTask>("pnpmPrettierFix") {
@@ -692,6 +748,34 @@ object ProjectConfiguration {
         }
 
         args.set(listOf("run", "test"))
+
+        //Capture output to display on failure
+        ignoreExitValue = true //handle the exit value ourselves
+        val stdOut = ByteArrayOutputStream()
+        val stdErr = ByteArrayOutputStream()
+
+        execOverrides {
+          standardOutput = stdOut
+          errorOutput = stdErr
+        }
+
+        doLast {
+          val exitValue = result?.exitValue ?: 0
+          if (exitValue != 0) {
+            val stdOutContent = stdOut.toString(Charsets.UTF_8)
+            val stdErrContent = stdErr.toString(Charsets.UTF_8)
+
+            if (stdOutContent.isNotBlank()) {
+              logger.error("stdout:\n$stdOutContent")
+            }
+            if (stdErrContent.isNotBlank()) {
+              logger.error("stderr:\n$stdErrContent")
+            }
+
+            logger.error("pnpmTest failed with exit code $exitValue")
+            throw GradleException("pnpmTest failed with exit code $exitValue")
+          }
+        }
       }
 
       /**
