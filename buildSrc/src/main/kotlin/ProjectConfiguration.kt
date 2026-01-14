@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrCompilation
 import org.jetbrains.kotlin.gradle.targets.js.npm.PackageJson
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 /**
@@ -677,6 +678,35 @@ object ProjectConfiguration {
         }
 
         args.set(listOf("run", "lint", "--fix"))
+      }
+
+      tasks.register<Exec>("pnpmLintHtmlReport") {
+        description = "Generates HTML lint report using ESLint"
+        group = "Pnpm"
+
+        dependsOn(":pnpmInstall", "build")
+
+        onlyIf {
+          packageJsonContainsScript("lint")
+        }
+
+        val reportDir = project.layout.buildDirectory.dir("reports/eslint").get().asFile
+        val reportFile = File(reportDir, "lint-report.html")
+
+        doFirst {
+          reportDir.mkdirs()
+        }
+
+        commandLine("npx", "eslint", ".", "--format", "html", "--output-file", reportFile.absolutePath)
+
+        // Don't fail if ESLint finds issues - we just want the report
+        isIgnoreExitValue = true
+
+        doLast {
+          if (reportFile.exists()) {
+            logger.lifecycle("HTML lint report generated: ${reportFile.absolutePath}")
+          }
+        }
       }
 
       tasks.register<PnpmTask>("pnpmPrettier") {

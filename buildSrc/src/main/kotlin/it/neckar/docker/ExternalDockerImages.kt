@@ -8,13 +8,13 @@ import it.neckar.projects.common.docker.DockerImageDescriptor
  */
 object ExternalDockerImages {
   val DockerIoAmir20Dozzle: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoAmir20Dozzle.withTag( ExternalDockerImageTags.DockerIoAmir20Dozzle )
-  val DockerIoContainrrrWatchtower: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoContainrrrWatchtower.withTag( ExternalDockerImageTags.DockerIoContainrrrWatchtower )
   val DockerIoGrafanaGrafanaOss: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaGrafanaOss.withTag( ExternalDockerImageTags.DockerIoGrafanaGrafanaOss )
   val DockerIoGrafanaLoki: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaLoki.withTag( ExternalDockerImageTags.DockerIoGrafanaLoki )
   val DockerIoMinioMinio: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMinioMinio.withTag( ExternalDockerImageTags.DockerIoMinioMinio )
   val DockerIoMongo: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMongo.withTag( ExternalDockerImageTags.DockerIoMongo )
   val DockerIoMysql: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMysql.withTag( ExternalDockerImageTags.DockerIoMysql )
   val DockerIoNginx: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoNginx.withTag( ExternalDockerImageTags.DockerIoNginx )
+  val DockerIoNickfedorWatchtower: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoNickfedorWatchtower.withTag( ExternalDockerImageTags.DockerIoNickfedorWatchtower )
   val DockerIoPortainerPortainerCe: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoPortainerPortainerCe.withTag( ExternalDockerImageTags.DockerIoPortainerPortainerCe )
   val DockerIoPostgres: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoPostgres.withTag( ExternalDockerImageTags.DockerIoPostgres )
   val DockerIoPromAlertmanager: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoPromAlertmanager.withTag( ExternalDockerImageTags.DockerIoPromAlertmanager )
@@ -35,13 +35,13 @@ object ExternalDockerImages {
    */
   val entries: List<DockerImageDescriptor> = listOf(
     DockerIoAmir20Dozzle,
-    DockerIoContainrrrWatchtower,
     DockerIoGrafanaGrafanaOss,
     DockerIoGrafanaLoki,
     DockerIoMinioMinio,
     DockerIoMongo,
     DockerIoMysql,
     DockerIoNginx,
+    DockerIoNickfedorWatchtower,
     DockerIoPortainerPortainerCe,
     DockerIoPostgres,
     DockerIoPromAlertmanager,
