@@ -94,6 +94,8 @@ public object Libs {
 
     public const val annotations: String = "com.intellij:annotations:_"
 
+    public const val domrobot: String = "com.inwx:domrobot:_"
+
     public const val com_javagen_schema_gen_gradle_plugin: String =
             "com.javagen.schema-gen:com.javagen.schema-gen.gradle.plugin:_"
 
