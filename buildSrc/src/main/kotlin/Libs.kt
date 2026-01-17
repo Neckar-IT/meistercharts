@@ -242,6 +242,10 @@ public object Libs {
 
     public const val mail: String = "javax.mail:mail:_"
 
+    public const val byte_buddy: String = "net.bytebuddy:byte-buddy:_"
+
+    public const val byte_buddy_agent: String = "net.bytebuddy:byte-buddy-agent:_"
+
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
     public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"

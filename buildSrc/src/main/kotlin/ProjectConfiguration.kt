@@ -54,12 +54,12 @@ object ProjectConfiguration {
   }
 
   /**
-   * Configures a JVM project - with the current LTS Java version
+   * Configures a JVM project - with the current Java version (Java 25)
    */
   fun configureJvm(project: Project) {
     with(project) {
       configureJvmCommon()
-      configureToolchainJava21LTS()
+      configureToolchainJava25LTS()
     }
   }
 
@@ -69,7 +69,7 @@ object ProjectConfiguration {
   fun configureKspProcessor(project: Project) {
     with(project) {
       configureJvmCommon()
-      configureToolchainJava21LTS()
+      configureToolchainJava25LTS()
 
       project.afterEvaluate {
         val projectDependencies = findAllProjectDependencies(listOf("api", "runtimeClasspath", "compileOnly"))

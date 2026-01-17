@@ -126,6 +126,8 @@ object Tests {
       api(Libs.junit_jupiter_params)
 
       api(Libs.mockk)
+      api(Libs.byte_buddy) // Override MockK's old ByteBuddy for Java 25 support
+      api(Libs.byte_buddy_agent)
 
       api(Libs.commons_io)
       api(Libs.commons_math3)
@@ -167,6 +169,8 @@ object Tests {
       implementation(Libs.junit_jupiter_params)
 
       implementation(Libs.mockk)
+      implementation(Libs.byte_buddy) // Override MockK's old ByteBuddy for Java 25 support
+      implementation(Libs.byte_buddy_agent)
 
       implementation(Libs.commons_io)
       implementation(Libs.commons_math3)
@@ -339,6 +343,8 @@ fun DependencyHandlerScope.addKotlinTestDependencies(scope: Scope = Scope.Test) 
   add(configurationName, Libs.junit_jupiter_params)
 
   add(configurationName, Libs.mockk)
+  add(configurationName, Libs.byte_buddy) // Override MockK's old ByteBuddy for Java 25 support
+  add(configurationName, Libs.byte_buddy_agent)
 
   add(configurationName, Libs.commons_io)
   add(configurationName, Libs.commons_math3)
@@ -376,6 +382,8 @@ fun JvmComponentDependencies.addKotlinTestDependencies() {
   implementation(Libs.junit_jupiter_params)
 
   implementation(Libs.mockk)
+  implementation(Libs.byte_buddy) // Override MockK's old ByteBuddy for Java 25 support
+  implementation(Libs.byte_buddy_agent)
 
   implementation(Libs.commons_io)
   implementation(Libs.commons_math3)

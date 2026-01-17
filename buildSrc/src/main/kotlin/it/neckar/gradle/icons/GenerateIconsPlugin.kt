@@ -57,20 +57,16 @@ open class GenerateIconsExtension(objects: ObjectFactory) {
   /**
    * The class name of the generated object
    */
-  @Input
   val objectName: Property<String> = objects.property(String::class.java)
 
   /**
    * The directory where the svg source icons are located
    */
-  @InputDirectory
   val svgIconsSourceDir: DirectoryProperty = objects.directoryProperty()
 
   /**
    * If set, generates the Basic Icons file that contains the icon IDs
    */
-  @Optional
-  @OutputFile
   val basicIconsFile: RegularFileProperty = objects.fileProperty()
 
   /**

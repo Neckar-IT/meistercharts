@@ -342,7 +342,7 @@ fun Project.configureToolchainJava8(): Provider<JavaCompiler> {
 fun Project.configureToolchain(jvmType: JvmType) {
   when (jvmType) {
     JvmType.JavaLatestLTS -> {
-      configureToolchainJava21LTS()
+      configureToolchainJava25LTS()
     }
   }
 }
@@ -350,19 +350,28 @@ fun Project.configureToolchain(jvmType: JvmType) {
 /**
  * Java 17 is a LTS version
  * See https://en.wikipedia.org/wiki/Java_version_history for details
- * Usually one should use [configureToolchainJava21LTS] instead
+ * Usually one should use [configureToolchainJava25LTS] instead
  */
-@Deprecated("Use [configureToolchainJava21LTS] instead in most cases", ReplaceWith("configureToolchainJava21LTS()"))
+@Deprecated("Use [configureToolchainJava25LTS] instead in most cases", ReplaceWith("configureToolchainJava25LTS()"))
 fun Project.configureToolchainJava17LTS(): Provider<JavaCompiler> {
   return configureToolchain(JavaLanguageVersion.of(17))
 }
 
 /**
- * Java 21 is a LTS version
+ * Java 21 is a LTS version - kept for backwards compatibility
+ * @see configureToolchainJava25LTS
+ */
+@Deprecated("Use [configureToolchainJava25LTS] instead in most cases", ReplaceWith("configureToolchainJava25LTS()"))
+fun Project.configureToolchainJava21LTS(): Provider<JavaCompiler> {
+  return configureToolchainJava25LTS()
+}
+
+/**
+ * Java 25 is a LTS version
  * See https://en.wikipedia.org/wiki/Java_version_history for details
  */
-fun Project.configureToolchainJava21LTS(): Provider<JavaCompiler> {
-  return configureToolchain(JavaLanguageVersion.of(21))
+fun Project.configureToolchainJava25LTS(): Provider<JavaCompiler> {
+  return configureToolchain(JavaLanguageVersion.of(25))
 }
 
 /**

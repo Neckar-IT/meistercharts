@@ -12,7 +12,6 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
@@ -76,7 +75,6 @@ open class PnpmKotlinInteropExtension(objects: ObjectFactory) {
   /**
    * Path to the Kotlin project that provides the JavaScript module files.
    */
-  @Input
   val kotlinProjectPath: Property<String> = objects.property(String::class.java)
 
   /**

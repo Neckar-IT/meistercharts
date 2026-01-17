@@ -84,3 +84,12 @@ org.jboss.resteasy:*
 
 org.bouncycastle:*
 ^^^^^^^^^^^^^^^^
+
+org.asciidoctor:*
+^^^.^^^^^^^^^^^
+
+org.mongodb:*
+^^^.^^^^^^^
+
+net.bytebuddy:*
+^^^.^^^^^^^^^

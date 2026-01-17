@@ -1,14 +1,10 @@
 package it.neckar.gradle.npmbundle
 
-import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.CopySpec
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
 import org.gradle.kotlin.dsl.property
 
 /**
@@ -18,32 +14,27 @@ open class NpmBundleExtension(objects: ObjectFactory) {
   /**
    * The module name - will be used as name for the package.json
    */
-  @Input
   val moduleName: Property<String> = objects.property()
 
   /**
    * The name of the directory within the tar.gz file
    */
-  @Input
   val dirNameInArchive: Property<String> = objects.property()
 
   /**
    * The name of the archive file - *without* suffix
    */
-  @Input
   val archiveFileName: Property<String> = objects.property()
 
   /**
    * The version number - will be used when processing the package.json template
    */
-  @Input
   val version: Property<String> = objects.property()
 
 
   /**
    * The files to bundle - will be copied to the working directory
    */
-  @Input
   val filesToBundle: Property<CopySpec> = objects.property<CopySpec>()
 
   /**
@@ -55,7 +46,6 @@ open class NpmBundleExtension(objects: ObjectFactory) {
   /**
    * The package json template file. Will be copied to [workingDir]
    */
-  @InputFile
   val packageJsonTemplate: RegularFileProperty = objects.fileProperty()
 
   /**

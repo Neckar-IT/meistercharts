@@ -49,7 +49,6 @@ open class GenerateWorkspaceYamlPluginExtension(objects: ObjectFactory) {
   /**
    * Where to write the generated workspace.yaml file
    */
-  @OutputFile
   val targetFile: RegularFileProperty = objects.fileProperty()
 
   /**

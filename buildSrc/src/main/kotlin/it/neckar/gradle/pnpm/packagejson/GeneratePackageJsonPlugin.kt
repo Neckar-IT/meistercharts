@@ -86,31 +86,26 @@ open class GeneratePackageJsonPluginExtension(objects: ObjectFactory) {
   /**
    * The package.template.json file that is read and converted to a package.json file
    */
-  @InputFile
   val templateFile: RegularFileProperty = objects.fileProperty()
 
   /**
    * Where to write the generated package.json file
    */
-  //@OutputFile //somehow does not work with grade config cache (2024-07-10)
   val targetFile: RegularFileProperty = objects.fileProperty()
 
   /**
    * Contains a symlink to the generated package.json file
    */
-  //@OutputFile
   val packageJsonSymLinkFile: RegularFileProperty = objects.fileProperty()
 
   /**
    * The module name - will be used as name for the package.json
    */
-  @Input
   val moduleName: Property<String> = objects.property()
 
   /**
    * The version number - will be used when processing the package.json template
    */
-  @Input
   val version: Property<String> = objects.property()
 
 }
