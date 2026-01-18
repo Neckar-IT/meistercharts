@@ -91,8 +91,12 @@ object Plugins {
    */
   const val licenseReport: String = "it.neckar.license-report"
 
+  @Deprecated("Use spotless instead", ReplaceWith("spotless"))
   const val licenseFormatBase: String = "com.github.hierynomus.license-base"
+  @Deprecated("Use spotless instead", ReplaceWith("spotless"))
   const val licenseFormat: String = "com.github.hierynomus.license"
+
+  const val spotless: String = "com.diffplug.spotless"
 
   const val dependenciesReport: String = "it.neckar.dependencies-report"
   const val jibCli: String = "it.neckar.jib-cli-plugin"
@@ -185,11 +189,18 @@ inline val PluginDependenciesSpec.versions: PluginDependencySpec
 inline val PluginDependenciesSpec.licenseReport: PluginDependencySpec
   get() = id(Plugins.licenseReport)
 
+@Suppress("DEPRECATION")
+@Deprecated("Use spotless instead", ReplaceWith("spotless"))
 inline val PluginDependenciesSpec.licenseFormat: PluginDependencySpec
   get() = id(Plugins.licenseFormat)
 
+@Suppress("DEPRECATION")
+@Deprecated("Use spotless instead", ReplaceWith("spotless"))
 inline val PluginDependenciesSpec.licenseFormatBase: PluginDependencySpec
   get() = id(Plugins.licenseFormatBase)
+
+inline val PluginDependenciesSpec.spotless: PluginDependencySpec
+  get() = id(Plugins.spotless)
 
 inline val PluginDependenciesSpec.generateIcons: PluginDependencySpec
   get() = id(Plugins.generateIcons)

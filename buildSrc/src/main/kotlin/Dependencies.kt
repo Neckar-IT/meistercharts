@@ -62,12 +62,12 @@ private fun KotlinMultiplatformExtension.jvm(scope: Scope, configure: KotlinSour
 fun KotlinMultiplatformExtension.addAnnotationDependencies(scope: Scope = Scope.Main) {
   jvm(scope) {
     dependencies {
+      // These must remain `api` (not `compileOnly`) because they need to be transitively visible
+      // to dependent modules that use annotations like @Nonnull, @Inject, etc.
       api(Libs.jsr305)
       api(Libs.javax_inject)
       api(Libs.javax_annotation_api)
-      api(Libs.annotations)
-
-      //TODO think about changing to compileOnly (runs into strange class not found errors with Kotlin 1.9*)
+      api(Libs.com_intellij_annotations)
     }
   }
 }
@@ -313,12 +313,14 @@ fun KotlinMultiplatformExtension.addKtorServerDependencies(scope: Scope) {
 }
 
 fun DependencyHandlerScope.addAnnotationDependencies(scope: Scope = Scope.Main) {
+  // These must remain `api` (not `compileOnly`) because they need to be transitively visible
+  // to dependent modules that use annotations like @Nonnull, @Inject, etc.
   val configurationName = scope.configurationName()
 
   add(configurationName, Libs.jsr305)
   add(configurationName, Libs.javax_inject)
   add(configurationName, Libs.javax_annotation_api)
-  add(configurationName, Libs.annotations)
+  add(configurationName, Libs.com_intellij_annotations)
 }
 
 

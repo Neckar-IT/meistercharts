@@ -12,8 +12,6 @@ import kotlin.String
  * See https://github.com/Splitties/refreshVersions
  */
 public object Libs {
-    public const val aopalliance: String = "aopalliance:aopalliance:_"
-
     public const val aws_sdk_kotlin_s3: String = "aws.sdk.kotlin:s3:_"
 
     public const val ca_cutterslade_analyze_gradle_plugin: String =
@@ -21,15 +19,26 @@ public object Libs {
 
     public const val logback_classic: String = "ch.qos.logback:logback-classic:_"
 
-    public const val commonmark: String = "com.atlassian.commonmark:commonmark:_"
+    public const val com_atlassian_commonmark_commonmark: String =
+            "com.atlassian.commonmark:commonmark:_"
 
-    public const val commonmark_ext_gfm_tables: String =
+    public const val com_atlassian_commonmark_commonmark_ext_gfm_tables: String =
             "com.atlassian.commonmark:commonmark-ext-gfm-tables:_"
+
+    public const val java_jwt: String = "com.auth0:java-jwt:_"
+
+    public const val com_autonomousapps_dependency_analysis_gradle_plugin: String =
+            "com.autonomousapps.dependency-analysis:com.autonomousapps.dependency-analysis.gradle.plugin:_"
 
     public const val kaml: String = "com.charleskorn.kaml:kaml:_"
 
     public const val com_dorongold_task_tree_gradle_plugin: String =
             "com.dorongold.task-tree:com.dorongold.task-tree.gradle.plugin:_"
+
+    public const val jackson_annotations: String =
+            "com.fasterxml.jackson.core:jackson-annotations:_"
+
+    public const val jackson_core: String = "com.fasterxml.jackson.core:jackson-core:_"
 
     public const val jackson_databind: String = "com.fasterxml.jackson.core:jackson-databind:_"
 
@@ -55,7 +64,16 @@ public object Libs {
 
     public const val clikt: String = "com.github.ajalt.clikt:clikt:_"
 
+    public const val clikt_core: String = "com.github.ajalt.clikt:clikt-core:_"
+
     public const val docker_java: String = "com.github.docker-java:docker-java:_"
+
+    public const val docker_java_api: String = "com.github.docker-java:docker-java-api:_"
+
+    public const val docker_java_core: String = "com.github.docker-java:docker-java-core:_"
+
+    public const val docker_java_transport: String =
+            "com.github.docker-java:docker-java-transport:_"
 
     public const val docker_java_transport_httpclient5: String =
             "com.github.docker-java:docker-java-transport-httpclient5:_"
@@ -76,9 +94,9 @@ public object Libs {
 
     public const val image_comparison: String = "com.github.romankh3:image-comparison:_"
 
-    public const val curvesapi: String = "com.github.virtuald:curvesapi:_"
-
     public const val jsr305: String = "com.google.code.findbugs:jsr305:_"
+
+    public const val gson: String = "com.google.code.gson:gson:_"
 
     public const val symbol_processing: String = "com.google.devtools.ksp:symbol-processing:_"
 
@@ -87,12 +105,9 @@ public object Libs {
 
     public const val guava: String = "com.google.guava:guava:_"
 
-    public const val guice_multibindings: String =
-            "com.google.inject.extensions:guice-multibindings:_"
-
     public const val guice: String = "com.google.inject:guice:_"
 
-    public const val annotations: String = "com.intellij:annotations:_"
+    public const val com_intellij_annotations: String = "com.intellij:annotations:_"
 
     public const val domrobot: String = "com.inwx:domrobot:_"
 
@@ -103,9 +118,9 @@ public object Libs {
 
     public const val playwright: String = "com.microsoft.playwright:playwright:_"
 
-    public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
+    public const val miglayout_core: String = "com.miglayout:miglayout-core:_"
 
-    public const val miglayout_swing: String = "com.miglayout:miglayout-swing:_"
+    public const val miglayout_javafx: String = "com.miglayout:miglayout-javafx:_"
 
     public const val javax_mail: String = "com.sun.mail:javax.mail:_"
 
@@ -132,6 +147,8 @@ public object Libs {
 
     public const val tilesfx: String = "eu.hansolo:tilesfx:_"
 
+    public const val vworkflows_core: String = "eu.mihosoft.vrl.workflow:vworkflows-core:_"
+
     public const val vworkflows_fx: String = "eu.mihosoft.vrl.workflow:vworkflows-fx:_"
 
     public const val io_codearte_nexus_staging_gradle_plugin: String =
@@ -142,10 +159,6 @@ public object Libs {
     public const val flowext: String = "io.github.hoc081098:FlowExt:_"
 
     public const val detekt_api: String = "io.gitlab.arturbosch.detekt:detekt-api:_"
-
-    public const val detekt_parser: String = "io.gitlab.arturbosch.detekt:detekt-parser:_"
-
-    public const val detekt_psi_utils: String = "io.gitlab.arturbosch.detekt:detekt-psi-utils:_"
 
     public const val konform: String = "io.konform:konform:_"
 
@@ -174,12 +187,11 @@ public object Libs {
 
     public const val ktor_client_serialization: String = "io.ktor:ktor-client-serialization:_"
 
-    public const val ktor_client_websockets: String = "io.ktor:ktor-client-websockets:_"
-
     public const val ktor_http: String = "io.ktor:ktor-http:_"
 
-    public const val ktor_network_tls_certificates: String =
-            "io.ktor:ktor-network-tls-certificates:_"
+    public const val ktor_io: String = "io.ktor:ktor-io:_"
+
+    public const val ktor_serialization: String = "io.ktor:ktor-serialization:_"
 
     public const val ktor_serialization_jackson: String = "io.ktor:ktor-serialization-jackson:_"
 
@@ -196,6 +208,10 @@ public object Libs {
 
     public const val ktor_server_call_id: String = "io.ktor:ktor-server-call-id:_"
 
+    public const val ktor_server_call_logging: String = "io.ktor:ktor-server-call-logging:_"
+
+    public const val ktor_server_compression: String = "io.ktor:ktor-server-compression:_"
+
     public const val ktor_server_conditional_headers: String =
             "io.ktor:ktor-server-conditional-headers:_"
 
@@ -206,19 +222,25 @@ public object Libs {
 
     public const val ktor_server_cors: String = "io.ktor:ktor-server-cors:_"
 
+    public const val ktor_server_default_headers: String = "io.ktor:ktor-server-default-headers:_"
+
     public const val ktor_server_forwarded_header: String = "io.ktor:ktor-server-forwarded-header:_"
 
     public const val ktor_server_metrics: String = "io.ktor:ktor-server-metrics:_"
 
     public const val ktor_server_netty: String = "io.ktor:ktor-server-netty:_"
 
+    public const val ktor_server_status_pages: String = "io.ktor:ktor-server-status-pages:_"
+
     public const val ktor_server_test_host: String = "io.ktor:ktor-server-test-host:_"
 
     public const val ktor_server_websockets: String = "io.ktor:ktor-server-websockets:_"
 
-    public const val ktor_websocket_serialization: String = "io.ktor:ktor-websocket-serialization:_"
+    public const val ktor_utils: String = "io.ktor:ktor-utils:_"
 
     public const val ktor_websockets: String = "io.ktor:ktor-websockets:_"
+
+    public const val micrometer_core: String = "io.micrometer:micrometer-core:_"
 
     public const val micrometer_registry_prometheus: String =
             "io.micrometer:micrometer-registry-prometheus:_"
@@ -227,12 +249,18 @@ public object Libs {
 
     public const val measured: String = "io.nacular.measured:measured:_"
 
-    public const val rxjava: String = "io.reactivex.rxjava2:rxjava:_"
+    public const val netty_common: String = "io.netty:netty-common:_"
+
+    public const val netty_handler: String = "io.netty:netty-handler:_"
 
     public const val rxkotlin: String = "io.reactivex.rxjava2:rxkotlin:_"
 
     public const val io_spring_dependency_management_gradle_plugin: String =
             "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:_"
+
+    public const val jakarta_ws_rs_api: String = "jakarta.ws.rs:jakarta.ws.rs-api:_"
+
+    public const val activation: String = "javax.activation:activation:_"
 
     public const val javax_annotation_api: String = "javax.annotation:javax.annotation-api:_"
 
@@ -248,8 +276,6 @@ public object Libs {
 
     public const val balloontip: String = "net.java.balloontip:balloontip:_"
 
-    public const val glazedlists_java16: String = "net.java.dev.glazedlists:glazedlists_java16:_"
-
     public const val commons_compress: String = "org.apache.commons:commons-compress:_"
 
     public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
@@ -258,13 +284,13 @@ public object Libs {
 
     public const val pdfbox: String = "org.apache.pdfbox:pdfbox:_"
 
+    public const val pdfbox_io: String = "org.apache.pdfbox:pdfbox-io:_"
+
     public const val poi: String = "org.apache.poi:poi:_"
 
     public const val poi_ooxml: String = "org.apache.poi:poi-ooxml:_"
 
-    public const val batik_svggen: String = "org.apache.xmlgraphics:batik-svggen:_"
-
-    public const val batik_svgrasterizer: String = "org.apache.xmlgraphics:batik-svgrasterizer:_"
+    public const val batik_codec: String = "org.apache.xmlgraphics:batik-codec:_"
 
     public const val batik_swing: String = "org.apache.xmlgraphics:batik-swing:_"
 
@@ -285,9 +311,16 @@ public object Libs {
 
     public const val bcprov_jdk15to18: String = "org.bouncycastle:bcprov-jdk15to18:_"
 
+    public const val bcprov_jdk18on: String = "org.bouncycastle:bcprov-jdk18on:_"
+
     public const val staxmate: String = "org.codehaus.staxmate:staxmate:_"
 
     public const val woodstox_core_asl: String = "org.codehaus.woodstox:woodstox-core-asl:_"
+
+    public const val org_commonmark_commonmark: String = "org.commonmark:commonmark:_"
+
+    public const val org_commonmark_commonmark_ext_gfm_tables: String =
+            "org.commonmark:commonmark-ext-gfm-tables:_"
 
     public const val controlsfx: String = "org.controlsfx:controlsfx:_"
 
@@ -296,6 +329,8 @@ public object Libs {
     public const val fxyz3d: String = "org.fxyz3d:fxyz3d:_"
 
     public const val gitlab4j_api: String = "org.gitlab4j:gitlab4j-api:_"
+
+    public const val gitlab4j_models: String = "org.gitlab4j:gitlab4j-models:_"
 
     public const val chrome_devtools_kotlin: String = "org.hildan.chrome:chrome-devtools-kotlin:_"
 
@@ -358,8 +393,6 @@ public object Libs {
 
     public const val kotlin_test_junit5: String = "org.jetbrains.kotlin:kotlin-test-junit5:_"
 
-    public const val kotlinx_cli: String = "org.jetbrains.kotlinx:kotlinx-cli:_"
-
     public const val kotlinx_coroutines_core: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:_"
 
@@ -372,18 +405,14 @@ public object Libs {
     public const val kotlinx_coroutines_jdk8: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:_"
 
-    public const val kotlinx_coroutines_jdk9: String =
-            "org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:_"
-
-    public const val kotlinx_coroutines_reactive: String =
-            "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:_"
-
     public const val kotlinx_coroutines_test: String =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:_"
 
     public const val kotlinx_datetime: String = "org.jetbrains.kotlinx:kotlinx-datetime:_"
 
     public const val kotlinx_html: String = "org.jetbrains.kotlinx:kotlinx-html:_"
+
+    public const val kotlinx_io_core: String = "org.jetbrains.kotlinx:kotlinx-io-core:_"
 
     public const val kotlinx_serialization_core: String =
             "org.jetbrains.kotlinx:kotlinx-serialization-core:_"
@@ -396,9 +425,13 @@ public object Libs {
 
     public const val kover_jvm_agent: String = "org.jetbrains.kotlinx:kover-jvm-agent:_"
 
+    public const val org_jetbrains_annotations: String = "org.jetbrains:annotations:_"
+
     public const val fxgraphics2d: String = "org.jfree:fxgraphics2d:_"
 
     public const val jfxtras_all: String = "org.jfxtras:jfxtras-all:_"
+
+    public const val jfxtras_common: String = "org.jfxtras:jfxtras-common:_"
 
     public const val jline_terminal_jansi: String = "org.jline:jline-terminal-jansi:_"
 
@@ -410,10 +443,22 @@ public object Libs {
 
     public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params:_"
 
+    public const val junit_platform_commons: String = "org.junit.platform:junit-platform-commons:_"
+
+    public const val bson: String = "org.mongodb:bson:_"
+
     public const val bson_kotlinx: String = "org.mongodb:bson-kotlinx:_"
+
+    public const val mongodb_driver_core: String = "org.mongodb:mongodb-driver-core:_"
 
     public const val mongodb_driver_kotlin_coroutine: String =
             "org.mongodb:mongodb-driver-kotlin-coroutine:_"
+
+    public const val javafx_base: String = "org.openjfx:javafx-base:_"
+
+    public const val javafx_controls: String = "org.openjfx:javafx-controls:_"
+
+    public const val javafx_graphics: String = "org.openjfx:javafx-graphics:_"
 
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
@@ -431,8 +476,7 @@ public object Libs {
 
     public const val testcontainers_mongodb: String = "org.testcontainers:testcontainers-mongodb:_"
 
-    public const val testcontainers_selenium: String =
-            "org.testcontainers:testcontainers-selenium:_"
+    public const val testfx_core: String = "org.testfx:testfx-core:_"
 
     public const val testfx_junit5: String = "org.testfx:testfx-junit5:_"
 

@@ -1,11 +1,4 @@
-import com.meistercharts.design.DarkDesign
-import com.meistercharts.design.DebugTheme
-import com.meistercharts.design.DefaultTheme
-import com.meistercharts.design.NeckarITDesign
-import com.meistercharts.design.Theme
-import it.neckar.open.charting.api.sanitizing.sanitize
-
-/**
+/*
  * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +13,13 @@ import it.neckar.open.charting.api.sanitizing.sanitize
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.meistercharts.design.DarkDesign
+import com.meistercharts.design.DebugTheme
+import com.meistercharts.design.DefaultTheme
+import com.meistercharts.design.NeckarITDesign
+import com.meistercharts.design.Theme
+import it.neckar.open.charting.api.sanitizing.sanitize
+
 /**
  * Supported Look and Feels for meistercharts.
  */
