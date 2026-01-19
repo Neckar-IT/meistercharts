@@ -32,6 +32,9 @@ public object Libs {
 
     public const val kaml: String = "com.charleskorn.kaml:kaml:_"
 
+    public const val com_diffplug_spotless_gradle_plugin: String =
+            "com.diffplug.spotless:com.diffplug.spotless.gradle.plugin:_"
+
     public const val com_dorongold_task_tree_gradle_plugin: String =
             "com.dorongold.task-tree:com.dorongold.task-tree.gradle.plugin:_"
 
@@ -83,12 +86,6 @@ public object Libs {
     public const val kotlin_csv_js: String = "com.github.doyaaaaaken:kotlin-csv-js:_"
 
     public const val kotlin_csv_jvm: String = "com.github.doyaaaaaken:kotlin-csv-jvm:_"
-
-    public const val com_github_hierynomus_license_base_gradle_plugin: String =
-            "com.github.hierynomus.license-base:com.github.hierynomus.license-base.gradle.plugin:_"
-
-    public const val com_github_hierynomus_license_gradle_plugin: String =
-            "com.github.hierynomus.license:com.github.hierynomus.license.gradle.plugin:_"
 
     public const val loki_logback_appender: String = "com.github.loki4j:loki-logback-appender:_"
 
