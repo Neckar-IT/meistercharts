@@ -140,6 +140,8 @@ object Plugins {
 
   const val tailwind: String = "it.neckar.tailwind"
   const val linksSiteGenerate: String = "it.neckar.links-site-generate"
+  const val mongoDbLocalDev: String = "it.neckar.mongodb-local-dev"
+  const val s3LocalDev: String = "it.neckar.s3-local-dev"
 
   /**
    * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
@@ -370,6 +372,12 @@ inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
 
 inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
   get() = id(Plugins.linksSiteGenerate)
+
+inline val PluginDependenciesSpec.mongoDbLocalDev: PluginDependencySpec
+  get() = id(Plugins.mongoDbLocalDev)
+
+inline val PluginDependenciesSpec.s3LocalDev: PluginDependencySpec
+  get() = id(Plugins.s3LocalDev)
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
   get() = id(Plugins.certificates)

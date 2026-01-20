@@ -51,6 +51,5 @@ open class NpmBundleExtension(objects: ObjectFactory) {
   /**
    * The directory that contains the tar.gz that contains the package.json and the content provided by [copyContent]
    */
-  //@OutputDirectory
   val targetDirectoryForArchive: DirectoryProperty = objects.directoryProperty()
 }
