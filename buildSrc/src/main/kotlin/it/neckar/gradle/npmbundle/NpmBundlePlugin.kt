@@ -7,6 +7,7 @@ import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.task
 import withTask
 
@@ -81,8 +82,8 @@ class NpmBundlePlugin : Plugin<Project> {
       group = Group
       description = "Collects the content to the working directory"
 
-      destinationDir.set(npmBundleExtensionProduction.workingDir)
-      filesToBundle.set(npmBundleExtensionProduction.filesToBundle)
+      destinationDir = npmBundleExtensionProduction.workingDir
+      filesToBundle = npmBundleExtensionProduction.filesToBundle
 
       //Well-known dependency
       project.tasks.findByName(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)?.let {
@@ -104,8 +105,8 @@ class NpmBundlePlugin : Plugin<Project> {
       group = Group
       description = "Collects the content to the working directory (Development)"
 
-      destinationDir.set(npmBundleExtensionDevelopment.workingDir)
-      filesToBundle.set(npmBundleExtensionDevelopment.filesToBundle)
+      destinationDir = npmBundleExtensionDevelopment.workingDir
+      filesToBundle = npmBundleExtensionDevelopment.filesToBundle
 
       //TODO add task dependencies
 
@@ -132,7 +133,7 @@ class NpmBundlePlugin : Plugin<Project> {
 
       dependsOn(npmCopyBundleContentTask)
 
-      workingDir.set(npmBundleExtensionProduction.workingDir)
+      workingDir = npmBundleExtensionProduction.workingDir
     }
 
     val verifyBundleContentTaskDevelopment = project.task<VerifyBundleContentTask>(VerifyBundleContentDevelopmentTaskName) {
@@ -141,7 +142,7 @@ class NpmBundlePlugin : Plugin<Project> {
 
       dependsOn(npmCopyBundleContentDevelopmentTask)
 
-      workingDir.set(npmBundleExtensionDevelopment.workingDir)
+      workingDir = npmBundleExtensionDevelopment.workingDir
     }
 
     //Ensure that the verifyBundleContentTask is executed after the npmCopyBundleContentTask
@@ -157,10 +158,10 @@ class NpmBundlePlugin : Plugin<Project> {
 
       dependsOn(npmCopyBundleContentTask, GeneratePackageJsonPlugin.GeneratePackageJsonTaskName) //TODO remove!
 
-      targetDirectoryForArchiveProperty.set(npmBundleExtensionProduction.targetDirectoryForArchive)
-      sourceDirProperty.set(npmBundleExtensionProduction.workingDir)
-      dirNameInArchiveProperty.set(npmBundleExtensionProduction.dirNameInArchive)
-      archiveFileNameProperty.set(npmBundleExtensionProduction.archiveFileName)
+      targetDirectoryForArchiveProperty = npmBundleExtensionProduction.targetDirectoryForArchive
+      sourceDirProperty = npmBundleExtensionProduction.workingDir
+      dirNameInArchiveProperty = npmBundleExtensionProduction.dirNameInArchive
+      archiveFileNameProperty = npmBundleExtensionProduction.archiveFileName
     }
 
     /**
@@ -173,10 +174,10 @@ class NpmBundlePlugin : Plugin<Project> {
       //dependsOn(npmBundleContentDevelopmentTask, packageJsonTaskDevelopment)
       dependsOn(npmCopyBundleContentDevelopmentTask, GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)
 
-      targetDirectoryForArchiveProperty.set(npmBundleExtensionDevelopment.targetDirectoryForArchive)
-      sourceDirProperty.set(npmBundleExtensionDevelopment.workingDir)
-      dirNameInArchiveProperty.set(npmBundleExtensionDevelopment.dirNameInArchive)
-      archiveFileNameProperty.set(npmBundleExtensionDevelopment.archiveFileName)
+      targetDirectoryForArchiveProperty = npmBundleExtensionDevelopment.targetDirectoryForArchive
+      sourceDirProperty = npmBundleExtensionDevelopment.workingDir
+      dirNameInArchiveProperty = npmBundleExtensionDevelopment.dirNameInArchive
+      archiveFileNameProperty = npmBundleExtensionDevelopment.archiveFileName
     }
 
     //Execute before assemble

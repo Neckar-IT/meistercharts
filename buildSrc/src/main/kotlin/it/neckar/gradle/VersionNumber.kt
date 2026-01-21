@@ -1,5 +1,6 @@
 package it.neckar.gradle
 
+import org.gradle.kotlin.dsl.assign
 import com.google.common.base.Objects
 import com.google.common.collect.Ordering
 import java.util.Locale

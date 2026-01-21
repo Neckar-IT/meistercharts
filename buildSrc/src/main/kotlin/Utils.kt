@@ -387,14 +387,14 @@ fun Project.configureToolchain(javaLanguageVersion: JavaLanguageVersion, vendor:
   val javaPluginExtension = extensions.getByType(JavaPluginExtension::class.java)
   val javaToolChainService = extensions.getByType(JavaToolchainService::class.java)
   val javaCompiler = javaToolChainService.compilerFor {
-    languageVersion.set(javaLanguageVersion)
+    languageVersion = javaLanguageVersion
   }
 
   tasks.withType<JavaCompile>().configureEach {
-    this.javaCompiler.set(javaCompiler)
+    this.javaCompiler = javaCompiler
   }
   tasks.withType<JavaExec>().configureEach {
-    this.javaLauncher.set(javaToolChainService.launcherFor(javaPluginExtension.toolchain))
+    this.javaLauncher = javaToolChainService.launcherFor(javaPluginExtension.toolchain)
   }
 
   extensions.findByName("kotlin")?.let {
@@ -418,10 +418,10 @@ fun Project.configureToolchain(javaLanguageVersion: JavaLanguageVersion, vendor:
  * Configures the java tool chain
  */
 fun JavaToolchainSpec.configureJavaToolchain(javaLanguageVersion: JavaLanguageVersion, vendor: JvmVendorSpec, implementation: JvmImplementation?) {
-  languageVersion.set(javaLanguageVersion)
-  this.vendor.set(vendor)
+  languageVersion = javaLanguageVersion
+  this.vendor = vendor
   implementation?.let {
-    this.implementation.set(it)
+    this.implementation = it
   }
 }
 

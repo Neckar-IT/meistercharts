@@ -13,6 +13,7 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
 
@@ -38,7 +39,7 @@ class PnpmKotlinInteropPlugin : Plugin<Project> {
       sourceDirectory.set(kotlinProjectProvider.flatMap {
         it.layout.buildDirectory.dir("compileSync/js/main/productionExecutable/kotlin")
       })
-      targetDirectory.set(extension.targetDirectory)
+      targetDirectory = extension.targetDirectory
     }
 
 
@@ -53,11 +54,11 @@ class PnpmKotlinInteropPlugin : Plugin<Project> {
 
       dependsOn(collectTypescriptDeclarationFilesTask, provideTypescriptDeclarationFileTask, providePredefinedTypeScriptDeclarationFilesTask)
 
-      sourceDirectoryFromDeps.set(collectTypescriptDeclarationFilesTask.flatMap { it.targetDirectory })
-      sourceDirectoryGenerated.set(provideTypescriptDeclarationFileTask.flatMap { it.targetDirectory })
-      sourceDirectoryPredefined.set(providePredefinedTypeScriptDeclarationFilesTask.flatMap { it.targetDirectory })
+      sourceDirectoryFromDeps = collectTypescriptDeclarationFilesTask.flatMap { it.targetDirectory }
+      sourceDirectoryGenerated = provideTypescriptDeclarationFileTask.flatMap { it.targetDirectory }
+      sourceDirectoryPredefined = providePredefinedTypeScriptDeclarationFilesTask.flatMap { it.targetDirectory }
 
-      targetDirectory.set(extension.targetDirectory)
+      targetDirectory = extension.targetDirectory
     }
 
     target.tasks.named("pnpmRunBuild") {
@@ -85,7 +86,7 @@ open class PnpmKotlinInteropExtension(objects: ObjectFactory) {
       return Projects.find(kotlinProjectPath.get())
     }
     set(value) {
-      kotlinProjectPath.set(value.path)
+      kotlinProjectPath = value.path
     }
 
   /**

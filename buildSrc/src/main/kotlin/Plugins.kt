@@ -121,6 +121,12 @@ object Plugins {
 
   const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
 
+  /**
+   * Provides a processResources task for projects without Java/Kotlin plugin.
+   * Useful for deployment projects and infrastructure configurations.
+   */
+  const val resourcesConvention: String = "it.neckar.resources-convention"
+
   const val secretsLoader: String = "it.neckar.secrets-loader"
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
@@ -321,6 +327,9 @@ inline val PluginDependenciesSpec.analyze: PluginDependencySpec
 
 inline val PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependencySpec
   get() = id(Plugins.copyResourcesFromDependencies)
+
+inline val PluginDependenciesSpec.resourcesConvention: PluginDependencySpec
+  get() = id(Plugins.resourcesConvention)
 
 inline val PluginDependenciesSpec.sslCertGen: PluginDependencySpec
   get() = id(Plugins.sslCertGen)

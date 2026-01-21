@@ -1,5 +1,6 @@
 package it.neckar.gradle.pnpm.dependencies
 
+import org.gradle.kotlin.dsl.assign
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray

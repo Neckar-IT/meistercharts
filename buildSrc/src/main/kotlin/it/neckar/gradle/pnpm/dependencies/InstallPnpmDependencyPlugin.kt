@@ -5,6 +5,7 @@ import it.neckar.gradle.pnpm.dependencies.BasePnpmDependencyTask.Companion.Argum
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.task
 
 
@@ -24,7 +25,7 @@ class InstallPnpmDependencyPlugin : Plugin<Project> {
      * This task is only relevant if this is the `npm-dependencies-project`
      */
     target.task<InstallPnpmDependencyToNpmDependenciesProject>(InstallPnpmDependencyToNpmDependenciesProjectTaskName) {
-      dependencyFile.set(extension.dependencyFile)
+      dependencyFile = extension.dependencyFile
     }
 
     /**
@@ -59,17 +60,17 @@ class InstallPnpmDependencyPlugin : Plugin<Project> {
     //Add to template
 
     target.task<AddPnpmDependencyToTemplateTask>(AddPnpmDependencyToTemplateTaskName) {
-      packageJsonTemplateFile.set(extension.packageJsonTemplateFile)
+      packageJsonTemplateFile = extension.packageJsonTemplateFile
     }
     target.task<AddPnpmDependencyToTemplateTask>(AddPnpmDevDependencyToTemplateTaskName) {
       description = "Adds an npm dev-dependency to the package.template.json file; synopsis: `gradle addPnpmDevDependencyToTemplate -P$ArgumentNameDependency={NODE_DEP}`"
       npmDependencyType = NpmDependencyType.Dev
-      packageJsonTemplateFile.set(extension.packageJsonTemplateFile)
+      packageJsonTemplateFile = extension.packageJsonTemplateFile
     }
     target.task<AddPnpmDependencyToTemplateTask>(AddPnpmPeerDependencyToTemplateTaskName) {
       description = "Adds an npm peer-dependency to the package.template.json file; synopsis: `gradle addPnpmPeerDependencyToTemplate -P$ArgumentNameDependency={NODE_DEP}`"
       npmDependencyType = NpmDependencyType.Peer
-      packageJsonTemplateFile.set(extension.packageJsonTemplateFile)
+      packageJsonTemplateFile = extension.packageJsonTemplateFile
     }
   }
 

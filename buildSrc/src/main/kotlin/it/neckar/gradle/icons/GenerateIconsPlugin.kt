@@ -19,6 +19,7 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.task
 import toCamelCase
 
@@ -39,13 +40,13 @@ class GenerateIconsPlugin : Plugin<Project> {
       description = "Creates BasicIcons definitions"
 
       //connect the properties
-      svgIconsSourceDir.set(extension.svgIconsSourceDir)
-      objectName.set(extension.objectName)
+      svgIconsSourceDir = extension.svgIconsSourceDir
+      objectName = extension.objectName
 
       //Output properties
-      basicIconsFile.set(extension.basicIconsFile)
-      svgPathsFile.set(extension.svgPathsFile)
-      svgPaintableProvidersFile.set(extension.svgPaintableProvidersFile)
+      basicIconsFile = extension.basicIconsFile
+      svgPathsFile = extension.svgPathsFile
+      svgPaintableProvidersFile = extension.svgPaintableProvidersFile
     }
   }
 }

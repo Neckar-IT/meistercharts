@@ -19,6 +19,7 @@ import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.tasks.AbstractCopyTask
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.assign
 import org.gradle.process.ExecOutput
 import java.io.File
 

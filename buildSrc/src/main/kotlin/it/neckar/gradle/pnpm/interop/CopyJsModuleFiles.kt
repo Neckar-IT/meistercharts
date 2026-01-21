@@ -1,5 +1,6 @@
 package it.neckar.gradle.pnpm.interop
 
+import org.gradle.kotlin.dsl.assign
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.DuplicatesStrategy

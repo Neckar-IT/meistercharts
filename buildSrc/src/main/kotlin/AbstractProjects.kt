@@ -3,6 +3,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
 import org.gradle.kotlin.dsl.project
+import org.gradle.kotlin.dsl.assign
 
 /**
  * Abstract base class for objects that contain constants for all projects
@@ -220,11 +221,6 @@ abstract class AbstractProjects {
       }
     }
   }
-}
-
-@Deprecated("Should not be required")
-fun Project.isMultiplatformProject(): Boolean {
-  return isOfType(ProjectType.KotlinMultiplatform)
 }
 
 fun Project.isJvmProject(): Boolean {

@@ -125,7 +125,7 @@ object ProjectConfiguration {
 
         dependsOn("jar")
         from(it.getByName<SourceSet>("main").allSource)
-        archiveClassifier.set("sources")
+        archiveClassifier = "sources"
       }
       tasks.register<Jar>("javadocJar") {
         group = "Build"
@@ -135,7 +135,7 @@ object ProjectConfiguration {
         if (dokkaEnabled) {
           from(tasks.named("dokkaHtml"))
         }
-        archiveClassifier.set("javadoc")
+        archiveClassifier = "javadoc"
       }
 
       artifacts {
@@ -282,7 +282,7 @@ object ProjectConfiguration {
 
       extensions.getByType<PythonPluginExtension>().apply {
         //This is the default python executable required for all AI projects
-        pythonExecutable.set("python3.12")
+        pythonExecutable = "python3.12"
       }
     }
   }
@@ -570,7 +570,7 @@ object ProjectConfiguration {
           (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey("build") == true)
         }
 
-        args.set(listOf("run", "build"))
+        args = listOf("run", "build")
 
         //Disable output if *info* is not enabled
         //if (logger.isInfoEnabled.not()) {
@@ -621,7 +621,7 @@ object ProjectConfiguration {
         group = "Pnpm"
 
         dependsOn(buildTask)
-        args.set(listOf("run", "dev"))
+        args = listOf("run", "dev")
       }
 
       tasks.register<PnpmTask>("pnpmLint") {
@@ -635,7 +635,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("lint")
         }
 
-        args.set(listOf("run", "lint"))
+        args = listOf("run", "lint")
 
         //Capture output to display on failure
         ignoreExitValue = true //handle the exit value ourselves
@@ -677,7 +677,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("lint")
         }
 
-        args.set(listOf("run", "lint", "--fix"))
+        args = listOf("run", "lint", "--fix")
       }
 
       tasks.register<Exec>("pnpmLintHtmlReport") {
@@ -720,7 +720,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("prettier")
         }
 
-        args.set(listOf("run", "prettier"))
+        args = listOf("run", "prettier")
 
         //Capture output to display on failure
         ignoreExitValue = true //handle the exit value ourselves
@@ -762,7 +762,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("prettier:fix")
         }
 
-        args.set(listOf("run", "prettier:fix"))
+        args = listOf("run", "prettier:fix")
       }
 
 
@@ -777,7 +777,7 @@ object ProjectConfiguration {
           packageJsonContainsScript("test")
         }
 
-        args.set(listOf("run", "test"))
+        args = listOf("run", "test")
 
         //Capture output to display on failure
         ignoreExitValue = true //handle the exit value ourselves

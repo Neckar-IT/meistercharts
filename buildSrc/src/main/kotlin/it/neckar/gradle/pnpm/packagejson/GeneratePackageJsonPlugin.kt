@@ -17,6 +17,7 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.task
@@ -46,17 +47,17 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
       targetFile.convention(target.layout.projectDirectory.file(PackageGeneratedJsonFileName)) //generate the package.json in the *same* directory to avoid problems with relative paths (e.g., pnpm)
       packageJsonSymLinkFile.convention(target.layout.projectDirectory.file("package.json"))
 
-      moduleName.set(target.name)
+      moduleName = target.name
       version.convention(target.version.toString())
     }
 
     val generatePackageJsonTask = target.task<GeneratePackageJsonTask>(GeneratePackageJsonTaskName) {
-      versionsProperties.set(extension.versionsProperties)
-      templateFile.set(extension.templateFile)
-      targetFile.set(extension.targetFile)
-      packageJsonSymLinkFile.set(extension.packageJsonSymLinkFile)
-      moduleName.set(extension.moduleName)
-      version.set(extension.version)
+      versionsProperties = extension.versionsProperties
+      templateFile = extension.templateFile
+      targetFile = extension.targetFile
+      packageJsonSymLinkFile = extension.packageJsonSymLinkFile
+      moduleName = extension.moduleName
+      version = extension.version
     }
 
     //Delete file on clean
