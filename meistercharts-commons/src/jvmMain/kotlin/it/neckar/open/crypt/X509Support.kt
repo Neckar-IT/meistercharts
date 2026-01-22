@@ -33,8 +33,11 @@ package it.neckar.open.crypt
 
 import it.neckar.open.kotlin.lang.checkNotNull
 import org.apache.commons.io.IOUtils
+import java.io.ByteArrayInputStream
 import java.io.DataInputStream
+import kotlin.io.path.inputStream
 import java.net.URL
+import java.nio.file.Path
 import java.security.KeyFactory
 import java.security.Signature
 import java.security.cert.CertificateFactory
@@ -42,12 +45,15 @@ import java.security.cert.X509Certificate
 import java.security.interfaces.RSAPrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import javax.crypto.Cipher
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * X509 Support provides methods to cipher, decipher, sign and verify signatures using an X509 certificate and an optional private key.
  *
  * This class can be instantiated with a private key or without one
  */
+@OptIn(ExperimentalEncodingApi::class)
 open class X509Support(
   /**
    * The certificate
@@ -166,6 +172,72 @@ open class X509Support(
         val cf = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
         return cf.generateCertificate(inputStream) as X509Certificate
       }
+    }
+
+    /**
+     * Reads an X.509 certificate from a PEM file at the given path.
+     */
+    fun readCertificate(
+      /**
+       * Path to the PEM certificate file
+       */
+      certPath: Path,
+    ): X509Certificate {
+      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+
+      certPath.inputStream().use { inputStream ->
+        val certificate = certificateFactory.generateCertificate(inputStream)
+
+        require(certificate is X509Certificate) {
+          "Certificate at $certPath is not an X.509 certificate"
+        }
+
+        return certificate
+      }
+    }
+
+    /**
+     * Loads an X.509 certificate from a Base64-encoded PEM string.
+     *
+     * Only PEM format is supported (Base64-encoded PEM file content with headers).
+     */
+    fun readCertificate(
+      /**
+       * Base64-encoded PEM certificate.
+       */
+      base64Certificate: Base64CertificatePem,
+    ): X509Certificate {
+      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+
+      // Use the decodeToString() method from Base64CertificatePem to get the PEM content
+      val pemContent = base64Certificate.decodeToString()
+      val certificateBytes = extractCertificateFromPem(pemContent)
+
+      ByteArrayInputStream(certificateBytes).use { inputStream ->
+        val certificate = certificateFactory.generateCertificate(inputStream)
+
+        require(certificate is X509Certificate) {
+          "Decoded content is not an X.509 certificate"
+        }
+
+        return certificate
+      }
+    }
+
+    /**
+     * Extracts the certificate bytes from a PEM-formatted string.
+     * Handles both standard PEM format and PEM with different header styles.
+     */
+    private fun extractCertificateFromPem(pemContent: String): ByteArray {
+      // Remove headers, footers, and whitespace
+      val base64Content = pemContent
+        .replace(Base64CertificatePem.BeginCertificate, "")
+        .replace(Base64CertificatePem.EndCertificate, "")
+        .replace(Base64CertificatePem.BeginTrustedCertificate, "")
+        .replace(Base64CertificatePem.EndTrustedCertificate, "")
+        .replace("""\s""".toRegex(), "")
+
+      return Base64.decode(base64Content)
     }
 
     /**

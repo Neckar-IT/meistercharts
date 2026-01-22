@@ -22,6 +22,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.assign
 import org.gradle.process.ExecOutput
 import java.io.File
+import java.util.Properties
 
 
 /**
@@ -311,4 +312,71 @@ fun Project.mergeKoverReports() {
     "No kover dependencies added for project $path. " +
       "Please ensure that the subprojects have the kover plugin applied and that they are configured correctly."
   }
+}
+
+/**
+ * Lazily loaded .env properties from the root project directory.
+ */
+private val Project.envProperties: Properties
+  get() {
+    val envFile = rootProject.file(".env")
+    return Properties().apply {
+      if (envFile.exists()) {
+        envFile.inputStream().use { load(it) }
+      }
+    }
+  }
+
+/**
+ * Resolves a configuration value from multiple sources, returning null if not found.
+ *
+ * Resolution order:
+ * 1. Gradle properties (-P flag)
+ * 2. Environment variables
+ * 3. .env file in project root
+ */
+fun Project.resolveConfigValueOrNull(
+  /**
+   * The name of the property to resolve
+   */
+  propertyName: String,
+): String? {
+  return findProperty(propertyName)?.toString()
+    ?: System.getenv(propertyName)
+    ?: envProperties.getProperty(propertyName)
+}
+
+/**
+ * Resolves a configuration value from multiple sources.
+ *
+ * Resolution order:
+ * 1. Gradle properties (-P flag)
+ * 2. Environment variables
+ * 3. .env file in project root
+ *
+ * @throws GradleException if the property is not found in any source
+ */
+fun Project.resolveConfigValue(
+  /**
+   * The name of the property to resolve
+   */
+  propertyName: String,
+): String {
+  return resolveConfigValueOrNull(propertyName)
+    ?: throw GradleException("$propertyName not set (via -P flag, environment variable, or .env file)")
+}
+
+/**
+ * Requires that the file exists and returns it.
+ *
+ * @throws GradleException if the file is null or does not exist
+ */
+fun File?.requireFileExists(): File {
+  if (this == null) {
+    throw GradleException("Required file is null")
+  }
+  if (exists().not()) {
+    throw GradleException("Required file not found: $absolutePath")
+  }
+  return this
 }
