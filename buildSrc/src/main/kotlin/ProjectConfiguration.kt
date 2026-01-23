@@ -8,6 +8,7 @@ import de.fayard.refreshVersions.core.versionFor
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.console
+import it.neckar.gradle.pnpm.vite.GenerateViteEnvFilePlugin
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
 import it.neckar.gradle.python.PythonPluginExtension
@@ -26,6 +27,7 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.attributes
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
@@ -510,6 +512,7 @@ object ProjectConfiguration {
        * Apply the package.json generator plugin to be able to generate the package.json file with the correct version numbers
        */
       project.plugins.apply(Plugins.generatePackageJson)
+      project.plugins.apply(Plugins.generateViteEnvFile)
       project.plugins.apply(Plugins.installPnpmDependency)
       project.plugins.apply(Plugins.certificates)
 
@@ -563,6 +566,7 @@ object ProjectConfiguration {
         description = "Executes `pnpm run build`"
 
         dependsOn(":pnpmInstall", verifyProjectConfiguration) //implicit dependency to generatePackageJson
+        dependsOn(tasks.named(GenerateViteEnvFilePlugin.GenerateEnvFileTaskName)) //Generate .env file with Git info
         dependsOn(CertificatesPlugin.GenerateCertTaskName) //Create the certificate early - at least necessary for vite projects
 
         onlyIf {

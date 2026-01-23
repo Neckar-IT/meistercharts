@@ -55,6 +55,7 @@ object Plugins {
 
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generatePackageJson: String = "it.neckar.repos.generate-package-json"
+  const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
   const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"
   const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
@@ -236,6 +237,9 @@ inline val PluginDependenciesSpec.asciidoctorGems: PluginDependencySpec
 
 inline val PluginDependenciesSpec.generatePackageJson: PluginDependencySpec
   get() = id(Plugins.generatePackageJson)
+
+inline val PluginDependenciesSpec.generateViteEnvFile: PluginDependencySpec
+  get() = id(Plugins.generateViteEnvFile)
 
 inline val PluginDependenciesSpec.generateAuditReport: PluginDependencySpec
   get() = id(Plugins.generateAuditReport)

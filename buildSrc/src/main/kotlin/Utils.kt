@@ -523,6 +523,13 @@ fun Project.configureJunit() {
       includeEngines(
         "junit-jupiter", //JUnit 5 engine
       )
+
+      //Exclude slow tests in CI MR pipelines for faster feedback
+      //Tests marked with @SlowTest annotation (uses "slow-test" tag) are skipped
+      if (project.resolveConfigValueOrNull("skipSlowTests") != null) {
+        excludeTags("slow-test")
+        project.logger.lifecycle("Skipping @SlowTest tests")
+      }
     }
 
     //Enable HTML reports

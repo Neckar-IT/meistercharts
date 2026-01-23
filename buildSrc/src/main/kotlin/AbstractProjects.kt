@@ -2,6 +2,7 @@ import it.neckar.gradle.ansiConsole
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
+import org.gradle.api.invocation.Gradle
 import org.gradle.kotlin.dsl.project
 import org.gradle.kotlin.dsl.assign
 
@@ -335,9 +336,19 @@ data class ConfiguredProject internal constructor(
     }
   }
 
-  //TODO replace with context once supported
+  /**
+   * Returns the Gradle [Project] (uses [GradleContext] global state).
+   */
   fun project(): Project {
     return GradleContext.project(path)
+  }
+
+  /**
+   * Returns the Gradle [Project] using context parameter (avoids global state).
+   */
+  context(gradle: Gradle)
+  fun project(): Project {
+    return gradle.rootProject.project(path)
   }
 
   override fun toString(): String {
