@@ -86,7 +86,7 @@ open class PnpmKotlinInteropExtension(objects: ObjectFactory) {
       return Projects.find(kotlinProjectPath.get())
     }
     set(value) {
-      kotlinProjectPath = value.path
+      kotlinProjectPath = value.path.path
     }
 
   /**

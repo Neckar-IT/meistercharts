@@ -78,7 +78,7 @@ open class GenerateWorkspaceYamlTask : DefaultTask() {
     val targetFile = targetFile.get().asFile
 
     val pnpmProjectPaths = Projects.pnpmProjects()
-      .map { it.path.replace(":", "/") }
+      .map { it.path.path.replace(":", "/") }
       .map {
         it.removePrefix("/") //remove leading slash
       }

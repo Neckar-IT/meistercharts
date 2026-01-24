@@ -8,6 +8,7 @@ import de.fayard.refreshVersions.core.versionFor
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.console
+import it.neckar.gradle.pnpm.dependency.PnpmWorkspaceDependencyResolver
 import it.neckar.gradle.pnpm.vite.GenerateViteEnvFilePlugin
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import it.neckar.gradle.pnpm.workspace.GeneratePnpmWorkspaceYamlPlugin
@@ -823,6 +824,74 @@ object ProjectConfiguration {
           require(outputFile.isFile) {
             "Expected ${outputFile.absolutePath} to be a file"
           }
+        }
+      }
+
+      tasks.register("pnpmDeps") {
+        description = "Shows the workspace dependency tree of this pnpm project"
+        group = "Pnpm"
+
+        doLast {
+          val startTime = System.currentTimeMillis()
+
+          val resolver = PnpmWorkspaceDependencyResolver()
+
+          /**
+           * Prints a dependency tree.
+           * @param useDevDependencies if true, follows devDependencies for transitive resolution; if false, follows dependencies
+           */
+          fun printDependencyTree(
+            dependencies: List<GradleProjectPath>,
+            useDevDependencies: Boolean,
+            indent: String = "",
+            visited: MutableSet<String> = mutableSetOf(),
+          ) {
+            dependencies.forEachIndexed { index, gradlePath ->
+              val isLast = index == dependencies.lastIndex
+              val isVisited = gradlePath.path in visited
+              val marker = if (isVisited) " (*)" else ""
+              val prefix = if (isLast) "└── " else "├── "
+              val childIndent = if (isLast) "$indent    " else "$indent│   "
+
+              logger.lifecycle("$indent$prefix${gradlePath.path}$marker")
+
+              if (isVisited.not()) {
+                visited.add(gradlePath.path)
+                val depProject = project.rootProject.findProject(gradlePath.path)
+                if (depProject != null) {
+                  val childDeps = resolver.resolveWorkspaceDependenciesByType(depProject)
+                  val relevantChildDeps = if (useDevDependencies) childDeps.devDependencies else childDeps.dependencies
+                  printDependencyTree(relevantChildDeps, useDevDependencies, childIndent, visited)
+                }
+              }
+            }
+          }
+
+          val deps = resolver.resolveWorkspaceDependenciesByType(project)
+
+          logger.lifecycle("")
+          logger.lifecycle("Workspace dependencies for ${project.path}:")
+          logger.lifecycle("")
+
+          if (deps.dependencies.isNotEmpty()) {
+            logger.lifecycle(ansiConsole.green("dependencies:"))
+            printDependencyTree(deps.dependencies, useDevDependencies = false)
+          } else {
+            logger.lifecycle(ansiConsole.gray("dependencies: (none)"))
+          }
+
+          logger.lifecycle("")
+
+          if (deps.devDependencies.isNotEmpty()) {
+            logger.lifecycle(ansiConsole.blue("devDependencies:"))
+            printDependencyTree(deps.devDependencies, useDevDependencies = true)
+          } else {
+            logger.lifecycle(ansiConsole.gray("devDependencies: (none)"))
+          }
+
+          val durationMs = System.currentTimeMillis() - startTime
+          logger.lifecycle("")
+          logger.lifecycle(ansiConsole.gray("Resolved in ${durationMs}ms"))
         }
       }
     }

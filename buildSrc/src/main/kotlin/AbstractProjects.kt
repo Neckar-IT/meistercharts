@@ -1,4 +1,5 @@
 import it.neckar.gradle.ansiConsole
+import kotlinx.serialization.Serializable
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.Dependencies
@@ -20,12 +21,12 @@ abstract class AbstractProjects {
    * Contains all configured projects
    */
   private val configuredProjects = mutableListOf<ConfiguredProject>()
-  private val path2project = mutableMapOf<String, ConfiguredProject>()
+  private val path2project = mutableMapOf<GradleProjectPath, ConfiguredProject>()
 
-  protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
+  protected fun configureProject(path: GradleProjectPath, projectType: ProjectType): ConfiguredProject {
     require(findOrNull(path) == null) { "Project $path already configured" }
 
-    val disabled = disabledProjectsSupport.isDisabled(path)
+    val disabled = disabledProjectsSupport.isDisabled(path.path)
     if (disabled && projectType == ProjectType.PNPM) {
       throw IllegalStateException("Disabling PNPM projects is not supported!. Project $path is disabled!\nCheck disabled-projects.json5! Add to forceEnabled if necessary!")
     }
@@ -38,6 +39,10 @@ abstract class AbstractProjects {
       configuredProjects.add(it)
       path2project[path] = it
     }
+  }
+
+  protected fun configureProject(path: String, projectType: ProjectType): ConfiguredProject {
+    return configureProject(GradleProjectPath(path), projectType)
   }
 
   protected fun jvm(path: String): ConfiguredProject {
@@ -87,23 +92,31 @@ abstract class AbstractProjects {
    * Returns the configured project for the given [project]
    */
   fun find(project: Project): ConfiguredProject {
-    return find(project.path)
+    return find(GradleProjectPath(project.path))
   }
 
-  fun find(path: String): ConfiguredProject {
+  fun find(path: GradleProjectPath): ConfiguredProject {
     return findOrNull(path) ?: throw IllegalStateException("Project $path not found")
   }
 
+  fun find(path: String): ConfiguredProject {
+    return find(GradleProjectPath(path))
+  }
+
   fun findOrNull(project: Project): ConfiguredProject? {
-    return findOrNull(project.path)
+    return findOrNull(GradleProjectPath(project.path))
   }
 
   /**
    * Returns the configured project for the given [path].
    * Returns null if the project is not found.
    */
-  fun findOrNull(path: String): ConfiguredProject? {
+  fun findOrNull(path: GradleProjectPath): ConfiguredProject? {
     return path2project[path]
+  }
+
+  fun findOrNull(path: String): ConfiguredProject? {
+    return findOrNull(GradleProjectPath(path))
   }
 
   /**
@@ -280,15 +293,15 @@ fun Project.isOfType(projectType: ProjectType): Boolean {
 }
 
 fun Project.project(configuredProject: ConfiguredProject): Project {
-  return this.project(configuredProject.path)
+  return this.project(configuredProject.path.path)
 }
 
 fun org.gradle.api.artifacts.dsl.DependencyHandler.project(configuredProject: ConfiguredProject): ProjectDependency {
-  return this.project(configuredProject.path)
+  return this.project(configuredProject.path.path)
 }
 
 fun Dependencies.project(configuredProject: ConfiguredProject): ProjectDependency {
-  return this.project(configuredProject.path)
+  return this.project(configuredProject.path.path)
 }
 
 fun Project.isSandboxProject(): Boolean {
@@ -303,7 +316,7 @@ data class ConfiguredProject internal constructor(
   /**
    * The path of the project
    */
-  val path: String,
+  val path: GradleProjectPath,
   /**
    * The type of the project
    */
@@ -323,9 +336,9 @@ data class ConfiguredProject internal constructor(
    */
   fun getProject(resolver: Project): Project {
     try {
-      return resolver.project(path)
+      return resolver.project(path.path)
     } catch (e: org.gradle.api.UnknownProjectException) {
-      resolver.logger.warn("Could not find project ${resolver.ansiConsole.red(path)} - is it disabled?: $disabled")
+      resolver.logger.warn("Could not find project ${resolver.ansiConsole.red(path.path)} - is it disabled?: $disabled")
       resolver.logger.warn("* Check disabled-projects.json if the project has been disabled!")
       resolver.logger.warn("* Check settings.gradle.kts if the project has been added")
       resolver.logger.warn("Try ${resolver.ansiConsole.orange("gradle clean build --no-configuration-cache --no-daemon --no-build-cache")} to force recompilation")
@@ -340,7 +353,7 @@ data class ConfiguredProject internal constructor(
    * Returns the Gradle [Project] (uses [GradleContext] global state).
    */
   fun project(): Project {
-    return GradleContext.project(path)
+    return GradleContext.project(path.path)
   }
 
   /**
@@ -348,11 +361,11 @@ data class ConfiguredProject internal constructor(
    */
   context(gradle: Gradle)
   fun project(): Project {
-    return gradle.rootProject.project(path)
+    return gradle.rootProject.project(path.path)
   }
 
   override fun toString(): String {
-    return path
+    return path.path
   }
 
   /**
@@ -426,10 +439,30 @@ enum class ProjectType {
  * Returns true if the list contains a project with the same path as the given project.
  */
 fun List<ConfiguredProject>.containsByPath(project: Project): Boolean {
-  val expectedPath = project.path
-  return containsByPath(expectedPath)
+  return containsByPath(GradleProjectPath(project.path))
+}
+
+fun List<ConfiguredProject>.containsByPath(expectedProjectPath: GradleProjectPath): Boolean {
+  return this.any { it.path == expectedProjectPath }
 }
 
 fun List<ConfiguredProject>.containsByPath(expectedProjectPath: String): Boolean {
-  return this.any { it.path == expectedProjectPath }
+  return containsByPath(GradleProjectPath(expectedProjectPath))
+}
+
+
+/**
+ * Value class representing a Gradle project path.
+ *
+ * Provides type safety for project paths like `:internal:open:commons:typescript-utils`.
+ */
+@Serializable
+@JvmInline
+value class GradleProjectPath(val path: String) {
+  init {
+    require(path.startsWith(":")) { "Gradle project path must start with ':': $path" }
+    require(path.isNotBlank()) { "Gradle project path must not be blank" }
+  }
+
+  override fun toString(): String = path
 }
