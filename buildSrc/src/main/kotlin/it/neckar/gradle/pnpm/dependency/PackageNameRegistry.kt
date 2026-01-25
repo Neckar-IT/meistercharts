@@ -31,7 +31,9 @@ class PackageNameRegistry private constructor(
 
     /**
      * Creates a new [PackageNameRegistry] by scanning all pnpm projects
-     * and extracting their package names from package.json files.
+     * and extracting their package names from package.template.json files.
+     *
+     * Uses template files to avoid dependency on generated files during Gradle configuration phase.
      *
      * @param pnpmProjects List of pnpm projects to scan (defaults to all pnpm projects)
      */
@@ -42,14 +44,14 @@ class PackageNameRegistry private constructor(
 
       val mapping = pnpmProjects
         .associate { configuredProject ->
-          val packageJsonFile = configuredProject.project().file("package.json")
+          val packageTemplateFile = configuredProject.project().file("package.template.json")
 
-          if (packageJsonFile.exists().not()) {
-            throw GradleException("package.json not found for pnpm project '${configuredProject.path}' at ${packageJsonFile.absolutePath}")
+          if (packageTemplateFile.exists().not()) {
+            throw GradleException("package.template.json not found for pnpm project '${configuredProject.path}' at ${packageTemplateFile.absolutePath}")
           }
 
-          val packageName = parser.extractPackageName(packageJsonFile)
-            ?: throw GradleException("No 'name' field found in ${packageJsonFile.absolutePath}")
+          val packageName = parser.extractPackageName(packageTemplateFile)
+            ?: throw GradleException("No 'name' field found in ${packageTemplateFile.absolutePath}")
 
           logger.debug("Mapped package '$packageName' -> '${configuredProject.path}'")
           packageName to configuredProject.path

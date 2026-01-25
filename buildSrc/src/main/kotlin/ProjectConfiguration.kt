@@ -8,6 +8,7 @@ import de.fayard.refreshVersions.core.versionFor
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.console
+import it.neckar.gradle.pnpm.dependency.PackageNameRegistry
 import it.neckar.gradle.pnpm.dependency.PnpmWorkspaceDependencyResolver
 import it.neckar.gradle.pnpm.vite.GenerateViteEnvFilePlugin
 import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
@@ -47,6 +48,13 @@ import java.io.File
  * Contains common code to configure a project
  */
 object ProjectConfiguration {
+  /**
+   * Cached [PackageNameRegistry] - lazy singleton to avoid repeated scanning of all pnpm projects.
+   * The registry maps npm package names to Gradle project paths.
+   */
+  private val packageNameRegistry by lazy {
+    PackageNameRegistry.create()
+  }
   fun configureParentProject(project: Project) {
     with(project) {
       apply(plugin = Plugins.kover)
@@ -564,18 +572,46 @@ object ProjectConfiguration {
       }
 
       val pnpmRunBuild: TaskProvider<PnpmTask> = tasks.register<PnpmTask>("pnpmRunBuild") {
-        description = "Executes `pnpm run build`"
+        description = "Executes `pnpm run build:only` (or `build` as fallback)"
 
         dependsOn(":pnpmInstall", verifyProjectConfiguration) //implicit dependency to generatePackageJson
         dependsOn(tasks.named(GenerateViteEnvFilePlugin.GenerateEnvFileTaskName)) //Generate .env file with Git info
         dependsOn(CertificatesPlugin.GenerateCertTaskName) //Create the certificate early - at least necessary for vite projects
 
+        // Automatic workspace dependency resolution - Gradle orchestrates build order
+        val resolver = PnpmWorkspaceDependencyResolver(packageNameRegistry)
+        val deps = resolver.resolveWorkspaceDependenciesByType(project)
+
+        // Include both dependencies AND devDependencies - devDependencies can provide
+        // build-relevant artifacts (shared configs, TypeScript types)
+        val allDeps = (deps.dependencies + deps.devDependencies).distinctBy { it.path }
+
+        allDeps
+          .filter { it.path != project.path } // Filter self-dependency
+          .forEach { gradlePath ->
+            project.rootProject.findProject(gradlePath.path)?.let { depProject ->
+              dependsOn(depProject.tasks.named("pnpmRunBuild"))
+            }
+          }
+
+        // Script selection: prefer build:only, fallback to build with warning
+        val scripts = parsePackageJson().jsonObject["scripts"]?.jsonObject
+        val hasBuildOnly = scripts?.containsKey("build:only") == true
+        val hasBuild = scripts?.containsKey("build") == true
+
         onlyIf {
-          //Check if there is a build script referenced
-          (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey("build") == true)
+          hasBuildOnly || hasBuild
         }
 
-        args = listOf("run", "build")
+        args = if (hasBuildOnly) {
+          listOf("run", "build:only")
+        } else {
+          // TODO: Remove fallback after all projects have build:only (see MR !11806)
+          if (hasBuild) {
+            logger.warn("${project.path}: no 'build:only' script, falling back to 'build'")
+          }
+          listOf("run", "build")
+        }
 
         //Disable output if *info* is not enabled
         //if (logger.isInfoEnabled.not()) {

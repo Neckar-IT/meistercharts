@@ -199,21 +199,23 @@ fun <T : Any> NamedDomainObjectSet<T>.findNamed(name: String): NamedDomainObject
 }
 
 /**
- * Returns the parsed package.json file
- * Throws an exception if the file does not exist
+ * Returns the parsed package.template.json file.
+ *
+ * Uses template file to avoid dependency on generated files during Gradle configuration phase.
+ * Throws an exception if the file does not exist.
  */
 fun Project.parsePackageJson(): JsonElement {
-  val packageJson = file("package.json")
+  val packageTemplateJson = file("package.template.json")
 
-  if (packageJson.isFile.not()) {
-    throw GradleException("Expected ${packageJson.absolutePath} to be a file")
+  if (packageTemplateJson.isFile.not()) {
+    throw GradleException("Expected ${packageTemplateJson.absolutePath} to be a file")
   }
 
-  return Json.parseToJsonElement(packageJson.readText())
+  return Json.parseToJsonElement(packageTemplateJson.readText())
 }
 
 /**
- * Returns true if the package.json file contains the given script
+ * Returns true if the package.template.json file contains the given script
  */
 fun Project.packageJsonContainsScript(scriptName: String): Boolean {
   return (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey(scriptName) == true)
