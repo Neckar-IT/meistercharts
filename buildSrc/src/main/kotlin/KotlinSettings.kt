@@ -267,7 +267,7 @@ object KotlinSettings {
     // add("-Xsupport-compatqual-checker-framework-annotations") // TODO: description missing
     // add("-Xjspecify-annotations") // Specify the behavior of 'jspecify' annotations. The default value is 'warn'.
     // add("-Xjvm-default") // TODO: description missing
-    add("-Xjvm-default=all") //Enable generation of default methods in interfaces
+    // Removed: add("-Xjvm-default=all") - now configured via compilerOptions.jvmDefault in Utils.kt
     // add("-Xgenerate-strict-metadata-version") // TODO: description missing
     // add("-Xsanitize-parentheses") // TODO: description missing
     // add("-Xfriend-paths") // TODO: description missing
