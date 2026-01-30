@@ -19,18 +19,18 @@ import java.io.FileOutputStream
 /**
  * Gzips the npm module
  */
-open class GzipNpmModuleTask : DefaultTask() {
-  @Input
-  val archiveFileNameProperty: Property<String> = project.objects.property()
+abstract class GzipNpmModuleTask : DefaultTask() {
+  @get:Input
+  abstract val archiveFileNameProperty: Property<String>
 
-  @Input
-  val dirNameInArchiveProperty: Property<String> = project.objects.property()
+  @get:Input
+  abstract val dirNameInArchiveProperty: Property<String>
 
-  @InputDirectory
-  val sourceDirProperty: DirectoryProperty = project.objects.directoryProperty()
+  @get:InputDirectory
+  abstract val sourceDirProperty: DirectoryProperty
 
-  @OutputDirectory
-  val targetDirectoryForArchiveProperty: DirectoryProperty = project.objects.directoryProperty()
+  @get:OutputDirectory
+  abstract val targetDirectoryForArchiveProperty: DirectoryProperty
 
   @Suppress("unused")
   @TaskAction

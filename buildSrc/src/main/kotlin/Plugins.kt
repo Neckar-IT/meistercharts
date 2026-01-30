@@ -102,6 +102,7 @@ object Plugins {
   const val dependenciesReport: String = "it.neckar.dependencies-report"
   const val jibCli: String = "it.neckar.jib-cli-plugin"
   const val jibService: String = "it.neckar.jib-service"
+  const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
@@ -177,6 +178,9 @@ inline val PluginDependenciesSpec.jibCli: PluginDependencySpec
 
 inline val PluginDependenciesSpec.jibService: PluginDependencySpec
   get() = id(Plugins.jibService)
+
+inline val PluginDependenciesSpec.dockerHubPublish: PluginDependencySpec
+  get() = id(Plugins.dockerHubPublish)
 
 inline val PluginDependenciesSpec.shadow: PluginDependencySpec
   get() = id(Plugins.shadow)

@@ -87,25 +87,25 @@ open class GenerateIconsExtension(objects: ObjectFactory) {
 }
 
 @CacheableTask
-open class CreateBasicIconsDeclarationTask() : DefaultTask() {
-  @Input
-  val objectName: Property<String> = project.objects.property(String::class.java)
+abstract class CreateBasicIconsDeclarationTask : DefaultTask() {
+  @get:Input
+  abstract val objectName: Property<String>
 
-  @PathSensitive(PathSensitivity.RELATIVE)
-  @InputDirectory
-  val svgIconsSourceDir: DirectoryProperty = project.objects.directoryProperty()
+  @get:PathSensitive(PathSensitivity.RELATIVE)
+  @get:InputDirectory
+  abstract val svgIconsSourceDir: DirectoryProperty
 
-  @Optional
-  @OutputFile
-  val basicIconsFile: RegularFileProperty = project.objects.fileProperty()
+  @get:Optional
+  @get:OutputFile
+  abstract val basicIconsFile: RegularFileProperty
 
-  @Optional
-  @OutputFile
-  val svgPathsFile: RegularFileProperty = project.objects.fileProperty()
+  @get:Optional
+  @get:OutputFile
+  abstract val svgPathsFile: RegularFileProperty
 
-  @Optional
-  @OutputFile
-  val svgPaintableProvidersFile: RegularFileProperty = project.objects.fileProperty()
+  @get:Optional
+  @get:OutputFile
+  abstract val svgPaintableProvidersFile: RegularFileProperty
 
   @TaskAction
   fun generate() {

@@ -282,6 +282,84 @@ object ProjectConfiguration {
   }
 
   /**
+   * Configuration for JVM-only multi-platform projects.
+   * Similar to configureMultiPlatform but without JS target.
+   */
+  fun configureMultiPlatformJvmOnly(project: Project, jvmType: JvmType) {
+    with(project) {
+
+      run {
+        //Ensure there are no "forgotten" source directories - this might happen when a project is converted from a JVM or JS project
+        //Verify that the directory is empty
+        requireDirectoryEmpty("src/main/kotlin")
+        requireDirectoryEmpty("src/main/java")
+        requireDirectoryEmpty("src/main/resources")
+        requireDirectoryEmpty("src/test/kotlin")
+        requireDirectoryEmpty("src/test/java")
+        requireDirectoryEmpty("src/test/resources")
+      }
+
+      //Report generation is not yet working
+      apply(plugin = Plugins.kotlinMultiPlatform)
+      if (dokkaEnabled) {
+        apply(plugin = Plugins.dokka)
+      }
+      apply(plugin = Plugins.detekt)
+      apply(plugin = Plugins.kover)
+
+      apply(plugin = Plugins.publishToGitlabPages)
+
+      configureKotlinJvmOnly()
+      configureJunit()
+
+      //Ensure the extension exist
+      requireNotNull(extensions.getByType(KotlinMultiplatformExtension::class.java))
+
+      //Default toolchain for multiplatform projects
+
+      configureToolchain(jvmType)
+
+      configureDetekt {
+        source.setFrom(
+          files(
+            "src/commonMain/kotlin",
+            "src/jvmMain/kotlin",
+          )
+        )
+      }
+
+      configureKover {
+      }
+
+      project.tasks.register("printSourceSets") {
+        doLast {
+          val ansiConsole = console
+
+          logger.lifecycle("------------------------------------------------------------")
+          logger.lifecycle(ansiConsole.green("Source Sets:"))
+          logger.lifecycle("------------------------------------------------------------")
+
+          val kotlinMultiplatformExtension: KotlinMultiplatformExtension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
+
+          kotlinMultiplatformExtension.sourceSets.all {
+            logger.lifecycle(ansiConsole.orange(name))
+
+            logger.lifecycle("  ${ansiConsole.gray("Source Dirs:")}")
+            this.kotlin.srcDirs.forEach {
+              logger.lifecycle("    ${ansiConsole.white(it.relativeTo(project.projectDir))}")
+            }
+
+            logger.lifecycle("  ${ansiConsole.gray("Resource Dirs:")}")
+            this.resources.srcDirs.forEach {
+              logger.lifecycle("    ${ansiConsole.white(it.relativeTo(project.projectDir))}")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Configuration for python projects
    */
   fun configurePython(project: Project) {

@@ -10,7 +10,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 @Suppress("IdentifierGrammar")
-open class AddPnpmDependencyToTemplateTask : BasePnpmDependencyTask() {
+abstract class AddPnpmDependencyToTemplateTask : BasePnpmDependencyTask() {
   init {
     description = "Adds an npm dependency to the package.template.json file; synopsis: `gradle addPnpmDependencyToTemplate -P$ArgumentNameDependency={NODE_DEP}`"
 
@@ -21,11 +21,11 @@ open class AddPnpmDependencyToTemplateTask : BasePnpmDependencyTask() {
   /**
    * The dependency type to install
    */
-  @Input
+  @get:Input
   var npmDependencyType: NpmDependencyType = NpmDependencyType.Production
 
-  @OutputFile
-  val packageJsonTemplateFile: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val packageJsonTemplateFile: RegularFileProperty
 
   @TaskAction
   fun installDependency() {

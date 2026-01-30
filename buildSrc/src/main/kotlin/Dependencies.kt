@@ -13,6 +13,11 @@ enum class Scope {
   Test
 }
 
+/**
+ * Returns true if this multiplatform extension has a JS target registered.
+ */
+val KotlinMultiplatformExtension.hasJsTarget: Boolean
+  get() = targets.findByName("js") != null
 
 private fun KotlinMultiplatformExtension.common(scope: Scope, configure: KotlinSourceSet.() -> Unit) {
   sourceSets {
@@ -28,7 +33,16 @@ private fun KotlinMultiplatformExtension.common(scope: Scope, configure: KotlinS
   }
 }
 
+/**
+ * Configures JS source sets only if a JS target is registered.
+ * This prevents "Source Set Used Without a Corresponding Target" warnings
+ * for JVM-only multiplatform projects.
+ */
 private fun KotlinMultiplatformExtension.js(scope: Scope, configure: KotlinSourceSet.() -> Unit) {
+  if (hasJsTarget.not()) {
+    return
+  }
+
   sourceSets {
     when (scope) {
       Scope.Main -> {
@@ -79,10 +93,15 @@ fun DependencyHandlerScope.addKotlinDependencies() {
 }
 
 /**
- * Add Kotlin related dependencies to the project
+ * Add Kotlin related dependencies to the project.
+ * Only configures JS dependencies if a JS target is registered.
  */
 fun KotlinMultiplatformExtension.addKotlinDependencies() {
   addAnnotationDependencies(Scope.Main)
+
+  if (hasJsTarget.not()) {
+    return
+  }
 
   sourceSets {
     jsMain {

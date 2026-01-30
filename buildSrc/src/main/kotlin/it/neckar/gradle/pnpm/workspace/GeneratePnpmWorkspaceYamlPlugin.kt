@@ -58,20 +58,20 @@ open class GenerateWorkspaceYamlPluginExtension(objects: ObjectFactory) {
   val manualEntries: ListProperty<String> = objects.listProperty(String::class)
 }
 
-open class GenerateWorkspaceYamlTask : DefaultTask() {
+abstract class GenerateWorkspaceYamlTask : DefaultTask() {
   init {
     group = "build"
     description = "Generates a workspace.yaml file"
   }
 
-  @OutputFile
-  val targetFile: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val targetFile: RegularFileProperty
 
   /**
    * Contains additional entries that will be added to the workspace.yaml file
    */
-  @Input
-  val manualEntries: ListProperty<String> = project.objects.listProperty(String::class)
+  @get:Input
+  abstract val manualEntries: ListProperty<String>
 
   @TaskAction
   fun generate() {

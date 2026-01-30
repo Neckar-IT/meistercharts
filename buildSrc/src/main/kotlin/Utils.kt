@@ -265,16 +265,18 @@ val Process.text: String
   }
 
 /**
- * Returns the gitlab access token - from environment or gradle.properties file
+ * Returns the gitlab access token - from environment or gradle.properties file.
+ * Checks for GITLAB_API_TOKEN first, falls back to legacy GITLAB_CONTAINER_ACCESS_TOKEN.
  */
 fun Project.getGitlabAccessToken(): String? {
-  val fromEnv: String? = System.getenv("GITLAB_CONTAINER_ACCESS_TOKEN")
+  val fromEnv = System.getenv("GITLAB_API_TOKEN")
+    ?: System.getenv("GITLAB_CONTAINER_ACCESS_TOKEN")
 
   if (fromEnv != null) {
     return fromEnv
   }
 
-  return properties["GITLAB_CONTAINER_ACCESS_TOKEN"] as String?
+  return (properties["GITLAB_API_TOKEN"] ?: properties["GITLAB_CONTAINER_ACCESS_TOKEN"]) as String?
 }
 
 
@@ -484,6 +486,40 @@ fun Project.configureKotlin() {
 
   //For Multiplatform projects (JS and JVM)
   extensions.findByType<KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
+}
+
+/**
+ * Configure Kotlin for JVM-only multiplatform projects (no JS target)
+ */
+fun Project.configureKotlinJvmOnly() {
+  //Ensure that this is only called once for each project
+  require(project.extra.has("kotlinConfigured").not()) {
+    "Kotlin already configured for project ${project.path}. Do *not* call configureKotlin() multiple times"
+  }
+  project.extra["kotlinConfigured"] = true
+
+  //JS projects are no longer supported
+  require(extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>() == null) {
+    "Must not contain KotlinJsProjectExtension. Use multiplatform instead"
+  }
+
+  tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
+  }
+
+  tasks.withType<KotlinJvmCompile> {
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+    compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
+  }
+
+  //for common
+  this.extensions.findByType<KotlinProjectExtension>()?.applyKotlinConfiguration()
+
+  //For JVM projects
+  extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
+
+  //For Multiplatform projects (JVM only)
+  extensions.findByType<KotlinMultiplatformExtension>()?.applyJvmOnlyKotlinConfiguration(this, suppressWarnings = true)
 }
 
 /**
@@ -891,6 +927,31 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
       target = "es2015"
     }
   }
+}
+
+/**
+ * Apply Kotlin configuration for JVM-only multiplatform projects.
+ * Similar to applyMultiplatformKotlinConfiguration but without JS target.
+ */
+fun KotlinMultiplatformExtension.applyJvmOnlyKotlinConfiguration(
+  project: Project,
+  suppressWarnings: Boolean = true
+) {
+  // Do NOT call applyDefaultHierarchyTemplate() - it creates jsMain/jsTest source sets
+  // which trigger "Source Set Used Without a Corresponding Target" warnings when no JS target is registered.
+  // For JVM-only projects, we only need commonMain, commonTest, jvmMain, jvmTest.
+  applyKotlinConfiguration()
+
+  compilerOptions {
+    this.suppressWarnings = suppressWarnings
+    extraWarnings = true
+  }
+
+  //Add a JVM configuration only
+  jvm {
+  }
+
+  // NO JS target - this is the key difference from applyMultiplatformKotlinConfiguration
 }
 
 /**

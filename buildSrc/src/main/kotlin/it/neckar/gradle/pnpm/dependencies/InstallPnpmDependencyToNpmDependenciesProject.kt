@@ -9,7 +9,7 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-open class InstallPnpmDependencyToNpmDependenciesProject : BasePnpmDependencyTask() {
+abstract class InstallPnpmDependencyToNpmDependenciesProject : BasePnpmDependencyTask() {
   init {
     description = "Installs an npm dependency to this `npm-dependencies-project`"
 
@@ -20,8 +20,8 @@ open class InstallPnpmDependencyToNpmDependenciesProject : BasePnpmDependencyTas
     finalizedBy(":kotlinUpgradeYarnLock")
   }
 
-  @OutputFile
-  val dependencyFile: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val dependencyFile: RegularFileProperty
 
   @TaskAction
   fun installDependency() {

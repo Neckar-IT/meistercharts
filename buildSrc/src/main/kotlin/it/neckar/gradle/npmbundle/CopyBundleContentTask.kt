@@ -15,13 +15,13 @@ import org.gradle.work.DisableCachingByDefault
  * Copies the bundled content
  */
 @DisableCachingByDefault
-open class CopyBundleContentTask : DefaultTask() {
+abstract class CopyBundleContentTask : DefaultTask() {
 
-  @Internal
-  val filesToBundle: Property<CopySpec> = project.objects.property<CopySpec>()
+  @get:Internal
+  abstract val filesToBundle: Property<CopySpec>
 
-  @OutputDirectory
-  val destinationDir: DirectoryProperty = project.objects.directoryProperty()
+  @get:OutputDirectory
+  abstract val destinationDir: DirectoryProperty
 
   @TaskAction
   fun copyBundleContent() {

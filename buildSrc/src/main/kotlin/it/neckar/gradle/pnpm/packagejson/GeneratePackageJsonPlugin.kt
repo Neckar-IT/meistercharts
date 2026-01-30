@@ -111,41 +111,41 @@ open class GeneratePackageJsonPluginExtension(objects: ObjectFactory) {
 
 }
 
-open class GeneratePackageJsonTask : DefaultTask() {
+abstract class GeneratePackageJsonTask : DefaultTask() {
   init {
     group = "build"
     description = "Generates a package.json file from a template"
   }
 
-  @InputFile
-  val templateFile: RegularFileProperty = project.objects.fileProperty()
+  @get:InputFile
+  abstract val templateFile: RegularFileProperty
 
-  @OutputFile
-  val targetFile: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val targetFile: RegularFileProperty
 
   /**
    * Contains a symlink to the generated package.json file.
    *
    * The symlink is necessary to ensure the package.json exists all the time.
    */
-  @OutputFile
-  val packageJsonSymLinkFile: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val packageJsonSymLinkFile: RegularFileProperty
 
-  @Input
-  val moduleName: Property<String> = project.objects.property()
+  @get:Input
+  abstract val moduleName: Property<String>
 
   /**
    * The version number - will be used when processing the package.json template
    */
-  @Input
-  val version: Property<String> = project.objects.property()
+  @get:Input
+  abstract val version: Property<String>
 
   /**
    * Reference to the `versions.properties` file.
    * If the `version.properties` file is updated, the package.json file will be regenerated
    */
-  @InputFile
-  val versionsProperties: RegularFileProperty = project.objects.fileProperty()
+  @get:InputFile
+  abstract val versionsProperties: RegularFileProperty
 
   @TaskAction
   fun generate() {

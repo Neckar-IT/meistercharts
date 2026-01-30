@@ -64,6 +64,10 @@ abstract class AbstractProjects {
     return configureProject(path, type)
   }
 
+  protected fun multiplatformJvmOnly(path: String): ConfiguredProject {
+    return configureProject(path, ProjectType.KotlinMultiplatformJvmOnly)
+  }
+
   protected fun pnpm(path: String): ConfiguredProject {
     return configureProject(path, ProjectType.PNPM)
   }
@@ -126,6 +130,13 @@ abstract class AbstractProjects {
     return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }
   }
 
+  /**
+   * Returns all JVM-only multi-platform projects
+   */
+  fun multiPlatformJvmOnlyProjectsLTS(): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformJvmOnly }
+  }
+
   fun project(type: ProjectType): List<ConfiguredProject> {
     return configuredProjects.filter { it.type == type }
   }
@@ -174,6 +185,13 @@ abstract class AbstractProjects {
       if (this.enabled) {
         baseProject.logger.debug("Configuring multi-platform LTS project: ${this.path}")
         ProjectConfiguration.configureMultiPlatform(this.getProject(baseProject), JvmType.JavaLatestLTS)
+      }
+    }
+
+    baseProject.configure(multiPlatformJvmOnlyProjectsLTS()) {
+      if (this.enabled) {
+        baseProject.logger.debug("Configuring multi-platform JVM-only LTS project: ${this.path}")
+        ProjectConfiguration.configureMultiPlatformJvmOnly(this.getProject(baseProject), JvmType.JavaLatestLTS)
       }
     }
 
@@ -400,6 +418,12 @@ enum class ProjectType {
    * Multiplatform project - usually contains JVM and JS code
    */
   KotlinMultiplatform,
+
+  /**
+   * Multiplatform project with JVM-only target.
+   * Code remains in commonMain for strategic flexibility, but no JS compilation.
+   */
+  KotlinMultiplatformJvmOnly,
 
   /**
    * JS project - build using pnpm
