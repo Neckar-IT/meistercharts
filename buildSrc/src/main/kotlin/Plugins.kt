@@ -99,7 +99,6 @@ object Plugins {
 
   const val spotless: String = "com.diffplug.spotless"
 
-  const val dependenciesReport: String = "it.neckar.dependencies-report"
   const val jibCli: String = "it.neckar.jib-cli-plugin"
   const val jibService: String = "it.neckar.jib-service"
   const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
@@ -321,9 +320,6 @@ inline val PluginDependenciesSpec.schemaGen: PluginDependencySpec
 
 inline val PluginDependenciesSpec.kover: PluginDependencySpec
   get() = id(Plugins.kover)
-
-inline val PluginDependenciesSpec.dependenciesReport: PluginDependencySpec
-  get() = id(Plugins.dependenciesReport)
 
 inline val PluginDependenciesSpec.javafx: PluginDependencySpec
   get() = id(Plugins.javafx)

@@ -10,6 +10,10 @@ object ExternalDockerImages {
   val DockerIoAmir20Dozzle: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoAmir20Dozzle.withTag( ExternalDockerImageTags.DockerIoAmir20Dozzle )
   val DockerIoGrafanaGrafanaOss: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaGrafanaOss.withTag( ExternalDockerImageTags.DockerIoGrafanaGrafanaOss )
   val DockerIoGrafanaLoki: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaLoki.withTag( ExternalDockerImageTags.DockerIoGrafanaLoki )
+  val DockerIoJitsiJicofo: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiJicofo.withTag( ExternalDockerImageTags.DockerIoJitsiJicofo )
+  val DockerIoJitsiJvb: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiJvb.withTag( ExternalDockerImageTags.DockerIoJitsiJvb )
+  val DockerIoJitsiProsody: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiProsody.withTag( ExternalDockerImageTags.DockerIoJitsiProsody )
+  val DockerIoJitsiWeb: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiWeb.withTag( ExternalDockerImageTags.DockerIoJitsiWeb )
   val DockerIoMinioMinio: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMinioMinio.withTag( ExternalDockerImageTags.DockerIoMinioMinio )
   val DockerIoMongo: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMongo.withTag( ExternalDockerImageTags.DockerIoMongo )
   val DockerIoMysql: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMysql.withTag( ExternalDockerImageTags.DockerIoMysql )
@@ -37,6 +41,10 @@ object ExternalDockerImages {
     DockerIoAmir20Dozzle,
     DockerIoGrafanaGrafanaOss,
     DockerIoGrafanaLoki,
+    DockerIoJitsiJicofo,
+    DockerIoJitsiJvb,
+    DockerIoJitsiProsody,
+    DockerIoJitsiWeb,
     DockerIoMinioMinio,
     DockerIoMongo,
     DockerIoMysql,
