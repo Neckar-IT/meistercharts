@@ -50,6 +50,9 @@ fun KClass<*>.asEnumClass(): KClass<out Enum<*>> {
   return asEnumClassOrNull() ?: throw IllegalArgumentException("Class [$this] is not an enum class")
 }
 
+/**
+ * Returns true if this is an object (singleton)
+ */
 val KClass<*>.isObject: Boolean get() = this.objectInstance != null
 
 /**

@@ -143,6 +143,18 @@ fun Project.hasPlugin(kotlinMultiPlatform: String): Boolean {
 }
 
 /**
+ * Returns true if this project is disabled (e.g., on macOS for JavaFX projects).
+ * A disabled project should be skipped during configuration.
+ */
+fun Project.isDisabledProject(): Boolean {
+  val configuredProject = Projects.findOrNull(this)
+    ?: ExternalProjects.findOrNull(this)
+    ?: OtherProjects.findOrNull(this)
+
+  return configuredProject?.disabled == true
+}
+
+/**
  * Returns all project dependencies (including transitive dependencies)
  * for the configurations with the given names.
  *

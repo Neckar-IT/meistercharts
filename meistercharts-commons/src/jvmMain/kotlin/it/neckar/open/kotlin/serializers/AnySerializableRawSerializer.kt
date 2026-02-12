@@ -52,11 +52,20 @@ object AnySerializableRawSerializer : KSerializer<Any> {
 
   /**
    * Encodes the provided object to a JsonElement
+   *
+   * @param includeOptionals When true, includes properties with default values (including computed properties)
+   * and explicitly serializes null values. This ensures computed properties are included in the output,
+   * which is necessary for OpenAPI examples where computed properties are marked as required.
+   *
+   * Note: The TypeScript example generator (extract-examples.ts) filters out null values to handle
+   * the type mismatch where Orval generates `property?: string` instead of `property: string | null`
+   * for optional nullable properties.
    */
   fun encodeToJsonElement(elementToEncode: Any, includeOptionals: Boolean = false): JsonElement {
     val json: Json = if (includeOptionals) {
       Json {
         encodeDefaults = true
+        explicitNulls = true
       }
     } else {
       Json {

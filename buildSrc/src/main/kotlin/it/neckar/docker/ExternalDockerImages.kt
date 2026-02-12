@@ -8,12 +8,14 @@ import it.neckar.projects.common.docker.DockerImageDescriptor
  */
 object ExternalDockerImages {
   val DockerIoAmir20Dozzle: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoAmir20Dozzle.withTag( ExternalDockerImageTags.DockerIoAmir20Dozzle )
+  val DockerIoAwesometechnologiesSynapseAdmin: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoAwesometechnologiesSynapseAdmin.withTag( ExternalDockerImageTags.DockerIoAwesometechnologiesSynapseAdmin )
   val DockerIoGrafanaGrafanaOss: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaGrafanaOss.withTag( ExternalDockerImageTags.DockerIoGrafanaGrafanaOss )
   val DockerIoGrafanaLoki: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoGrafanaLoki.withTag( ExternalDockerImageTags.DockerIoGrafanaLoki )
   val DockerIoJitsiJicofo: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiJicofo.withTag( ExternalDockerImageTags.DockerIoJitsiJicofo )
   val DockerIoJitsiJvb: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiJvb.withTag( ExternalDockerImageTags.DockerIoJitsiJvb )
   val DockerIoJitsiProsody: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiProsody.withTag( ExternalDockerImageTags.DockerIoJitsiProsody )
   val DockerIoJitsiWeb: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoJitsiWeb.withTag( ExternalDockerImageTags.DockerIoJitsiWeb )
+  val DockerIoMatrixdotorgSynapse: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMatrixdotorgSynapse.withTag( ExternalDockerImageTags.DockerIoMatrixdotorgSynapse )
   val DockerIoMinioMinio: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMinioMinio.withTag( ExternalDockerImageTags.DockerIoMinioMinio )
   val DockerIoMongo: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMongo.withTag( ExternalDockerImageTags.DockerIoMongo )
   val DockerIoMysql: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoMysql.withTag( ExternalDockerImageTags.DockerIoMysql )
@@ -29,6 +31,7 @@ object ExternalDockerImages {
   val DockerIoTraefik: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoTraefik.withTag( ExternalDockerImageTags.DockerIoTraefik )
   val DockerIoTwinproductionGatus: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoTwinproductionGatus.withTag( ExternalDockerImageTags.DockerIoTwinproductionGatus )
   val DockerIoVaultwardenServer: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoVaultwardenServer.withTag( ExternalDockerImageTags.DockerIoVaultwardenServer )
+  val DockerIoVectorimElementWeb: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoVectorimElementWeb.withTag( ExternalDockerImageTags.DockerIoVectorimElementWeb )
   val DockerIoWordpress: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.DockerIoWordpress.withTag( ExternalDockerImageTags.DockerIoWordpress )
   val GhcrIoUmamiSoftwareUmami: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.GhcrIoUmamiSoftwareUmami.withTag( ExternalDockerImageTags.GhcrIoUmamiSoftwareUmami )
   val QuayIoKeycloakKeycloak: DockerImageDescriptor =  ExternalDockerImagesWithoutTag.QuayIoKeycloakKeycloak.withTag( ExternalDockerImageTags.QuayIoKeycloakKeycloak )
@@ -39,12 +42,14 @@ object ExternalDockerImages {
    */
   val entries: List<DockerImageDescriptor> = listOf(
     DockerIoAmir20Dozzle,
+    DockerIoAwesometechnologiesSynapseAdmin,
     DockerIoGrafanaGrafanaOss,
     DockerIoGrafanaLoki,
     DockerIoJitsiJicofo,
     DockerIoJitsiJvb,
     DockerIoJitsiProsody,
     DockerIoJitsiWeb,
+    DockerIoMatrixdotorgSynapse,
     DockerIoMinioMinio,
     DockerIoMongo,
     DockerIoMysql,
@@ -60,6 +65,7 @@ object ExternalDockerImages {
     DockerIoTraefik,
     DockerIoTwinproductionGatus,
     DockerIoVaultwardenServer,
+    DockerIoVectorimElementWeb,
     DockerIoWordpress,
     GhcrIoUmamiSoftwareUmami,
     QuayIoKeycloakKeycloak,

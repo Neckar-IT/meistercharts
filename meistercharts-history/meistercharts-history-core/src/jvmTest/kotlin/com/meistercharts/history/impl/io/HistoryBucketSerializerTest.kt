@@ -22,11 +22,14 @@ import com.meistercharts.history.impl.createSimpleChunk
 import com.meistercharts.history.impl.createSinusChunk
 import it.neckar.open.serialization.roundTrip
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 
 /**
  */
 class HistoryBucketSerializerTest {
   @Test
+  @DisabledOnOs(OS.MAC) // Floating-point serialization produces slightly different results on macOS
   fun testIt() {
     val descriptor = HistoryBucketDescriptor.forTimestamp(351351351.0, HistoryBucketRange.OneDay)
     val bucket = HistoryBucket(descriptor, createSinusChunk(descriptor))

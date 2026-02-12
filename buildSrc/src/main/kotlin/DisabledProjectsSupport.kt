@@ -40,17 +40,13 @@ data class DisabledProjectsSupport(
       .build()
 
     /**
-     * Creates a new instance from the given configuration files.
+     * Creates a new instance from the given configuration file.
      */
     fun load(
       /**
        * The (optional) file containing the disabled projects
        */
       disabledProjectsFile: File,
-      /**
-       * Special file that contains projects that can not be build on macOS
-       */
-      disabledOnMacOsFile: File,
     ): DisabledProjectsSupport {
       val disabledProjectPrefixes: MutableSet<String> = mutableSetOf()
       val forceEnabledProjectPrefixes: MutableSet<String> = mutableSetOf()
@@ -66,16 +62,6 @@ data class DisabledProjectsSupport(
 
         forceEnabledNode?.map { it.textValue() }?.forEach {
           forceEnabledProjectPrefixes.add(it)
-        }
-      }
-
-      require(disabledOnMacOsFile.exists()) { "File $disabledOnMacOsFile does not exist" }
-      val isMacOs = System.getProperty("os.name").contains("Mac OS X")
-
-      if (isMacOs) {
-        mapper.readTree(disabledOnMacOsFile.readText()).map { it.textValue() }.forEach {
-          println("||||--> $it")
-          disabledProjectPrefixes.add(it)
         }
       }
 

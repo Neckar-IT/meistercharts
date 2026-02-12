@@ -1,6 +1,7 @@
 package it.neckar.open.test.utils
 
 import org.junit.jupiter.api.extension.ExtendWith
+import org.slf4j.event.Level
 
 /**
  * Tests annotated with this annotation will have logging enabled (again).
@@ -10,4 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class EnableLogging
+annotation class EnableLogging(
+  val level: Level = Level.INFO,
+)

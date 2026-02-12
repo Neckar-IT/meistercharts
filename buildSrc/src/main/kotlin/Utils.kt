@@ -321,24 +321,6 @@ fun Project.configureJavaFX(modules: List<JavaFXModule> = listOf(JavaFXModule.CO
 }
 
 /**
- * Configures a project to use Oracle Java 8 (including Java FX)
- */
-@Deprecated("no longer supported. Update to 21")
-fun Project.configureToolchainJava8WithFx(): Provider<JavaCompiler> {
-  //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
-  return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ORACLE)
-}
-
-/**
- * Configures a project to use Java 8 (not including JavaFX)
- */
-@Deprecated("no longer supported. Update to 21")
-fun Project.configureToolchainJava8(): Provider<JavaCompiler> {
-  //Only Oracle 8 JDK is supported - OpenJDK does *not* contain JavaFX
-  return configureToolchain(JavaLanguageVersion.of(8), JvmVendorSpec.ADOPTIUM)
-}
-
-/**
  * Configures the toolchain using the [JvmType] - as configured in the project.
  */
 fun Project.configureToolchain(jvmType: JvmType) {
@@ -347,25 +329,6 @@ fun Project.configureToolchain(jvmType: JvmType) {
       configureToolchainJava25LTS()
     }
   }
-}
-
-/**
- * Java 17 is a LTS version
- * See https://en.wikipedia.org/wiki/Java_version_history for details
- * Usually one should use [configureToolchainJava25LTS] instead
- */
-@Deprecated("Use [configureToolchainJava25LTS] instead in most cases", ReplaceWith("configureToolchainJava25LTS()"))
-fun Project.configureToolchainJava17LTS(): Provider<JavaCompiler> {
-  return configureToolchain(JavaLanguageVersion.of(17))
-}
-
-/**
- * Java 21 is a LTS version - kept for backwards compatibility
- * @see configureToolchainJava25LTS
- */
-@Deprecated("Use [configureToolchainJava25LTS] instead in most cases", ReplaceWith("configureToolchainJava25LTS()"))
-fun Project.configureToolchainJava21LTS(): Provider<JavaCompiler> {
-  return configureToolchainJava25LTS()
 }
 
 /**
@@ -424,28 +387,6 @@ fun JavaToolchainSpec.configureJavaToolchain(javaLanguageVersion: JavaLanguageVe
   this.vendor = vendor
   implementation?.let {
     this.implementation = it
-  }
-}
-
-/**
- * Returns the tools jar path for the compiler provider.
- *
- * ATTENTION: Does only work for Java 8
- */
-fun Provider<JavaCompiler>.toolsJarPath(): File {
-  return get().toolsJarPath()
-}
-
-/**
- * Returns the tools.jar for the installation path of this java compiler
- */
-fun JavaCompiler.toolsJarPath(): File {
-  val installationPath = this.metadata.installationPath.asFile
-
-  return File(installationPath, "/lib/tools.jar").also {
-    require(it.isFile) {
-      "No tools.jar found @ <${it.absolutePath}>"
-    }
   }
 }
 
@@ -592,6 +533,12 @@ fun Project.configureJunit() {
     //Set Coroutines Debugging - see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html
     systemProperty("kotlinx.coroutines.debug", "on")
     jvmArgs("-Dkotlinx.coroutines.debug=on")
+
+    //Testcontainers: Disable Ryuk resource reaper.
+    //With the Singleton Container pattern, containers are shared across test classes
+    //and cleaned up at JVM shutdown. Ryuk is not needed and can cause issues in CI.
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
+    environment("TESTCONTAINERS_RYUK_VERBOSE", "true")
   }
 }
 

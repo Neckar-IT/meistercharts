@@ -65,9 +65,9 @@ object Plugins {
   const val generateTypesList: String = "it.neckar.generation.types-list"
   const val dockerRefreshTags: String = "it.neckar.docker.refresh-tags"
   const val runDockerServices: String = "it.neckar.docker.services"
+  const val ngrokTunnel: String = "it.neckar.ngrok-tunnel"
 
   const val publishToGitlabPages: String = "it.neckar.publish.gitlab-pages"
-  const val sslCertGen: String = "com.fuseanalytics.gradle.sslcertgen"
   const val certificates: String = "it.neckar.ssl.certificates"
 
   /**
@@ -269,6 +269,9 @@ inline val PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
 inline val PluginDependenciesSpec.runDockerServices: PluginDependencySpec
   get() = id(Plugins.runDockerServices)
 
+inline val PluginDependenciesSpec.ngrokTunnel: PluginDependencySpec
+  get() = id(Plugins.ngrokTunnel)
+
 /**
  * Use task tree like this:
  *
@@ -332,9 +335,6 @@ inline val PluginDependenciesSpec.copyResourcesFromDependencies: PluginDependenc
 
 inline val PluginDependenciesSpec.resourcesConvention: PluginDependencySpec
   get() = id(Plugins.resourcesConvention)
-
-inline val PluginDependenciesSpec.sslCertGen: PluginDependencySpec
-  get() = id(Plugins.sslCertGen)
 
 inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
   get() = id(Plugins.secretsLoader)

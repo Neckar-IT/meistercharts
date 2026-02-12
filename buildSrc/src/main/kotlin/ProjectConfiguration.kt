@@ -149,12 +149,6 @@ object ProjectConfiguration {
         archiveClassifier = "javadoc"
       }
 
-      artifacts {
-        //archives(tasks.getByName("sourcesJar"))
-        add("archives", tasks.named("sourcesJar"))
-        //Results in a NPE
-        //archives(tasks.getByName("javadocJar"))
-      }
     }
 
     tasks.named<Jar>("jar") {
@@ -531,7 +525,7 @@ object ProjectConfiguration {
 
       tasks.register("createNvmConfiguration") {
         group = "Pnpm"
-        description = "Creates the .nvmrc file"
+        description = "Creates the .nvmrc file and tools/nvm/install.sh"
 
         doLast {
           file(".nvmrc").writeText("v" + versionFor("version.npm.node"))
@@ -540,14 +534,16 @@ object ProjectConfiguration {
             installShFile.writeText(
               //language=bash
               """
-              #!/usr/bin/env sh
+              #!/usr/bin/env bash
 
               set -e
 
               nvm install
               nvm use
+              nvm alias default ${'$'}(cat .nvmrc)
+              corepack enable
 
-              npm install -g pnpm@${versionFor("version.npm.pnpm")}
+              echo "✓ Node.js and pnpm toolchain updated"
             """.trimIndent()
             )
 
@@ -557,6 +553,75 @@ object ProjectConfiguration {
       }.also {
         pnpmInstallTask.configure {
           dependsOn(it)
+        }
+      }
+
+      tasks.register("updateNodeToolchain") {
+        group = "Pnpm"
+        description = "Updates Node.js/pnpm toolchain and generates shell scripts for all common shells"
+
+        dependsOn("createNvmConfiguration")
+        dependsOn("generatePackageJson")
+
+        doLast {
+          // Generate ZSH script (same content as Bash)
+          file("tools/nvm/install.zsh").let { installZshFile ->
+            installZshFile.writeText(
+              //language=zsh
+              """
+              #!/usr/bin/env zsh
+
+              set -e
+
+              nvm install
+              nvm use
+              nvm alias default ${'$'}(cat .nvmrc)
+              corepack enable
+
+              echo "✓ Node.js and pnpm toolchain updated"
+            """.trimIndent()
+            )
+
+            installZshFile.setExecutable(true)
+          }
+
+          // Generate Fish script (different syntax)
+          file("tools/nvm/install.fish").let { installFishFile ->
+            installFishFile.writeText(
+              //language=fish
+              """
+              #!/usr/bin/env fish
+
+              nvm install
+              nvm use
+              nvm alias default (cat .nvmrc)
+              corepack enable
+
+              echo "✓ Node.js and pnpm toolchain updated"
+            """.trimIndent()
+            )
+
+            installFishFile.setExecutable(true)
+          }
+
+          // Output instructions based on detected shell
+          val shell = System.getenv("SHELL") ?: ""
+          val scriptName = when {
+            shell.endsWith("fish") -> "install.fish"
+            shell.endsWith("zsh") -> "install.zsh"
+            else -> "install.sh"
+          }
+
+          logger.lifecycle("")
+          logger.lifecycle(ansiConsole.green("✓ Node.js/pnpm toolchain scripts generated"))
+          logger.lifecycle("")
+          logger.lifecycle("Node.js version: ${ansiConsole.blue("v" + versionFor("version.npm.node"))}")
+          logger.lifecycle("pnpm version:    ${ansiConsole.blue(versionFor("version.npm.pnpm"))}")
+          logger.lifecycle("")
+          logger.lifecycle("To update your shell environment, run:")
+          logger.lifecycle("")
+          logger.lifecycle("    ${ansiConsole.yellow("source tools/nvm/$scriptName")}")
+          logger.lifecycle("")
         }
       }
     }

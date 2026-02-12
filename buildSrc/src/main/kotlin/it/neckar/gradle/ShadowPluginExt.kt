@@ -47,6 +47,7 @@ fun Project.configureServiceShadowJar(
       exclude(Libs.logback_classic)
       exclude(Libs.clikt)
       exclude(Libs.ktor_serialization_kotlinx_json)
+      exclude(Libs.ktor_client_okhttp) // OkHttp engine is loaded via ServiceLoader
       minimizeExclusions()
     }
 

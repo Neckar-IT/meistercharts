@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Polygon(private val vertices: List<Coordinates>) : Shape {
   init {
-    require(vertices.size >= 3) { "A polygon must have at least 3 vertices" }
+    require(vertices.size >= 3) { "A polygon must have at least 3 vertices, but was ${vertices.size}: $vertices" }
   }
 
   override val location: Coordinates
@@ -26,7 +26,6 @@ data class Polygon(private val vertices: List<Coordinates>) : Shape {
       return Rectangle(Coordinates.of(minX, minY), Size(maxX - minX, maxY - minY))
     }
 
-  //TODO store field
   override val size: Size
     get() = boundingBox.size
 

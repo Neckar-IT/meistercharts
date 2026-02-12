@@ -1,11 +1,9 @@
 package it.neckar.open.kotlin.serializers
 
-import it.neckar.open.annotations.serialization.SerializedType
 import it.neckar.open.kotlin.lang.asKClass
 import it.neckar.open.kotlin.lang.findPropertyValueForced
 import it.neckar.open.kotlin.lang.getAllSealedSubclasses
 import it.neckar.open.kotlin.lang.isSealed
-import it.neckar.open.kotlin.reflect.classForName
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -52,24 +50,6 @@ fun <T : Any> KClass<T>.getDiscriminatorValues(): List<String> {
     .map { subclass ->
       subclass.findSerialName() ?: throw IllegalStateException("Subclass [${subclass.simpleName}] of sealed type [$simpleName] is missing @SerialName annotation")
     }
-}
-
-/**
- * Returns the KClass that is guessed from the serial descriptor
- */
-actual fun SerialDescriptor.guessClass(): KClass<*> {
-  val guessClassName = guessClassName()
-  return classForName(guessClassName)
-}
-
-/**
- * Guesses the class name from the annotations or serial name
- */
-actual fun SerialDescriptor.guessClassName(): String {
-  return annotations
-    .filterIsInstance<SerializedType>()
-    .firstOrNull()?.type?.qualifiedName
-    ?: serialName
 }
 
 /**

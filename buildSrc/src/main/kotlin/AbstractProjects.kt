@@ -14,7 +14,6 @@ abstract class AbstractProjects {
 
   val disabledProjectsSupport: DisabledProjectsSupport = DisabledProjectsSupport.load(
     disabledProjectsFile = GradleContext.rootProject.file("disabled-projects.json5"),
-    disabledOnMacOsFile = GradleContext.rootProject.file(".project-sets/${ProjectType.KotlinJvm.name}.json5"),
   )
 
   /**
@@ -127,17 +126,25 @@ abstract class AbstractProjects {
    * Returns all multi-platform projects for the current java version
    */
   fun multiPlatformProjectsLTS(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform }
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatform && it.enabled }
   }
 
   /**
    * Returns all JVM-only multi-platform projects
    */
   fun multiPlatformJvmOnlyProjectsLTS(): List<ConfiguredProject> {
-    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformJvmOnly }
+    return configuredProjects.filter { it.type == ProjectType.KotlinMultiplatformJvmOnly && it.enabled }
   }
 
   fun project(type: ProjectType): List<ConfiguredProject> {
+    return configuredProjects.filter { it.type == type && it.enabled }
+  }
+
+  /**
+   * Returns all projects of the given type, including disabled ones.
+   * Use [project] for only enabled projects.
+   */
+  fun projectIncludingDisabled(type: ProjectType): List<ConfiguredProject> {
     return configuredProjects.filter { it.type == type }
   }
 
@@ -176,81 +183,65 @@ abstract class AbstractProjects {
   /**
    * Configures the projects based on the provided project.
    * Call this method in your "root" build script to configure all projects.
+   *
+   * Note: All project list methods (e.g., jvmProjects(), multiPlatformProjectsLTS()) now
+   * return only enabled projects, so disabled projects are automatically skipped.
    */
   fun configureProjects(baseProject: Project) {
     /**
      * Configuration for the multi-platform projects
      */
     baseProject.configure(multiPlatformProjectsLTS()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring multi-platform LTS project: ${this.path}")
-        ProjectConfiguration.configureMultiPlatform(this.getProject(baseProject), JvmType.JavaLatestLTS)
-      }
+      baseProject.logger.debug("Configuring multi-platform LTS project: ${this.path}")
+      ProjectConfiguration.configureMultiPlatform(this.getProject(baseProject), JvmType.JavaLatestLTS)
     }
 
     baseProject.configure(multiPlatformJvmOnlyProjectsLTS()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring multi-platform JVM-only LTS project: ${this.path}")
-        ProjectConfiguration.configureMultiPlatformJvmOnly(this.getProject(baseProject), JvmType.JavaLatestLTS)
-      }
+      baseProject.logger.debug("Configuring multi-platform JVM-only LTS project: ${this.path}")
+      ProjectConfiguration.configureMultiPlatformJvmOnly(this.getProject(baseProject), JvmType.JavaLatestLTS)
     }
 
     baseProject.configure(kspProcessorProjects()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring KSP processor project: ${this.path}")
-        ProjectConfiguration.configureKspProcessor(this.getProject(baseProject))
-      }
+      baseProject.logger.debug("Configuring KSP processor project: ${this.path}")
+      ProjectConfiguration.configureKspProcessor(this.getProject(baseProject))
     }
 
     baseProject.configure(pnpmProjects()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring pnpm project: ${this.path}")
-        ProjectConfiguration.configurePnpm(this.getProject(baseProject))
-      }
+      baseProject.logger.debug("Configuring pnpm project: ${this.path}")
+      ProjectConfiguration.configurePnpm(this.getProject(baseProject))
     }
 
     baseProject.configure(pythonProjects()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring python project: ${this.path}")
-        ProjectConfiguration.configurePython(this.getProject(baseProject))
-      }
+      baseProject.logger.debug("Configuring python project: ${this.path}")
+      ProjectConfiguration.configurePython(this.getProject(baseProject))
     }
 
     /**
      * Configuration for the Java projects
      */
     baseProject.configure(jvmProjects()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring jvm project: ${this.path}")
-        ProjectConfiguration.configureJvm(this.getProject(baseProject))
-      }
+      baseProject.logger.debug("Configuring jvm project: ${this.path}")
+      ProjectConfiguration.configureJvm(this.getProject(baseProject))
     }
 
     /**
      * Configuration for all IntelliJ IDEA Plugin projects
      */
     baseProject.configure(ideaPluginProjects()) {
-      if (this.enabled) {
-        //  configureKotlin()
-        //  configureToolchainJava8WithFx()
-      }
+      //  configureKotlin()
     }
 
     baseProject.configure(intermediateProjects()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring intermediate project: ${this.path}")
-        //No configuration
-      }
+      baseProject.logger.debug("Configuring intermediate project: ${this.path}")
+      //No configuration
     }
 
     /**
      * ATTENTION: Call this *after* the other projects have been configured
      */
     baseProject.configure(parents()) {
-      if (this.enabled) {
-        baseProject.logger.debug("Configuring parent project: ${this.path}")
-        ProjectConfiguration.configureParentProject(this.getProject(baseProject))
-      }
+      baseProject.logger.debug("Configuring parent project: ${this.path}")
+      ProjectConfiguration.configureParentProject(this.getProject(baseProject))
     }
   }
 }
