@@ -8,12 +8,6 @@ import org.gradle.api.model.ObjectFactory
  */
 open class InstallPnpmDependencyPluginExtension(objects: ObjectFactory) {
   /**
-   * The dependency file (usually `npmDependencies.json`) for the Gradle dependency project.
-   * This property is only relevant if this is the Gradle dependency project.
-   */
-  val dependencyFile: RegularFileProperty = objects.fileProperty()
-
-  /**
    * The path to the package.template.json file.
    */
   val packageJsonTemplateFile: RegularFileProperty = objects.fileProperty()

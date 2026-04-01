@@ -20,7 +20,7 @@ kotlin {
 
     jvmMain {
       dependencies {
-        implementation(Libs.threeten_extra)
+        implementation(libs.threeten.extra)
       }
     }
 

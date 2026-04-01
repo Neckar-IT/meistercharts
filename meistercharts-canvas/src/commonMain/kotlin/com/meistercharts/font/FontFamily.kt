@@ -43,7 +43,7 @@ data class FontFamily(
   /**
    * Returns true if this font familiy represents (possibly!) the default serif font familiy of the browser.
    * Firefox does not hardcode a specific serif font; it uses a "serif" generic family.
-   * The default html canvas and body font are documented in Readme-DefaultFonts.adoc.
+   * The default html canvas and body font are documented in Readme-DefaultFonts.md.
    */
   fun isProbablyDefaultSerifFamily(): Boolean {
     return family == "serif" || //Firefox

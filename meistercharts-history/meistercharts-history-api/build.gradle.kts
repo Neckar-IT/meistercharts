@@ -21,7 +21,7 @@ kotlin {
 
     jvmMain {
       dependencies {
-        implementation(Libs.commons_compress)
+        implementation(libs.commons.compress)
       }
     }
 
@@ -37,7 +37,7 @@ kotlin {
     }
     jsTest {
       dependencies {
-        implementation(Libs.kotlin_test)
+        implementation(libs.kotlin.test)
       }
     }
   }

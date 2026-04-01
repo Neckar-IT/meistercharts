@@ -1,0 +1,1092 @@
+# MasterCharts Release Notes
+
+## 1.39.0-SNAPSHOT
+
+### Fixes / Improvements
+
+#### Features
+
+- Themes: Add support for themes per chart
+  - Configurable at runtime
+
+- I18n: Configurable per chart
+  - Configurable at runtime
+
+- Update the default font to "sans-serif".
+This offers a better default for all platforms.
+
+- Add support for generic font families.
+- Add support for using the font family from the CSS style
+- Add a dark corporate design
+- Adjust the default background-color used for multi-value axes
+- Adjust the default background-color used for offsets in the time-axis
+- Adjust the default background-color used for the text-boxes of the HUD-layer
+- Adjust the default background-color used for the content-area of all charts
+
+- Introduce React Wrapper:
+  - Add support for setting the theme for a chart
+  - Add support for setting the i18n configuration for a chart
+  - Performance improvements
+
+- Fonts:
+  - Support font families and generic fonts
+  - Support for using the font family from the CSS style
+  - Improve Performance of Font mapping service
+
+### Fixes / Improvements
+
+- [Regression] Typescript Definition File not created (#16)
+- Logging improvements
+- Simplify build configuration
+- Update to Kotlin 1.9.20
+- Update to Gradle 8.5
+- Updated numerous libraries
+- Fixed: Invalid offset when painting background image
+- Fixed: Support for FontAwesome
+
+### Easy API
+
+- Add support for setting the i18n-configuration of a chart
+- Add support for setting the default i18n-configuration
+- Add support for setting the theme for a chart
+- Add support for setting the default theme for all charts
+- Change default styling of the value-axes used in the time-line chart
+
+## 1.38.0
+
+Release date: 2023-10-16
+
+### Features
+
+#### Logarithmic Value Axis
+
+- Display only ticks corresponding to powers of ten
+- Enhanced support for logarithmic axes with very small value ranges: Start and end are still displayed.
+- New heuristic for very small tick counts (1 or 2 max ticks)
+
+#### Demo Pages
+
+- Improved URL for demo pages: Ability to filter visible demos by quality and stability
+
+### Generation of TypeScript definition files
+
+- Using KSP to generate TypeScript definition files
+
+### Fixes / Improvements
+
+#### Easy API: #dispose() remove holder
+
+Calling `dispose()` clears up everything related to the chart:
+The `holder` is now also removed from the DOM - even if it has not been added to the DOM by meistercharts itself.
+
+#### E2E-Tests
+
+- Virtual-Time Policy removed: Avoid strange errors related to date
+- Added a lot of additional E2E tests
+
+### Build
+
+- Update to Kotlin 1.9.10
+- Update to Gradle 8.4
+- Updated numerous libraries
+- Improved synchronization of source code to GitHub
+- Simplified configuration of Gradle build - using new syntax
+- Improved code style (Detekt)
+- Cleanup test dependencies: Removed unused dependencies (e.g. Assertj)
+
+## 1.37.0
+
+Release date: 2023-09-19
+
+### Features
+
+- improved build scripts and performance
+- Playwright End2End tests for most of the charts
+
+### Bugfixes
+
+- Fix edge case in timeline axis where rounding of hours was wrong.
+
+### Improvements
+
+- Serialization of HistoryBuckets simplified
+  - Start/End of Buckets calculated on the fly
+- Removed a lot of old code that has been replaced with new layers
+- Improved code style: Removed a lot of warnings
+
+#### Build
+
+- Update to Kotlin 1.9.0
+- Update to Gradle 8.3
+- Improved synchronization of source code to GitHub
+- Simplified configuration of Gradle build
+
+## 1.36.0
+
+Release date: 2023-09-13
+
+### Features
+
+#### Replaced DateTime-API (Klock) with minimal implementation
+
+- reduces the dependencies - Klock is no longer required
+- Increased supported time range: now time ranges with negative years are supported
+- improved handling of time zones: The ticks in the time axis are aligned correctly in all cases (hopefully)
+- improved performance: Fewer objects are instantiated when calculating the ticks for the time axis
+- Attention: New tradeoff: Only the current timezone of the browser is supported for the time axis.
+This should be ok for 98% of the users / use cases
+
+### Bugfixes
+
+- Guaranteed History Duration: Fix edge case where the history duration was too short.
+Related to the alignment of the history buckets.
+
+### Internal
+
+- Updated dependencies
+- additional checks introduced: Kotlin Compiler Plugin (KSP) to avoid accidental boxing of primitive values added.
+
+## MeisterCharts 1.35.0
+
+Release date: 2023-08-13
+
+### New Features
+
+- Improve log output for several layers
+
+#### E2E tests
+
+- Improve VirtualNowProvider: Introduce time progression step for virtual time.
+- Introduce CSS marker class "paused" that signals that the virtual time has paused.
+- Additional E2E tests for several charts and low level tests.
+
+### Internal
+
+- Updated most `Layer`s to use the new pattern (`Configuration` with secondary constructor)
+- Updated some `Gestalt`s to use the new pattern with `Configuration`
+- Updated dependencies
+
+## MeisterCharts 1.34.1
+
+Release date: 2023-08-04
+
+### New Features
+
+- StringShortener: Use truncateToLength from common code (performance improvement)
+- Extract KeyCode/KeyEvents to common code (improved test coverage)
+- Log messages greatly improved
+- End-to-End Tests: Added Playwright tests for several charts
+- Extract geometry module (improved test coverage)
+
+#### Virtual Time
+
+Meistercharts supports a virtual time in all charts.
+This allows for easier testing.
+
+### Bugfixes / Improvements
+
+- Fix Category Chart: Category Axis repaint missing (#3)
+- Update dependencies
+- Remove IE11 workarounds (IE11 is no longer supported)
+- Handling of default time zone improved (default time zone is now UTC - relevant for E2E tests)
+
+
+#### Examples
+
+- Updated the links within the examples.
+
+### Build / Tests
+
+- Improve JSON comparisons (using skyscreamer/jsonassert)
+
+## MeisterCharts 1.34.0
+
+Release date: 2023-07-18
+
+### New Features
+
+#### Timeline Chart
+
+##### Min/Max Area
+
+- add support for displaying min/max area
+
+##### Points Painter
+
+- add support for displaying points.
+- Calculate optimal distance between data points depending on the size of the points
+
+##### Tiles Precision improvements
+
+The precision of the calculations related to tiles has been greatly improved.
+Meistercharts support tiles with a resolution of microseconds in a time range of several hundred thousand years.
+
+##### Downsampling Modes
+
+There are now two downsampling modes available:
+
+- Automatic
+- None
+
+When using the automatic mode, Meistercharts will automatically select the best downsampling mode for the current zoom level.
+When using the none mode, no downsampling will be applied.
+The user is responsible for providing the data in the correct resolution.
+
+##### Custom Events for History Queries
+
+- Custom events are now published when querying data from the history storage.
+
+##### Timeline Chart Config Assistant
+
+The new assistant allows a much simplified configuration of a timeline chart.
+The assistant calculates the relevant properties and applies them to the chart automatically.
+
+##### Reset Zoom Improvements
+
+Reset zoom to defaults can be configured now: The affected axes can be configured now.
+
+#### Startup behavior
+
+- Meistercharts startup improvements: Meistercharts is now initialized *before* onLoad().
+- Font loading is now done in parallel.
+Repaint is triggered when all fonts are loaded.
+
+#### New Colors API
+
+A new colors API is available now.
+This API reproduces the behavior of the HTML5 Canvas API.
+All colors are now defined as RGBA values.
+The alpha value is optional and defaults to 1.0.
+
+Meisterchart supports all web colors and the following color formats:
+
+- RGB
+- RGBA
+- HSL
+- HSLA
+- HEX
+- HEXA
+- CSS color names (with alpha)
+
+- Add constants for Material Design colors
+
+#### CSS classes
+
+- All DIVs created by Meistercharts now have a CSS class.
+This allows for easier styling.
+- The Chart-ID is also added as CSS class.
+
+#### Logging
+
+Logging has been improved a lot.
+
+##### Logging "CLI"
+
+Meistercharts Log Levels can be configured using the Developer console:
+
+- `meistercharts.rootLevel = "DEBUG"`
+- `meistercharts.list()`
+
+#### Virtual "Now"
+
+Meistercharts now supports a virtual "now" for all charts.
+Therefore, we have full control about the time now.
+The is especially useful for end-to-end tests.
+
+#### E2E Tests: Playwright Tests
+
+- Meistercharts now supports end-to-end tests using Playwright.
+- The tests are executed in our CI pipeline
+
+
+##### Demos
+
+- A lot of new demos have been created to visualize/test the new features
+- Each Demo has a UUID.
+This UUID can be used to create links to a specific demo.
+
+### Performance Improvements
+
+- Introduce cache for alpha colors
+- Improved FPS calculations
+- [TimelineChart] Tiles size has been optimized.
+This improves the tile recreation performance by 65%.
+- Improved precision for frame timestamps
+
+### Minor Improvements
+
+- Sanitizing of API inputs has been improved: Additional checks have been added for min/max values
+- Improve package structure
+- [SlippyMap] Additional map providers implemented
+- React integration: Add functional component
+
+### Bugfixes
+
+- [Discrete Data Series] Fix visible data series for NaN and invisible data series
+- [Thresholds] Improve mouse interaction handling: Avoid "flickering" when two thresholds are placed at the same location.
+- [Timeline] Improve calculation of downsampling: Min/Max values are now calculated correctly using the lower levels, too
+- [Timeline] Improve calculation of default zoom level: Viewport top is now calculated correctly.
+- [Locale] Fix initial parsing of locale from browser
+
+### Deployment/Hosting
+
+Meistercharts is now fully available on GitHub: https://github.com/Neckar-IT/meistercharts
+
+### Documentation
+
+- Minimal examples for Vite, NPM, Yarn
+- JS Fiddles added
+- Add example for react application
+
+## MeisterCharts 1.33.0
+
+Release date: 2023-05-25
+
+### Added
+
+- added property `showMouseWheelModifierHint` to `TimeLineChartStyle` in order to show/hide the mouse-wheel-modifier-hint
+- added properties `decimalMinValues` and `decimalMaxValues` to `Sample` in order to define min/max-values for decimal-values at the native sampling period
+- added `TimeLineChartLineStyle` to configure the appearance of lines shown in `TimeLineChart`; this implies
+  - the support for dots where a sample-point is supposed to be
+  - the support for min/max-areas
+- added support for thresholds becoming active when hovered with the mouse; the corresponding new properties can be found in `Threshold`:
+  - `labelColorActive` - defines the color of the label when the threshold is active
+  - `lineStyleActive` - defines the line-style when the threshold is active
+  - `labelBoxStyleActive` - defines the box-style of the label when the threshold is active
+
+### Changed
+
+- removed `defaultEntryDuration` from `DiscreteTimelineChartData`
+- changed type of `lineStyles`-property found in `TimeLineChartStyle` from `Array<LineStyle>?` to `Array<TimeLineChartLineStyle>?` (see above)
+
+### Bugfixes
+
+- `DiscreteTimelineChart`: fixed freeze when `defaultEntryDuration` did not match the data at hand
+
+## MeisterCharts 1.32.0
+
+Release date: 2023-04-25
+
+### Added
+
+- added chart `DiscreteTimelineChart`
+- added function `setUpDemo` to `TimeLineChart`
+- added property `labelColor` to `StripeStyle`
+
+### Changed
+
+- `TimeLineChart` has a toolbar per default (can be hidden via `showToolbar`)
+
+## MeisterCharts 1.31.0
+
+Release date: 2023-03-09
+
+### Changed
+
+- renamed to MeisterCharts.
+- Resources-Loading improved
+- `TimeLineChartGestalt` - enums: performance improvements regarding the painter
+- improved Date/Time Formatter
+- first preview version: MeisterCharts Data Server
+- Using Kotlin 1.8
+
+### Bugfixes
+
+- `CrossWireLayer`: fixed distribution of labels along the cross-wire
+- fix IndexOutOfBoundsException for visible data series (enums and decimals)
+
+## MeisterCharts 1.30.0
+
+Release date: 2023-02-01
+
+### Added
+
+- `BarChartGrouped`: added a data-overflow indicator in the shape of a triangle
+- `BulletChart`: added a data-overflow indicator in the shape of a triangle
+- `BarChartStacked`: added support for value-axis
+- `BarChartStackedStyle`: added property `remainderSegmentBackgroundColor` to set the background-color of the remainder-segments
+- `LineChartSimple`: added property `tooltipWireStyle` to configure the appearance of the tooltip-wire
+- `TimeLineChart`: added property `crossWireStyle` to configure the appearance of the cross-wire
+- `TimeLineChart`: added property `enumsBackgroundColor` to configure the background of the part where the enum-values are shown
+- `BalloonTooltipStyle`: added properties `headlineFont` and `headlineMarginBottom`
+- `ValueAxisStyle`: added property `presentationType`
+- `JustifyTickContent`: added value `SpaceGreedilyPreferRoundIndices` to the enum
+
+### Changed
+
+- adjusted the content area for all charts that support value-axes with their title on top
+- `BarChartGrouped`: changed tooltips to being balloon-like
+- `BulletChartConfiguration`: changed properties to configure thresholds
+- `LineChartSimple`: changed properties to configure thresholds
+- improved handling of NaN-values for tooltips
+- `BalloonTooltipStyle`: changed property `symbolSize` of type `Size` to `symbolSizes` of type `Array<Size>`
+
+### Bugfixes
+
+- several minor bugfixes and improvements
+
+## MeisterCharts 1.29.0
+
+Release date: 2022-12-02
+
+### Bugfixes
+
+- fixed handling of NaN (not-a-number) in samples for enum values added to the `TimeLineChart`
+
+## MeisterCharts 1.28.0
+
+Release date: 2022-12-01
+
+### Changed
+
+- `Histogram`: reverted changes done to layout introduced with 1.27.0
+
+### Bugfixes
+
+- fixed z-order of grid-lines
+
+## MeisterCharts 1.27.0
+
+Release date: 2022-11-27
+
+### Added
+
+- new chart `BulletChart`
+- added `setConfiguration` to `MeisterChartsApi` which should be called instead of `setData` and `setStyle`
+
+### Changed
+
+- `BarChartGroupedStyle`: replaced properties `tooltipFont`, `tooltipFormat` and `tooltipBoxStyles` with property `tooltipStyle`
+- `LineChartSimpleStyle`: replaced properties `tooltipFont`, `tooltipFormat` and `tooltipBoxStyles` with property `tooltipStyle`
+- renamed `CategoriesData` to `CategoriesSeriesData` and `CategoryData` to `CategorySeriesData`
+- improved layout of bars shown in `Histogram`
+
+### Changed
+
+## MeisterCharts 1.26.0
+
+Release date: 2022-10-13
+
+### Changed
+
+- changed type of `labels` of `Threshold` from `Array<String>` to `String`
+
+### Added
+
+- added `arrowHeadLength`, `arrowHeadWidth`, `labelColor`, `labelFont`, `lineStyle` and `labelBoxStyle` to `Threshold`
+
+### Removed
+
+- removed `axisLabel` from `EnumDataSeriesStyle`
+
+## MeisterCharts 1.25.0
+
+Release date: 2022-08-01
+
+### Changed
+
+- renamed interface `DataSeries` to `DecimalDataSeries`
+- `Sample`: renamed property `values` to `decimalValues`
+- `TimeLineChart`: changed signature of `setDataSeries` to `setDataSeries(jsDecimalDataSeries: Array<DecimalDataSeries>,jsEnumDataSeries: Array<EnumDataSeries>)`
+- `TimeLineChartStyle`: changed property `dataSeriesConfigurations` to `decimalDataSeriesStyles` of type `Array<DecimalDataSeriesStyle>?`
+- renamed `DataSeriesConfiguration` to `DecimalDataSeriesStyle` and renamed its property `label` to `valueAxisTitle`
+
+## MeisterCharts 1.24.0
+
+Release date: 2022-07-25
+
+### Changed
+
+- `BarChartGroupedStyle`: changed type of property `tooltipBoxStyles` from `Array<BoxStyle>?` to `Array<Array<BoxStyle>>?`
+
+### Bufixes
+
+- fixed the background color of tooltips shown in grouped bar charts
+
+## MeisterCharts 1.23.0
+
+Release date: 2022-07-11
+
+### Added
+
+- `LineChartSimpleStyle`:
+  - added property `visibleLines` to show/hide the lines of the chart
+  - added property `tooltipBoxStyles` to set the styles for the tooltip for each line
+- added support for tooltips to the the grouped bar chart; this lead to the following additions to `BarChartGroupedStyle`:
+  - added property `showTooltip` to enable/disable tooltips
+  - added property `tooltipFont` to set the font to be used for the tooltips
+  - added property `tooltipFormat` to set the format to be used for values of the tooltips
+  - added property `tooltipBoxStyles` to set the styles for the tooltip for each bar
+  - added property `activeGroupBackgroundColor` to set the background-color to be used for the active group
+- `TimeLineChartStyle`:
+  - added property `crossWireLabelBoxStyles` to set how the boxes for the cross wire labels should be painted
+  - added property `crossWireLabelTextColor` to set the color for the cross wire value labels
+
+### Changed
+
+- `TimeLineChartStyle`
+  - set `visibleLines` to `[-1]` instead of `null` or `undefined` to imply that all lines should be visible
+  - set `visibleValueAxes` to `[-1]` instead of `null` or `undefined` to imply that all value-axes should be visible
+
+## MeisterCharts 1.22.2
+
+Release date: 2022-06-29
+
+### Bufixes
+
+- `TimeLineChart`:
+  - fixed layout-errors related to the size of the time-axis
+  - fixed the background-color of the value-axes
+
+## MeisterCharts 1.22.1
+
+Release date: 2022-06-27
+
+### Bufixes
+
+- `CategoryLineChart`: fixed changing the font of the labels of the cross-wire
+
+## MeisterCharts 1.22.0
+
+Release date: 2022-06-27
+
+### Changed
+
+- the precision of the samples stored into the history of the `TimeLineChart` has been tremendously increased.
+Previously, every sample was stored as an 32-bit integer value.
+This version stores every sample as a 64bit floating point value.
+- improved visibility of labels painted at the cross-wire
+- all lines of the `TimeLineChart` are visible by default
+- all value-axes (up to 10) of the `TimeLineChart` are visible by default
+- split property `thresholds` of `BarChartGroupedData` into property `thresholdValues` of `BarChartGroupedData` and property `thresholdLabels` of `BarChartGroupedStyle`
+- split property `thresholds` of `LineChartSimpleData` into property `thresholdValues` of `LineChartSimpleData` and property `thresholdLabels` of `LineChartSimpleStyle`
+- `DataSeries`: renamed property `dataStructureId` to `ìd`
+- `DecimalDataSeriesStyle`: changed type of property `ticksFormat` from `TicksFormat` to `NumberFormat`
+- `ValueAxisStyle`: changed type of property `ticksFormat` from `TicksFormat` to `NumberFormat`
+
+### Added
+
+- `CategoryLineChart`: added cross-wire
+- `LineChartSimpleStyle`: added properties `showTooltip`, `tooltipFont` and `tooltipFormat`
+- `DataSeries`: added property `name`
+- `TimeLineChartStyle`: added property `lineStyles`
+
+### Removed
+
+- `LineChartSimpleStyle`: removed properties `valueLabelFont`, `valueLabelColor` and `valueLabelStrokeColor`
+- `DataSeries`: removed property `fractionDigits`
+- `TimeLineChartStyle`: removed property `valueAxesMaxCount`
+- `DecimalDataSeriesStyle`: removed properties `pointType`, `pointSize`, `pointLineWidth`, `pointColor1`, `pointColor2`, `lineStyle`
+- removed type `Threshold`
+
+### Deprecated
+
+- `TicksFormat`: marked as deprecated
+
+## MeisterCharts 1.20.1
+
+Release date: 2022-05-17
+
+## MeisterCharts 1.20.0
+
+### Added
+
+- extracted added property `contentAreaMarginTop` to `BarChartGroupedStyle`
+
+### Changed
+
+- extracted `ValueLabelsStyle` in `BarChartStyle`
+
+- Default placement of labels in `BarChartGrouped` improved: Using all available space
+
+Release date: 2022-05-12
+
+### Added
+
+- added properties `valueLabelGapHorizontal` and `valueLabelGapVertical` to `BarChartGroupedStyle`
+
+### Removed
+
+- removed property `valueLabelGap` from `BarChartGroupedStyle`
+
+### Changed
+
+- The default position and direction of bar-value labels of horizontal grouped bar charts has changed
+
+## MeisterCharts 1.19.0
+
+Release date: 2022-04-21
+
+### Added
+
+- added property `valueLabelStrokeColor` to `BarChartGroupedStyle`
+- added property `valueLabelStrokeColor` to `LineChartSimpleStyle`
+
+## MeisterCharts 1.18.0
+
+Release date: 2022-04-21
+
+### Changed
+
+- bars are no longer clipped against the content area but only against the present axes
+- bar-value labels are painted with a white outline to ensure their readability
+- the direction of bar-value labels is automatically inverted if there is not enough space
+
+### Added
+
+- added properties to `BarChartGroupedStyle`
+  - showValueLabels - whether to show the value of a bar in a separate label
+  - valueLabelGap - the distance between a value label and its corresponding bar in pixels
+  - valueLabelFormat - the format to be used for the value-label of a bar
+
+## MeisterCharts 1.17.1
+
+Release date: 2022-02-24
+
+### Fixed
+
+- fixed first tick of a category-axis not being painted when its title is painted on top and categories are very narrow
+
+## MeisterCharts 1.17.0
+
+Release date: 2022-02-03
+
+### Changed
+
+- renamed interface DataSeriesConfiguration to DataSeries
+- renamed interface TimeLineChartLineStyle to DataSeriesConfiguration
+- added property ticksFormat to DataSeriesConfiguration (formerly TimeLineChartLineStyle)
+- renamed property lineStyles to dataSeriesConfigurations in TimeLineChartStyle
+- renamed property visibleTracesIndices to visibleLinesIndices in TimeLineChartStyle
+- renamed function setDataSeriesConfigurations to setDataSeries in TimeLineChart
+- tick-labels of value axis will be truncated by an ellipsis if there is not enough space (instead of being hidden)
+
+## MeisterCharts 1.16.0
+
+Release date: 2022-01-20
+
+### Changed
+
+- renamed interface NumberFormatter to NumberFormatter
+- renamed interface DataSeriesNumberFormatter to DataSeriesNumberFormat
+- renamed property crossWireFormatter of interface TimeLineChartStyle to crossWireFormat
+- removed property valueFormat from interface TimeLineChartLineStyle
+- replaced property tickFormatter of type NumberFormatter? of interface ValueAxisStyle with property ticksFormat of type TicksFormat?
+
+### Added
+
+- interface TicksFormat
+
+## MeisterCharts 1.15.1
+
+Release date: 2022-01-17
+
+### Changed
+
+- category-axes: labels and icons are painted even if the space may not suffice to paint them completely; it is up to the user to set the axis size accordingly
+
+## MeisterCharts 1.15.0
+
+Release date: 2022-01-16
+
+### Changed
+
+- titles of vertical value-axes are painted on top of the axis
+- titles of category-axes are painted on top of the axis
+
+### Fixed
+
+- fixed handling scroll-offsets while processing touch-events
+
+## MeisterCharts 1.14.0
+
+Release date: 2021-12-23
+
+### Changed
+
+- time-line charts use a common cache for their tiles; this ensures that the maximum number of canvas-elements will not be exceeded on iOS safari browsers
+
+## MeisterCharts 1.13.0
+
+Release date: 2021-11-29
+
+### Changed
+
+- renamed property LineChartSimpleStyle#tracesStyles to lineStyles
+- renamed interface LineChartSimpleTraceStyle to LineChartLineStyle
+- renamed property TimeLineChartStyle#lineChartTraceStyles to lineStyles
+- renamed property TimeLineChartStyle#visibleTraces to visibleLines
+- renamed interface TimeLineChartTraceStyle to TimeLineChartLineStyle
+- changed type of property TimeLineChartStyle#crossWireFormatter from NumberFormatter to DataSeriesNumberFormatter
+- renamed enum LineType to PointConnectionStyle
+
+### Added
+
+- interface DataSeriesNumberFormatter: provides the means to format numbers of a data-series
+
+## MeisterCharts 1.12.0
+
+Release date: 2021-11-15
+
+### Added
+
+- Every chart dispatches custom-events of type "ContentAreaSizeChanged" whenever the size of their content-area changes.
+This size is independent of the zoom currently set for that chart.
+
+### Changed
+
+- Renamed property barWidth of the BarChartGroupedStyle interface to barSize; also the value will be treated as the actual bar size and not as the maximum bar size.
+
+## MeisterCharts 1.11.2
+
+Release date: 2021-11-03
+
+### Fixed
+
+- Memory consumed by canvas-elements rendered by Safari browsers on iOS platforms
+- Dragging outside of the canvas-element
+- Detecting the touch count when number of touches changes during a gesture
+
+### Added
+
+- TimeLineChart: added support for resetting the zoom and translation with a double-tap gesture
+- TimeLineChart: added support for separate zooming along the x/y-axes
+- Preliminary recognition of single-touch gestures
+
+## MeisterCharts 1.11.1
+
+Release date: 2021-10-18
+
+### Fixed
+
+- Only cancelable touch-events are being prevented if consumed by MeisterCharts
+
+## MeisterCharts 1.11.0
+
+Release date: 2021-10-18
+
+### Added
+
+- TimeLineChart: added support for zooming with a 2-finger pinch-gesture
+
+## MeisterCharts 1.10.0
+
+Release date: 2021-10-10
+
+### Added
+
+- TimeLineChart: added support for panning with a 2-finger drag-gesture
+- Added functions to create MeisterCharts-charts without passing a holder-element
+
+### Fixed
+
+- Fixed that disposing MeisterCharts did not dispose the canvas-element
+
+## MeisterCharts 1.9.0
+
+Release date: 2021-09-30
+
+### Bug Fixes
+
+- TimeLineChart: fixed that panning via touchpad is disabled if device also provides a touchable screen
+
+## MeisterCharts 1.8.0
+
+Release date: 2021-08-29
+
+### Changes
+
+#### Features
+
+- the value-labels of a stacked bar chart have the same color as their corresponding bar segment; this can be changed by setting the property valueLabelColor to a color that will be used by all value-labels
+
+#### API
+
+- property labelColor of the BarChartStyle has been replaced with property valueLabelColor of BarChartStackedStyle and BarChartGroupedStyle
+- property valueLabelFont has been added to BarChartGroupedStyle
+- property labelColor of LineChartSimpleStyle has been renamed to valueLabelColor
+
+## MeisterCharts 1.7.0
+
+Release date: 2021-07-23
+
+### Bug Fixes
+
+- TimeLineChart: line styles will be applied to value-axes no matter what the number of available data-series is
+
+### Changes
+
+- TimeLineChart: history-configuration must be set via API and is no longer computed from the line-styles
+- TimeLineChart: setting line-styles will overwrite all previously set line-styles
+- all number-formats must be of type NumberFormatter; ValueFormatterStyle is no longer supported
+
+## MeisterCharts 1.6.2
+
+Release date: 2021-05-04
+
+### Bug Fixes
+
+- Rectangle: fixed the computation of centerX and centerY
+- fixed division by 0 in stacked bar chart
+- double-click and mouse-wheel events are only consumed if they result in a zoom-related action
+- mouse-down events are only consumed if the modifier matches the ones defined by the event handler
+- fixed translation done by the TranslationLayer
+- fixed processing events that occur when the dragging stops
+
+### New Features
+
+- Paintable with resize-handles
+- added SVG-icon for delete actions
+
+### Changes
+
+- introduction of the I18nConfiguration that contains all locales and the time zone needed to translate text and format data
+- removed the padding from the empty box-style
+- added git-commit date to version info
+
+## MeisterCharts 1.6.1
+
+Release date: 2021-04-14
+
+### Bug Fixes
+
+- fixed that clearing the history did not cancel data samples scheduled for storing
+- fixed book keeping used in history storage
+- fixed handling of hover events for toolbar buttons
+- fixed updating the button state while dragging with the mouse
+- fixed differentiation between logical and physical pixels when computing the translation of the canvas-rendering context; this also fixes the size and location of images under certain conditions
+
+### New Features
+
+- the color of labels of a category axis may be set separately
+- bars of a stacked bar chart may have a border
+- text of entries of a legend may have an optimal width regarding their text length
+- the visible area of any two charts may be synchronized
+- added a simple gestalt to support charts with a slippy map
+- time-line chart: the time axis became optional
+
+### Changes
+
+- the limits layer takes the horizontal and vertical axis orientation into account and switches up/down or left/right accordingly
+- time-line chart: custom line styles are applied last and hence override any precomputed line-style property
+- if an image could not be loaded a warning will be printed to the console
+
+## MeisterCharts 1.6.0
+
+Release date: 2021-03-22
+
+### New Features
+
+- line chart supports category grid-lines
+- line chart: grid lines of the value axis may be turned off
+- added `valueLabelFont`-Property to `BarChartStackedStyle` to be able to set the font for the value labels
+- added `valueLabelFont`-Property to `LineChartSimpleStyle` to be able to set the font for the value labels
+- added `crossWireFont`-Property to `TimeLineChartStyle` to be able to set the font for the labels of the cross wire of the time-line chart
+- added support for various point-connection types to line chart
+- number-formatter may be specified for the labels of the cross wire of the time-line chart
+- added property `justifyTickContent` to `CategoryAxisStyle` to be able to set how labels along the category axis are laid out
+
+### Changes
+
+- removed `font`-Property from `BarChartStyle`
+- removed `font`-Property from `TimeLineChartStyle`
+- `LineChartSimpleStyle`: split `gridStyle`-Property int separate properties to style grid lines for category axes and value axes
+- line-colors provided for grids are no longer necessarily associated with a domain-value
+- time-line chart has become more robust against extreme combinations of sampling-rates and acutally added samples
+
+## MeisterCharts 1.5.0
+
+Release date: 2021-03-08
+
+### New Features
+
+- added interface `CategoryAxisStyle` to support styling of category axes
+- added interface `TimeAxisStyle` to support styling of time axes
+- new algorithm to layout category labels of a category axis of a line chart
+- time axis with offset
+
+### Bug Fixes
+
+- fixed collecting samples before adding them to the time-line chart
+
+### Changes
+
+- Time-line chart
+  - moved properties `visibleTimeRange` and `crossWirePosition` from `TimeLineChartData` to `TimeLineChartStyle`
+  - added properties to style the value axes to `TimeLineChartStyle`
+  - removed the property `unit` from `TimeLineChartTraceStyle`
+- renamed `ValueRangeScale` enum value `logarithmic` to `log10`
+- add style-related properties to `AxisStyle`
+- switched to Intl date-time format (removed IE11 support)
+- category line chart uses new algorithm to layout category labels as default
+- improved handling of mouse related drag and drop events
+
+## MeisterCharts 1.4.0
+
+Release date: 2021-02-22
+
+### New Features
+
+- grouped and stacked bar charts may have a logarithmic value range
+- line charts may have a logarithmic value range
+
+### Bug Fixes
+
+- fixed handling of mouse-drag events
+
+### Changes
+
+- introduction of client-specific releases; in this turn the MeisterCharts npm package has got an individual scope
+- value-ranges are part of the style of a chart and hence have been moved from the model class to the corresponding style class
+- value-ranges have a new property, called "scale", that denotes whether the value range is of a linear or a logarithmic scale
+- removed unused charts from the API, namely the map with stacked bars, compass and circular chart
+- adjusted the default colors of toolbar buttons
+- corporate design has been extended with button colors
+- buttons use colors of the corporate design as a default
+- a toolbar layer does no longer need to be initialized separately
+
+## MeisterCharts 1.3.1
+
+Release date: 2021-01-26
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.3.1.tar.gz
+
+### New Features
+
+- new gestalt: `com/cedarsoft/charting/charts/TimeLineChartWithToolbarGestalt.kt`
+
+### Bug Fixes
+
+- handling the absence of values in a category-line chart
+- JavaScript API: changing the history configuration in a time-line chart will clear the history; the history configuration is computed from properties of the `TimeLineChartStyle` class
+
+### Other
+
+- tremendous performance improvements regarding the rendering of time-line charts
+- usage of inline classes
+
+## MeisterCharts 1.3.2
+
+Release date: 2021-02-23
+
+### Changes
+
+- time-line chart: reduced the minimal time that needs to be passed before a change to the history becomes visible
+
+## MeisterCharts 1.3.0-rc1
+
+Release date: 2020-11-12
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.3.0-rc1.tar.gz
+
+### New Features
+
+- improved performance of the time-line chart
+
+### Bug Fixes
+
+- fixed truncation of labels shown for ticks of a category-axis
+
+## MeisterCharts 1.2.2
+
+Release date: 2020-11-09
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.2.2.tar.gz
+
+### New Features
+
+- Stacked bar charts show grid line at 0
+
+## MeisterCharts 1.2.1
+
+Release date: 2020-11-05
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.2.1.tar.gz
+
+### Changes to API
+
+- Grouped bar charts support various grid line colors
+
+## MeisterCharts 1.2.0
+
+Release date: 2020-10-26
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.2.0.tar.gz
+
+### Changes to API
+
+- Line chart supports threshold lines
+- You may set the text, color and font of an axis title
+
+### New Features
+
+- Line chart supports threshold lines
+- Cashing of inline SVG images
+
+## MeisterCharts 1.1.0
+
+Release date: 2020-10-15
+https://neckar.it/MeisterCharts/npm/meisterCharts-1.1.0.tar.gz
+
+### Changes to API
+
+- major changes to API; flat hierarchy replaced by a real hierarchy of settings
+
+### New Features
+
+- Support of threshold lines in grouped bar chart
+- Support of threshold lines in bar chart
+
+### Bug Fixes
+
+- stacked bar chart: fixed overlap of value label with axis line
+
+## MeisterCharts 1.0.3
+
+Release date: 2020-10-07
+https://www.neckar.it/MeisterCharts/npm/meisterCharts-1.0.3.tar.gz
+
+### Changes to API
+
+- horizontal property for bar charts; as a consequence some properties needed to be renamed:
+  - interface `ValueAxisStyle`: `valueAxisWidth` -> `valueAxisSize`
+  - interface `CategoryAxisStyle`: `categoryAxisHeight` -> `categoryAxisSize`
+- changed default appearance of compass
+- added function to create a map with stacked bars
+
+### New Features
+
+- Performance improvements
+- horizontal grouped bar charts
+- horizontal stacked bar charts
+- support of negative values in stacked bar charts
+- new design of compass component
+- changed reference time stamp in timeline charts from now to a fixed point in time
+
+### Bug Fixes
+
+- minor bug fixes
+
+## MeisterCharts 1.0.2
+
+Release date: 2020-08-13
+https://www.neckar.it/MeisterCharts/npm/meisterCharts-1.0.2.tar.gz
+
+### Changes to API
+
+- Colors provided to circular chart are used in a modulo fashion
+- TimeLineChartData: new property minGapSizeFactor
+- TimeLineChart: new function clearHistory()
+- SamplingPeriod: new entries
+
+### New Features
+
+- Performance improvements
+- Support of corporate designs and themes
+- Adjustments of default colors and default fonts used in charts
+- TimeLineChart: size of content area is adjusted when natural sampling period changes
+- TimeLineChart: minimum gap factor is configurable
+- Added values to SamplingPeriod to support greater distances between samples
+- TimeLineChart: paint dots for lines that consist of only a single sample
+- Zoom and translation: double click handling is configurable
+- Logarithmic value axis
+
+### Bug Fixes
+
+- Fixed computation errors when canvas or content area has no size
+- Fixed alignment of history-buckets between different sampling periods

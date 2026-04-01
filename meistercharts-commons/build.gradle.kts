@@ -47,12 +47,20 @@ val createVersionConstantsTasks: Task = task("createVersionConstants") {
       """
       package it.neckar.open.version
 
-      object VersionConstants{
-        const val monorepoVersion: String = "$version"
-        const val buildDateDay: String = "$buildDateDay"
-        const val branch: String = "$branch"
-        const val gitDescribe: String = "$gitDescribe"
-        const val gitCommit: String = "$gitCommit"
+      object VersionConstants {
+        val monorepoVersion: String = "$version"
+        val buildDate: String = "$buildDateDay"
+        val buildDateDay: String = "$buildDateDay"
+        val branch: String = "$branch"
+        val gitDescribe: String = "$gitDescribe"
+        val gitCommit: String = "$gitCommit"
+      }
+
+      enum class GitProperty(val propertyKey: String) {
+        Hash("git.hash"),
+        HashShort("git.hash.short"),
+        Branch("branch"),
+        CommitDateTime("git.commit.date.time"),
       }
       """.trimIndent()
     )
@@ -71,25 +79,29 @@ kotlin {
       kotlin.srcDir(createVersionConstantsTasks)
 
       dependencies {
-        implementation(Libs.kotlinx_coroutines_core)
-        api(KotlinX.serialization.core)
-        api(KotlinX.serialization.json)
+        implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.kotlinx.datetime)
+        api(libs.kotlinx.serialization.core)
+        api(libs.kotlinx.serialization.json)
 
-        api(Libs.kotlin_reflect)
-        api(Libs.commons_io)
+        api(libs.kotlin.reflect)
+        api(libs.commons.io)
       }
     }
 
     jvmMain {
+      // Local compat sources replacing excluded logback files (LogbackExt without Loki dependency)
+      kotlin.srcDir("src-compat/jvmMain/kotlin")
+
       dependencies {
-        api(Libs.jsr305)
-        api(Libs.logback_classic)
-        implementation(Libs.commons_lang3)
-        api(Libs.bson_kotlinx)
-        api(Libs.javax_inject)
-        api(Libs.commons_codec)
-        api(Libs.jackson_databind)
-        api(Libs.jsonassert)
+        api(libs.jsr305)
+        api(libs.logback.classic)
+        implementation(libs.commons.lang3)
+        api(libs.bson.kotlinx)
+        api(libs.javax.inject)
+        api(libs.commons.codec)
+        api(libs.jackson.databind)
+        api(libs.jsonassert)
 
       }
     }
@@ -98,7 +110,7 @@ kotlin {
 
     jsMain {
       dependencies {
-        api(Libs.kotlin_js)
+        api(libs.kotlin.js)
       }
     }
 

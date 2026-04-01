@@ -1,11 +1,9 @@
-import de.fayard.refreshVersions.core.versionFor
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Provider
-import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
@@ -79,26 +77,6 @@ fun String.gradlePathToFilePath(): String {
   return this.replace(':', '/')
 }
 
-@Suppress("DEPRECATION")
-fun PublishingExtension.configureMavenReposForPublish(project: Project) {
-  repositories {
-    maven {
-      name = if (project.isProjectVersionSnapshot) "SonatypeOssSnapshots" else "SonatypeOssStaging"
-      url = if (project.isProjectVersionSnapshot) {
-        Repos.sonatype_snapshots
-      } else {
-        project.uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-      }
-
-      credentials {
-        //Environment variable: ORG_GRADLE_PROJECT_MAVEN_REPO_USER
-        username = project.findProperty("MAVEN_REPO_USER") as? String
-        //Environment variable: ORG_GRADLE_PROJECT_MAVEN_REPO_PASS
-        password = project.findProperty("MAVEN_REPO_PASS") as? String
-      }
-    }
-  }
-}
 
 inline val Project.isIntermediate: Boolean
   get() = this.subprojects.isNotEmpty()
@@ -480,12 +458,12 @@ fun Project.isMultiplatform(): Boolean {
 }
 
 /**
- * Configures the node and webpack CLI version to use the version provided by the refreshVersions plugin
+ * Configures the node and webpack CLI version from the npm version catalog.
  */
 fun Project.configureNodeJsRootExtension() {
   allprojects {
     project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin> {
-      project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().version = versionFor("version.npm.node")
+      project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().version = npmVersion("node")
     }
   }
 }
@@ -963,15 +941,6 @@ val Project.tagForDocker: String
 val Project.onMainBranch: Boolean
   get() {
     return rootProject.branch == "master" || rootProject.branch == "main"
-  }
-
-/**
- * Returns the sha1 of the current git commit
- */
-@Deprecated("use gitHash instead", ReplaceWith("gitHash"))
-val Project.gitCommit: String
-  get() {
-    return gitHash
   }
 
 /**

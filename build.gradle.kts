@@ -7,9 +7,7 @@ GradleContext.initialize(gradle)
 
 
 plugins {
-//  id("org.jetbrains.kotlin.plugin.serialization") version "_" apply false
   kotlinxSerialization apply false
-  dokka apply false
   detekt apply false
   generatePackageJson apply false
 }
@@ -186,21 +184,4 @@ configure(Projects.multiPlatformProjectsLTS()) {
     logger.debug("Configuring multi-platform LTS project: ${this.path}")
     ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.JavaLatestLTS)
   }
-}
-configure(Projects.multiPlatformProjectsJava8Fx()) {
-  if (this.enabled) {
-    logger.debug("Configuring multi-platform 8 FX project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.Java8Fx)
-  }
-}
-configure(Projects.multiPlatformProjectsJava8()) {
-  if (this.enabled) {
-    logger.debug("Configuring multi-platform 8 project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.Java8)
-  }
-}
-
-
-subprojects {
-  //TODO configure kotlin
 }

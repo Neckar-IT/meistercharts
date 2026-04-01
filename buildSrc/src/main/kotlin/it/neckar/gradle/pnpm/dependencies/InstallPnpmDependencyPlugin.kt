@@ -10,50 +10,31 @@ import org.gradle.kotlin.dsl.task
 
 
 /**
- * Installs a npm dependency to the package.template.json file.
- * Also updates all o
+ * Adds npm dependencies: version to `npm.versions.toml`, placeholder to `package.template.json`,
+ * then regenerates `package.json` and updates lock files.
+ *
+ * Usage: `gradle installPnpmDependency -Pdependency=clsx`
  */
 class InstallPnpmDependencyPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     val extension = target.extensions.create<InstallPnpmDependencyPluginExtension>("installPnpmDependency").apply {
-      dependencyFile.convention(target.layout.projectDirectory.file("npmDependencies.json"))
       packageJsonTemplateFile.convention(target.layout.projectDirectory.file("package.template.json"))
     }
 
-
-    /**
-     * This task is only relevant if this is the `npm-dependencies-project`
-     */
-    target.task<InstallPnpmDependencyToNpmDependenciesProject>(InstallPnpmDependencyToNpmDependenciesProjectTaskName) {
-      dependencyFile = extension.dependencyFile
-    }
-
-    /**
-     * This task is relevant for all projects but the `npm-dependencies-project`
-     */
     target.task<InstallPnpmDependencyTask>(InstallPnpmDependencyTaskName) {
       npmDependencyType = NpmDependencyType.Production
-      finalizedBy(":internal:closed:tools:npm-dependencies-project:$InstallPnpmDependencyToNpmDependenciesProjectTaskName")
-
-      //Ensure the dependency is added to *our* `package.template.json` file
       dependsOn(AddPnpmDependencyToTemplateTaskName)
     }
 
     target.task<InstallPnpmDependencyTask>(InstallPnpmDevDependencyTaskName) {
-      description = "Adds an npm dev-dependency to the project and updates the npm-dependencies-project; synopsis: `gradle installPnpmDevDependency -P$ArgumentNameDependency={NODE_DEP}`"
+      description = "Adds an npm dev-dependency; synopsis: `gradle installPnpmDevDependency -P$ArgumentNameDependency={NODE_DEP}`"
       npmDependencyType = NpmDependencyType.Dev
-      finalizedBy(":internal:closed:tools:npm-dependencies-project:$InstallPnpmDependencyToNpmDependenciesProjectTaskName")
-
-      //Ensure the dependency is added to *our* `package.template.json` file
       dependsOn(AddPnpmDevDependencyToTemplateTaskName)
     }
 
     target.task<InstallPnpmDependencyTask>(InstallPnpmPeerDependencyTaskName) {
-      description = "Adds an npm peer-dependency to the project and updates the npm-dependencies-project; synopsis: `gradle installPnpmPeerDependency -P$ArgumentNameDependency={NODE_DEP}`"
+      description = "Adds an npm peer-dependency; synopsis: `gradle installPnpmPeerDependency -P$ArgumentNameDependency={NODE_DEP}`"
       npmDependencyType = NpmDependencyType.Peer
-      finalizedBy(":internal:closed:tools:npm-dependencies-project:$InstallPnpmDependencyToNpmDependenciesProjectTaskName")
-
-      //Ensure the dependency is added to *our* `package.template.json` file
       dependsOn(AddPnpmPeerDependencyToTemplateTaskName)
     }
 
@@ -82,8 +63,6 @@ class InstallPnpmDependencyPlugin : Plugin<Project> {
     const val AddPnpmDependencyToTemplateTaskName: String = "addPnpmDependencyToTemplate"
     const val AddPnpmDevDependencyToTemplateTaskName: String = "addPnpmDevDependencyToTemplate"
     const val AddPnpmPeerDependencyToTemplateTaskName: String = "addPnpmPeerDependencyToTemplate"
-
-    const val InstallPnpmDependencyToNpmDependenciesProjectTaskName: String = "installPnpmDependencyToNpmDependenciesProject"
   }
 }
 

@@ -7,6 +7,8 @@ plugins {
 
 
 kotlin {
+  addKotlinTestDependencies(project)
+
   sourceSets {
     commonMain {
       dependencies {
@@ -15,30 +17,9 @@ kotlin {
       }
     }
 
-    commonTest {
-      dependencies {
-
-      }
-    }
-
-    jvmMain {
-      dependencies {
-      }
-    }
-
     jvmTest {
       dependencies {
-        implementation(Libs.measured)
-      }
-    }
-
-    jsMain {
-      dependencies {
-      }
-    }
-    jsTest {
-      dependencies {
-        implementation(Libs.kotlin_test)
+        implementation(libs.measured)
       }
     }
   }

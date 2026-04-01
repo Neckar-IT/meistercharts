@@ -11,7 +11,7 @@ repositories {
 }
 
 kotlin {
-  addKotlinTestDependencies(Scope.Main)
+  addKotlinTestDependencies(project, Scope.Main)
   sourceSets {
     commonMain {
       dependencies {
@@ -21,8 +21,12 @@ kotlin {
 
     jvmMain {
       dependencies {
-        implementation(Libs.commons_lang3)
-
+        implementation(libs.commons.lang3)
+        implementation(libs.logback.classic)
+        implementation(libs.jackson.module.kotlin)
+        implementation(libs.jackson.datatype.jdk8)
+        implementation(libs.jackson.datatype.jsr310)
+        implementation(libs.jackson.module.parameter.names)
       }
     }
 

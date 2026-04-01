@@ -3,6 +3,7 @@ package it.neckar.gradle
 import com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import formatAsMegaBytes
+import lib
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.named
@@ -43,11 +44,11 @@ fun Project.configureServiceShadowJar(
 
     // Default exclusions are always applied
     minimize {
-      exclude(Libs.kotlin_reflect)
-      exclude(Libs.logback_classic)
-      exclude(Libs.clikt)
-      exclude(Libs.ktor_serialization_kotlinx_json)
-      exclude(Libs.ktor_client_okhttp) // OkHttp engine is loaded via ServiceLoader
+      exclude(project.lib("kotlin-reflect"))
+      exclude(project.lib("logback-classic"))
+      exclude(project.lib("clikt"))
+      exclude(project.lib("ktor-serialization-kotlinx-json"))
+      exclude(project.lib("ktor-client-okhttp")) // OkHttp engine is loaded via ServiceLoader
       minimizeExclusions()
     }
 
@@ -62,36 +63,49 @@ fun Project.configureServiceShadowJar(
 }
 
 /**
- * Excludes a dependency from minimization using the Libs constant directly.
- *
- * Usage: `exclude(Libs.kotlin_reflect)` instead of `exclude(dependency(Libs.kotlin_reflect.removeSuffix(":_")))`
+ * Excludes a dependency from minimization using a catalog library provider.
+ * Extracts the group:artifact pattern for the dependency filter.
  */
-fun DependencyFilter.exclude(lib: String) {
-  exclude(dependency(lib.removeSuffix(":_")))
+fun DependencyFilter.exclude(lib: Any) {
+  when (lib) {
+    is org.gradle.api.provider.Provider<*> -> {
+      val dep = lib.get()
+      if (dep is org.gradle.api.artifacts.MinimalExternalModuleDependency) {
+        exclude(dependency("${dep.module}"))
+      }
+    }
+
+    is String -> {
+      val groupArtifact = lib.substringBeforeLast(":")
+      exclude(dependency(groupArtifact))
+    }
+
+    else -> error("Unsupported dependency type: ${lib::class}")
+  }
 }
 
 /**
  * Excludes Kotlin Reflect when minimizing the shadow jar.
  * Note: Already included in configureServiceShadowJar defaults.
  */
-fun DependencyFilter.excludeKotlinReflect() {
-  exclude(Libs.kotlin_reflect)
+fun DependencyFilter.excludeKotlinReflect(project: Project) {
+  exclude(project.lib("kotlin-reflect"))
 }
 
 /**
  * Excludes Logback when minimizing the shadow jar.
  * Note: Already included in configureServiceShadowJar defaults.
  */
-fun DependencyFilter.excludeLogback() {
-  exclude(Libs.logback_classic)
+fun DependencyFilter.excludeLogback(project: Project) {
+  exclude(project.lib("logback-classic"))
 }
 
 /**
  * Excludes Clikt when minimizing the shadow jar.
  * Note: Already included in configureServiceShadowJar defaults.
  */
-fun DependencyFilter.excludeClikt() {
-  exclude(Libs.clikt)
+fun DependencyFilter.excludeClikt(project: Project) {
+  exclude(project.lib("clikt"))
 }
 
 /**
@@ -99,6 +113,6 @@ fun DependencyFilter.excludeClikt() {
  * Required because the provider class is loaded via ServiceLoader and has no direct code references.
  * Note: Already included in configureServiceShadowJar defaults.
  */
-fun DependencyFilter.excludeKtorSerializationJson() {
-  exclude(Libs.ktor_serialization_kotlinx_json)
+fun DependencyFilter.excludeKtorSerializationJson(project: Project) {
+  exclude(project.lib("ktor-serialization-kotlinx-json"))
 }

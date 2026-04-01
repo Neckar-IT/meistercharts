@@ -6,7 +6,7 @@ plugins {
 }
 
 kotlin {
-  addKotlinTestDependencies()
+  addKotlinTestDependencies(project)
   sourceSets {
     commonMain {
       dependencies {
@@ -38,7 +38,7 @@ kotlin {
     }
     jsTest {
       dependencies {
-        implementation(KotlinX.html)
+        implementation(libs.kotlinx.html)
       }
     }
   }

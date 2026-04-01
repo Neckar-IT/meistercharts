@@ -12,7 +12,7 @@ object Plugins {
   const val shadowOld: String = "com.github.johnrengelman.shadow"
   const val shadow: String = "com.gradleup.shadow"
 
-  const val nexusStaging: String = "io.codearte.nexus-staging"
+  const val mavenPublish: String = "com.vanniktech.maven.publish"
 
   const val launch4j: String = "edu.sc.seis.launch4j"
   const val consoleReporter: String = "com.github.ksoichiro.console.reporter"
@@ -47,9 +47,6 @@ object Plugins {
 
   const val kotlinJvm: String = "org.jetbrains.kotlin.jvm"
 
-  @Deprecated("Do not use - runs into problems when")
-  const val jacoco: String = "org.gradle.jacoco"
-
   const val verifyMainClassExists: String = "it.neckar.verify.main-class-exists"
   const val verifyGitlabAccessToken: String = "it.neckar.verify.gitlab-access-token"
 
@@ -58,12 +55,28 @@ object Plugins {
   const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val installPnpmDependency: String = "it.neckar.repos.install-pnpm-dependency"
   const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"
+  const val buildProfileReport: String = "it.neckar.gradle.report.build-profile"
   const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
+  @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
+  @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
+  const val disableDistTasks: String = "it.neckar.performance.disable-dist-tasks"
+
+  /**
+   * Convention plugin bundling `application`, `disableDistTasks`, and `verifyMainClassExists`.
+   * For CLI tools, demos, and other executable applications without Docker deployment.
+   */
+  const val executableApplication: String = "it.neckar.executable-application"
+
+  /**
+   * Convention plugin for Ktor services deployed as Docker images.
+   * Extends `executableApplication` with `jibService` for Docker image building.
+   */
+  const val serviceApplication: String = "it.neckar.service-application"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
-  const val dockerRefreshTags: String = "it.neckar.docker.refresh-tags"
+  const val dockerGenerateObjects: String = "it.neckar.docker.generate-objects"
   const val runDockerServices: String = "it.neckar.docker.services"
   const val ngrokTunnel: String = "it.neckar.ngrok-tunnel"
 
@@ -91,11 +104,6 @@ object Plugins {
    * Creates a license report (used for SDD development)
    */
   const val licenseReport: String = "it.neckar.license-report"
-
-  @Deprecated("Use spotless instead", ReplaceWith("spotless"))
-  const val licenseFormatBase: String = "com.github.hierynomus.license-base"
-  @Deprecated("Use spotless instead", ReplaceWith("spotless"))
-  const val licenseFormat: String = "com.github.hierynomus.license"
 
   const val spotless: String = "com.diffplug.spotless"
 
@@ -132,9 +140,6 @@ object Plugins {
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
 
-  @Deprecated("Does not seem to work")
-  const val ssh: String = "online.colaba.ssh"
-
   /**
    * Only for JavaFX 17+
    */
@@ -146,6 +151,7 @@ object Plugins {
   const val specHarvest: String = "it.neckar.ksp.spec-harvest"
 
   const val tailwind: String = "it.neckar.tailwind"
+  const val keycloakClient: String = "it.neckar.keycloak-client"
   const val linksSiteGenerate: String = "it.neckar.links-site-generate"
 
   /**
@@ -190,24 +196,14 @@ inline val PluginDependenciesSpec.launch4j: PluginDependencySpec
 inline val PluginDependenciesSpec.download: PluginDependencySpec
   get() = id(Plugins.download)
 
-inline val PluginDependenciesSpec.nexusStaging: PluginDependencySpec
-  get() = id(Plugins.nexusStaging)
+inline val PluginDependenciesSpec.mavenPublish: PluginDependencySpec
+  get() = id(Plugins.mavenPublish)
 
 inline val PluginDependenciesSpec.versions: PluginDependencySpec
   get() = id(Plugins.versions)
 
 inline val PluginDependenciesSpec.licenseReport: PluginDependencySpec
   get() = id(Plugins.licenseReport)
-
-@Suppress("DEPRECATION")
-@Deprecated("Use spotless instead", ReplaceWith("spotless"))
-inline val PluginDependenciesSpec.licenseFormat: PluginDependencySpec
-  get() = id(Plugins.licenseFormat)
-
-@Suppress("DEPRECATION")
-@Deprecated("Use spotless instead", ReplaceWith("spotless"))
-inline val PluginDependenciesSpec.licenseFormatBase: PluginDependencySpec
-  get() = id(Plugins.licenseFormatBase)
 
 inline val PluginDependenciesSpec.spotless: PluginDependencySpec
   get() = id(Plugins.spotless)
@@ -245,6 +241,9 @@ inline val PluginDependenciesSpec.generateViteEnvFile: PluginDependencySpec
 inline val PluginDependenciesSpec.generateAuditReport: PluginDependencySpec
   get() = id(Plugins.generateAuditReport)
 
+inline val PluginDependenciesSpec.buildProfileReport: PluginDependencySpec
+  get() = id(Plugins.buildProfileReport)
+
 inline val PluginDependenciesSpec.installPnpmDependency: PluginDependencySpec
   get() = id(Plugins.installPnpmDependency)
 
@@ -263,8 +262,8 @@ inline val PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
 inline val PluginDependenciesSpec.publishToGitlabPages: PluginDependencySpec
   get() = id(Plugins.publishToGitlabPages)
 
-inline val PluginDependenciesSpec.dockerRefreshTags: PluginDependencySpec
-  get() = id(Plugins.dockerRefreshTags)
+inline val PluginDependenciesSpec.dockerGenerateObjects: PluginDependencySpec
+  get() = id(Plugins.dockerGenerateObjects)
 
 inline val PluginDependenciesSpec.runDockerServices: PluginDependencySpec
   get() = id(Plugins.runDockerServices)
@@ -360,11 +359,24 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig:
 inline val PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
   get() = id(Plugins.generatePnpmWorkspaceYaml)
 
+@Suppress("DEPRECATION")
+@Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
 inline val PluginDependenciesSpec.skipDistForApplication: PluginDependencySpec
   get() = id(Plugins.skipDistForApplication)
 
+@Suppress("DEPRECATION")
+@Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
 inline val PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
   get() = id(Plugins.skipShadowDistZipForShadowPlugin)
+
+inline val PluginDependenciesSpec.disableDistTasks: PluginDependencySpec
+  get() = id(Plugins.disableDistTasks)
+
+inline val PluginDependenciesSpec.executableApplication: PluginDependencySpec
+  get() = id(Plugins.executableApplication)
+
+inline val PluginDependenciesSpec.serviceApplication: PluginDependencySpec
+  get() = id(Plugins.serviceApplication)
 
 inline val PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
   get() = id(Plugins.generateIgnoreProjectSets)
@@ -381,13 +393,12 @@ inline val PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
 inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
   get() = id(Plugins.tailwind)
 
+inline val PluginDependenciesSpec.keycloakClient: PluginDependencySpec
+  get() = id(Plugins.keycloakClient)
+
 inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
   get() = id(Plugins.linksSiteGenerate)
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
   get() = id(Plugins.certificates)
 
-@Suppress("DEPRECATION")
-@Deprecated("Does not seem to work")
-inline val PluginDependenciesSpec.ssh: PluginDependencySpec
-  get() = id(Plugins.ssh)

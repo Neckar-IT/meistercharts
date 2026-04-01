@@ -1,59 +1,60 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "2.1.0-Beta2"
+val kotlinVersion: String = "2.3.0"
 
 plugins {
   `kotlin-dsl`
   `java-library`
   `java-gradle-plugin`
   idea
-  //kotlin("plugin.serialization")
 }
 
 repositories {
   mavenCentral()
+  gradlePluginPortal()
 }
 
 idea {
-  //Add target dir to exclude dirs
   module {
     isDownloadSources = true
   }
 }
 
-// Must be called within afterEvaluate to overwrite settings from the `kotlin-dsl` plugin
-// https://handstandsam.com/2022/04/13/using-the-kotlin-dsl-gradle-plugin-forces-kotlin-1-4-compatibility/
-// Currently the free compiler args are *not* supported: //https://github.com/gradle/gradle/issues/24221
 afterEvaluate {
   tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
-    kotlinOptions {
-      languageVersion = "2.1"
-      apiVersion = "2.1"
+    compilerOptions {
+      languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
+      apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
       javaParameters = true
-      jvmTarget = "21"
-      options.freeCompilerArgs.add("-progressive")
-      options.freeCompilerArgs.add("-opt-in=kotlin.ExperimentalStdlibApi")
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+      freeCompilerArgs.add("-progressive")
+      freeCompilerArgs.add("-opt-in=kotlin.ExperimentalStdlibApi")
+      freeCompilerArgs.add("-Xcontext-parameters")
     }
   }
 }
 
 
 dependencies {
-  implementation("com.google.guava:guava:_")
+  implementation(libs.guava)
 
-  implementation("org.apache.commons:commons-compress:_")
-  implementation("org.apache.commons:commons-lang3:_")
+  implementation(libs.commons.compress)
+  implementation(libs.commons.lang3)
 
-  implementation(KotlinX.serialization.json)
+  implementation(libs.kotlinx.serialization.json)
   implementation(kotlin("gradle-plugin", kotlinVersion))
+  implementation(kotlin("serialization", kotlinVersion))
 
-  implementation("com.fasterxml.jackson.core:jackson-core:_")
-  implementation("com.fasterxml.jackson.core:jackson-databind:_")
-  implementation("com.github.jengelman.gradle.plugins:shadow:_")
-  implementation("com.github.node-gradle:gradle-node-plugin:_")
-  implementation("io.gitlab.arturbosch.detekt:io.gitlab.arturbosch.detekt.gradle.plugin:_")
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation("com.gradleup.shadow:shadow-gradle-plugin:8.3.10")
+  implementation("com.github.node-gradle:gradle-node-plugin:7.1.0")
+  implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
+  implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.9.8")
+  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.6")
+  implementation("org.openjfx:javafx-plugin:0.1.0")
 
-  testImplementation(Testing.junit.jupiter.api)
+  testImplementation(libs.junit.jupiter.api)
 }
 
 gradlePlugin {
@@ -70,10 +71,6 @@ gradlePlugin {
     register("NpmBundlePlugin") {
       id = "it.neckar.npm-bundle"
       implementationClass = "it.neckar.gradle.npmbundle.NpmBundlePlugin"
-    }
-    register("KspVerifyBoxingPlugin") {
-      id = "it.neckar.ksp.boxing-plugin"
-      implementationClass = "it.neckar.gradle.kps.boxing.KpsBoxingPlugin"
     }
     register("TypescriptDefinitionGenerationPlugin") {
       id = "it.neckar.ksp.generating.ts-plugin"
@@ -101,4 +98,3 @@ tasks.withType<Test>()
       isFailOnNoMatchingTests = false
     }
   }
-

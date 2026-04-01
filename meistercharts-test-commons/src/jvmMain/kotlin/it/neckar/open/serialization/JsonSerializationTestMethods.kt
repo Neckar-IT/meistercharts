@@ -1,3 +1,30 @@
+/*
+ * Copyright (C) 2013-2026 Neckar IT GmbH, Mössingen, Germany
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Linking this library statically or dynamically with other modules is
+ * making a combined work based on this library. Thus, the terms and
+ * conditions of the GNU General Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of this library give you
+ * permission to link this library with independent modules, regardless of
+ * the license terms of these independent modules, and to copy and distribute
+ * the resulting combined work under terms of your choice, provided that every
+ * copy of the combined work is accompanied by a complete copy of the source
+ * code of this library.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package it.neckar.open.serialization
 
 import assertk.*
@@ -45,6 +72,7 @@ fun <T> testDeserialization(
   return testDeserialization(serializer, expected, inclusionStrategy, comparisonCheck) { json }
 }
 
+@IgnorableReturnValue
 inline fun <reified T> testSerialization(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
@@ -52,18 +80,19 @@ inline fun <reified T> testSerialization(
   inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
   //language=JSON
   json: () -> String,
-) {
+): String {
   val encoder = Json {
     this.serializersModule = serializersModule
     this.defaultJsonConfiguration(true, inclusionStrategy)
   }
 
-  testSerialization(objectToSerialize = objectToSerialize, encoder = encoder, serializer = serializer, json())
+  return testSerialization(objectToSerialize = objectToSerialize, encoder = encoder, serializer = serializer, json())
 }
 
 /**
  * Tests serialization round trip
  */
+@IgnorableReturnValue
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T>,
@@ -73,13 +102,14 @@ inline fun <reified T> roundTrip(
     assertThat(deserialized).isEqualTo(originalObject)
   },
   expectedJson: String?,
-) {
-  roundTrip(objectToSerialize, serializer, serializersModule, inclusionStrategy, comparisonCheck) { expectedJson }
+): T {
+  return roundTrip(objectToSerialize, serializer, serializersModule, inclusionStrategy, comparisonCheck) { expectedJson }
 }
 
 /**
  * Tests the round trip. If the [expectedJsonProvider] provides null, the resulting JSON will not be checked
  */
+@IgnorableReturnValue
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
@@ -99,6 +129,7 @@ inline fun <reified T> roundTrip(
   return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck, expectedJsonProvider)
 }
 
+@IgnorableReturnValue
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
@@ -114,6 +145,7 @@ inline fun <reified T> roundTrip(
 /**
  * Returns the deserialized object
  */
+@IgnorableReturnValue
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
   serializer: KSerializer<T> = serializer(),
@@ -129,6 +161,7 @@ inline fun <reified T> roundTrip(
   return _roundTrip(encoder, serializer, objectToSerialize, comparisonCheck, expectedJsonProvider())
 }
 
+@IgnorableReturnValue
 @Suppress("FunctionName")
 fun <T> _roundTrip(
   encoder: Json,

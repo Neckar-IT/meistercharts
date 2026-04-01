@@ -15,7 +15,6 @@ abstract class AddPnpmDependencyToTemplateTask : BasePnpmDependencyTask() {
     description = "Adds an npm dependency to the package.template.json file; synopsis: `gradle addPnpmDependencyToTemplate -P$ArgumentNameDependency={NODE_DEP}`"
 
     outputs.upToDateWhen { false }
-    //dependsOn(InstallPnpmDependencyToNpmDependenciesProjectTaskName)
   }
 
   /**

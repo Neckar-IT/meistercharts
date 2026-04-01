@@ -1,39 +1,26 @@
+import it.neckar.gradle.console
 import it.neckar.gradle.npmbundle.CopyBundleContentTask
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 description = """Meistercharts - Easy API"""
 
 plugins {
-  kotlinMultiPlatform
-  kotlinxSerialization
   npmBundle
   generatePackageJson
-
-  if (false) {
-    generateTsDeclaration
-  }
 }
 
 kotlin {
+  jvm {
+  }
   js {
     executableJsApplication(
       varName = "meisterchartsEasyApi",
       jsTargetType = JsTargetType.ES2015,
       webpackModuleType = WebpackModuleType.ModernModule,
       webpackModuleTypeForDev = WebpackModuleType.Var,
-      //jsTargetType = JsTargetType.ES2015,
-      //webpackModuleType = WebpackModuleType.ModernModule,
-      //webpackModuleTypeForDev = WebpackModuleType.ModernModule,
     ) {
-      //Workaround to avoid
-      // java.lang.IllegalStateException: Cannot read properties of undefined (reading 'BarChartGrouped2')
-      // in jsBrowserDevelopmentWebpack
-
-      mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+      mode = KotlinWebpackConfig.Mode.PRODUCTION
     }
-
-  }
-  jvm {
   }
 
   sourceSets {
@@ -50,77 +37,133 @@ kotlin {
       }
     }
 
+    jsMain {
+      dependencies {
+      }
+    }
+
+    jsTest {
+      dependencies {
+        implementation(libs.kotlin.test)
+      }
+    }
+
     jvmMain {
       dependencies {
       }
     }
 
-
     jvmTest {
       dependencies {
       }
     }
-
-    jsMain {
-      dependencies {
-      }
-    }
-    jsTest {
-      dependencies {
-        implementation(Libs.kotlin_test)
-      }
-    }
   }
 }
-
-/**
- * Generate type script definitions for the Kotlin public API
- */
-//generateTypeScriptDefinitions {
-//namespace = "Meistercharts"
-//  typeScriptDefinitionFile.set(file("build/meistercharts-easy-api.d.ts"))
-//targetTypescriptDefinitionFileName = "meistercharts-easy-api.d.ts"
-//
-//  exportConfigFile.set(file("ts-generation.paths"))
-//}
 
 npmBundle {
-  moduleName.set("@meistercharts/meistercharts")
-
-  archiveFileName.set("@meistercharts-easy-api")
-  dirNameInArchive.set("package")
+  moduleName = "@meistercharts/meistercharts"
+  archiveFileName = "@meistercharts-easy-api"
+  dirNameInArchive = "package"
+  this.version = meisterchartsVersion
 }
-
-tasks.getByName<CopyBundleContentTask>("npmCopyBundleContent") {
-  dependsOn("jsBrowserWebpack", "jsBrowserDistribution")
-  tasks.findByName("createTypeScriptDefinitions")?.let {
-    dependsOn(it)
-  }
-
-  from("build/distributions")
-  include("meistercharts-easy-api.js", "meistercharts-easy-api.js.map")
-
-  from("build")
-  include("meistercharts-easy-api.d.ts")
-}
-
 
 npmBundleDevelopment {
-  moduleName.set("@meistercharts-dev/meistercharts")
-  archiveFileName.set("@meistercharts-easy-api-dev")
-  dirNameInArchive.set("package")
+  moduleName = "@meistercharts-dev/meistercharts"
+  archiveFileName = "@meistercharts-easy-api-dev"
+  dirNameInArchive = "package"
+  this.version = meisterchartsVersion
 }
 
 
-tasks.getByName<CopyBundleContentTask>("npmCopyBundleContentDevelopment") {
-  dependsOn("jsBrowserDevelopmentWebpack")
-  tasks.findByName("createTypeScriptDefinitions")?.let {
-    dependsOn(it)
+tasks.register("publishNpmBundle") {
+  group = "Publishing"
+  description = "Publish the NPM bundle to npmjs.org"
+
+  dependsOn("npmBundle")
+
+  doLast {
+    val npmTag = if (isMeisterchartsSnapshot) {
+      "snapshot"
+    } else {
+      "latest"
+    }
+
+    providers.exec {
+      workingDir = projectDir
+      commandLine("npm", "publish", "--access", "public", "--tag", npmTag)
+      workingDir = file("build/npm/work")
+    }.result.get().rethrowFailure()
   }
+}
 
-  from("build/developmentExecutable")
-  include("meistercharts-easy-api.js")
+tasks.register("npmInfo") {
+  group = "Publishing"
+  description = "Get the information about the published version numbers"
 
-  from("build")
-  include("meistercharts-easy-api.d.ts")
+  doLast {
+    val standardOutput = providers.exec {
+      workingDir = projectDir
+      commandLine("yarn", "-s", "info", "@meistercharts/meistercharts", "versions")
+    }.standardOutputAsStringOnSuccess()
+
+    println(console.green(standardOutput))
+  }
+}
+
+tasks.register("publishNpmBundleDevelopment") {
+  group = "Publishing"
+  description = "Publish the NPM dev bundle to npmjs.org"
+
+  dependsOn("npmBundleDevelopment")
+
+  doLast {
+    val npmTag = if (isMeisterchartsSnapshot) {
+      "snapshot"
+    } else {
+      "latest"
+    }
+
+    providers.exec {
+      workingDir = projectDir
+      commandLine("npm", "publish", "--access", "public", "--tag", npmTag)
+      workingDir = file("build/npmDevelopment/work")
+    }.result.get().rethrowFailure()
+  }
+}
+
+tasks.register("fileSizeMetrics") {
+  group = "Reporting"
+  description = "Creates the file size metrics for Meistercharts"
+
+  dependsOn("build")
+
+  val originalPath = "build/dist/js/productionExecutable/meistercharts-easy-api.js"
+  val reportOutPath = "build/reports/meistercharts.metrics.md"
+
+  inputs.file(originalPath)
+  outputs.file(reportOutPath)
+
+  doLast {
+    println("Reporting file size:")
+
+    val lengthOriginal = file(originalPath).length()
+    println("meistercharts-easy-api.js: ${lengthOriginal / 1024} KB")
+
+    val out = file(reportOutPath)
+
+    out.writeText(
+      """
+      # Meistercharts-easy-api.JS file size
+
+      meistercharts-easy-api.js ${lengthOriginal / 1024} KB\
+    """.trimIndent()
+    )
+  }
+}
+
+tasks.register("metrics") {
+  group = "Reporting"
+  description = "Creates the metrics for Meistercharts"
+
+  dependsOn("fileSizeMetrics")
 }

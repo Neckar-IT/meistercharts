@@ -1,34 +1,30 @@
-/**
- * Copyright (C) cedarsoft GmbH.
+/*
+ * Copyright (C) 2013-2026 Neckar IT GmbH, Mössingen, Germany
  *
- * Licensed under the GNU General Public License version 3 (the "License")
- * with Classpath Exception; you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * http://www.cedarsoft.org/gpl3ce
- * (GPL 3 with Classpath Exception)
+ * Linking this library statically or dynamically with other modules is
+ * making a combined work based on this library. Thus, the terms and
+ * conditions of the GNU General Public License cover the whole combination.
  *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 3 only, as
- * published by the Free Software Foundation. cedarsoft GmbH designates this
- * particular file as subject to the "Classpath" exception as provided
- * by cedarsoft GmbH in the LICENSE file that accompanied this code.
+ * As a special exception, the copyright holders of this library give you
+ * permission to link this library with independent modules, regardless of
+ * the license terms of these independent modules, and to copy and distribute
+ * the resulting combined work under terms of your choice, provided that every
+ * copy of the combined work is accompanied by a complete copy of the source
+ * code of this library.
  *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 3 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License version
- * 3 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact cedarsoft GmbH, 72810 Gomaringen, Germany,
- * or visit www.cedarsoft.com if you need additional information or
- * have any questions.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package it.neckar.open.crypt
 
 /**

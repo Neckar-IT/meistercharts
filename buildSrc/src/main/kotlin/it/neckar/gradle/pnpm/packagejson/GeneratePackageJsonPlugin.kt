@@ -1,7 +1,8 @@
 package it.neckar.gradle.pnpm.packagejson
 
 import Plugins
-import de.fayard.refreshVersions.core.versionFor
+import normalizeNpmNameToAlias
+import npmVersion
 import isSymLinkTo
 import it.neckar.gradle.ansiConsole
 import org.gradle.api.DefaultTask
@@ -36,8 +37,8 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
     target.plugins.apply(Plugins.base) //Ensure that the base plugin is applied
 
     val extension = target.extensions.create<GeneratePackageJsonPluginExtension>("generatePackageJson").apply {
-      versionsProperties.convention {
-        target.rootProject.file("versions.properties")
+      npmVersionsToml.convention {
+        target.rootProject.file("gradle/npm.versions.toml")
       }
 
       templateFile.convention {
@@ -52,7 +53,7 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
     }
 
     val generatePackageJsonTask = target.task<GeneratePackageJsonTask>(GeneratePackageJsonTaskName) {
-      versionsProperties = extension.versionsProperties
+      npmVersionsToml = extension.npmVersionsToml
       templateFile = extension.templateFile
       targetFile = extension.targetFile
       packageJsonSymLinkFile = extension.packageJsonSymLinkFile
@@ -60,12 +61,7 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
       version = extension.version
     }
 
-    //Delete file on clean
-    target.tasks.named<Delete>("clean") {
-      delete(generatePackageJsonTask.targetFile)
-    }
-
-    //Update the clean task to delete the generated package.json file
+    //Delete generated file on clean
     target.tasks.named<Delete>("clean") {
       delete(generatePackageJsonTask.targetFile)
     }
@@ -80,9 +76,10 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
 
 open class GeneratePackageJsonPluginExtension(objects: ObjectFactory) {
   /**
-   * The `versions.properties` file that is used to resolve version numbers
+   * The `gradle/npm.versions.toml` file that is used to resolve version numbers.
+   * Referenced as an input to trigger regeneration when versions change.
    */
-  val versionsProperties: RegularFileProperty = objects.fileProperty()
+  val npmVersionsToml: RegularFileProperty = objects.fileProperty()
 
   /**
    * The package.template.json file that is read and converted to a package.json file
@@ -141,11 +138,11 @@ abstract class GeneratePackageJsonTask : DefaultTask() {
   abstract val version: Property<String>
 
   /**
-   * Reference to the `versions.properties` file.
-   * If the `version.properties` file is updated, the package.json file will be regenerated
+   * Reference to the `gradle/npm.versions.toml` file.
+   * If the file is updated, the package.json file will be regenerated.
    */
   @get:InputFile
-  abstract val versionsProperties: RegularFileProperty
+  abstract val npmVersionsToml: RegularFileProperty
 
   @TaskAction
   fun generate() {
@@ -174,15 +171,17 @@ abstract class GeneratePackageJsonTask : DefaultTask() {
       .replace("\$VERSION", version.get())
       .replace("\$MODULE", moduleName.get())
 
-    //find all version variables in the style ${version.*} and replace them with the resolved version number
+    //find all version variables in the style ${version.npm.*} and replace them with the resolved version number
     val versionVariableNames = "\\$\\{([^}]+)}".toRegex().findAll(content)
       .map { it.groupValues[1] } //get the first group
       .filter {
-        it.startsWith("version.")
+        it.startsWith("version.npm.")
       }
 
     val replacedVersionNumbers = versionVariableNames.fold(replaced) { acc, variableName ->
-      val versionValue = project.versionFor(variableName)
+      val npmPackageName = variableName.removePrefix("version.npm.")
+      val alias = normalizeNpmNameToAlias(npmPackageName)
+      val versionValue = project.npmVersion(alias)
       acc.replace("\${$variableName}", versionValue)
     }
 
