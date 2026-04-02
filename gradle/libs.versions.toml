@@ -52,7 +52,7 @@ org-slf4j = "2.0.17"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.4"
+net-bytebuddy = "1.18.7"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
@@ -64,7 +64,7 @@ org-mongodb = "5.6.4"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.46"
+aws-sdk-kotlin = "1.6.47"
 
 apache-poi = "5.5.1"
 
@@ -72,7 +72,7 @@ com-atlassian-commonmark = "0.17.0"
 
 org-bouncycastle = "1.83"
 
-ktor = "3.3.0"
+ktor = "3.4.2"
 
 com-github-docker-java = "3.7.0"
 
@@ -86,7 +86,7 @@ kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.0"
 
-kotest-property = "6.1.9"
+kotest-property = "6.1.10"
 
 assertj = "3.27.7"
 
@@ -104,7 +104,7 @@ kotlinx-datetime = "0.7.1-0.6.x-compat"
 
 kotlinx-html = "0.11.0"
 
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0"
 
 mockk = "1.14.7"
 
@@ -204,15 +204,15 @@ commons-lang3 = "org.apache.commons:commons-lang3:3.20.0"
 
 clikt-core = "com.github.ajalt.clikt:clikt-core:5.1.0"
 
-opentelemetry-api = "io.opentelemetry:opentelemetry-api:1.47.0"
+opentelemetry-api = "io.opentelemetry:opentelemetry-api:1.60.1"
 
-opentelemetry-sdk = "io.opentelemetry:opentelemetry-sdk:1.47.0"
+opentelemetry-sdk = "io.opentelemetry:opentelemetry-sdk:1.60.1"
 
-opentelemetry-sdk-extension-autoconfigure = "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.47.0"
+opentelemetry-sdk-extension-autoconfigure = "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.60.1"
 
-opentelemetry-exporter-otlp = "io.opentelemetry:opentelemetry-exporter-otlp:1.47.0"
+opentelemetry-exporter-otlp = "io.opentelemetry:opentelemetry-exporter-otlp:1.60.1"
 
-opentelemetry-extension-kotlin = "io.opentelemetry:opentelemetry-extension-kotlin:1.47.0"
+opentelemetry-extension-kotlin = "io.opentelemetry:opentelemetry-extension-kotlin:1.60.1"
 
 opentelemetry-ktor-v3 = "io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:2.25.0-alpha"
 
@@ -222,7 +222,7 @@ symbol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-proc
 
 opentelemetry-javaagent = "io.opentelemetry.javaagent:opentelemetry-javaagent:2.26.1"
 
-opentelemetry-sdk-testing = "io.opentelemetry:opentelemetry-sdk-testing:1.47.0"
+opentelemetry-sdk-testing = "io.opentelemetry:opentelemetry-sdk-testing:1.60.1"
 
 jsoup = "org.jsoup:jsoup:1.22.1"
 
@@ -420,9 +420,9 @@ kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", v
 
 kotlin-csv-js = { group = "com.github.doyaaaaaken", name = "kotlin-csv-js", version.ref = "kotlin-csv" }
 
-org-commonmark-commonmark = "org.commonmark:commonmark:0.27.1"
+org-commonmark-commonmark = "org.commonmark:commonmark:0.28.0"
 
-org-commonmark-commonmark-ext-gfm-tables = "org.commonmark:commonmark-ext-gfm-tables:0.27.1"
+org-commonmark-commonmark-ext-gfm-tables = "org.commonmark:commonmark-ext-gfm-tables:0.28.0"
 
 batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.ref = "org-apache-xmlgraphics" }
 

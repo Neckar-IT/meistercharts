@@ -923,16 +923,34 @@ val Project.branch: String
   }
 
 /**
- * Returns the guessed tag that can/should be used for docker - based on the current branch name
+ * Returns the branch-based Docker tag (mutable alias like `main` or `feature_xyz`).
+ * Used in docker-compose templates and by Watchtower for auto-updates.
  */
-val Project.tagForDocker: String
+val Project.branchTagForDocker: String
   get() {
-    val tagForDocker: String = branch.encodeForDockerTag()
-    require(tagForDocker.isNotBlank()) {
-      "Tag for docker must not be blank"
+    val branchTag: String = branch.encodeForDockerTag()
+    require(branchTag.isNotBlank()) {
+      "Branch tag for docker must not be blank"
     }
 
-    return tagForDocker
+    return branchTag
+  }
+
+/**
+ * Returns the immutable Docker tag in the format `YYYYMMDD-shortsha` (e.g. `20260326-a1b2c3d`).
+ *
+ * Uses `gitHashShort` which is produced by `git rev-parse --short HEAD`, letting Git
+ * determine the minimum collision-free abbreviation length (typically 7-12 characters).
+ * The date component uses the build date (not the commit date) so the tag reflects when
+ * the image was built.
+ */
+val Project.immutableDockerTag: String
+  get() {
+    val date = buildDate.replace("-", "")
+    require(gitHashShort.length >= 7) {
+      "Git short hash too short: '$gitHashShort' (expected at least 7 characters)"
+    }
+    return "$date-$gitHashShort"
   }
 
 /**
