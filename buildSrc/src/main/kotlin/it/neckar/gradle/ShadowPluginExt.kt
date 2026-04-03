@@ -1,10 +1,11 @@
 package it.neckar.gradle
 
-import com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter
+import com.github.jengelman.gradle.plugins.shadow.tasks.DependencyFilter
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import formatAsMegaBytes
 import lib
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.named
 
@@ -37,6 +38,9 @@ fun Project.configureServiceShadowJar(
     archiveAppendix.set("")
     archiveVersion.set("")
     archiveClassifier.set("")
+
+    // Shadow 9.x requires INCLUDE for mergeServiceFiles() to work (EXCLUDE skips duplicates before merging)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     manifest {
       attributes["Main-Class"] = mainClass
