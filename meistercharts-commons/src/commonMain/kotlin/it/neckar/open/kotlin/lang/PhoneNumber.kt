@@ -37,46 +37,52 @@ import kotlinx.serialization.encoding.Encoder
 import kotlin.jvm.JvmInline
 
 /**
- * A validated and normalized email address (ADL 0145).
+ * A normalized phone number (ADL 0145).
  *
- * Normalizes input by trimming whitespace and lowercasing.
- * Performs basic structural validation: non-blank, contains exactly one `@`,
- * both local and domain parts non-empty.
+ * Normalizes input by trimming whitespace and collapsing multiple consecutive
+ * spaces into single spaces. Retains digits, `+`, spaces, hyphens, parentheses,
+ * and `/` — strips all other characters.
  *
- * Example: `EmailAddress("  User@Example.COM  ")` produces `value = "user@example.com"`.
+ * Example: `PhoneNumber("  +49  123  456 7890  ")` produces `value = "+49 123 456 7890"`.
  */
-@Serializable(with = EmailAddress.EmailAddressSerializer::class)
+@Serializable(with = PhoneNumber.PhoneNumberSerializer::class)
 @JvmInline
-value class EmailAddress private constructor(val value: String) {
-
-  init {
-    require(value.isNotBlank()) { "Email address must not be blank" }
-    val atIndex = value.indexOf('@')
-    require(atIndex > 0) { "Email address must contain '@' with a non-empty local part: $value" }
-    require(atIndex < value.lastIndex) { "Email address must have a domain part after '@': $value" }
-    require(value.indexOf('@', atIndex + 1) == -1) { "Email address must contain exactly one '@': $value" }
-  }
+value class PhoneNumber private constructor(val value: String) {
 
   override fun toString(): String = value
 
   companion object {
     /**
-     * Creates an EmailAddress from any input format.
-     * Trims whitespace and lowercases.
+     * Characters allowed in a normalized phone number.
      */
-    operator fun invoke(raw: String): EmailAddress {
-      return EmailAddress(raw.trim().lowercase())
+    private val allowedChars: Set<Char> = setOf('+', '-', '(', ')', '/', ' ') // plus digits
+
+    /**
+     * Creates a PhoneNumber from any input format.
+     * Trims whitespace, retains only phone-related characters, and collapses consecutive spaces.
+     */
+    operator fun invoke(raw: String): PhoneNumber {
+      val filtered = raw.trim()
+        .filter { it.isDigit() || it in allowedChars }
+
+      val collapsed = filtered.replace(Regex("""\s+"""), " ").trim()
+
+      require(collapsed.isNotEmpty()) {
+        "Phone number must not be blank"
+      }
+
+      return PhoneNumber(collapsed)
     }
   }
 
-  internal object EmailAddressSerializer : KSerializer<EmailAddress> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("EmailAddress", PrimitiveKind.STRING)
+  internal object PhoneNumberSerializer : KSerializer<PhoneNumber> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PhoneNumber", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: EmailAddress) {
+    override fun serialize(encoder: Encoder, value: PhoneNumber) {
       encoder.encodeString(value.value)
     }
 
-    override fun deserialize(decoder: Decoder): EmailAddress {
+    override fun deserialize(decoder: Decoder): PhoneNumber {
       return invoke(decoder.decodeString())
     }
   }

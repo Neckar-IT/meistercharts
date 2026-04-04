@@ -119,8 +119,6 @@ object Plugins {
   const val kvision: String = "kvision"
   const val jib: String = "com.google.cloud.tools.jib"
 
-  const val springBoot: String = "org.springframework.boot"
-  const val springDependencyManagement: String = "io.spring.dependency-management"
 
   const val schemaGen: String = "com.javagen.schema-gen"
 
@@ -308,14 +306,8 @@ inline val PluginDependenciesSpec.jib: PluginDependencySpec
 inline val PluginDependenciesSpec.intellij: PluginDependencySpec
   get() = id(Plugins.intellij)
 
-inline val PluginDependenciesSpec.springBoot: PluginDependencySpec
-  get() = id(Plugins.springBoot)
-
 inline val PluginDependenciesSpec.python: PluginDependencySpec
   get() = id(Plugins.python)
-
-inline val PluginDependenciesSpec.springDependencyManagement: PluginDependencySpec
-  get() = id(Plugins.springDependencyManagement)
 
 inline val PluginDependenciesSpec.schemaGen: PluginDependencySpec
   get() = id(Plugins.schemaGen)

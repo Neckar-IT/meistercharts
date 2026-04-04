@@ -22,13 +22,10 @@ org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version = "4.0.5" 
 
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.1" }
 
-org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "2.2.1" }
+org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.0.1" }
 
 org-jetbrains-intellij = { id = "org.jetbrains.intellij", version = "1.17.4" }
 
-org-springframework-boot = { id = "org.springframework.boot", version = "2.7.18" }
-
-io-spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
@@ -64,7 +61,7 @@ org-mongodb = "5.6.4"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.48"
+aws-sdk-kotlin = "1.6.49"
 
 apache-poi = "5.5.1"
 
@@ -118,11 +115,6 @@ rxjava2 = "2.2.21"
 
 rxkotlin = "2.4.0"
 
-spring-boot = "2.7.18"
-
-spring-cloud = "3.1.5"
-
-spring-kafka = "2.9.13"
 
 [libraries]
 
@@ -248,7 +240,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.25"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.26"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -584,22 +576,5 @@ rxkotlin = { group = "io.reactivex.rxjava2", name = "rxkotlin", version.ref = "r
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "org-slf4j" }
 
 
-spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "spring-boot" }
-
-spring-boot-starter-data-mongodb = { group = "org.springframework.boot", name = "spring-boot-starter-data-mongodb", version.ref = "spring-boot" }
-
-spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
-
-spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "spring-boot" }
-
-spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "spring-boot" }
-
-spring-boot-starter-web-services = { group = "org.springframework.boot", name = "spring-boot-starter-web-services", version.ref = "spring-boot" }
-
-spring-cloud-starter-openfeign = { group = "org.springframework.cloud", name = "spring-cloud-starter-openfeign", version.ref = "spring-cloud" }
-
-spring-kafka = { group = "org.springframework.kafka", name = "spring-kafka", version.ref = "spring-kafka" }
-
-springdoc-openapi-ui = "org.springdoc:springdoc-openapi-ui:1.8.0"
 
 trove4j = "net.sf.trove4j:trove4j:3.0.3"

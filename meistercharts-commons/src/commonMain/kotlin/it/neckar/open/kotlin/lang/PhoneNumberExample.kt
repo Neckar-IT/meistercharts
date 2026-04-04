@@ -25,27 +25,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.http
+package it.neckar.open.kotlin.lang
 
 /**
- * Examples for URLs
+ * Examples for phone numbers
  */
-object UrlExample {
-
-  object DataScheme {
-    /**
-     * The minimal PNG image that can be used for testing purposes.
-     */
-    val png1x1: Url.DataScheme = Url.DataScheme("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Yx3O3sAAAAASUVORK5CYII=")
-
-    /**
-     * A single-page blank PDF document.
-     */
-    val singlePageBlankPdf: Url.DataScheme = Url.DataScheme(
-      "data:application/pdf;base64,JVBERi0xLjUKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMCA0IDAgUj4+Pj4vTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDUgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvTmFtZS9GMCAvQmFzZUZvbnQvSGVsdmV0aWNhPj4KZW5kb2JqCjUgMCBvYmoKPDwvTGVuZ3RoIDYzPj4Kc3RyZWFtCkJUIC9GMCBUIDEyIFREICgxMDAgNzAwIFREKSAoSGVsbG8gUERGISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA3MyAwMDAwMCBuIAowMDAwMDAwMTU3IDAwMDAwIG4gCjAwMDAwMDAyMzAgMDAwMDAgbiAKMDAwMDAwMDI5MiAwMDAwMCBuIAp0cmFpbGVyCjw8L1Jvb3QgMSAwIFIvU2l6ZSA2Pj4Kc3RhcnR4cmVmCjMxNgolJUVPRgo="
-    )
-  }
+object PhoneNumberExample {
+  val neckarIT: PhoneNumber = PhoneNumber("+49 (0) 7473 959 496 0")
+  val mobile: PhoneNumber = PhoneNumber("+49 170 1234567")
+  val landline: PhoneNumber = PhoneNumber("+49 7071 12345")
+  val austria: PhoneNumber = PhoneNumber("+43 1 234567")
+  val switzerland: PhoneNumber = PhoneNumber("+41 44 1234567")
 }
 
-val Url.Companion.Example: UrlExample
-  get() = UrlExample
+val PhoneNumber.Companion.Example: PhoneNumberExample
+  get() = PhoneNumberExample
