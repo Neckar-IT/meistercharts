@@ -35,7 +35,7 @@ axios = "1.13.6"
 # npm: bootstrap
 bootstrap = "5.3.8"
 # npm: caniuse-lite
-caniuse-lite = "1.0.30001781"
+caniuse-lite = "1.0.30001784"
 # npm: chalk
 chalk = "5.6.2"
 # npm: class-variance-authority
