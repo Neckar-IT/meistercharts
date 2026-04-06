@@ -67,6 +67,8 @@ apache-poi = "5.5.1"
 
 com-atlassian-commonmark = "0.17.0"
 
+org-commonmark = "0.28.0"
+
 org-bouncycastle = "1.83"
 
 ktor = "3.4.2"
@@ -412,9 +414,9 @@ kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", v
 
 kotlin-csv-js = { group = "com.github.doyaaaaaken", name = "kotlin-csv-js", version.ref = "kotlin-csv" }
 
-org-commonmark-commonmark = "org.commonmark:commonmark:0.28.0"
+org-commonmark-commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "org-commonmark" }
 
-org-commonmark-commonmark-ext-gfm-tables = "org.commonmark:commonmark-ext-gfm-tables:0.28.0"
+org-commonmark-commonmark-ext-gfm-tables = { group = "org.commonmark", name = "commonmark-ext-gfm-tables", version.ref = "org-commonmark" }
 
 batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.ref = "org-apache-xmlgraphics" }
 

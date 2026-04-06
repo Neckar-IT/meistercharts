@@ -97,7 +97,7 @@ jotai = "2.16.2"
 # npm: jsdom
 jsdom = "27.4.0"
 # npm: knip
-knip = "5.82.1"
+knip = "5.88.1"
 # npm: @ladle/react
 ladle-react = "5.1.1"
 # npm: left-pad
