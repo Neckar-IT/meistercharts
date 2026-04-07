@@ -61,7 +61,7 @@ org-mongodb = "5.6.4"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.49"
+aws-sdk-kotlin = "1.6.51"
 
 apache-poi = "5.5.1"
 
@@ -73,7 +73,7 @@ org-bouncycastle = "1.83"
 
 ktor = "3.4.2"
 
-com-github-docker-java = "3.7.0"
+com-github-docker-java = "3.7.1"
 
 com-miglayout = "11.4.3"
 
@@ -91,7 +91,7 @@ assertj = "3.27.7"
 
 junit = "4.13.2"
 
-junit-jupiter = "6.0.1"
+junit-jupiter = "6.0.3"
 
 kotlinx-cli = "0.3.6"
 
@@ -105,7 +105,7 @@ kotlinx-html = "0.11.0"
 
 kotlinx-serialization = "1.10.0"
 
-mockk = "1.14.7"
+mockk = "1.14.9"
 
 modbus = "1.2.2"
 
@@ -169,7 +169,7 @@ commons-math3 = "org.apache.commons:commons-math3:3.6.1"
 
 awaitility = "org.awaitility:awaitility:4.3.0"
 
-measured = "io.nacular.measured:measured:0.4.1"
+measured = "io.nacular.measured:measured:0.4.2"
 
 # jackson-annotations 2.20.1 doesn't exist on Maven Central - use 2.20
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.21" }
@@ -242,7 +242,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.26"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.28"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -254,7 +254,7 @@ poi = { group = "org.apache.poi", name = "poi", version.ref = "apache-poi" }
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 
-pdfbox = "org.apache.pdfbox:pdfbox:3.0.6"
+pdfbox = "org.apache.pdfbox:pdfbox:3.0.7"
 
 loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
 
@@ -284,7 +284,7 @@ bcprov-jdk15to18 = { group = "org.bouncycastle", name = "bcprov-jdk15to18", vers
 
 commons-codec = "commons-codec:commons-codec:1.21.0"
 
-pdfbox-io = "org.apache.pdfbox:pdfbox-io:3.0.6"
+pdfbox-io = "org.apache.pdfbox:pdfbox-io:3.0.7"
 
 bcprov-jdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "org-bouncycastle" }
 
@@ -296,11 +296,11 @@ java-jwt = "com.auth0:java-jwt:4.5.1"
 
 micrometer-core = "io.micrometer:micrometer-core:1.16.4"
 
-junit-platform-commons = "org.junit.platform:junit-platform-commons:6.0.2"
+junit-platform-commons = "org.junit.platform:junit-platform-commons:6.0.3"
 
 ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
 
-jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.6"
+jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.9"
 
 gitlab4j-api = "org.gitlab4j:gitlab4j-api:6.2.0"
 
@@ -332,7 +332,7 @@ jfoenix = "com.jfoenix:jfoenix:9.0.10"
 
 fontawesomefx = "de.jensd:fontawesomefx:8.9"
 
-controlsfx = "org.controlsfx:controlsfx:11.2.2"
+controlsfx = "org.controlsfx:controlsfx:11.2.3"
 
 tilesfx = "eu.hansolo:tilesfx:21.0.9"
 
@@ -342,9 +342,9 @@ balloontip = "net.java.balloontip:balloontip:1.2.4.1"
 
 org-jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
 
-javafx-base = "org.openjfx:javafx-base:21"
+javafx-base = "org.openjfx:javafx-base:25.0.2"
 
-javafx-graphics = "org.openjfx:javafx-graphics:21"
+javafx-graphics = "org.openjfx:javafx-graphics:25.0.2"
 
 testfx-junit5 = "org.testfx:testfx-junit5:4.0.18"
 
@@ -356,7 +356,7 @@ vworkflows-core = "eu.mihosoft.vrl.workflow:vworkflows-core:0.2.5.0"
 
 jfxtras-common = "org.jfxtras:jfxtras-common:17-r1"
 
-javafx-controls = "org.openjfx:javafx-controls:21"
+javafx-controls = "org.openjfx:javafx-controls:25.0.2"
 
 fxyz3d = "org.fxyz3d:fxyz3d:0.6.0"
 
@@ -404,7 +404,7 @@ javax-mail-api = "javax.mail:javax.mail-api:1.6.2"
 
 javax-mail = "com.sun.mail:javax.mail:1.6.2"
 
-activation = "javax.activation:activation:1.1"
+activation = "javax.activation:activation:1.1.1"
 
 kotlin-csv-jvm = { group = "com.github.doyaaaaaken", name = "kotlin-csv-jvm", version.ref = "kotlin-csv" }
 
@@ -561,7 +561,7 @@ ktor-utils = { group = "io.ktor", name = "ktor-utils", version.ref = "ktor" }
 
 ktor-websockets = { group = "io.ktor", name = "ktor-websockets", version.ref = "ktor" }
 
-lombok = "org.projectlombok:lombok:1.18.24"
+lombok = "org.projectlombok:lombok:1.18.44"
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
