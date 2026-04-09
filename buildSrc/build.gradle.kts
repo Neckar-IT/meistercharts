@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "2.3.0"
+val kotlinVersion: String = "2.3.20"
 
 plugins {
   `kotlin-dsl`

@@ -86,6 +86,10 @@ object KotlinSettings {
     // Kotlin 2.2.x
     add("-Xreturn-value-checker=full")
     add("-Xcontext-sensitive-resolution")
+
+    // Kotlin 2.3.x: enable name-based destructuring syntax (opt-in, syntax only)
+    // https://kotlinlang.org/docs/whatsnew23.html
+    add("-Xname-based-destructuring=only-syntax")
   }
 
   /**

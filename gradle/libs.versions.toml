@@ -2,9 +2,9 @@
 
 [plugins]
 
-org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.0" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.20" }
 
-org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "2.3.0" }
+org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "2.3.20" }
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
@@ -39,7 +39,7 @@ org-gradle-kotlin-kotlin-dsl = { id = "org.gradle.kotlin.kotlin-dsl", version = 
 
 [versions]
 
-kotlin = "2.3.0"
+kotlin = "2.3.20"
 
 org-asciidoctor = "4.0.5"
 
@@ -61,7 +61,7 @@ org-mongodb = "5.6.4"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.51"
+aws-sdk-kotlin = "1.6.52"
 
 apache-poi = "5.5.1"
 
@@ -85,7 +85,7 @@ kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.0"
 
-kotest-property = "6.1.10"
+kotest-property = "6.1.11"
 
 assertj = "3.27.7"
 
@@ -242,7 +242,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.28"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.29"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
