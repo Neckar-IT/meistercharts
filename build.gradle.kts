@@ -130,7 +130,7 @@ allprojects {
     mavenCentral()
   }
 
-  task("info") {
+  tasks.register("info") {
     doLast {
       println("|-------------------------------------------------")
       println("| MEISTERCHARTS.COM ------------------------------")
@@ -145,7 +145,7 @@ allprojects {
   /**
    * Prints all configured plugins
    */
-  task("plugins") {
+  tasks.register("plugins") {
     group = "Documentation"
     description = "Prints all configured plugins"
 
@@ -160,7 +160,7 @@ allprojects {
     }
   }
 
-  task("configurations") {
+  tasks.register("configurations") {
     description = "Prints all configurations"
     group = "Help"
 

@@ -394,6 +394,7 @@ batik-transcoder = { group = "org.apache.xmlgraphics", name = "batik-transcoder"
 
 batik-codec = { group = "org.apache.xmlgraphics", name = "batik-codec", version.ref = "org-apache-xmlgraphics" }
 
+netty-bom = "io.netty:netty-bom:4.2.12.Final"
 netty-common = "io.netty:netty-common:4.2.12.Final"
 
 netty-handler = "io.netty:netty-handler:4.2.12.Final"

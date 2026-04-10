@@ -153,7 +153,7 @@ postcss = "8.5.6"
 # npm: oxfmt
 oxfmt = "0.44.0"
 # npm: oxlint
-oxlint = "1.58.0"
+oxlint = "1.59.0"
 # npm: oxlint-tsgolint
 oxlint-tsgolint = "0.20.0"
 # npm: radix-ui
@@ -178,8 +178,6 @@ react-hook-form = "7.72.1"
 react-i18next = "16.5.3"
 # npm: react-icons
 react-icons = "5.6.0"
-# npm: react-is
-react-is = "19.1.0"
 # npm: react-json-view
 react-json-view = "1.21.3"
 # npm: react-markdown
@@ -193,11 +191,9 @@ react-router = "7.14.0"
 # npm: react-router-dom
 react-router-dom = "6.30.3"
 # npm: react-scan
-react-scan = "0.4.3"
+react-scan = "0.5.3"
 # npm: @react-scan/vite-plugin-react-scan
 react-scan-vite-plugin-react-scan = "0.2.3"
-# npm: react-scripts
-react-scripts = "5.1.0-next.26"
 # npm: react-youtube-lite
 react-youtube-lite = "1.0.1"
 # npm: recharts
