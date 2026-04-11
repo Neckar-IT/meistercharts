@@ -2,23 +2,23 @@
 
 [plugins]
 
-org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.20" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
-org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "2.3.20" }
+org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.4.0" }
 
-com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
+com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
 edu-sc-seis-launch4j = { id = "edu.sc.seis.launch4j", version = "4.0.0" }
 
-org-asciidoctor-jvm-convert = { id = "org.asciidoctor.jvm.convert", version = "4.0.5" }
+org-asciidoctor-jvm-convert = { id = "org.asciidoctor.jvm.convert", version.ref = "org-asciidoctor" }
 
-org-asciidoctor-jvm-pdf = { id = "org.asciidoctor.jvm.pdf", version = "4.0.5" }
+org-asciidoctor-jvm-pdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "org-asciidoctor" }
 
-org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version = "4.0.5" }
+org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version.ref = "org-asciidoctor" }
 
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.1" }
 
@@ -33,7 +33,7 @@ ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
 com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.6.1" }
 
-de-undercouch-download = { id = "de.undercouch.download", version = "5.7.0" }
+de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
 org-gradle-kotlin-kotlin-dsl = { id = "org.gradle.kotlin.kotlin-dsl", version = "6.6.0" }
 
@@ -85,6 +85,16 @@ kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.0"
 
+kover = "0.9.8"
+
+node-gradle = "7.1.0"
+
+shadow = "9.4.1"
+
+de-undercouch-download = "5.7.0"
+
+com-vanniktech-maven-publish = "0.36.0"
+
 kotest-property = "6.1.11"
 
 assertj = "3.27.7"
@@ -111,9 +121,25 @@ modbus = "1.2.2"
 
 okhttp3 = "5.3.2"
 
+opentelemetry = "1.60.1"
+
 opentelemetry-instrumentation = "2.25.0-alpha"
 
-rxjava2 = "2.2.21"
+opentelemetry-javaagent = "2.26.1"
+
+micrometer = "1.16.4"
+
+pdfbox = "3.0.7"
+
+gitlab4j = "6.2.0"
+
+testfx = "4.0.18"
+
+clikt = "5.1.0"
+
+javafx = "25.0.2"
+
+netty = "4.2.12.Final"
 
 rxkotlin = "2.4.0"
 
@@ -122,11 +148,21 @@ rxkotlin = "2.4.0"
 
 asciidoctorj = { group = "org.asciidoctor", name = "asciidoctorj", version.ref = "org-asciidoctor" }
 
-kover-jvm-agent = "org.jetbrains.kotlinx:kover-jvm-agent:0.9.8"
+kover-jvm-agent = { group = "org.jetbrains.kotlinx", name = "kover-jvm-agent", version.ref = "kover" }
 
 asciidoctorj-pdf = { group = "org.asciidoctor", name = "asciidoctorj-pdf", version.ref = "org-asciidoctor" }
 
 asciidoctorj-diagram = { group = "org.asciidoctor", name = "asciidoctorj-diagram", version.ref = "org-asciidoctor" }
+
+jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-jupiter" }
+kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
+ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
+mongodb-driver-bom = { group = "org.mongodb", name = "mongodb-driver-bom", version.ref = "org-mongodb" }
+opentelemetry-bom = { group = "io.opentelemetry", name = "opentelemetry-bom", version.ref = "opentelemetry" }
+opentelemetry-instrumentation-bom-alpha = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-instrumentation-bom-alpha", version.ref = "opentelemetry-instrumentation" }
+testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 
 jackson-module-parameter-names = { group = "com.fasterxml.jackson.module", name = "jackson-module-parameter-names", version.ref = "jackson" }
 
@@ -169,7 +205,7 @@ commons-math3 = "org.apache.commons:commons-math3:3.6.1"
 
 awaitility = "org.awaitility:awaitility:4.3.0"
 
-measured = "io.nacular.measured:measured:0.4.2"
+measured = "io.nacular.measured:measured:0.5.0"
 
 # jackson-annotations 2.20.1 doesn't exist on Maven Central - use 2.20
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.21" }
@@ -196,27 +232,27 @@ im4java = "org.im4java:im4java:1.4.0"
 
 commons-lang3 = "org.apache.commons:commons-lang3:3.20.0"
 
-clikt-core = "com.github.ajalt.clikt:clikt-core:5.1.0"
+clikt-core = { group = "com.github.ajalt.clikt", name = "clikt-core", version.ref = "clikt" }
 
-opentelemetry-api = "io.opentelemetry:opentelemetry-api:1.60.1"
+opentelemetry-api = { group = "io.opentelemetry", name = "opentelemetry-api", version.ref = "opentelemetry" }
 
-opentelemetry-sdk = "io.opentelemetry:opentelemetry-sdk:1.60.1"
+opentelemetry-sdk = { group = "io.opentelemetry", name = "opentelemetry-sdk", version.ref = "opentelemetry" }
 
-opentelemetry-sdk-extension-autoconfigure = "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.60.1"
+opentelemetry-sdk-extension-autoconfigure = { group = "io.opentelemetry", name = "opentelemetry-sdk-extension-autoconfigure", version.ref = "opentelemetry" }
 
-opentelemetry-exporter-otlp = "io.opentelemetry:opentelemetry-exporter-otlp:1.60.1"
+opentelemetry-exporter-otlp = { group = "io.opentelemetry", name = "opentelemetry-exporter-otlp", version.ref = "opentelemetry" }
 
-opentelemetry-extension-kotlin = "io.opentelemetry:opentelemetry-extension-kotlin:1.60.1"
+opentelemetry-extension-kotlin = { group = "io.opentelemetry", name = "opentelemetry-extension-kotlin", version.ref = "opentelemetry" }
 
-opentelemetry-ktor-v3 = "io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:2.25.0-alpha"
+opentelemetry-ktor-v3 = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-ktor-3.0", version.ref = "opentelemetry-instrumentation" }
 
 symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "com-google-devtools-ksp" }
 
 symbol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "com-google-devtools-ksp" }
 
-opentelemetry-javaagent = "io.opentelemetry.javaagent:opentelemetry-javaagent:2.26.1"
+opentelemetry-javaagent = { group = "io.opentelemetry.javaagent", name = "opentelemetry-javaagent", version.ref = "opentelemetry-javaagent" }
 
-opentelemetry-sdk-testing = "io.opentelemetry:opentelemetry-sdk-testing:1.60.1"
+opentelemetry-sdk-testing = { group = "io.opentelemetry", name = "opentelemetry-sdk-testing", version.ref = "opentelemetry" }
 
 jsoup = "org.jsoup:jsoup:1.22.1"
 
@@ -254,7 +290,7 @@ poi = { group = "org.apache.poi", name = "poi", version.ref = "apache-poi" }
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 
-pdfbox = "org.apache.pdfbox:pdfbox:3.0.7"
+pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
 
 loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
 
@@ -284,39 +320,39 @@ bcprov-jdk15to18 = { group = "org.bouncycastle", name = "bcprov-jdk15to18", vers
 
 commons-codec = "commons-codec:commons-codec:1.21.0"
 
-pdfbox-io = "org.apache.pdfbox:pdfbox-io:3.0.7"
+pdfbox-io = { group = "org.apache.pdfbox", name = "pdfbox-io", version.ref = "pdfbox" }
 
 bcprov-jdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "org-bouncycastle" }
 
-micrometer-registry-prometheus = "io.micrometer:micrometer-registry-prometheus:1.16.4"
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
 
-opentelemetry-logback-mdc-v1 = "io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:2.25.0-alpha"
+opentelemetry-logback-mdc-v1 = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-logback-mdc-1.0", version.ref = "opentelemetry-instrumentation" }
 
 java-jwt = "com.auth0:java-jwt:4.5.1"
 
-micrometer-core = "io.micrometer:micrometer-core:1.16.4"
+micrometer-core = { group = "io.micrometer", name = "micrometer-core", version.ref = "micrometer" }
 
-junit-platform-commons = "org.junit.platform:junit-platform-commons:6.0.3"
+junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons", version.ref = "junit-jupiter" }
 
 ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
 
 jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.9"
 
-gitlab4j-api = "org.gitlab4j:gitlab4j-api:6.2.0"
+gitlab4j-api = { group = "org.gitlab4j", name = "gitlab4j-api", version.ref = "gitlab4j" }
 
-gitlab4j-models = "org.gitlab4j:gitlab4j-models:6.2.0"
+gitlab4j-models = { group = "org.gitlab4j", name = "gitlab4j-models", version.ref = "gitlab4j" }
 
 domrobot = "com.inwx:domrobot:4.0.0"
 
 gson = "com.google.code.gson:gson:2.13.2"
 
-clikt = "com.github.ajalt.clikt:clikt:5.1.0"
+clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 
 dotenv-kotlin = "io.github.cdimascio:dotenv-kotlin:6.5.1"
 
 commons-compress = "org.apache.commons:commons-compress:1.28.0"
 
-kotlin-csv = "com.github.doyaaaaaken:kotlin-csv:1.10.0"
+kotlin-csv = { group = "com.github.doyaaaaaken", name = "kotlin-csv", version.ref = "kotlin-csv" }
 
 docker-java = { group = "com.github.docker-java", name = "docker-java", version.ref = "com-github-docker-java" }
 
@@ -342,13 +378,13 @@ balloontip = "net.java.balloontip:balloontip:1.2.4.1"
 
 org-jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
 
-javafx-base = "org.openjfx:javafx-base:25.0.2"
+javafx-base = { group = "org.openjfx", name = "javafx-base", version.ref = "javafx" }
 
-javafx-graphics = "org.openjfx:javafx-graphics:25.0.2"
+javafx-graphics = { group = "org.openjfx", name = "javafx-graphics", version.ref = "javafx" }
 
-testfx-junit5 = "org.testfx:testfx-junit5:4.0.18"
+testfx-junit5 = { group = "org.testfx", name = "testfx-junit5", version.ref = "testfx" }
 
-testfx-core = "org.testfx:testfx-core:4.0.18"
+testfx-core = { group = "org.testfx", name = "testfx-core", version.ref = "testfx" }
 
 miglayout-core = { group = "com.miglayout", name = "miglayout-core", version.ref = "com-miglayout" }
 
@@ -356,7 +392,7 @@ vworkflows-core = "eu.mihosoft.vrl.workflow:vworkflows-core:0.2.5.0"
 
 jfxtras-common = "org.jfxtras:jfxtras-common:17-r1"
 
-javafx-controls = "org.openjfx:javafx-controls:25.0.2"
+javafx-controls = { group = "org.openjfx", name = "javafx-controls", version.ref = "javafx" }
 
 fxyz3d = "org.fxyz3d:fxyz3d:0.6.0"
 
@@ -394,10 +430,10 @@ batik-transcoder = { group = "org.apache.xmlgraphics", name = "batik-transcoder"
 
 batik-codec = { group = "org.apache.xmlgraphics", name = "batik-codec", version.ref = "org-apache-xmlgraphics" }
 
-netty-bom = "io.netty:netty-bom:4.2.12.Final"
-netty-common = "io.netty:netty-common:4.2.12.Final"
+netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
+netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty" }
 
-netty-handler = "io.netty:netty-handler:4.2.12.Final"
+netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
 
 threeten-extra = "org.threeten:threeten-extra:1.8.0"
 
@@ -581,3 +617,32 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "org-
 
 
 trove4j = "net.sf.trove4j:trove4j:3.0.3"
+
+
+# Gradle plugin dependencies (used in buildSrc/build.gradle.kts)
+
+detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
+
+jib-core = "com.google.cloud.tools:jib-core:0.28.1"
+
+jib-gradle-plugin = "com.google.cloud.tools:jib-gradle-plugin:3.5.3"
+
+symbol-processing-gradle-plugin = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "com-google-devtools-ksp" }
+
+kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
+
+kotlinx-html-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm", version.ref = "kotlinx-html" }
+
+node-gradle-plugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "node-gradle" }
+
+gradle-download-task = { group = "de.undercouch", name = "gradle-download-task", version.ref = "de-undercouch-download" }
+
+shadow-gradle-plugin = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+
+maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
+
+javafx-plugin = "org.openjfx:javafx-plugin:0.1.0"
+
+asciidoctor-gradle-jvm-pdf = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm-pdf", version.ref = "org-asciidoctor" }
+
+asciidoctor-gradle-jvm-gems = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm-gems", version.ref = "org-asciidoctor" }
