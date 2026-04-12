@@ -22,7 +22,7 @@ org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version.ref = "org
 
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.1" }
 
-org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.0.1" }
+org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.0.2" }
 
 org-jetbrains-intellij = { id = "org.jetbrains.intellij", version = "1.17.4" }
 
@@ -57,11 +57,11 @@ io-gitlab-arturbosch-detekt = "1.23.8"
 
 com-google-devtools-ksp = "2.3.6"
 
-org-mongodb = "5.6.4"
+org-mongodb = "5.6.5"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.52"
+aws-sdk-kotlin = "1.6.55"
 
 apache-poi = "5.5.1"
 
@@ -113,7 +113,7 @@ kotlinx-datetime = "0.7.1-0.6.x-compat"
 
 kotlinx-html = "0.11.0"
 
-kotlinx-serialization = "1.10.0"
+kotlinx-serialization = "1.11.0"
 
 mockk = "1.14.9"
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.29"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.32"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -296,7 +296,7 @@ loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-playwright = "com.microsoft.playwright:playwright:1.58.0"
+playwright = "com.microsoft.playwright:playwright:1.59.0"
 
 com-atlassian-commonmark-commonmark = { group = "com.atlassian.commonmark", name = "commonmark", version.ref = "com-atlassian-commonmark" }
 
