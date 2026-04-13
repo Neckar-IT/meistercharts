@@ -31,7 +31,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.6.1" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.7.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -61,7 +61,7 @@ org-mongodb = "5.6.5"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.55"
+aws-sdk-kotlin = "1.6.56"
 
 apache-poi = "5.5.1"
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.32"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.33"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

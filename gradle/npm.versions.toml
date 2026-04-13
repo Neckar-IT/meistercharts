@@ -293,7 +293,7 @@ webpack-cli = "6.0.1"
 # npm: @welldone-software/why-did-you-render
 welldone-software-why-did-you-render = "10.0.1"
 # npm: ws
-ws = "8.19.0"
+ws = "8.20.0"
 # npm: yoastseo
 yoastseo = "3.5.0"
 # npm: zod
