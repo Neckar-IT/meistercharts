@@ -18,7 +18,6 @@ object KotlinSettings {
    */
   val optInExperimentalAnnotations: List<String> = listOf(
     "kotlin.ExperimentalStdlibApi",
-    "kotlin.time.ExperimentalTime",
     "kotlin.contracts.ExperimentalContracts",
     "kotlin.experimental.ExperimentalTypeInference",
     "kotlin.js.ExperimentalJsExport",
@@ -71,7 +70,6 @@ object KotlinSettings {
     add("-Xconsistent-data-class-copy-visibility") // https://youtrack.jetbrains.com/issue/KT-11914
     add("-Xcontext-parameters")
     add("-Xnon-local-break-continue")
-    add("-Xmulti-dollar-interpolation") // https://kotlinlang.org/docs/whatsnew21.html#multi-dollar-string-interpolation
     add("-Xwhen-guards")
 
     // Kotlin 2.2 required
@@ -87,9 +85,9 @@ object KotlinSettings {
     add("-Xreturn-value-checker=full")
     add("-Xcontext-sensitive-resolution")
 
-    // Kotlin 2.3.x: enable name-based destructuring syntax (opt-in, syntax only)
-    // https://kotlinlang.org/docs/whatsnew23.html
-    add("-Xname-based-destructuring=only-syntax")
+    // Kotlin 2.3.x
+    add("-Xexplicit-backing-fields") // https://kotlinlang.org/docs/whatsnew23.html#explicit-backing-fields
+    add("-Xname-based-destructuring=only-syntax") // https://kotlinlang.org/docs/whatsnew2320.html
   }
 
   /**

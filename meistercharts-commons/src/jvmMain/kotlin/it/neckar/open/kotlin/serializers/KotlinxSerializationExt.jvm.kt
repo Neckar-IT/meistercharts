@@ -33,6 +33,7 @@ import it.neckar.open.kotlin.lang.getAllSealedSubclasses
 import it.neckar.open.kotlin.lang.isSealed
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
@@ -112,7 +113,7 @@ private val emptySerializersModule = EmptySerializersModule()
 fun KType.serializer(): KSerializer<*> {
   try {
     return emptySerializersModule.serializer(this)
-  } catch (e: Exception) {
+  } catch (e: SerializationException) {
     throw IllegalStateException("Cannot find serializer for type ${this}", e)
   }
 }
