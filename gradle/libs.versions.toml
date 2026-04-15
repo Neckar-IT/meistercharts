@@ -127,6 +127,8 @@ opentelemetry-javaagent = "2.26.1"
 
 micrometer = "1.16.4"
 
+caffeine = "3.1.8"
+
 pdfbox = "3.0.7"
 
 gitlab4j = "6.2.0"
@@ -325,6 +327,8 @@ bcprov-jdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
 
 opentelemetry-logback-mdc-v1 = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-logback-mdc-1.0", version.ref = "opentelemetry-instrumentation" }
+
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 
 java-jwt = "com.auth0:java-jwt:4.5.1"
 

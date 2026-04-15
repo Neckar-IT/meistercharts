@@ -35,6 +35,9 @@ class GitlabCiInformation(private val env: Map<String, String?>) {
   val pipelineUrl: String?
     get() = env.getOrDefault("CI_PIPELINE_URL", null)
 
+  val jobUrl: String?
+    get() = env.getOrDefault("CI_JOB_URL", null)
+
   /**
    * @return The SCM reference that is currently being built. Either a tag or a branch, depending on what is being built
    */
