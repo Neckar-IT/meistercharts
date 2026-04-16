@@ -43,15 +43,17 @@ class ObservableList<T>(initValue: List<T>) : ReadOnlyObservableList<T>, Observa
   /**
    * Maps the elements of the list to another value.
    * Returns an observable list of the new type that is automatically updated.
+   *
+   * The returned list holds the upstream subscription on this observable and releases it on [dispose].
    */
   fun <R> mapElements(mapFunction: (T) -> R): ReadOnlyObservableList<R> {
     val mappedInitially = this.value.map { mapFunction(it) }
 
     return ObservableList(mappedInitially).also {
-      consume { newValue ->
+      it.addUpstreamSubscription(consume { newValue ->
         val mapped = newValue.map { mapFunction(it) }
         it.value = mapped
-      }
+      })
     }
   }
 
@@ -88,8 +90,8 @@ fun <T : Observable<*>, N : Any?> ReadOnlyObservableList<T>.selectList(extractNe
     recalculateResults()
   }
 
-  //Register the listeners
-  this.consumeImmediately { elements ->
+  //Register the listeners - tracked on resultList so dispose releases both the outer subscription and all inner listeners
+  resultList.addUpstreamSubscription(this.consumeImmediately { elements ->
     //Dispose the old listeners
     disposableSupport.dispose()
 
@@ -102,7 +104,9 @@ fun <T : Observable<*>, N : Any?> ReadOnlyObservableList<T>.selectList(extractNe
 
     //Recalculate the results
     recalculateResults()
-  }
+  })
+  //Forward dispose to the inner-listener container
+  resultList.addUpstreamSubscription(disposableSupport)
 
   return resultList
 }
@@ -133,8 +137,9 @@ fun <T> ReadOnlyObservableList<T>.selectListObservable(
     resultObservable.notifyListeners(oldValue, newValue)
   }
 
-  //Register the listeners at the observables in the list
-  consumeImmediately { elements ->
+  //Register the listeners at the observables in the list - tracked on resultObservable so dispose releases
+  //both the outer subscription and all inner listeners
+  resultObservable.addUpstreamSubscription(consumeImmediately { elements ->
     //Dispose the old listeners
     disposableSupport.dispose()
 
@@ -148,7 +153,9 @@ fun <T> ReadOnlyObservableList<T>.selectListObservable(
 
     //Notify the listeners about the updated values
     resultObservable.notifyListeners(null, elements)
-  }
+  })
+  //Forward dispose to the inner-listener container
+  resultObservable.addUpstreamSubscription(disposableSupport)
 
   return resultObservable
 }

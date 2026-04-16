@@ -40,7 +40,7 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
 
   fun skipToAlign(count: Int) {
     val nextPosition = offset.nextAlignedTo(offset)
-    readBytes((nextPosition - offset).toInt())
+    skip((nextPosition - offset).toInt())
   }
 
   // 8 bit

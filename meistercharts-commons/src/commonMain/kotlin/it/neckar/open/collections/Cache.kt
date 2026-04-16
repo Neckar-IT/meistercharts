@@ -155,8 +155,11 @@ class Cache<K, V>
   }
 
   /**
-   * Stores a new value in the cache. Returns the old value - if there has been one
+   * Stores a new value in the cache. Returns the old value - if there has been one.
+   * The returned previous value is informational only; most callers (including the
+   * [set] operator below) legitimately discard it.
    */
+  @IgnorableReturnValue
   fun store(key: K, value: V): V? {
     lock.write {
       return map.put(key, value)

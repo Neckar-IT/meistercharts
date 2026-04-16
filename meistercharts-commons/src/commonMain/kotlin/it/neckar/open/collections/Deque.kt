@@ -129,7 +129,11 @@ open class TGenDeque<TGen>(initialCapacity: Int) : MutableCollection<TGen> {
   override fun clear() = run { _size = 0 }
   override fun remove(element: TGen): Boolean {
     val index = indexOf(element)
-    if (index >= 0) removeAt(index)
+    if (index >= 0) {
+      removeAt(index).also { removed ->
+        check(removed == element) { "Expected to remove $element but removed $removed" }
+      }
+    }
     return (index >= 0)
   }
 
@@ -306,7 +310,11 @@ open class IntDeque(initialCapacity: Int) : MutableCollection<Int> {
   override fun clear() = run { _size = 0 }
   override fun remove(element: Int): Boolean {
     val index = indexOf(element)
-    if (index >= 0) removeAt(index)
+    if (index >= 0) {
+      removeAt(index).also { removed ->
+        check(removed == element) { "Expected to remove $element but removed $removed" }
+      }
+    }
     return (index >= 0)
   }
 
@@ -483,7 +491,11 @@ open class DoubleDeque(initialCapacity: Int) : MutableCollection<Double> {
   override fun clear() = run { _size = 0 }
   override fun remove(element: Double): Boolean {
     val index = indexOf(element)
-    if (index >= 0) removeAt(index)
+    if (index >= 0) {
+      removeAt(index).also { removed ->
+        check(removed == element) { "Expected to remove $element but removed $removed" }
+      }
+    }
     return (index >= 0)
   }
 
@@ -660,7 +672,11 @@ open class FloatDeque(initialCapacity: Int) : MutableCollection<Float> {
   override fun clear() = run { _size = 0 }
   override fun remove(element: Float): Boolean {
     val index = indexOf(element)
-    if (index >= 0) removeAt(index)
+    if (index >= 0) {
+      removeAt(index).also { removed ->
+        check(removed == element) { "Expected to remove $element but removed $removed" }
+      }
+    }
     return (index >= 0)
   }
 
@@ -837,7 +853,11 @@ open class ByteDeque(initialCapacity: Int) : MutableCollection<Byte> {
   override fun clear() = run { _size = 0 }
   override fun remove(element: Byte): Boolean {
     val index = indexOf(element)
-    if (index >= 0) removeAt(index)
+    if (index >= 0) {
+      removeAt(index).also { removed ->
+        check(removed == element) { "Expected to remove $element but removed $removed" }
+      }
+    }
     return (index >= 0)
   }
 
@@ -908,7 +928,10 @@ open class ByteDeque(initialCapacity: Int) : MutableCollection<Byte> {
     val sb = StringBuilder()
     sb.append('[')
     for (n in 0 until size) {
-      sb.append(this[n])
+      // StringBuilder has no append(Byte) overload, so the call would dispatch to
+      // append(Any?), whose return is not marked @IgnorableReturnValue. Format the
+      // byte explicitly to hit append(String) instead.
+      sb.append(this[n].toString())
       if (n != size - 1) sb.append(", ")
     }
     sb.append(']')

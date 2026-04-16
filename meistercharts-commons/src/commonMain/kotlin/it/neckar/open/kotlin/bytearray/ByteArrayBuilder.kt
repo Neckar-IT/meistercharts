@@ -68,37 +68,72 @@ class ByteArrayBuilder(var data: ByteArray, size: Int = data.size, val allowGrow
     }
   }
 
+  // The fluent builder methods below return `this` to support chaining like
+  // `builder.s8(0).s16LE(1)`. The return value may be safely discarded by callers
+  // that only care about the accumulating side effect.
+
+  @IgnorableReturnValue
   fun append(v: Byte) = this.apply { prepare(1) { data[_size] = v } }
 
+  @IgnorableReturnValue
   fun append(vararg v: Byte) = append(v)
+
+  @IgnorableReturnValue
   fun append(vararg v: Int) = this.apply {
     prepare(v.size) {
       for (n in 0 until v.size) this.data[this._size + n] = v[n].toByte()
     }
   }
 
+  @IgnorableReturnValue
   fun appendByte(v: Int) = this.apply { prepare(1) { data[_size] = v.toByte() } }
 
+  @IgnorableReturnValue
   fun s8(v: Int) = appendByte(v)
 
+  @IgnorableReturnValue
   fun s16(v: Int, little: Boolean) = this.apply { prepare(2) { data.write16(_size, v, little) } }
+
+  @IgnorableReturnValue
   fun s16LE(v: Int) = this.apply { prepare(2) { data.write16LE(_size, v) } }
+
+  @IgnorableReturnValue
   fun s16BE(v: Int) = this.apply { prepare(2) { data.write16BE(_size, v) } }
 
+  @IgnorableReturnValue
   fun s24(v: Int, little: Boolean) = this.apply { prepare(3) { data.write24(_size, v, little) } }
+
+  @IgnorableReturnValue
   fun s24LE(v: Int) = this.apply { prepare(3) { data.write24LE(_size, v) } }
+
+  @IgnorableReturnValue
   fun s24BE(v: Int) = this.apply { prepare(3) { data.write24BE(_size, v) } }
 
+  @IgnorableReturnValue
   fun s32(v: Int, little: Boolean) = this.apply { prepare(4) { data.write32(_size, v, little) } }
+
+  @IgnorableReturnValue
   fun s32LE(v: Int) = this.apply { prepare(4) { data.write32LE(_size, v) } }
+
+  @IgnorableReturnValue
   fun s32BE(v: Int) = this.apply { prepare(4) { data.write32BE(_size, v) } }
 
+  @IgnorableReturnValue
   fun f32(v: Float, little: Boolean) = this.apply { prepare(4) { data.writeF32(_size, v, little) } }
+
+  @IgnorableReturnValue
   fun f32LE(v: Float) = this.apply { prepare(4) { data.writeF32LE(_size, v) } }
+
+  @IgnorableReturnValue
   fun f32BE(v: Float) = this.apply { prepare(4) { data.writeF32BE(_size, v) } }
 
+  @IgnorableReturnValue
   fun f64(v: Double, little: Boolean) = this.apply { prepare(8) { data.writeF64(_size, v, little) } }
+
+  @IgnorableReturnValue
   fun f64LE(v: Double) = this.apply { prepare(8) { data.writeF64LE(_size, v) } }
+
+  @IgnorableReturnValue
   fun f64BE(v: Double) = this.apply { prepare(8) { data.writeF64BE(_size, v) } }
 
   fun clear() {

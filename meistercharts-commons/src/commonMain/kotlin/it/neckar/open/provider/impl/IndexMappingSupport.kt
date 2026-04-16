@@ -61,8 +61,10 @@ class IndexMappingSupport : IndexMapping {
 
   /**
    * Updates the mapping.
-   * Returns the effective size - so that this method can be called directly in the size method of the providers
+   * Returns the effective size - so that this method can be called directly in the size method of the providers.
+   * The return may be ignored; the same value is also available via [originalIndicesEffectiveSize].
    */
+  @IgnorableReturnValue
   inline fun updateMapping(
     /**
      * How man original indices are there?

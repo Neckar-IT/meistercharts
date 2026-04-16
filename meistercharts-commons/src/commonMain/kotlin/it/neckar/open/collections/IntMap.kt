@@ -151,6 +151,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
     return null
   }
 
+  @IgnorableReturnValue
   operator fun set(key: Int, value: T?): T? {
     retry@ while (true) {
       val index = _getKeyIndex(key)
@@ -503,6 +504,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
     return 0
   }
 
+  @IgnorableReturnValue
   operator fun set(key: Int, value: Int): Int {
     retry@ while (true) {
       val index = _getKeyIndex(key)

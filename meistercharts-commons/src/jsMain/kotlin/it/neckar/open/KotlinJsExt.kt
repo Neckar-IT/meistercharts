@@ -39,8 +39,11 @@ import kotlin.reflect.KClass
 external class Object
 
 /**
- * JavaScript delete operator
+ * JavaScript delete operator. The returned [Boolean] indicates whether the
+ * property was removed; in practice this is almost always used purely for
+ * side-effect, so the return value may be ignored.
  */
+@IgnorableReturnValue
 external fun delete(p: dynamic): Boolean
 
 internal data class LegacyTest(val test: Boolean = true)

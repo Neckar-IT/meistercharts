@@ -540,8 +540,10 @@ infix fun Double.ifInfinite(fallback: Double): Double {
 }
 
 /**
- * Throws an ISE if this double is not finite
+ * Throws an ISE if this double is not finite.
+ * Returns [this] to support fluent usage; the return value may be safely ignored.
  */
+@IgnorableReturnValue
 fun Double.requireFinite(): Double {
   if (this.isFinite()) {
     return this
@@ -550,6 +552,7 @@ fun Double.requireFinite(): Double {
   throw IllegalStateException("Finite value required - but was <$this>")
 }
 
+@IgnorableReturnValue
 inline fun Double.requireFinite(descriptionProvider: (() -> String)): Double {
   if (this.isFinite()) {
     return this

@@ -67,7 +67,7 @@ com-atlassian-commonmark = "0.17.0"
 
 org-commonmark = "0.28.0"
 
-org-bouncycastle = "1.83"
+org-bouncycastle = "1.84"
 
 ktor = "3.4.2"
 

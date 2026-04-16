@@ -77,15 +77,20 @@ private fun File.treeRecursively(prefix: String = "", continuation: String = "",
 }
 
 /**
- * Throws an exception if this file is not a file (e.g. does not exist or is a directory)
- *
- * Returns this
+ * Throws an exception if this file is not a file (e.g. does not exist or is a directory).
+ * Returns [this] to support fluent usage; the return value may be safely ignored.
  */
+@IgnorableReturnValue
 fun File.requireIsFile(messageProvider: (File) -> String = { "File <${this.absolutePath}> is not a file" }): File {
   require(this.isFile) { messageProvider(this) }
   return this
 }
 
+/**
+ * Throws an exception if this file is not a directory.
+ * Returns [this] to support fluent usage; the return value may be safely ignored.
+ */
+@IgnorableReturnValue
 fun File.requireIsDirectory(messageProvider: (File) -> String = { "File <${this.absolutePath}> is not a directory" }): File {
   require(this.isDirectory) { messageProvider(this) }
   return this

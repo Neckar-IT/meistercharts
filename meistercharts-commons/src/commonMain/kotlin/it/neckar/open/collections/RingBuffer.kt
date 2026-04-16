@@ -155,13 +155,17 @@ class ShortRingBuffer(val bits: Int) {
 
   private val temp = ShortArray(1)
   fun readOne(): Short {
-    read(temp, 0, 1)
+    read(temp, 0, 1).also { count ->
+      check(count == 1) { "Expected to read 1 element but read $count" }
+    }
     return temp[0]
   }
 
   fun writeOne(value: Short) {
     temp[0] = value
-    write(temp, 0, 1)
+    write(temp, 0, 1).also { count ->
+      check(count == 1) { "Expected to write 1 element but wrote $count" }
+    }
   }
 
   fun clear() {

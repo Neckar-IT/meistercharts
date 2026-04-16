@@ -63,18 +63,26 @@ internal fun ilog2Ceil(v: Int): Int = kotlin.math.ceil(kotlin.math.log2(v.toDoub
 //}
 
 
+// arraycopy wrappers delegate to kotlin.collections.copyInto, which returns the
+// destination array purely as a convenience. All call sites discard the return.
+
+@IgnorableReturnValue
 internal fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 
+@IgnorableReturnValue
 internal fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 
+@IgnorableReturnValue
 internal fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 
+@IgnorableReturnValue
 internal fun arraycopy(src: FloatArray, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 
+@IgnorableReturnValue
 internal fun arraycopy(src: DoubleArray, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 

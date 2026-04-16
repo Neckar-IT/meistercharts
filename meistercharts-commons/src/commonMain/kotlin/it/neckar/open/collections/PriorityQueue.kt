@@ -118,12 +118,15 @@ class TGenPriorityQueue<TGen>
   }
 
   fun removeAt(index: Int) {
+    val expectedRemoved = index.value
     var i = index
     while (i != 0) {
       swap(i, i.parent)
       i = i.parent
     }
-    removeHead()
+    removeHead().also { removed ->
+      check(removed == expectedRemoved) { "Expected to remove $expectedRemoved at index $index but removed $removed" }
+    }
   }
 
   private fun ensure(index: Int) {
@@ -292,12 +295,15 @@ class IntPriorityQueue
   }
 
   fun removeAt(index: Int) {
+    val expectedRemoved = index.value
     var i = index
     while (i != 0) {
       swap(i, i.parent)
       i = i.parent
     }
-    removeHead()
+    removeHead().also { removed ->
+      check(removed == expectedRemoved) { "Expected to remove $expectedRemoved at index $index but removed $removed" }
+    }
   }
 
   private fun ensure(index: Int) {
@@ -464,12 +470,15 @@ class DoublePriorityQueue
   }
 
   fun removeAt(index: Int) {
+    val expectedRemoved = index.value
     var i = index
     while (i != 0) {
       swap(i, i.parent)
       i = i.parent
     }
-    removeHead()
+    removeHead().also { removed ->
+      check(removed == expectedRemoved) { "Expected to remove $expectedRemoved at index $index but removed $removed" }
+    }
   }
 
   private fun ensure(index: Int) {
@@ -636,12 +645,15 @@ class FloatPriorityQueue
   }
 
   fun removeAt(index: Int) {
+    val expectedRemoved = index.value
     var i = index
     while (i != 0) {
       swap(i, i.parent)
       i = i.parent
     }
-    removeHead()
+    removeHead().also { removed ->
+      check(removed == expectedRemoved) { "Expected to remove $expectedRemoved at index $index but removed $removed" }
+    }
   }
 
   private fun ensure(index: Int) {

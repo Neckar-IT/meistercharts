@@ -28,6 +28,7 @@
 package it.neckar.open.observable
 
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.dispose.Disposable
 
 /**
  * Nested  binding for observable object.
@@ -51,7 +52,7 @@ import it.neckar.open.collections.fastForEach
  * The `name` value is updated whenever the `inner` property is changed *and* the `name` property
  * change of the referenced object
  */
-fun <T, N> ReadOnlyObservableObject<T>.select(extractNested: (T) -> ReadOnlyObservableObject<N>): ReadOnlyObservableObject<N> {
+fun <T, N> ReadOnlyObservableObject<T>.select(extractNested: (T) -> ReadOnlyObservableObject<N>): DisposableReadOnlyObservableObject<N> {
   //The currently nested value
   var currentNested: ReadOnlyObservableObject<N> = extractNested(value)
 
@@ -63,18 +64,20 @@ fun <T, N> ReadOnlyObservableObject<T>.select(extractNested: (T) -> ReadOnlyObse
     nestedObservableObject.value = newValue
   }
 
-  var disposable = currentNested.consumeImmediately(nestedValueListener)
+  var innerSubscription = currentNested.consumeImmediately(nestedValueListener)
+  //Forwarding disposable so that disposing the intermediate disposes whichever inner subscription is currently active
+  nestedObservableObject.addUpstreamSubscription(Disposable { innerSubscription.dispose() })
 
-  //Update the nested
-  consumeImmediately { newValue ->
+  //Update the nested - outer subscription tracked so it is released on dispose
+  nestedObservableObject.addUpstreamSubscription(consumeImmediately { newValue ->
     //Unregister from the old nested
-    disposable.dispose()
+    innerSubscription.dispose()
 
     currentNested = extractNested(newValue)
     nestedObservableObject.value = currentNested.value
 
-    disposable = currentNested.consumeImmediately(nestedValueListener)
-  }
+    innerSubscription = currentNested.consumeImmediately(nestedValueListener)
+  })
 
   return nestedObservableObject
 }
@@ -82,31 +85,33 @@ fun <T, N> ReadOnlyObservableObject<T>.select(extractNested: (T) -> ReadOnlyObse
 /**
  * Reduces a list of observables
  */
-fun <T, R> List<ReadOnlyObservableObject<T>>.reduce(function: (List<T>) -> R): ReadOnlyObservableObject<R> {
+fun <T, R> List<ReadOnlyObservableObject<T>>.reduce(function: (List<T>) -> R): DisposableReadOnlyObservableObject<R> {
   return reduceObservables(this, function)
 }
 
 /**
  * Merges multiple observables with the same type
  */
-fun <T, R> reduceObservables(vararg observables: ReadOnlyObservableObject<T>, function: (List<T>) -> R): ReadOnlyObservableObject<R> {
+fun <T, R> reduceObservables(vararg observables: ReadOnlyObservableObject<T>, function: (List<T>) -> R): DisposableReadOnlyObservableObject<R> {
   return reduceObservables(observables.toList(), function)
 }
 
 /**
- * Merges multiple observables with the same type into one single observable
+ * Merges multiple observables with the same type into one single observable.
+ *
+ * The returned observable holds the upstream subscriptions on each source observable and releases them on [ObservableObject.dispose].
  */
-fun <T, R> reduceObservables(observables: List<ReadOnlyObservableObject<T>>, function: (List<T>) -> R): ReadOnlyObservableObject<R> {
+fun <T, R> reduceObservables(observables: List<ReadOnlyObservableObject<T>>, function: (List<T>) -> R): DisposableReadOnlyObservableObject<R> {
   fun extractValues(): List<T> {
     return observables.map { it.value }
   }
 
   val intermediateObservable = ObservableObject(function(extractValues()))
 
-  observables.fastForEach {
-    it.consumeImmediately {
+  observables.fastForEach { source ->
+    intermediateObservable.addUpstreamSubscription(source.consumeImmediately {
       intermediateObservable.value = function(extractValues())
-    }
+    })
   }
 
   return intermediateObservable

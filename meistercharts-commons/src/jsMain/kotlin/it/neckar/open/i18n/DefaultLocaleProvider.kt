@@ -64,7 +64,8 @@ actual class DefaultLocaleProvider {
       val i18nConfiguration = I18nConfiguration(textLocale = locale, formatLocale = locale, timeZone = TimeZone.UTC) //timezone doesn't matter here
       //Do *not* access [DefaultI18nConfiguration] - has not yet been initialized!
 
-      decimalFormat.format(0.0, i18nConfiguration)
+      val probeResult = decimalFormat.format(0.0, i18nConfiguration)
+      logger.trace("Locale probe succeeded for <${locale.locale}>: '$probeResult'")
 
       //The locale can be used to format a string, use it
       locale

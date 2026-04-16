@@ -80,6 +80,12 @@ fun assertNotEventDispatchThread() {
  * @throws InterruptedException if any.
  */
 
+/**
+ * Returns the result of [callable], or `null` if [callable] is null. Callers that use this
+ * helper only for the side effect (typical in tests that place assertions inside the
+ * callable) may ignore the return value.
+ */
+@IgnorableReturnValue
 @Throws(ExecutionException::class, InterruptedException::class)
 fun <T> invokeInOtherThread(@Nonnull callable: Callable<T>?): T? {
   val executor = Executors.newSingleThreadExecutor()

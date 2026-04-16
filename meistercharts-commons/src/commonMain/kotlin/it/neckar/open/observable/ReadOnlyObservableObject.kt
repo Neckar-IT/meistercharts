@@ -85,43 +85,49 @@ interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSuppor
   }
 
   /**
-   * Maps the value of the current observable object to another value
+   * Maps the value of the current observable object to another value.
+   *
+   * The returned observable holds the upstream subscription on this observable and releases it on [dispose].
    */
-  fun <R> map(mapFunction: (T) -> R): ReadOnlyObservableObject<R> {
+  fun <R> map(mapFunction: (T) -> R): DisposableReadOnlyObservableObject<R> {
     //This method cannot be pushed down, since the value is required
     val intermediateObservable = ObservableObject(initValue = mapFunction(value))
 
-    consume { newValue ->
+    intermediateObservable.addUpstreamSubscription(consume { newValue ->
       intermediateObservable.value = mapFunction(newValue)
-    }
+    })
     return intermediateObservable
   }
 
   /**
    * Maps the value of the current observable object to a boolean.
    * Returns a new observable boolean that is automatically updated.
+   *
+   * The returned observable holds the upstream subscription on this observable and releases it on [dispose].
    */
   fun mapBoolean(mapFunction: (T) -> Boolean): ReadOnlyObservableBoolean {
     val intermediateObservable = ObservableBoolean(mapFunction(value))
 
-    consume { newValue ->
+    intermediateObservable.addUpstreamSubscription(consume { newValue ->
       intermediateObservable.value = mapFunction(newValue)
-    }
+    })
     return intermediateObservable
   }
 
   /**
-   * Use this observable and another observable and map these two values into a new observable
+   * Use this observable and another observable and map these two values into a new observable.
+   *
+   * The returned observable holds the upstream subscriptions on both source observables and releases them on [dispose].
    */
-  fun <U, R> map(otherObservable: ReadOnlyObservableObject<U>, function: (T, U) -> R): ReadOnlyObservableObject<R> {
+  fun <U, R> map(otherObservable: ReadOnlyObservableObject<U>, function: (T, U) -> R): DisposableReadOnlyObservableObject<R> {
     val intermediateObservable = ObservableObject(function(value, otherObservable.value))
 
-    consume { newValue ->
+    intermediateObservable.addUpstreamSubscription(consume { newValue ->
       intermediateObservable.value = function(newValue, otherObservable.value)
-    }
-    otherObservable.consume { newValue ->
+    })
+    intermediateObservable.addUpstreamSubscription(otherObservable.consume { newValue ->
       intermediateObservable.value = function(value, newValue)
-    }
+    })
 
     return intermediateObservable
   }
@@ -133,18 +139,18 @@ interface ReadOnlyObservableObject<out T> : Observable<T>, DependentObjectSuppor
 fun <T, U, V, R> ReadOnlyObservableObject<T>.map(
   otherObservable1: ReadOnlyObservableObject<U>,
   otherObservable2: ReadOnlyObservableObject<V>, function: (T, U, V) -> R,
-): ReadOnlyObservableObject<R> {
+): DisposableReadOnlyObservableObject<R> {
   val intermediateObservable = ObservableObject(function(value, otherObservable1.value, otherObservable2.value))
 
-  consume { newValue ->
+  intermediateObservable.addUpstreamSubscription(consume { newValue ->
     intermediateObservable.value = function(newValue, otherObservable1.value, otherObservable2.value)
-  }
-  otherObservable1.consume { newValue ->
+  })
+  intermediateObservable.addUpstreamSubscription(otherObservable1.consume { newValue ->
     intermediateObservable.value = function(value, newValue, otherObservable2.value)
-  }
-  otherObservable2.consume { newValue ->
+  })
+  intermediateObservable.addUpstreamSubscription(otherObservable2.consume { newValue ->
     intermediateObservable.value = function(value, otherObservable1.value, newValue)
-  }
+  })
 
   return intermediateObservable
 }
@@ -152,7 +158,7 @@ fun <T, U, V, R> ReadOnlyObservableObject<T>.map(
 /**
  * Reduces this observable with the other observables into a single observable
  */
-fun <T, R> ReadOnlyObservableObject<T>.reduce(vararg otherObservables: ReadOnlyObservableObject<T>, function: (List<T>) -> R): ReadOnlyObservableObject<R> {
+fun <T, R> ReadOnlyObservableObject<T>.reduce(vararg otherObservables: ReadOnlyObservableObject<T>, function: (List<T>) -> R): DisposableReadOnlyObservableObject<R> {
   val otherObservables1 = listOf(this, *otherObservables)
   return reduceObservables(otherObservables1, function)
 }
@@ -161,7 +167,7 @@ fun <T, R> ReadOnlyObservableObject<T>.reduce(vararg otherObservables: ReadOnlyO
 /**
  * Creates a new observable boolean that holds "or"
  */
-infix fun ReadOnlyObservableObject<Boolean>.or(other: ReadOnlyObservableObject<Boolean>): ReadOnlyObservableObject<Boolean> {
+infix fun ReadOnlyObservableObject<Boolean>.or(other: ReadOnlyObservableObject<Boolean>): DisposableReadOnlyObservableObject<Boolean> {
   return map(other) { myValue, otherValue ->
     return@map myValue || otherValue
   }
@@ -170,7 +176,7 @@ infix fun ReadOnlyObservableObject<Boolean>.or(other: ReadOnlyObservableObject<B
 /**
  * Creates a new observable boolean that holds "and"
  */
-infix fun ReadOnlyObservableObject<Boolean>.and(other: ObservableObject<Boolean>): ReadOnlyObservableObject<Boolean> {
+infix fun ReadOnlyObservableObject<Boolean>.and(other: ObservableObject<Boolean>): DisposableReadOnlyObservableObject<Boolean> {
   return map(other) { myValue, otherValue ->
     return@map myValue && otherValue
   }
@@ -179,7 +185,7 @@ infix fun ReadOnlyObservableObject<Boolean>.and(other: ObservableObject<Boolean>
 /**
  * Connects multiple observables using or
  */
-fun ReadOnlyObservableObject<Boolean>.or(vararg other: ReadOnlyObservableObject<Boolean>): ReadOnlyObservableObject<Boolean> {
+fun ReadOnlyObservableObject<Boolean>.or(vararg other: ReadOnlyObservableObject<Boolean>): DisposableReadOnlyObservableObject<Boolean> {
   return reduce(*other) {
     it.reduce { bool1, bool2 ->
       bool1 || bool2
@@ -191,7 +197,7 @@ fun ReadOnlyObservableObject<Boolean>.or(vararg other: ReadOnlyObservableObject<
  * Returns an observable that connects all values of this list using `and`.
  * Does not work with an empty list
  */
-fun ReadOnlyObservableObject<Boolean>.and(vararg other: ObservableObject<Boolean>): ReadOnlyObservableObject<Boolean> {
+fun ReadOnlyObservableObject<Boolean>.and(vararg other: ObservableObject<Boolean>): DisposableReadOnlyObservableObject<Boolean> {
   return reduce(*other) {
     it.reduce { bool1, bool2 ->
       bool1 && bool2

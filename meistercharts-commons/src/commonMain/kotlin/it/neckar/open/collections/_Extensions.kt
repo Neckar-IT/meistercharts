@@ -65,6 +65,12 @@ fun <K, V> Iterable<Pair<K, V>>.toLinkedMap(): LinkedHashMap<K, V> = LinkedHashM
 fun <K, V> Map<K, V>.flip(): Map<V, K> = this.map { Pair(it.value, it.key) }.toMap()
 fun <T> List<T>.countMap(): Map<T, Int> = LinkedHashMap<T, Int>().also { for (key in this) it.incr(key, +1) }
 
+/**
+ * Increments the counter stored under [key] by [delta] (defaulting to +1) and
+ * returns the new count. Callers that only want to accumulate counts (e.g.
+ * building a frequency map) may safely discard the return value.
+ */
+@IgnorableReturnValue
 fun <K> MutableMap<K, Int>.incr(key: K, delta: Int = +1): Int {
   val next = this.getOrPut(key) { 0 } + delta
   this[key] = next

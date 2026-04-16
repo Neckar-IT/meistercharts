@@ -29,9 +29,15 @@ package it.neckar.open.collections
 
 import kotlin.math.min
 
+/**
+ * Sorts the given [subject] in place. Returns [subject] to support fluent use;
+ * the return value may be safely ignored since sorting is a pure side effect.
+ */
+@IgnorableReturnValue
 fun <T> genericSort(subject: T, left: Int, right: Int, ops: SortOps<T>): T =
   genericSort(subject, left, right, ops, false)
 
+@IgnorableReturnValue
 fun <T> genericSort(subject: T, left: Int, right: Int, ops: SortOps<T>, reversed: Boolean): T =
   subject.also {
     timSort(subject, left, right, ops, reversed)
@@ -123,6 +129,7 @@ object SortOpsComparable : SortOps<MutableList<Comparable<Any>>>() {
   }
 }
 
+@IgnorableReturnValue
 fun <T : Comparable<T>> MutableList<T>.genericSort(left: Int = 0, right: Int = size - 1): MutableList<T> =
   genericSort(this, left, right, SortOpsComparable as SortOps<MutableList<T>>, false)
 

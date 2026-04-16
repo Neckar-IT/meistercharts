@@ -43,6 +43,8 @@ object LoggingTestSupport {
 
   /**
    * Forces the logging level of all loggers to the given level.
+   * The returned [OriginalLevels] must be passed to [enableLogging] once the test finishes
+   * so that other tests are not affected by the altered logging configuration.
    */
   fun forceLoggingLevel(level: Level = Level.ERROR): OriginalLevels {
     val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext

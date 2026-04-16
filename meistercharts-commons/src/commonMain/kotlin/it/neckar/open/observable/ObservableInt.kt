@@ -37,14 +37,16 @@ class ObservableInt(initValue: Int) : ObservableObject<Int>(initValue), ReadOnly
  */
 interface ReadOnlyObservableInt : ReadOnlyObservableObject<Int> {
   /**
-   * Creates a binding that compares the value of this to the given value
+   * Creates a binding that compares the value of this to the given value.
+   *
+   * The returned observable holds the upstream subscription on this observable and releases it on [dispose].
    */
-  fun isEqualTo(compareWith: Int): ReadOnlyObservableObject<out Boolean> {
+  fun isEqualTo(compareWith: Int): DisposableReadOnlyObservableObject<Boolean> {
     val intermediateObservable = ObservableBoolean(this.value == compareWith)
 
-    consume { newValue ->
+    intermediateObservable.addUpstreamSubscription(consume { newValue ->
       intermediateObservable.value = newValue == compareWith
-    }
+    })
 
     return intermediateObservable
   }
@@ -52,33 +54,39 @@ interface ReadOnlyObservableInt : ReadOnlyObservableObject<Int> {
 
 
 /**
- * Converts the observable object to an observable object that holds a number
+ * Converts the observable object to an observable object that holds a number.
+ *
+ * Both upstream subscriptions are registered on the returned observable, so calling [ObservableObject.dispose]
+ * on it releases both listeners.
  */
 fun ObservableObject<Int>.toNumber(): ObservableObject<Number> {
   val numberObservableObject = ObservableObject<Number>(this.value)
 
-  consume {
+  numberObservableObject.addUpstreamSubscription(consume {
     numberObservableObject.value = it
-  }
-  numberObservableObject.consume {
+  })
+  numberObservableObject.addUpstreamSubscription(numberObservableObject.consume {
     this.value = it.toInt()
-  }
+  })
 
   return numberObservableObject
 }
 
 /**
- * Converts the observable object to an observable object that holds a number
+ * Converts the observable object to an observable object that holds a number.
+ *
+ * Both upstream subscriptions are registered on the returned observable, so calling [ObservableObject.dispose]
+ * on it releases both listeners.
  */
 fun ObservableObject<Int>.toDouble(): ObservableObject<Double> {
   val numberObservableObject = ObservableDouble(value.toDouble())
 
-  consume {
+  numberObservableObject.addUpstreamSubscription(consume {
     numberObservableObject.value = it.toDouble()
-  }
-  numberObservableObject.consume {
+  })
+  numberObservableObject.addUpstreamSubscription(numberObservableObject.consume {
     this.value = it.toInt()
-  }
+  })
 
   return numberObservableObject
 }

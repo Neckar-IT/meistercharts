@@ -180,7 +180,9 @@ fun DoubleArrayList.removeAll(predicate: (Double) -> Boolean) {
     val currentValue = this.getAt(n)
 
     if (predicate(currentValue)) {
-      removeAt(n)
+      removeAt(n).also { removed ->
+        check(removed == currentValue) { "Expected to remove $currentValue at index $n but removed $removed" }
+      }
     } else {
       //Only iterate if no element has been removed
       n++

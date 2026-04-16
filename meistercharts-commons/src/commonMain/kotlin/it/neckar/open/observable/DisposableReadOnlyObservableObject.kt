@@ -27,28 +27,14 @@
  */
 package it.neckar.open.observable
 
-/**
- * Convenience class; it is the same as [ObservableObject] with type-parameter [Double]
- */
-class ObservableDouble(initValue: Double) : ObservableObject<Double>(initValue), ReadOnlyObservableDouble
+import it.neckar.open.dispose.Disposable
 
 /**
- * Convenience class; it is the same as [ReadOnlyObservableObject] with type-parameter [Double]
+ * Read-only observable that holds subscriptions on upstream observables and can be disposed
+ * to release those subscriptions.
+ *
+ * Returned by derived-observable factories such as [ReadOnlyObservableObject.map] and the
+ * top-level `map`/`reduce` combinators. Callers that want the intermediate observable to be
+ * eligible for garbage collection must call [dispose] to unregister the upstream listeners.
  */
-interface ReadOnlyObservableDouble : ReadOnlyObservableObject<Double> {
-
-  /**
-   * Creates a binding that compares the value of this to the given value.
-   *
-   * The returned observable holds the upstream subscription on this observable and releases it on [dispose].
-   */
-  fun isEqualTo(compareWith: Double): DisposableReadOnlyObservableObject<Boolean> {
-    val intermediateObservable = ObservableBoolean(this.value == compareWith)
-
-    intermediateObservable.addUpstreamSubscription(consume { newValue ->
-      intermediateObservable.value = newValue == compareWith
-    })
-
-    return intermediateObservable
-  }
-}
+interface DisposableReadOnlyObservableObject<out T> : ReadOnlyObservableObject<T>, Disposable

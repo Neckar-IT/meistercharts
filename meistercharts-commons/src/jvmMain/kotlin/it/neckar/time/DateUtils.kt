@@ -112,11 +112,11 @@ object DateUtils {
       )
     )
 
-    fun StringBuilder.replaceOnce(toReplace: String, replacement: String) =
-      StringUtils.replaceOnce(this.toString(), toReplace, replacement).let {
-        this.setLength(0)
-        this.append(it)
-      }
+    fun StringBuilder.replaceOnce(toReplace: String, replacement: String) {
+      val replaced = StringUtils.replaceOnce(this.toString(), toReplace, replacement)
+      this.setLength(0)
+      this.append(replaced)
+    }
 
     fun StringBuilder.replaceZeros() {
       listOf(

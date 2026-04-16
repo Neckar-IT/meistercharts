@@ -44,6 +44,14 @@ open class DefaultObservable<T> : Observable<T>, Disposable, DependentObjectSupp
    */
   private val dependentObjects: DependentObjects = DependentObjects()
 
+  /**
+   * Upstream subscriptions that this observable holds on other observables (via map/bind/select).
+   *
+   * Disposed when this observable is disposed. Without this, a derived observable cannot be garbage collected
+   * while its source is alive, because the source retains the intermediate via its listener list.
+   */
+  private val upstreamSubscriptions: MutableList<Disposable> = mutableListOf()
+
   override fun consume(action: ConsumeAction<T>): Disposable {
     return consumeChanges { _, newValue -> action(newValue) }
   }
@@ -103,10 +111,23 @@ open class DefaultObservable<T> : Observable<T>, Disposable, DependentObjectSupp
   }
 
   /**
+   * Registers a subscription on another observable that this instance depends on.
+   *
+   * Must be called when this observable is derived from another via map/bind/select — the returned
+   * [Disposable] from `consume`/`consumeImmediately`/`consumeChanges*` must be passed here so it is
+   * released in [dispose].
+   */
+  fun addUpstreamSubscription(subscription: Disposable) {
+    upstreamSubscriptions.add(subscription)
+  }
+
+  /**
    * Disposes the observable object:
-   * Removes all listeners
+   * Disposes all upstream subscriptions, removes all listeners, and clears dependent objects.
    */
   override fun dispose() {
+    upstreamSubscriptions.fastForEach { it.dispose() }
+    upstreamSubscriptions.clear()
     valueChangeListeners.clear()
     dependentObjects.dispose()
   }

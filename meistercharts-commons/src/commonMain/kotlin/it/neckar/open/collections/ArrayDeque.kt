@@ -74,7 +74,9 @@ class ByteArrayDeque(val initialBits: Int = 10, val allowGrow: Boolean = true) {
       val newRing = RingBuffer(newBits)
       while (ring.availableRead > 0) {
         val read = ring.read(tempBuffer, 0, tempBuffer.size)
-        newRing.write(tempBuffer, 0, read)
+        newRing.write(tempBuffer, 0, read).also { written ->
+          check(written == read) { "Buffer resize must copy all bytes: read $read but wrote $written" }
+        }
       }
       this.ring = newRing
     }
@@ -88,13 +90,17 @@ class ByteArrayDeque(val initialBits: Int = 10, val allowGrow: Boolean = true) {
   val hasMoreToWrite get() = ring.availableWrite > 0
   val hasMoreToRead get() = ring.availableRead > 0
   fun readOne() = run {
-    read(tempBuffer, 0, 1)
+    read(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to read 1 element but read $count" }
+    }
     tempBuffer[0]
   }
 
   fun writeOne(value: Byte) {
     tempBuffer[0] = value
-    write(tempBuffer, 0, 1)
+    write(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to write 1 element but wrote $count" }
+    }
   }
 
   override fun hashCode(): Int = ring.contentHashCode()
@@ -138,7 +144,9 @@ class ShortArrayDeque(val initialBits: Int = 10) {
       val newRing = ShortRingBuffer(newBits)
       while (ring.availableRead > 0) {
         val read = ring.read(tempBuffer, 0, tempBuffer.size)
-        newRing.write(tempBuffer, 0, read)
+        newRing.write(tempBuffer, 0, read).also { written ->
+          check(written == read) { "Buffer resize must copy all bytes: read $read but wrote $written" }
+        }
       }
       this.ring = newRing
     }
@@ -152,13 +160,17 @@ class ShortArrayDeque(val initialBits: Int = 10) {
   val hasMoreToWrite get() = ring.availableWrite > 0
   val hasMoreToRead get() = ring.availableRead > 0
   fun readOne(): Short {
-    read(tempBuffer, 0, 1)
+    read(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to read 1 element but read $count" }
+    }
     return tempBuffer[0]
   }
 
   fun writeOne(value: Short) {
     tempBuffer[0] = value
-    write(tempBuffer, 0, 1)
+    write(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to write 1 element but wrote $count" }
+    }
   }
 
   override fun hashCode(): Int = ring.contentHashCode()
@@ -203,7 +215,9 @@ class IntArrayDeque(val initialBits: Int = 10) {
       val newRing = IntRingBuffer(newBits)
       while (ring.availableRead > 0) {
         val read = ring.read(tempBuffer, 0, tempBuffer.size)
-        newRing.write(tempBuffer, 0, read)
+        newRing.write(tempBuffer, 0, read).also { written ->
+          check(written == read) { "Buffer resize must copy all bytes: read $read but wrote $written" }
+        }
       }
       this.ring = newRing
     }
@@ -217,13 +231,17 @@ class IntArrayDeque(val initialBits: Int = 10) {
   val hasMoreToWrite get() = ring.availableWrite > 0
   val hasMoreToRead get() = ring.availableRead > 0
   fun readOne() = run {
-    read(tempBuffer, 0, 1)
+    read(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to read 1 element but read $count" }
+    }
     tempBuffer[0]
   }
 
   fun writeOne(value: Int) {
     tempBuffer[0] = value
-    write(tempBuffer, 0, 1)
+    write(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to write 1 element but wrote $count" }
+    }
   }
 
   override fun hashCode(): Int = ring.contentHashCode()
@@ -268,7 +286,9 @@ class FloatArrayDeque(val initialBits: Int = 10) {
       val newRing = FloatRingBuffer(newBits)
       while (ring.availableRead > 0) {
         val read = ring.read(tempBuffer, 0, tempBuffer.size)
-        newRing.write(tempBuffer, 0, read)
+        newRing.write(tempBuffer, 0, read).also { written ->
+          check(written == read) { "Buffer resize must copy all bytes: read $read but wrote $written" }
+        }
       }
       this.ring = newRing
     }
@@ -282,13 +302,17 @@ class FloatArrayDeque(val initialBits: Int = 10) {
   val hasMoreToWrite get() = ring.availableWrite > 0
   val hasMoreToRead get() = ring.availableRead > 0
   fun readOne() = run {
-    read(tempBuffer, 0, 1)
+    read(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to read 1 element but read $count" }
+    }
     tempBuffer[0]
   }
 
   fun writeOne(value: Float) {
     tempBuffer[0] = value
-    write(tempBuffer, 0, 1)
+    write(tempBuffer, 0, 1).also { count ->
+      check(count == 1) { "Expected to write 1 element but wrote $count" }
+    }
   }
 
   override fun hashCode(): Int = ring.contentHashCode()

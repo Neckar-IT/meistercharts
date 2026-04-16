@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
 /**
  * An observable object that contains a value and can be observed
  */
-open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyObservableObject<T>, Disposable {
+open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), DisposableReadOnlyObservableObject<T> {
   /**
    * The current value
    */
@@ -69,14 +69,17 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
   /**
    * Binds this [ObservableObject] to [other] and vice versa.
    *
-   * Copies the value from [other] to this initially
+   * Copies the value from [other] to this initially.
+   *
+   * Both upstream subscriptions are registered on this observable, so calling [dispose] on this
+   * instance releases both listeners.
    *
    * For a unidirectional binding see [bind]
    */
   fun bindBidirectional(other: ObservableObject<T>) {
     //Copy value from this to other
-    consume { newValue -> other.value = newValue }
-    other.consumeImmediately { newValue -> this.value = newValue }
+    addUpstreamSubscription(consume { newValue -> other.value = newValue })
+    addUpstreamSubscription(other.consumeImmediately { newValue -> this.value = newValue })
   }
 
   fun <R> bindBidirectional(
@@ -92,6 +95,9 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
    *
    * Assigns the value of the other observable to this initially.
    *
+   * Both upstream subscriptions are registered on this observable, so calling [dispose] on this
+   * instance releases both listeners.
+   *
    * ATTENTION: The converter must work bidirectional - they must return objects that are equal to each other
    * @param R the other type
    */
@@ -103,8 +109,8 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
     //Copy value from this to other
     var updating = false
 
-    consume { newValue ->
-      if (!updating) {
+    addUpstreamSubscription(consume { newValue ->
+      if (updating.not()) {
         updating = true
         try {
           other.value = converterForward(newValue, other.value)
@@ -112,9 +118,9 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
           updating = false
         }
       }
-    }
-    other.consumeImmediately { newValue ->
-      if (!updating) {
+    })
+    addUpstreamSubscription(other.consumeImmediately { newValue ->
+      if (updating.not()) {
         updating = true
         try {
           this.value = converterBack(newValue, this.value)
@@ -122,7 +128,7 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
           updating = false
         }
       }
-    }
+    })
   }
 
   /**
@@ -133,15 +139,18 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), ReadOnlyO
   /**
    * Binds this [ObservableObject] to [other].
    *
-   * Copies the value from [other] to this initially
+   * Copies the value from [other] to this initially.
+   *
+   * The upstream subscription is registered on this observable, so calling [dispose] on this
+   * instance releases the listener on [other].
    *
    * For a bidirectional binding see [bindBidirectional]
    */
   fun bind(other: ReadOnlyObservableObject<T>) {
     requireNotBound()
-    other.consumeImmediately { newValue ->
+    addUpstreamSubscription(other.consumeImmediately { newValue ->
       updateFromBinding(newValue)
-    }
+    })
     isBound = true
   }
 

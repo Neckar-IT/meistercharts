@@ -73,10 +73,13 @@ private object FloatArrayListSortOps : SortOps<FloatArrayList>() {
   }
 }
 
+@IgnorableReturnValue
 fun IntArrayList.sort(start: Int = 0, end: Int = size, reversed: Boolean = false) = genericSort(this, start, end - 1, IntArrayListSortOps, reversed)
 
+@IgnorableReturnValue
 fun DoubleArrayList.sort(start: Int = 0, end: Int = size, reversed: Boolean = false) = genericSort(this, start, end - 1, DoubleArrayListSortOps, reversed)
 
+@IgnorableReturnValue
 fun FloatArrayList.sort(start: Int = 0, end: Int = size, reversed: Boolean = false) = genericSort(this, start, end - 1, FloatArrayListSortOps, reversed)
 
 fun IntArrayList.reverse(start: Int = 0, end: Int = size) = IntArrayListSortOps.reverse(this, start, end - 1)
@@ -120,12 +123,19 @@ fun DoubleArrayList.rotated(offset: Int): DoubleArrayList = DoubleArrayList(this
 }
 
 /**
- * Removes elements from the list until the max size has been reached
+ * Removes elements from the start of the list until the given [maxSize] has been reached.
+ *
+ * Uses a single bulk [DoubleArrayList.removeAt] call instead of a shrinking loop —
+ * O(n) instead of O(n²).
  */
 fun DoubleArrayList.deleteFromStartUntilMaxSize(maxSize: Int) {
   require(maxSize >= 0) { "Invalid max size: $maxSize" }
 
-  while (this.size > maxSize) {
-    removeAt(0)
+  val removeCount = this.size - maxSize
+  if (removeCount > 0) {
+    val firstExpected = this.getAt(0)
+    removeAt(0, removeCount).also { firstRemoved ->
+      check(firstRemoved == firstExpected) { "Expected first removed element to be $firstExpected but was $firstRemoved" }
+    }
   }
 }
