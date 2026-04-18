@@ -102,12 +102,18 @@ class PuristicCompassGestalt(
     anchorDirection = Direction.TopCenter
   }
 
-  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
-    configuration.marginProperty.consumeImmediately {
-      fixedChartGestalt.contentViewportMargin = it
-      resizablePaintableLayer.insets = it
-    }
+  /**
+   * Kept on the instance so the subscription's lifetime is tied to this gestalt.
+   * Previously registered in `configure()` - which would have attached a new listener on every
+   * call; moving it into an initialised property ensures exactly one subscription per gestalt.
+   */
+  @Suppress("unused")
+  private val marginSubscription = configuration.marginProperty.consumeImmediately {
+    fixedChartGestalt.contentViewportMargin = it
+    resizablePaintableLayer.insets = it
+  }
 
+  override fun configure(meisterChartBuilder: MeisterchartBuilder) {
     fixedChartGestalt.configure(meisterChartBuilder)
 
     meisterChartBuilder.configure {

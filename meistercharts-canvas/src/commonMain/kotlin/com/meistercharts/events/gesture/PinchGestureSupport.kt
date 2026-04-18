@@ -117,8 +117,11 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
   }
 
   /**
-   * Notify all registered callbacks about the current state of the pinch gesture
+   * Notify all registered callbacks about the current state of the pinch gesture.
+   * Returns [EventConsumption.Ignored] so callers can use `return notifyPinched()` as an idiom;
+   * the return value is otherwise safe to ignore.
    */
+  @IgnorableReturnValue
   private fun notifyPinched(): EventConsumption {
     val pinchGesture = PinchGesture(gestureState, pinchZoom, pinchCenter)
     pinchedCallbacks.forEach {

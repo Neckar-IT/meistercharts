@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.timerSupport
 import it.neckar.open.async.TimerSupport
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.si.ms
 import kotlin.time.Duration
@@ -36,14 +37,17 @@ class HideAfterTimeoutLayer<T : Layer>(
   override val type: LayerType
     get() = delegate.type
 
-  init {
-    delegate.visibleProperty.consume(false) {
-      if (it) {
-        lastShowTime = nowMillis()
+  /**
+   * Subscription on [delegate]'s visibleProperty, kept on the instance so its lifetime is tied to
+   * this layer.
+   */
+  @Suppress("unused")
+  private val visiblePropertySubscription: Disposable = delegate.visibleProperty.consume(false) {
+    if (it) {
+      lastShowTime = nowMillis()
 
-        timerSupport.delay(duration) {
-          delegate.visibleProperty.value = false
-        }
+      timerSupport.delay(duration) {
+        delegate.visibleProperty.value = false
       }
     }
   }

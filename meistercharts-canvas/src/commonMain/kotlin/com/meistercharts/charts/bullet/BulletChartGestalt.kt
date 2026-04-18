@@ -288,14 +288,17 @@ class BulletChartGestalt constructor(
    */
   val balloonTooltipLayer: BalloonTooltipLayer = balloonTooltipSupport.createTooltipLayer()
 
-  init {
-    fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
-      valueAxisGridLayer.configuration.passpartout = it
-      categoryAxisGridLayer.configuration.applyPasspartout(it)
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val viewportMarginSubscription = fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
+    valueAxisGridLayer.configuration.passpartout = it
+    categoryAxisGridLayer.configuration.applyPasspartout(it)
 
-      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
-      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
-    }
+    valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+    categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
+  }
+
+  init {
 
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)

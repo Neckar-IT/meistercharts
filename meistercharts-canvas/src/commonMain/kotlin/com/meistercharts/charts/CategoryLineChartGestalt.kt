@@ -312,16 +312,18 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    */
   val categoriesGridLayer: GridLayer = categoryAxisLayer.createGrid {}
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val viewportMarginSubscription = fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
+    valuesGridLayer.configuration.passpartout = it
+
+    categoriesGridLayer.configuration.applyPasspartout(it)
+
+    valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+    categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
+  }
+
   init {
-    fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
-      valuesGridLayer.configuration.passpartout = it
-
-      categoriesGridLayer.configuration.applyPasspartout(it)
-
-      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
-      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
-    }
-
     configureBuilder { meisterChartBuilder: MeisterchartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)
 

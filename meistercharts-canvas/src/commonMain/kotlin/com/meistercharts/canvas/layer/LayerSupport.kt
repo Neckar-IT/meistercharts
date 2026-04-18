@@ -28,6 +28,7 @@ import com.meistercharts.events.KeyEventBroker
 import com.meistercharts.events.MouseEventBroker
 import com.meistercharts.events.PointerEventBroker
 import com.meistercharts.events.TouchEventBroker
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.observable.ReadOnlyObservableObject
 
 /**
@@ -111,10 +112,11 @@ interface LayerSupport : PaintListener {
 }
 
 /**
- * Registers a dirty listeners for the given [layerSupport]
+ * Registers a dirty listener for the given [layerSupport].
+ * The subscription is tied to the underlying [ChartSupport] lifecycle.
  */
 fun ReadOnlyObservableObject<Any?>.registerDirtyListener(layerSupport: LayerSupport, reason: DirtyReason) {
   consume {
     layerSupport.markAsDirty(reason)
-  }
+  }.disposeOn(layerSupport.chartSupport)
 }

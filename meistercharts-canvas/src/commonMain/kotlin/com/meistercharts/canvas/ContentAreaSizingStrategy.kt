@@ -23,6 +23,7 @@ import com.meistercharts.state.MutableChartState
 import it.neckar.geometry.Size
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.number.MayBeZero
@@ -83,15 +84,15 @@ abstract class AbstractContentAreaSizingStrategy(
       )
     }
 
-    //Update the content area size on a window size change
+    //Update the content area size on a window size change - tied to chart-support lifecycle
     chartState.windowSizeProperty.consumeChanges { oldWindowSize, newWindowSize ->
       recalculate(chartState, oldWindowSize, newWindowSize, chartSupport)
-    }
+    }.disposeOn(chartSupport)
 
     //Update the content area size on a content viewport margin change
     chartState.contentViewportMarginProperty.consumeChanges { _, _ ->
       recalculate(chartState, chartState.windowSize, chartState.windowSize, chartSupport)
-    }
+    }.disposeOn(chartSupport)
 
     //Recalculate whenever a dependency has been updated
     dependencies.forEach { dependency ->

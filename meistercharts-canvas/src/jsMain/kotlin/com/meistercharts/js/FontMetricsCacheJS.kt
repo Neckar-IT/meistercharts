@@ -42,11 +42,13 @@ object FontMetricsCacheJS : FontMetricsCache {
    */
   val fontMetricsCalculator: CanvasFontMetricsCalculatorJS = CanvasFontMetricsCalculatorJS()
 
-  init {
+  /**
+   * Subscription on font-loaded events. Lives for the lifetime of this cache object.
+   */
+  @Suppress("unused")
+  private val fontLoadedSubscription = FontLoadedEventBroker.onLoaded {
     //Clear the cache whenever a font has been loaded.
-    FontLoadedEventBroker.onLoaded {
-      fontMetricsCache.clear()
-    }
+    fontMetricsCache.clear()
   }
 
   /**

@@ -63,6 +63,7 @@ data class Matrix(
     }
   }
 
+  @IgnorableReturnValue
   fun setTo(a: Double, b: Double, c: Double, d: Double, tx: Double, ty: Double): Matrix = this.apply {
     this.a = a
     this.b = b
@@ -72,14 +73,19 @@ data class Matrix(
     this.ty = ty
   }
 
+  @IgnorableReturnValue
   fun setTo(a: Float, b: Float, c: Float, d: Float, tx: Float, ty: Float): Matrix = setTo(a.toDouble(), b.toDouble(), c.toDouble(), d.toDouble(), tx.toDouble(), ty.toDouble())
+
+  @IgnorableReturnValue
   fun setTo(a: Int, b: Int, c: Int, d: Int, tx: Int, ty: Int): Matrix = setTo(a.toDouble(), b.toDouble(), c.toDouble(), d.toDouble(), tx.toDouble(), ty.toDouble())
 
+  @IgnorableReturnValue
   fun copyFrom(that: Matrix): Matrix {
     setTo(that.a, that.b, that.c, that.d, that.tx, that.ty)
     return this
   }
 
+  @IgnorableReturnValue
   fun rotate(theta: @rad Double): Matrix = this.apply {
     val cos = cos(theta)
     val sin = sin(theta)
@@ -97,6 +103,7 @@ data class Matrix(
     tx = tx1
   }
 
+  @IgnorableReturnValue
   fun skew(skewX: Double, skewY: Double): Matrix {
     val sinX = sin(skewX)
     val cosX = cos(skewX)
@@ -113,25 +120,36 @@ data class Matrix(
     )
   }
 
+  @IgnorableReturnValue
   fun scale(sx: Double, sy: Double = sx): Matrix = setTo(a * sx, b * sx, c * sy, d * sy, tx * sx, ty * sy)
+
+  @IgnorableReturnValue
   fun prescale(sx: Double, sy: Double = sx): Matrix = setTo(a * sx, b * sx, c * sy, d * sy, tx, ty)
+
+  @IgnorableReturnValue
   fun translate(dx: Double, dy: Double): Matrix = this.apply { this.tx += dx; this.ty += dy }
+
+  @IgnorableReturnValue
   fun pretranslate(dx: Double, dy: Double): Matrix = this.apply { tx += a * dx + c * dy; ty += b * dx + d * dy }
 
+  @IgnorableReturnValue
   fun prerotate(theta: @rad Double): Matrix = this.apply {
     val m = Matrix()
     m.rotate(theta)
     this.premultiply(m)
   }
 
+  @IgnorableReturnValue
   fun preskew(skewX: Double, skewY: Double): Matrix = this.apply {
     val m = Matrix()
     m.skew(skewX, skewY)
     this.premultiply(m)
   }
 
+  @IgnorableReturnValue
   fun premultiply(m: Matrix): Matrix = this.premultiply(m.a, m.b, m.c, m.d, m.tx, m.ty)
 
+  @IgnorableReturnValue
   fun premultiply(la: Double, lb: Double, lc: Double, ld: Double, ltx: Double, lty: Double): Matrix = setTo(
     la * a + lb * c,
     la * b + lb * d,
@@ -141,6 +159,7 @@ data class Matrix(
     ltx * b + lty * d + ty
   )
 
+  @IgnorableReturnValue
   fun multiply(l: Matrix, r: Matrix): Matrix = setTo(
     l.a * r.a + l.b * r.c,
     l.a * r.b + l.b * r.d,
@@ -156,8 +175,10 @@ data class Matrix(
   /**
    * Resets the matrix to the identity matrix
    */
+  @IgnorableReturnValue
   fun reset(): Matrix = setTo(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
+  @IgnorableReturnValue
   fun invert(matrixToInvert: Matrix = this): Matrix {
     val src = matrixToInvert
     val dst = this
@@ -179,6 +200,7 @@ data class Matrix(
 
   fun inverted(out: Matrix = Matrix()): Matrix = out.invert(this)
 
+  @IgnorableReturnValue
   fun setTransform(
     x: Double,
     y: Double,

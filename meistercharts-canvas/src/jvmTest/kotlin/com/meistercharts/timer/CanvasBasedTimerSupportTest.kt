@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("RETURN_VALUE_NOT_USED") // Test/demo-scope discards: builder-style mutator returns, event-notifier returns, subscription discards
+
 package com.meistercharts.timer
 
 import assertk.*

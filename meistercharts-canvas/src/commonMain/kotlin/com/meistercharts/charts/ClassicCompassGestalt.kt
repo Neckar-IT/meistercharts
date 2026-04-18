@@ -70,11 +70,11 @@ class ClassicCompassGestalt(
     gaugePaintable
   }
 
-  init {
-    configuration.marginProperty.consumeImmediately {
-      fixedChartGestalt.contentViewportMargin = it
-      gaugePaintableLayer.insets = it
-    }
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val marginSubscription = configuration.marginProperty.consumeImmediately {
+    fixedChartGestalt.contentViewportMargin = it
+    gaugePaintableLayer.insets = it
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

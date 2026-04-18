@@ -1014,60 +1014,59 @@ class TimeLineChartGestalt
    */
   var contentViewportMargin: Insets by contentViewportGestalt::contentViewportMargin
 
-  init {
+  /**
+   * Configuration-property subscriptions. Kept on the instance so the lifetime is tied to this
+   * gestalt — when the gestalt is collected, the configuration properties (and their listener
+   * lists) go with it.
+   */
+  @Suppress("unused")
+  private val configurationSubscriptions: List<Disposable> = listOf(
     configuration.minimumSamplingPeriodProperty.consumeImmediately {
       //adjust the content area in order to display about 600 samples
       configuration.applyMinimumSamplingPeriod(it)
-    }
-
+    },
     configuration.contentAreaTimeRangeProperty.consumeImmediately { newContentAreaTimeRange ->
       timeAxisLayer.configuration.contentAreaTimeRange = newContentAreaTimeRange
       tileProvider.clear()
-    }
-
+    },
     configuration.requestedVisibleDecimalSeriesIndicesProperty.consume {
       tileProvider.clear()
-    }
-
+    },
     configuration.lineStylesProperty.consumeImmediately {
       tileProvider.clear()
-    }
-
+    },
     configuration.pointPaintersProperty.consumeImmediately {
       tileProvider.clear()
-    }
-
+    },
     configuration.requestedVisibleValueAxesIndicesProperty.consumeImmediately {
       //updateValueAxisLayers()
-    }
-
+    },
     configuration.timeAxisSizeProperty.consumeImmediately {
       timeAxisLayer.configuration.size = it
       //updateValueAxisLayers()
-    }
-
+    },
     configuration.showTimeAxisProperty.consumeImmediately {
       //The margins used for the value axes depends on the visibility of the time axis
       //TODO
       //updateValueAxisLayers()
-    }
-
+    },
     configuration.historyGapCalculatorProperty.consume {
       tileProvider.clear()
-    }
-
+    },
     //Apply the configuration again - when it is updated
     configuration.valueAxisStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachAxisLayer { decimalDataSeriesIndex, valueAxisLayer ->
         configuration(valueAxisLayer.configuration, decimalDataSeriesIndex)
       }
-    }
-
+    },
     configuration.valueAxisTopTitleStyleConfigurationProperty.consume { configuration ->
       valueAxisSupport.foreachTopTitleLayer { decimalDataSeriesIndex, layer ->
         configuration(layer.configuration, decimalDataSeriesIndex)
       }
-    }
+    },
+  )
+
+  init {
 
     configureBuilder { meisterChartBuilder ->
       chartRefreshGestalt.configure(meisterChartBuilder)

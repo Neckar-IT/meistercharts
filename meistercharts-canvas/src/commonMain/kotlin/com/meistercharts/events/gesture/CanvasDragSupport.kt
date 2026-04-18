@@ -173,8 +173,9 @@ class CanvasDragSupport {
   /**
    * Updates the drag location.
    *
-   * Returns the delta time
+   * Returns the delta time (callers that only need the side-effect may ignore the return).
    */
+  @IgnorableReturnValue
   private fun updateDragLocation(coordinates: Coordinates?, eventTime: @ms Double): @ms Double {
     currentLocation = coordinates
 

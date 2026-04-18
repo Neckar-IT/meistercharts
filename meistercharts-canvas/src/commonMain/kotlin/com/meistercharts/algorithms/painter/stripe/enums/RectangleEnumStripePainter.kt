@@ -101,7 +101,6 @@ class RectangleEnumStripePainter(
     }
 
     val paintingVariables: EnumStripePainterPaintingVariables = paintingVariables()
-    paintingVariables.historyConfiguration
 
     gc.fill(configuration.fillProvider(ordinalToPaint, paintingVariables.historyEnum))
     val snapConfiguration = configuration.snapConfiguration()

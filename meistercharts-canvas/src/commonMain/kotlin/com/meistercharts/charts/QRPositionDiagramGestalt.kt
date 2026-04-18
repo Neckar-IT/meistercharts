@@ -100,17 +100,17 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
 
   val domainAxisMarkersLayer: DomainAxisMarkersLayer = DomainAxisMarkersLayer({ Coordinates(configuration.valueRangeX.toDomainRelative(configuration.x), configuration.valueRangeY.toDomainRelative(configuration.y)) })
 
-  init {
-    configuration.marginProperty.consumeImmediately {
-      fixedChartGestalt.contentViewportMargin = it
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val marginSubscription = configuration.marginProperty.consumeImmediately {
+    fixedChartGestalt.contentViewportMargin = it
 
-      valueAxisXLayer.configuration.size = it.bottom
-      gridLayerX.configuration.passpartout = it
+    valueAxisXLayer.configuration.size = it.bottom
+    gridLayerX.configuration.passpartout = it
 
-      valueAxisYLayer.configuration.size = it.left
+    valueAxisYLayer.configuration.size = it.left
 
-      gridLayerY.configuration.passpartout = it
-    }
+    gridLayerY.configuration.passpartout = it
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

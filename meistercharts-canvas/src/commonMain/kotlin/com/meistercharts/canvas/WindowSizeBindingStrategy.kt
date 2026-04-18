@@ -18,6 +18,7 @@ package com.meistercharts.canvas
 import com.meistercharts.state.MutableChartState
 import it.neckar.geometry.AxisSelection
 import it.neckar.open.dispose.OnDispose
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.async.Async
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -53,7 +54,7 @@ data object ImmediateWindowSizeBindingStrategy : WindowSizeBindingStrategy {
   override fun bind(chartState: MutableChartState, canvas: Canvas, onDispose: OnDispose) {
     canvas.sizeProperty.consumeImmediately {
       chartState.windowSize = it
-    }
+    }.disposeOn(onDispose)
   }
 
 }
@@ -86,7 +87,7 @@ class DelayedWindowSizeBindingStrategy(
       async.throttleLast(delay, asyncKey) {
         chartState.windowSize = chartState.windowSize.with(canvas.size, axisSelection) // use the current canvas.size! Not 'newValue'!
       }
-    }
+    }.disposeOn(onDispose)
 
     //apply the first size immediately
     chartState.windowSize = canvas.size

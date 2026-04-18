@@ -88,12 +88,18 @@ object MeisterChartsPlatform : MeisterChartsAbstractPlatform() {
   }
 
   /**
+   * The render-loop subscription registered via [armRenderLoop]. Kept so its lifetime is tied to this singleton.
+   */
+  @Suppress("unused")
+  private var renderLoopSubscription: it.neckar.open.dispose.Disposable? = null
+
+  /**
    * Start the animation frame when the first chart is created and stop it when the last chart is disposed
    */
   private fun armRenderLoop() {
     require(Meistercharts.platformState.hasInstances.not()) { "Already contains instances!" }
 
-    Meistercharts.platformState.onPlatformStateUpdate(object : PlatformStateListener {
+    renderLoopSubscription = Meistercharts.platformState.onPlatformStateUpdate(object : PlatformStateListener {
       /**
        * ID for the current animation frame request - used to cancel the request
        */

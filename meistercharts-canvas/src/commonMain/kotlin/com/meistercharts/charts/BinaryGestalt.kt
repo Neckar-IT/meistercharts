@@ -61,12 +61,15 @@ class BinaryGestalt(
     valuesProvider = configuration::valuesProvider.delegate()
   )
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val marginSubscription = configuration.marginProperty.consumeImmediately {
+    withContentViewportGestalt.contentViewportMargin = it
+    valueAxisLayer.configuration.size = it.left
+  }
+
   init {
     configuration.additionalConfiguration()
-    configuration.marginProperty.consumeImmediately {
-      withContentViewportGestalt.contentViewportMargin = it
-      valueAxisLayer.configuration.size = it.left
-    }
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

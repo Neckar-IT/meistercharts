@@ -94,18 +94,20 @@ class ScatterPlotGestalt(
 
   val scatterPlotLayer: ScatterPlotLayer = ScatterPlotLayer(configuration)
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val marginSubscription = configuration.marginProperty.consumeImmediately {
+    fixedChartGestalt.contentViewportMargin = it
+
+    valueAxisXLayer.configuration.size = it.bottom
+    valueAxisYLayer.configuration.size = it.left
+
+    gridXLayer.configuration.passpartout = it
+    gridYLayer.configuration.passpartout = it
+  }
+
   init {
     configuration.additionalConfiguration()
-
-    configuration.marginProperty.consumeImmediately {
-      fixedChartGestalt.contentViewportMargin = it
-
-      valueAxisXLayer.configuration.size = it.bottom
-      valueAxisYLayer.configuration.size = it.left
-
-      gridXLayer.configuration.passpartout = it
-      gridYLayer.configuration.passpartout = it
-    }
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

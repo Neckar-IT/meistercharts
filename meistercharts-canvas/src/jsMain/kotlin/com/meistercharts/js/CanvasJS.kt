@@ -56,6 +56,7 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.other.px
@@ -187,7 +188,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     // Set the width and height attributes of the HTMLCanvasElement. Depending on the size and the device pixel ratio
     sizeProperty.consumeImmediately {
       recalculateCanvasRenderingSize()
-    }
+    }.disposeOn(disposeSupport)
 
     canvasElement.unselectable()
     canvasElement.noFocusBorder()
@@ -195,7 +196,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     if (type == CanvasType.Main) {
       mouseCursor.consumeImmediately {
         canvasElement.style.cursor = it.toCss()
-      }
+      }.disposeOn(disposeSupport)
 
       //Both touch and mouse events are added
       setUpTouchEventListeners()

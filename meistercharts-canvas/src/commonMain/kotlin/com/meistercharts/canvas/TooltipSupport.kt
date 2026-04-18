@@ -43,10 +43,11 @@ class TooltipSupport(
    */
   fun tooltipProperty(key: Any): ObservableObject<TooltipContent?> {
     return toolTips.getOrPut(key) {
+      //The self-subscription is tracked so the listener is released when the property is disposed.
       val observableObject: ObservableObject<TooltipContent?> = ObservableObject(null)
-      observableObject.consumeImmediately {
+      observableObject.addUpstreamSubscription(observableObject.consumeImmediately {
         updateTooltips()
-      }
+      })
 
       observableObject
     }

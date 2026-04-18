@@ -36,41 +36,49 @@ class ZoomAndTranslationModifiersBuilder(config: ZoomAndTranslationModifiersBuil
    */
   var current: ZoomAndTranslationModifier = ZoomAndTranslationModifier.none
 
+  @IgnorableReturnValue
   fun disableZoomingAndTranslation(): ZoomAndTranslationModifiersBuilder {
     current = DisableZoomAndTranslationModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun disableTranslationX(): ZoomAndTranslationModifiersBuilder {
     current = DisableTranslateXModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun disableTranslationY(): ZoomAndTranslationModifiersBuilder {
     current = DisableTranslateYModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun disableZoomX(): ZoomAndTranslationModifiersBuilder {
     current = DisableZoomXModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun disableZoomY(): ZoomAndTranslationModifiersBuilder {
     current = DisableZoomYModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun disableZoom(): ZoomAndTranslationModifiersBuilder {
     current = DisableZoomModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun contentAlwaysBarelyVisible(): ZoomAndTranslationModifiersBuilder {
     current = ContentAreaAlwaysBarelyVisibleTranslationModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun contentAlwaysCompletelyVisible(
     axisSelection: AxisSelection = AxisSelection.Both,
     boundsProvider: @ContentAreaRelative BoundsProvider = DefaultBoundsProvider,
@@ -84,26 +92,31 @@ class ZoomAndTranslationModifiersBuilder(config: ZoomAndTranslationModifiersBuil
     return this
   }
 
+  @IgnorableReturnValue
   fun onlyPositiveTranslation(): ZoomAndTranslationModifiersBuilder {
     current = OnlyPositiveTranslationModifier(current)
     return this
   }
 
+  @IgnorableReturnValue
   fun maxZoom(maxZoomFactorX: DoubleProvider, maxZoomFactorY: DoubleProvider): ZoomAndTranslationModifiersBuilder {
     current = MaxZoomModifier(maxZoomFactorX, maxZoomFactorY, current)
     return this
   }
 
+  @IgnorableReturnValue
   fun minZoom(minZoomFactorX: DoubleProvider, minZoomFactorY: DoubleProvider): ZoomAndTranslationModifiersBuilder {
     current = MinZoomModifier(minZoomFactorX, minZoomFactorY, current)
     return this
   }
 
+  @IgnorableReturnValue
   fun maxZoom(maxZoomFactorX: Double, maxZoomFactorY: Double): ZoomAndTranslationModifiersBuilder {
     current = MaxZoomModifier(maxZoomFactorX, maxZoomFactorY, current)
     return this
   }
 
+  @IgnorableReturnValue
   fun minZoom(minZoomFactorX: Double, minZoomFactorY: Double): ZoomAndTranslationModifiersBuilder {
     current = MinZoomModifier(minZoomFactorX, minZoomFactorY, current)
     return this

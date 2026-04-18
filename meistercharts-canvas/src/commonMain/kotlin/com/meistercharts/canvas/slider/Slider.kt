@@ -223,8 +223,11 @@ class Slider(
     }
 
     /**
-     * Updates the state while mouse button is up
+     * Updates the state while mouse button is up. Returns the resulting [EventConsumption] so
+     * callers can use `return updateStateWhileMouseUp(...)` as an idiom; the return value is
+     * otherwise safe to ignore.
      */
+    @IgnorableReturnValue
     private fun updateStateWhileMouseUp(chartSupport: ChartSupport, coordinates: Coordinates?): EventConsumption {
       if (onHandle(coordinates)) {
         state::state.setIfDifferent(State.MouseOverHandle) {

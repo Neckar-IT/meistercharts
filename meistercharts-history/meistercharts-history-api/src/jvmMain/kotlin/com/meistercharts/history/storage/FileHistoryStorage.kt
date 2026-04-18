@@ -81,7 +81,7 @@ class FileHistoryStorage(
   }
 
   fun scheduleDownSampling() {
-    downSamplingService.scheduleDownSampling()
+    disposeSupport.onDispose(downSamplingService.scheduleDownSampling())
   }
 
   /**

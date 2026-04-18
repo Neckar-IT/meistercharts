@@ -83,6 +83,7 @@ object KotlinSettings {
 
     // Kotlin 2.2.x
     add("-Xreturn-value-checker=full")
+    add("-Xwarning-level=RETURN_VALUE_NOT_USED:error")
     add("-Xcontext-sensitive-resolution")
 
     // Kotlin 2.3.x

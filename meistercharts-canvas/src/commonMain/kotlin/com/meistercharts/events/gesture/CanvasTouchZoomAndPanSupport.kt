@@ -98,8 +98,10 @@ class CanvasTouchZoomAndPanSupport {
   var center: @Window Coordinates? = null
 
   /**
-   * Resets the current detection
+   * Resets the current detection. Returns [EventConsumption.Ignored] so callers can use
+   * `return reset()` as an idiom; the return value is otherwise safe to ignore.
    */
+  @IgnorableReturnValue
   private fun reset(): EventConsumption {
     touchCoordinates.clear()
     center = null

@@ -937,6 +937,7 @@ const val BlankFallbackText: String = "?"
  * Paints a box with a text in it. The anchor direction and gap describes how the box is painted relative
  * to the current "0/0"
  */
+@IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
    * The text line to be painted
@@ -991,6 +992,7 @@ fun CanvasRenderingContext.paintTextBox(
  *
  * @return the bounds of the box that has been painted
  */
+@IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
    * The text lines to be painted
@@ -1049,6 +1051,7 @@ fun CanvasRenderingContext.paintTextBox(
  *
  * @return the bounds of the box that has been painted
  */
+@IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
    * The text lines to be painted.

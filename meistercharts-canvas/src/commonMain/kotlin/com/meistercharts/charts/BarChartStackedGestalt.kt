@@ -176,15 +176,17 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     lineStyles = { value: @DomainRelative Double -> configuration.gridLineStyles(configuration.valueRange.toDomain(value)) }
   }
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val viewportMarginSubscription = fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
+    gridLayer.configuration.passpartout = it
+
+    valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+    categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
+  }
+
   init {
     categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
-
-    fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
-      gridLayer.configuration.passpartout = it
-
-      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
-      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
-    }
 
 
     configureBuilder { meisterChartBuilder ->

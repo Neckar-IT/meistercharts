@@ -169,7 +169,7 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
    * Attention: It is necessary to schedule down sampling *before* any data is added to the history storage
    */
   fun scheduleDownSampling() {
-    downSamplingService.scheduleDownSampling()
+    disposeSupport.onDispose(downSamplingService.scheduleDownSampling())
   }
 
   /**

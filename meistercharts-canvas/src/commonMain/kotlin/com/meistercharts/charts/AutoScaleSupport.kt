@@ -29,6 +29,7 @@ import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
 import com.meistercharts.time.TimeRange
 import it.neckar.open.collections.fastMapNotNull
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.kotlin.lang.findMagnitudeValue
 import it.neckar.open.kotlin.lang.findMagnitudeValueCeil
 import it.neckar.open.provider.MultiProvider
@@ -87,14 +88,14 @@ class AutoScaleSupport(
     //Listen to changes to the visible area
     gestalt.configuration.contentAreaTimeRangeProperty.consume {
       dirty = true
-    }
+    }.disposeOn(chartSupport)
 
     chartSupport.timerSupport.repeat(checkWindow) {
       if (dirty) {
         recalculateAutoScale(chartSupport, dataSeriesIndices)
         dirty = false
       }
-    }
+    }.disposeOn(chartSupport)
   }
 
   /**

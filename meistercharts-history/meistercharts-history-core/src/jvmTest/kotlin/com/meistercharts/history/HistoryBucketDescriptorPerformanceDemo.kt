@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("RETURN_VALUE_NOT_USED") // Test scope: return values intentionally discarded
+
 package com.meistercharts.history
 
 import org.junit.jupiter.api.Test

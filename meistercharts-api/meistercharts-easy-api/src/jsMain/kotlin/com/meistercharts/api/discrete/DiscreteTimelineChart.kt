@@ -45,6 +45,7 @@ import com.meistercharts.js.MeisterchartJS
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import it.neckar.logging.Logger
+import it.neckar.open.dispose.disposeOn
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.formatting.formatUtc
@@ -87,19 +88,19 @@ class DiscreteTimelineChart internal constructor(
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.windowSizeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.contentAreaSizeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.zoomProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     gestalt.configuration.contentAreaTimeRangeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
 
     //Add refresh listener as debug
     meisterCharts.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf {

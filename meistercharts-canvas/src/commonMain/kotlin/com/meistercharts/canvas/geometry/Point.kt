@@ -81,6 +81,7 @@ data class Point(
     //return acos((ax * bx + ay * by) / (al * bl))
   }
 
+  @IgnorableReturnValue
   fun setTo(x: Double, y: Double): Point {
     this.x = x
     this.y = y

@@ -20,6 +20,8 @@ import com.meistercharts.canvas.components.CheckBox
 import com.meistercharts.canvas.components.Choice
 import com.meistercharts.canvas.components.ComboBox
 import com.meistercharts.canvas.components.NativeComponent
+import it.neckar.open.dispose.OnDispose
+import it.neckar.open.dispose.disposeOn
 import com.meistercharts.canvas.components.NativeComponentsHandler
 import com.meistercharts.canvas.components.TextInput
 import com.meistercharts.canvas.nativeComponentsSupport
@@ -67,7 +69,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
           it.setAttribute("type", "text")
 
           //Bind the text
-          it.bindTextBidirectional(textInput.textProperty)
+          it.bindTextBidirectional(textInput.textProperty, textInput)
         }
       }
 
@@ -77,7 +79,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
           it.setAttribute("type", "checkbox")
 
           //Bind the text
-          it.bindSelectedBidirectional(checkBox.selectedProperty)
+          it.bindSelectedBidirectional(checkBox.selectedProperty, checkBox)
         }
       }
 
@@ -101,10 +103,10 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
                 optionElement.text = comboBox.converter(choice)
                 options.add(optionElement)
               }
-            }
+            }.disposeOn(comboBox)
 
           //Bind the selection
-          it.bindChoiceBidirectional(comboBox.selectedProperty) {
+          it.bindChoiceBidirectional(comboBox.selectedProperty, comboBox) {
             comboBox.choices
           }
         }
@@ -139,20 +141,21 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
 }
 
 /**
- * Binds the location of the FX component to the location of the native component
+ * Binds the location of the FX component to the location of the native component.
+ * The subscription is released when the [nativeComponent] is disposed.
  */
 private fun HTMLElement.bindLocation(nativeComponent: NativeComponent) {
   nativeComponent.locationProperty.consumeImmediately { coordinates ->
     this.style.setProperty("left", "${coordinates.x}px")
     this.style.setProperty("top", "${coordinates.y}px")
-  }
+  }.disposeOn(nativeComponent)
 }
 
 /**
- * Binds the text bidirectional.
- * Copies the value from the given property to this initially
+ * Binds the text bidirectional. Copies the value from the given property to this initially.
+ * The subscription is released when [onDispose] fires.
  */
-private fun HTMLInputElement.bindTextBidirectional(property: ObservableObject<String>) {
+private fun HTMLInputElement.bindTextBidirectional(property: ObservableObject<String>, onDispose: OnDispose) {
   //On update write the value to the property
   oninput = {
     property.value = value
@@ -161,10 +164,10 @@ private fun HTMLInputElement.bindTextBidirectional(property: ObservableObject<St
 
   property.consumeImmediately {
     value = it
-  }
+  }.disposeOn(onDispose)
 }
 
-private fun HTMLInputElement.bindSelectedBidirectional(property: ObservableBoolean) {
+private fun HTMLInputElement.bindSelectedBidirectional(property: ObservableBoolean, onDispose: OnDispose) {
   //On update write the value to the property
   oninput = {
     property.value = checked
@@ -173,10 +176,10 @@ private fun HTMLInputElement.bindSelectedBidirectional(property: ObservableBoole
 
   property.consumeImmediately {
     checked = it
-  }
+  }.disposeOn(onDispose)
 }
 
-private fun HTMLSelectElement.bindChoiceBidirectional(property: ObservableObject<Choice?>, choicesProvider: () -> List<Choice>) {
+private fun HTMLSelectElement.bindChoiceBidirectional(property: ObservableObject<Choice?>, onDispose: OnDispose, choicesProvider: () -> List<Choice>) {
   oninput = {
     val choice = choicesProvider()[selectedIndex]
     property.value = choice
@@ -185,5 +188,5 @@ private fun HTMLSelectElement.bindChoiceBidirectional(property: ObservableObject
 
   property.consumeImmediately {
     selectedIndex = choicesProvider().indexOf(it)
-  }
+  }.disposeOn(onDispose)
 }

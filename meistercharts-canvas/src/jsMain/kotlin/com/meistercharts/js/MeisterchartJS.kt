@@ -23,6 +23,7 @@ import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.layer.LayerSupport
 import com.meistercharts.events.FontLoadedEventBroker
 import com.meistercharts.events.ImageLoadedEventBroker
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.time.RelativeMillis
 import kotlinx.browser.document
@@ -129,7 +130,7 @@ constructor(
     //Recalculate the canvas rendering size if the device pixel ratio has been updated
     chartSupport.devicePixelRatioSupport.devicePixelRatioProperty.consume {
       htmlCanvas.recalculateCanvasRenderingSize()
-    }
+    }.disposeOn(chartSupport)
 
     // Do not(!) set the width or height attribute of canvasEle to the corresponding width or height of parentElement.
     // The size of parentElement may depend on the size of canvasElement. Hence, the size of parentElement might be 0 at this point.

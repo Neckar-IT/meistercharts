@@ -36,6 +36,7 @@ import it.neckar.events.MouseMoveEvent
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.unit.other.px
 
@@ -143,7 +144,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
   override fun initialize(paintingContext: LayerPaintingContext) {
     val chartSupport = paintingContext.chartSupport
 
-    //Update the mouse cursor depending on the ui state
+    //Update the mouse cursor depending on the ui state - tied to the chart-support lifecycle
     uiStateProperty.consumeImmediately {
       chartSupport.markAsDirty(DirtyReason.UiStateChanged)
 
@@ -152,7 +153,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
         is HoveringOverHandle -> it.handleDirection.getResizeCursor()
         is DraggingHandle -> it.handleDirection.getResizeCursor()
       }
-    }
+    }.disposeOn(chartSupport)
 
 
     //Notify the handlers about the changes
@@ -176,7 +177,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
           chartSupport.resizeHandlesSupport.notifyBeginResize(newValue.handleDirection)
         }
       }
-    }
+    }.disposeOn(chartSupport)
   }
 
   /**

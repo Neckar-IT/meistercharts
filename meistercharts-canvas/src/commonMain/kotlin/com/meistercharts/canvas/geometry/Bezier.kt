@@ -31,6 +31,11 @@ import kotlin.math.sqrt
 interface Bezier {
   fun getBounds(target: Rectangle): Rectangle
 
+  /**
+   * Calculates the point at parameter [t] and writes it into [target]. Returns the same [target]
+   * for fluent chaining; the return value may be ignored when only the mutation is needed.
+   */
+  @IgnorableReturnValue
   fun calc(t: Double, target: Point = Point()): Point
 
   class Quad(val p0: Coordinates, val p1: Coordinates, val p2: Coordinates) : Bezier {

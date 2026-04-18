@@ -39,8 +39,10 @@ interface Paintable2 : Paintable {
    *
    * Therefore, usually it is *not* necessary to call [layout] manually.
    *
-   * Returns the bounding box - which might have a width and/or height of 0.0
+   * Returns the bounding box - which might have a width and/or height of 0.0.
+   * The return value may be ignored by callers that only need the layout side-effect.
    */
+  @IgnorableReturnValue
   fun layout(paintingContext: LayerPaintingContext): @Zoomed @IsFinite @MayBeZero Rectangle
 
   /**

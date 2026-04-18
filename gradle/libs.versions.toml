@@ -59,7 +59,7 @@ org-mongodb = "5.6.5"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.56"
+aws-sdk-kotlin = "1.6.57"
 
 apache-poi = "5.5.1"
 
@@ -125,9 +125,9 @@ opentelemetry-instrumentation = "2.25.0-alpha"
 
 opentelemetry-javaagent = "2.26.1"
 
-micrometer = "1.16.4"
+micrometer = "1.16.5"
 
-caffeine = "3.1.8"
+caffeine = "3.2.3"
 
 pdfbox = "3.0.7"
 
@@ -210,7 +210,7 @@ measured = "io.nacular.measured:measured:0.5.0"
 # jackson-annotations 2.20.1 doesn't exist on Maven Central - use 2.20
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.21" }
 
-guava = "com.google.guava:guava:33.5.0-jre"
+guava = "com.google.guava:guava:33.6.0-jre"
 
 kotlin-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "org-jetbrains-kotlin-wrappers" }
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.33"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.34"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

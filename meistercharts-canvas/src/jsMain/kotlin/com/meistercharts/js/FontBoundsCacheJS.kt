@@ -29,11 +29,13 @@ object FontBoundsCacheJS {
    */
   private val widthCache = cache<Int, Double>("HtmlFontBoundsCache-width", 500)
 
-  init {
+  /**
+   * Subscription on font-loaded events. Lives for the lifetime of this singleton object.
+   */
+  @Suppress("unused")
+  private val fontLoadedSubscription = FontLoadedEventBroker.onLoaded {
     //Clear the cache whenever a font has been loaded.
-    FontLoadedEventBroker.onLoaded {
-      widthCache.clear()
-    }
+    widthCache.clear()
   }
 
   /**

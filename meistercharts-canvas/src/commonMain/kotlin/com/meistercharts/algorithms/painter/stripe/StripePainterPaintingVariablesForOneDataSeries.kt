@@ -157,9 +157,7 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
     @ms @MayBeNaN val activeTimeStamp = activeTimeStamp
 
     try {
-      layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
-
-      @MayBeNaN @Window val opticalCenter = this.layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      @MayBeNaN @Window val opticalCenter = layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
       if (activeTimeStamp in startTime..endTime) {
         return opticalCenter //Only return if this is relevant for the active time stamp
       }

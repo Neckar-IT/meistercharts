@@ -279,6 +279,26 @@ class PixelValuesGestalt @JvmOverloads constructor(
     lineStyles = LineStyle(color = Color("#404c4f").asProvider()).asProvider1()
   }.clipped()
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val viewportMarginSubscription = fitContentInViewportGestalt.contentViewportMarginProperty.consumeImmediately {
+    val withoutTop = it.withTop(0.0)
+    val contentInsets = it.withTop(0.0).withRight(0.0)
+
+    yValueAxisLayer.configuration.size = it.left
+    xValueAxisLayer.configuration.size = it.bottom
+
+    horizontalGridLayer.configuration.passpartout = withoutTop
+    verticalGridLayer.configuration.passpartout = withoutTop
+
+    clippedZeroLinesLayer.configuration.insets = { contentInsets }
+    limitsLayer.configuration.insets = { contentInsets }
+    lineChartLayer.configuration.insets = { contentInsets }
+    liveEdgesLayer.configuration.insets = { contentInsets }
+    detectedEdgesLayer.configuration.insets = { contentInsets }
+    teachEdgesLayer.configuration.insets = { contentInsets }
+  }
+
   init {
     style.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
 
@@ -286,23 +306,6 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
 
     fitContentInViewportGestalt.contentViewportMargin = Insets.of(20.0, 20.0, 60.0, 75.0)
-    fitContentInViewportGestalt.contentViewportMarginProperty.consumeImmediately {
-      val withoutTop = it.withTop(0.0)
-      val contentInsets = it.withTop(0.0).withRight(0.0)
-
-      yValueAxisLayer.configuration.size = it.left
-      xValueAxisLayer.configuration.size = it.bottom
-
-      horizontalGridLayer.configuration.passpartout = withoutTop
-      verticalGridLayer.configuration.passpartout = withoutTop
-
-      clippedZeroLinesLayer.configuration.insets = { contentInsets }
-      limitsLayer.configuration.insets = { contentInsets }
-      lineChartLayer.configuration.insets = { contentInsets }
-      liveEdgesLayer.configuration.insets = { contentInsets }
-      detectedEdgesLayer.configuration.insets = { contentInsets }
-      teachEdgesLayer.configuration.insets = { contentInsets }
-    }
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

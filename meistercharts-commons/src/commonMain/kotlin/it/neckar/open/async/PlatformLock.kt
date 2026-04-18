@@ -63,6 +63,7 @@ inline fun <T> PlatformLock.withLock(action: () -> T): T {
   }
 }
 
+@IgnorableReturnValue
 inline fun <T> PlatformReadWriteLock.read(action: () -> T): T {
   contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
   val readLock = readLock()
@@ -74,6 +75,7 @@ inline fun <T> PlatformReadWriteLock.read(action: () -> T): T {
   }
 }
 
+@IgnorableReturnValue
 inline fun <T> PlatformReadWriteLock.write(action: () -> T): T {
   contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
 

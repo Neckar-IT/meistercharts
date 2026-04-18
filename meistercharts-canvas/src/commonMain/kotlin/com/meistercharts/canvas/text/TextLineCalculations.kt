@@ -45,7 +45,7 @@ object TextLineCalculations {
 
     if (lines.allBlank()) {
       //TODO introduce cache(?)
-      List(lines.size) { BlankFallbackText }
+      return List(lines.size) { BlankFallbackText }
     }
 
     return lines

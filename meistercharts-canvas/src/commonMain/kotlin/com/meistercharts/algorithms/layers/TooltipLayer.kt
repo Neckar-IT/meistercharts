@@ -28,6 +28,7 @@ import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.geometry.with
 import com.meistercharts.style.BoxStyle
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.unit.si.ms
 
 /**
@@ -56,13 +57,13 @@ class TooltipLayer(
 
     val layerSupport = paintingContext.layerSupport
 
-    //Update if the mouse has been moved
+    //Update if the mouse has been moved - subscription tied to the chart-support lifecycle
     layerSupport.mouseEvents.mousePositionProperty.consumeImmediately {
       //Repaint if the mouse has been moved and a tooltip is shown
       if (lastVisibleTooltipInfo != null) {
         layerSupport.markAsDirty(DirtyReason.UserInteraction)
       }
-    }
+    }.disposeOn(paintingContext.chartSupport)
   }
 
   override fun paint(paintingContext: LayerPaintingContext) {

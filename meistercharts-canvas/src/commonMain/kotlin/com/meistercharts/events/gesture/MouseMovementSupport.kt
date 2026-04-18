@@ -18,6 +18,8 @@ package com.meistercharts.events.gesture
 import com.meistercharts.annotations.Window
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
+import it.neckar.open.dispose.Disposable
+import it.neckar.open.observable.DisposableReadOnlyObservableObject
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 
@@ -29,7 +31,7 @@ class MouseMovementSupport(val mousePositionProperty: ReadOnlyObservableObject<@
   /**
    * Returns an observable boolean with the mouse over state for the given rectangle
    */
-  fun mouseOver(boundsObservable: ObservableObject<Rectangle>): ReadOnlyObservableObject<Boolean> {
+  fun mouseOver(boundsObservable: ObservableObject<Rectangle>): DisposableReadOnlyObservableObject<Boolean> {
     return mousePositionProperty.map(boundsObservable) { coords, bounds ->
       return@map coords != null && bounds.contains(coords)
     }
@@ -38,11 +40,14 @@ class MouseMovementSupport(val mousePositionProperty: ReadOnlyObservableObject<@
   /**
    * Register a mouse over action that is notified whenever the mouse is over the given coordinates
    */
-  fun mouseOver(boundsObservable: ObservableObject<Rectangle>, function: (Boolean) -> Unit) {
-    //The property that should contain "true" if the mouse is over the rectangle
+  fun mouseOver(boundsObservable: ObservableObject<Rectangle>, function: (Boolean) -> Unit): Disposable {
+    //The property that should contain "true" if the mouse is over the rectangle.
+    //Returned Disposable releases both the derived observable and the notifier subscription.
     val isOverRectangle = mouseOver(boundsObservable)
-
-    //Notify the function
-    isOverRectangle.consumeImmediately(function)
+    val notifierSubscription = isOverRectangle.consumeImmediately(function)
+    return Disposable {
+      notifierSubscription.dispose()
+      isOverRectangle.dispose()
+    }
   }
 }

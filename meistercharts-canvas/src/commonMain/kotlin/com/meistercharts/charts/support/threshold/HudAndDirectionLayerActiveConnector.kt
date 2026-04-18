@@ -51,8 +51,11 @@ class HudAndDirectionLayerActiveConnector(
   private var mouseOverHudElementIndex: @HudElementIndex Int = HudElementIndex.None
 
   /**
-   * Connects the interaction layers to the provided directional lines and hud layers
+   * Connects the interaction layers to the provided directional lines and hud layers.
+   * Returns `this` for fluent chaining; the return value may be ignored when only the connection
+   * side-effect is needed.
    */
+  @IgnorableReturnValue
   fun connectTo(directionalLinesLayers: SizedProvider<DirectionalLinesLayer>, hudLayers: SizedProvider<ValueAxisHudLayer>): HudAndDirectionLayerActiveConnector {
     /**
      * Is called to update both layers
@@ -130,8 +133,11 @@ class HudAndDirectionLayerActiveConnector(
 
 
   /**
-   * Connects the interaction layers to the provided layers
+   * Connects the interaction layers to the provided layers.
+   * Returns `this` for fluent chaining; the return value may be ignored when only the connection
+   * side-effect is needed.
    */
+  @IgnorableReturnValue
   fun connectTo(directionalLinesLayer: DirectionalLinesLayer, hudLayer: ValueAxisHudLayer): HudAndDirectionLayerActiveConnector {
     return connectTo(SizedProvider.single(directionalLinesLayer), SizedProvider.single(hudLayer))
   }

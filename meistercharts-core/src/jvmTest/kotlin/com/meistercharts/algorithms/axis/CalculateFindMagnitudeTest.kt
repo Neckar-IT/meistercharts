@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("RETURN_VALUE_NOT_USED") // Test verifies side-effects in callbacks; return value is intentionally discarded
+
 package com.meistercharts.algorithms.axis
 
 import assertk.*

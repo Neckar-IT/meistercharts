@@ -25,6 +25,7 @@ import com.meistercharts.js.MeisterchartJS
 import it.neckar.geometry.Size
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.kotlin.lang.isCloseTo
 import it.neckar.open.unit.number.MayBeZero
 import org.w3c.dom.CustomEvent
@@ -63,7 +64,7 @@ internal constructor(
   init {
     meisterCharts.chartSupport.rootChartState.contentAreaSizeProperty.consume {
       scheduleContentAreaSizeChangedNotification(it)
-    }
+    }.disposeOn(meisterCharts.chartSupport)
   }
 
   private fun scheduleContentAreaSizeChangedNotification(size: @ContentArea @MayBeZero Size) {

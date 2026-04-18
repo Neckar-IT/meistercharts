@@ -172,7 +172,7 @@ class ToolbarLayer(
     }
 
     override fun onDoubleClick(event: MouseDoubleClickEvent, chartSupport: ChartSupport): EventConsumption {
-      findButtonIndex(event.coordinates) ?: return Ignored
+      if (findButtonIndex(event.coordinates) == null) return Ignored
       //Consume double clicks on the button to avoid consumption from other layers
       return Consumed
     }

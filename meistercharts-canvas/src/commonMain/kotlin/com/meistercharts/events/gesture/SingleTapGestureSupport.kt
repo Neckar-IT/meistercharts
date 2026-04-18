@@ -53,8 +53,10 @@ class SingleTapGestureSupport(
   private var startEventTime: @ms Double? = null
 
   /**
-   * Reset the gesture
+   * Reset the gesture. Returns [EventConsumption.Ignored] so callers can use `return reset()`
+   * as an idiom; the return value is otherwise safe to ignore.
    */
+  @IgnorableReturnValue
   private fun reset(): EventConsumption {
     startCoordinates = null
     startEventTime = null

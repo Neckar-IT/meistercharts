@@ -104,13 +104,15 @@ class MapGestalt(
     anchorPointProvider = DirectionBasedBasePointProvider(anchorDirection)
   }
 
+  /** Kept on the instance so the subscription's lifetime is tied to this gestalt. */
+  @Suppress("unused")
+  private val slippyMapProviderSubscription = configuration.slippyMapProviderProperty.consumeImmediately {
+    slippyMapLayer.configuration.slippyMapProvider = it
+    slippyMapLayer.tileProvider.clear()
+  }
+
   init {
     configuration.additionalConfiguration()
-
-    configuration.slippyMapProviderProperty.consumeImmediately {
-      slippyMapLayer.configuration.slippyMapProvider = it
-      slippyMapLayer.tileProvider.clear()
-    }
   }
 
   override fun configure(meisterChartBuilder: MeisterchartBuilder) {

@@ -390,8 +390,10 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
 /**
  * Adds a zoom and pan layer.
  *
- * If necessary also adds the [RubberBandVisualizationLayer]
+ * If necessary also adds the [RubberBandVisualizationLayer]. Returns the layer for callers that
+ * need to configure it further; the return value is otherwise safe to ignore.
  */
+@IgnorableReturnValue
 fun Layers.addZoomAndTranslation(
   zoomAndTranslationSupport: ZoomAndTranslationSupport,
   configuration: ZoomAndTranslationLayer.() -> Unit = {},

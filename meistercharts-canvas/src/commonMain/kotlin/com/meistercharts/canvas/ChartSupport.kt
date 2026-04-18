@@ -58,6 +58,7 @@ import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.dispose.OnDispose
+import it.neckar.open.dispose.disposeOn
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.DefaultTextService
 import it.neckar.open.i18n.I18nConfiguration
@@ -325,7 +326,7 @@ class ChartSupport(
         //repaint is necessary after a change
         markAsDirty(DirtyReason.Initial)
       }
-    }
+    }.disposeOn(disposeSupport)
 
     //Mark as dirty initially to ensure at least one repaint
     markAsDirty(DirtyReason.Initial)
@@ -589,12 +590,13 @@ fun paintPaintDisabledText(gc: CanvasRenderingContext) {
 }
 
 /**
- * Registers a dirty listener that marks the chart support as dirty, every time the property changes
+ * Registers a dirty listener that marks the chart support as dirty, every time the property changes.
+ * The subscription is tied to the [chartSupport] lifecycle via [ChartSupport.onDispose].
  */
 fun ReadOnlyObservableObject<Any?>.registerDirtyListener(chartSupport: ChartSupport, reason: DirtyReason) {
   consume {
     chartSupport.markAsDirty(reason)
-  }
+  }.disposeOn(chartSupport)
 }
 
 /**
@@ -867,20 +869,19 @@ fun ChartSupport.bindVisibleRangeBidirectional(other: ChartSupport, axisSelectio
     apply(other, this)
   }
 
-  //apply values from other to this initially
+  //apply values from other to this initially - subscriptions are tied to this chart support
   other.rootChartState.windowSizeProperty.consumeImmediately {
     applyOther2This()
-  }
+  }.disposeOn(this)
   other.rootChartState.windowTranslationProperty.consumeImmediately {
     applyOther2This()
-  }
+  }.disposeOn(this)
 
   //apply values from this to other when changed
   rootChartState.windowSizeProperty.consume {
     applyThis2Other()
-  }
+  }.disposeOn(this)
   rootChartState.windowTranslationProperty.consume {
     applyThis2Other()
-  }
-
+  }.disposeOn(this)
 }

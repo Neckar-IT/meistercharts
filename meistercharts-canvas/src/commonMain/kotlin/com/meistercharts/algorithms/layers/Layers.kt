@@ -111,7 +111,11 @@ class Layers(val chartId: ChartId) {
    * Adds the given [Layer] to this collection.
    *
    * The layer is placed above the top most layer with the same [LayerType].
+   *
+   * Returns the painting index for callers that need it. The mutation effect (layer added to the
+   * collection) is the primary goal, so the return value may be ignored.
    */
+  @IgnorableReturnValue
   fun addLayer(layer: Layer): @PaintingOrder Int {
     @PaintingOrder val insertionIndex = layersListPainting.indexOfLast {
       it.type.sameOrBelow(layer.type)

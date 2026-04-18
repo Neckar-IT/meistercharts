@@ -29,6 +29,7 @@ package it.neckar.open.io
 
 import java.io.File
 import java.io.FilterOutputStream
+import java.io.IOException
 import java.nio.file.Files
 
 /**
@@ -60,7 +61,9 @@ class FileOutputStreamWithMove(val file: File) : FilterOutputStream(null) {
     if (tmpFile.exists()) {
       //delete the original file first - overwrite mode
       if (file.exists()) {
-        file.delete()
+        if (!file.delete()) {
+          throw IOException("Failed to delete existing file before move: ${file.absolutePath}")
+        }
       }
 
       Files.move(tmpFile.toPath(), file.toPath())

@@ -120,8 +120,10 @@ class SVGPathParser(private val svgPathAsString: String) {
   }
 
   /**
-   * Skips all white spaces
+   * Skips all white spaces. Returns the new [currentPosition] for callers that need it;
+   * the return value may be ignored when only the side-effect (advancing the parser) is needed.
    */
+  @IgnorableReturnValue
   private fun toNextNonWhitespace(): Int {
     var canBeComma = allowComma
     while (currentPosition < length) {

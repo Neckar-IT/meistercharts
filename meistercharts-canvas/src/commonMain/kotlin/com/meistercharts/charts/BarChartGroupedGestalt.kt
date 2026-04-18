@@ -89,6 +89,7 @@ import com.meistercharts.style.Shadow
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.intFormat
@@ -420,17 +421,21 @@ class BarChartGroupedGestalt constructor(
     lineStyles = { value: @DomainRelative Double -> style.gridLineStyles(style.valueRange.toDomain(value)) }
   }
 
+  /**
+   * Subscription on the viewport margin, kept on the instance so its lifetime is tied to this gestalt.
+   */
+  @Suppress("unused")
+  private val viewportMarginSubscription: Disposable = fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
+    gridLayer.configuration.passpartout = it
+
+    valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
+    categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
+  }
+
   init {
     style.applyValueLabelsInWindowRespectingAxis()
 
     categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
-
-    fixedChartGestalt.contentViewportMarginProperty.consumeImmediately {
-      gridLayer.configuration.passpartout = it
-
-      valueAxisLayer.configuration.size = it[valueAxisLayer.configuration.side]
-      categoryAxisLayer.configuration.size = it[categoryAxisLayer.configuration.side]
-    }
 
     configureBuilder { meisterChartBuilder ->
       fixedChartGestalt.configure(meisterChartBuilder)

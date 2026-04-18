@@ -44,11 +44,12 @@ class MouseCursorSupport(
       return found.cursorProperty
     }
 
-    //No entry found, create a new one
+    //No entry found, create a new one. The self-subscription is tracked so [clearProperty]'s
+    //dispose() on the cursorProperty releases the listener along with the property itself.
     val cursorProperty: ObservableObject<MouseCursor?> = ObservableObject(null)
-    cursorProperty.consumeImmediately {
+    cursorProperty.addUpstreamSubscription(cursorProperty.consumeImmediately {
       updateRequestedCursors()
-    }
+    })
 
     requestedCursors.add(Entry(key, priority, cursorProperty))
     requestedCursors.sortByDescending { it.priority }

@@ -25,6 +25,7 @@ import com.meistercharts.model.Insets
 import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.dispose.Disposable
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.other.px
@@ -95,14 +96,21 @@ open class DefaultChartState : AbstractChartState(), ObservableChartState {
   override var axisOrientationY: AxisOrientationY by axisOrientationYProperty
 
 
-  init {
-    zoomProperty.consume { notifyListeners() }
-    windowTranslationProperty.consume { notifyListeners() }
-    contentAreaSizeProperty.consume { notifyListeners() }
-    windowSizeProperty.consume { notifyListeners() }
-    axisOrientationXProperty.consume { notifyListeners() }
-    axisOrientationYProperty.consume { notifyListeners() }
-  }
+  /**
+   * Subscriptions on the chart-state properties that fire [notifyListeners].
+   *
+   * Kept on the instance so the lifetime is tied to this [DefaultChartState] instance — when this
+   * object becomes garbage collectible, the properties (and their listener lists) go with it.
+   */
+  @Suppress("unused")
+  private val notifyListenersSubscriptions: List<Disposable> = listOf(
+    zoomProperty.consume { notifyListeners() },
+    windowTranslationProperty.consume { notifyListeners() },
+    contentAreaSizeProperty.consume { notifyListeners() },
+    windowSizeProperty.consume { notifyListeners() },
+    axisOrientationXProperty.consume { notifyListeners() },
+    axisOrientationYProperty.consume { notifyListeners() },
+  )
 
   private val changeListeners = mutableListOf<(chartState: ObservableChartState) -> Unit>()
 

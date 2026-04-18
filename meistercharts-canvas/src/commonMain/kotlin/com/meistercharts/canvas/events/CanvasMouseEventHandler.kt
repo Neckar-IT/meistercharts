@@ -134,56 +134,42 @@ class CanvasMouseEventHandlerBroker() : CanvasMouseEventHandler {
   }
 
   override fun onClick(event: MouseClickEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onClick(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onClick(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onDown(event: MouseDownEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onDown(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onDown(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onUp(event: MouseUpEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onUp(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onUp(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onDoubleClick(event: MouseDoubleClickEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onDoubleClick(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onDoubleClick(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onMove(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onMove(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onDrag(event: MouseDragEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onDrag(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onDrag(event, chartSupport)
     } ?: EventConsumption.Ignored
   }
 
   override fun onWheel(event: MouseWheelEvent, chartSupport: ChartSupport): EventConsumption {
-    super.onWheel(event, chartSupport)
-
     return delegates.consumeUntil(EventConsumption.Consumed) {
       it.onWheel(event, chartSupport)
     } ?: EventConsumption.Ignored

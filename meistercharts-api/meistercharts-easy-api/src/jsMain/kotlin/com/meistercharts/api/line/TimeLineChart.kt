@@ -77,6 +77,7 @@ import com.meistercharts.zoom.UpdateReason
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Side
 import it.neckar.logging.Logger
+import it.neckar.open.dispose.disposeOn
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.charting.api.sanitizing.sanitize
 import it.neckar.open.collections.Cache
@@ -150,25 +151,25 @@ class TimeLineChart internal constructor(
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.windowSizeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.contentAreaSizeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     meisterCharts.chartSupport.rootChartState.zoomProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
     gestalt.timeLineChartGestalt.configuration.contentAreaTimeRangeProperty.consume {
       scheduleTimeRangeChangedNotification()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
 
     //If the history configuration changes we need to clear the history because
     //managing different configurations in a single history is not supported yet.
     gestalt.timeLineChartGestalt.configuration.historyConfigurationProperty.consume {
       clearHistory()
-    }
+    }.disposeOn(meisterCharts.chartSupport)
 
     //Add refresh listener as debug
     meisterCharts.layerSupport.layers.addLayer(PaintPerformanceLayer().visibleIf {

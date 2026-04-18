@@ -62,7 +62,6 @@ class CircularChartLayer(
 
       //Paint the donut using a painter
       circularChartPaintable.outerLineRadiusOutside = outerRadius
-      circularChartPaintable.style.outerCircleWidth
       circularChartPaintable.paint(paintingContext, center)
     }
   }

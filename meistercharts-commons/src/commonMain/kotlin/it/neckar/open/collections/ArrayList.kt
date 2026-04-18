@@ -388,6 +388,7 @@ class DoubleArrayList(capacity: Int = 7) {
 
   fun isNotEmpty(): Boolean = !isEmpty()
 
+  @IgnorableReturnValue
   fun insertAt(index: Int, value: Double) = this.apply {
     ensure(1)
     if (isNotEmpty()) arraycopy(data, index, data, index + 1, length - index)

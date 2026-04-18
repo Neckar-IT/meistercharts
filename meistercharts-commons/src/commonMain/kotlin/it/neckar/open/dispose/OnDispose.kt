@@ -43,3 +43,19 @@ interface OnDispose {
     onDispose(disposable::dispose)
   }
 }
+
+/**
+ * Postfix form of [OnDispose.onDispose] - registers this [Disposable] to be disposed when [owner]'s
+ * dispose is called.
+ *
+ * Reads linearly at the call site: "subscribe now, dispose when [owner] disposes". Prefer this over
+ * wrapping a `consume`/`consumeImmediately` call in [OnDispose.onDispose] - the postfix form avoids
+ * the inside-out reading order and makes the lifetime relationship explicit.
+ *
+ * ```
+ * source.consumeImmediately { ... }.disposeOn(chartSupport)
+ * ```
+ */
+fun Disposable.disposeOn(owner: OnDispose) {
+  owner.onDispose(this)
+}

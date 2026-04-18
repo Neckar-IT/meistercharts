@@ -81,6 +81,7 @@ fun createLink(linkTarget: File, linkFile: File, symbolic: Boolean): Boolean {
  *
  * @throws IOException if any.
  */
+@IgnorableReturnValue
 fun createSymbolicLink(linkTarget: File, linkFile: File): Boolean {
   return createLink(linkTarget, linkFile, true)
 }
@@ -94,6 +95,7 @@ fun createSymbolicLink(linkTarget: File, linkFile: File): Boolean {
  *
  * @throws IOException if any.
  */
+@IgnorableReturnValue
 fun createHardLink(linkTarget: File, linkFile: File): Boolean {
   return createLink(linkTarget, linkFile, false)
 }
@@ -109,6 +111,7 @@ fun createHardLink(linkTarget: File, linkFile: File): Boolean {
  *
  * @throws IOException if something went wrong
  */
+@IgnorableReturnValue
 fun createLink(linkTarget: File, linkFile: File, linkType: LinkType): Boolean {
   if (linkFile.exists()) {
     if (linkType == LinkType.HARD) {
