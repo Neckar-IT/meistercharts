@@ -153,6 +153,13 @@ object Plugins {
   const val linksSiteGenerate: String = "it.neckar.links-site-generate"
 
   /**
+   * Convention plugin for local development environments.
+   * Registers a `dev` task that starts a tmux session with the correct panes
+   * for the product type (backend, frontend, website).
+   */
+  const val localDev: String = "it.neckar.local-dev"
+
+  /**
    * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
    */
   const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
@@ -393,4 +400,7 @@ inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
   get() = id(Plugins.certificates)
+
+inline val PluginDependenciesSpec.localDev: PluginDependencySpec
+  get() = id(Plugins.localDev)
 

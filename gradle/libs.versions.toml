@@ -59,7 +59,7 @@ org-mongodb = "5.6.5"
 
 testcontainers = "2.0.4"
 
-aws-sdk-kotlin = "1.6.57"
+aws-sdk-kotlin = "1.6.58"
 
 apache-poi = "5.5.1"
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.34"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.35"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
