@@ -25,18 +25,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.commons.js
-
-import kotlin.jvm.JvmInline
+package it.neckar.reflect
 
 /**
- * Represents a cookie name
+ * Well-known class name examples from the Kotlin/JVM standard library and this project.
  */
-@JvmInline
-value class CookieName(val value: String) {
-  override fun toString(): String {
-    return value
-  }
+object ClassNameExample {
+  // Kotlin standard library
+  val string: ClassName = ClassName("kotlin.String")
+  val int: ClassName = ClassName("kotlin.Int")
+  val boolean: ClassName = ClassName("kotlin.Boolean")
+  val list: ClassName = ClassName("kotlin.collections.List")
+  val map: ClassName = ClassName("kotlin.collections.Map")
+  val uuid: ClassName = ClassName("kotlin.uuid.Uuid")
 
-  companion object
+  // Kotlinx
+  val instant: ClassName = ClassName("kotlinx.datetime.Instant")
+  val localDate: ClassName = ClassName("kotlinx.datetime.LocalDate")
+  val jsonElement: ClassName = ClassName("kotlinx.serialization.json.JsonElement")
+
+  // Project-specific
+  val emailAddress: ClassName = ClassName("it.neckar.open.kotlin.lang.EmailAddress")
+  val phoneNumber: ClassName = ClassName("it.neckar.open.kotlin.lang.PhoneNumber")
+  val url: ClassName = ClassName("it.neckar.open.http.Url")
 }
+
+val ClassName.Companion.Example: ClassNameExample
+  get() = ClassNameExample

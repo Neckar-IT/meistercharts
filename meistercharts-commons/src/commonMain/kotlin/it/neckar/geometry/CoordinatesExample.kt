@@ -25,18 +25,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.commons.js
-
-import kotlin.jvm.JvmInline
+package it.neckar.geometry
 
 /**
- * Represents a cookie name
+ * Example coordinates for tests and documentation.
  */
-@JvmInline
-value class CookieName(val value: String) {
-  override fun toString(): String {
-    return value
-  }
-
-  companion object
+object CoordinatesExample {
+  val origin: Coordinates = Coordinates.origin
+  val unitX: Coordinates = Coordinates.of(1.0, 0.0)
+  val unitY: Coordinates = Coordinates.of(0.0, 1.0)
+  val diagonal: Coordinates = Coordinates.of(1.0, 1.0)
+  val center: Coordinates = Coordinates.of(50.0, 50.0)
+  val topRight: Coordinates = Coordinates.of(100.0, 0.0)
+  val bottomLeft: Coordinates = Coordinates.of(0.0, 100.0)
+  val negative: Coordinates = Coordinates.of(-25.0, -50.0)
+  val large: Coordinates = Coordinates.of(10000.0, 8000.0)
+  val subPixel: Coordinates = Coordinates.of(150.75, 200.25)
 }

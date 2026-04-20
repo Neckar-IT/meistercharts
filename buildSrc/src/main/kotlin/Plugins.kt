@@ -39,7 +39,7 @@ object Plugins {
   const val npmBundle: String = "it.neckar.npm-bundle"
   const val taskTree: String = "com.dorongold.task-tree"
   const val taskInfo: String = "org.barfuin.gradle.taskinfo"
-  const val detekt: String = "io.gitlab.arturbosch.detekt"
+  const val detekt: String = "dev.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
   const val pnpmKotlinInterop: String = "it.neckar.gradle.pnpm.kotlin-interop"
 

@@ -25,18 +25,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.commons.js
-
-import kotlin.jvm.JvmInline
+package it.neckar.open.http
 
 /**
- * Represents a cookie name
+ * Examples for URL parameter names commonly used in REST APIs.
  */
-@JvmInline
-value class CookieName(val value: String) {
-  override fun toString(): String {
-    return value
-  }
-
-  companion object
+object UrlParameterNameExample {
+  val id: UrlParameterName = UrlParameterName("id")
+  val authorId: UrlParameterName = UrlParameterName("authorId")
+  val bookId: UrlParameterName = UrlParameterName("bookId")
+  val publisherId: UrlParameterName = UrlParameterName("publisherId")
+  val page: UrlParameterName = UrlParameterName("page")
+  val pageSize: UrlParameterName = UrlParameterName("pageSize")
+  val query: UrlParameterName = UrlParameterName("query")
+  val status: UrlParameterName = UrlParameterName("status")
+  val from: UrlParameterName = UrlParameterName("from")
+  val to: UrlParameterName = UrlParameterName("to")
 }
+
+val UrlParameterName.Companion.Example: UrlParameterNameExample
+  get() = UrlParameterNameExample

@@ -27,16 +27,16 @@
  */
 package it.neckar.commons.js
 
-import kotlin.jvm.JvmInline
-
 /**
- * Represents a cookie name
+ * Well-known cookie name examples.
  */
-@JvmInline
-value class CookieName(val value: String) {
-  override fun toString(): String {
-    return value
-  }
-
-  companion object
+object CookieNameExample {
+  val sessionId: CookieName = CookieName("JSESSIONID")
+  val csrfToken: CookieName = CookieName("XSRF-TOKEN")
+  val locale: CookieName = CookieName("locale")
+  val consent: CookieName = CookieName("cookie-consent")
+  val theme: CookieName = CookieName("theme")
 }
+
+val CookieName.Companion.Example: CookieNameExample
+  get() = CookieNameExample

@@ -67,6 +67,7 @@ fun File.isLink(): Boolean {
 /**
  * Creates a link
  */
+@IgnorableReturnValue
 @Deprecated("Use createLink instead", ReplaceWith("createLink(linkTarget, linkFile, linkType)"))
 fun createLink(linkTarget: File, linkFile: File, symbolic: Boolean): Boolean {
   return createLink(linkTarget, linkFile, if (symbolic) LinkType.SYMBOLIC else LinkType.HARD)
@@ -77,7 +78,8 @@ fun createLink(linkTarget: File, linkFile: File, symbolic: Boolean): Boolean {
  *
  * @param linkTarget the link source
  * @param linkFile   the link file
- * @return whether the link has been created
+ * @return `true` when a new link was created, `false` when the link already existed. Callers
+ * that only need the side effect (link exists afterwards) may discard the return.
  *
  * @throws IOException if any.
  */
@@ -91,7 +93,8 @@ fun createSymbolicLink(linkTarget: File, linkFile: File): Boolean {
  *
  * @param linkTarget the link source
  * @param linkFile   the link file
- * @return whether the link has been created
+ * @return `true` when a new link was created, `false` when the link already existed. Callers
+ * that only need the side effect (link exists afterwards) may discard the return.
  *
  * @throws IOException if any.
  */

@@ -46,5 +46,5 @@ value class ClassName(val value: String) {
     return value
   }
 
-
+  companion object
 }

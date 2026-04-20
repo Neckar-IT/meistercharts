@@ -25,18 +25,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.commons.js
-
-import kotlin.jvm.JvmInline
+package it.neckar.geometry
 
 /**
- * Represents a cookie name
+ * Example polygons for tests and documentation.
  */
-@JvmInline
-value class CookieName(val value: String) {
-  override fun toString(): String {
-    return value
-  }
+object PolygonExample {
 
-  companion object
+  val square: Polygon = Polygon(
+    listOf(
+      Coordinates.of(0.0, 0.0),
+      Coordinates.of(100.0, 0.0),
+      Coordinates.of(100.0, 100.0),
+      Coordinates.of(0.0, 100.0),
+    ),
+  )
+
+  val rectangle: Polygon = Polygon(
+    listOf(
+      Coordinates.of(0.0, 0.0),
+      Coordinates.of(500.0, 0.0),
+      Coordinates.of(500.0, 300.0),
+      Coordinates.of(0.0, 300.0),
+    ),
+  )
+
+  val triangle: Polygon = Polygon(
+    listOf(
+      Coordinates.of(50.0, 0.0),
+      Coordinates.of(100.0, 100.0),
+      Coordinates.of(0.0, 100.0),
+    ),
+  )
+
+  val lShape: Polygon = Polygon(
+    listOf(
+      Coordinates.of(0.0, 0.0),
+      Coordinates.of(200.0, 0.0),
+      Coordinates.of(200.0, 100.0),
+      Coordinates.of(100.0, 100.0),
+      Coordinates.of(100.0, 200.0),
+      Coordinates.of(0.0, 200.0),
+    ),
+  )
 }
