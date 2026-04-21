@@ -27,7 +27,7 @@ astrojs-sitemap = "3.7.2"
 # npm: @astrojs/starlight
 astrojs-starlight = "0.38.3"
 # npm: astro
-astro = "6.1.7"
+astro = "6.1.8"
 # npm: axios
 axios = "1.15.0"
 # npm: bootstrap
@@ -79,11 +79,11 @@ gray-matter = "4.0.3"
 # npm: @hookform/resolvers
 hookform-resolvers = "5.2.2"
 # npm: i18next
-i18next = "26.0.5"
+i18next = "26.0.6"
 # npm: i18next-browser-languagedetector
 i18next-browser-languagedetector = "8.2.1"
 # npm: i18next-http-backend
-i18next-http-backend = "3.0.4"
+i18next-http-backend = "3.0.5"
 # npm: ibm-openapi-validator
 ibm-openapi-validator = "1.37.12"
 # npm: immer
@@ -121,7 +121,7 @@ mime-types = "3.0.2"
 # npm: motion
 motion = "12.38.0"
 # npm: msw
-msw = "2.13.3"
+msw = "2.13.4"
 # npm: nanoid
 nanoid = "5.1.9"
 # npm: node
@@ -135,9 +135,9 @@ openapi-merge-cli = "1.3.2"
 # npm: openapi3-ts
 openapi3-ts = "4.5.0"
 # npm: orval
-orval = "7.21.0"
+orval = "8.8.0"
 # npm: @orval/core
-orval-core = "7.21.0"
+orval-core = "8.8.0"
 # npm: @playwright/test
 playwright-test = "1.59.1"
 # npm: pnpm
@@ -169,7 +169,7 @@ react-highlight-words = "0.21.0"
 # npm: react-hook-form
 react-hook-form = "7.72.1"
 # npm: react-i18next
-react-i18next = "17.0.3"
+react-i18next = "17.0.4"
 # npm: react-icons
 react-icons = "5.6.0"
 # npm: react-json-view
@@ -213,9 +213,9 @@ tailwindcss-typography = "0.5.19"
 # npm: @tailwindcss/vite
 tailwindcss-vite = "4.2.2"
 # npm: @tanstack/react-query
-tanstack-react-query = "5.99.0"
+tanstack-react-query = "5.99.1"
 # npm: @tanstack/react-query-devtools
-tanstack-react-query-devtools = "5.99.0"
+tanstack-react-query-devtools = "5.99.1"
 # npm: @tanstack/react-table
 tanstack-react-table = "8.21.3"
 # npm: @testing-library/dom
@@ -265,7 +265,7 @@ vanilla-cookieconsent = "3.1.0"
 # npm: vite
 vite = "8.0.8"
 # npm: vite-plugin-css-injected-by-js
-vite-plugin-css-injected-by-js = "5.0.0"
+vite-plugin-css-injected-by-js = "5.0.1"
 # npm: vite-plugin-dts
 vite-plugin-dts = "4.5.4"
 # npm: @vitejs/plugin-react
