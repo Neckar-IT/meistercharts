@@ -137,6 +137,7 @@ object Plugins {
   const val secretsLoader: String = "it.neckar.secrets-loader"
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
+  const val orvalConvert: String = "it.neckar.gradle.openapi.orval-convert"
 
   /**
    * Only for JavaFX 17+
@@ -354,6 +355,9 @@ inline val PluginDependenciesSpec.openapiValidator: PluginDependencySpec
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig: PluginDependencySpec
   get() = id(Plugins.openapiGenerationConfig)
+
+inline val PluginDependenciesSpec.orvalConvert: PluginDependencySpec
+  get() = id(Plugins.orvalConvert)
 
 inline val PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
   get() = id(Plugins.generatePnpmWorkspaceYaml)

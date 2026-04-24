@@ -31,7 +31,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.7.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.9.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -57,9 +57,9 @@ com-google-devtools-ksp = "2.3.6"
 
 org-mongodb = "5.6.5"
 
-testcontainers = "2.0.4"
+testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.59"
+aws-sdk-kotlin = "1.6.61"
 
 apache-poi = "5.5.1"
 
@@ -123,7 +123,7 @@ opentelemetry = "1.61.0"
 
 opentelemetry-instrumentation = "2.25.0-alpha"
 
-opentelemetry-javaagent = "2.26.1"
+opentelemetry-javaagent = "2.27.0"
 
 micrometer = "1.16.5"
 
@@ -137,7 +137,7 @@ testfx = "4.0.18"
 
 clikt = "5.1.0"
 
-javafx = "25.0.2"
+javafx = "25.0.3"
 
 netty = "4.2.12.Final"
 
@@ -254,7 +254,7 @@ opentelemetry-javaagent = { group = "io.opentelemetry.javaagent", name = "opente
 
 opentelemetry-sdk-testing = { group = "io.opentelemetry", name = "opentelemetry-sdk-testing", version.ref = "opentelemetry" }
 
-jsoup = "org.jsoup:jsoup:1.22.1"
+jsoup = "org.jsoup:jsoup:1.22.2"
 
 jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.36"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.38"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -472,7 +472,7 @@ commons-cli = "commons-cli:commons-cli:1.11.0"
 
 java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.16"
 
-javassist = "org.javassist:javassist:3.30.2-GA"
+javassist = "org.javassist:javassist:3.31.0-GA"
 
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 
@@ -600,7 +600,7 @@ ktor-utils = { group = "io.ktor", name = "ktor-utils", version.ref = "ktor" }
 
 ktor-websockets = { group = "io.ktor", name = "ktor-websockets", version.ref = "ktor" }
 
-lombok = "org.projectlombok:lombok:1.18.44"
+lombok = "org.projectlombok:lombok:1.18.46"
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
