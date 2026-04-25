@@ -45,8 +45,8 @@ object ClassNameExample {
   val jsonElement: ClassName = ClassName("kotlinx.serialization.json.JsonElement")
 
   // Project-specific
-  val emailAddress: ClassName = ClassName("it.neckar.open.kotlin.lang.EmailAddress")
-  val phoneNumber: ClassName = ClassName("it.neckar.open.kotlin.lang.PhoneNumber")
+  val emailAddress: ClassName = ClassName("it.neckar.contact.EmailAddress")
+  val phoneNumber: ClassName = ClassName("it.neckar.contact.PhoneNumber")
   val url: ClassName = ClassName("it.neckar.open.http.Url")
 }
 

@@ -28,14 +28,25 @@
 package it.neckar.open.kotlin.lang
 
 /**
- * Examples for email addresses
+ * Tagging interface for inline value classes that wrap a single String.
+ * Implementing classes *must* be value classes with a primitive-String serializer
+ * so the underlying storage representation is a plain string (JSON, BSON, etc.).
+ *
+ * Example:
+ * ```kotlin
+ * @Serializable(with = MyId.Serializer::class)
+ * @JvmInline
+ * value class MyId(override val value: String) : ValueClassString
+ * ```
+ *
+ * Consumers can use the tag to write generic, type-safe APIs that accept any
+ * string-backed value class — e.g. MongoDB regex filters or Ktor path parameters
+ * — without resorting to `.value` unwraps or `.name` field-string lookups at call
+ * sites.
  */
-object EmailAddressExample {
-  val info: EmailAddress = EmailAddress("info@neckar.it")
-  val support: EmailAddress = EmailAddress("support@example.com")
-  val personal: EmailAddress = EmailAddress("max.mustermann@example.de")
-  val admin: EmailAddress = EmailAddress("admin@example.org")
+interface ValueClassString {
+  /**
+   * The underlying string representation.
+   */
+  val value: String
 }
-
-val EmailAddress.Companion.Example: EmailAddressExample
-  get() = EmailAddressExample
