@@ -51,7 +51,7 @@ net-bytebuddy = "1.18.7"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
-io-gitlab-arturbosch-detekt = "2.0.0-alpha.2"
+io-gitlab-arturbosch-detekt = "2.0.0-alpha.3"
 
 com-google-devtools-ksp = "2.3.7"
 
@@ -59,7 +59,7 @@ org-mongodb = "5.6.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.63"
+aws-sdk-kotlin = "1.6.64"
 
 apache-poi = "5.5.1"
 
@@ -278,7 +278,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.40"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.41"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
