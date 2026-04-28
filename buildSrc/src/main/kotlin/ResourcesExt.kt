@@ -41,9 +41,9 @@ enum class BuildInfoVars(val value: String, val useAsInput: Boolean = true) {
 fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
   return when (buildInfoVar) {
     BuildInfoVars.BuildDate -> buildDate
-    BuildInfoVars.GitCommitDateTime -> if (inCi) gitCommitDateTime else "1970-01-01T00:00:00Z"
-    BuildInfoVars.GitHash -> if (inCi) gitHash else "0".repeat(40)
-    BuildInfoVars.GitHashShort -> if (inCi) gitHashShort else "0000000"
+    BuildInfoVars.GitCommitDateTime -> if (inCi || onMainBranch) gitCommitDateTime else "1970-01-01T00:00:00Z"
+    BuildInfoVars.GitHash -> if (inCi || onMainBranch) gitHash else "0".repeat(40)
+    BuildInfoVars.GitHashShort -> if (inCi || onMainBranch) gitHashShort else "0000000"
     BuildInfoVars.Branch -> branch
   }
 }

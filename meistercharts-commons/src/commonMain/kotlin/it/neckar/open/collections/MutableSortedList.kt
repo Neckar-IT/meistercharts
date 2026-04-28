@@ -78,8 +78,12 @@ class MutableSortedList<V> internal constructor(
   override fun add(index: Int, element: V) {
     require(index > -1) { "index must be greater than -1 but was $index" }
     require(index <= size) { "index must be smaller than $size but was $index" }
-    require(index == size || comparator.compare(this[index], element) >= 0)
-    require(index == 0 || comparator.compare(this[index - 1], element) <= 0)
+    require(index == size || comparator.compare(this[index], element) >= 0) {
+      "MutableSortedList.add: element <$element> is greater than the element at index $index <${this[index]}> (size=$size)"
+    }
+    require(index == 0 || comparator.compare(this[index - 1], element) <= 0) {
+      "MutableSortedList.add: element <$element> is smaller than the element at index ${index - 1} <${this[index - 1]}> (size=$size)"
+    }
     decorated.add(index, element)
   }
 
@@ -91,8 +95,12 @@ class MutableSortedList<V> internal constructor(
       return false
     }
     val sortedList = elements.sortedWith(comparator)
-    require(index == size || comparator.compare(get(index), sortedList.last()) >= 0)
-    require(index == 0 || comparator.compare(get(index - 1), sortedList.first()) <= 0)
+    require(index == size || comparator.compare(get(index), sortedList.last()) >= 0) {
+      "MutableSortedList.addAll: last element to insert <${sortedList.last()}> is greater than the element at index $index <${get(index)}> (size=$size)"
+    }
+    require(index == 0 || comparator.compare(get(index - 1), sortedList.first()) <= 0) {
+      "MutableSortedList.addAll: first element to insert <${sortedList.first()}> is smaller than the element at index ${index - 1} <${get(index - 1)}> (size=$size)"
+    }
     return decorated.addAll(index, sortedList)
   }
 
@@ -175,8 +183,12 @@ class MutableSortedList<V> internal constructor(
   override fun set(index: Int, element: V): V {
     require(index > -1) { "index must be greater than -1 but was $index" }
     require(index < size) { "index must be smaller than $size but was $index" }
-    require(index == size - 1 || comparator.compare(this[index + 1], element) >= 0)
-    require(index == 0 || comparator.compare(this[index - 1], element) <= 0)
+    require(index == size - 1 || comparator.compare(this[index + 1], element) >= 0) {
+      "MutableSortedList.set: element <$element> is greater than the element at index ${index + 1} <${this[index + 1]}> (size=$size)"
+    }
+    require(index == 0 || comparator.compare(this[index - 1], element) <= 0) {
+      "MutableSortedList.set: element <$element> is smaller than the element at index ${index - 1} <${this[index - 1]}> (size=$size)"
+    }
     return decorated.set(index, element)
   }
 

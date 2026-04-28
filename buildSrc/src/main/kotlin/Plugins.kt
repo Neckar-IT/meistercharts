@@ -80,7 +80,6 @@ object Plugins {
   const val runDockerServices: String = "it.neckar.docker.services"
   const val ngrokTunnel: String = "it.neckar.ngrok-tunnel"
 
-  const val publishToGitlabPages: String = "it.neckar.publish.gitlab-pages"
   const val certificates: String = "it.neckar.ssl.certificates"
 
   /**
@@ -264,9 +263,6 @@ inline val PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
 
 inline val PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
-
-inline val PluginDependenciesSpec.publishToGitlabPages: PluginDependencySpec
-  get() = id(Plugins.publishToGitlabPages)
 
 inline val PluginDependenciesSpec.dockerGenerateObjects: PluginDependencySpec
   get() = id(Plugins.dockerGenerateObjects)
