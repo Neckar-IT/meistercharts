@@ -55,7 +55,7 @@ fun interface MultiProvider1<in IndexContext, out T, in P1> : MultiProvider2<Ind
      * Creates a new instance of an empty multi provider
      */
     fun <T> empty(): @Domain MultiProvider1<Any, T, Any> {
-      return MultiProvider1<Any, T, Any> { _, _ -> throw UnsupportedOperationException() }
+      return MultiProvider1<Any, T, Any> { _, _ -> throw UnsupportedOperationException("MultiProvider1.empty() called \u2014 the empty provider returns no values") }
     }
 
     /**

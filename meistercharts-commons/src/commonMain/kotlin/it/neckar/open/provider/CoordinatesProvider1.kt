@@ -47,11 +47,11 @@ interface CoordinatesProvider1<in P1> : HasSize1<P1>, MultiCoordinatesProvider1<
       }
 
       override fun xAt(index: Int, param1: Any): @NotBoxed Double {
-        throw UnsupportedOperationException()
+        throw UnsupportedOperationException("CoordinatesProvider1.Empty has no entries \u2014 xAt is not callable")
       }
 
       override fun yAt(index: Int, param1: Any): @NotBoxed Double {
-        throw UnsupportedOperationException()
+        throw UnsupportedOperationException("CoordinatesProvider1.Empty has no entries \u2014 yAt is not callable")
       }
     }
   }

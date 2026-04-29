@@ -39,7 +39,7 @@ import it.neckar.open.unit.si.rad
  */
 class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   override val canvas: Canvas
-    get() = throw UnsupportedOperationException()
+    get() = throw UnsupportedOperationException("MockCanvasRenderingContext has no backing canvas")
 
   override var canvasSize: Size = Size.of(800.0, 600.0)
 

@@ -92,7 +92,7 @@ class DefaultHistoryTileInvalidator : HistoryTileInvalidator {
     updateInfo.updatedTimeRanges.fastForEach { updatedTimeRange ->
       //Iterate over all groups - calculate for each group
       groupedByTileX.values.forEach { tilesInColumn ->
-        require(tilesInColumn.isNotEmpty())
+        require(tilesInColumn.isNotEmpty()) { "tilesInColumn must not be empty \u2014 empty groups should have been filtered out by groupBy" }
 
         //Find the first tile that is not empty
         val firstTile = tilesInColumn.firstOrNull {

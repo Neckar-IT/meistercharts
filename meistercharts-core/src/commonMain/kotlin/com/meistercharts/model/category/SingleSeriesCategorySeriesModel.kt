@@ -73,7 +73,7 @@ class SingleSeriesCategorySeriesModel @JvmOverloads constructor(
   }
 
   fun seriesAt(seriesIndex: Int): Series {
-    require(seriesIndex == 0)
+    require(seriesIndex == 0) { "SingleSeriesCategorySeriesModel only holds one series \u2014 seriesIndex must be 0 but was [$seriesIndex]" }
     return series
   }
 }

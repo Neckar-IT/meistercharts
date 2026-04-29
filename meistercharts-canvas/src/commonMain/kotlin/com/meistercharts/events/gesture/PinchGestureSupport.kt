@@ -166,7 +166,7 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
 
     if (pinchPointer1st == null) {
       // no pointer-down event so far -> update the first pointer
-      check(gestureState == GestureState.Possible)
+      check(gestureState == GestureState.Possible) { "First pointer-down: gestureState must be Possible but was [$gestureState]" }
       pinchPointer1st = pointerEvent.pointer
       notifyPinched()
       return EventConsumption.Ignored
@@ -174,7 +174,7 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
 
     if (pinchPointer2nd == null) {
       // this must be the second pointer-down event -> update the second pointer
-      check(gestureState == GestureState.Possible)
+      check(gestureState == GestureState.Possible) { "Second pointer-down: gestureState must be Possible but was [$gestureState]" }
       pinchPointer2nd = pointerEvent.pointer
       notifyPinched()
       return EventConsumption.Ignored
@@ -198,12 +198,12 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
         notifyPinched()
       }
 
-      GestureState.Began     -> check(false) // should not happen
+      GestureState.Began     -> check(false) { "PinchGestureSupport.onMove called with gestureState=Began \u2014 should be unreachable" }
       GestureState.Changed   -> {
       }
 
-      GestureState.Ended     -> check(false) // should not happen
-      GestureState.Cancelled -> check(false) // should not happen
+      GestureState.Ended     -> check(false) { "PinchGestureSupport.onMove called with gestureState=Ended \u2014 should be unreachable" }
+      GestureState.Cancelled -> check(false) { "PinchGestureSupport.onMove called with gestureState=Cancelled \u2014 should be unreachable" }
     }
 
     gestureState = GestureState.Changed

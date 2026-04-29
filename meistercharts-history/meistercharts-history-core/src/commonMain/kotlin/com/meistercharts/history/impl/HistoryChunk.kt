@@ -457,7 +457,9 @@ data class HistoryChunk(
     additionalReferenceEntryDataList: @ForOnePointInTime Set<ReferenceEntryData>,
   ): HistoryChunk {
     //Convert to significands array
-    require(additionalDecimalValues.size == decimalDataSeriesCount)
+    require(additionalDecimalValues.size == decimalDataSeriesCount) {
+      "Invalid values size. Was <${additionalDecimalValues.size}> but expected <$decimalDataSeriesCount>"
+    }
 
     requireMeasuringMode()
 

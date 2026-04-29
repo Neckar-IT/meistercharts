@@ -55,5 +55,5 @@ class ShiftedSizedProvider<T>(
 @Deprecated("Do not shift shifted providers again", level = DeprecationLevel.ERROR)
 @Suppress("UNUSED_PARAMETER")
 fun <T> ShiftedSizedProvider<T>.shiftedBy(shift: Int): ShiftedSizedProvider<T> {
-  throw UnsupportedOperationException()
+  throw UnsupportedOperationException("ShiftedSizedProvider is already shifted \u2014 do not shift again")
 }

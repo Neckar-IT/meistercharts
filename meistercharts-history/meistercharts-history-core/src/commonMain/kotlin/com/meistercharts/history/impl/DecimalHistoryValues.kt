@@ -50,7 +50,7 @@ data class DecimalHistoryValues(
 
   init {
     if (minValues != null) {
-      requireNotNull(maxValues)
+      requireNotNull(maxValues) { "DecimalHistoryValues with non-null minValues must also have non-null maxValues" }
     }
 
     if (minValues != null || maxValues != null) {

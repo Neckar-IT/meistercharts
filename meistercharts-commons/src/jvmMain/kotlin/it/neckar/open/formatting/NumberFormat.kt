@@ -79,9 +79,9 @@ actual class ExponentialFormat actual constructor(
       minimumIntegerDigits: Int,
       locale: it.neckar.open.i18n.Locale
     ): DecimalFormat {
-      require(maximumFractionDigits > -1)
-      require(minimumFractionDigits > -1)
-      require(minimumIntegerDigits > -1)
+      require(maximumFractionDigits > -1) { "maximumFractionDigits must be >= 0 but was [$maximumFractionDigits]" }
+      require(minimumFractionDigits > -1) { "minimumFractionDigits must be >= 0 but was [$minimumFractionDigits]" }
+      require(minimumIntegerDigits > -1) { "minimumIntegerDigits must be >= 0 but was [$minimumIntegerDigits]" }
 
       val formatSymbols = DecimalFormatSymbols.getInstance(locale.convert()).also { it.exponentSeparator = "e" }
       val patternExponent = "E0"

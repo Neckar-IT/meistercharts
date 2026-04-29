@@ -62,10 +62,10 @@ fun HistoryBucketDescriptor.calculateDownSampled(
 
   //Check the descriptors
   childBuckets.fastForEach {
-    require(it.descriptor.parent() == this)
+    require(it.descriptor.parent() == this) { "Child bucket descriptor parent [${it.descriptor.parent()}] must equal target descriptor [$this]" }
 
-    require(it.chunk.firstTimestamp >= this.start)
-    require(it.chunk.lastTimestamp < this.end)
+    require(it.chunk.firstTimestamp >= this.start) { "Child chunk firstTimestamp [${it.chunk.firstTimestamp}] must be >= target start [$start]" }
+    require(it.chunk.lastTimestamp < this.end) { "Child chunk lastTimestamp [${it.chunk.lastTimestamp}] must be < target end [$end]" }
   }
 
   return calculateDownSampled(SizedProvider.mapped(childBuckets) {

@@ -3,8 +3,6 @@ package it.neckar.gradle.pnpm.packagejson
 import Plugins
 import normalizeNpmNameToAlias
 import npmVersion
-import isSymLinkTo
-import it.neckar.gradle.ansiConsole
 import org.gradle.api.DefaultTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Plugin
@@ -12,14 +10,12 @@ import org.gradle.api.Project
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.assign
-import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.task
 
@@ -27,10 +23,9 @@ import org.gradle.kotlin.dsl.task
 /**
  * Generates a package.json file from a template.
  *
- * The package.json is a symlink to the generated package.json file.
- * The package.json file is always checked in to ensure the project is recognizable as a node project.
- *
- * If the generated package.json does not exist, the project will fail to build (instead of being ignored)
+ * The plugin writes `package.json` directly into the project directory. The generated
+ * file is checked in to Git so the effective state is visible and Renovate's native
+ * `npm` manager can pick it up.
  */
 class GeneratePackageJsonPlugin : Plugin<Project> {
   override fun apply(target: Project) {
@@ -45,32 +40,25 @@ class GeneratePackageJsonPlugin : Plugin<Project> {
         target.file("package.template.json")
       }
 
-      targetFile.convention(target.layout.projectDirectory.file(PackageGeneratedJsonFileName)) //generate the package.json in the *same* directory to avoid problems with relative paths (e.g., pnpm)
-      packageJsonSymLinkFile.convention(target.layout.projectDirectory.file("package.json"))
+      targetFile.convention(target.layout.projectDirectory.file(PackageJsonFileName))
 
       moduleName = target.name
       version.convention(target.version.toString())
     }
 
-    val generatePackageJsonTask = target.task<GeneratePackageJsonTask>(GeneratePackageJsonTaskName) {
+    target.task<GeneratePackageJsonTask>(GeneratePackageJsonTaskName) {
       npmVersionsToml = extension.npmVersionsToml
       templateFile = extension.templateFile
       targetFile = extension.targetFile
-      packageJsonSymLinkFile = extension.packageJsonSymLinkFile
       moduleName = extension.moduleName
       version = extension.version
-    }
-
-    //Delete generated file on clean
-    target.tasks.named<Delete>("clean") {
-      delete(generatePackageJsonTask.targetFile)
     }
   }
 
   companion object {
     const val GeneratePackageJsonTaskName: String = "generatePackageJson"
 
-    private const val PackageGeneratedJsonFileName = "package.generated.json"
+    private const val PackageJsonFileName = "package.json"
   }
 }
 
@@ -90,11 +78,6 @@ open class GeneratePackageJsonPluginExtension(objects: ObjectFactory) {
    * Where to write the generated package.json file
    */
   val targetFile: RegularFileProperty = objects.fileProperty()
-
-  /**
-   * Contains a symlink to the generated package.json file
-   */
-  val packageJsonSymLinkFile: RegularFileProperty = objects.fileProperty()
 
   /**
    * The module name - will be used as name for the package.json
@@ -119,14 +102,6 @@ abstract class GeneratePackageJsonTask : DefaultTask() {
 
   @get:OutputFile
   abstract val targetFile: RegularFileProperty
-
-  /**
-   * Contains a symlink to the generated package.json file.
-   *
-   * The symlink is necessary to ensure the package.json exists all the time.
-   */
-  @get:OutputFile
-  abstract val packageJsonSymLinkFile: RegularFileProperty
 
   @get:Input
   abstract val moduleName: Property<String>
@@ -155,14 +130,6 @@ abstract class GeneratePackageJsonTask : DefaultTask() {
     val templateContent = templateFile.readText()
 
     targetFile.writeText(replaceContent(templateContent))
-
-    //Create symlink file
-    val symLinkFile = packageJsonSymLinkFile.get().asFile
-    require(symLinkFile.isSymLinkTo(targetFile)) {
-      "The symlink file <${symLinkFile.absolutePath}> is not a symlink to <${targetFile.absolutePath}>.\n" +
-        "Generate the symlink file with:\n" +
-        ansiConsole.green("ln -s ${targetFile.name} ${symLinkFile.name}")
-    }
   }
 
   private fun replaceContent(content: String): String {
