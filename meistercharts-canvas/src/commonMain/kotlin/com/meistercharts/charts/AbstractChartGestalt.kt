@@ -31,7 +31,7 @@ import it.neckar.open.dispose.OnDispose
  * *[configure] - can be used to configure that [LayerSupport]. This method is often used in many gestalts.
  */
 abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
-  private var disposeSupport: DisposeSupport = DisposeSupport()
+  private val disposeSupport: DisposeSupport = DisposeSupport()
 
   override fun dispose() {
     disposeSupport.dispose()

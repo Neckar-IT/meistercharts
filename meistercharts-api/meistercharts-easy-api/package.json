@@ -1,6 +1,6 @@
 {
   "name": "meistercharts-easy-api",
-  "version": "9.0.2-SNAPSHOT",
+  "version": "0.0.0",
   "description": "meistercharts.com",
   "main": "meistercharts-easy-api.js",
   "types": "meistercharts-easy-api.d.ts",

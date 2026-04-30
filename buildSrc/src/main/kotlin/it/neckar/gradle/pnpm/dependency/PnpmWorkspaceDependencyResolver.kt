@@ -7,15 +7,13 @@ import org.gradle.api.logging.Logging
 /**
  * Resolves workspace dependencies for pnpm projects.
  *
- * Parses package.template.json files to extract internal workspace dependencies
+ * Parses `package.json` files to extract internal workspace dependencies
  * (dependencies with `workspace:*` specifier) and maps them to Gradle project paths.
- *
- * Uses template files to avoid dependency on generated files during Gradle configuration phase.
  *
  * ## Architecture
  * The resolver consists of three components:
  * 1. [PackageNameRegistry] - Maps npm package names to Gradle project paths
- * 2. [PackageJsonParser] - Parses package.json/template files to extract workspace dependencies
+ * 2. [PackageJsonParser] - Parses package.json files to extract workspace dependencies
  * 3. [GradleProjectPath] - Value class for type-safe Gradle project paths
  *
  * ## Usage
@@ -34,20 +32,20 @@ class PnpmWorkspaceDependencyResolver(
   /**
    * Determines all internal workspace dependencies of a pnpm project.
    *
-   * Parses the project's package.template.json file and extracts dependencies that use
+   * Parses the project's `package.json` file and extracts dependencies that use
    * the `workspace:*` specifier, then maps them to their corresponding Gradle project paths.
    *
    * @return List of Gradle project paths for workspace dependencies
    */
   fun resolveWorkspaceDependencies(project: Project): List<GradleProjectPath> {
-    val packageTemplateFile = project.file("package.template.json")
+    val packageJsonFile = project.file("package.json")
 
-    if (packageTemplateFile.exists().not()) {
-      logger.debug("No package.template.json found for project ${project.path}")
+    if (packageJsonFile.exists().not()) {
+      logger.debug("No package.json found for project ${project.path}")
       return emptyList()
     }
 
-    val workspacePackageNames = packageJsonParser.extractWorkspaceDependencyNames(packageTemplateFile)
+    val workspacePackageNames = packageJsonParser.extractWorkspaceDependencyNames(packageJsonFile)
 
     return resolvePackageNames(workspacePackageNames, project)
   }
@@ -58,14 +56,14 @@ class PnpmWorkspaceDependencyResolver(
    * @return [ResolvedWorkspaceDependencies] with separate lists for dependencies and devDependencies
    */
   fun resolveWorkspaceDependenciesByType(project: Project): ResolvedWorkspaceDependencies {
-    val packageTemplateFile = project.file("package.template.json")
+    val packageJsonFile = project.file("package.json")
 
-    if (packageTemplateFile.exists().not()) {
-      logger.debug("No package.template.json found for project ${project.path}")
+    if (packageJsonFile.exists().not()) {
+      logger.debug("No package.json found for project ${project.path}")
       return ResolvedWorkspaceDependencies(emptyList(), emptyList())
     }
 
-    val workspaceDeps = packageJsonParser.extractWorkspaceDependenciesByType(packageTemplateFile)
+    val workspaceDeps = packageJsonParser.extractWorkspaceDependenciesByType(packageJsonFile)
 
     return ResolvedWorkspaceDependencies(
       dependencies = resolvePackageNames(workspaceDeps.dependencies, project),

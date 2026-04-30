@@ -21,12 +21,19 @@ import org.gradle.kotlin.dsl.task
 
 
 /**
- * Generates a package.json file from a template.
+ * Generates a package.json file from a `package.template.json` by substituting
+ * `$VERSION`, `$MODULE`, and `${version.npm.*}` placeholders against
+ * `gradle/npm.versions.toml`.
  *
- * The plugin writes `package.json` directly into the project directory. The generated
- * file is checked in to Git so the effective state is visible and Renovate's native
- * `npm` manager can pick it up.
+ * Deprecated as of #1635: the templating pipeline has been replaced by checked-in
+ * `package.json` files updated by Renovate's native npm manager. The plugin is
+ * kept on disk for archival reference; its inputs (templates and the TOML) have
+ * been deleted, so applying it produces a runtime failure.
  */
+@Deprecated(
+  "Replaced by checked-in package.json + Renovate npm manager (#1635). " +
+    "Templates and gradle/npm.versions.toml have been deleted; applying this plugin will fail at task execution.",
+)
 class GeneratePackageJsonPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     target.plugins.apply(Plugins.base) //Ensure that the base plugin is applied

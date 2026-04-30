@@ -28,7 +28,7 @@ abstract class VerifyBundleContentTask : DefaultTask() {
       throw GradleException("Verification failed: No .js files found in $workingDirFile")
     }
     if (packageJsonExists.not()) {
-      project.logger.lifecycle(ansiConsole.blue("Register the generatePackageJson plugin to generate a package.json file."))
+      project.logger.lifecycle(ansiConsole.blue("Add the project's package.json to the bundled files (npmBundle.filesToBundle)."))
       throw GradleException("Verification failed: No package.json file found in $workingDirFile")
     }
 

@@ -8,14 +8,12 @@ import org.gradle.api.Project
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
-import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.listProperty
-import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.task
 
 
@@ -30,14 +28,9 @@ class GeneratePnpmWorkspaceYamlPlugin : Plugin<Project> {
       targetFile.convention(target.layout.projectDirectory.file("pnpm-workspace.yaml"))
     }
 
-    val generateWorkspaceYamlTask = target.task<GenerateWorkspaceYamlTask>(GenerateWorkspaceYamlTaskName) {
+    target.task<GenerateWorkspaceYamlTask>(GenerateWorkspaceYamlTaskName) {
       targetFile = extension.targetFile
       manualEntries = extension.manualEntries
-    }
-
-    //Update the clean task to delete the generated file
-    target.tasks.named<Delete>("clean") {
-      delete(generateWorkspaceYamlTask.targetFile)
     }
   }
 

@@ -53,13 +53,18 @@ org-jetbrains-kotlin-wrappers = "2025.1.6"
 
 io-gitlab-arturbosch-detekt = "2.0.0-alpha.3"
 
+# detekt-gitlab-report: Detekt plugin that emits an extra Code-Climate-format
+# JSON. Hosted on the plugin author's GitLab Maven repo (see settings.gradle.kts).
+# 0.5.0 is the first release that supports Detekt 2.
+com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
+
 com-google-devtools-ksp = "2.3.7"
 
 org-mongodb = "5.6.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.64"
+aws-sdk-kotlin = "1.6.65"
 
 apache-poi = "5.5.1"
 
@@ -226,6 +231,7 @@ com-intellij-annotations = "com.intellij:annotations:12.0"
 
 detekt-api = { group = "dev.detekt", name = "detekt-api", version.ref = "io-gitlab-arturbosch-detekt" }
 detekt-test = { group = "dev.detekt", name = "detekt-test", version.ref = "io-gitlab-arturbosch-detekt" }
+detekt-gitlab-report = { group = "com.gitlab.cromefire", name = "detekt-gitlab-report", version.ref = "com-gitlab-cromefire-detekt-gitlab-report" }
 
 kotlin-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin" }
 
@@ -279,7 +285,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.42.41"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.43.0"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -339,7 +345,7 @@ junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-
 
 ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
 
-jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.9"
+jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.11"
 
 gitlab4j-api = { group = "org.gitlab4j", name = "gitlab4j-api", version.ref = "gitlab4j" }
 

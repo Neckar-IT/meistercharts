@@ -52,7 +52,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
   /**
    * Contains the current ui state
    */
-  private var uiStateProperty: ObservableObject<ResizeByHandlesLayerState> = ObservableObject(DefaultState)
+  private val uiStateProperty: ObservableObject<ResizeByHandlesLayerState> = ObservableObject(DefaultState)
 
   /**
    * The current ui state

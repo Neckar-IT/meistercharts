@@ -35,7 +35,7 @@ class XyAreaPainter(
   private val baseLineY: Double, snapXValues: Boolean, snapYValues: Boolean
 ) : FancyXyLinePainter(snapXValues, snapYValues) {
 
-  private var fill: Color? = null
+  private val fill: Color? = null
 
   /**
    * Stores the first x values to be able to finish the area

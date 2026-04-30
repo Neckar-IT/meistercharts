@@ -222,7 +222,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
 
   class Iterator<T>(val map: IntMap<T>) {
     private var index: Int = if (map.hasZero) ZERO_INDEX else nextNonEmptyIndex(map._keys, 0)
-    private var entry = Entry<T?>(0, null)
+    private val entry = Entry<T?>(0, null)
 
     fun hasNext() = index != EOF
 
@@ -555,7 +555,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
 
   class Iterator(val map: IntIntMap) {
     private var index: Int = if (map.hasZero) ZERO_INDEX else nextNonEmptyIndex(map._keys, 0)
-    private var entry = Entry(0, 0)
+    private val entry = Entry(0, 0)
 
     fun hasNext() = index != EOF
 

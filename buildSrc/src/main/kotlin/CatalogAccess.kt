@@ -28,16 +28,41 @@ fun Project.lib(alias: String): Provider<MinimalExternalModuleDependency> {
 }
 
 /**
- * Looks up a version from `gradle/npm.versions.toml` by its alias.
+ * Looks up the configured Node.js or pnpm version.
  *
- * Parses the TOML file directly at execution time, so newly added entries
- * are immediately visible — even within the same Gradle invocation.
+ * Sources of truth after the npm.versions.toml removal (#1635):
+ * - "node" → reads `.nvmrc` (strips the leading `v`)
+ * - "pnpm" → reads `engines.pnpm` from the root `package.json`
+ *
+ * Any other alias throws — Renovate's native `npm` manager updates application
+ * dependencies directly in the relevant `package.json` files, so build-time
+ * lookup of arbitrary npm versions is no longer supported.
  */
-fun Project.npmVersion(alias: String): String {
-  val tomlFile = rootProject.file("gradle/npm.versions.toml")
-  val versions = parseTomlVersions(tomlFile)
-  return versions[alias]
-    ?: throw IllegalArgumentException("NPM version alias '$alias' not found in gradle/npm.versions.toml")
+fun Project.npmVersion(alias: String): String = when (alias) {
+  "node" -> readNvmrcNodeVersion(rootProject.file(".nvmrc"))
+  "pnpm" -> readPnpmEngineVersion(rootProject.file("package.json"))
+  else -> throw IllegalArgumentException(
+    "npmVersion('$alias') is no longer supported. Only 'node' and 'pnpm' remain after the npm.versions.toml removal (#1635). " +
+      "Read application dependencies from the relevant package.json directly."
+  )
+}
+
+private val NodeVersionRegex = Regex("""^v?(\d+\.\d+\.\d+)$""")
+
+private fun readNvmrcNodeVersion(nvmrcFile: File): String {
+  val content = nvmrcFile.readText().trim()
+  val match = NodeVersionRegex.find(content)
+    ?: throw IllegalStateException("Cannot parse Node.js version from .nvmrc content <$content>")
+  return match.groupValues[1]
+}
+
+private val PnpmEngineRegex = Regex(""""pnpm"\s*:\s*"([^"]+)"""")
+
+private fun readPnpmEngineVersion(packageJsonFile: File): String {
+  val content = packageJsonFile.readText()
+  val match = PnpmEngineRegex.find(content)
+    ?: throw IllegalStateException("Cannot find engines.pnpm version in ${packageJsonFile.absolutePath}")
+  return match.groupValues[1]
 }
 
 /**

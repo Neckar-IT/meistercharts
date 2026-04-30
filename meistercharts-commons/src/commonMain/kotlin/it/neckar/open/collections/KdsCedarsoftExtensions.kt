@@ -57,7 +57,7 @@ fun IntArray2.Companion.invokeCols(cols: Array<IntArray>): IntArray2 {
 }
 
 fun IntArray2.setCols(cols: Array<IntArray>) {
-  var n = 0
+  val n = 0
   for (x in cols.indices) {
     val column = cols[x]
     for (y in column.indices) {
@@ -128,7 +128,7 @@ fun DoubleArray2.Companion.invokeCols(cols: Array<DoubleArray>): DoubleArray2 {
 }
 
 fun DoubleArray2.setCols(cols: Array<DoubleArray>) {
-  var n = 0
+  val n = 0
   for (x in cols.indices) {
     val column = cols[x]
     for (y in column.indices) {

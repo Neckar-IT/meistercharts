@@ -14,7 +14,15 @@ import org.gradle.kotlin.dsl.task
  * then regenerates `package.json` and updates lock files.
  *
  * Usage: `gradle installPnpmDependency -Pdependency=clsx`
+ *
+ * Deprecated as of #1635: dependencies are now declared directly in the relevant
+ * `package.json`. Templates and `gradle/npm.versions.toml` have been removed, so
+ * the registered tasks fail at execution.
  */
+@Deprecated(
+  "Edit the relevant package.json directly and run `pnpm install` (#1635). " +
+    "Templates and gradle/npm.versions.toml have been deleted; this plugin's tasks fail at execution.",
+)
 class InstallPnpmDependencyPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     val extension = target.extensions.create<InstallPnpmDependencyPluginExtension>("installPnpmDependency").apply {

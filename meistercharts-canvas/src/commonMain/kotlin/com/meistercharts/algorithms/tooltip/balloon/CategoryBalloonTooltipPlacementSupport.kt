@@ -73,7 +73,7 @@ class CategoryBalloonTooltipPlacementSupport(
     return configuration.activeCategoryIndex()
   }
 
-  private var paintingVariables = object {
+  private val paintingVariables = object {
     /**
      * The side where the tooltips are placed - relative to the category
      */

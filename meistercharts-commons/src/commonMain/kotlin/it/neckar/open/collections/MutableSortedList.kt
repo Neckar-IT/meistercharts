@@ -36,7 +36,7 @@ class MutableSortedList<V> internal constructor(
 ) : MutableList<V> by decorated {
 
   override fun indexOf(element: V): Int {
-    var index = decorated.binarySearch(element, comparator)
+    val index = decorated.binarySearch(element, comparator)
     return if (index < 0) -1 else index
   }
 

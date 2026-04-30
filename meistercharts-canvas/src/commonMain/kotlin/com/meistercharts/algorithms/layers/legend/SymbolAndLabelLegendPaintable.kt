@@ -74,7 +74,7 @@ class SymbolAndLabelLegendPaintable(
     return paintingVariables
   }
 
-  private var paintingVariables = object : AbstractPaintablePaintingVariables() {
+  private val paintingVariables = object : AbstractPaintablePaintingVariables() {
     var labelsCount: Int = 0
 
     /**

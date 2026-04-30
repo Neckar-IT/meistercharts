@@ -94,7 +94,7 @@ class DiscreteSeriesBalloonTooltipPlacementSupport(
     return configuration.activeDataSeriesIndex()
   }
 
-  private var paintingVariables = object {
+  private val paintingVariables = object {
     /**
      * The side where the tooltips are placed - relative to the data series
      */

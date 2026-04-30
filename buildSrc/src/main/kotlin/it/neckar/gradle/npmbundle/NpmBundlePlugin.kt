@@ -3,7 +3,6 @@
 package it.neckar.gradle.npmbundle
 
 import hasKotlinMultiplatformPlugin
-import it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
@@ -15,7 +14,7 @@ import withTask
 /**
  * Creates a NPM module.
  *
- * Most of the time the package.json is created using the [it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin].
+ * The bundled package.json is the file checked in next to the Gradle project (see #1635).
  */
 class NpmBundlePlugin : Plugin<Project> {
   override fun apply(project: Project) {
@@ -85,11 +84,6 @@ class NpmBundlePlugin : Plugin<Project> {
       destinationDir = npmBundleExtensionProduction.workingDir
       filesToBundle = npmBundleExtensionProduction.filesToBundle
 
-      //Well-known dependency
-      project.tasks.findByName(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)?.let {
-        dependsOn(it)
-      }
-
       when {
         project.hasKotlinMultiplatformPlugin() -> {
           dependsOn("jsBrowserProductionWebpack")
@@ -107,13 +101,6 @@ class NpmBundlePlugin : Plugin<Project> {
 
       destinationDir = npmBundleExtensionDevelopment.workingDir
       filesToBundle = npmBundleExtensionDevelopment.filesToBundle
-
-      //TODO add task dependencies
-
-      //Well-known dependency
-      project.tasks.findByName(GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)?.let {
-        dependsOn(it)
-      }
 
       //Add the deps automatically for Kotlin projects
       when {
@@ -156,7 +143,7 @@ class NpmBundlePlugin : Plugin<Project> {
       group = Group
       description = "Creates the npm bundle (*.tar.gz)"
 
-      dependsOn(npmCopyBundleContentTask, GeneratePackageJsonPlugin.GeneratePackageJsonTaskName) //TODO remove!
+      dependsOn(npmCopyBundleContentTask)
 
       targetDirectoryForArchiveProperty = npmBundleExtensionProduction.targetDirectoryForArchive
       sourceDirProperty = npmBundleExtensionProduction.workingDir
@@ -171,8 +158,7 @@ class NpmBundlePlugin : Plugin<Project> {
       group = Group
       description = "Creates the npm bundle (*.tar.gz) - (Development)"
 
-      //dependsOn(npmBundleContentDevelopmentTask, packageJsonTaskDevelopment)
-      dependsOn(npmCopyBundleContentDevelopmentTask, GeneratePackageJsonPlugin.GeneratePackageJsonTaskName)
+      dependsOn(npmCopyBundleContentDevelopmentTask)
 
       targetDirectoryForArchiveProperty = npmBundleExtensionDevelopment.targetDirectoryForArchive
       sourceDirProperty = npmBundleExtensionDevelopment.workingDir
