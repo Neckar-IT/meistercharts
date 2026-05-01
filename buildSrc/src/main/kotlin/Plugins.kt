@@ -76,7 +76,6 @@ object Plugins {
   const val serviceApplication: String = "it.neckar.service-application"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
-  const val dockerGenerateObjects: String = "it.neckar.docker.generate-objects"
   const val runDockerServices: String = "it.neckar.docker.services"
   const val ngrokTunnel: String = "it.neckar.ngrok-tunnel"
 
@@ -263,9 +262,6 @@ inline val PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
 
 inline val PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
   get() = id(Plugins.additionalGitRepository)
-
-inline val PluginDependenciesSpec.dockerGenerateObjects: PluginDependencySpec
-  get() = id(Plugins.dockerGenerateObjects)
 
 inline val PluginDependenciesSpec.runDockerServices: PluginDependencySpec
   get() = id(Plugins.runDockerServices)

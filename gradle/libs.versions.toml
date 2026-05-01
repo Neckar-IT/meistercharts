@@ -41,7 +41,7 @@ kotlin = "2.3.21"
 
 org-asciidoctor = "4.0.5"
 
-jackson = "2.21.2"
+jackson = "2.21.3"
 
 org-slf4j = "2.0.17"
 
@@ -64,7 +64,7 @@ org-mongodb = "5.6.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.65"
+aws-sdk-kotlin = "1.6.66"
 
 apache-poi = "5.5.1"
 
@@ -337,7 +337,7 @@ opentelemetry-logback-mdc-v1 = { group = "io.opentelemetry.instrumentation", nam
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 
-java-jwt = "com.auth0:java-jwt:4.5.1"
+java-jwt = "com.auth0:java-jwt:4.5.2"
 
 micrometer-core = { group = "io.micrometer", name = "micrometer-core", version.ref = "micrometer" }
 
