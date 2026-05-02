@@ -290,7 +290,7 @@ class Creator {
    */
   private val additionalCodeGenerators = mutableMapOf<Pair<Application, Usage>, () -> String>()
     .apply {
-      put(Pair(Application.ContentArea, Usage.ValueX)) {
+      this[Pair(Application.ContentArea, Usage.ValueX)] = {
         """fun toDomainRelativeValue(axisOrientation: AxisInversionInformation): DomainRelativeValueX {
           if (axisOrientation.axisInverted) {
             return DomainRelativeValueX(1 - value)
@@ -299,7 +299,7 @@ class Creator {
           return DomainRelativeValueX(value)
         }"""
       }
-      put(Pair(Application.ContentArea, Usage.ValueY)) {
+      this[Pair(Application.ContentArea, Usage.ValueY)] = {
         """
             fun toDomainRelativeValue(axisOrientation: AxisInversionInformation): DomainRelativeValueY {
               if (axisOrientation.axisInverted) {
@@ -310,19 +310,19 @@ class Creator {
             }
         """
       }
-      put(Pair(Application.Domain, Usage.ValueX)) {
+      this[Pair(Application.Domain, Usage.ValueX)] = {
         """  fun toDomainRelative(valueRange: ValueRange): DomainRelativeValueX {
               return valueRange.toDomainRelative(this)
             }
         """
       }
-      put(Pair(Application.Domain, Usage.ValueY)) {
+      this[Pair(Application.Domain, Usage.ValueY)] = {
         """  fun toDomainRelative(valueRange: ValueRange): DomainRelativeValueY {
               return valueRange.toDomainRelative(this)
             }
         """
       }
-      put(Pair(Application.DomainRelative, Usage.ValueX)) {
+      this[Pair(Application.DomainRelative, Usage.ValueX)] = {
         """
           fun toContentAreaRelative(axisOrientation: AxisInversionInformation): ContentAreaRelativeValueX {
             if (axisOrientation.axisInverted) {
@@ -337,7 +337,7 @@ class Creator {
           }
         """
       }
-      put(Pair(Application.DomainRelative, Usage.ValueY)) {
+      this[Pair(Application.DomainRelative, Usage.ValueY)] = {
         """
           fun toContentAreaRelative(axisOrientation: AxisInversionInformation): ContentAreaRelativeValueY {
             if (axisOrientation.axisInverted) {

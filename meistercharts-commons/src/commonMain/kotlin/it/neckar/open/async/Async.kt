@@ -69,7 +69,7 @@ class Async : Disposable {
    * Removes all runnables scheduled for execution with the given [key]
    */
   fun remove(key: Any) {
-    scheduledRunnables.remove(key)
+    scheduledRunnables -= key
   }
 
   /**

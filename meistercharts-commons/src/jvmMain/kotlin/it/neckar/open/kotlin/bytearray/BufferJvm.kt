@@ -70,10 +70,10 @@ fun DoubleBuffer.slice(offset: Int, size: Int): DoubleBuffer = run {
 }
 
 actual class MemBuffer(val buffer: ByteBuffer, val size: Int) {
-  val sbuffer = buffer.order(ByteOrder.nativeOrder()).asShortBuffer()
-  val ibuffer = buffer.order(ByteOrder.nativeOrder()).asIntBuffer()
-  val fbuffer = buffer.order(ByteOrder.nativeOrder()).asFloatBuffer()
-  val dbuffer = buffer.order(ByteOrder.nativeOrder()).asDoubleBuffer()
+  val sbuffer: ShortBuffer = buffer.order(ByteOrder.nativeOrder()).asShortBuffer()
+  val ibuffer: IntBuffer = buffer.order(ByteOrder.nativeOrder()).asIntBuffer()
+  val fbuffer: FloatBuffer = buffer.order(ByteOrder.nativeOrder()).asFloatBuffer()
+  val dbuffer: DoubleBuffer = buffer.order(ByteOrder.nativeOrder()).asDoubleBuffer()
 }
 
 actual fun MemBufferAlloc(size: Int): MemBuffer = MemBuffer(ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder()), size)
@@ -147,7 +147,7 @@ inline operator fun ShortBuffer.set(index: Int, value: Short) = this.put(index, 
 inline operator fun IntBuffer.set(index: Int, value: Int) = this.put(index, value)
 inline operator fun FloatBuffer.set(index: Int, value: Float) = this.put(index, value)
 inline operator fun DoubleBuffer.set(index: Int, value: Double) = this.put(index, value)
-inline operator fun MemBuffer.set(index: Int, value: Byte) = this.buffer.put(index, value)
+inline operator fun MemBuffer.set(index: Int, value: Byte): ByteBuffer = this.buffer.put(index, value)
 inline operator fun MemBuffer.get(index: Int): Byte = this.buffer.get(index)
 
 private inline fun <T> arraycopy(size: Int, src: Any?, srcPos: Int, dst: Any?, dstPos: Int, setDst: (Int, T) -> Unit, getSrc: (Int) -> T) {

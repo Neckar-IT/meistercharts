@@ -17,6 +17,7 @@ package com.meistercharts.history
 
 import com.meistercharts.time.TimeRange
 import it.neckar.open.kotlin.lang.floor
+import it.neckar.open.kotlin.lang.requireNotNull
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.si.ms
@@ -182,9 +183,8 @@ enum class HistoryBucketRange(
    * Calculates the amount of data points of the children that are averaged into one data point for this range.
    */
   fun downSamplingFactor(): Int {
-    return lower()?.let {
-      return (distance / it.distance).roundToInt()
-    } ?: throw IllegalArgumentException("Not supported <$this>")
+    val lower = lower().requireNotNull { "Not supported <$this>" }
+    return (distance / lower.distance).roundToInt()
   }
 
   companion object {

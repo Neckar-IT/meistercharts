@@ -147,7 +147,7 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
         }
 
         override fun valueAt(index: @GridLayer.GridLine Int, param1: LayerPaintingContext): Double {
-          val zoomedValue = layout.calculateCenter(BoxIndex(index)) ?: 0.0
+          val zoomedValue = layout.calculateCenter(BoxIndex(index))
 
           //Switch based on the orientation of the *value axis*!
           return when (configuration.orientation) {

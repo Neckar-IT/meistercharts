@@ -234,8 +234,9 @@ class ConfigurationAssistant(
 
     fun hereIsMyDataThatsAll(myData: Any, targetWindowWidth: @px Double): ConfigurationAssistant {
       TODO("Not yet implemented")
-      return ConfigurationAssistant(durationBetweenSamples = TODO("calculate"))
-      //.showAllData()
+      // Implementation hint:
+      // return ConfigurationAssistant(durationBetweenSamples = TODO("calculate"))
+      //   .showAllData()
     }
 
     private val logger = LoggerFactory.getLogger("com.meistercharts.charts.timeline.ConfigurationAssistant")

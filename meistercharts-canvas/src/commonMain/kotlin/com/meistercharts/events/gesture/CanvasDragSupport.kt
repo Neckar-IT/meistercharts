@@ -24,6 +24,7 @@ import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import it.neckar.open.kotlin.lang.consumeUntil
+import it.neckar.open.kotlin.lang.requireNotNull
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
 import com.meistercharts.events.EventConsumption.Ignored
@@ -134,16 +135,16 @@ class CanvasDragSupport {
     }
 
     //Notify about drag
-    currentLocation?.let {
-      @px val distance = coordinates.delta(it)
-      @ms val deltaTime: Double = updateDragLocation(coordinates, eventTime)
+    val location = currentLocation.requireNotNull { "No current mouse location available" }
 
-      dragSpeedCalculator.add(deltaTime, distance)
+    @px val distance = coordinates.delta(location)
+    @ms val deltaTime: Double = updateDragLocation(coordinates, eventTime)
 
-      return handlers.consumeUntil(Consumed) { handler ->
-        handler.onDrag(this, coordinates, distance, deltaTime, chartSupport)
-      } ?: Ignored
-    } ?: throw IllegalStateException("No current mouse location available")
+    dragSpeedCalculator.add(deltaTime, distance)
+
+    return handlers.consumeUntil(Consumed) { handler ->
+      handler.onDrag(this, coordinates, distance, deltaTime, chartSupport)
+    } ?: Ignored
   }
 
   fun finishDragging(coordinates: Coordinates, chartSupport: ChartSupport): EventConsumption {

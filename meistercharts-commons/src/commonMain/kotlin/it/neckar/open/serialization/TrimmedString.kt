@@ -59,18 +59,9 @@ import kotlinx.serialization.encoding.Encoder
  * Trimming happens at the serialization boundary (REST, MongoDB), not at in-code
  * construction. Generators and tests are not user input and are not affected.
  *
- * For values that must not be blank after trimming, use [TrimmedStringNonBlank].
  * For nullable values where blank-after-trim should collapse to `null`, use [TrimmedStringOrNull].
  */
 typealias TrimmedString = @Serializable(with = TrimmedStringSerializer::class) String
-
-/**
- * Like [TrimmedString], but throws [IllegalArgumentException] when the trimmed value
- * is empty. Use for properties that semantically must not be blank.
- *
- * Decode of `"   "` throws.
- */
-typealias TrimmedStringNonBlank = @Serializable(with = TrimmedStringNonBlankSerializer::class) String
 
 /**
  * Nullable variant of [TrimmedString]. Trims whitespace and collapses blank values to `null`.
@@ -94,26 +85,6 @@ object TrimmedStringSerializer : KSerializer<String> {
 
   override fun deserialize(decoder: Decoder): String {
     return decoder.decodeString().trim()
-  }
-}
-
-/**
- * Serializer for [TrimmedStringNonBlank]. Trims on decode and rejects blank values.
- */
-object TrimmedStringNonBlankSerializer : KSerializer<String> {
-  override val descriptor: SerialDescriptor =
-    PrimitiveSerialDescriptor("TrimmedStringNonBlank", PrimitiveKind.STRING)
-
-  override fun serialize(encoder: Encoder, value: String) {
-    encoder.encodeString(value)
-  }
-
-  override fun deserialize(decoder: Decoder): String {
-    val trimmed = decoder.decodeString().trim()
-    require(trimmed.isNotEmpty()) {
-      "Trimmed string must not be blank"
-    }
-    return trimmed
   }
 }
 
