@@ -38,15 +38,15 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
 ```json
 {
   "name": "yarn-meistercharts-minimal",
-  "author": "NeckarIT",
   "license": "Apache-2.0",
+  "author": "NeckarIT",
   "main": "src/index.js",
   "dependencies": {
     "@meistercharts/meistercharts": "1.33.0"
   },
   "devDependencies": {
-    "webpack": "5.82.0",
-    "webpack-cli": "5.0.2"
+    "webpack": "5.106.2",
+    "webpack-cli": "5.1.4"
   }
 }
 

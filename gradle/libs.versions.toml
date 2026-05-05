@@ -132,7 +132,7 @@ opentelemetry-javaagent = "2.27.0"
 
 micrometer = "1.16.5"
 
-caffeine = "3.2.3"
+caffeine = "3.2.4"
 
 pdfbox = "3.0.7"
 
