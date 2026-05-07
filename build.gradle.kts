@@ -9,7 +9,6 @@ GradleContext.initialize(gradle)
 plugins {
   kotlinxSerialization apply false
   detekt apply false
-  generatePackageJson apply false
 }
 
 //Prepare the extra variables
