@@ -31,8 +31,7 @@ class IntListCache : LayoutVariableWithSize {
    * Altering this instance alters the cache, too.
    */
   @PublishedApi
-  internal var values: MutableList<Int> = mutableListOf()
-    private set
+  internal val values: MutableList<Int> = mutableListOf()
 
   override fun reset() {
     values.forEachIndexed { index, _ ->

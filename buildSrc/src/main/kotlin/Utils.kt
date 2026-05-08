@@ -1013,6 +1013,13 @@ val Project.inCi: Boolean
     return ciInformation.inCi
   }
 
+/**
+ * Returns true if the given pipeline-schedule env variable (e.g. `SCHEDULE_E2E_TESTS`) is set to `"true"`.
+ */
+fun Project.inSchedule(scheduleVariableName: String): Boolean {
+  return ciInformation.inSchedule(scheduleVariableName)
+}
+
 val Project.inContainer: Boolean
   get() {
     return devContainerInformation.inDockerContainer

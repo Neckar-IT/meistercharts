@@ -24,6 +24,7 @@ object Plugins {
 
   const val java: String = "java"
   const val intellij: String = "org.jetbrains.intellij"
+  const val ideaExt: String = "org.jetbrains.gradle.plugin.idea-ext"
 
   const val kotlinxSerialization: String = "org.jetbrains.kotlin.plugin.serialization"
 
@@ -297,6 +298,9 @@ inline val PluginDependenciesSpec.jib: PluginDependencySpec
 
 inline val PluginDependenciesSpec.intellij: PluginDependencySpec
   get() = id(Plugins.intellij)
+
+inline val PluginDependenciesSpec.ideaExt: PluginDependencySpec
+  get() = id(Plugins.ideaExt)
 
 inline val PluginDependenciesSpec.python: PluginDependencySpec
   get() = id(Plugins.python)

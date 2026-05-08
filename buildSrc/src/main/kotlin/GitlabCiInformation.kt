@@ -10,6 +10,13 @@ class GitlabCiInformation(private val env: Map<String, String?>) {
   val inCi: Boolean
     get() = env.containsKey("GITLAB_CI")
 
+  /**
+   * Returns true if the given pipeline-schedule env variable (e.g. `SCHEDULE_E2E_TESTS`) is set to `"true"`.
+   */
+  fun inSchedule(scheduleVariableName: String): Boolean {
+    return env.getOrDefault(scheduleVariableName, "false").equals("true")
+  }
+
   val buildNumber: String?
     get() = env.getOrDefault("CI_PIPELINE_IID", null)
 

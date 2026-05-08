@@ -26,6 +26,8 @@ org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3
 
 org-jetbrains-intellij = { id = "org.jetbrains.intellij", version = "1.17.4" }
 
+org-jetbrains-gradle-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.2" }
+
 
 com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
@@ -135,6 +137,8 @@ micrometer = "1.16.5"
 caffeine = "3.2.4"
 
 pdfbox = "3.0.7"
+
+metadata-extractor = "2.19.0"
 
 gitlab4j = "6.2.0"
 
@@ -299,6 +303,8 @@ poi = { group = "org.apache.poi", name = "poi", version.ref = "apache-poi" }
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 
 pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
+
+metadata-extractor = { group = "com.drewnoakes", name = "metadata-extractor", version.ref = "metadata-extractor" }
 
 loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
 
