@@ -87,7 +87,6 @@ import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
-import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.delegate
 import it.neckar.open.provider.mapped
 import it.neckar.open.unit.number.MayBeNaN
@@ -575,12 +574,5 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
 
     private val defaultValueRange: ValueRange = ValueRange.linear(0.0, 110.0)
     private val defaultNumberFormat: CachedNumberFormat = intFormat
-
-    private fun createDefaultThresholds(): SizedProvider<Threshold> {
-      return SizedProvider.forValues(
-        Threshold(35.0, listOf(TextKey.simple("Min"), TextKey.simple(defaultNumberFormat.format(35.0)))),
-        Threshold(95.0, listOf(TextKey.simple("Max"), TextKey.simple(defaultNumberFormat.format(95.0)))),
-      )
-    }
   }
 }

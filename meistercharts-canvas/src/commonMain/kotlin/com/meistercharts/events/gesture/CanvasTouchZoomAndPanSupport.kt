@@ -138,13 +138,6 @@ class CanvasTouchZoomAndPanSupport {
   }
 
   /**
-   * Stores the coordinates for a *one* finger gesture
-   */
-  private fun storeCoordinates(touch: Touch) {
-    touchCoordinates[touch.touchId] = touch.coordinates
-  }
-
-  /**
    * Returns the coordinates for a given touch id.
    * Returns null if no coordinates could be found.
    */

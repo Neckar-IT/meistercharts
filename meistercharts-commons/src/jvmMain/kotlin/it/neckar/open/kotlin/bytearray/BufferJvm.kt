@@ -161,45 +161,45 @@ private inline fun <T> arraycopy(size: Int, src: Any?, srcPos: Int, dst: Any?, d
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: ByteArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: ShortArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.sbuffer[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst.sbuffer[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: ShortArray, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.sbuffer[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src.sbuffer[it] })
 }
 
 actual fun arraycopy(src: IntArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.ibuffer[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst.ibuffer[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: IntArray, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.ibuffer[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src.ibuffer[it] })
 }
 
 actual fun arraycopy(src: FloatArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.fbuffer[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst.fbuffer[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: FloatArray, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.fbuffer[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src.fbuffer[it] })
 }
 
 actual fun arraycopy(src: DoubleArray, srcPos: Int, dst: MemBuffer, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst.dbuffer[it] = value }, { src[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst.dbuffer[idx] = value }, { src[it] })
 }
 
 actual fun arraycopy(src: MemBuffer, srcPos: Int, dst: DoubleArray, dstPos: Int, size: Int): Unit {
-  arraycopy(size, src, srcPos, dst, dstPos, { it, value -> dst[it] = value }, { src.dbuffer[it] })
+  arraycopy(size, src, srcPos, dst, dstPos, { idx, value -> dst[idx] = value }, { src.dbuffer[it] })
 }

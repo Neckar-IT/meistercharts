@@ -145,13 +145,6 @@ class CategoryLayer<T : CategoryModel>(
   }
 
   /**
-   * Returns true if the category is highlighted (e.g. because of a mouse over)
-   */
-  private fun CategoryIndex.isHighlighted(): Boolean {
-    return configuration.activeCategoryIndex == this
-  }
-
-  /**
    * ```
    * ━━━
    * ━━
