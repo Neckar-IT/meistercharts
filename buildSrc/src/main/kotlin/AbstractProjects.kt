@@ -480,4 +480,12 @@ value class GradleProjectPath(val path: String) {
   }
 
   override fun toString(): String = path
+
+  /**
+   * The project's location as a filesystem-relative path (relative to the Gradle root).
+   *
+   * Example: `:internal:closed:profiles` → `internal/closed/profiles`.
+   */
+  val filePath: String
+    get() = path.removePrefix(":").replace(':', '/')
 }

@@ -55,7 +55,7 @@ object Plugins {
   const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"
   const val buildProfileReport: String = "it.neckar.gradle.report.build-profile"
-  const val generatePnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.generate-workspace-yaml"
+  const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
@@ -347,8 +347,8 @@ inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig:
 inline val PluginDependenciesSpec.orvalConvert: PluginDependencySpec
   get() = id(Plugins.orvalConvert)
 
-inline val PluginDependenciesSpec.generatePnpmWorkspaceYaml: PluginDependencySpec
-  get() = id(Plugins.generatePnpmWorkspaceYaml)
+inline val PluginDependenciesSpec.verifyPnpmWorkspaceYaml: PluginDependencySpec
+  get() = id(Plugins.verifyPnpmWorkspaceYaml)
 
 @Suppress("DEPRECATION")
 @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
