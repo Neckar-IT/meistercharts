@@ -142,11 +142,11 @@ actual val Float64Buffer.size: Int get() = (jbuffer as java.nio.Buffer).limit() 
 actual operator fun Float64Buffer.get(index: Int): Double = jbuffer.get(offset + index)
 actual operator fun Float64Buffer.set(index: Int, value: Double): Unit = run { jbuffer.put(offset + index, value) }
 
-inline operator fun ByteBuffer.set(index: Int, value: Byte) = this.put(index, value)
-inline operator fun ShortBuffer.set(index: Int, value: Short) = this.put(index, value)
-inline operator fun IntBuffer.set(index: Int, value: Int) = this.put(index, value)
-inline operator fun FloatBuffer.set(index: Int, value: Float) = this.put(index, value)
-inline operator fun DoubleBuffer.set(index: Int, value: Double) = this.put(index, value)
+inline operator fun ByteBuffer.set(index: Int, value: Byte) { this.put(index, value) }
+inline operator fun ShortBuffer.set(index: Int, value: Short) { this.put(index, value) }
+inline operator fun IntBuffer.set(index: Int, value: Int) { this.put(index, value) }
+inline operator fun FloatBuffer.set(index: Int, value: Float) { this.put(index, value) }
+inline operator fun DoubleBuffer.set(index: Int, value: Double) { this.put(index, value) }
 inline operator fun MemBuffer.set(index: Int, value: Byte): ByteBuffer = this.buffer.put(index, value)
 inline operator fun MemBuffer.get(index: Int): Byte = this.buffer.get(index)
 

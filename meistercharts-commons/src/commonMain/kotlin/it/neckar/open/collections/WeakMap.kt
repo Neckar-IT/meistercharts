@@ -27,6 +27,8 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.kotlin.lang.requireNotNull
+
 /**
  * A weak map implementation for JS/JVM - with weak *keys*
  */
@@ -76,7 +78,7 @@ expect class WeakSet<T>() {
  */
 fun <K : Any, V> WeakMap<K, V>.getOrPut(key: K, value: (K) -> V): V {
   if (key !in this) this[key] = value(key)
-  return this[key]!!
+  return this[key].requireNotNull { "Value missing for key $key after insert in WeakMap" }
 }
 
 @Deprecated("not supported by Safari", ReplaceWith("use WeakMap or WeakSet"))

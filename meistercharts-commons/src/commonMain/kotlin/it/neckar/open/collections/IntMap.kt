@@ -31,6 +31,7 @@ package it.neckar.open.collections
 
 import it.neckar.open.collections.*
 import it.neckar.open.kotlin.lang.fastCastTo
+import it.neckar.open.kotlin.lang.requireNotNull
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.math.max
@@ -182,9 +183,10 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   }
 
   inline fun getOrPut(key: Int, callback: () -> T): T {
-    val res = get(key)
-    if (res == null) set(key, callback())
-    return get(key)!!
+    get(key)?.let { return it }
+    val newValue = callback()
+    set(key, newValue)
+    return newValue.requireNotNull { "callback returned null for key $key" }
   }
 
   private fun hash1(key: Int) = _hash1(key, mask)
@@ -285,11 +287,11 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   }
 
   inline fun fastValueForEach(callback: (value: T) -> Unit): Unit {
-    fastKeyForEach { callback(this[it]!!) }
+    fastKeyForEach { key -> callback(this[key].requireNotNull { "Value for key $key is null in IntMap" }) }
   }
 
   inline fun fastForEach(callback: (key: Int, value: T) -> Unit): Unit {
-    fastKeyForEach { callback(it, this[it]!!) }
+    fastKeyForEach { key -> callback(key, this[key].requireNotNull { "Value for key $key is null in IntMap" }) }
   }
 
   override fun equals(other: Any?): Boolean {

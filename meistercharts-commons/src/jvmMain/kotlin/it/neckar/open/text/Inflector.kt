@@ -312,21 +312,22 @@ class Inflector {
       return ""
     }
     if (uppercaseFirstLetter) {
-      var result: String? = lowerCaseAndUnderscoredWord
+      var result: String = lowerCaseAndUnderscoredWord
       // Replace any extra delimiters with underscores (before the underscores are converted in the next step)...
-      if (delimiterChars != null) {
-        for (delimiterChar in delimiterChars) {
-          result = result!!.replace(delimiterChar, '_')
-        }
+      for (delimiterChar in delimiterChars) {
+        result = result.replace(delimiterChar, '_')
       }
 
       // Change the case at the beginning at after each underscore ...
-      return Companion.replaceAllWithUppercase(result!!, "(^|_)(.)", 2)
+      return Companion.replaceAllWithUppercase(result, "(^|_)(.)", 2)
     }
     if (lowerCaseAndUnderscoredWord.length < 2) {
       return lowerCaseAndUnderscoredWord
     }
-    return ("" + lowerCaseAndUnderscoredWord.get(0).lowercaseChar() + camelCase(lowerCaseAndUnderscoredWord, true, *delimiterChars)!!.substring(1))
+    val upperCamelCased = requireNotNull(camelCase(lowerCaseAndUnderscoredWord, true, *delimiterChars)) {
+      "Recursive camelCase returned null for non-null input"
+    }
+    return "" + lowerCaseAndUnderscoredWord.get(0).lowercaseChar() + upperCamelCased.substring(1)
   }
 
   /**
@@ -458,9 +459,10 @@ class Inflector {
     words: String?,
     vararg removableTokens: String
   ): String {
-    var result = humanize(words, *removableTokens)
-    result = Companion.replaceAllWithUppercase(result!!, "\\b([a-z])", 1) // change first char of each word to uppercase
-    return result
+    val humanized = requireNotNull(humanize(words, *removableTokens)) {
+      "humanize returned null in titleCase for input '$words'"
+    }
+    return Companion.replaceAllWithUppercase(humanized, "\\b([a-z])", 1) // change first char of each word to uppercase
   }
 
   /**

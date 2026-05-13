@@ -27,6 +27,7 @@
  */
 package it.neckar.open.provider.impl
 
+import it.neckar.open.kotlin.lang.requireNotNull
 import it.neckar.open.provider.IndexMapping
 
 /**
@@ -55,7 +56,8 @@ class SortedIndexMappingSupport1<P1>(
     var currentValueP1: P1? = null
 
     override fun compare(a: Int, b: Int): Int {
-      return indexComparator.invoke(a, b, currentValueP1!!)
+      val value = currentValueP1.requireNotNull { "currentValueP1 not initialized — call updateMapping before compare" }
+      return indexComparator.invoke(a, b, value)
     }
   }
 

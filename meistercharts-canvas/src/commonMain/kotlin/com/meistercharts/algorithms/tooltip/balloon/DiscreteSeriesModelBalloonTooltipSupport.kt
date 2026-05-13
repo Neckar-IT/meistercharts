@@ -105,10 +105,11 @@ class DiscreteSeriesModelBalloonTooltipSupport(
         return when (index) {
           0 -> {
             //Text key or status?
-            if (textKey.isEmpty()) {
+            val key = textKey
+            if (key.isEmpty()) {
               formatStatusEnum(statusEnum, textService, i18nConfiguration) //No text key, return the status enum
             } else {
-              textKey!!.resolve(textService, i18nConfiguration)
+              key.resolve(textService, i18nConfiguration)
             }
           }
 

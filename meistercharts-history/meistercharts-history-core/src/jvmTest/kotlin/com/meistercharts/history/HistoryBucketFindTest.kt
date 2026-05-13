@@ -43,10 +43,10 @@ class HistoryBucketFindTest {
 
 
   val millis = 1312003123123.0
-  val instant = Instant.ofEpochMilli(millis.toLong())
-  val dateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
+  val instant: Instant = Instant.ofEpochMilli(millis.toLong())
+  val dateTime: OffsetDateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
 
-  val time = OffsetDateTime.of(2020, 12, 24, 5, 18, 43, 123 * 1_000_000, ZoneOffset.UTC)
+  val time: OffsetDateTime = OffsetDateTime.of(2020, 12, 24, 5, 18, 43, 123 * 1_000_000, ZoneOffset.UTC)
 
 
   lateinit var bucket0: HistoryBucket

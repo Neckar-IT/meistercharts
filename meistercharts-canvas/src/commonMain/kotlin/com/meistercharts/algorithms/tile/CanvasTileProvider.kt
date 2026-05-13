@@ -115,23 +115,17 @@ class CanvasTile(
       }
     }
 
-    requireNotNull(snapshot) {
-      "Snapshot must not be null!"
-    }
-    requireNotNull(creationInfo) {
-      "creationInfo must not be null!"
-    }
+    val snapshotValue = requireNotNull(snapshot) { "Snapshot must not be null!" }
+    val creationInfoValue = requireNotNull(creationInfo) { "creationInfo must not be null!" }
 
     //Check if the tile is empty
-    if (creationInfo!!.isEmpty) {
+    if (creationInfoValue.isEmpty) {
       //If the tile is empty there is no need to paint it
       return
     }
 
-    snapshot!!.let {
-      //TODO: when animated paintImage looks better than paintImagePixelPerfect
-      gc.paintImagePixelPerfect(it, 0.0, 0.0)
-    }
+    //TODO: when animated paintImage looks better than paintImagePixelPerfect
+    gc.paintImagePixelPerfect(snapshotValue, 0.0, 0.0)
   }
 
   /**

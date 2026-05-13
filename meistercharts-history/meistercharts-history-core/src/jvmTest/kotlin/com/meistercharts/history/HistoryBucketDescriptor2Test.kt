@@ -30,8 +30,8 @@ import java.time.ZoneOffset
 @DisableLogging
 class HistoryBucketDescriptor2Test {
   val millis = 1312003123123.0
-  val instant = Instant.ofEpochMilli(millis.toLong())
-  val dateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
+  val instant: Instant = Instant.ofEpochMilli(millis.toLong())
+  val dateTime: OffsetDateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC)
 
   @Test
   fun testIt() {

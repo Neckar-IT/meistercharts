@@ -185,7 +185,9 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
   }
 
   private fun onMove(pointerEvent: PointerMoveEvent): EventConsumption {
-    if (pinchPointer1st == null || pinchPointer2nd == null) {
+    val pointer1 = pinchPointer1st
+    val pointer2 = pinchPointer2nd
+    if (pointer1 == null || pointer2 == null) {
       // we need exactly two valid pointers for a pinch gesture
       return EventConsumption.Ignored
     }
@@ -194,7 +196,7 @@ class PinchGestureSupport(pointerEvents: PointerEventBroker) {
       GestureState.Possible  -> {
         // this is the first move which marks the beginning of a pinch gesture
         gestureState = GestureState.Began
-        startDistance = pinchPointer1st!!.distanceDeltaAbsolute(pinchPointer2nd!!)
+        startDistance = pointer1.distanceDeltaAbsolute(pointer2)
         notifyPinched()
       }
 
