@@ -1,6 +1,21 @@
 import it.neckar.gradle.console
 import java.time.Instant
 
+import it.neckar.gradle.DevContainerInformation
+import it.neckar.gradle.GitlabCiInformation
+import it.neckar.gradle.GradleContext
+import it.neckar.gradle.JvmType
+import it.neckar.gradle.Plugins
+import it.neckar.gradle.ProjectConfiguration
+import it.neckar.projects.Projects
+import it.neckar.gradle.branch
+import it.neckar.gradle.buildDate
+
+import it.neckar.gradle.ciInformation
+import it.neckar.gradle.devContainerInformation
+import it.neckar.gradle.inIde
+import it.neckar.gradle.meisterchartsVersion
+
 description = "meistercharts.com"
 
 GradleContext.initialize(gradle)

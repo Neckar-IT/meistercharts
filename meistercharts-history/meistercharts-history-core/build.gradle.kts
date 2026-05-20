@@ -1,3 +1,7 @@
+import it.neckar.projects.project
+
+import it.neckar.projects.Projects
+
 description = """Meistercharts - Core"""
 
 plugins {

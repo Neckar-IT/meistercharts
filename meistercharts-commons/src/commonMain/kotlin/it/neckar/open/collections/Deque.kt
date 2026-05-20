@@ -97,17 +97,17 @@ open class TGenDeque<TGen>(initialCapacity: Int) : MutableCollection<TGen> {
   }
 
   fun removeFirst(): TGen {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return first.apply { _start = (_start + 1) umod capacity; _size-- }
   }
 
   fun removeLast(): TGen {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return last.apply { _size-- }
   }
 
   fun removeAt(index: Int): TGen {
-    if (index < 0 || index >= size) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= size) throw IndexOutOfBoundsException("index $index out of bounds for size $size")
     if (index == 0) return removeFirst()
     if (index == size - 1) return removeLast()
 
@@ -278,17 +278,17 @@ open class IntDeque(initialCapacity: Int) : MutableCollection<Int> {
   }
 
   fun removeFirst(): Int {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return first.apply { _start = (_start + 1) umod capacity; _size-- }
   }
 
   fun removeLast(): Int {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return last.apply { _size-- }
   }
 
   fun removeAt(index: Int): Int {
-    if (index < 0 || index >= size) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= size) throw IndexOutOfBoundsException("index $index out of bounds for size $size")
     if (index == 0) return removeFirst()
     if (index == size - 1) return removeLast()
 
@@ -459,17 +459,17 @@ open class DoubleDeque(initialCapacity: Int) : MutableCollection<Double> {
   }
 
   fun removeFirst(): Double {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return first.apply { _start = (_start + 1) umod capacity; _size-- }
   }
 
   fun removeLast(): Double {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return last.apply { _size-- }
   }
 
   fun removeAt(index: Int): Double {
-    if (index < 0 || index >= size) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= size) throw IndexOutOfBoundsException("index $index out of bounds for size $size")
     if (index == 0) return removeFirst()
     if (index == size - 1) return removeLast()
 
@@ -640,17 +640,17 @@ open class FloatDeque(initialCapacity: Int) : MutableCollection<Float> {
   }
 
   fun removeFirst(): Float {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return first.apply { _start = (_start + 1) umod capacity; _size-- }
   }
 
   fun removeLast(): Float {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return last.apply { _size-- }
   }
 
   fun removeAt(index: Int): Float {
-    if (index < 0 || index >= size) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= size) throw IndexOutOfBoundsException("index $index out of bounds for size $size")
     if (index == 0) return removeFirst()
     if (index == size - 1) return removeLast()
 
@@ -821,17 +821,17 @@ open class ByteDeque(initialCapacity: Int) : MutableCollection<Byte> {
   }
 
   fun removeFirst(): Byte {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return first.apply { _start = (_start + 1) umod capacity; _size-- }
   }
 
   fun removeLast(): Byte {
-    if (_size <= 0) throw IndexOutOfBoundsException()
+    if (_size <= 0) throw IndexOutOfBoundsException("deque is empty")
     return last.apply { _size-- }
   }
 
   fun removeAt(index: Int): Byte {
-    if (index < 0 || index >= size) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= size) throw IndexOutOfBoundsException("index $index out of bounds for size $size")
     if (index == 0) return removeFirst()
     if (index == size - 1) return removeLast()
 

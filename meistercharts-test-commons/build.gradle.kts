@@ -1,3 +1,10 @@
+import it.neckar.projects.project
+
+import it.neckar.projects.Projects
+
+import it.neckar.gradle.Scope
+import it.neckar.gradle.addKotlinTestDependencies
+
 description = """Meistercharts - Test - Commons"""
 
 plugins {

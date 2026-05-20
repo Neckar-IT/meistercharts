@@ -61,14 +61,14 @@ inline fun DoubleArrayList.fastForEachReversed(callback: (value: Double) -> Unit
 }
 
 /**
- * Returns true if at least one of the elements matches the given check.
- * [check] is called for all elements until it returns true.
+ * Returns true if at least one of the elements matches the given [predicate].
+ * [predicate] is called for all elements until it returns true.
  */
-inline fun DoubleArrayList.fastFindAny(check: (Double) -> Boolean): Boolean {
+inline fun DoubleArrayList.fastFindAny(predicate: (Double) -> Boolean): Boolean {
   var n = 0
   val currentSize = size
   while (n < currentSize) {
-    if (check(this.getAt(n++))) {
+    if (predicate(this.getAt(n++))) {
       return true
     }
   }

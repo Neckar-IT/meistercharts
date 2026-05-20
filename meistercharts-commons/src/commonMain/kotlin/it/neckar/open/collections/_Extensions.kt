@@ -117,22 +117,22 @@ fun IntArrayList.binarySearchRight(v: Int, fromIndex: Int = 0, toIndex: Int = si
 fun FloatArrayList.binarySearchRight(v: Float, fromIndex: Int = 0, toIndex: Int = size) = (genericBinarySearchRight(fromIndex, toIndex) { this.getAt(it).compareTo(v) })
 fun DoubleArrayList.binarySearchRight(v: Double, fromIndex: Int = 0, toIndex: Int = size) = (genericBinarySearchRight(fromIndex, toIndex) { this.getAt(it).compareTo(v) })
 
-inline fun genericBinarySearchResult(fromIndex: Int, toIndex: Int, check: (value: Int) -> Int): BSearchResult = BSearchResult(genericBinarySearch(fromIndex, toIndex, { _, _, low, _ -> -low - 1 }, check))
+inline fun genericBinarySearchResult(fromIndex: Int, toIndex: Int, compare: (value: Int) -> Int): BSearchResult = BSearchResult(genericBinarySearch(fromIndex, toIndex, { _, _, low, _ -> -low - 1 }, compare))
 
 /**
  * Returns the exact index or the *left* index if there is no exact match.
- * The return values of the given check lambda can be interpreted as:
+ * The return values of the given [compare] lambda can be interpreted as:
  * * <0 --> the given index is too small
  * * >0 --> the given index is too large
  * * ==0 --> the given index matches exactly
  *
- * @param check compares the given index with the value to find
+ * @param compare compares the given index with the value to find
  *
- * @return the best index that matches the given check. Always returns a value between fromIndex (inclusive) and toIndex (exclusive)
+ * @return the best index that matches the given comparison. Always returns a value between fromIndex (inclusive) and toIndex (exclusive)
  *
  */
-inline fun genericBinarySearchLeft(fromIndex: @Inclusive Int, toIndex: @Exclusive Int, check: (value: Int) -> Int): Int =
-  genericBinarySearch(fromIndex, toIndex, invalid = { from, to, low, high -> min(low, high).coerceIn(from, to - 1) }, check = check)
+inline fun genericBinarySearchLeft(fromIndex: @Inclusive Int, toIndex: @Exclusive Int, compare: (value: Int) -> Int): Int =
+  genericBinarySearch(fromIndex, toIndex, invalid = { from, to, low, high -> min(low, high).coerceIn(from, to - 1) }, compare = compare)
 
 /**
  * Returns the exact index or the *right* index if there is no exact match.
@@ -140,21 +140,21 @@ inline fun genericBinarySearchLeft(fromIndex: @Inclusive Int, toIndex: @Exclusiv
  * Returns the same value as [genericBinarySearchLeft] as long as an exact hit is found.
  * Only returns different values for hits *between* two values
  */
-inline fun genericBinarySearchRight(fromIndex: @Inclusive Int, toIndex: @Exclusive Int, check: (value: Int) -> Int): Int =
-  genericBinarySearch(fromIndex, toIndex, invalid = { from, to, low, high -> max(low, high).coerceIn(from, to - 1) }, check = check)
+inline fun genericBinarySearchRight(fromIndex: @Inclusive Int, toIndex: @Exclusive Int, compare: (value: Int) -> Int): Int =
+  genericBinarySearch(fromIndex, toIndex, invalid = { from, to, low, high -> max(low, high).coerceIn(from, to - 1) }, compare = compare)
 
 inline fun genericBinarySearch(
   fromIndex: Int,
   toIndex: Int,
   invalid: (from: Int, to: Int, low: Int, high: Int) -> Int = { from, to, low, high -> -low - 1 },
-  check: (value: Int) -> Int
+  compare: (value: Int) -> Int
 ): Int {
   var low = fromIndex
   var high = toIndex - 1
 
   while (low <= high) {
     val mid = (low + high) / 2
-    val mval = check(mid)
+    val mval = compare(mid)
 
     when {
       mval < 0 -> low = mid + 1

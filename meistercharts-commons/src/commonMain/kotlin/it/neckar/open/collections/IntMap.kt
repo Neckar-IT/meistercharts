@@ -145,7 +145,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   }
 
   private fun setEmptySlot(index: Int, key: Int, value: T?): T? {
-    if (_keys[index] != EMPTY) throw IllegalStateException()
+    if (_keys[index] != EMPTY) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
     _keys[index] = key
     _values[index] = value
     size++
@@ -499,7 +499,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   }
 
   private fun setEmptySlot(index: Int, key: Int, value: Int): Int {
-    if (_keys[index] != EMPTY) throw IllegalStateException()
+    if (_keys[index] != EMPTY) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
     _keys[index] = key
     _values[index] = value
     size++

@@ -1,3 +1,6 @@
+import it.neckar.projects.AbstractProjects
+import it.neckar.projects.ConfiguredProject
+
 /**
  * Project definitions for the standalone meistercharts.com-sync build.
  * This is a local file — not overwritten by populateBuildSrc.

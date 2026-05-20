@@ -139,7 +139,7 @@ data class Array2<TGen>(val width: Int, val height: Int, val data: Array<TGen>) 
   override fun hashCode(): Int = width + height + data.contentHashCode()
 
   private fun index(x: Int, y: Int): Int {
-    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException()
+    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException("($x, $y) outside ${width}x${height}")
     return y * width + x
   }
 
@@ -297,7 +297,7 @@ data class IntArray2(val width: Int, val height: Int, val data: IntArray) : Iter
   override fun hashCode(): Int = width + height + data.contentHashCode()
 
   private fun index(x: Int, y: Int): Int {
-    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException()
+    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException("($x, $y) outside ${width}x${height}")
     return y * width + x
   }
 
@@ -455,7 +455,7 @@ data class DoubleArray2(val width: Int, val height: Int, val data: DoubleArray) 
   override fun hashCode(): Int = width + height + data.contentHashCode()
 
   private fun index(x: Int, y: Int): Int {
-    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException()
+    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException("($x, $y) outside ${width}x${height}")
     return y * width + x
   }
 
@@ -603,7 +603,7 @@ data class FloatArray2(val width: Int, val height: Int, val data: FloatArray) : 
   override fun hashCode(): Int = width + height + data.contentHashCode()
 
   private fun index(x: Int, y: Int): Int {
-    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException()
+    if ((x !in 0 until width) || (y !in 0 until height)) throw IndexOutOfBoundsException("($x, $y) outside ${width}x${height}")
     return y * width + x
   }
 

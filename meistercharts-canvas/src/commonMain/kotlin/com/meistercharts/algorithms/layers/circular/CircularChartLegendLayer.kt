@@ -103,14 +103,14 @@ class CircularChartLegendLayer(
    * @param areaSize the size of the area the corner describes (e.g. the window or content area)
    */
   private fun Corner.getAnchor(@px areaSize: Size): Anchoring {
-    val location = when (this) {
+    val location: Coordinates = when (this) {
       Corner.TopLeft     -> Coordinates(configuration.padding.left, configuration.padding.top)
       Corner.TopRight    -> Coordinates(areaSize.width - configuration.padding.right, configuration.padding.top)
       Corner.BottomLeft  -> Coordinates(configuration.padding.left, areaSize.height - configuration.padding.bottom)
       Corner.BottomRight -> Coordinates(areaSize.width - configuration.padding.right, areaSize.height - configuration.padding.bottom)
     }
 
-    val direction = when (this) {
+    val direction: Direction = when (this) {
       Corner.TopLeft -> Direction.TopLeft
       Corner.TopRight -> Direction.TopRight
       Corner.BottomLeft -> Direction.BottomLeft

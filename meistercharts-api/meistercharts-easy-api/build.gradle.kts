@@ -1,6 +1,18 @@
+import it.neckar.gradle.standardOutputAsStringOnSuccess
+
+import it.neckar.projects.project
+
 import it.neckar.gradle.console
 import it.neckar.gradle.npmbundle.CopyBundleContentTask
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
+import it.neckar.projects.Projects
+
+import it.neckar.gradle.JsTargetType
+import it.neckar.gradle.WebpackModuleType
+import it.neckar.gradle.executableJsApplication
+import it.neckar.gradle.isMeisterchartsSnapshot
+import it.neckar.gradle.meisterchartsVersion
 
 description = """Meistercharts - Easy API"""
 

@@ -7,6 +7,7 @@
  * of functions needed by ProjectConfiguration.kt, Utils.kt, and NpmBundlePlugin.kt.
  */
 
+import it.neckar.gradle.Plugins
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject

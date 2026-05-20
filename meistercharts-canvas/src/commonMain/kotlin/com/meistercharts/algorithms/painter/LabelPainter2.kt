@@ -432,7 +432,7 @@ class LabelPainter2(
         //Translate to the box location
         gc.translate(innerX, actualCenterY)
 
-        val boxAnchor = when (placement) {
+        val boxAnchor: Direction = when (placement) {
           LabelPlacement.OnRightSide -> Direction.CenterLeft
           LabelPlacement.OnLeftSide -> Direction.CenterRight
         }

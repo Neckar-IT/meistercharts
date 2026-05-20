@@ -64,7 +64,7 @@ class TGenPriorityQueue<TGen>
   override var size = 0; private set
   val head: TGen
     get() {
-      if (size <= 0) throw IndexOutOfBoundsException()
+      if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
       return data[0]
     }
 
@@ -81,7 +81,7 @@ class TGenPriorityQueue<TGen>
   }
 
   fun removeHead(): TGen {
-    if (size <= 0) throw IndexOutOfBoundsException()
+    if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
     if (size == 1) {
       size--
       return 0.value
@@ -241,7 +241,7 @@ class IntPriorityQueue
   override var size = 0; private set
   val head: Int
     get() {
-      if (size <= 0) throw IndexOutOfBoundsException()
+      if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
       return data[0]
     }
 
@@ -258,7 +258,7 @@ class IntPriorityQueue
   }
 
   fun removeHead(): Int {
-    if (size <= 0) throw IndexOutOfBoundsException()
+    if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
     if (size == 1) {
       size--
       return 0.value
@@ -416,7 +416,7 @@ class DoublePriorityQueue
   override var size = 0; private set
   val head: Double
     get() {
-      if (size <= 0) throw IndexOutOfBoundsException()
+      if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
       return data[0]
     }
 
@@ -433,7 +433,7 @@ class DoublePriorityQueue
   }
 
   fun removeHead(): Double {
-    if (size <= 0) throw IndexOutOfBoundsException()
+    if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
     if (size == 1) {
       size--
       return 0.value
@@ -591,7 +591,7 @@ class FloatPriorityQueue
   override var size = 0; private set
   val head: Float
     get() {
-      if (size <= 0) throw IndexOutOfBoundsException()
+      if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
       return data[0]
     }
 
@@ -608,7 +608,7 @@ class FloatPriorityQueue
   }
 
   fun removeHead(): Float {
-    if (size <= 0) throw IndexOutOfBoundsException()
+    if (size <= 0) throw IndexOutOfBoundsException("queue is empty")
     if (size == 1) {
       size--
       return 0.value

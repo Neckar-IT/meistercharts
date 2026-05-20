@@ -51,7 +51,7 @@ dependencies {
   implementation("com.github.node-gradle:gradle-node-plugin:7.1.0")
   implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
   implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.9.8")
-  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.7")
+  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.8")
   implementation("org.openjfx:javafx-plugin:0.1.0")
 
   testImplementation(libs.junit.jupiter.api)

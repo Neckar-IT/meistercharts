@@ -188,7 +188,7 @@ class TimeAxisLayer(
       val allTicks: @ms DoubleArrayList = timeTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
 
-      val formatter = when (style.timestampsMode) {
+      val formatter: TimeAxisTickFormat = when (style.timestampsMode) {
         TimestampsMode.Absolute -> style.absoluteTimestampTickFormat
         TimestampsMode.Relative -> style.relativeTimestampsTickFormat
       }

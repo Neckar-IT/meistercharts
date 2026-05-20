@@ -65,7 +65,7 @@ object AnySerializableRawSerializer : KSerializer<Any> {
 
     // Delegate to encoder.encodeJsonElement to avoid tag stack issues
     val jsonElement = try {
-      encoder.json.encodeToJsonElement(serializer as KSerializer<Any>, value)
+      encoder.json.encodeToJsonElement<Any>(serializer as KSerializer<Any>, value)
     } catch (e: SerializationException) {
       throw SerializationException("Failed to serialize [${value::class.java.name}]", e)
     }
@@ -100,6 +100,6 @@ object AnySerializableRawSerializer : KSerializer<Any> {
       }
     }
 
-    return json.encodeToJsonElement(AnySerializableRawSerializer, elementToEncode)
+    return json.encodeToJsonElement<Any>(AnySerializableRawSerializer, elementToEncode)
   }
 }

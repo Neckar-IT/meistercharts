@@ -38,7 +38,7 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "8.0.11"
+    "vite": "8.0.13"
   },
   "dependencies": {
     "@meistercharts/meistercharts": "1.38.0"

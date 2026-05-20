@@ -1,0 +1,142 @@
+package it.neckar.gradle
+
+import it.neckar.projects.Projects
+import org.gradle.api.tasks.AbstractCopyTask
+
+/**
+ * A role-specific subdirectory of `:internal:infrastructure:common` whose
+ * files can be pulled into the destination of a Gradle [AbstractCopyTask].
+ *
+ * All role definitions live together in this file — every magic string for
+ * source folder, include glob and destination folder has exactly one home.
+ *
+ * @property sourceSubdir    subfolder under `common/` that holds the role's assets
+ * @property includePattern  glob matched against files in [sourceSubdir]
+ * @property destinationSubdir  subfolder inside the copy destination where matched files land
+ */
+private class CommonInfrastructureRole(
+  val sourceSubdir: String,
+  val includePattern: String,
+  val destinationSubdir: String,
+) {
+  fun applyTo(task: AbstractCopyTask) {
+    val commonProjectDir = Projects.infrastructure_common.project().projectDir
+    task.from(commonProjectDir.resolve(sourceSubdir)) {
+      include(includePattern)
+      into(destinationSubdir)
+    }
+  }
+}
+
+private val CommonTraefikCompose = CommonInfrastructureRole(
+  sourceSubdir = "traefik",
+  includePattern = "docker-compose-common-*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonGitlabRunnerScripts = CommonInfrastructureRole(
+  sourceSubdir = "gitlab-runner",
+  includePattern = "*.sh",
+  destinationSubdir = "scripts",
+)
+
+private val CommonRestrictedEgressAssets = CommonInfrastructureRole(
+  sourceSubdir = "gitlab-runner/restricted-egress",
+  includePattern = "*",
+  destinationSubdir = "scripts/restricted-egress",
+)
+
+private val CommonOtelAgentCompose = CommonInfrastructureRole(
+  sourceSubdir = "otel-agent",
+  includePattern = "*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonHostExportersCompose = CommonInfrastructureRole(
+  sourceSubdir = "host-exporters",
+  includePattern = "*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonWorkerHostScripts = CommonInfrastructureRole(
+  sourceSubdir = "worker-host",
+  includePattern = "*.sh",
+  destinationSubdir = "",
+)
+
+/**
+ * Pulls in the shared Traefik Docker Compose fragment.
+ * Host declares explicitly that it plays the reverse-proxy role.
+ */
+fun AbstractCopyTask.includeCommonTraefikCompose() = CommonTraefikCompose.applyTo(this)
+
+/**
+ * Pulls in the shared GitLab-Runner maintenance scripts.
+ * Host declares explicitly that it runs a GitLab Runner with Docker executor.
+ * The deploy script is expected to scp the resulting `scripts/` folder to
+ * `/srv/scripts` on the target host and to register a cron entry.
+ *
+ * The executable bit is preserved from the source file permissions (`chmod +x` in the repo).
+ */
+fun AbstractCopyTask.includeCommonGitlabRunnerScripts() = CommonGitlabRunnerScripts.applyTo(this)
+
+/**
+ * Pulls in the assets needed by `setup-restricted-runner.sh` to provision the
+ * second, egress-restricted GitLab Runner instance on a worker host:
+ * `apply-rules.sh`, `sanitize-runner-config.py`, `dnsmasq.conf.template`,
+ * `allowlist.conf`, and the systemd unit files.
+ *
+ * Target: every file under `common/gitlab-runner/restricted-egress/` →
+ * `scripts/restricted-egress/` in the build-output directory. `setup-restricted-runner.sh`
+ * scp's them to the target host during `bootstrap`.
+ *
+ * See `doc/workflow/restricted-egress-runner.md`.
+ */
+fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgressAssets.applyTo(this)
+
+/**
+ * Pulls in the shared per-host OTel Agent Docker Compose fragment and its
+ * agent config. Host declares explicitly that it runs the OTel Agent per
+ * ADL 0143 ("one agent per host"). The agent forwards local telemetry to
+ * the central OTel Gateway on `monitoring.neckar.it`.
+ *
+ * Copies two files into `docker-compose/`:
+ * - `docker-compose-common-otel-agent.yml` (compose fragment)
+ * - `otel-agent-config.yml` (agent configuration)
+ *
+ * The main `docker-compose.yml` pulls the service via `extends:` — the config
+ * file is mounted by the fragment via a relative path, so both files must land
+ * side by side on the deployed host.
+ *
+ * Consumers must supply `otel-collector-client-id` and `otel-collector-client-secret`
+ * in their `secretsLoader.keys`, plus a `${host_role}` filter substitution
+ * (worker hosts → "worker", others → "infrastructure").
+ */
+fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.applyTo(this)
+
+/**
+ * Pulls in the shared per-host Prometheus-compatible exporter containers (per ADL 0147).
+ * Every host that runs the OTel-Collector also runs these exporters — they are scraped
+ * by the OTel-Collector via its sub-keyed `prometheus/<name>` receivers and form the only path for
+ * host-level metric sources without a native OTel receiver (smartctl, IPMI, …).
+ *
+ * Copies one file into `docker-compose/`:
+ * - `docker-compose-common-host-exporters.yml` (compose fragment with one service per exporter)
+ *
+ * The host's main `docker-compose.yml` pulls each exporter via `extends:` and joins it to
+ * the `traefik-public` network so the OTel-Collector can resolve it by container name.
+ */
+fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCompose.applyTo(this)
+
+/**
+ * Pulls in the shared worker-host orchestration scripts (e.g., `bootstrap.sh`).
+ * These scripts sit at the root of the build output directory and are intended
+ * to be executed locally against the target host (not copied to the host).
+ *
+ * Target: `*.sh` files from `common/worker-host/` → build-output root.
+ *
+ * Used by worker hosts that run a GitLab Runner (see `:worker-01.neckar.it`,
+ * `:worker-02.neckar.it`). The one-command entry point is the Gradle `bootstrap`
+ * task registered in each worker's `build.gradle.kts`.
+ */
+fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.applyTo(this)

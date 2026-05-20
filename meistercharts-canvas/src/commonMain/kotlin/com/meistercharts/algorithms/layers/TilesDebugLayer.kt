@@ -110,7 +110,7 @@ class TilesDebugLayer(
 
       val cachedTile = cachedTileProvider?.getTileFromCache(tileIdentifier) as? CanvasTile
 
-      val countingTileProvider = when (tileProvider) {
+      val countingTileProvider: CountingTileProvider? = when (tileProvider) {
         is CountingTileProvider -> tileProvider
         is CachedTileProvider -> tileProvider.delegate as? CountingTileProvider
         else -> null

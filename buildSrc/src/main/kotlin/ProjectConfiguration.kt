@@ -1,4 +1,10 @@
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import it.neckar.gradle.JvmType
+import it.neckar.gradle.Plugins
+import it.neckar.gradle.configureJunit
+import it.neckar.gradle.configureKotlin
+import it.neckar.gradle.configureToolchain
+import it.neckar.gradle.requireNotNull
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider

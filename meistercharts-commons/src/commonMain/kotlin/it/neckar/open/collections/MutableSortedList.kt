@@ -167,14 +167,14 @@ class MutableSortedList<V> internal constructor(
       }
 
       override fun remove() {
-        check(indexLastReturned >= 0)
+        check(indexLastReturned >= 0) { "ListIterator.remove called without prior next() or previous()" }
         removeAt(indexLastReturned)
         cursor = indexLastReturned
         indexLastReturned = -1
       }
 
       override fun set(element: V) {
-        check(indexLastReturned < 0)
+        check(indexLastReturned < 0) { "indexLastReturned must be < 0" }
         set(indexLastReturned, element)
       }
     }

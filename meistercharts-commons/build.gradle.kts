@@ -1,3 +1,8 @@
+import it.neckar.gradle.branch
+import it.neckar.gradle.buildDate
+
+import it.neckar.gradle.meisterchartsVersion
+
 description = """Meistercharts - Commons"""
 
 plugins {

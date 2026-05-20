@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.4.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.5.1" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.10.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.12.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -45,7 +45,7 @@ org-asciidoctor = "4.0.5"
 
 jackson = "2.21.3"
 
-org-slf4j = "2.0.17"
+org-slf4j = "2.0.18"
 
 com-willowtreeapps-assertk = "0.28.1"
 
@@ -60,13 +60,13 @@ io-gitlab-arturbosch-detekt = "2.0.0-alpha.3"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.7"
+com-google-devtools-ksp = "2.3.8"
 
 org-mongodb = "5.7.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.72"
+aws-sdk-kotlin = "1.6.76"
 
 apache-poi = "5.5.1"
 
@@ -76,7 +76,7 @@ org-commonmark = "0.28.0"
 
 org-bouncycastle = "1.84"
 
-ktor = "3.4.3"
+ktor = "3.5.0"
 
 com-github-docker-java = "3.7.1"
 
@@ -290,9 +290,11 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.44.4"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.44.8"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
+
+night-config-toml = "com.electronwill.night-config:toml:3.8.4"
 
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest-property" }
 
@@ -476,7 +478,7 @@ batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.
 
 # Added during version catalog migration
 
-asm = "org.ow2.asm:asm:9.9.1"
+asm = "org.ow2.asm:asm:9.10"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
@@ -484,7 +486,7 @@ bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.
 
 commons-cli = "commons-cli:commons-cli:1.11.0"
 
-java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.16"
+java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.17"
 
 javassist = "org.javassist:javassist:3.31.0-GA"
 

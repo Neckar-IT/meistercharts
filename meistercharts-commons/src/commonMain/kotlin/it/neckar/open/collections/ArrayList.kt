@@ -193,7 +193,7 @@ class IntArrayList(capacity: Int = 7) {
   fun removeAt(index: Int): Int = removeAt(index, 1)
 
   fun removeAt(index: Int, count: Int): Int {
-    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException("index=$index count=$count out of bounds for length=$length")
     val out = data[index]
     if (count > 0) {
       if (index < length - count) arraycopy(data, index + count, data, index, length - index - count)
@@ -414,7 +414,7 @@ class DoubleArrayList(capacity: Int = 7) {
   fun removeAt(index: Int): Double = removeAt(index, 1)
 
   fun removeAt(index: Int, count: Int): Double {
-    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException("index=$index count=$count out of bounds for length=$length")
     val out = data[index]
     if (count > 0) {
       if (index < length - count) arraycopy(data, index + count, data, index, length - index - count)
@@ -582,7 +582,7 @@ class FloatArrayList(capacity: Int = 7) {
   fun removeAt(index: Int): Float = removeAt(index, 1)
 
   fun removeAt(index: Int, count: Int): Float {
-    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException()
+    if (index < 0 || index >= length || index + count > length) throw IndexOutOfBoundsException("index=$index count=$count out of bounds for length=$length")
     val out = data[index]
     if (count > 0) {
       if (index < length - count) arraycopy(data, index + count, data, index, length - index - count)
