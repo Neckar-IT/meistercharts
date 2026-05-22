@@ -22,6 +22,7 @@ GradleContext.initialize(gradle)
 
 
 plugins {
+  openModule
   kotlinxSerialization apply false
   detekt apply false
 }

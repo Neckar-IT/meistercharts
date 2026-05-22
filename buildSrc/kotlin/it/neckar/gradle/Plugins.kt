@@ -55,6 +55,13 @@ object Plugins {
    */
   const val dependencyFence: String = "it.neckar.dependency-fence"
 
+  /**
+   * Convention plugin for `internal/open` modules — applies a `dependencyFence`
+   * rule that bans any `internal/closed` project dependency in production scope.
+   * See [it.neckar.gradle.fence.OpenModulePlugin].
+   */
+  const val openModule: String = "it.neckar.open-module"
+
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"

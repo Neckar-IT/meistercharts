@@ -3,6 +3,7 @@
 val kotlinVersion: String = "2.3.21"
 
 plugins {
+  openModule
   `kotlin-dsl`
   `java-library`
   `java-gradle-plugin`

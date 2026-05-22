@@ -98,7 +98,7 @@ fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgr
  * Pulls in the shared per-host OTel Agent Docker Compose fragment and its
  * agent config. Host declares explicitly that it runs the OTel Agent per
  * ADL 0143 ("one agent per host"). The agent forwards local telemetry to
- * the central OTel Gateway on `monitoring.neckar.it`.
+ * the central OTel Gateway on `monitoring-host.neckar.it`.
  *
  * Copies two files into `docker-compose/`:
  * - `docker-compose-common-otel-agent.yml` (compose fragment)
@@ -135,8 +135,8 @@ fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCo
  *
  * Target: `*.sh` files from `common/worker-host/` → build-output root.
  *
- * Used by worker hosts that run a GitLab Runner (see `:worker-01.neckar.it`,
- * `:worker-02.neckar.it`). The one-command entry point is the Gradle `bootstrap`
+ * Used by worker hosts that run a GitLab Runner (see `:worker-01-host.neckar.it`,
+ * `:worker-02-host.neckar.it`). The one-command entry point is the Gradle `bootstrap`
  * task registered in each worker's `build.gradle.kts`.
  */
 fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.applyTo(this)

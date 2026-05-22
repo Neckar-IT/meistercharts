@@ -6,6 +6,7 @@ import it.neckar.gradle.meisterchartsVersion
 description = """Meistercharts - Commons"""
 
 plugins {
+  openModule
   kotlinMultiPlatform
   kotlinxSerialization
 }
