@@ -130,7 +130,7 @@ opentelemetry = "1.62.0"
 
 opentelemetry-instrumentation = "2.25.0-alpha"
 
-opentelemetry-javaagent = "2.27.0"
+opentelemetry-javaagent = "2.28.1"
 
 micrometer = "1.16.5"
 
@@ -290,7 +290,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.44.9"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.44.10"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

@@ -34,6 +34,7 @@ object Plugins {
   const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
 
   const val gitLabDb: String = "it.neckar.gitlab.db"
+  const val gitlabPipelines: String = "it.neckar.gitlab.pipelines"
 
   const val npmBundle: String = "it.neckar.npm-bundle"
   const val taskTree: String = "com.dorongold.task-tree"

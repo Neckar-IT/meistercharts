@@ -1,5 +1,6 @@
 package it.neckar.gradle
 
+import it.neckar.ci.ScheduleVariable
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -1036,10 +1037,12 @@ val Project.inCi: Boolean
   }
 
 /**
- * Returns true if the given pipeline-schedule env variable (e.g. `SCHEDULE_E2E_TESTS`) is set to `"true"`.
+ * Returns true if the given pipeline-schedule env variable is set to `"true"`.
+ *
+ * Use the typed [ScheduleVariable] from [ScheduleVariable].
  */
-fun Project.inSchedule(scheduleVariableName: String): Boolean {
-  return ciInformation.inSchedule(scheduleVariableName)
+fun Project.inSchedule(scheduleVariable: ScheduleVariable): Boolean {
+  return ciInformation.inSchedule(scheduleVariable.variableName)
 }
 
 val Project.inContainer: Boolean
