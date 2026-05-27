@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.12.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.13.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -148,7 +148,7 @@ clikt = "5.1.0"
 
 javafx = "25.0.3"
 
-netty = "4.2.13.Final"
+netty = "4.2.14.Final"
 
 rxkotlin = "2.4.0"
 
@@ -478,7 +478,7 @@ batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.
 
 # Added during version catalog migration
 
-asm = "org.ow2.asm:asm:9.10"
+asm = "org.ow2.asm:asm:9.10.1"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
