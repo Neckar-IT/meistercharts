@@ -469,6 +469,16 @@ fun Project.configureNodeJsRootExtension() {
       project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().version = npmVersion("node")
     }
   }
+
+  // Make root :kotlinNpmInstall depend on root :kotlinNodeJsSetup so the node distribution
+  // is downloaded into the root .gradle/nodejs/ before npm install tries to exec it.
+  // Without this edge, a fresh CI runner that invokes only subproject :build tasks (e.g.
+  // integration-product-build.yml) executes per-subproject :kotlinNodeJsSetup tasks that
+  // install into the subproject's own .gradle/nodejs/, while root :kotlinNpmInstall still
+  // looks in the root .gradle/nodejs/ — leaving its node binary path non-existent.
+  tasks.matching { it.name == "kotlinNpmInstall" }.configureEach {
+    dependsOn(tasks.matching { it.name == "kotlinNodeJsSetup" })
+  }
 }
 
 
