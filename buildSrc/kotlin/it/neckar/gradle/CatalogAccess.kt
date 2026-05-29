@@ -5,7 +5,6 @@ import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
-import java.io.File
 
 /**
  * Provides access to the version catalog from buildSrc Kotlin source code.
@@ -32,38 +31,50 @@ fun Project.lib(alias: String): Provider<MinimalExternalModuleDependency> {
 /**
  * Looks up the configured Node.js or pnpm version.
  *
- * Sources of truth after the npm.versions.toml removal (#1635):
- * - "node" → reads `.nvmrc` (strips the leading `v`)
- * - "pnpm" → reads `engines.pnpm` from the root `package.json`
+ * Single source of truth: the `engines` block of the root `package.json`.
+ * - "node" → reads `engines.node`
+ * - "pnpm" → reads `engines.pnpm`
+ *
+ * Gradle binds its Node toolchain to `engines.node` — the exact version pnpm
+ * enforces via `engineStrict` — so the downloaded Node always satisfies pnpm's
+ * engine check and `:pnpmInstall` cannot fail on node/pnpm engine drift.
+ *
+ * `.nvmrc` is a generated mirror of `engines.node` (task `generateNvmrc`,
+ * drift-checked by the root `verifyNoGeneratorDrift` task), kept only for tools
+ * that read `.nvmrc` directly: nvm, the Ansible nvm role, and
+ * `docker/_versions.sh`. See #1914.
  *
  * Any other alias throws — Renovate's native `npm` manager updates application
  * dependencies directly in the relevant `package.json` files, so build-time
  * lookup of arbitrary npm versions is no longer supported.
  */
-fun Project.npmVersion(alias: String): String = when (alias) {
-  "node" -> readNvmrcNodeVersion(rootProject.file(".nvmrc"))
-  "pnpm" -> readPnpmEngineVersion(rootProject.file("package.json"))
-  else -> throw IllegalArgumentException(
-    "npmVersion('$alias') is no longer supported. Only 'node' and 'pnpm' remain after the npm.versions.toml removal (#1635). " +
-      "Read application dependencies from the relevant package.json directly."
-  )
+fun Project.npmVersion(alias: String): String {
+  val packageJsonContent = rootProject.file("package.json").readText()
+  return when (alias) {
+    "node" -> parseNodeEngineVersion(packageJsonContent)
+    "pnpm" -> parsePnpmEngineVersion(packageJsonContent)
+    else -> throw IllegalArgumentException(
+      "npmVersion('$alias') is no longer supported. Only 'node' and 'pnpm' remain after the npm.versions.toml removal (#1635). " +
+        "Read application dependencies from the relevant package.json directly."
+    )
+  }
 }
 
-private val NodeVersionRegex = Regex("""^v?(\d+\.\d+\.\d+)$""")
+private val NodeEngineRegex = Regex(""""node"\s*:\s*"([^"]+)"""")
 
-private fun readNvmrcNodeVersion(nvmrcFile: File): String {
-  val content = nvmrcFile.readText().trim()
-  val match = NodeVersionRegex.find(content)
-    ?: throw IllegalStateException("Cannot parse Node.js version from .nvmrc content <$content>")
+/** Parses `engines.node` from root `package.json` content. */
+fun parseNodeEngineVersion(packageJsonContent: String): String {
+  val match = NodeEngineRegex.find(packageJsonContent)
+    ?: throw IllegalStateException("Cannot find engines.node version in package.json")
   return match.groupValues[1]
 }
 
 private val PnpmEngineRegex = Regex(""""pnpm"\s*:\s*"([^"]+)"""")
 
-private fun readPnpmEngineVersion(packageJsonFile: File): String {
-  val content = packageJsonFile.readText()
-  val match = PnpmEngineRegex.find(content)
-    ?: throw IllegalStateException("Cannot find engines.pnpm version in ${packageJsonFile.absolutePath}")
+/** Parses `engines.pnpm` from root `package.json` content. */
+fun parsePnpmEngineVersion(packageJsonContent: String): String {
+  val match = PnpmEngineRegex.find(packageJsonContent)
+    ?: throw IllegalStateException("Cannot find engines.pnpm version in package.json")
   return match.groupValues[1]
 }
 
