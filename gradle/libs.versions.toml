@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.5.1" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.6.0" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.13.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.14.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -43,7 +43,7 @@ kotlin = "2.3.21"
 
 org-asciidoctor = "4.0.5"
 
-jackson = "2.21.3"
+jackson = "2.21.4"
 
 org-slf4j = "2.0.18"
 
@@ -60,9 +60,9 @@ io-gitlab-arturbosch-detekt = "2.0.0-alpha.3"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.8"
+com-google-devtools-ksp = "2.3.9"
 
-org-mongodb = "5.7.0"
+org-mongodb = "5.8.0"
 
 testcontainers = "2.0.5"
 
