@@ -49,7 +49,7 @@ org-slf4j = "2.0.18"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.7"
+net-bytebuddy = "1.18.8"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
@@ -453,7 +453,7 @@ netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty
 
 netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
 
-threeten-extra = "org.threeten:threeten-extra:1.8.0"
+threeten-extra = "org.threeten:threeten-extra:1.9.0"
 
 javax-mail-api = "javax.mail:javax.mail-api:1.6.2"
 
