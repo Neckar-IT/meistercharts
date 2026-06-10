@@ -37,6 +37,8 @@ com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-a
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
+me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
+
 [versions]
 
 kotlin = "2.3.21"
@@ -135,6 +137,12 @@ opentelemetry-javaagent = "2.28.1"
 micrometer = "1.16.5"
 
 caffeine = "3.2.4"
+
+# Multiplatform in-memory cache — evaluated against Caffeine and the commons Eigenbau in #1371
+cache4k = "0.14.0"
+
+# JMH core for the cache microbenchmark (me.champeau.jmh plugin)
+jmh = "1.37"
 
 pdfbox = "3.0.7"
 
@@ -345,6 +353,8 @@ micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-r
 opentelemetry-logback-mdc-v1 = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-logback-mdc-1.0", version.ref = "opentelemetry-instrumentation" }
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
+
+cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4k", version.ref = "cache4k" }
 
 java-jwt = "com.auth0:java-jwt:4.5.2"
 
