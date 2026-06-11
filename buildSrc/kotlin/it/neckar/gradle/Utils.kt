@@ -1117,3 +1117,11 @@ inline fun <reified T> Project.getOrPut(key: String, defaultValue: () -> T): T {
   extra.set(key, value)
   return value
 }
+
+/**
+ * Returns this string, or null if it is null or blank.
+ *
+ * build-logic cannot depend on the project's kotlin-lang module, so this mirrors
+ * `it.neckar.open.kotlin.lang.nullIfBlank`.
+ */
+fun String?.nullIfBlank(): String? = takeUnless { it.isNullOrBlank() }
