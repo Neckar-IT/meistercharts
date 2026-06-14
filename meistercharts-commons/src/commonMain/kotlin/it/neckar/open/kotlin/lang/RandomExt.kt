@@ -92,7 +92,9 @@ data class RandomWeights<T>(val weightsMap: Map<T, Double>) {
  * Returns random values around [center]. 95% of these values are within the range of 4 sigma (-2/+2) around the center
  */
 fun randomNormal(center: Double, sigma: Double): Double {
-  return center + (sigma * sqrt(-2.0 * kotlin.math.log(random.nextDouble(), 10.0)) * cos(2.0 * PI * random.nextDouble()))
+  // Box-Muller transform requires the natural logarithm. Using log base 10
+  // would scale sigma by sqrt(1/ln(10)) ≈ 0.659 — narrowing the distribution.
+  return center + (sigma * sqrt(-2.0 * kotlin.math.ln(random.nextDouble())) * cos(2.0 * PI * random.nextDouble()))
 }
 
 

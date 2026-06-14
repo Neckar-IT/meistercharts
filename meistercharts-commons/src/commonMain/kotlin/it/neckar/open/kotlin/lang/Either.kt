@@ -35,8 +35,8 @@ data class Either<T1, T2>(
   val value2: T2?,
 ) {
   init {
-    require(value1 != null || value2 != null) { "Either must contain one value, but contains two" }
-    require(value1 == null || value2 == null) { "Either must contain one value, but does not contain any" }
+    require(value1 != null || value2 != null) { "Either must contain one value, but does not contain any" }
+    require(value1 == null || value2 == null) { "Either must contain one value, but contains two" }
   }
 
   /**

@@ -119,9 +119,12 @@ inline fun <E, T> Collection<E>.consumeUntil(cancelValue: T, consumer: (E) -> T)
 
 /**
  * Returns a list of values that have relative values (the sum of all values is equal to 1.0).
+ *
+ * Requires the receiver to be non-empty and have a non-zero sum.
  */
 fun List<@Domain Double>.toRelativeValues(): List<@pct Double> {
   @Domain val sum = this.sum()
+  require(sum != 0.0) { "Cannot compute relative values for a list with sum 0.0 (size=$size)" }
   return map {
     1 / sum * it
   }
