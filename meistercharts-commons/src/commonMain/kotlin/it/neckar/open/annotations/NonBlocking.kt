@@ -30,7 +30,10 @@ package it.neckar.open.annotations
 import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 
 /**
+ * Marks methods that must not perform blocking operations and are safe to call
+ * from event loops, coroutine dispatchers, or other non-blocking contexts.
  *
+ * Counterpart to [Blocking].
  */
 @Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 @MustBeDocumented

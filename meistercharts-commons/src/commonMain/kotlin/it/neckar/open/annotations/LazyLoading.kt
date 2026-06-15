@@ -30,6 +30,8 @@ package it.neckar.open.annotations
 /**
  * Marks values that are loaded lazily.
  */
+@MustBeDocumented
+@Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE, AnnotationTarget.PROPERTY)
 annotation class LazyLoading(
   val description: String = "",

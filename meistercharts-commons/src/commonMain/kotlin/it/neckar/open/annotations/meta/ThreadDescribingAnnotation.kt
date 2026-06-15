@@ -36,8 +36,8 @@ package it.neckar.open.annotations.meta
 @Target(AnnotationTarget.CLASS)
 annotation class ThreadDescribingAnnotation(
   /**
-   * A thread description
-   * @return the thread description
+   * A thread description identifying the thread this annotation refers to
+   * (for example `"ui-thread"` or `"non-ui-thread"`).
    */
   val value: String,
 )

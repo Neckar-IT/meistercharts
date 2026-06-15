@@ -41,6 +41,9 @@ annotation class ExportAsObject() {
      * The name of the JsExport annotation.
      * The JsExport annotation is only available in JS projects.
      */
-    const val AnnotationMame: String = "ExportAsObject"
+    const val AnnotationName: String = "ExportAsObject"
+
+    @Deprecated("Typo. Use AnnotationName instead.", ReplaceWith("AnnotationName"))
+    const val AnnotationMame: String = AnnotationName
   }
 }

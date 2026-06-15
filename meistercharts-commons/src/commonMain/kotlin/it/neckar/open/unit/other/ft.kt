@@ -58,7 +58,8 @@ import it.neckar.open.unit.si.m
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )
-@MustBeDocumented@Suppress("ClassName")
+@MustBeDocumented
+@Suppress("ClassName")
 @Unit
 @Length
 @Name("feet")

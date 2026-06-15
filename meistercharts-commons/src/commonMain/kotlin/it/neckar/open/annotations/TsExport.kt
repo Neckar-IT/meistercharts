@@ -43,11 +43,17 @@ annotation class TsExport() {
      * The name of the JsExport annotation.
      * The JsExport annotation is only available in JS projects.
      */
-    const val JsExportAnnotationMame: String = "JsExport"
+    const val JsExportAnnotationName: String = "JsExport"
 
     /**
      * The name of the `JsExport.Ignore` annotation.
      */
-    const val JsExportIgnoredAnnotationMame: String = "Ignore"
+    const val JsExportIgnoredAnnotationName: String = "Ignore"
+
+    @Deprecated("Typo. Use JsExportAnnotationName instead.", ReplaceWith("JsExportAnnotationName"))
+    const val JsExportAnnotationMame: String = JsExportAnnotationName
+
+    @Deprecated("Typo. Use JsExportIgnoredAnnotationName instead.", ReplaceWith("JsExportIgnoredAnnotationName"))
+    const val JsExportIgnoredAnnotationMame: String = JsExportIgnoredAnnotationName
   }
 }

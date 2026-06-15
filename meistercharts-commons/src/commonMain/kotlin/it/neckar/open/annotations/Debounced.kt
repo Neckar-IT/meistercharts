@@ -28,7 +28,8 @@
 package it.neckar.open.annotations
 
 /**
- * Annotates methods are debounced.
+ * Marks methods whose invocations are debounced — repeated calls within [delay] milliseconds
+ * collapse into a single execution after the last call.
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(

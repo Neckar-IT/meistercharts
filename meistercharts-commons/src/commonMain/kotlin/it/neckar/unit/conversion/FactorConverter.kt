@@ -28,9 +28,15 @@
 package it.neckar.unit.conversion
 
 /**
- * Converter using a factor
+ * Converter using a factor.
+ *
+ * [factor] must be non-zero, otherwise [reverseValue] would produce `Infinity`/`NaN`.
  */
 class FactorConverter(val factor: Double) : Converter {
+  init {
+    require(factor != 0.0) { "factor must not be zero" }
+  }
+
   override fun convertValue(value: Double): Double {
     return value * factor
   }

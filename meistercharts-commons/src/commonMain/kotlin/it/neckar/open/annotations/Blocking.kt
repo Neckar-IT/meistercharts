@@ -30,7 +30,10 @@ package it.neckar.open.annotations
 import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 
 /**
+ * Marks methods that perform blocking operations (e.g. I/O, locks, long-running computation)
+ * and must therefore not be called from a non-blocking context.
  *
+ * Counterpart to [NonBlocking].
  */
 @Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 @MustBeDocumented

@@ -35,6 +35,15 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 @Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
+@Target(
+  AnnotationTarget.FIELD,
+  AnnotationTarget.VALUE_PARAMETER,
+  AnnotationTarget.FUNCTION,
+  AnnotationTarget.PROPERTY_GETTER,
+  AnnotationTarget.PROPERTY_SETTER,
+  AnnotationTarget.CONSTRUCTOR,
+  AnnotationTarget.CLASS,
+)
 @ThreadDescribingAnnotation(UiThread.THREAD_DESCRIPTOR)
 annotation class UiThread {
   companion object {
