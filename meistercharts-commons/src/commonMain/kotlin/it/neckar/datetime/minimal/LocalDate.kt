@@ -28,6 +28,7 @@
 package it.neckar.datetime.minimal
 
 import it.neckar.datetime.minimal.io.LocalDateSerializer
+import it.neckar.open.annotations.CrossLayer
 import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
 
@@ -36,6 +37,7 @@ import kotlinx.serialization.Serializable
  *
  * Attention: This is a very minimalistic implementation without any special checks.
  */
+@CrossLayer("Calendar date — a single ISO yyyy-MM-dd scalar that lives identically in Domain, Mongo Entity, and on the REST wire, like NativeInstant and NativeUuid. Serializes as a primitive string, so embedding it in a DataView exposes no business internals.")
 @Serializable(with = LocalDateSerializer::class)
 data class LocalDate(
   val year: Year,
