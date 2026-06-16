@@ -40,7 +40,7 @@ abstract class ValueRange protected constructor(
       "Start must be finite but was $start"
     }
     require(end.isFinite()) {
-      "End must be finite but was $start"
+      "End must be finite but was $end"
     }
 
     require(start <= end) {

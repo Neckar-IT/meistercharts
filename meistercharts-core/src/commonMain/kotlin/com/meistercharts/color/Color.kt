@@ -255,7 +255,7 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
      * Black with 50% opacity
      */
     @JvmField
-    val black50percent: () -> RgbaColor = RgbaColor(1.0, 1.0, 1.0, 0.5).asProvider()
+    val black50percent: () -> RgbaColor = RgbaColor(0.0, 0.0, 0.0, 0.5).asProvider()
 
     /**
      * ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
