@@ -98,7 +98,7 @@ fun LocalDate.setWeekOfYearMonday(week: Int, locale: Locale = Locale.GERMANY): L
 fun LocalDate.getDaysInInterval(to: LocalDate): Int =
   (ChronoUnit.DAYS.between(this, to).toInt() + 1)
     .takeIf { it > 0 }
-    ?: throw IllegalArgumentException("start date $this is smaller than end date $to.")
+    ?: throw IllegalArgumentException("start date $this must not be after end date $to.")
 
 /**
  * Returns number of days between [this] date and [to] date (exclusive).

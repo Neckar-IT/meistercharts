@@ -41,7 +41,7 @@ me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 
 [versions]
 
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 
 org-asciidoctor = "4.0.5"
 
@@ -84,7 +84,7 @@ com-github-docker-java = "3.7.1"
 
 com-miglayout = "11.4.3"
 
-dev-zacsweers-kctfork = "0.12.1"
+dev-zacsweers-kctfork = "0.13.0-alpha01"
 
 org-apache-xmlgraphics = "1.19"
 

@@ -335,7 +335,7 @@ interface UrlPattern {
     }
 
     fun resolve(parameterValue: Uuid): Url.Relative {
-      return resolve(parameterValue.toString())
+      return resolve(parameterValue.toHexDashString())
     }
 
     fun resolve(parameterValue: String): Url.Relative {
@@ -403,7 +403,7 @@ interface UrlPattern {
     }
 
     fun resolve(parameterValue1: Uuid, parameterValue2: Uuid): Url.Relative {
-      return resolve(parameterValue1.toString(), parameterValue2.toString())
+      return resolve(parameterValue1.toHexDashString(), parameterValue2.toHexDashString())
     }
 
     fun resolve(parameterValue1: String, parameterValue2: String): Url.Relative {
@@ -475,7 +475,7 @@ interface UrlPattern {
     }
 
     fun resolve(parameterValue1: Uuid, parameterValue2: Uuid, parameterValue3: Uuid): Url.Relative {
-      return resolve(parameterValue1.toString(), parameterValue2.toString(), parameterValue3.toString())
+      return resolve(parameterValue1.toHexDashString(), parameterValue2.toHexDashString(), parameterValue3.toHexDashString())
     }
 
     fun resolve(parameterValue1: String, parameterValue2: String, parameterValue3: String): Url.Relative {

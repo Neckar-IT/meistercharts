@@ -92,7 +92,7 @@ class MinMaxValues(
         }
         if (max.isFinite()) {
           val oldValue = maxValues[index]
-          maxValues[index] = if (oldValue.isNoValue()) max else oldValue.coerceAtLeast(min)
+          maxValues[index] = if (oldValue.isNoValue()) max else oldValue.coerceAtLeast(max)
         }
       }
     }

@@ -48,7 +48,7 @@ object ClosedFloatingPointRangeSerializer : KSerializer<ClosedFloatingPointRange
   override fun deserialize(decoder: Decoder): ClosedFloatingPointRange<Double> {
     val decodeString = decoder.decodeString()
     val parts = decodeString.split(delimiter)
-    require(parts.size == 2) { "Expected two parts separated by ${IntRangeSerializer.delimiter} for [$decodeString]" }
+    require(parts.size == 2) { "Expected two parts separated by $delimiter for [$decodeString]" }
     return parts[0].toDouble()..parts[1].toDouble()
   }
 

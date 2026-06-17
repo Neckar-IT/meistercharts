@@ -67,11 +67,11 @@ data class Distance(
   }
 
   operator fun times(factor: Double): Distance {
-    return Distance(x * factor, y + factor)
+    return Distance(x * factor, y * factor)
   }
 
   fun multiply(factorX: Double, factorY: Double): Distance {
-    return Distance(x * factorX, y + factorY)
+    return Distance(x * factorX, y * factorY)
   }
 
   fun divide(divisorX: Double, divisorY: Double): Distance {

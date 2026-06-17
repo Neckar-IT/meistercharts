@@ -62,6 +62,6 @@ class JVMTimerCoroutineImplementation(
         delay(delay)
       }
     }
-    return Disposable { job.cancel("Disposed of delayScope") }
+    return Disposable { job.cancel("Disposed of repeatScope") }
   }
 }

@@ -1,15 +1,16 @@
 package it.neckar.gradle
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 /**
  * Kotlin settings
  */
 object KotlinSettings {
-  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
+  val languageVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_4
   val languageVersionAsString: String = languageVersion.version
 
-  val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
+  val apiVersion: KotlinVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_4
   val apiVersionAsString: String = apiVersion.version
 
   /**
@@ -34,13 +35,10 @@ object KotlinSettings {
   )
 
   /**
-   * Language features that are enabled
-   */
-  val languageFeatures: List<String> = listOf(
-  )
-
-  /**
    * Compiler argument sources by Kotlin version (keep sorted by Kotlin version).
+   *
+   * Kotlin 2.4.x:
+   * - https://kotlinlang.org/docs/whatsnew-eap.html
    *
    * Kotlin 2.3.x:
    * - https://github.com/JetBrains/kotlin/blob/v2.3.0/compiler/arguments/src/org/jetbrains/kotlin/arguments/description/CommonCompilerArguments.kt
@@ -66,31 +64,28 @@ object KotlinSettings {
 
     add("-Xwarning-level=NOTHING_TO_INLINE:disabled")
 
-    add("-Xannotation-target-all")
     add("-XXexplicit-return-types=warning")
     add("-Xexpect-actual-classes") // https://youtrack.jetbrains.com/issue/KT-61573
     add("-Xconsistent-data-class-copy-visibility") // https://youtrack.jetbrains.com/issue/KT-11914
-    add("-Xcontext-parameters")
-    add("-Xnon-local-break-continue")
-    add("-Xwhen-guards")
-
-    // Kotlin 2.2 required
-    add("-Xannotation-default-target=param-property") // https://youtrack.jetbrains.com/issue/KT-73255
-
-    // Kotlin 2.2.20 required
-    add("-Xallow-condition-implies-returns-contracts")
-    add("-Xallow-holdsin-contract")
-    add("-Xallow-contracts-on-more-functions")
-    add("-Xallow-reified-type-in-catch")
 
     // Kotlin 2.2.x
     add("-Xreturn-value-checker=full")
     add("-Xwarning-level=RETURN_VALUE_NOT_USED:error")
     add("-Xcontext-sensitive-resolution")
 
-    // Kotlin 2.3.x
-    add("-Xexplicit-backing-fields") // https://kotlinlang.org/docs/whatsnew23.html#explicit-backing-fields
     add("-Xname-based-destructuring=only-syntax") // https://kotlinlang.org/docs/whatsnew2320.html
+
+    // Kotlin 2.4.x — newly introduced opt-in flags
+    add("-Xexplicit-context-arguments") // explicit context arguments — https://kotlinlang.org/docs/whatsnew-eap.html
+    add("-Xcollection-literals") // bracket-syntax `[]` collection literals
+    add("-Xintrinsic-const-evaluation") // enables IntrinsicConstEvaluation language feature
+
+    // Candidates to evaluate in a follow-up — enable individually after measuring noise:
+    // add("-Xreport-all-warnings") // emit warnings even when errors are present
+    // add("-Xdata-flow-based-exhaustiveness") // experimental; `when` exhaustiveness via data-flow analysis
+    // add("-Xnested-type-aliases") // experimental; allow `object Foo { typealias Bar = ... }`
+    // add("-Xlocal-type-aliases") // experimental; type aliases inside function bodies
+    // add("-Xmulti-dollar-interpolation") // experimental; `$$${...}` template syntax
   }
 
   /**
@@ -103,9 +98,6 @@ object KotlinSettings {
     // Kotlin 2.2.x
     add("-Xes-long-as-bigint")
 
-    // Kotlin 2.3.x
-    add("-Xenable-suspend-function-exporting")
-
     // Required: -Xir-dce must be set in combination with -Xir-dce-print-reachability-info
     add("-Xir-dce-print-reachability-info")
     add("-Xir-dce")
@@ -116,6 +108,15 @@ object KotlinSettings {
    */
   val additionalFreeCompilerArgsJVM: List<String> = buildList {
     add("-Xjsr305=strict")
-    add("-Xannotations-in-metadata")
+    // Compile against the specified JDK API version (analogous to javac's --release).
+    // Setting this also pins -jvm-target to the same version, so newer JDK APIs are
+    // rejected by the compiler — protects against an unnoticed build-JDK bump.
+    add("-Xjdk-release=${JvmTarget.JVM_25.target}")
+    add("-Xemit-jvm-type-annotations") // type annotations (e.g. nullability on generics) in bytecode
+    add("-Xuse-inline-scopes-numbers") // better stack traces for inline functions (Coroutines, Sequences)
+
+    // Candidates to evaluate in a follow-up — enable individually after measuring impact:
+    // add("-Xenhance-type-parameter-types-to-def-not-null") // `@NotNull T` => `T & Any`; may break Java-interop wrappers
+    // add("-Xenhanced-coroutines-debugging") // extra line-numbers for compiler-generated suspend code
   }
 }

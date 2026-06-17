@@ -43,7 +43,7 @@ data class LocalTime(
     require(hour in 0..23) { "Hour must be between 0 and 23" }
     require(minute in 0..59) { "Minute must be between 0 and 59" }
     require(second in 0..59) { "Second must be between 0 and 59" }
-    require(millis in 0..999) { "Millis must be between 0 and 1000.0" }
+    require(millis in 0..999) { "Millis must be between 0 and 999" }
   }
 
   fun format(): String {
@@ -67,22 +67,26 @@ data class LocalTime(
   }
 
   fun plusHours(hoursToAdd: Int): LocalTime {
-    val newHour = (hour + hoursToAdd) % 24
+    val newHour = floorMod(hour + hoursToAdd, 24)
     return LocalTime(newHour, minute, second, millis)
   }
 
   fun plusMinutes(minutesToAdd: Int): LocalTime {
-    val totalMinutes = hour * 60 + minute + minutesToAdd
-    val newHour = (totalMinutes / 60) % 24
-    val newMinute = totalMinutes % 60
+    // Normalize into the minute-of-day range [0, 1440) first, then split. Dividing before the
+    // floorMod would truncate negative quotients toward zero and drop the hour borrow.
+    val minuteOfDay = floorMod(hour * 60 + minute + minutesToAdd, 24 * 60)
+    val newHour = minuteOfDay / 60
+    val newMinute = minuteOfDay % 60
     return LocalTime(newHour, newMinute, second, millis)
   }
 
   fun plusSeconds(secondsToAdd: Int): LocalTime {
-    val totalSeconds = (hour * 3600) + (minute * 60) + second + secondsToAdd
-    val newHour = (totalSeconds / 3600) % 24
-    val newMinute = (totalSeconds % 3600) / 60
-    val newSecond = totalSeconds % 60
+    // Normalize into the second-of-day range [0, 86400) first, then split. Dividing before the
+    // floorMod would truncate negative quotients toward zero and drop the hour/minute borrow.
+    val secondOfDay = floorMod((hour * 3600) + (minute * 60) + second + secondsToAdd, 24 * 3600)
+    val newHour = secondOfDay / 3600
+    val newMinute = (secondOfDay % 3600) / 60
+    val newSecond = secondOfDay % 60
     return LocalTime(newHour, newMinute, newSecond, millis)
   }
 
@@ -104,3 +108,13 @@ data class LocalTime(
 }
 
 expect fun LocalTime.Companion.fromMillisCurrentTimeZone(millis: @ms Double, expectedTimeZone: TimeZone): LocalTime
+
+/**
+ * Floor modulo — like Java's `Math.floorMod`. Always returns a non-negative result
+ * for positive `mod`, regardless of sign of [value]. Kotlin's `%` would return a
+ * negative remainder for negative operands.
+ */
+private fun floorMod(value: Int, mod: Int): Int {
+  val r = value % mod
+  return if (r < 0) r + mod else r
+}

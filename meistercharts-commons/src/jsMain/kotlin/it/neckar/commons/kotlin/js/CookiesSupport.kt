@@ -47,19 +47,27 @@ object CookiesSupport {
   }
 
   /**
-   * Parses the document cookies string
+   * Parses the document cookies string.
+   *
+   * Browsers can occasionally hand out cookies whose token does not split into exactly
+   * `key=value` pairs (third-party cookies, malformed values). Skip those instead of
+   * throwing — otherwise a single bad cookie breaks every lookup. Aligns with
+   * [deleteAllCookiesForKey], which already tolerated this case.
    */
   internal fun findCookieValue(cookiesFromDocument: String, cookieName: CookieName): String? {
     cookiesFromDocument.split(';').filter { it.isNotBlank() }
       .fastForEach { cookieValue ->
         val splitToken = cookieValue.split("=")
-        if (splitToken.size != 2) throw IllegalStateException("Cookie [$cookieValue] is invalid")
+        if (splitToken.size != 2) {
+          console.error("Invalid Cookie token [$cookieValue]. Could not split token at '='")
+          return@fastForEach
+        }
 
-      val key = splitToken[0].trim()
-      if (key == cookieName.value) {
-        return splitToken[1].trim()
+        val key = splitToken[0].trim()
+        if (key == cookieName.value) {
+          return splitToken[1].trim()
+        }
       }
-    }
 
     return null
   }

@@ -135,11 +135,24 @@ data class LocalDate(
       }
     }
 
+    while (newDayOfMonth < 1) {
+      // Go back one month, then add that month's days to bring newDayOfMonth into range.
+      newMonth = if (newMonth.value == 1) {
+        newYear = Year(newYear.value - 1)
+        Month(12)
+      } else {
+        Month(newMonth.value - 1)
+      }
+      newDayOfMonth += newMonth.daysInMonth(newYear).value
+    }
+
     return LocalDate(newYear, newMonth, DayOfMonth(newDayOfMonth))
   }
 
   fun plusYears(yearsToAdd: Int): LocalDate {
-    return LocalDate(year + yearsToAdd, month, dayOfMonth)
+    val newYear = year + yearsToAdd
+    // Coerce day of month to handle Feb 29 in non-leap years (matches plusMonths semantics).
+    return LocalDate(newYear, month, dayOfMonth.coerceDayOfMonth(newYear, month))
   }
 
   override fun compareTo(other: LocalDate?): Int {

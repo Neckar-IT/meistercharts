@@ -90,7 +90,7 @@ fun URLSearchParams.getNumber(parameterName: String): Double? {
     try {
       return parameterValue.toDouble()
     } catch (e: Exception) {
-      console.warn("Could not parse $parameterValue as Boolean due to ${e.message}")
+      console.warn("Could not parse $parameterValue as Double due to ${e.message}")
     }
   }
   return null

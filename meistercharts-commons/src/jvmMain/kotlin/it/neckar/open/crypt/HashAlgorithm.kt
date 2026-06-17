@@ -166,7 +166,7 @@ data class HashAlgorithm(
      * Calculates the hash for the given resource using the given algorithm and message digest.
      */
     fun calculate(algorithm: HashAlgorithm, messageDigest: MessageDigest, resource: InputStream): Hash {
-      require(messageDigest.algorithm == algorithm.name) { "Algorithm name must not be the same. Was $algorithm but message digest has ${messageDigest.algorithm}" }
+      require(messageDigest.algorithm == algorithm.name) { "Algorithm name must match. Was $algorithm but message digest has ${messageDigest.algorithm}" }
 
       messageDigest.reset()
 

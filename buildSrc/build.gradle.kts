@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "2.3.21"
+val kotlinVersion: String = "2.4.0"
 
 plugins {
   openModule

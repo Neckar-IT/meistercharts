@@ -381,10 +381,8 @@ fun Project.configureKotlin() {
   }
   project.extra["kotlinConfigured"] = true
 
-  //JS projects are no longer supported
-  require(extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>() == null) {
-    "Must not contain KotlinJsProjectExtension. Use multiplatform instead"
-  }
+  // JS-only projects ("kotlin-js" plugin) are unrepresentable since Kotlin 2.4
+  // (KotlinJsProjectExtension removed). No runtime guard needed.
 
   tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
@@ -420,10 +418,8 @@ fun Project.configureKotlinJvmOnly() {
   }
   project.extra["kotlinConfigured"] = true
 
-  //JS projects are no longer supported
-  require(extensions.findByType<org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension>() == null) {
-    "Must not contain KotlinJsProjectExtension. Use multiplatform instead"
-  }
+  // JS-only projects ("kotlin-js" plugin) are unrepresentable since Kotlin 2.4
+  // (KotlinJsProjectExtension removed). No runtime guard needed.
 
   tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
@@ -478,6 +474,17 @@ fun Project.configureNodeJsRootExtension() {
   // looks in the root .gradle/nodejs/ — leaving its node binary path non-existent.
   tasks.matching { it.name == "kotlinNpmInstall" }.configureEach {
     dependsOn(tasks.matching { it.name == "kotlinNodeJsSetup" })
+  }
+
+  // The Lizergy planner-ui (maintenance-only) pulls in react-json-view 1.21.3,
+  // whose declared peer-dep is React <= 17. The workspace ships React 19.
+  // Yarn 1.22 only warns on this; npm hard-fails by default. Match the
+  // resolution semantics of the previous (yarn-based) setup by enabling
+  // npm's --legacy-peer-deps for the Kotlin/JS NPM install step.
+  rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>()
+      .npmInstallTaskProvider
+      .configure { args.add("--legacy-peer-deps") }
   }
 }
 
@@ -560,10 +567,6 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
   sourceSets.all {
     KotlinSettings.optInExperimentalAnnotations.forEach {
       languageSettings.optIn(it)
-    }
-
-    KotlinSettings.languageFeatures.forEach {
-      languageSettings.enableLanguageFeature(it)
     }
 
     languageSettings {

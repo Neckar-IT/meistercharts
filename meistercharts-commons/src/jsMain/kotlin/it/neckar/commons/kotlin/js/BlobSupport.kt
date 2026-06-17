@@ -38,7 +38,7 @@ import org.w3c.files.BlobPropertyBag
  */
 object BlobSupport {
   /**
-   * Creates a blog for the given content and type
+   * Creates a blob for the given content and type
    */
   fun createBlob(content: ByteArray, contentType: String): Blob {
     return Blob(arrayOf(content), BlobPropertyBag(contentType))
