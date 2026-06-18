@@ -68,13 +68,16 @@ data class HoveringOverHandle(
   /**
    * The direction of the handle the mouse is currently hovering above
    */
-  var handleDirection: Direction
+  val handleDirection: Direction
 ) : ResizeByHandlesLayerState {
   override fun hoveringAboveHandle(handleDirection: Direction?): ResizeByHandlesLayerState {
     if (handleDirection == null) {
       return DefaultState
     }
-    return this
+    if (handleDirection == this.handleDirection) {
+      return this
+    }
+    return HoveringOverHandle(handleDirection)
   }
 
   override fun startDragging(handleDirection: Direction): DraggingHandle {
@@ -89,7 +92,7 @@ data class HoveringOverHandle(
 /**
  * Currently dragging the handle
  */
-data class DraggingHandle(var handleDirection: Direction) : ResizeByHandlesLayerState {
+data class DraggingHandle(val handleDirection: Direction) : ResizeByHandlesLayerState {
   override fun finishedDragging(hoverHandleDirection: Direction?): ResizeByHandlesLayerState {
     if (hoverHandleDirection == null) {
       return DefaultState

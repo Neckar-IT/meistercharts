@@ -453,7 +453,7 @@ class DownSamplingCalculator(
    */
   fun addReferenceEntrySample(
     newReferenceEntries: @ReferenceEntryIdInt IntArray,
-    newDifferentIdsCount: @ReferenceEntryIdInt IntArray?,
+    newDifferentIdsCount: @ReferenceEntryDifferentIdsCountInt IntArray?,
     newStatuses: @HistoryEnumSetInt IntArray,
   ) {
     require(newReferenceEntries.size == referenceEntryCounters.size) {

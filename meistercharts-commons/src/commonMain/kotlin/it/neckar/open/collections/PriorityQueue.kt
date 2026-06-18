@@ -206,7 +206,7 @@ class TGenPriorityQueue<TGen>
   override fun toString(): String = toList().toString()
 
   override fun equals(other: Any?): Boolean = other is TGenPriorityQueue<*/*_TGen_*/> && this.data.contentEquals(other.data) && this.comparator == other.comparator
-  override fun hashCode(): Int = data.contentHashCode()
+  override fun hashCode(): Int = data.contentHashCode() * 31 + comparator.hashCode()
 }
 
 

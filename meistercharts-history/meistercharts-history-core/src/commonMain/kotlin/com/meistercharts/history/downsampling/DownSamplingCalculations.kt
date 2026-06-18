@@ -89,7 +89,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
   require(childChunks.first().firstTimestamp >= this.start) {
     "Invalid child bucket start <${childChunks.first().firstTimestamp.formatUtc()}> while descriptor start is <${this.start.formatUtc()}> for bucket range <${this.bucketRange}>"
   }
-  require(childChunks.last().lastTimestamp <= this.end) {
+  require(childChunks.last().lastTimestamp < this.end) {
     "Invalid child bucket end <${childChunks.last().lastTimestamp.formatUtc()}> while descriptor end is <${this.end.formatUtc()}> for bucket range <${this.bucketRange}>"
   }
 

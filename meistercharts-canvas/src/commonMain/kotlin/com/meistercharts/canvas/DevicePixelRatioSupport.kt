@@ -43,9 +43,15 @@ class DevicePixelRatioSupport {
 
   /**
    * Updates the device pixel ratio.
-   * This method will only be called from the LayerSupport
+   * This method will only be called from the LayerSupport.
+   *
+   * Rejects non-positive or non-finite values: a `0.0` or `NaN` would propagate
+   * through every canvas-coordinate division and corrupt the rendering pipeline.
    */
   fun updateDevicePixelRatio(devicePixelRatio: Double) {
+    require(devicePixelRatio.isFinite() && devicePixelRatio > 0.0) {
+      "devicePixelRatio must be a positive finite number but was <$devicePixelRatio>"
+    }
     (devicePixelRatioProperty as ObservableDouble).value = devicePixelRatio
   }
 }

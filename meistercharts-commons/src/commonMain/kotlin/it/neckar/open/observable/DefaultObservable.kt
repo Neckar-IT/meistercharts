@@ -105,7 +105,9 @@ open class DefaultObservable<T> : Observable<T>, Disposable, DependentObjectSupp
    * Notifies the listeners - even if [oldValue] and [newValue] are the same
    */
   fun notifyListeners(oldValue: T, newValue: T) {
-    valueChangeListeners.fastForEach {
+    // Snapshot before iterating: a listener may dispose itself (or another listener) during the call,
+    // which removes from valueChangeListeners and would otherwise corrupt the iteration.
+    valueChangeListeners.toList().fastForEach {
       it(oldValue, newValue)
     }
   }

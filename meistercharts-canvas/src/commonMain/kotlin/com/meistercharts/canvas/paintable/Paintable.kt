@@ -339,6 +339,12 @@ interface Paintable {
     @px val currentBoundingBox = boundingBox(paintingContext)
     @px val size = currentBoundingBox.size
 
+    // A zero-sized bounding box would yield Infinity (or NaN) scale factors and
+    // poison the canvas transform — silently skip the paint instead.
+    if (size.width <= 0.0 || size.height <= 0.0) {
+      return
+    }
+
     val scaleX = 1.0 / size.width * forcedSize.width
     val scaleY = 1.0 / size.height * forcedSize.height
 

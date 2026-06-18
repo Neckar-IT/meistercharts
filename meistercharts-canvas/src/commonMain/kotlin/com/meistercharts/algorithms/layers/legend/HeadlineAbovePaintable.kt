@@ -53,9 +53,9 @@ class HeadlineAbovePaintable<Delegate : Paintable>(
    */
   val stackedPaintablesPaintable: StackedPaintablesPaintable = StackedPaintablesPaintable(object : SizedProvider1<Paintable, LayerPaintingContext> {
     override fun size(param1: LayerPaintingContext): Int {
-      val headlineVisible = headlinePaintable.configuration.label.invoke(param1.chartSupport).isNullOrBlank()
+      val labelIsBlank = headlinePaintable.configuration.label.invoke(param1.chartSupport).isNullOrBlank()
 
-      if (headlineVisible) {
+      if (labelIsBlank) {
         //Only show the delegate - do *not* show the headline
         return 1
       }

@@ -73,7 +73,7 @@ class CanvasTouchZoomAndPanSupport {
   }
 
   fun removeHandler(handler: Handler) {
-    this.handlers.add(handler)
+    this.handlers.remove(handler)
   }
 
   /**

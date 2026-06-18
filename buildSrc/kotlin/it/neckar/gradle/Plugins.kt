@@ -144,6 +144,11 @@ object Plugins {
   const val resourcesConvention: String = "it.neckar.resources-convention"
 
   const val secretsLoader: String = "it.neckar.secrets-loader"
+
+  /**
+   * Generates a self-contained `deploy` task (host + tag baked into the script) for a module.
+   */
+  const val deployment: String = "it.neckar.deployment"
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
   const val orvalConvert: String = "it.neckar.gradle.openapi.orval-convert"

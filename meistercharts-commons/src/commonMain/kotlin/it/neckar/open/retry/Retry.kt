@@ -79,7 +79,7 @@ suspend fun <T> retry(
     currentDelay = (currentDelay * delayIncreaseFactor).coerceAtMost(maxDelay)
   }
 
-  return block(retryCount) //last try
+  return block(retryCount - 1) //last try (matches the loop's tryIndex sequence)
 }
 
 private val logger = LoggerFactory.getLogger("it.neckar.open.retry.retry")

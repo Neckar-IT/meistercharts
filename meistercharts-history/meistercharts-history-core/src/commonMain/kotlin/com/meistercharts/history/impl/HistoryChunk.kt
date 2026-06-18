@@ -32,6 +32,7 @@ import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
+import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.SamplingPeriod
@@ -384,7 +385,7 @@ data class HistoryChunk(
    * Returns the counts for the different entry IDs
    */
   @ForOnePointInTime
-  fun getReferenceEntryDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray? {
+  fun getReferenceEntryDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryDifferentIdsCountInt IntArray? {
     return values.getReferenceEntryDifferentIdsCounts(timeStampIndex)
   }
 

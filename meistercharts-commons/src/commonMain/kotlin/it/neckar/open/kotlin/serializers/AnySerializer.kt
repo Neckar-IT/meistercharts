@@ -117,5 +117,5 @@ private fun JsonPrimitive.toAnyValue(): Any? {
   if (doubleValue != null) {
     return doubleValue
   }
-  throw IllegalArgumentException("Unsupported content： $content")
+  throw IllegalArgumentException("Unsupported content: $content")
 }

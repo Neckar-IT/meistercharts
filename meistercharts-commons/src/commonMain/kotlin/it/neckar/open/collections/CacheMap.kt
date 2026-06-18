@@ -102,5 +102,5 @@ open class CacheMap<K, V> private constructor(
   override fun toString(): String = map.toString()
 
   override fun equals(other: Any?): Boolean = (other is CacheMap<*, *>) && (this.map == other.map) && (this.free == other.free)
-  override fun hashCode(): Int = this.map.hashCode() + maxSize
+  override fun hashCode(): Int = map.hashCode() * 31 + free.hashCode()
 }

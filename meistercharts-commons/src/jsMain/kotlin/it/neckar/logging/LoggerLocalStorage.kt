@@ -96,14 +96,19 @@ object LoggerLocalStorage {
   }
 
   /**
-   * Clears all logger levels from the local storage
+   * Clears all logger levels from the local storage.
+   *
+   * Collects matching keys first, then removes them — iterating and removing
+   * in the same pass shifts the remaining indices and silently skips entries.
    */
   fun clearLoggers() {
+    val keysToRemove = mutableListOf<String>()
     window.localStorage.length.fastFor { index ->
       val key = window.localStorage.key(index) ?: return@fastFor
       if (key.startsWith(LoggerLocalStorageKeys.LoggerPrefix)) {
-        window.localStorage.removeItem(key)
+        keysToRemove.add(key)
       }
     }
+    keysToRemove.forEach { window.localStorage.removeItem(it) }
   }
 }

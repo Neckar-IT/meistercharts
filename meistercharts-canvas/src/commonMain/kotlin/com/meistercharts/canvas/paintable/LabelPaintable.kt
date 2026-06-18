@@ -115,6 +115,12 @@ class LabelPaintable(
     var anchorDirection: Direction = Direction.TopLeft
     var anchorGapHorizontal: @px Double = 0.0
     var anchorGapVertical: @px Double = 0.0
-    var maxWidth: @px Double = Double.NaN
+    /**
+     * Maximum text width — text wider than this is clamped via [Double.coerceAtMost].
+     * Default is [Double.POSITIVE_INFINITY] so the clamp is a no-op when not set.
+     * Using `Double.NaN` as a default would propagate through `coerceAtMost` and turn
+     * every `textWidth` into `NaN`, breaking layout.
+     */
+    var maxWidth: @px Double = Double.POSITIVE_INFINITY
   }
 }

@@ -36,7 +36,7 @@ import java.nio.charset.Charset
 fun File.writeTextWithRename(text: String, charset: Charset = Charsets.UTF_8) {
   val tmpFile: File = this.createTmpFile()
   tmpFile.writeText(text, charset)
-  tmpFile.renameTo(this)
+  check(tmpFile.renameTo(this)) { "Failed to rename <${tmpFile.absolutePath}> to <${this.absolutePath}>" }
 }
 
 /** Creates a corresponding tmp file for this file. The tmp file has an appendix consisting of a TMP suffix (.tmp) and the current nanoTime. */
@@ -53,8 +53,8 @@ fun File.replaceDirWithRename(sourceDirectory: File) {
   val backupDirectory = File(this.parentFile, this.name + ".old")
   // Replace the old storage directory with the new, converted storage directory
   // by first renaming storageBaseDirToConvert to a backupDirectory and then renaming newDirectory to storageBaseDirToConvert
-  this.renameTo(backupDirectory)
-  sourceDirectory.renameTo(this)
+  check(this.renameTo(backupDirectory)) { "Failed to rename <${this.absolutePath}> to backup <${backupDirectory.absolutePath}>" }
+  check(sourceDirectory.renameTo(this)) { "Failed to rename source <${sourceDirectory.absolutePath}> to <${this.absolutePath}>" }
 
   // delete backup and temp rename Directory
   backupDirectory.deleteRecursively()
