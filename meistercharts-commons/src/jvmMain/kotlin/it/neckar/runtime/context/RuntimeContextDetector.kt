@@ -134,7 +134,7 @@ object RuntimeContextDetector {
    * Resolves the hostname from system properties or environments
    */
   private fun resolveHostname(source: Source): Hostname? {
-    return Hostname.nullable(resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_DEPLOYMENT_STAGE_SYS, RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV))
+    return Hostname.nullable(resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_SERVICE_HOST_SYS, RuntimeContextEnv.KEY_SERVICE_HOST_ENV))
   }
 
   /**

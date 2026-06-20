@@ -381,7 +381,7 @@ class IntPriorityQueue
   override fun toString(): String = toList().toString()
 
   override fun equals(other: Any?): Boolean = other is IntPriorityQueue && this.data.contentEquals(other.data) && this.comparator == other.comparator
-  override fun hashCode(): Int = data.contentHashCode()
+  override fun hashCode(): Int = 31 * data.contentHashCode() + comparator.hashCode()
 }
 
 
@@ -556,7 +556,7 @@ class DoublePriorityQueue
   override fun toString(): String = toList().toString()
 
   override fun equals(other: Any?): Boolean = other is DoublePriorityQueue && this.data.contentEquals(other.data) && this.comparator == other.comparator
-  override fun hashCode(): Int = data.contentHashCode()
+  override fun hashCode(): Int = 31 * data.contentHashCode() + comparator.hashCode()
 }
 
 
@@ -731,5 +731,5 @@ class FloatPriorityQueue
   override fun toString(): String = toList().toString()
 
   override fun equals(other: Any?): Boolean = other is FloatPriorityQueue && this.data.contentEquals(other.data) && this.comparator == other.comparator
-  override fun hashCode(): Int = data.contentHashCode()
+  override fun hashCode(): Int = 31 * data.contentHashCode() + comparator.hashCode()
 }

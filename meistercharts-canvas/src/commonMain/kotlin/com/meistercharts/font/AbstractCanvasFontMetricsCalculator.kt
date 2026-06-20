@@ -202,7 +202,7 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
    * Starts at the base line and searches downloads (to larger values)
    */
   protected fun findBottomLine(imageData: ImageData, baseLineY: Int): @Scaled Int {
-    for (y in baseLineY..imageData.imageHeight) {
+    for (y in baseLineY until imageData.imageHeight) {
       if (!imageData.containsPixel(y)) {
         return y - 1 //returns the row below that must contain a value
       }

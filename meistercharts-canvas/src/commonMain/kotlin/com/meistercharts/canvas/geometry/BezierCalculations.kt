@@ -200,7 +200,6 @@ object BezierCalculations {
 
     val direct = start.distanceTo(end)
     val diff = direct - length
-    println("Direct: $direct Length: $length Diff: $diff")
 
     return length
   }

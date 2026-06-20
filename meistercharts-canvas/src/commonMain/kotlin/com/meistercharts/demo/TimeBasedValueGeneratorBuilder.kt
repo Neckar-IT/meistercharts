@@ -85,7 +85,7 @@ class TimeBasedValueGeneratorBuilder(config: TimeBasedValueGeneratorBuilder.() -
     check(!built) { "build() may only called once" }
     built = true
 
-    require(minDeviation >= 0) { "$minDeviation < 0" }
+    require(minDeviation > 0) { "minDeviation must be > 0 but was <$minDeviation>" }
     require(maxDeviation > 0) { "$maxDeviation <= 0" }
     require(minDeviation < maxDeviation) { "$minDeviation >= $maxDeviation" }
     require(period > 0) { "period must be greater than 0 but was <$period>" }

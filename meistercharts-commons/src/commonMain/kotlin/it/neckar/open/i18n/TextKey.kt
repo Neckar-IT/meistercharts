@@ -68,7 +68,7 @@ class TextKey(
    * Returns true if the key is an empty string
    */
   fun isEmpty(): Boolean {
-    return this.key == ""
+    return this.key.isEmpty()
   }
 
   companion object {

@@ -66,7 +66,7 @@ fun File.replaceDirWithRename(sourceDirectory: File) {
 fun File.writeBytesWithRename(array: ByteArray) {
   val tmpFile: File = this.createTmpFile()
   tmpFile.writeBytes(array)
-  tmpFile.renameTo(this)
+  check(tmpFile.renameTo(this)) { "Failed to rename <${tmpFile.absolutePath}> to <${this.absolutePath}>" }
 }
 
 

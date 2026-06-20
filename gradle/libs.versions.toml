@@ -55,7 +55,7 @@ net-bytebuddy = "1.18.9"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
-io-gitlab-arturbosch-detekt = "2.0.0-alpha.3"
+io-gitlab-arturbosch-detekt = "2.0.0-alpha.5"
 
 # detekt-gitlab-report: Detekt plugin that emits an extra Code-Climate-format
 # JSON. Hosted on the plugin author's GitLab Maven repo (see settings.gradle.kts).

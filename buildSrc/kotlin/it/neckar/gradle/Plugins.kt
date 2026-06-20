@@ -149,6 +149,11 @@ object Plugins {
    * Generates a self-contained `deploy` task (host + tag baked into the script) for a module.
    */
   const val deployment: String = "it.neckar.deployment"
+
+  /**
+   * Generates a self-contained `provision` task (host baked into the script) for one-time host provisioning.
+   */
+  const val provisioning: String = "it.neckar.provisioning"
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
   const val orvalConvert: String = "it.neckar.gradle.openapi.orval-convert"

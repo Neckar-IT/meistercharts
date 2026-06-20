@@ -463,7 +463,7 @@ interface UrlPattern {
     }
 
     override operator fun plus(toAppend: UrlParameterName): RelativeMulti {
-      return RelativeMulti(appendUrlStrings(value, toAppend.asUrlPatternParameter()), listOf(parameterName1, parameterName2, parameterName3))
+      return RelativeMulti(appendUrlStrings(value, toAppend.asUrlPatternParameter()), listOf(parameterName1, parameterName2, parameterName3, toAppend))
     }
 
     override fun plus(toAppend: UrlPattern): RelativeMulti {
