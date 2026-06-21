@@ -216,7 +216,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns the different ids counts for the given [timeStampIndex]
    */
-  fun getDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray? {
+  fun getDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryDifferentIdsCountInt IntArray? {
     if (differentIdsCount == null) {
       return null
     }

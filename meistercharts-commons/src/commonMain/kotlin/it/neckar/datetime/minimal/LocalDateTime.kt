@@ -83,14 +83,14 @@ data class LocalDateTime(
    * Creates a new instance at the start of the current hour
    */
   fun atStartOfHour(): LocalDateTime {
-    return LocalDateTime(date, time.startStartOfHour())
+    return LocalDateTime(date, time.startOfHour())
   }
 
   /**
    * Creates a new instance at the start of the provided hour
    */
   fun atStartOfHour(hour: Int): LocalDateTime {
-    return LocalDateTime(date, time.startStartOfHour(hour))
+    return LocalDateTime(date, time.startOfHour(hour))
   }
 
   fun format(): String {

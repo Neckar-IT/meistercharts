@@ -174,7 +174,7 @@ class MutableSortedList<V> internal constructor(
       }
 
       override fun set(element: V) {
-        check(indexLastReturned < 0) { "indexLastReturned must be < 0" }
+        check(indexLastReturned >= 0) { "ListIterator.set called without prior next() or previous()" }
         set(indexLastReturned, element)
       }
     }

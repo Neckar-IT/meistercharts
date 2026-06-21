@@ -92,7 +92,7 @@ class SVGPathParserTest {
 
     val count = element.childNodes.length
 
-    for (i in 0..element.childNodes.length) {
+    for (i in 0 until element.childNodes.length) {
       val child = element.childNodes.item(i)
 
       if (child is Element) {

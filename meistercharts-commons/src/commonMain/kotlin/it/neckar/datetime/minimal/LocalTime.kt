@@ -58,11 +58,11 @@ data class LocalTime(
   /**
    * Creates a new instance at the start of the current hour
    */
-  fun startStartOfHour(): LocalTime {
+  fun startOfHour(): LocalTime {
     return LocalTime(hour, 0, 0, 0)
   }
 
-  fun startStartOfHour(hour: Int): LocalTime {
+  fun startOfHour(hour: Int): LocalTime {
     return LocalTime(hour, 0, 0, 0)
   }
 

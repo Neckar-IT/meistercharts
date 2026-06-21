@@ -98,11 +98,18 @@ class MovableCrossWireLayer(
   }
 
   /**
-   * Check if the mouse is above one of hte labels
+   * Check if the mouse is above one of hte labels.
+   *
+   * The cursor-update path below is staged and intentionally not active yet — dragging
+   * support is not implemented. Always returning [EventConsumption.Ignored] keeps the
+   * stub honest, while the staged code remains in source for the future enabling work.
    */
+  @Suppress("unused")
   private fun updateCursorOnMouseMove(mousePosition: @Window Coordinates?): EventConsumption {
-    //Enable later when dragging is implemented
-    if (true) {
+    //TODO Enable when dragging is implemented
+    @Suppress("KotlinConstantConditions")
+    val draggingImplemented = false
+    if (!draggingImplemented) {
       return EventConsumption.Ignored
     }
 

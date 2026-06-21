@@ -298,7 +298,7 @@ fun IntArray.calculateMax(numberToCombine: Int): IntArray {
     var max = Int.MIN_VALUE
 
     val baseIndexForSegment = segmentIndex * numberToCombine
-    for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
+    for (i in baseIndexForSegment until min(baseIndexForSegment + numberToCombine, size)) {
       max = kotlin.math.max(max, this[i])
     }
 
@@ -320,8 +320,8 @@ fun IntArray.calculateMin(numberToCombine: Int): IntArray {
     var min = Int.MAX_VALUE
 
     val baseIndexForSegment = segmentIndex * numberToCombine
-    for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
-      min = min(min, this[i])
+    for (i in baseIndexForSegment until kotlin.math.min(baseIndexForSegment + numberToCombine, size)) {
+      min = kotlin.math.min(min, this[i])
     }
 
     results[segmentIndex] = min
@@ -350,7 +350,7 @@ fun DoubleArray.calculateStandardDeviation(numberToCombine: Int, means: DoubleAr
     var sum = 0.0
 
     val baseIndexForSegment = segmentIndex * numberToCombine
-    for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
+    for (i in baseIndexForSegment until min(baseIndexForSegment + numberToCombine, size)) {
       val delta = this[i] - mean
       sum += delta * delta
     }
@@ -379,7 +379,7 @@ fun DoubleArray.combineStandardDeviations(numberToCombine: Int): DoubleArray {
     var currentCount = 0
 
     val baseIndexForSegment = segmentIndex * numberToCombine
-    for (i in baseIndexForSegment until baseIndexForSegment + numberToCombine) {
+    for (i in baseIndexForSegment until min(baseIndexForSegment + numberToCombine, size)) {
       val stdDeviationToCombine = this[i]
 
       sum += stdDeviationToCombine * stdDeviationToCombine
