@@ -34,9 +34,11 @@ import it.neckar.open.collections.cache
  */
 object DecimalFormatsCache {
   /**
-   * Cache for decimal formats
+   * Cache for decimal formats. The key is a [DecimalFormatKey] data class (not the
+   * Int hash of the parameters) so that two distinct configurations with a colliding
+   * Int hash do not return each other's cached format.
    */
-  private val cache = cache<Int, CachedNumberFormat>("DecimalFormatsCache", 50)
+  private val cache = cache<DecimalFormatKey, CachedNumberFormat>("DecimalFormatsCache", 50)
 
   /**
    * Returns a (cached) decimal format with a fixed number of decimals
@@ -67,27 +69,22 @@ object DecimalFormatsCache {
      */
     useGrouping: Boolean = true
   ): CachedNumberFormat {
-    val hashCode = calculateHashCode(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
+    val key = DecimalFormatKey(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
 
-    return cache.getOrStore(hashCode) {
+    return cache.getOrStore(key) {
       DecimalFormat(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping).cached()
     }
   }
-
-  /**
-   * Calculates the hash code for the given values
-   */
-  private fun calculateHashCode(
-    maximumFractionDigits: Int,
-    minimumFractionDigits: Int,
-    minimumIntegerDigits: Int,
-    useGrouping: Boolean
-  ): Int {
-    var result = maximumFractionDigits
-    result = 31 * result + minimumFractionDigits
-    result = 31 * result + minimumIntegerDigits
-    result = 31 * result + useGrouping.hashCode()
-    return result
-  }
-
 }
+
+/**
+ * Cache key for [DecimalFormatsCache] / [PercentageFormatsCache]. Uses the data-class
+ * generated equals/hashCode so cache lookup is keyed on the full configuration tuple,
+ * not on a hash that could collide.
+ */
+internal data class DecimalFormatKey(
+  val maximumFractionDigits: Int,
+  val minimumFractionDigits: Int,
+  val minimumIntegerDigits: Int,
+  val useGrouping: Boolean,
+)

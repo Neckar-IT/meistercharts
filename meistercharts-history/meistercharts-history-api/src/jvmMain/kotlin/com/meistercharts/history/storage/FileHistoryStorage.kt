@@ -200,7 +200,14 @@ class FileHistoryStorage(
     parentFile.mkdirs()
     val file = File(parentFile, getFileName(descriptor))
 
-    file.delete()
+    // Notify observers only after we have either deleted the file or established that
+    // it never existed in the first place. file.delete() returns false when the path
+    // does not exist or when permissions blocked the delete; without this check the
+    // observers would be told the bucket is gone while the data is still on disk.
+    val deleted = file.delete()
+    check(deleted || !file.exists()) {
+      "Failed to delete history bucket file <${file.absolutePath}>"
+    }
     val updateInfo = HistoryUpdateInfo.from(descriptor)
     observers.fastForEach {
       it(updateInfo)

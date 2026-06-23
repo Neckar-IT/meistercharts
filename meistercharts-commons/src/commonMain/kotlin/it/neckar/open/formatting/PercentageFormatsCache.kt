@@ -34,9 +34,10 @@ import it.neckar.open.collections.cache
  */
 object PercentageFormatsCache {
   /**
-   * Cache for decimal formats
+   * Cache for percentage formats. Keyed on [DecimalFormatKey] data class (not Int hash)
+   * to avoid hash-collision corruption between distinct configurations.
    */
-  private val cache = cache<Int, CachedNumberFormat>("PercentageFormatsCache", 50)
+  private val cache = cache<DecimalFormatKey, CachedNumberFormat>("PercentageFormatsCache", 50)
 
   /**
    * Returns a (cached) decimal format with a fixed number of decimals
@@ -67,28 +68,11 @@ object PercentageFormatsCache {
      */
     useGrouping: Boolean = true
   ): CachedNumberFormat {
-    val hashCode = calculateHashCode(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
+    val key = DecimalFormatKey(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
 
-    return cache.getOrStore(hashCode) {
+    return cache.getOrStore(key) {
       val decimalFormat = DecimalFormatsCache.get(maximumFractionDigits, minimumFractionDigits, minimumIntegerDigits, useGrouping)
       PercentageFormat(decimalFormat).cached()
     }
   }
-
-  /**
-   * Calculates the hash code for the given values
-   */
-  private fun calculateHashCode(
-    maximumFractionDigits: Int,
-    minimumFractionDigits: Int,
-    minimumIntegerDigits: Int,
-    useGrouping: Boolean
-  ): Int {
-    var result = maximumFractionDigits
-    result = 31 * result + minimumFractionDigits
-    result = 31 * result + minimumIntegerDigits
-    result = 31 * result + useGrouping.hashCode()
-    return result
-  }
-
 }

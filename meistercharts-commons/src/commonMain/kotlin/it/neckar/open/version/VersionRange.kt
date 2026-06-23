@@ -246,12 +246,12 @@ data class VersionRange
      */
     @JvmStatic
     fun fromVersions(versions: Iterable<Version>): VersionRange {
-      var smalles: Version? = null
+      var smallest: Version? = null
       var largest: Version? = null
 
       for (version in versions) {
-        if (smalles == null || smalles.greaterThan(version)) {
-          smalles = version
+        if (smallest == null || smallest.greaterThan(version)) {
+          smallest = version
         }
 
         if (largest == null || largest.smallerThan(version)) {
@@ -260,11 +260,11 @@ data class VersionRange
       }
 
 
-      if (smalles == null || largest == null) {
+      if (smallest == null || largest == null) {
         throw IllegalArgumentException("Need at least one version")
       }
 
-      return VersionRange(smalles, largest)
+      return VersionRange(smallest, largest)
     }
   }
 }

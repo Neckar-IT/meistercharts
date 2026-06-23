@@ -446,7 +446,10 @@ fun getSlopeBetweenPoints(point1X: Double, point1Y: Double, point2X: Double, poi
 fun Coordinates.calculateCornerAngles(p1: Coordinates, p2: Coordinates): @deg Double {
   val d1 = distanceTo(p1)
   val d2 = distanceTo(p2)
-  val dotProduct = (this.x - p1.x) * (p2.x - this.x) + (this.y - p1.y) * (p2.y - this.y)
+  // Angle is measured at `this` between the rays to p1 and p2; the dot product needs
+  // the vectors (p1 - this) and (p2 - this). Using (this - p1) flipped the sign and
+  // returned the supplementary angle (180° - α).
+  val dotProduct = (p1.x - this.x) * (p2.x - this.x) + (p1.y - this.y) * (p2.y - this.y)
   return acos(dotProduct / (d1 * d2)).toDegrees()
 }
 

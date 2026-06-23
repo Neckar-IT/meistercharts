@@ -487,11 +487,9 @@ fun PixelValuesModel.fillWithSampleData() {
     }
   }
 
-  for (i in 0 until 3) {
-    liveEdgesValues = doubleArrayOf(10.1, 15.0, 77.0)
-    detectedEdgesValues = doubleArrayOf(10.0, 11.0, 15.0, 52.0)
-    teachEdgesValues = doubleArrayOf(37.0, 72.0)
-  }
+  liveEdgesValues = doubleArrayOf(10.1, 15.0, 77.0)
+  detectedEdgesValues = doubleArrayOf(10.0, 11.0, 15.0, 52.0)
+  teachEdgesValues = doubleArrayOf(37.0, 72.0)
 }
 
 /**

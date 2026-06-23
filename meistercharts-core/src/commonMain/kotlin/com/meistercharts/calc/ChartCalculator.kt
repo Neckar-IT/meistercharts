@@ -215,8 +215,8 @@ open class ChartCalculator(val chartState: ChartState) {
    */
   fun contentAreaRelative2contentArea(@ContentAreaRelative @pct coordinates: Coordinates): @ContentArea Coordinates {
     return Coordinates.of(
-      contentAreaRelative2contentAreaX(coordinates.y),
-      contentAreaRelative2contentAreaY(coordinates.x)
+      contentAreaRelative2contentAreaX(coordinates.x),
+      contentAreaRelative2contentAreaY(coordinates.y)
     )
   }
 
@@ -799,14 +799,14 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
-  fun zoomed2domainDelta(@Window @px coordinates: Coordinates, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
+  fun zoomed2domainDelta(@Zoomed @px coordinates: Coordinates, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
     return Coordinates.of(
       zoomed2domainDeltaX(coordinates.x, valueRangeX),
       zoomed2domainDeltaY(coordinates.y, valueRangeY)
     )
   }
 
-  fun zoomed2domainDelta(@Window @px distance: Distance, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
+  fun zoomed2domainDelta(@Zoomed @px distance: Distance, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
     return Coordinates.of(
       zoomed2domainDeltaX(distance.x, valueRangeX),
       zoomed2domainDeltaY(distance.y, valueRangeY)
@@ -880,8 +880,8 @@ open class ChartCalculator(val chartState: ChartState) {
 
   fun zoomed2domainRelative(@Zoomed @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
-      contentAreaRelative2domainRelativeY(coordinates.x),
-      contentAreaRelative2domainRelativeY(coordinates.y)
+      zoomed2domainRelativeX(coordinates.x),
+      zoomed2domainRelativeY(coordinates.y)
     )
   }
 
@@ -912,7 +912,7 @@ open class ChartCalculator(val chartState: ChartState) {
 
   fun contentArea2domainRelative(@ContentArea @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
-      contentArea2domainRelativeY(coordinates.x),
+      contentArea2domainRelativeX(coordinates.x),
       contentArea2domainRelativeY(coordinates.y)
     )
   }
@@ -978,21 +978,21 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaTimeRange.relative2time(relativeTime)
   }
 
-  fun window2timeY(@px @Window value: Double, contentAreaTimeRange: TimeRange): @px @Window Double {
+  fun window2timeY(@px @Window value: Double, contentAreaTimeRange: TimeRange): @Time @ms Double {
     @TimeRelative @pct val relativeTime = window2timeRelativeY(value)
     return contentAreaTimeRange.relative2time(relativeTime)
   }
 
-  fun contentAreaRelative2timeX(value: @ContentAreaRelative Double, contentAreaTimeRange: TimeRange): @px @Window Double {
+  fun contentAreaRelative2timeX(value: @ContentAreaRelative Double, contentAreaTimeRange: TimeRange): @Time @ms Double {
     @TimeRelative @pct val relativeTime = contentAreaRelative2timeRelativeX(value)
     return contentAreaTimeRange.relative2time(relativeTime)
   }
 
-  fun contentAreaRelative2timeRelativeX(value: @ContentAreaRelative Double): @ContentAreaRelative Double {
+  fun contentAreaRelative2timeRelativeX(value: @ContentAreaRelative Double): @TimeRelative @pct Double {
     return contentAreaRelative2domainRelativeX(value)
   }
 
-  fun contentAreaRelative2timeRelativeY(value: @ContentAreaRelative Double): @ContentAreaRelative Double {
+  fun contentAreaRelative2timeRelativeY(value: @ContentAreaRelative Double): @TimeRelative @pct Double {
     return contentAreaRelative2domainRelativeY(value)
   }
 

@@ -241,16 +241,12 @@ data class TileIndex(
       "mainX value ${mainX.value} is too large to be converted to int"
     }
 
-    if (mainX.value > Int.MAX_VALUE / SubIndexFactor) {
-      throw IllegalStateException("mainX value ${mainX.value} is too large to be converted to int")
-    }
-
     return mainX.value * SubIndexFactor + subX.value
   }
 
   fun yAsInt(): Int {
-    if (mainY.value > Int.MAX_VALUE / SubIndexFactor) {
-      throw IllegalStateException("mainY value ${mainY.value} is too large to be converted to int")
+    require(mainY.value < Int.MAX_VALUE / SubIndexFactor) {
+      "mainY value ${mainY.value} is too large to be converted to int"
     }
 
     return mainY.value * SubIndexFactor + subY.value

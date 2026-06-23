@@ -102,11 +102,11 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
     this.stackedBarsPainter.stackedBarPaintable.style.valueLabelFormat = it
   }
 
-  jsStyle.categoryAxisStyle?.let { jsValueAxisStyle ->
-    this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsValueAxisStyle)
-    this.categoryAxisLayer.configuration.applyCategoryAxisStyle(jsValueAxisStyle)
+  jsStyle.categoryAxisStyle?.let { jsCategoryAxisStyle ->
+    this.categoryAxisTopTitleLayer.configuration.applyTitleStyle(jsCategoryAxisStyle)
+    this.categoryAxisLayer.configuration.applyCategoryAxisStyle(jsCategoryAxisStyle)
 
-    jsValueAxisStyle.axisSize?.let {
+    jsCategoryAxisStyle.axisSize?.let {
       contentViewportMargin = contentViewportMargin.withSide(categoryAxisLayer.configuration.side, it)
     }
   }

@@ -77,17 +77,21 @@ object RuntimeContextDetector {
 
     //Resolve the host
     val hostname = forcedHostName ?: resolveHostname(source) ?: guessHostName()
-    val serviceHost = forcedHost ?: serviceHostRegistry.findByHostname(hostname)
+    val serviceHost = forcedHost ?: serviceHostRegistry.resolveHost(hostname)
 
-    //Get the execution environment profile
+    // Get the execution environment profile. The host is NOT a fallback here: a deployment receives
+    // its stage/environment via EXECUTION_ENVIRONMENT / DEPLOYMENT_STAGE (the same values the host
+    // constants declare and the DeploymentPlugin templates into the deploy config), so reading them
+    // off the host again would be redundant. When nothing is configured (local/test) we fall back to
+    // the conservative local defaults.
     val executionEnvironment: ExecutionEnvironment = forcedExecutionEnvironment ?: if (guessInCIEnvironment()) {
       ExecutionEnvironment.CI
     } else {
-      resolveProfile(source) ?: serviceHost.executionEnvironment
+      resolveProfile(source) ?: ExecutionEnvironment.LocalDev
     }
 
     //Get the deployment stage
-    val deploymentStage = forcedState ?: resolveStage(source) ?: serviceHost.deploymentStage
+    val deploymentStage = forcedState ?: resolveStage(source) ?: DeploymentStage.Development
 
     val debugging = guessDebugging()
     val inUnitTest = guessInUnitTestEnvironment()
@@ -189,20 +193,20 @@ fun <HostType: ServiceHost> RuntimeContext.Companion.initializeFromEnvironment(
  * This is useful for local development environments where you want to ensure that the context is set up correctly.
  */
 fun  RuntimeContext.Companion.initializeForLocalhost(
-  serviceHostRegistry: ServiceHostRegistry<ServiceHost.Localhost> = ServiceHost.Localhost,
+  serviceHostRegistry: ServiceHostRegistry<ServiceHost.Default> = ServiceHost.Default,
   source: RuntimeContextDetector.Source = RuntimeContextDetector.Source.default(),
 
   forcedExecutionEnvironment: ExecutionEnvironment? = null,
   forcedState: DeploymentStage? = null,
-  forcedHost: ServiceHost.Localhost? = null,
-): RuntimeContext<ServiceHost.Localhost> {
+  forcedHost: ServiceHost.Default? = null,
+): RuntimeContext<ServiceHost.Default> {
   return RuntimeContextDetector.detectFromEnvironment(
     serviceHostRegistry = serviceHostRegistry,
     source = source,
 
     forcedExecutionEnvironment = forcedExecutionEnvironment,
     forcedState = forcedState,
-    forcedHost = forcedHost ?: ServiceHost.Localhost,
+    forcedHost = forcedHost ?: ServiceHost.Default,
   ).also {
     this.current = it
   }
@@ -279,7 +283,7 @@ const val DebugWaitHelpEnableMessage: String = "Add Environment variable or syst
 /**
  * Fallback runtime context for local development.
  */
-actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
+actual fun getInitialValue(): RuntimeContext<ServiceHost.Default> {
   val guessInCIEnvironment = guessInCIEnvironment()
   val debugging = guessDebugging()
   val inUnitTest = guessInUnitTestEnvironment()
@@ -293,7 +297,7 @@ actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
   return RuntimeContext(
     executionEnvironment = executionEnvironment,
     stage = DeploymentStage.Development,
-    host = ServiceHost.Localhost,
+    host = ServiceHost.Default,
     inUnitTest = inUnitTest,
     debugMode = debugging,
     initialValue = true,

@@ -113,7 +113,7 @@ object NeckarItFlow {
     BezierCurve(
       start = Coordinates(0.00, 1.0 - 0.85 - halfWidthLeft3),
       control1 = Coordinates(0.16, 1.0 - 1.00 - halfWidthLeft3),
-      end = Coordinates(1.00, 01.0 - .49 - halfWidthRight3),
+      end = Coordinates(1.00, 1.0 - 0.49 - halfWidthRight3),
       control2 = Coordinates(0.78, 1.0 - 0.00 - halfWidthRight3)
     ),
     BezierCurve(

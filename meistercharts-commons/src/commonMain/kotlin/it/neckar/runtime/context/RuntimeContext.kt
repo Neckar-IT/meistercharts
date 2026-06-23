@@ -180,4 +180,4 @@ data class RuntimeContext<HostType: ServiceHost>(
 /**
  * Returns the initial value of the runtime context.
  */
-expect fun getInitialValue(): RuntimeContext<ServiceHost.Localhost>
+expect fun getInitialValue(): RuntimeContext<ServiceHost.Default>

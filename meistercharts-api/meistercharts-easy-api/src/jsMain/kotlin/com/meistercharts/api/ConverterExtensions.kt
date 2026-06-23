@@ -284,9 +284,9 @@ fun HistoryBucketDescriptor.toHistoryQueryDescriptorJs(): HistoryQueryDescriptor
  * Converts this JavaScript [Zoom] object into a model Zoom object
  */
 fun Zoom.toModel(): com.meistercharts.model.Zoom {
-  requireNotNull(scaleX) { "no scale-x provided " }
-  requireNotNull(scaleY) { "no scale-y provided " }
-  return com.meistercharts.model.Zoom(scaleX ?: 1.0, scaleY ?: 1.0)
+  val sx = requireNotNull(scaleX) { "no scale-x provided " }
+  val sy = requireNotNull(scaleY) { "no scale-y provided " }
+  return com.meistercharts.model.Zoom(sx, sy)
 }
 
 fun LineStyle.toModel(): com.meistercharts.algorithms.layers.linechart.LineStyle {

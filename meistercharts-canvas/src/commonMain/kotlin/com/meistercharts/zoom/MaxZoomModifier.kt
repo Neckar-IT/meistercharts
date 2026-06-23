@@ -26,8 +26,8 @@ import it.neckar.open.provider.DoubleProvider
  *
  */
 class MaxZoomModifier(
-  private var maxZoomFactorX: DoubleProvider,
-  private var maxZoomFactorY: DoubleProvider,
+  private val maxZoomFactorX: DoubleProvider,
+  private val maxZoomFactorY: DoubleProvider,
   private val delegate: ZoomAndTranslationModifier,
 ) : ZoomAndTranslationModifier {
 

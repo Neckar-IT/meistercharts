@@ -31,6 +31,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.Locale
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextResolver
+import java.util.MissingResourceException
 import java.util.ResourceBundle
 
 /**
@@ -47,7 +48,15 @@ class ResourceBundleTextResolver(
 
   override fun resolve(key: TextKey, i18nConfiguration: I18nConfiguration): String? {
     val bundle = ResourceBundle.getBundle(bundleName, i18nConfiguration.textLocale.toJvmLocale())
-    return bundle.getString(key.key)
+    return try {
+      bundle.getString(key.key)
+    } catch (ignored: MissingResourceException) {
+      // Honour the TextResolver contract (returns String?) so callers can fall through to
+      // other resolvers instead of getting an exception. ResourceBundle.getString throws
+      // MissingResourceException when the key is absent; SimpleMapBasedTextResolver and
+      // friends return null in the same situation.
+      null
+    }
   }
 }
 

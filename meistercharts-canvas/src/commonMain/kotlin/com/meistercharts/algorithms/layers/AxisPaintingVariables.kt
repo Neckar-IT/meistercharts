@@ -175,8 +175,6 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    */
   open fun reset() {
     axisTitleLocation = Double.NaN
-    axisTitleLocation = Double.NaN
-    axisContentLocation = Double.NaN
     axisContentLocation = Double.NaN
     axisLineLocation = Double.NaN
 

@@ -295,7 +295,7 @@ class GroupedBarsPainter(
           || valueRange.end <= 0.0 && barValue >= valueRange.end //The bar value is larger than the displayed value range
 
         @Window @px val barEnd = coerceInViewportX(barEndUnbound)
-        @Zoomed val barWidth = snapConfiguration.snapYSize(barEnd - barStart)
+        @Zoomed val barWidth = snapConfiguration.snapXSize(barEnd - barStart)
 
         @Window val top = center - boxSizeSnapped / 2.0
 

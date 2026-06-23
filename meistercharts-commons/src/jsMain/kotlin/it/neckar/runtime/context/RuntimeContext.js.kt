@@ -27,11 +27,11 @@
  */
 package it.neckar.runtime.context
 
-actual fun getInitialValue(): RuntimeContext<ServiceHost.Localhost> {
+actual fun getInitialValue(): RuntimeContext<ServiceHost.Default> {
   return RuntimeContext(
     executionEnvironment = ExecutionEnvironment.LocalDev,
     stage = DeploymentStage.Development,
-    host = ServiceHost.Localhost,
+    host = ServiceHost.Default,
     inUnitTest = false, // Browser apps don't run in unit tests
     debugMode = false, // Not detectable in browser
     initialValue = true,
