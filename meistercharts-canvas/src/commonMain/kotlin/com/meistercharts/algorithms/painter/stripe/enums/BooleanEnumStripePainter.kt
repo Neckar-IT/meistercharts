@@ -54,7 +54,7 @@ class BooleanEnumStripePainter(
     }
     historyEnum.values[1].ordinal.let {
       require(it.value == 1) {
-        "Second ordinal must be 0 but was <${it}>"
+        "Second ordinal must be 1 but was <${it}>"
       }
     }
 

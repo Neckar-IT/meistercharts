@@ -89,6 +89,10 @@ data class ModifierCombination(
         return None
       }
 
+      if (Shift.matches(shift, control, alt, meta)) {
+        return Shift
+      }
+
       if (Alt.matches(shift, control, alt, meta)) {
         return Alt
       }

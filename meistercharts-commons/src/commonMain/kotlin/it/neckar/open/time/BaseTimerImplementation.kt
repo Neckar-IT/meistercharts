@@ -105,7 +105,7 @@ abstract class BaseTimerImplementation : TimerImplementation {
 
   override fun repeat(delay: Duration, callback: () -> Unit): Disposable {
     @ms val delayInMillis = delay.toDouble(DurationUnit.MILLISECONDS)
-    require(delayInMillis >= 1) { "delay must be at least 1 millisecond but was $delay" }
+    require(delayInMillis >= 1) { "delay must be at least 1 millisecond but was $delayInMillis" }
 
     val entry = RepeatEntry(delayInMillis, nowMillis() + delayInMillis, callback)
     repeatCallbacks.add(entry)

@@ -253,7 +253,7 @@ data class Rectangle(
     }
 
     fun centerTop(size: Size): Rectangle {
-      return Rectangle(Coordinates.of(-size.width / 2.0, size.height), size)
+      return Rectangle(Coordinates.of(-size.width / 2.0, 0.0), size)
     }
 
     fun centerBottom(size: Size): Rectangle {

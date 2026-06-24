@@ -52,62 +52,96 @@ object KotlinSettings {
    */
 
   /**
-   * The free compiler args that must be used to configure the Kotlin compiler tasks.
-   * These args are used for both JS and JVM.
+   * Free compiler args applied to every Kotlin compilation (common, JVM and JS).
    *
-   * See the links above for a list of all available compiler arguments per Kotlin version.
+   * Flags are grouped by status:
+   * - **Diagnostics & language mode** — permanent policy toggles, not tied to a language version.
+   * - **Stabilization-track features** — opt-in today; each becomes the language-version default in a
+   *   later Kotlin release, at which point the compiler prints
+   *   `The argument '<flag>' is redundant for the current language version <v>`. Drop the flag then.
+   * - **Not active** — every other relevant flag, documented with its purpose and the reason it is off
+   *   (already default at LV 2.4, deferred, no effect, deprecated, …). Kept for reference, not enabled.
+   *
+   * Scope: this catalogs language features and project-level quality / diagnostics / interop decisions for
+   * Kotlin 2.2–2.4 — every flag we choose, active or not. Compiler/build-system plumbing (incremental
+   * compilation, module & classpath, IR/codegen internals, Wasm/Native targets, debug dumps) is intentionally
+   * omitted: the Gradle Kotlin plugin manages it, it is not a decision made here. Full list: `kotlinc -X`.
+   *
+   * Redundancy audit (run on every Kotlin / language-version bump): recompile and
+   * `grep "is redundant for the current language version"` — a flag that warns has become the LV default;
+   * move it from active into the "already default" list below. See the per-version argument-source links above.
    */
   val freeCompilerArgs: List<String> = buildList {
+    // Opt-ins for the experimental APIs we use.
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" })
-    add("-progressive")
-    add("-Wextra")
 
-    add("-Xwarning-level=NOTHING_TO_INLINE:disabled")
+    // Diagnostics & language mode (permanent policy, not language-version gated).
+    add("-progressive") // apply new deprecations/migrations eagerly
+    add("-Wextra") // extra opt-in compiler warnings
+    add("-Xwarning-level=NOTHING_TO_INLINE:disabled") // do not warn on intentionally non-inline-worthy `inline` funs
+    add("-Xreturn-value-checker=full") // report unused return values... (2.2)
+    add("-Xwarning-level=RETURN_VALUE_NOT_USED:error") // ...and treat them as errors
+    add("-XXexplicit-return-types=warning") // require explicit return types on public API (full -Xexplicit-api deferred, see #1944)
 
-    add("-XXexplicit-return-types=warning")
-    add("-Xexpect-actual-classes") // https://youtrack.jetbrains.com/issue/KT-61573
-    add("-Xconsistent-data-class-copy-visibility") // https://youtrack.jetbrains.com/issue/KT-11914
+    // Stabilization-track features (opt-in until they become the language-version default).
+    add("-Xexpect-actual-classes") // silence expect/actual-class beta warning — KT-61573
+    add("-Xconsistent-data-class-copy-visibility") // opt into the future default data-class copy() visibility — KT-11914
+    add("-Xcontext-sensitive-resolution") // context-sensitive resolution (2.2)
+    add("-Xname-based-destructuring=only-syntax") // name-based destructuring (2.3) — https://kotlinlang.org/docs/whatsnew2320.html
+    add("-Xexplicit-context-arguments") // explicit passing of context arguments via named-argument syntax (2.4) — https://kotlinlang.org/docs/whatsnew-eap.html
+    add("-Xcollection-literals") // bracket-syntax `[]` collection literals (2.4)
+    add("-Xintrinsic-const-evaluation") // IntrinsicConstEvaluation language feature (2.4)
+    add("-Xlocal-type-aliases") // `typealias` inside function bodies (2.4) — enabled in #1944
 
-    // Kotlin 2.2.x
-    add("-Xreturn-value-checker=full")
-    add("-Xwarning-level=RETURN_VALUE_NOT_USED:error")
-    add("-Xcontext-sensitive-resolution")
-
-    add("-Xname-based-destructuring=only-syntax") // https://kotlinlang.org/docs/whatsnew2320.html
-
-    // Kotlin 2.4.x — newly introduced opt-in flags
-    add("-Xexplicit-context-arguments") // explicit context arguments — https://kotlinlang.org/docs/whatsnew-eap.html
-    add("-Xcollection-literals") // bracket-syntax `[]` collection literals
-    add("-Xintrinsic-const-evaluation") // enables IntrinsicConstEvaluation language feature
-
-    // Candidates to evaluate in a follow-up — enable individually after measuring noise:
-    // add("-Xreport-all-warnings") // emit warnings even when errors are present
-    // add("-Xdata-flow-based-exhaustiveness") // experimental; `when` exhaustiveness via data-flow analysis
-    // add("-Xnested-type-aliases") // experimental; allow `object Foo { typealias Bar = ... }`
-    // add("-Xlocal-type-aliases") // experimental; type aliases inside function bodies
-    // add("-Xmulti-dollar-interpolation") // experimental; `$$${...}` template syntax
+    // Not active — documented for reference. Status verified against the Kotlin 2.4.0 compiler (#1944).
+    //
+    // Already the DEFAULT at language version 2.4 — these language features are usable today WITHOUT any
+    // flag; the flag only emits "is redundant for the current language version 2.4". Re-check on LV bumps:
+    //   -Xnested-type-aliases             nested `typealias`, e.g. `object Foo { typealias Bar = ... }`
+    //   -Xdata-flow-based-exhaustiveness  `when` exhaustiveness via data-flow analysis
+    //   -Xmulti-dollar-interpolation      multi-dollar string templates (`$$"..."`), already used repo-wide
+    //   -Xwhen-guards                     guard conditions in `when` (`is Foo if cond -> ...`)
+    //   -Xnon-local-break-continue        `break`/`continue` out of inline-lambda loops
+    //   -Xexplicit-backing-fields         explicit backing fields (`val x: T get() = field`)
+    //   -Xcontext-parameters              `context(...)` parameters (the language feature itself)
+    //
+    // Deferred:
+    //   -Xexplicit-api[=warning|strict]   also require explicit visibility on public API. #1944: 25,370
+    //                                     violations at =warning (24,885 visibility + 485 return-type), far
+    //                                     above the cleanup threshold, and warnings are globally suppressed
+    //                                     anyway. Active -XXexplicit-return-types=warning covers the return half.
+    //
+    // Available but deliberately off:
+    //   -Xreport-all-warnings             no effect — warning-level diagnostics are globally suppressed (suppressWarnings=true)
+    //   -Xallow-returns-result-of         would force PRE-RELEASE binaries (returnsResultOf contract feeding the
+    //                                     return-value checker); not worth the pre-release constraint
+    //   -Xvalue-classes                   DEPRECATED flag; multi-field value classes stay experimental behind
+    //                                     -XXLanguage:+JvmInlineMultiFieldValueClasses. No use case.
   }
 
   /**
-   * Additional compiler args - only used for JS
+   * Additional free compiler args for the JS target only (appended to [freeCompilerArgs]).
+   * All permanent JS code-generation policy — none are language-version gated.
    */
   val additionalFreeCompilerArgsJS: List<String> = buildList {
-    add("-Xfake-override-validator")
-    add("-Xoptimize-generated-js")
-
-    // Kotlin 2.2.x
-    add("-Xes-long-as-bigint")
-
-    // Required: -Xir-dce must be set in combination with -Xir-dce-print-reachability-info
-    add("-Xir-dce-print-reachability-info")
-    add("-Xir-dce")
+    add("-Xfake-override-validator") // validate fake overrides in the JS IR
+    add("-Xoptimize-generated-js") // optimize the generated JS
+    add("-Xes-long-as-bigint") // represent Kotlin Long as JS BigInt (2.2)
+    add("-Xir-dce") // dead-code elimination on the JS IR
+    add("-Xir-dce-print-reachability-info") // companion to -Xir-dce (must be combined with it)
   }
 
   /**
-   * Additional compiler args - only used for the JVM
+   * Additional compiler args - only used for the JVM.
+   *
+   * [enhancedCoroutinesDebugging] appends `-Xenhanced-coroutines-debugging`, which adds line-number
+   * instructions to every compiler-generated suspend func/lambda so a debugger can distinguish them
+   * from user code. Off by default — it bloats bytecode across all 646 `suspend fun` files repo-wide.
+   * Enable per build with `-PenhancedCoroutinesDebugging` when stepping through coroutines in a debugger.
    */
-  val additionalFreeCompilerArgsJVM: List<String> = buildList {
-    add("-Xjsr305=strict")
+  fun additionalFreeCompilerArgsJVM(enhancedCoroutinesDebugging: Boolean): List<String> = buildList {
+    // Permanent JVM bytecode/interop policy — none are language-version gated.
+    add("-Xjsr305=strict") // treat JSR-305 nullability annotations strictly
     // Compile against the specified JDK API version (analogous to javac's --release).
     // Setting this also pins -jvm-target to the same version, so newer JDK APIs are
     // rejected by the compiler — protects against an unnoticed build-JDK bump.
@@ -115,8 +149,13 @@ object KotlinSettings {
     add("-Xemit-jvm-type-annotations") // type annotations (e.g. nullability on generics) in bytecode
     add("-Xuse-inline-scopes-numbers") // better stack traces for inline functions (Coroutines, Sequences)
 
-    // Candidates to evaluate in a follow-up — enable individually after measuring impact:
-    // add("-Xenhance-type-parameter-types-to-def-not-null") // `@NotNull T` => `T & Any`; may break Java-interop wrappers
-    // add("-Xenhanced-coroutines-debugging") // extra line-numbers for compiler-generated suspend code
+    // Opt-in (off by default), toggled per build by -PenhancedCoroutinesDebugging — see the KDoc above.
+    if (enhancedCoroutinesDebugging) {
+      add("-Xenhanced-coroutines-debugging") // #1944: line-numbers for compiler-generated suspend code
+    }
+
+    // Not active — documented for reference (#1944). Already the DEFAULT at language version 2.4:
+    //   -Xenhance-type-parameter-types-to-def-not-null  `@NotNull T` => `T & Any` (definitely-non-null) at the
+    //     Java-interop boundary — already active at LV 2.4; the flag only emits a redundancy warning.
   }
 }

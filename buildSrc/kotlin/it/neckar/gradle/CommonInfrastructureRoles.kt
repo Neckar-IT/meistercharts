@@ -140,3 +140,22 @@ fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCo
  * task registered in each worker's `build.gradle.kts`.
  */
 fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.applyTo(this)
+
+/**
+ * The shared host-stack compose fragments a host can fold into its materialized
+ * `docker-compose/` directory. Declared on the `deployment { … }` extension so the
+ * host-stack deploys through the same plugin as every other container, instead of a
+ * hand-rolled `processResources` configuration.
+ */
+enum class CommonComposeRole {
+  Traefik,
+  OtelAgent,
+  HostExporters,
+}
+
+/** Applies the [role]'s shared compose fragment to this copy task's destination. */
+fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (role) {
+  CommonComposeRole.Traefik -> includeCommonTraefikCompose()
+  CommonComposeRole.OtelAgent -> includeCommonOtelAgentCompose()
+  CommonComposeRole.HostExporters -> includeCommonHostExportersCompose()
+}

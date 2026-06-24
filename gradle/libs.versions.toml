@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.6.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.7.0" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.14.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.15.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -45,7 +45,7 @@ kotlin = "2.4.0"
 
 org-asciidoctor = "4.0.5"
 
-jackson = "2.21.4"
+jackson = "2.22.0"
 
 org-slf4j = "2.0.18"
 
@@ -68,13 +68,13 @@ org-mongodb = "5.8.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.99"
+aws-sdk-kotlin = "1.6.100"
 
 apache-poi = "5.5.1"
 
 com-atlassian-commonmark = "0.17.0"
 
-org-commonmark = "0.28.0"
+org-commonmark = "0.29.0"
 
 org-bouncycastle = "1.84"
 
@@ -84,7 +84,7 @@ com-github-docker-java = "3.7.1"
 
 com-miglayout = "11.4.3"
 
-dev-zacsweers-kctfork = "0.13.0-alpha01"
+dev-zacsweers-kctfork = "0.13.0"
 
 org-apache-xmlgraphics = "1.19"
 
@@ -102,7 +102,7 @@ de-undercouch-download = "5.7.0"
 
 com-vanniktech-maven-publish = "0.36.0"
 
-kotest-property = "6.1.11"
+kotest-property = "6.2.1"
 
 assertj = "3.27.7"
 
@@ -128,7 +128,7 @@ mockk = "1.14.11"
 
 modbus = "1.2.2"
 
-okhttp3 = "5.3.2"
+okhttp3 = "5.4.0"
 
 opentelemetry = "1.62.0"
 
@@ -136,7 +136,7 @@ opentelemetry-instrumentation = "2.25.0-alpha"
 
 opentelemetry-javaagent = "2.28.1"
 
-micrometer = "1.16.5"
+micrometer = "1.17.0"
 
 caffeine = "3.2.4"
 
@@ -228,7 +228,7 @@ awaitility = "org.awaitility:awaitility:4.3.0"
 measured = "io.nacular.measured:measured:0.5.0"
 
 # jackson-annotations 2.20.1 doesn't exist on Maven Central - use 2.20
-jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.21" }
+jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.22" }
 
 guava = "com.google.guava:guava:33.6.0-jre"
 
@@ -300,7 +300,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.46.14"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.46.15"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

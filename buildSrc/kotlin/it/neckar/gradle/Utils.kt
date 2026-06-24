@@ -372,6 +372,14 @@ fun JavaToolchainSpec.configureJavaToolchain(javaLanguageVersion: JavaLanguageVe
 }
 
 /**
+ * Whether `-Xenhanced-coroutines-debugging` is enabled for this build, controlled by the
+ * `-PenhancedCoroutinesDebugging` Gradle property. Present (any value other than `false`) enables it;
+ * absent disables it. Off by default — see [KotlinSettings.additionalFreeCompilerArgsJVM].
+ */
+fun Project.isEnhancedCoroutinesDebuggingEnabled(): Boolean =
+  providers.gradleProperty("enhancedCoroutinesDebugging").orNull?.let { it != "false" } ?: false
+
+/**
  * Configures the Kotlin config todo attempt to add flags here
  */
 fun Project.configureKotlin() {
@@ -389,7 +397,7 @@ fun Project.configureKotlin() {
   }
 
   tasks.withType<KotlinJvmCompile> {
-    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM(project.isEnhancedCoroutinesDebuggingEnabled()))
     compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
   }
 
@@ -426,7 +434,7 @@ fun Project.configureKotlinJvmOnly() {
   }
 
   tasks.withType<KotlinJvmCompile> {
-    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM)
+    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM(project.isEnhancedCoroutinesDebuggingEnabled()))
     compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
   }
 

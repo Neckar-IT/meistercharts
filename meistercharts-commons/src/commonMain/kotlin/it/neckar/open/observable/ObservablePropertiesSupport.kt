@@ -67,7 +67,10 @@ open class ObservablePropertiesSupport(
    * Notifies all listeners about a change.
    */
   fun notifyChange(oldValue: Any?, newValue: Any?) {
-    valueChangeListeners.fastForEach { listener ->
+    // Snapshot before iterating: a listener may dispose itself (or another listener)
+    // during the call, which removes from valueChangeListeners and would otherwise
+    // corrupt the iteration. Same fix as DefaultObservable.notifyListeners.
+    valueChangeListeners.toList().fastForEach { listener ->
       listener(oldValue, newValue)
     }
   }

@@ -27,7 +27,7 @@
  */
 package it.neckar.open.collections
 
-inline fun IntRange.toIntList(): IntArrayList = IntArrayList(this.endInclusive - this.start).also { for (v in this.start..this.endInclusive) it.add(v) }
+inline fun IntRange.toIntList(): IntArrayList = IntArrayList(this.endInclusive - this.start + 1).also { for (v in this.start..this.endInclusive) it.add(v) }
 
 inline fun Iterable<Int>.toIntList(): IntArrayList = IntArrayList().also { for (v in this) it.add(v) }
 inline fun Iterable<Float>.toFloatList(): FloatArrayList = FloatArrayList().also { for (v in this) it.add(v) }
