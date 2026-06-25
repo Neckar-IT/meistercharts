@@ -189,10 +189,10 @@ fun historyConfiguration(
       "You need to create a decimal data series entry for each data series. Was ${it.decimalDataSeriesCount} but expected $decimalDataSeriesCount"
     }
     require(it.enumDataSeriesCount == enumDataSeriesCount) {
-      "You need to create a enum data series entry for each data series. Was ${it.decimalDataSeriesCount} but expected $decimalDataSeriesCount"
+      "You need to create a enum data series entry for each data series. Was ${it.enumDataSeriesCount} but expected $enumDataSeriesCount"
     }
     require(it.referenceEntryDataSeriesCount == referenceEntrySeriesCount) {
-      "You need to create a referenceEntry data series entry for each data series. Was ${it.decimalDataSeriesCount} but expected $decimalDataSeriesCount"
+      "You need to create a referenceEntry data series entry for each data series. Was ${it.referenceEntryDataSeriesCount} but expected $referenceEntrySeriesCount"
     }
   }
 }

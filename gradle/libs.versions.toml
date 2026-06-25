@@ -100,7 +100,7 @@ shadow = "9.4.1"
 
 de-undercouch-download = "5.7.0"
 
-com-vanniktech-maven-publish = "0.36.0"
+com-vanniktech-maven-publish = "0.37.0"
 
 kotest-property = "6.2.1"
 
@@ -130,11 +130,11 @@ modbus = "1.2.2"
 
 okhttp3 = "5.4.0"
 
-opentelemetry = "1.62.0"
+opentelemetry = "1.63.0"
 
-opentelemetry-instrumentation = "2.25.0-alpha"
+opentelemetry-instrumentation = "2.29.0-alpha"
 
-opentelemetry-javaagent = "2.28.1"
+opentelemetry-javaagent = "2.29.0"
 
 micrometer = "1.17.0"
 

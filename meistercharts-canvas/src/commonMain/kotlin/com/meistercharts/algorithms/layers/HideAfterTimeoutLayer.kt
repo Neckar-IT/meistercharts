@@ -38,25 +38,31 @@ class HideAfterTimeoutLayer<T : Layer>(
     get() = delegate.type
 
   /**
-   * Subscription on [delegate]'s visibleProperty, kept on the instance so its lifetime is tied to
+   * Subscription on [delegate]'s visibleProperty. Wired in [initialize] (not in the
+   * property initializer) because the timer hand-off needs [timerSupport], which only
+   * exists once [initialize] has run. Kept on the instance so its lifetime is tied to
    * this layer.
    */
   @Suppress("unused")
-  private val visiblePropertySubscription: Disposable = delegate.visibleProperty.consume(false) {
-    if (it) {
-      lastShowTime = nowMillis()
-
-      timerSupport.delay(duration) {
-        delegate.visibleProperty.value = false
-      }
-    }
-  }
+  private var visiblePropertySubscription: Disposable? = null
 
   private lateinit var timerSupport: TimerSupport
 
   override fun initialize(paintingContext: LayerPaintingContext) {
     super.initialize(paintingContext)
     timerSupport = paintingContext.chartSupport.timerSupport
+
+    if (visiblePropertySubscription == null) {
+      visiblePropertySubscription = delegate.visibleProperty.consume(false) {
+        if (it) {
+          lastShowTime = nowMillis()
+
+          timerSupport.delay(duration) {
+            delegate.visibleProperty.value = false
+          }
+        }
+      }
+    }
   }
 }
 
