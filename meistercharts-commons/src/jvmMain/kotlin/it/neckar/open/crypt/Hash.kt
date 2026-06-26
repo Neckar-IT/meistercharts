@@ -30,6 +30,7 @@ package it.neckar.open.crypt
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import java.io.Serializable
+import java.security.MessageDigest
 
 /**
  * Represents a hash value
@@ -67,7 +68,11 @@ class Hash(
     if (other !is Hash) return false
 
     if (algorithm != other.algorithm) return false
-    if (!value.contentEquals(other.value)) return false
+    // MessageDigest.isEqual provides a constant-time comparison: the running time
+    // does not depend on how many leading bytes match. ByteArray.contentEquals
+    // short-circuits at the first mismatching byte, which leaks the matching prefix
+    // length when Hash is used to verify MAC/auth-code values.
+    if (MessageDigest.isEqual(value, other.value).not()) return false
 
     return true
   }

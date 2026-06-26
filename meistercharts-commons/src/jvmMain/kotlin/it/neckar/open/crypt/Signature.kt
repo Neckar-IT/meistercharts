@@ -27,6 +27,8 @@
  */
 package it.neckar.open.crypt
 
+import java.security.MessageDigest
+
 /**
  * Represents a signature
  */
@@ -47,7 +49,9 @@ class Signature(bytes: ByteArray) {
     if (this === other) return true
     if (other !is Signature) return false
 
-    return bytes.contentEquals(other.bytes)
+    // MessageDigest.isEqual provides a constant-time comparison so that signature
+    // verification does not leak the matching-prefix length via timing.
+    return MessageDigest.isEqual(bytes, other.bytes)
   }
 
   override fun hashCode(): Int {

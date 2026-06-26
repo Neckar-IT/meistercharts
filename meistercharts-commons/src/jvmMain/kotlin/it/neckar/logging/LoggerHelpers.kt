@@ -27,28 +27,37 @@
  */
 package it.neckar.logging
 
-import org.slf4j.LoggerFactory
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.companionObject
-
 /**
- * Provides a slf4j logger that resolves the name of the enclosing class, automatically.
+ * Returns a [Logger] named after the receiver's runtime class (its fully qualified name).
  *
- * Prefer the inline reified [logger] / [LoggerFactory.getLogger] helpers for new code.
- * `LoggerDelegate` remains the right choice for properties on a base class that does not know its concrete `T` at compile time,
- * or when the logger must be looked up lazily.
+ * Inlined and reified: zero reflection, zero allocation beyond the SLF4J call itself.
+ *
+ * ```kotlin
+ * class FooService {
+ *   private val logger = logger()
+ * }
+ * ```
+ *
+ * For `companion object` properties prefer the symmetric form [LoggerFactory.getLogger]`<MyClass>()`
+ * — declaring `logger()` inside a companion resolves [T] to `Companion`, not the enclosing class.
+ *
+ * JVM-only by design: SLF4J semantics are JVM-anchored, and Kotlin/JS would silently degrade the
+ * logger name to the simple name (no `KClass.qualifiedName` on JS for general classes).
  */
-class LoggerDelegate<in R : Any> : ReadOnlyProperty<R, Logger> {
-  override fun getValue(thisRef: R, property: KProperty<*>): Logger = LoggerFactory.getLogger(getClassForLogging(thisRef.javaClass))
-}
+inline fun <reified T : Any> T.logger(): Logger = LoggerFactory.getLogger(T::class)
 
 /**
- * Extracts the class for logging
+ * Returns a [Logger] named after the type argument [T]. Intended for `companion object` properties
+ * where `this` is the companion and [logger] would resolve to `Companion`.
+ *
+ * ```kotlin
+ * class FooService {
+ *   companion object {
+ *     private val logger = LoggerFactory.getLogger<FooService>()
+ *   }
+ * }
+ * ```
+ *
+ * JVM-only by design (see [logger]).
  */
-fun <T : Any> getClassForLogging(javaClass: Class<T>): Class<*> {
-  return javaClass.enclosingClass?.takeIf {
-    it.kotlin.companionObject?.java == javaClass
-  } ?: javaClass
-}
-
+inline fun <reified T : Any> LoggerFactory.getLogger(): Logger = getLogger(T::class)

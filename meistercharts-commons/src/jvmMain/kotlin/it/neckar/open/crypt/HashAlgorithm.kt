@@ -132,9 +132,19 @@ data class HashAlgorithm(
   }
 
   companion object {
+    /**
+     * MD5 is cryptographically broken and **must not** be used for authentication, MAC,
+     * password hashing, or signature verification. Acceptable only for non-security
+     * data-integrity hashing (file fingerprints, cache keys). Use [SHA256] or stronger.
+     */
     val MD5: HashAlgorithm = HashAlgorithm("MD5", 128)
 
-    val SHA1: HashAlgorithm = HashAlgorithm("SHA1", 128, "SHA-1")
+    /**
+     * SHA-1 is cryptographically broken and **must not** be used for authentication, MAC,
+     * password hashing, or signature verification. Acceptable only for non-security
+     * data-integrity hashing (file fingerprints, cache keys). Use [SHA256] or stronger.
+     */
+    val SHA1: HashAlgorithm = HashAlgorithm("SHA1", 160, "SHA-1")
     val SHA224: HashAlgorithm = HashAlgorithm("SHA-224", 224, "SHA224")
     val SHA256: HashAlgorithm = HashAlgorithm("SHA-256", 256, "SHA256")
     val SHA384: HashAlgorithm = HashAlgorithm("SHA-384", 384, "SHA384")

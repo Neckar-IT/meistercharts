@@ -68,7 +68,7 @@ org-mongodb = "5.8.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.6.100"
+aws-sdk-kotlin = "1.6.102"
 
 apache-poi = "5.5.1"
 
@@ -96,7 +96,7 @@ kover = "0.9.8"
 
 node-gradle = "7.1.0"
 
-shadow = "9.4.1"
+shadow = "9.4.2"
 
 de-undercouch-download = "5.7.0"
 
@@ -197,7 +197,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.34"
+logback-classic = "ch.qos.logback:logback-classic:1.5.35"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -300,11 +300,11 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.46.15"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.46.17"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
-night-config-toml = "com.electronwill.night-config:toml:3.8.4"
+night-config-toml = "com.electronwill.night-config:toml:3.9.0"
 
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest-property" }
 
@@ -465,7 +465,7 @@ netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty
 
 netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
 
-threeten-extra = "org.threeten:threeten-extra:1.9.0"
+threeten-extra = "org.threeten:threeten-extra:1.10.0"
 
 javax-mail-api = "javax.mail:javax.mail-api:1.6.2"
 
@@ -500,7 +500,7 @@ commons-cli = "commons-cli:commons-cli:1.11.0"
 
 java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.17"
 
-javassist = "org.javassist:javassist:3.31.0-GA"
+javassist = "org.javassist:javassist:3.32.0-GA"
 
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 
