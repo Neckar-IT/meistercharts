@@ -58,6 +58,18 @@ private val CommonHostExportersCompose = CommonInfrastructureRole(
   destinationSubdir = "docker-compose",
 )
 
+private val CommonHostManagementCompose = CommonInfrastructureRole(
+  sourceSubdir = "host-management",
+  includePattern = "docker-compose-common-*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonHostLogsCompose = CommonInfrastructureRole(
+  sourceSubdir = "host-logs",
+  includePattern = "docker-compose-common-*.yml",
+  destinationSubdir = "docker-compose",
+)
+
 private val CommonWorkerHostScripts = CommonInfrastructureRole(
   sourceSubdir = "worker-host",
   includePattern = "*.sh",
@@ -129,15 +141,37 @@ fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.ap
 fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCompose.applyTo(this)
 
 /**
- * Pulls in the shared worker-host orchestration scripts (e.g., `bootstrap.sh`).
- * These scripts sit at the root of the build output directory and are intended
- * to be executed locally against the target host (not copied to the host).
+ * Pulls in the shared host-management compose fragment (portainer + watchtower) into
+ * `docker-compose/`. Every host runs these host-level tools via its host stack
+ * (see [CommonComposeRole.HostManagement], folded into `hostStack()`).
+ *
+ * portainer publishes only to 127.0.0.1 (SSH-tunnel access); watchtower exposes no port.
+ * Neither needs secrets.
+ */
+fun AbstractCopyTask.includeCommonHostManagementCompose() = CommonHostManagementCompose.applyTo(this)
+
+/**
+ * Pulls in the shared host-logs compose fragment (Dozzle) into `docker-compose/`.
+ *
+ * Opt-in per host via an explicit `composeRole(CommonComposeRole.HostLogs)` — NOT part of
+ * `hostStack()`. Dozzle is public (via Traefik) and guarded only by a Keycloak OIDC
+ * middleware, so a host may enable it only once it supplies `logs-keycloak-client-id`,
+ * `logs-keycloak-client-secret`, `traefik-oidc-encryption-secret` and DNS for `logs.<host>`.
+ */
+fun AbstractCopyTask.includeCommonHostLogsCompose() = CommonHostLogsCompose.applyTo(this)
+
+/**
+ * Pulls in the shared worker-host runner-registration scripts (`register-runners.sh`,
+ * `setup-gitlab-runner.sh`, `setup-restricted-runner.sh`). These scripts sit at the root
+ * of the build output directory and are intended to be executed locally against the target
+ * host (not copied to the host).
  *
  * Target: `*.sh` files from `common/worker-host/` → build-output root.
  *
  * Used by worker hosts that run a GitLab Runner (see `:worker-01-host.neckar.it`,
- * `:worker-02-host.neckar.it`). The one-command entry point is the Gradle `bootstrap`
- * task registered in each worker's `build.gradle.kts`.
+ * `:worker-02-host.neckar.it`), where they back the `registerRunners` task. The one-command
+ * `bootstrap` task in each worker's `build.gradle.kts` chains `provision` → `registerRunners`
+ * → `deploy`.
  */
 fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.applyTo(this)
 
@@ -151,6 +185,8 @@ enum class CommonComposeRole {
   Traefik,
   OtelAgent,
   HostExporters,
+  HostManagement,
+  HostLogs,
 }
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */
@@ -158,4 +194,6 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
   CommonComposeRole.Traefik -> includeCommonTraefikCompose()
   CommonComposeRole.OtelAgent -> includeCommonOtelAgentCompose()
   CommonComposeRole.HostExporters -> includeCommonHostExportersCompose()
+  CommonComposeRole.HostManagement -> includeCommonHostManagementCompose()
+  CommonComposeRole.HostLogs -> includeCommonHostLogsCompose()
 }

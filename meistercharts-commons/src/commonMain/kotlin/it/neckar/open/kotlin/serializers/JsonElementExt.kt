@@ -90,7 +90,10 @@ fun JsonBuilder.defaultJsonConfiguration(
   inclusionStrategy: JsonInclusionStrategy = JsonInclusionStrategy.EncodeDefaultsIncludeNulls,
 ) {
   prettyPrint = prettyPrintEnabled
-  prettyPrintIndent = "  "
+  // kotlinx rejects a non-default prettyPrintIndent unless prettyPrint is on, so only set it then.
+  if (prettyPrintEnabled) {
+    prettyPrintIndent = "  "
+  }
 
   this.encodeDefaults = inclusionStrategy.encodeDefaults
   this.explicitNulls = inclusionStrategy.explicitNulls

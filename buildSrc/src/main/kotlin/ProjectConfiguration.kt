@@ -66,7 +66,11 @@ object ProjectConfiguration {
 fun Project.configureDetekt(additionalConfig: DetektExtension.() -> Unit) {
   extensions.getByType(DetektExtension::class.java).apply {
     config.from(rootProject.files("config/detekt/detekt.yml"))
-    parallel = true
+    // Detekt's default (false): per-module multithreading races on the Kotlin compiler's
+    // non-thread-safe KotlinCliJavaFileManagerImpl during type resolution and crashes
+    // intermittently with `ArrayIndexOutOfBoundsException` at the internal map's rehash().
+    // Same root cause and fix as the main build's configureDetekt. Refs: detekt#5403, detekt#2629.
+    parallel = false
     buildUponDefaultConfig = true
     additionalConfig()
   }

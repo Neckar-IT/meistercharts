@@ -197,7 +197,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.35"
+logback-classic = "ch.qos.logback:logback-classic:1.5.36"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
