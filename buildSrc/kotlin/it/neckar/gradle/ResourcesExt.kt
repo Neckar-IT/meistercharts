@@ -163,14 +163,30 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
   require(file.isFile) { "Must be a file @ ${file.absolutePath}" }
   file.forEachLine { line ->
     //Find the line that contains the invalid pattern! Print the found pattern and line number
-    variablePattern.find(line)?.let { match ->
-      logger.error("Remaining variable pattern found: [${project.ansiConsole.red(match.value)}] in file: [${project.ansiConsole.red(file)}] in line: [$line]")
-      throw GradleException("Remaining variable pattern found: [${match.value}] in file: [${file}] in line: [$line]")
+    findUnresolvedVariable(line)?.let { match ->
+      logger.error("Remaining variable pattern found: [${project.ansiConsole.red(match)}] in file: [${project.ansiConsole.red(file)}] in line: [$line]")
+      throw GradleException("Remaining variable pattern found: [$match] in file: [$file] in line: [$line]")
     }
   }
 }
 
 /**
- * A regex pattern to find variables in the form of "${*}"
+ * Returns the unresolved `${…}` placeholder found in [line], or `null` if the line carries none.
+ *
+ * A `${…}` preceded by a backslash (`\${…}`) is a deliberately escaped shell expansion: the
+ * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
+ * (e.g. `short=\${fqdn%%.*}` inside an `ssh "root@$host" "…"` block, where `$host` is expanded
+ * locally but `${fqdn%%.*}` must run remotely). Such escaped occurrences are not unresolved
+ * placeholders and are ignored. An unescaped `${key}` that no replacement filled is a real error
+ * and is returned.
  */
-private val variablePattern = "\\$\\{.*}".toRegex()
+internal fun findUnresolvedVariable(line: String): String? {
+  return variablePattern.find(line)?.value
+}
+
+/**
+ * Matches an unescaped variable of the form "${*}". The negative lookbehind `(?<!\\)` skips a
+ * `${…}` escaped with a leading backslash (`\${…}`), which denotes an intentional runtime shell
+ * expansion rather than an unresolved deployment placeholder.
+ */
+private val variablePattern = "(?<!\\\\)\\$\\{.*}".toRegex()
