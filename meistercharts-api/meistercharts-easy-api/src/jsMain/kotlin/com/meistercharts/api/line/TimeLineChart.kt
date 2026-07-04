@@ -246,11 +246,11 @@ class TimeLineChart internal constructor(
     gestalt.timeLineChartGestalt.applyStyle(jsStyle)
 
     jsStyle.showToolbar?.let {
-      gestalt.style.showToolbar = it
+      gestalt.configuration.showToolbar = it
     }
 
     jsStyle.showMouseWheelModifierHint?.let {
-      gestalt.style.showMouseWheelModifierHint = it
+      gestalt.configuration.showMouseWheelModifierHint = it
     }
 
     jsStyle.visibleTimeRange?.toModel()?.let {

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.Zoomed
@@ -72,6 +73,8 @@ class DebugTilePainter(
 
     return TileCreationInfo()
   }
+
+  @StyleDsl
 
   open class Style(
     /**

@@ -43,11 +43,11 @@ class HistogramGestalt(
    */
   toolTipType: ToolTipType = ToolTipType.Balloon,
 
-  styleConfiguration: BarChartGroupedGestalt.Configuration.() -> Unit = {},
+  additionalConfiguration: BarChartGroupedGestalt.Configuration.() -> Unit = {},
 ) : ChartGestalt {
 
-  val barChartGroupedGestalt: BarChartGroupedGestalt = BarChartGroupedGestalt(categorySeriesModel, toolTipType, styleConfiguration).also {
-    it.style.activeCategoryBackgroundMargin = Insets.all2
+  val barChartGroupedGestalt: BarChartGroupedGestalt = BarChartGroupedGestalt(categorySeriesModel, toolTipType, additionalConfiguration).also {
+    it.configuration.activeCategoryBackgroundMargin = Insets.all2
   }
 
   val configuration: BarChartGroupedGestalt.Configuration by barChartGroupedGestalt::configuration
@@ -113,13 +113,5 @@ class HistogramGestalt(
   val groupedBarsPainter: GroupedBarsPainter
     get() {
       return barChartGroupedGestalt.groupedBarsPainter
-    }
-
-  /**
-   * Returns the style of the bar chart grouped gestalt
-   */
-  val style: BarChartGroupedGestalt.Configuration
-    get() {
-      return barChartGroupedGestalt.style
     }
 }

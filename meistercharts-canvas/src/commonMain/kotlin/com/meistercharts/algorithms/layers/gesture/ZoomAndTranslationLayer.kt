@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layers.Layers
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.canvas.events.CanvasMouseEventHandler
@@ -224,6 +225,7 @@ class ZoomAndTranslationLayer(
    */
   var rubberBandCurrentLocation: @Window Coordinates? = null
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The modifier combination for panning

@@ -153,29 +153,6 @@ class MovableCrossWireLayer(
     @px
     var paddingBottom: Double = 0.0
   }
-
-  /**
-   * The style for the movable cross-wire layer
-   */
-  @ConfigurationDsl
-  open class Style {
-    /**
-     * The location of the cross-wire
-     */
-    var locationX: () -> @WindowRelative Double = { 0.75 }
-
-
-    /**
-     * The fill of the marker at the bottom
-     */
-    var markerFill: ColorProvider = Color.gray
-
-    /**
-     * The padding at the bottom
-     */
-    @px
-    var paddingBottom: Double = 0.0
-  }
 }
 
 /**

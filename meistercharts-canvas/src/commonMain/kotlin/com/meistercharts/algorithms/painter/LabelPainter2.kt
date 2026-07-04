@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.crosswire.CrossWireLayer.LabelIndex
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.i18nConfiguration
 import com.meistercharts.canvas.layout.cache.LayoutVariable
@@ -452,7 +452,7 @@ class LabelPainter2(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   open class Style {
     /**
      * If set to true the connecting line to the value box is painted

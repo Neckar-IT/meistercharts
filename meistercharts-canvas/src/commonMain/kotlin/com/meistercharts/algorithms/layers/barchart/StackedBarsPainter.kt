@@ -20,7 +20,7 @@ import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.valuesAt
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.saved
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
@@ -136,7 +136,7 @@ class StackedBarsPainter(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * The max width (vertical) or height (horizontal) of a stacked bar.

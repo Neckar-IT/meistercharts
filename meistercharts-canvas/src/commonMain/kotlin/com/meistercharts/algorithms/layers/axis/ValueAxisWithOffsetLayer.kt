@@ -45,12 +45,12 @@ class ValueAxisWithOffsetLayer(
   constructor(
     title: String,
     valueRange: ValueRange,
-    styleConfiguration: Configuration.() -> Unit = {},
+    additionalConfiguration: Configuration.() -> Unit = {},
   ) : this(
     Configuration(valueRangeProvider = { valueRange }),
     {
       titleProvider = { _, _ -> title }
-      styleConfiguration()
+      additionalConfiguration()
     },
   )
 

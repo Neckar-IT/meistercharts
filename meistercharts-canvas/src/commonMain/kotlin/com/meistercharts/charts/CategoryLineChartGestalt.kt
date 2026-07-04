@@ -276,7 +276,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
    * Visualizes the title on top of the value layer
    *
    * ATTENTION: Is not visible by default
-   * see [Style.axisTitleLocation]
+   * see [Configuration.axisTitleLocation]
    *
    * Is only visible if the [valueAxisLayer] is placed at the left or right
    */

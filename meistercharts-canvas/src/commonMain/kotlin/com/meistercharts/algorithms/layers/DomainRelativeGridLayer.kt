@@ -150,7 +150,7 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
  * If the value axis does not have any visible ticks, the grid layer does not show anything.
  */
 @JvmOverloads
-fun ValueAxisLayer.createGrid(styleConfiguration: DomainRelativeGridLayer.Configuration.() -> Unit = {}): DomainRelativeGridLayer {
+fun ValueAxisLayer.createGrid(additionalConfiguration: DomainRelativeGridLayer.Configuration.() -> Unit = {}): DomainRelativeGridLayer {
   return DomainRelativeGridLayer(valuesProvider = object : DoublesProvider {
     override fun size(): Int {
       return tickDomainValues.size
@@ -161,6 +161,6 @@ fun ValueAxisLayer.createGrid(styleConfiguration: DomainRelativeGridLayer.Config
     }
   }, orientationProvider = {
     configuration.orientation.opposite()
-  }, additionalConfiguration = styleConfiguration
+  }, additionalConfiguration = additionalConfiguration
   )
 }

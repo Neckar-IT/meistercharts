@@ -29,11 +29,11 @@ import it.neckar.open.unit.other.px
  * Paints the Neckar IT 'flow'
  */
 class NeckarItFlowLayer(
-  configuration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Content
 
-  val style: Configuration = Configuration().also(configuration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override
   fun paint(paintingContext: LayerPaintingContext) {
@@ -42,9 +42,9 @@ class NeckarItFlowLayer(
     val paintable = NeckarItFlowPaintable.forWidth(gc.width)
 
     //Translate to center Y
-    gc.translate(0.0, gc.centerY + style.gapToCenterY)
+    gc.translate(0.0, gc.centerY + configuration.gapToCenterY)
 
-    gc.globalAlpha = style.opacity
+    gc.globalAlpha = configuration.opacity
 
     paintable.paint(paintingContext, Coordinates.none)
     paintingContext.chartSupport.markAsDirty(DirtyReason.Animation)

@@ -17,7 +17,7 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.PaintableLocation
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.i18nConfiguration
@@ -73,7 +73,7 @@ class SymbolAndTextKeyPaintable(
     paintingContext.paintTextWithPaintable(text, symbol, style.symbolLocation, Direction.Center, gap = style.gap, maxTextWidth = style.textWidthForLayout)
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   open class Style {
     /**
      * Where to paint the symbol in relation to the text

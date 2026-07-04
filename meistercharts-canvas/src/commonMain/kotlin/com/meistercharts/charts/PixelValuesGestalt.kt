@@ -102,9 +102,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
   /**
    * The model that returns @DomainRelative values
    */
-  val domainRelativeModel: @DomainRelative LinesChartModel = configuration.domainModel.toDomainRelativeY { style.yValueRange }
-
-  val style: Configuration = Configuration(configuration.domainModel).also(additionalConfiguration)
+  val domainRelativeModel: @DomainRelative LinesChartModel = configuration.domainModel.toDomainRelativeY { configuration.yValueRange }
 
   val fitContentInViewportGestalt: FitContentInViewportGestalt = FitContentInViewportGestalt()
 
@@ -118,7 +116,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     paintRange = AxisConfiguration.PaintRange.Continuous
   }.also {
     it.configuration.valueRangeProvider = {
-      style.yValueAxisValueRangeOverride ?: style.yValueRange
+      configuration.yValueAxisValueRangeOverride ?: configuration.yValueRange
     }
   }
 
@@ -134,7 +132,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     ticksFormat = intFormat
   }.also {
     it.configuration.valueRangeProvider = {
-      style.xValueRange
+      configuration.xValueRange
     }
   }
 
@@ -178,8 +176,8 @@ class PixelValuesGestalt @JvmOverloads constructor(
       val pointStylePainter = PointStylePainter(PointStyle.Dot, snapXValues = true, snapYValues = true)
 
       override fun valueAt(index: Int): PointPainter {
-        if (style.showDots) {
-          pointStylePainter.color = style.getLineColor(model.mode, index)
+        if (this@PixelValuesGestalt.configuration.showDots) {
+          pointStylePainter.color = this@PixelValuesGestalt.configuration.getLineColor(model.mode, index)
           return pointStylePainter
         }
 
@@ -190,7 +188,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
     configuration.linePainters = object : MultiProvider<LinesChartModelIndex, LinePainter> {
       val directLinePainter = DirectLinePainter(snapXValues = true, snapYValues = true)
       override fun valueAt(index: Int): LinePainter {
-        if (!style.showLines) {
+        if (!this@PixelValuesGestalt.configuration.showLines) {
           return NoLinePainter
         }
         return directLinePainter
@@ -199,7 +197,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
 
     configuration.lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
       override fun valueAt(index: Int): LineStyle {
-        if (!style.showLines) {
+        if (!this@PixelValuesGestalt.configuration.showLines) {
           return LineStyle.Continuous // don't care
         }
         val lineWidth = when (model.mode) {
@@ -217,7 +215,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
             1.0
           }
         }
-        return LineStyle(lineWidth = lineWidth, color = style.getLineColor(model.mode, index))
+        return LineStyle(lineWidth = lineWidth, color = this@PixelValuesGestalt.configuration.getLineColor(model.mode, index))
       }
     }
   }.clipped()
@@ -300,7 +298,9 @@ class PixelValuesGestalt @JvmOverloads constructor(
   }
 
   init {
-    style.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
+    configuration.additionalConfiguration()
+
+    configuration.xValueRange = ValueRange.linear(1.0, model.dataPointCount.toDouble())
 
     yValueAxisLayer.configuration.apply {
     }
@@ -375,7 +375,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
         maxZoom(5.0, 5.0)
         contentAlwaysCompletelyVisible(boundsProvider = object : BoundsProvider {
           override fun top(): @ContentAreaRelative Double {
-            @DomainRelative val maxTop = style.yValueRange.toDomainRelative(style.maxYValueTop)
+            @DomainRelative val maxTop = configuration.yValueRange.toDomainRelative(configuration.maxYValueTop)
             return -(maxTop + 1)
           }
         })

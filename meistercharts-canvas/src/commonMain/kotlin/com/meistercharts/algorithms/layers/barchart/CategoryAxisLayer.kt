@@ -295,10 +295,10 @@ class CategoryAxisLayer(
  */
 fun CategoryLayer<*>.createAxisLayer(
   labelsProvider: SizedLabelsProvider = configuration.modelProvider().createCategoryLabelsProvider(),
-  styleConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {},
+  additionalConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {},
 ): CategoryAxisLayer {
   return CategoryAxisLayer(labelsProvider, { paintingVariables().layout }) {
-    styleConfiguration()
+    additionalConfiguration()
   }
 }
 
@@ -306,9 +306,9 @@ fun CategoryLayer<*>.createAxisLayer(
 /**
  * Creates a category axis layer that uses the layout of this [CategoryLinesLayer]
  */
-fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = configuration.categorySeriesModel.createCategoryLabelsProvider(), styleConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {}): CategoryAxisLayer {
+fun CategoryLinesLayer.createAxisLayer(labelsProvider: SizedLabelsProvider = configuration.categorySeriesModel.createCategoryLabelsProvider(), additionalConfiguration: CategoryAxisLayer.Configuration.() -> Unit = {}): CategoryAxisLayer {
   return CategoryAxisLayer(labelsProvider, { paintingVariables().layout }) {
-    styleConfiguration()
+    additionalConfiguration()
   }
 }
 

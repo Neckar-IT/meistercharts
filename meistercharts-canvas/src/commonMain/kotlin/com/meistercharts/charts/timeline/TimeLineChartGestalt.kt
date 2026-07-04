@@ -650,7 +650,7 @@ class TimeLineChartGestalt
 
   /**
    * Calculates the total height required for the enums layer.
-   * Also contains the insets ([Style.enumLayerInsets])
+   * Also contains the insets ([Configuration.enumLayerInsets])
    *
    * The returned value depends on the available and visible enum series
    */

@@ -23,7 +23,7 @@ import com.meistercharts.axis.LinearAxisTickCalculator
 import com.meistercharts.axis.LinearAxisTickCalculator.calculateTickValues
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ArcType
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
 import com.meistercharts.font.FontDescriptorFragment
@@ -102,7 +102,7 @@ class CompassBasePainter(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * Provides the ticks

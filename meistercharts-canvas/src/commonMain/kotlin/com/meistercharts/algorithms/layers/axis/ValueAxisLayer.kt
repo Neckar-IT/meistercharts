@@ -257,22 +257,22 @@ class ValueAxisLayer
     /**
      * Creates a linear value axis
      */
-    fun linear(title: String, valueRange: LinearValueRange, styleConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
+    fun linear(title: String, valueRange: LinearValueRange, additionalConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
         //Configure the ticks for linear
         applyLinearScale()
-        styleConfiguration()
+        additionalConfiguration()
       }
     }
 
     /**
      * Creates a logarithmic value axis
      */
-    fun logarithmic(title: String, valueRange: LogarithmicValueRange, styleConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
+    fun logarithmic(title: String, valueRange: LogarithmicValueRange, additionalConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
         //Configure the ticks for logarithmic
         applyLogarithmicScale()
-        styleConfiguration()
+        additionalConfiguration()
       }
     }
   }

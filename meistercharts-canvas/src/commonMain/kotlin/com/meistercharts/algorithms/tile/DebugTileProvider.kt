@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.tile
 
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.CanvasRenderingContext
@@ -88,6 +89,8 @@ class DebugTileProvider(
       }
     }
   }
+
+  @StyleDsl
 
   open class Style(
     /**

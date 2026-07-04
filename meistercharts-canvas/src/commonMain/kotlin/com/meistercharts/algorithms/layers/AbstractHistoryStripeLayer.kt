@@ -23,6 +23,7 @@ import com.meistercharts.algorithms.painter.stripe.StripePainter
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
@@ -306,6 +307,7 @@ abstract class AbstractHistoryStripeLayer<
    */
   val visibleIndices: DataSeriesIndexProvider<DataSeriesIndexType> = configuration::requestedVisibleIndices.atMost { dataSeriesCount() }
 
+  @ConfigurationDsl
   abstract class Configuration<
     SeriesIndexProviderType : DataSeriesIndexProvider<DataSeriesIndexType>,
     DataSeriesIndexType : DataSeriesIndex,

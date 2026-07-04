@@ -37,6 +37,7 @@ import com.meistercharts.axis.time.TimeTickDistance
 import com.meistercharts.axis.time.TimeUnits
 import com.meistercharts.axis.time.valueAt
 import com.meistercharts.calc.TimeChartCalculator
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.fillRectCoordinates
 import com.meistercharts.canvas.saved
@@ -375,6 +376,7 @@ class TimeAxisLayer(
   /**
    * Style object for the time axis
    */
+  @ConfigurationDsl
   class Configuration(
     /**
      * The time range that is spans the content area
@@ -594,8 +596,8 @@ object RelativeToNowTickFormat : RelativeTickFormat {
 /**
  * Adds a time axis layer
  */
-fun Layers.addTimeAxis(contentAreaTimeRange: TimeRange, styleConfiguration: TimeAxisLayer.Configuration.() -> Unit = {}): TimeAxisLayer {
-  return TimeAxisLayer(TimeAxisLayer.Configuration(contentAreaTimeRange), styleConfiguration).also {
+fun Layers.addTimeAxis(contentAreaTimeRange: TimeRange, additionalConfiguration: TimeAxisLayer.Configuration.() -> Unit = {}): TimeAxisLayer {
+  return TimeAxisLayer(TimeAxisLayer.Configuration(contentAreaTimeRange), additionalConfiguration).also {
     addLayer(it)
   }
 }

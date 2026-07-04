@@ -177,22 +177,22 @@ class TextLayer(
      */
     val helloMeisterChart: TextLayer = forText({ _, _ -> "Hello MeisterCharts" })
 
-    fun forText(text: TextProvider, styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
-      return TextLayer(text.asLinesProvider(), styleConfiguration)
+    fun forText(text: TextProvider, additionalConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(text.asLinesProvider(), additionalConfiguration)
     }
 
     /**
      * Creates a new text layer that shows the lines
      */
-    fun forLines(lines: LinesProvider, styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
-      return TextLayer(lines, styleConfiguration)
+    fun forLines(lines: LinesProvider, additionalConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(lines, additionalConfiguration)
     }
 
     /**
      * Creates a new text layer that has no text
      */
-    fun empty(styleConfiguration: Configuration.() -> Unit = {}): TextLayer {
-      return TextLayer(lines = { _, _ -> emptyList() }, styleConfiguration)
+    fun empty(additionalConfiguration: Configuration.() -> Unit = {}): TextLayer {
+      return TextLayer(lines = { _, _ -> emptyList() }, additionalConfiguration)
     }
   }
 }
@@ -208,7 +208,7 @@ fun Layers.addTextColored(textKey: TextKey, color: ColorProvider = Color.bluevio
  * Adds a text layer with texts that are resolved
  */
 fun Layers.addTextColored(textKeys: List<TextKey>, color: ColorProvider = Color.blueviolet): TextLayer {
-  return addText(textKeys, styleConfiguration = { textColor = color })
+  return addText(textKeys, additionalConfiguration = { textColor = color })
 }
 
 /**
@@ -222,39 +222,39 @@ fun Layers.addTextUnresolvedColored(text: String, color: ColorProvider): TextLay
  * Adds a message layer with texts that are not resolved
  */
 fun Layers.addTextUnresolvedColored(texts: List<String>, color: ColorProvider): TextLayer {
-  return addTextUnresolved(texts, styleConfiguration = { textColor = color })
+  return addTextUnresolved(texts, additionalConfiguration = { textColor = color })
 }
 
 /**
  * Adds a text layer with a text that is resolved
  */
-fun Layers.addText(textKey: TextKey, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
-  return addText(listOf(textKey), styleConfiguration)
+fun Layers.addText(textKey: TextKey, additionalConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+  return addText(listOf(textKey), additionalConfiguration)
 }
 
-fun Layers.addText(text: String, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
-  return addText(listOf(TextKey.simple(text)), styleConfiguration)
+fun Layers.addText(text: String, additionalConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+  return addText(listOf(TextKey.simple(text)), additionalConfiguration)
 }
 
 /**
  * Adds a text layer with texts that are resolved
  */
-fun Layers.addText(textKeys: List<TextKey>, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
-  return addText(textKeys.asLinesProvider(), styleConfiguration)
+fun Layers.addText(textKeys: List<TextKey>, additionalConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+  return addText(textKeys.asLinesProvider(), additionalConfiguration)
 }
 
 /**
  * Adds a message layer with a fixed string that is not resolved.
  */
-fun Layers.addTextUnresolved(texts: String, styleConfiguration: TextLayer.Configuration.() -> Unit = {}): TextLayer {
-  return addTextUnresolved(listOf(texts), styleConfiguration)
+fun Layers.addTextUnresolved(texts: String, additionalConfiguration: TextLayer.Configuration.() -> Unit = {}): TextLayer {
+  return addTextUnresolved(listOf(texts), additionalConfiguration)
 }
 
 /**
  * Adds a message layer with fixed strings that are not resolved.
  */
-fun Layers.addTextUnresolved(lines: List<String>, styleConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
-  return addText({ _, _ -> lines }, styleConfiguration)
+fun Layers.addTextUnresolved(lines: List<String>, additionalConfiguration: TextLayer.Configuration.() -> Unit): TextLayer {
+  return addText({ _, _ -> lines }, additionalConfiguration)
 }
 
 
@@ -263,9 +263,9 @@ fun Layers.addTextUnresolved(lines: List<String>, styleConfiguration: TextLayer.
  */
 fun Layers.addText(
   linesProvider: LinesProvider,
-  styleConfiguration: TextLayer.Configuration.() -> Unit = {},
+  additionalConfiguration: TextLayer.Configuration.() -> Unit = {},
 ): TextLayer {
-  return TextLayer(linesProvider, styleConfiguration)
+  return TextLayer(linesProvider, additionalConfiguration)
     .also {
       addLayer(it)
     }

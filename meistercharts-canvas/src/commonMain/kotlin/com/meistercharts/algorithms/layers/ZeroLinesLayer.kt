@@ -27,26 +27,26 @@ import it.neckar.open.unit.other.px
  * Paints (endless lines) at zero
  */
 class ZeroLinesLayer(
-  configuration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
-  val style: Configuration = Configuration().also(configuration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    gc.lineWidth = style.lineWidth
-    gc.stroke(style.color)
+    gc.lineWidth = configuration.lineWidth
+    gc.stroke(configuration.color)
 
     val chartCalculator = paintingContext.chartCalculator
-    if (style.axisToPaint.containsX) {
+    if (configuration.axisToPaint.containsX) {
       @Window val y = chartCalculator.domainRelative2windowY(0.0)
       gc.strokeLine(0.0, y, gc.width, y)
     }
 
-    if (style.axisToPaint.containsY) {
+    if (configuration.axisToPaint.containsY) {
       @Window val x = chartCalculator.domainRelative2windowX(0.0)
       gc.strokeLine(x, 0.0, x, gc.height)
     }

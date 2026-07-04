@@ -121,9 +121,7 @@ class BarChartGroupedGestalt constructor(
   initialToolTipType: ToolTipType = ToolTipType.Balloon,
   additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractChartGestalt() {
-  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType)
-
-  val style: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
+  val configuration: Configuration = Configuration(initialCategorySeriesModel, initialToolTipType).also(additionalConfiguration)
 
   /**
    * Delegate the configures the chart to have a fixed zoom and translation
@@ -135,7 +133,7 @@ class BarChartGroupedGestalt constructor(
    * The painter used by the [categoryLayer]
    */
   val groupedBarsPainter: GroupedBarsPainter = GroupedBarsPainter {
-    valueRangeProvider = { style.valueRange }
+    valueRangeProvider = { configuration.valueRange }
     colorsProvider = CategorySeriesModelColorsProvider.onlySeriesColorsProvider(chartColors)
     showValueLabel = false
     barGap = 4.0
@@ -151,7 +149,7 @@ class BarChartGroupedGestalt constructor(
 
     activeCategoryBackgroundSize = {
       //Use the actual size of the group
-      groupedBarsPainter.paintingVariables().actualSize + style.activeCategoryBackgroundMargin.offsetWidth
+      groupedBarsPainter.paintingVariables().actualSize + configuration.activeCategoryBackgroundMargin.offsetWidth
     }
 
     layoutCalculator = DefaultCategoryLayouter {
@@ -163,7 +161,7 @@ class BarChartGroupedGestalt constructor(
         val minGroupSize = groupedBarsPainter.configuration.minBarSize * barsCount + groupedBarsPainter.configuration.barGap * (barsCount - 1)
 
         //Calculate the total width of category
-        minGroupSize + style.minGapBetweenGroups
+        minGroupSize + configuration.minGapBetweenGroups
       }
 
       maxCategorySizeProvider = {
@@ -174,7 +172,7 @@ class BarChartGroupedGestalt constructor(
           val maxGroupSize = maxBarSize * barsCount + groupedBarsPainter.configuration.barGap * (barsCount - 1)
 
           //Calculate the total width of category
-          maxGroupSize + style.maxGapBetweenGroups
+          maxGroupSize + configuration.maxGapBetweenGroups
         }
       }
     }
@@ -200,7 +198,7 @@ class BarChartGroupedGestalt constructor(
    * Handles the mouse over - does *not* paint anything itself
    */
   val toolbarInteractionLayer: TooltipInteractionLayer<CategoryIndex> = TooltipInteractionLayer.forCategories(
-    orientation = { style.orientation.layoutDirection.orientation },
+    orientation = { configuration.orientation.layoutDirection.orientation },
     layoutProvider = { categoryLayer.paintingVariables().layout },
     selectionSink = { newSelection, chartSupport ->
       if (activeCategoryIndexOrNull != newSelection) {
@@ -235,7 +233,7 @@ class BarChartGroupedGestalt constructor(
           categoryModel.numberOfSeries.fastFor { seriesIndexAsInt ->
             val seriesIndex = SeriesIndex(seriesIndexAsInt)
             @MayBeNaN @Domain val value = categoryModel.valueAt(categoryIndex, seriesIndex)
-            @MayBeNaN @DomainRelative val relativeValue = style.valueRange.toDomainRelative(value)
+            @MayBeNaN @DomainRelative val relativeValue = configuration.valueRange.toDomainRelative(value)
 
             locations[seriesIndexAsInt] = chartCalculator.domainRelative2windowY(relativeValue)
           }
@@ -259,7 +257,7 @@ class BarChartGroupedGestalt constructor(
         val categoryModel = configuration.categorySeriesModel
 
         @Domain val value = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
-        return style.crossWireValueLabelFormat.format(value)
+        return configuration.crossWireValueLabelFormat.format(value)
       }
     }
   ) {
@@ -269,7 +267,7 @@ class BarChartGroupedGestalt constructor(
     /**
      * The label placement strategy that is used to determine the "base" location
      */
-    val baseValueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { style.minCrossWireSpaceOnRightSide }
+    val baseValueLabelPlacementStrategy = LabelPlacementStrategy.preferOnRightSide { configuration.minCrossWireSpaceOnRightSide }
 
     /**
      * Used to combine locationX and valueLabelPlacement
@@ -315,10 +313,10 @@ class BarChartGroupedGestalt constructor(
 
 
     valueLabelBoxStyle = MultiProvider {
-      style.crossWireLabelBoxStyles.boxStyle(activeCategoryIndex, SeriesIndex(it))
+      configuration.crossWireLabelBoxStyles.boxStyle(activeCategoryIndex, SeriesIndex(it))
     }
     valueLabelTextColor = MultiProvider {
-      style.crossWireLabelTextColors.color(activeCategoryIndex, SeriesIndex(it))
+      configuration.crossWireLabelTextColors.color(activeCategoryIndex, SeriesIndex(it))
     }
 
 
@@ -331,7 +329,7 @@ class BarChartGroupedGestalt constructor(
    */
   val balloonTooltipSupport: CategorySeriesModelBalloonTooltipSupport = CategorySeriesModelBalloonTooltipSupport(
     CategoryBalloonTooltipPlacementSupport(
-      orientation = { style.orientation.categoryOrientation.opposite() }, //convert orientation of bars to orientation of category placement
+      orientation = { configuration.orientation.categoryOrientation.opposite() }, //convert orientation of bars to orientation of category placement
       activeCategoryIndexProvider = ::activeCategoryIndexOrNull,
       categorySize = {
         val layout = categoryLayer.paintingVariables().layout
@@ -340,7 +338,7 @@ class BarChartGroupedGestalt constructor(
       boxLayout = { categoryLayer.paintingVariables().layout }
     ),
     { configuration.categorySeriesModel },
-    valueFormat = { style.balloonTooltipValueLabelFormat },
+    valueFormat = { configuration.balloonTooltipValueLabelFormat },
     colors = { index ->
       groupedBarsPainter.configuration.colorsProvider.color(activeCategoryIndex, SeriesIndex(index))
     }
@@ -369,7 +367,7 @@ class BarChartGroupedGestalt constructor(
    * Visualizes the title on top of the category layer
    *
    * ATTENTION: Is not visible by default
-   * see [Style.axisTitleLocation]
+   * see [Configuration.axisTitleLocation]
    *
    * Is only visible if the [categoryAxisLayer] is placed at the left or right
    */
@@ -379,7 +377,7 @@ class BarChartGroupedGestalt constructor(
     }
 
   val valueAxisSupport = ValueAxisSupport.single(
-    { style.valueRange }
+    { configuration.valueRange }
   ) {
     valueAxisConfiguration = { _, _, _ ->
       tickOrientation = Vicinity.Outside
@@ -402,7 +400,7 @@ class BarChartGroupedGestalt constructor(
    * Visualizes the title on top of the value layer
    *
    * ATTENTION: Is not visible by default
-   * see [Style.axisTitleLocation]
+   * see [Configuration.axisTitleLocation]
    *
    * Is only visible if the [valueAxisLayer] is placed at the left or right
    */
@@ -418,7 +416,7 @@ class BarChartGroupedGestalt constructor(
   }
 
   val gridLayer: DomainRelativeGridLayer = valueAxisLayer.createGrid {
-    lineStyles = { value: @DomainRelative Double -> style.gridLineStyles(style.valueRange.toDomain(value)) }
+    lineStyles = { value: @DomainRelative Double -> configuration.gridLineStyles(configuration.valueRange.toDomain(value)) }
   }
 
   /**
@@ -433,7 +431,7 @@ class BarChartGroupedGestalt constructor(
   }
 
   init {
-    style.applyValueLabelsInWindowRespectingAxis()
+    configuration.applyValueLabelsInWindowRespectingAxis()
 
     categoryAxisLayer.configuration.labelsProvider = configuration::categorySeriesModel.createCategoryLabelsProvider()
 
@@ -445,8 +443,8 @@ class BarChartGroupedGestalt constructor(
       layers.addClearBackground()
       layers.addFillCanvasBackground()
 
-      layers.addAboveBackground(gridLayer.visibleIfWithState(style.showGridProperty))
-      layers.addLayer(toolbarInteractionLayer.visibleIfWithState(style.showTooltipsProperty))
+      layers.addAboveBackground(gridLayer.visibleIfWithState(configuration.showGridProperty))
+      layers.addLayer(toolbarInteractionLayer.visibleIfWithState(configuration.showTooltipsProperty))
 
       valueAxisSupport.addLayers(this)
       thresholdsSupport.addLayers(this)
@@ -459,7 +457,7 @@ class BarChartGroupedGestalt constructor(
         val categoryAxisSide = categoryAxisLayer.configuration.side
         val valueAxisSide = valueAxisLayer.configuration.side
         // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
-        val thresholdSide = if (style.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
+        val thresholdSide = if (configuration.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
         contentViewportMargin.only(categoryAxisSide, valueAxisSide, thresholdSide)
       })
@@ -467,7 +465,7 @@ class BarChartGroupedGestalt constructor(
       when (configuration.toolTipType) {
         ToolTipType.CrossWire -> {
           layers.addLayer(crossWireLayerVertical.visibleIf {
-            style.orientation.categoryOrientation == Orientation.Vertical && activeCategoryIndexOrNull != null
+            configuration.orientation.categoryOrientation == Orientation.Vertical && activeCategoryIndexOrNull != null
           })
         }
 

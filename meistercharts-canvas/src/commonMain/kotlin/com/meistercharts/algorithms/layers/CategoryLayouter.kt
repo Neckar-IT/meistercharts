@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layout.Exact
 import com.meistercharts.algorithms.layout.LayoutMode
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import it.neckar.geometry.Orientation
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.unit.other.px
@@ -74,7 +74,7 @@ class DefaultCategoryLayouter(
     )
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * The layout mode

@@ -69,8 +69,8 @@ class ToolbarLayer(
 
   constructor(
     buttons: List<Button>,
-    styleConfiguration: Configuration.() -> Unit = {},
-  ) : this(Configuration(buttons), styleConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {},
+  ) : this(Configuration(buttons), additionalConfiguration)
 
   init {
     configuration.also(additionalConfiguration)

@@ -42,11 +42,11 @@ import kotlin.jvm.JvmOverloads
  */
 class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
   historyStorage: HistoryStorage = InMemoryHistoryStorage(),
-  styleConfiguration: Style.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
   val toolbarConfiguration: ToolbarButtonFactory.() -> List<Button> = { emptyList() }
 ) : ChartGestalt {
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   val timeLineChartGestalt: TimeLineChartGestalt = TimeLineChartGestalt(initialHistoryStorage = historyStorage)
 
@@ -71,17 +71,17 @@ class TimeLineChartWithToolbarGestalt @JvmOverloads constructor(
       ) {
       }
 
-      layers.addLayer(scrollWithoutModifierHintLayer.visibleIf { style.showMouseWheelModifierHint })
+      layers.addLayer(scrollWithoutModifierHintLayer.visibleIf { configuration.showMouseWheelModifierHint })
 
       layers.addLayer(toolbarLayer.visibleIf {
-        style.showToolbar
+        configuration.showToolbar
       })
       layers.addVersionNumberHidden()
     }
   }
 
   @ConfigurationDsl
-  class Style {
+  class Configuration {
     /**
      * Whether the toolbar is visible (true) or not (false)
      */

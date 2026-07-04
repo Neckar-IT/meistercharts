@@ -52,8 +52,8 @@ class ShowLoadingIconOnResourceMissingLayer(
 /**
  * Adds a layer that paints an icon if resources are missing
  */
-fun Layers.addShowLoadingOnMissingResources(styleConfiguration: ShowLoadingIconOnResourceMissingLayer.Configuration.() -> Unit = {}): ShowLoadingIconOnResourceMissingLayer {
-  return ShowLoadingIconOnResourceMissingLayer(styleConfiguration).also {
+fun Layers.addShowLoadingOnMissingResources(additionalConfiguration: ShowLoadingIconOnResourceMissingLayer.Configuration.() -> Unit = {}): ShowLoadingIconOnResourceMissingLayer {
+  return ShowLoadingIconOnResourceMissingLayer(additionalConfiguration).also {
     addLayer(it)
   }
 }

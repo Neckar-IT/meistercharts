@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.compass
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.Arrows
 import com.meistercharts.annotations.DomainRelative
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
@@ -51,7 +51,7 @@ class ArrowValuePainter(
     gc.stroke(Arrows.toTop(radius, 20.0, 10.0))
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * The pointer stroke width

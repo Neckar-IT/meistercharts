@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.compass
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintable.AbstractResizablePaintable
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Rectangle
@@ -112,7 +112,7 @@ class GaugePaintable(
     )
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * Paints the base

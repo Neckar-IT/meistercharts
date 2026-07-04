@@ -69,8 +69,10 @@ class NeckarITSloganWithFlowGestalt(
     }
   }
 
+  /**
+   * Configuration for this gestalt. Currently has no configurable properties;
+   * kept as the extension point for future slogan/flow configuration.
+   */
   @ConfigurationDsl
-  open class Configuration {
-    // TODO
-  }
+  open class Configuration
 }

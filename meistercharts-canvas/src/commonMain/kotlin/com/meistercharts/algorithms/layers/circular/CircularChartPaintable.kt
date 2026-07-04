@@ -20,7 +20,7 @@ import com.meistercharts.algorithms.layers.circular.CircularChartLegendLayer.Cir
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ArcType
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
@@ -100,7 +100,7 @@ class CircularChartPaintable(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   open class Style {
     /**
      * Provides the color for the segment at a certain index

@@ -20,7 +20,7 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.saved
@@ -145,7 +145,7 @@ class ModernCompassPainter(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * Returns the ticks

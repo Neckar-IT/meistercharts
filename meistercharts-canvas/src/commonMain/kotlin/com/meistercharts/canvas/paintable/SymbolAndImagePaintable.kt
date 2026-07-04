@@ -17,7 +17,7 @@ package com.meistercharts.canvas.paintable
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.style.Palette
@@ -64,7 +64,7 @@ class SymbolAndImagePaintable(
     image.paintInBoundingBox(paintingContext, x, y, Direction.CenterLeft, style.gapHorizontal / 2.0, style.gapVertical / 2.0, boundingBox.getWidth(), boundingBox.getHeight())
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   open class Style {
     /**
      * The size of the image

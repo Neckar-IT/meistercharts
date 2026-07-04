@@ -45,6 +45,13 @@ chart.setUpDemo();
 
 To build the project follow the steps described in [How To Build](how-to-build.md)
 
+### Architecture & conventions
+
+See [architecture/](architecture/) for architecture notes and conventions, including:
+
+- [Config objects: `Configuration` vs. `Style`](architecture/config-objects.md)
+- [Configuration properties & the repaint model](architecture/configuration-properties.md)
+
 ### Modules Overview
 
 Each module has a specific function in the architecture of

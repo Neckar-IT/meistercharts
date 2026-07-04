@@ -16,14 +16,18 @@
 package com.meistercharts.canvas
 
 /**
- * DSL marker for the **Configuration** of a layer or gestalt.
+ * DSL marker for the visual **Style** of a painter or paintable.
  *
  * Config-object naming convention in meistercharts:
- * - Layer / Gestalt      -> nested `Configuration` + [ConfigurationDsl] — full surface (data, behaviour, appearance)
  * - Painter / Paintable  -> nested `Style`         + [StyleDsl]         — purely visual (colors, widths, fonts, gaps)
+ * - Layer / Gestalt      -> nested `Configuration` + [ConfigurationDsl] — full surface (data, behaviour, appearance)
  *
- * A `Configuration` covers everything a layer/gestalt needs (data source, behaviour, appearance).
- * A painter's purely visual appearance uses [StyleDsl] instead.
+ * A `Style` must hold visual properties only. Data and behaviour belong in the owning
+ * Layer/Gestalt [ConfigurationDsl] object, never in a painter [Style].
+ *
+ * Separate markers (instead of a single one) keep the DSL receiver scopes isolated: a painter
+ * style builder nested inside a layer configuration builder cannot accidentally resolve the
+ * layer's members, and vice versa.
  */
 @DslMarker
-annotation class ConfigurationDsl
+annotation class StyleDsl

@@ -51,7 +51,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.api.bar.
  * Is called initially and applies the Easy API defaults
  */
 fun BarChartGroupedGestalt.applyEasyApiDefaults() {
-  style.applyAxisTitleOnTop(40.0)
+  configuration.applyAxisTitleOnTop(40.0)
   groupedBarsPainter.configuration.overflowIndicatorPainter?.configuration?.applyDefaultIndicators(
     Color.darkgray, Color.white, 1.0, 7.0, 7.0
   )
@@ -67,28 +67,28 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
   //because a change in the orientation triggers a reset of the layout.
   jsStyle.horizontal?.let {
     if (it) {
-      this.style.applyHorizontalConfiguration() //resets the content area margins!
+      this.configuration.applyHorizontalConfiguration() //resets the content area margins!
     } else {
-      this.style.applyVerticalConfiguration() //resets the content area margins!
+      this.configuration.applyVerticalConfiguration() //resets the content area margins!
     }
 
     //ensure that there is some space, the content are top is potentially overridden by a property later
-    style.applyAxisTitleOnTop(40.0)
+    configuration.applyAxisTitleOnTop(40.0)
   }
 
   //call apply-functions early
   jsStyle.valueRange?.toModel()?.let {
-    if (this.style.valueRange != it) {
-      this.style.applyValueRange(it)
+    if (this.configuration.valueRange != it) {
+      this.configuration.applyValueRange(it)
     }
   }
 
   jsStyle.minGapBetweenGroups?.let {
-    this.style.minGapBetweenGroups = it
+    this.configuration.minGapBetweenGroups = it
   }
 
   jsStyle.maxGapBetweenGroups?.let {
-    this.style.maxGapBetweenGroups = it
+    this.configuration.maxGapBetweenGroups = it
   }
 
   jsStyle.valueAxisStyle?.let { jsValueAxisStyle ->
@@ -122,9 +122,9 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     groupedBarsPainter.configuration.barGap = it
   }
 
-  this.gridLayer.configuration.applyLinesStyle(jsStyle.gridStyle) { this.style.valueRange }
+  this.gridLayer.configuration.applyLinesStyle(jsStyle.gridStyle) { this.configuration.valueRange }
   jsStyle.gridStyle?.visible?.let {
-    this.style.showGrid = it
+    this.configuration.showGrid = it
   }
 
   jsStyle.valueLabelsStyle?.let { valueLabelsStyle ->
@@ -162,17 +162,17 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
   }
 
   //Ensure that the labels are painted in the window - but not overlapping the axis
-  style.applyValueLabelsInWindowRespectingAxis()
+  configuration.applyValueLabelsInWindowRespectingAxis()
 
 
   //Tooltip related stuff
   jsStyle.showTooltip?.let {
-    this.style.showTooltip = it
+    this.configuration.showTooltip = it
   }
 
   jsStyle.tooltipStyle?.let { jsTooltipStyle ->
     jsTooltipStyle.tooltipFormat?.toNumberFormat()?.let {
-      this.style.balloonTooltipValueLabelFormat = it
+      this.configuration.balloonTooltipValueLabelFormat = it
     }
 
     jsTooltipStyle.tooltipBoxStyle?.toModel()?.let {

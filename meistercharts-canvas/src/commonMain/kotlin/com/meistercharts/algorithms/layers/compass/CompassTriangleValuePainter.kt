@@ -17,7 +17,7 @@ package com.meistercharts.algorithms.layers.compass
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.calc.domain2rad
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.LineJoin
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
@@ -76,7 +76,7 @@ class CompassTriangleValuePainter(
     }
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   class Style {
     /**
      * The gap to the outline of the gauge

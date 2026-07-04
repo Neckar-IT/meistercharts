@@ -24,7 +24,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.ConfigurationDsl
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.paintMark
@@ -158,7 +158,7 @@ class DefaultCategoryAxisLabelPainter(styleConfiguration: Style.() -> Unit = {})
     gc.fillText(label, x + gapX, y + gapY, direction, maxWidth = maxWidth, maxHeight = maxHeight)
   }
 
-  @ConfigurationDsl
+  @StyleDsl
   open class Style {
     /**
      * Provides the images for the axis
