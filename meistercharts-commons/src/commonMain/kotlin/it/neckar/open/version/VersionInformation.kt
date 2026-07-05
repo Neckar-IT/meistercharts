@@ -30,7 +30,7 @@ package it.neckar.open.version
 /**
  * Application related information.
  *
- * Stable values (version, buildDate) come from generated [VersionConstants].
+ * The stable value (version) comes from generated [VersionConstants].
  * Volatile git info is loaded at runtime from resources (JVM)
  * or returns "unknown" (JS) to avoid unnecessary Kotlin recompilation on every commit.
  */
@@ -44,11 +44,6 @@ object VersionInformation {
    * Returns true if the current version is a snapshot
    */
   val isSnapshot: Boolean = version.isSnapshot()
-
-  /**
-   * The build date (only day - not the time)
-   */
-  val buildDate: String = VersionConstants.buildDate
 
   /**
    * The git commit date and time (ISO 8601 format).

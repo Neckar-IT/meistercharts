@@ -35,11 +35,6 @@ object MeisterChartsVersion {
 
   val monorepoVersion: String = VersionInformation.version
 
-  /**
-   * The build date (only day - not the time)
-   */
-  val buildDate: String = VersionInformation.buildDate
-
   val gitHash: String = VersionInformation.gitHash
 
   val gitHashShort: String = VersionInformation.gitHashShort

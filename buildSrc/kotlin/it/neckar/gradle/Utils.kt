@@ -985,12 +985,12 @@ val Project.branchTagForDocker: String
  *
  * Uses `gitHashShort` which is produced by `git rev-parse --short HEAD`, letting Git
  * determine the minimum collision-free abbreviation length (typically 7-12 characters).
- * The date component uses the build date (not the commit date) so the tag reflects when
- * the image was built.
+ * The date component is the commit date (from [gitCommitDateTime]), not the build date, so the tag
+ * is a pure function of the commit: rebuilding the same commit yields the same immutable tag.
  */
 val Project.immutableDockerTag: String
   get() {
-    val date = buildDate.replace("-", "")
+    val date = gitCommitDateTime.substringBefore("T").replace("-", "")
     require(gitHashShort.length >= 7) {
       "Git short hash too short: '$gitHashShort' (expected at least 7 characters)"
     }
@@ -1026,8 +1026,20 @@ val Project.gitCommitDateTime: String
     return rootProject.extra.get("gitCommitDateTime") as? String ?: throw IllegalStateException("Could not find gitCommitDateTime in extra")
   }
 /**
- * The current build date - without time
+ * The current build date (day only, `LocalDate.now()`).
+ *
+ * Changes every day, so it MUST NOT be embedded into content-addressed or reproducible
+ * build artifacts (generated Kotlin sources, OCI image labels, image config): doing so makes
+ * identical inputs produce different outputs across days. Use [gitCommitDateTime] there — it is
+ * stable per commit.
+ *
+ * Only legitimate for human-facing "when was this built" displays (dependency-audit report,
+ * asciidoc `revdate`, frontend footer) where reproducibility does not matter.
  */
+@Deprecated(
+  "buildDate is daily-volatile; do not bake it into reproducible artifacts (generated sources, OCI labels). " +
+    "Use gitCommitDateTime for those. Only kept for human-facing build-date displays.",
+)
 val Project.buildDate: String
   get() {
     return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")
