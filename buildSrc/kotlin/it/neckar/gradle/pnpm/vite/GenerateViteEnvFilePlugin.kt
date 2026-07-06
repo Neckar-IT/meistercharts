@@ -1,10 +1,8 @@
 package it.neckar.gradle.pnpm.vite
 
+import it.neckar.gradle.BuildInfoVars
 import it.neckar.gradle.Plugins
-import it.neckar.gradle.buildDate
-import it.neckar.gradle.gitCommitDateTime
-import it.neckar.gradle.gitHash
-import it.neckar.gradle.gitHashShort
+import it.neckar.gradle.getBuildInfoVarValue
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -27,7 +25,11 @@ import org.gradle.kotlin.dsl.register
  * - VITE_GIT_COMMIT_DATE_TIME: Git commit date/time
  * - VITE_GIT_HASH: Full Git commit hash
  * - VITE_GIT_HASH_SHORT: Short Git commit hash
- * - VITE_BUILD_DATE: Build date
+ * - VITE_BUILD_DATE: Build date (commit date, day only — reproducible)
+ *
+ * On local (non-CI, non-main) builds the git values are replaced with fixed placeholders
+ * so the .env file does not change on every commit. VITE_BUILD_DATE stays the real commit
+ * date (it changes at most once per commit day) — same gating as the HTML resource expansion.
  */
 class GenerateViteEnvFilePlugin : Plugin<Project> {
   override fun apply(target: Project) {
@@ -41,11 +43,15 @@ class GenerateViteEnvFilePlugin : Plugin<Project> {
       targetFile.convention(target.layout.projectDirectory.file(EnvFileName))
       viteVariables.convention(
         target.provider {
+          //Uses getBuildInfoVarValue so local (non-CI, non-main) builds get the fixed
+          //placeholders for the git values instead of per-commit values — keeps the
+          //generated .env (and the downstream Vite build) cacheable, same as the HTML
+          //resource expansion. BuildDate is the commit date (changes per commit day).
           mapOf(
-            ViteVariableNames.GitCommitDateTime to target.gitCommitDateTime,
-            ViteVariableNames.GitHash to target.gitHash,
-            ViteVariableNames.GitHashShort to target.gitHashShort,
-            ViteVariableNames.BuildDate to target.buildDate,
+            ViteVariableNames.GitCommitDateTime to target.getBuildInfoVarValue(BuildInfoVars.GitCommitDateTime),
+            ViteVariableNames.GitHash to target.getBuildInfoVarValue(BuildInfoVars.GitHash),
+            ViteVariableNames.GitHashShort to target.getBuildInfoVarValue(BuildInfoVars.GitHashShort),
+            ViteVariableNames.BuildDate to target.getBuildInfoVarValue(BuildInfoVars.BuildDate),
           )
         }
       )

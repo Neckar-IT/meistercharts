@@ -983,8 +983,8 @@ val Project.branchTagForDocker: String
 /**
  * Returns the immutable Docker tag in the format `YYYYMMDD-shortsha` (e.g. `20260326-a1b2c3d`).
  *
- * Uses `gitHashShort` which is produced by `git rev-parse --short HEAD`, letting Git
- * determine the minimum collision-free abbreviation length (typically 7-12 characters).
+ * Uses `gitHashShort`, produced by `git rev-parse --short=12 HEAD` — pinned to 12 characters
+ * so the tag does not depend on the repository's object count (CI clone vs. local repo).
  * The date component is the commit date (from [gitCommitDateTime]), not the build date, so the tag
  * is a pure function of the commit: rebuilding the same commit yields the same immutable tag.
  */
@@ -1026,20 +1026,12 @@ val Project.gitCommitDateTime: String
     return rootProject.extra.get("gitCommitDateTime") as? String ?: throw IllegalStateException("Could not find gitCommitDateTime in extra")
   }
 /**
- * The current build date (day only, `LocalDate.now()`).
+ * The build date (day only), derived from the last commit date — NOT the wall clock.
  *
- * Changes every day, so it MUST NOT be embedded into content-addressed or reproducible
- * build artifacts (generated Kotlin sources, OCI image labels, image config): doing so makes
- * identical inputs produce different outputs across days. Use [gitCommitDateTime] there — it is
- * stable per commit.
- *
- * Only legitimate for human-facing "when was this built" displays (dependency-audit report,
- * asciidoc `revdate`, frontend footer) where reproducibility does not matter.
+ * Stable per commit: identical inputs produce identical outputs, so it is safe to embed into
+ * manifests, expanded resources and generated .env files. It is the date component of
+ * [gitCommitDateTime]. Defined in the root build.gradle.kts (#792).
  */
-@Deprecated(
-  "buildDate is daily-volatile; do not bake it into reproducible artifacts (generated sources, OCI labels). " +
-    "Use gitCommitDateTime for those. Only kept for human-facing build-date displays.",
-)
 val Project.buildDate: String
   get() {
     return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")

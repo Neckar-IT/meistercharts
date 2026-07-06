@@ -21,7 +21,8 @@ import java.io.File
  */
 enum class BuildInfoVars(val value: String, val useAsInput: Boolean = true) {
   /**
-   * The build date (*not* the time - for caching reasons)
+   * The build date (day only) — derived from the last commit date, not the wall clock,
+   * so expanded resources stay reproducible and cacheable (#792)
    */
   BuildDate("buildDate"),
   /**
