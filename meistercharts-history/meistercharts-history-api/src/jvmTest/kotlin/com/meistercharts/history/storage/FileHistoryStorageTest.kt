@@ -127,6 +127,21 @@ class FileHistoryStorageTest {
   }
 
   @Test
+  fun `consecutive 30-day buckets map to distinct files`(@TempFolder baseDirTemp: File) {
+    val storage = FileHistoryStorage(baseDirTemp, Json { HistoryConfiguration })
+    val range = HistoryBucketRange.ThirtyDays
+
+    //30-day buckets are epoch-aligned, not calendar-aligned. The previous scheme named the file
+    //after the calendar month within a year-directory, so within a year (~12.17 bucket starts) two
+    //buckets collided and overwrote each other. Every distinct bucket must map to a distinct file.
+    val start = 1.5927516E12
+    val paths = (0 until 40).map { i ->
+      storage.getFile(HistoryBucketDescriptor.forTimestamp(start + i * range.duration, range)).absolutePath
+    }
+    assertThat(paths.toSet().size).isEqualTo(paths.size)
+  }
+
+  @Test
   fun testGetUpdates(@TempFolder newTempDirectory: File){
     val json: Json = Json {
       HistoryConfiguration

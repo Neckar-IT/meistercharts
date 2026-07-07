@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layers.barchart.CategoryPainterPaintingVaria
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
@@ -199,6 +200,7 @@ class BulletChartPainter(
     configuration.overflowIndicatorPainter.paintIndicators(outOfBoundsIndicatorsSelection, paintingContext)
   }
 
+  @ConfigurationDsl
   class Configuration {
     /**
      * The value range to be used for all categories painted by the painter

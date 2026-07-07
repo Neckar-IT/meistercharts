@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.ArcPathWorkaroundEpsilon
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.AbstractPaintablePaintingVariables
@@ -48,16 +49,16 @@ import kotlin.math.absoluteValue
  */
 class BalloonTooltipPaintable(
   content: Paintable,
-  additionalConfiguration: Configuration.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : AbstractPaintable() {
 
-  val configuration: Configuration = Configuration(content).also(additionalConfiguration)
+  val style: Style = Style(content).also(styleConfiguration)
 
   /**
    * Updates the content - and calls [layout]
    */
   fun layout(paintingContext: LayerPaintingContext, content: Paintable) {
-    configuration.content = content
+    style.content = content
     layout(paintingContext)
   }
 
@@ -155,18 +156,18 @@ class BalloonTooltipPaintable(
     var yBottom: @px Double = Double.NaN
 
     override fun performCalculation(paintingContext: LayerPaintingContext) {
-      contentBoundingBox = configuration.content.boundingBox(paintingContext)
+      contentBoundingBox = style.content.boundingBox(paintingContext)
       val contentSize = contentBoundingBox.size
-      contentPadding = configuration.boxStyle.padding
+      contentPadding = style.boxStyle.padding
 
-      noseSide = configuration.noseSide()
+      noseSide = style.noseSide()
 
       //The distance from top left
-      @px val nosePositionDistanceFromTop = configuration.nosePositionCalculator.calculateDistanceFromTop(contentSize)
-      @px val nosePositionDistanceFromLeft = configuration.nosePositionCalculator.calculateDistanceFromLeft(contentSize)
+      @px val nosePositionDistanceFromTop = style.nosePositionCalculator.calculateDistanceFromTop(contentSize)
+      @px val nosePositionDistanceFromLeft = style.nosePositionCalculator.calculateDistanceFromLeft(contentSize)
 
 
-      noseWidthHalf = configuration.noseWidth / 2.0
+      noseWidthHalf = style.noseWidth / 2.0
 
       //Calculate the total width/height - including the content padding
       widthInclusiveContentPadding = contentSize.width + contentPadding.offsetWidth
@@ -182,8 +183,8 @@ class BalloonTooltipPaintable(
 
 
       contentOffsetX = when (noseSide) {
-        Side.Left -> configuration.noseLength + contentPadding.left
-        Side.Right -> -configuration.noseLength - contentPadding.right - contentSize.width
+        Side.Left -> style.noseLength + contentPadding.left
+        Side.Right -> -style.noseLength - contentPadding.right - contentSize.width
 
         Side.Bottom,
         Side.Top,
@@ -195,12 +196,12 @@ class BalloonTooltipPaintable(
         Side.Right,
         -> -nosePositionDistanceFromTop
 
-        Side.Top -> configuration.noseLength + contentPadding.top
-        Side.Bottom -> -configuration.noseLength - contentPadding.bottom - contentSize.height
+        Side.Top -> style.noseLength + contentPadding.top
+        Side.Bottom -> -style.noseLength - contentPadding.bottom - contentSize.height
       }
 
       //The radii for the border
-      val borderRadii = configuration.boxStyle.radii ?: BorderRadius.none
+      val borderRadii = style.boxStyle.radii ?: BorderRadius.none
 
       //Calculate the max radii - just for content width/height (without calculating the nose location)
       val borderRadiusMaxWidthHeight = (widthInclusiveContentPadding / 2.0).coerceAtMost(heightInclusiveContentPadding / 2.0)
@@ -213,8 +214,8 @@ class BalloonTooltipPaintable(
       //Calculate the start and end of the box
       when (noseSide) {
         Side.Left -> {
-          xLeft = configuration.noseLength
-          xRight = widthInclusiveContentPadding + configuration.noseLength
+          xLeft = style.noseLength
+          xRight = widthInclusiveContentPadding + style.noseLength
 
           yTop = heightLow
           yBottom = heightHigh
@@ -224,8 +225,8 @@ class BalloonTooltipPaintable(
         }
 
         Side.Right -> {
-          xLeft = -widthInclusiveContentPadding - configuration.noseLength
-          xRight = -configuration.noseLength
+          xLeft = -widthInclusiveContentPadding - style.noseLength
+          xRight = -style.noseLength
 
           yTop = heightLow
           yBottom = heightHigh
@@ -238,8 +239,8 @@ class BalloonTooltipPaintable(
           xRight = widthHigh
           xLeft = widthLow
 
-          yTop = configuration.noseLength
-          yBottom = configuration.noseLength + heightInclusiveContentPadding
+          yTop = style.noseLength
+          yBottom = style.noseLength + heightInclusiveContentPadding
 
           radiusTopLeft = radiusTopLeft.coerceAtMost(widthLow.absoluteValue - noseWidthHalf - ArcPathWorkaroundEpsilon)
           radiusTopRight = radiusTopRight.coerceAtMost(widthHigh.absoluteValue - noseWidthHalf - ArcPathWorkaroundEpsilon)
@@ -249,8 +250,8 @@ class BalloonTooltipPaintable(
           xRight = widthHigh
           xLeft = widthLow
 
-          yTop = -configuration.noseLength - heightInclusiveContentPadding
-          yBottom = -configuration.noseLength
+          yTop = -style.noseLength - heightInclusiveContentPadding
+          yBottom = -style.noseLength
 
           radiusBottomLeft = radiusBottomLeft.coerceAtMost(widthLow.absoluteValue - noseWidthHalf - ArcPathWorkaroundEpsilon)
           radiusBottomRight = radiusBottomRight.coerceAtMost(widthHigh.absoluteValue - noseWidthHalf - ArcPathWorkaroundEpsilon)
@@ -327,18 +328,18 @@ class BalloonTooltipPaintable(
       }
 
       //Fill the background - including shadow
-      configuration.boxStyle.shadow?.let { shadow ->
+      style.boxStyle.shadow?.let { shadow ->
         gc.shadow(shadow)
       }
-      configuration.boxStyle.fill.get()?.let { fill ->
+      style.boxStyle.fill.get()?.let { fill ->
         gc.fill(fill)
         gc.fill()
       }
       gc.clearShadow()
 
       //Stroke the border
-      configuration.boxStyle.borderColor.get()?.let { borderColor ->
-        gc.lineWidth = configuration.boxStyle.borderWidth
+      style.boxStyle.borderColor.get()?.let { borderColor ->
+        gc.lineWidth = style.boxStyle.borderWidth
         gc.stroke(borderColor)
         gc.stroke()
       }
@@ -348,7 +349,7 @@ class BalloonTooltipPaintable(
         gc.paintMark(paintingVariables.contentOffsetX, paintingVariables.contentOffsetY)
       }
 
-      configuration.content.paintInBoundingBox(
+      style.content.paintInBoundingBox(
         paintingContext,
         x = paintingVariables.contentOffsetX,
         y = paintingVariables.contentOffsetY,
@@ -359,7 +360,8 @@ class BalloonTooltipPaintable(
     }
   }
 
-  class Configuration(
+  @StyleDsl
+  class Style(
     /**
      * The content paintable for the balloon tooltip
      */

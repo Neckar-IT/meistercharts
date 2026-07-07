@@ -844,7 +844,7 @@ fun String.toColorProvider(): ColorProvider {
  * Applies the style to an overflow indicator painter
  */
 fun OverflowIndicatorPainter.applyStyle(jsStyle: OverflowIndicatorStyle) {
-  this.configuration.applyDefaultIndicators(
+  this.style.applyDefaultIndicators(
     fill = jsStyle.fill?.toColorProvider(),
     stroke = jsStyle.stroke?.toColorProvider(),
     strokeWidth = jsStyle.strokeWidth,

@@ -74,8 +74,8 @@ class ValueAxisHudInteractionLayer(
 
             //First check if the mouse is within the hud element
             if (paintingVariables.boundingBoxes.contains(hudElementIndex, mouseLocation)) {
-              @Zoomed val deltaX = (paintingVariables.coordinatesMultiCache.x(hudElementIndex) - mouseLocation.x).abs()
-              @Zoomed val deltaY = (paintingVariables.coordinatesMultiCache.y(hudElementIndex) - mouseLocation.y).abs()
+              @Zoomed val deltaX = (paintingVariables.coordinatesMultiBuffer.x(hudElementIndex) - mouseLocation.x).abs()
+              @Zoomed val deltaY = (paintingVariables.coordinatesMultiBuffer.y(hudElementIndex) - mouseLocation.y).abs()
 
               //either deltaX or deltaY are *always* the same. Therefore, we can just add these values
               val deltaAdded = deltaX + deltaY

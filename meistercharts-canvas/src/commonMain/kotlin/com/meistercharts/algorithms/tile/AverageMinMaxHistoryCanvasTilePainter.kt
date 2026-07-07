@@ -22,8 +22,9 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Tile
 import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
-import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
+import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
 import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
 import com.meistercharts.color.RgbaColor
@@ -54,7 +55,7 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
   /**
    * Used to store the locations of the points to paint them later
    */
-  private val pointsCache = CoordinatesMultiCache()
+  private val pointsBuffer = CoordinatesMultiBuffer()
 
   override fun paintDataSeries(
     paintingContext: LayerPaintingContext,
@@ -75,7 +76,7 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
 
     //The point painter - that *might* be used later
     val pointPainter = configuration.pointPainters.valueAt(dataSeriesIndex.value)
-    pointsCache.prepare(0) //prepare with empty values
+    pointsBuffer.prepare(0) //prepare with empty values
 
     val averageLineStyle = configuration.averageLineStyles.valueAt(dataSeriesIndex)
     averageLineStyle.apply(gc)
@@ -162,7 +163,7 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
         @Tile val maxValueTile = tileCalculator.domainRelative2tileY(maxDomainRelative)
 
         averageLinePainter.addCoordinates(gc, x, y)
-        pointsCache.add(x, y)
+        pointsBuffer.add(x, y)
         if (paintMinMaxArea) {
           minMaxAreaPainter?.addCoordinates(gc, x, minValueTile, maxValueTile)
         }
@@ -197,12 +198,13 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
 
     //Paint the points
     if (pointPainter != null) {
-      pointsCache.fastForEachIndexed { _, x, y ->
+      pointsBuffer.fastForEachIndexed { _, x, y ->
         pointPainter.paintPoint(gc, x, y)
       }
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     historyStorage: HistoryStorage,
     contentAreaTimeRange: @ContentArea TimeRangeProvider,

@@ -289,10 +289,10 @@ data class Insets(
     fun topRight(top: Double, right: Double): Insets = Insets(top, right, 0.0, 0.0)
 
     @JvmStatic
-    fun bottomLeft(top: Double, left: Double): Insets = Insets(top, 0.0, 0.0, left)
+    fun bottomLeft(bottom: Double, left: Double): Insets = Insets(0.0, 0.0, bottom, left)
 
     @JvmStatic
-    fun bottomRight(top: Double, right: Double): Insets = Insets(top, right, 0.0, 0.0)
+    fun bottomRight(bottom: Double, right: Double): Insets = Insets(0.0, right, bottom, 0.0)
 
     /**
      * Creates a new instance with the given value for the given side.

@@ -23,9 +23,9 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.i18nConfiguration
-import com.meistercharts.canvas.layout.cache.LayoutVariable
-import com.meistercharts.canvas.layout.cache.LayoutVariablesObjectCache
-import com.meistercharts.canvas.layout.cache.StringMultiCache.Companion.Uninitialized
+import com.meistercharts.canvas.layout.buffer.LayoutVariable
+import com.meistercharts.canvas.layout.buffer.LayoutVariablesObjectBuffer
+import com.meistercharts.canvas.layout.buffer.StringMultiBuffer.Companion.Uninitialized
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.stroke
@@ -69,10 +69,10 @@ class LabelPainter2(
     /**
      * Contains the layouted labels
      */
-    val layoutedLabelsCache: LayoutVariablesObjectCache<LayoutedLabel2> = LayoutVariablesObjectCache { LayoutedLabel2() }
+    val layoutedLabelsBuffer: LayoutVariablesObjectBuffer<LayoutedLabel2> = LayoutVariablesObjectBuffer { LayoutedLabel2() }
 
     override fun isNotEmpty(): Boolean {
-      return layoutedLabelsCache.isEmpty().not()
+      return layoutedLabelsBuffer.isEmpty().not()
     }
 
     fun update(
@@ -110,13 +110,13 @@ class LabelPainter2(
       @px val lineHeight = gc.getFontMetrics().totalHeight
 
       //The size will be later reduced - if not all labels are visible
-      layoutedLabelsCache.prepare(preferredLabelsCount)
+      layoutedLabelsBuffer.prepare(preferredLabelsCount)
 
       //Fill the cache with the values - these are then used to calculate the layout
       @px var availableSpace = max - min
 
       labelLocations.fastForEachIndexed(paintingContext) { labelIndex: @LabelIndex Int, labelLocation: @MayBeNaN @Window Double ->
-        layoutedLabelsCache.values[labelIndex].let { layoutedLabel ->
+        layoutedLabelsBuffer.values[labelIndex].let { layoutedLabel ->
           layoutedLabel.index = labelIndex
 
           //Check if there is a valid label location - else skip
@@ -159,7 +159,7 @@ class LabelPainter2(
       }
 
       //Remove all invisible elements
-      layoutedLabelsCache.removeAll {
+      layoutedLabelsBuffer.removeAll {
         it.visible.not()
       }
 
@@ -176,7 +176,7 @@ class LabelPainter2(
      */
     private fun calculateOptimalPositions(min: @Window Double, max: @Window Double) {
       //Sort the labels by Y location
-      layoutedLabelsCache.sortWith(layoutedLabelByPreferredYComparator)
+      layoutedLabelsBuffer.sortWith(layoutedLabelByPreferredYComparator)
 
       // Step 1: Calculate absolute min/max values for each label
       // These are the absolute min/max values - when the labels are stacked at the top/bottom
@@ -203,7 +203,7 @@ class LabelPainter2(
     private fun calculateAbsoluteMin(min: @Window Double) {
       var lastMaxY = min - style.labelSpacing
 
-      layoutedLabelsCache.fastForEach { label ->
+      layoutedLabelsBuffer.fastForEach { label ->
         label.setCenterYMin(lastMaxY + style.labelSpacing + label.halfHeight)
         lastMaxY = label.centerYMin + label.halfHeight
       }
@@ -215,7 +215,7 @@ class LabelPainter2(
     private fun calculateAbsoluteMax(max: @Window Double) {
       var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReversed { label ->
+      layoutedLabelsBuffer.fastForEachReversed { label ->
         label.setCenterYMax(lastMinY - style.labelSpacing - label.halfHeight)
         lastMinY = label.centerYMax - label.halfHeight
       }
@@ -230,7 +230,7 @@ class LabelPainter2(
     private fun minToMaxLayout(min: @Window Double) {
       @px var lastMaxY = min - style.labelSpacing
 
-      layoutedLabelsCache.fastForEach { label ->
+      layoutedLabelsBuffer.fastForEach { label ->
         //Check the min y with the last stored top y
         if (label.actualMinY < lastMaxY + style.labelSpacing) {
           //We are too low - move up
@@ -245,7 +245,7 @@ class LabelPainter2(
      * Move 50% towards the natural position
      */
     private fun revertPercent(@pct correctionFactor: Double) {
-      layoutedLabelsCache.fastForEachFiltered({ it.hasModifiedActualY() }) { label ->
+      layoutedLabelsBuffer.fastForEachFiltered({ it.hasModifiedActualY() }) { label ->
         //The delta to the preferred center
         @px val delta = label.actualCenterY - label.preferredCenterY
         label.setActualCenterY(label.actualCenterY - delta * correctionFactor)
@@ -258,7 +258,7 @@ class LabelPainter2(
     private fun maxToMinLayout(max: @Window Double) {
       @px var lastMinY = max + style.labelSpacing
 
-      layoutedLabelsCache.fastForEachReversed { label ->
+      layoutedLabelsBuffer.fastForEachReversed { label ->
         //Check the max y with the last stored bottom y
         if (label.actualMaxY > lastMinY - style.labelSpacing) {
           //We are too high - move down
@@ -273,21 +273,21 @@ class LabelPainter2(
      * Optimize the layout locally
      */
     private fun optimizeLayoutYLocally() {
-      if (layoutedLabelsCache.isEmpty()) {
+      if (layoutedLabelsBuffer.isEmpty()) {
         return
       }
 
-      layoutedLabelsCache.fastForEachWithIndex { index, middleLabel ->
+      layoutedLabelsBuffer.fastForEachWithIndex { index, middleLabel ->
         val topLabel: LayoutedLabel2? = if (index == 0) {
           null
         } else {
-          layoutedLabelsCache[index - 1]
+          layoutedLabelsBuffer[index - 1]
         }
 
-        val bottomLabel: LayoutedLabel2? = if (index == layoutedLabelsCache.size - 1) {
+        val bottomLabel: LayoutedLabel2? = if (index == layoutedLabelsBuffer.size - 1) {
           null
         } else {
-          layoutedLabelsCache[index + 1]
+          layoutedLabelsBuffer[index + 1]
         }
 
         avoidOverlap(topLabel, middleLabel, bottomLabel)
@@ -381,7 +381,7 @@ class LabelPainter2(
     gc.font(style.font())
 
     //Paint the labels
-    paintingVariables.layoutedLabelsCache.fastForEach { label ->
+    paintingVariables.layoutedLabelsBuffer.fastForEach { label ->
       @Window @px val preferredCenterY = snapYPosition(label.preferredCenterY)
       @Window @px val actualCenterY = snapYPosition(label.actualCenterY)
 

@@ -118,8 +118,8 @@ class MaxNumberOfTicksProvider(val maxTickCount: Int, val delegate: TickProvider
  */
 fun TickProvider.withMaxNumberOfTicks(maxTickCount: Int): MaxNumberOfTicksProvider {
   if (this is MaxNumberOfTicksProvider) {
-    //Avoid wrapping multiple times
-    return MaxNumberOfTicksProvider(maxTickCount, this.delegate)
+    //Avoid wrapping multiple times - keep the tighter of the two caps
+    return MaxNumberOfTicksProvider(maxTickCount.coerceAtMost(this.maxTickCount), this.delegate)
   }
 
   return MaxNumberOfTicksProvider(maxTickCount, this)

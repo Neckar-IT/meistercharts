@@ -19,14 +19,14 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LoopIndexAware
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.loop.PaintingLoopIndex
-import com.meistercharts.canvas.layout.cache.MappedLayoutCache
+import com.meistercharts.canvas.layout.buffer.MappedLayoutBuffer
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 
 /**
  * Painting variables for [StripePainter]s.
  *
- * This painting variables supports multiple data series by using [MappedLayoutCache] with the data series index as key
+ * This painting variables supports multiple data series by using [MappedLayoutBuffer] with the data series index as key
  */
 abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type>(
   /**
@@ -67,7 +67,7 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
   /**
    * Contains the delegate painting variables for each data series
    */
-  private val paintingVariables4DataSeries = MappedLayoutCache<DataSeriesIndexType, StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>> {
+  private val paintingVariables4DataSeries = MappedLayoutBuffer<DataSeriesIndexType, StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>> {
     StripePainterPaintingVariablesForOneDataSeries(dataSeriesIndexDefault, value1Default, value2Default, value3Default, value4Default)
   }
 

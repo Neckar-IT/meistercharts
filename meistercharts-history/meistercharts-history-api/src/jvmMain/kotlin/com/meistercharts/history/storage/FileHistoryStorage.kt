@@ -119,11 +119,15 @@ class FileHistoryStorage(
       }
 
       HistoryBucketRange.ThirtyDays -> {
-        return startInUtc.monthValue.toString() + ".json"
+        //30-day buckets are epoch-aligned, not calendar-aligned, so the month value is not
+        //unique within a year (two buckets can start in the same month). Use the bucket index,
+        //which uniquely identifies the bucket.
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.OneQuarter -> {
-        return startInUtc.monthValue.toString() + ".json"
+        //90-day buckets are epoch-aligned, not calendar-aligned - use the unique bucket index.
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.OneYear -> {

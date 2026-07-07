@@ -167,7 +167,7 @@ class BulletChartBalloonTooltipSupport(
   }
 
   fun applyBalloonTooltipSizes(currentValueSymbolSize: Size, barSymbolSize: Size) {
-    tooltipContentPaintable.delegate.configuration.symbols = createSymbolsForBallonTooltipValueAndRange(currentValueSymbolSize, barSymbolSize)
+    tooltipContentPaintable.delegate.style.symbols = createSymbolsForBallonTooltipValueAndRange(currentValueSymbolSize, barSymbolSize)
   }
 
   /**
@@ -181,7 +181,7 @@ class BulletChartBalloonTooltipSupport(
       )
     ) {
     }.also {
-      it.tooltipPainter.configuration.noseSide = {
+      it.tooltipPainter.style.noseSide = {
         tooltipPlacement.tooltipSide.flipped()
       }
     }

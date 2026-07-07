@@ -24,6 +24,7 @@ import com.meistercharts.annotations.Tile
 import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.TileChartCalculator
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.HistoryBucket
@@ -117,6 +118,7 @@ class CandleHistoryCanvasTilePainter(val configuration: Configuration) : History
     }
   }
 
+  @ConfigurationDsl
   class Configuration(
     historyStorage: HistoryStorage,
     contentAreaTimeRange: @ContentArea TimeRangeProvider,

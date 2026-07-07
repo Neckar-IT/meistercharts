@@ -17,8 +17,8 @@ package com.meistercharts.algorithms.painter.stripe
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.layout.cache.LayoutVariable
-import com.meistercharts.canvas.layout.cache.LayoutVariablesObjectCache
+import com.meistercharts.canvas.layout.buffer.LayoutVariable
+import com.meistercharts.canvas.layout.buffer.LayoutVariablesObjectBuffer
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -106,7 +106,7 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
    * Contains the information about the segments.
    * Each segment might have a different length (and span multiple data points)
    */
-  val segments: LayoutVariablesObjectCache<SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>> = LayoutVariablesObjectCache {
+  val segments: LayoutVariablesObjectBuffer<SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>> = LayoutVariablesObjectBuffer {
     SegmentLayoutVariables(value1Default, value2Default, value3Default, value4Default)
   }
 
@@ -133,7 +133,7 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
 
     //Paint the *current* value until the next start
     currentEndX = startX
-    currentEndTime = endTime
+    currentEndTime = startTime
 
     this.activeTimeStamp = activeTimeStamp
   }

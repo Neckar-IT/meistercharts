@@ -668,7 +668,7 @@ open class PixelValuesModel(
    * This method copies the current averages to [heldAverageValues]
    */
   fun holdAverages() {
-    while (heldAverageValues.size > heldAveragesMaxCount) {
+    while (heldAverageValues.size >= heldAveragesMaxCount) {
       heldAverageValues.removeLast()
     }
 

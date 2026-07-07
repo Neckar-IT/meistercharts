@@ -18,6 +18,7 @@ package com.meistercharts.canvas.paintable
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.resize.HandleBoundsProvider
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Direction
@@ -34,7 +35,7 @@ open class ResizeHandlesPaintable(
   val handleBoundsProvider: HandleBoundsProvider,
 ) : Paintable {
 
-  val configuration: Configuration = Configuration()
+  val style: Style = Style()
 
   override fun boundingBox(paintingContext: LayerPaintingContext): Rectangle {
     return Rectangle.withLTRB(
@@ -48,7 +49,7 @@ open class ResizeHandlesPaintable(
   override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
     val gc = paintingContext.gc
 
-    gc.fill(configuration.handleFill)
+    gc.fill(style.handleFill)
 
     Direction.cornersAndSides.fastForEach { it: Direction ->
       gc.fillOvalOrigin(
@@ -60,7 +61,8 @@ open class ResizeHandlesPaintable(
     }
   }
 
-  class Configuration {
+  @StyleDsl
+  class Style {
     /**
      * The color of the handle
      */

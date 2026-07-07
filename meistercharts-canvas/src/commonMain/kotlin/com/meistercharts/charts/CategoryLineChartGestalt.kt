@@ -51,7 +51,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MeisterchartBuilder
-import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
 import com.meistercharts.charts.support.ValueAxisSupport
 import com.meistercharts.charts.support.addLayers
 import com.meistercharts.charts.support.getTopTitleLayer
@@ -164,7 +164,7 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
     valueLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
 
       private val paintingVariables = object : PaintingVariables {
-        val locations = @MayBeNaN DoubleMultiCache()
+        val locations = @MayBeNaN DoubleMultiBuffer()
 
         override fun calculate(paintingContext: LayerPaintingContext) {
           val chartCalculator = paintingContext.chartCalculator

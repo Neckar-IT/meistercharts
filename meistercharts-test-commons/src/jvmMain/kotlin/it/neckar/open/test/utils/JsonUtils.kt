@@ -156,23 +156,28 @@ fun Assert<String>.isJsonEqualTo(
  * Recursively removes all properties that start with the given prefix from the current node and all child nodes.
  */
 fun JsonNode.removePropertiesStartingWith(prefix: String) {
-  if (this is ObjectNode) {
-    val keysToRemove = asObjectNode()
-      .properties()
-      .asSequence()
-      .map { it.key }
-      .filter { it.startsWith(prefix) }
-      .toList()
+  when {
+    this is ObjectNode -> {
+      val keysToRemove = properties()
+        .asSequence()
+        .map { it.key }
+        .filter { it.startsWith(prefix) }
+        .toList()
 
-    this.remove(keysToRemove)
+      this.remove(keysToRemove)
+
+      //Recurse into the remaining field values
+      properties()
+        .asSequence()
+        .map { it.value }
+        .forEach { it.removePropertiesStartingWith(prefix) }
+    }
+
+    this.isArray -> {
+      //Recurse into array elements - object arrays (e.g. `parameters`, `tags`) can carry matching keys too
+      elements().forEach { it.removePropertiesStartingWith(prefix) }
+    }
   }
-
-  //Call recursively for all child nodes
-  properties()
-    .asSequence()
-    .map { it.value }
-    //.filterIsInstance<JsonNode>()
-    .forEach { it.removePropertiesStartingWith(prefix) }
 }
 
 /**

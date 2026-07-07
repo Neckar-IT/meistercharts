@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.painter.stripe.refentry
 
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
@@ -52,6 +53,7 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
     return currentId != value1 || currentCount != value2 || currentEnumSet != value3
   }
 
+  @ConfigurationDsl
   open class Configuration {
   }
 }

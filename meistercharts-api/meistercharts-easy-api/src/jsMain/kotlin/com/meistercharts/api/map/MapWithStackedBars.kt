@@ -15,13 +15,28 @@
  */
 package com.meistercharts.api.map
 
+import com.meistercharts.algorithms.layers.barchart.StackedBarWithLabelPaintable
+import com.meistercharts.algorithms.layers.slippymap.PaintableOnSlippyMap
 import com.meistercharts.api.MeisterChartsApiLegacy
+import com.meistercharts.api.toColorProvider
+import com.meistercharts.api.toModelLinear
+import com.meistercharts.canvas.paintable.Paintable
+import com.meistercharts.canvas.paintable.withDefaultZoom
+import com.meistercharts.canvas.paintable.withOriginAtBottom
 import com.meistercharts.charts.MapWithPaintablesGestalt
 import com.meistercharts.js.MeisterchartJS
-import it.neckar.logging.LoggerFactory
+import com.meistercharts.maps.Latitude
+import com.meistercharts.maps.Longitude
+import com.meistercharts.model.Zoom
+import com.meistercharts.range.LinearValueRange
+import com.meistercharts.range.ValueRange
+import it.neckar.open.provider.DoublesProvider
+import it.neckar.open.provider.SizedProvider1
 
 /**
- * A map with stacked bars
+ * A map with stacked bars.
+ *
+ * Each [StackedBarOnMap] is placed at its latitude/longitude and painted as a labelled stacked bar.
  */
 @JsExport
 class MapWithStackedBars internal constructor(
@@ -33,18 +48,42 @@ class MapWithStackedBars internal constructor(
     gestalt.applyEasyApiDefaults()
   }
 
+  /**
+   * The bars of the most recent [setData] call. The value range from [setStyle] is baked into each
+   * bar paintable, so both are kept and the paintables are rebuilt whenever either changes.
+   */
+  private var bars: List<StackedBarOnMap> = emptyList()
+  private var valueRange: LinearValueRange = ValueRange.default
+
   override fun setData(jsData: MapWithBarsData) {
-    // TODO
-    logger.warn("setData is not implemented yet")
+    bars = jsData.stackedBars.orEmpty().filterNotNull()
+    rebuildPaintables()
+    markAsDirty()
   }
 
   override fun setStyle(jsStyle: MapWithBarsStyle) {
-    // TODO
-    logger.warn("setStyle is not implemented yet")
-
+    jsStyle.valueRange?.let {
+      valueRange = it.toModelLinear()
+    }
+    rebuildPaintables()
+    markAsDirty()
   }
 
-  companion object {
-    private val logger = LoggerFactory.getLogger("com.meistercharts.api.map.MapWithStackedBars")
+  private fun rebuildPaintables() {
+    val paintables: List<PaintableOnSlippyMap<Paintable>> = bars.map { bar ->
+      val barPaintable = StackedBarWithLabelPaintable(
+        name = bar.locationName,
+        valuesProvider = DoublesProvider.forValues(bar.barValues.toList()),
+        valueRange = valueRange,
+        colors = bar.barColors.map { it.toColorProvider() },
+      ).withOriginAtBottom().withDefaultZoom()
+
+      PaintableOnSlippyMap(Latitude(bar.latitude), Longitude(bar.longitude), barPaintable)
+    }
+
+    gestalt.configuration.paintables = object : SizedProvider1<PaintableOnSlippyMap<*>, Zoom> {
+      override fun size(param1: Zoom): Int = paintables.size
+      override fun valueAt(index: Int, param1: Zoom): PaintableOnSlippyMap<*> = paintables[index]
+    }
   }
 }

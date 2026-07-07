@@ -33,6 +33,7 @@ class RelativeToNowTickFormatTest {
 
   @Test
   fun testRelativeFormat() {
-    assertThat(RelativeToNowTickFormat.format(10.0, DistanceDays(DistanceDays.TicksPerMonth.Every5Days), I18nConfiguration.Germany)).isEqualTo("-0 y 0 M 0 d 0 h 0 min 0 s 113 ms")
+    //Leading zero-value units are suppressed - only the significant tail is shown
+    assertThat(RelativeToNowTickFormat.format(10.0, DistanceDays(DistanceDays.TicksPerMonth.Every5Days), I18nConfiguration.Germany)).isEqualTo("-113 ms")
   }
 }

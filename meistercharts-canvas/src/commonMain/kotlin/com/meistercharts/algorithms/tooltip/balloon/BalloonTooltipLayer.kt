@@ -21,7 +21,7 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
+import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
 import it.neckar.open.provider.CoordinatesProvider1
@@ -58,17 +58,17 @@ class BalloonTooltipLayer(
      */
     @Window
     @MayBeNaN
-    val coordinates = CoordinatesMultiCache()
+    val coordinates = CoordinatesMultiBuffer()
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       val size = configuration.coordinates.size(paintingContext)
-      coordinates.ensureSize(size)
+      coordinates.resize(size)
 
       configuration.coordinates.fastForEachIndexed(paintingContext) { index, x, y ->
         coordinates.set(index, x, y)
 
         val contentPainter = configuration.tooltipContent.valueAt(index, paintingContext)
-        tooltipPainter.configuration.content = contentPainter
+        tooltipPainter.style.content = contentPainter
         tooltipPainter.layout(paintingContext, contentPainter)
       }
     }

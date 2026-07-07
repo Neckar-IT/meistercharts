@@ -578,10 +578,13 @@ object RelativeToNowTickFormat : RelativeTickFormat {
     @Domain @ms var distanceAbsolute = abs(distance)
     val sign = if (distance < 0) "+" else "-"
     val formattedDistance = StringBuilder().append(sign)
+    //Suppress leading zero-value units - start appending at the first non-zero unit
+    var valueAppended = false
     for (timeUnit in timeUnitsDescending) {
       val timeUnitValue = (distanceAbsolute / timeUnit.span).toInt()
-      if (timeUnitValue > 0 || formattedDistance.isNotEmpty()) {
+      if (timeUnitValue > 0 || valueAppended) {
         formattedDistance.append(timeUnitValue).append(' ').append(timeUnit.unit).append(' ')
+        valueAppended = true
       }
       distanceAbsolute -= timeUnitValue * timeUnit.span
     }

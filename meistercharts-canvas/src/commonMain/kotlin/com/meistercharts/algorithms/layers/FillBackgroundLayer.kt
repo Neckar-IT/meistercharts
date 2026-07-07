@@ -29,11 +29,11 @@ import it.neckar.open.kotlin.lang.asProvider
  * Fills the canvas with a background color
  */
 class FillBackgroundLayer(
-  configuration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
-  val configuration: Configuration = Configuration().also(configuration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   constructor(backgroundColor: Color) : this({
     this.background = backgroundColor.asProvider()

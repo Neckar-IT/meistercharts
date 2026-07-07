@@ -39,6 +39,10 @@ value class HistoryUnit(val name: String?) {
      * millimeter
      */
     val mm: @mm HistoryUnit = HistoryUnit("mm")
-    val ml: @mm HistoryUnit = HistoryUnit("ml")
+
+    /**
+     * milliliter
+     */
+    val ml: HistoryUnit = HistoryUnit("ml")
   }
 }

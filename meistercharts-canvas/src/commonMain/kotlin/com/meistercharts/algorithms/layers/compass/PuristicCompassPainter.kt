@@ -20,7 +20,7 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
@@ -49,15 +49,15 @@ import kotlin.math.PI
 /**
  */
 class PuristicCompassPainter(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : GaugeBasePainter {
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override fun paintBase(gaugePaintable: GaugePaintable, paintingContext: LayerPaintingContext, radius: Double, startAngle: Double, extendWithRotationDirection: @rad @MayBeNegative Double, valueRange: ValueRange) {
     val gc = paintingContext.gc
 
-    gc.fill(style.backgroundColor)
+    gc.fill(configuration.backgroundColor)
     gc.fillOvalCenter(0.0, 0.0, radius * 2.0, radius * 2.0)
 
     //paint the degree markers (small ticks)
@@ -78,10 +78,10 @@ class PuristicCompassPainter(
     tickType: CompassTickType
   ) {
     //Only set the gc settings once at the start (especially important for the font)
-    gc.font(style.tickFont(radius, tickType))
-    gc.lineWidth = style.tickWidth(radius, tickType)
+    gc.font(configuration.tickFont(radius, tickType))
+    gc.lineWidth = configuration.tickWidth(radius, tickType)
 
-    style.ticksProvider.ticks(gaugePaintable, tickType)
+    configuration.ticksProvider.ticks(gaugePaintable, tickType)
       .fastForEach { tickValue: @Domain Double ->
         paintTick(gc, startAngle, valueRange, tickValue, radius, extendWithRotationDirection, tickType)
       }
@@ -101,14 +101,14 @@ class PuristicCompassPainter(
   ) {
     val tickAngle = domain2rad(tickValue, valueRange, startAngle, extendWithRotationDirection)
 
-    @px val startPolarRadius = radius - style.tickLength(radius, tickType)
+    @px val startPolarRadius = radius - configuration.tickLength(radius, tickType)
 
     val startCartesianX = PolarCoordinates.toCartesianX(startPolarRadius, tickAngle)
     val startCartesianY = PolarCoordinates.toCartesianY(startPolarRadius, tickAngle)
     val endCartesianX = PolarCoordinates.toCartesianX(radius, tickAngle)
     val endCartesianY = PolarCoordinates.toCartesianY(radius, tickAngle)
 
-    gc.fill(style.tickColor)
+    gc.stroke(configuration.tickColor())
     gc.strokeLine(startCartesianX, startCartesianY, endCartesianX, endCartesianY)
 
 
@@ -117,19 +117,19 @@ class PuristicCompassPainter(
         //too small to be decipherable
         return
       }
-      val formattedTick = style.valueFormat.format(tickValue)
+      val formattedTick = configuration.valueFormat.format(tickValue)
 
       gc.saved {
         gc.translate(startCartesianX, startCartesianY)
         gc.rotateRadians(tickAngle + PI / 2.0)
-        gc.fill(style.labelsColor)
-        gc.fillText(formattedTick, Coordinates.origin, Direction.TopCenter, style.labelsGap)
+        gc.fill(configuration.labelsColor)
+        gc.fillText(formattedTick, Coordinates.origin, Direction.TopCenter, configuration.labelsGap)
       }
     }
   }
 
-  @StyleDsl
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * Returns the ticks
      */

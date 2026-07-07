@@ -108,7 +108,7 @@ class ZoomAndTranslationConfiguration {
       zoomAndTranslationLayer.resetToDefaultsOnDoubleClick()
     }
 
-    if (resetOnDoubleClick) {
+    if (resetOnDoubleTap) {
       zoomAndTranslationLayer.resetToDefaultsOnDoubleTap()
     }
 

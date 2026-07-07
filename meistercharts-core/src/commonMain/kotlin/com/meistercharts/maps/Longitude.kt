@@ -21,6 +21,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.unit.other.deg
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.math.abs
 
 /**
  * The longitude (180° W - 180° E) of the location in the center of the window
@@ -55,16 +56,16 @@ value class Longitude(
    *
    * more: https://en.wikipedia.org/wiki/Geographic_coordinate_system
    */
-  @Suppress("UNUSED_PARAMETER")
   fun format(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
-    val longitudeMinutesCalculation = ((value % 1) * 60)
+    val absValue = abs(value)
+    val longitudeMinutesCalculation = ((absValue % 1) * 60)
     val longitudeSecondsCalculation = (longitudeMinutesCalculation % 1) * 60
     return buildString {
-      append(value.toInt())
+      append(absValue.toInt())
       append("°")
       append(longitudeMinutesCalculation.toInt())
       append("'")
-      append(longitudeSecondsCalculation.format(1))
+      append(longitudeSecondsCalculation.format(1, i18nConfiguration = i18nConfiguration))
       append("\"")
       append(if (isWest()) "W" else if (isEast()) "E" else "")
     }

@@ -54,52 +54,22 @@ See [architecture/](architecture/) for architecture notes and conventions, inclu
 
 ### Modules Overview
 
-Each module has a specific function in the architecture of
-MeisterCharts. Here is an overview of the different modules
-and their functions:
+Platform-independent modules (`commonMain`) compile to both JVM and JS; the JVM test source
+set runs the unit tests. Platform-specific modules (`-fx`, `-react`) provide the bindings for
+one target.
 
-#### meistercharts-examples
-
-Contains examples of MeisterCharts and shows how to use MeisterCharts with
-different package manager and
-
-- [](meistercharts-examples)
-
-#### history-algorithms
-
-Data model and calculations related to history
-
-- [](meistercharts-history)
-
-#### history (platform independent) - for usage with REST
-
-Contains history related classes - including data transfer objects and serializers for REST
-
-#### meistercharts
-
-This project dir contains specific JS implementations for customers.
-
-#### meistercharts-algorithms (platform independent)
-
-This module contains algorithm implementations.
-All content within this module is independent of any UI framework.
-
-This code can be compiled to JVM and JavaScript
-
-The src/test/kotlin folder contains tests that run using the JVM
-
-#### meistercharts-canvas (platform independent)
-
-Contains layer implementations and canvas related stuff
-
-#### meistercharts-custom
-
-Custom charts for projects that are usually not reused.
-
-#### meistercharts-marketing
-
-Marketing related documentation and (design) files
-
-#### meistercharts-version-info (platform independent)
-
-Contains an object that can be used to resolve the current version number
+| Module | Platform | Purpose |
+|--------|----------|---------|
+| `meistercharts-core` | independent | Core primitives: math, geometry, model, color, time, i18n. |
+| `meistercharts-canvas` | independent | The charting engine — layers, gestalten, painters, paintables, canvas abstraction. |
+| `meistercharts-history` | independent | History data model, chunks and serializers (`-history-api`, `-history-core`); usable over REST. |
+| `meistercharts-additional-charts` | independent | Additional, less commonly used chart types built on the engine. |
+| `meistercharts-api` / `meistercharts-easy-api` | JS | The simplified, JS-facing API and WebComponents (`createTimeLineChartFromId`, `setData`/`setStyle`). |
+| `meistercharts-data` | independent | Data transfer / REST layer (`-data-api`, `-data-client`, `-data-server`). |
+| `meistercharts-demos` | independent | Interactive demo gallery — every property adjustable at runtime (`-demos`, `-demos-js`, `-demos-react`). |
+| `meistercharts-fx` | JavaFX | JavaFX platform implementation, used as a fast development/preview platform. |
+| `meistercharts-react` / `meistercharts-react-kotlin` | React | React integration: TypeScript components and their Kotlin bindings. |
+| `meistercharts-examples` | JS | Standalone usage examples for different bundlers (npm, yarn, vite). |
+| `meistercharts-e2e-tests` | JS | Playwright end-to-end and screenshot regression tests. |
+| `meistercharts-docs` | — | This developer documentation (AsciiDoc). |
+| `meistercharts-version-info` | independent | Resolves the current version number as a constant. |

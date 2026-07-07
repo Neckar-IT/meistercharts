@@ -367,12 +367,14 @@ data class HistoryValues(
     other as HistoryValues
 
     if (decimalHistoryValues != other.decimalHistoryValues) return false
-    return enumHistoryValues == other.enumHistoryValues
+    if (enumHistoryValues != other.enumHistoryValues) return false
+    return referenceEntryHistoryValues == other.referenceEntryHistoryValues
   }
 
   override fun hashCode(): Int {
     var result = decimalHistoryValues.hashCode()
     result = 31 * result + enumHistoryValues.hashCode()
+    result = 31 * result + referenceEntryHistoryValues.hashCode()
     return result
   }
 

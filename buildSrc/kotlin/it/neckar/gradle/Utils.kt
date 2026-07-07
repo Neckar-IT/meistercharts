@@ -968,7 +968,7 @@ val Project.branch: String
 
 /**
  * Returns the branch-based Docker tag (mutable alias like `main` or `feature_xyz`).
- * Used in docker-compose templates and by Watchtower for auto-updates.
+ * Used in docker-compose templates; continuous deploy (#2341) pulls this tag on rollout.
  */
 val Project.branchTagForDocker: String
   get() {

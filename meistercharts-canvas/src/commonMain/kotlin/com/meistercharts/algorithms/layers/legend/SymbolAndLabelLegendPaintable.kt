@@ -18,12 +18,12 @@ package com.meistercharts.algorithms.layers.legend
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
-import com.meistercharts.canvas.layout.cache.BoundsMultiCache
+import com.meistercharts.canvas.layout.buffer.BoundsMultiBuffer
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.AbstractPaintable
@@ -65,10 +65,10 @@ class SymbolAndLabelLegendPaintable(
    */
   symbols: MultiProvider<LegendEntryIndex, Paintable>,
 
-  additionalConfiguration: Configuration.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : AbstractPaintable() {
 
-  val configuration: Configuration = Configuration(labels, symbols).also(additionalConfiguration)
+  val style: Style = Style(labels, symbols).also(styleConfiguration)
 
   override fun paintingVariables(): PaintablePaintingVariables {
     return paintingVariables
@@ -96,7 +96,7 @@ class SymbolAndLabelLegendPaintable(
     /**
      * Contains the symbol bounding boxes
      */
-    val symbolBoundingBoxes = BoundsMultiCache()
+    val symbolBoundingBoxes = BoundsMultiBuffer()
 
     /**
      * The height of the text block
@@ -122,11 +122,11 @@ class SymbolAndLabelLegendPaintable(
       val chartSupport = paintingContext.chartSupport
 
       val gc = chartSupport.canvas.gc
-      gc.font(configuration.textFont())
+      gc.font(style.textFont())
 
-      val labels = configuration.labels
+      val labels = style.labels
       labelsCount = labels.size(chartSupport)
-      symbolBoundingBoxes.ensureSize(labelsCount)
+      symbolBoundingBoxes.resize(labelsCount)
 
       if (labelsCount == 0) {
         //Nothing to paint, just exit
@@ -136,7 +136,7 @@ class SymbolAndLabelLegendPaintable(
       maxSymbolHeight = 0.0
       maxSymbolWidth = 0.0
       labelsCount.fastFor { index ->
-        val symbol = configuration.symbols.valueAt(index)
+        val symbol = style.symbols.valueAt(index)
 
         val boundingBox = symbol.boundingBox(paintingContext)
         symbolBoundingBoxes[index] = boundingBox
@@ -155,18 +155,18 @@ class SymbolAndLabelLegendPaintable(
       textBlockHeight = TextLineCalculations.calculateTextBlockHeight(
         chartSupport.canvas.gc.getFontMetrics(),
         linesCount = labelsCount,
-        spaceBetweenLines = configuration.entriesGap,
+        spaceBetweenLines = style.entriesGap,
         minLineHeight = maxSymbolHeight
       )
 
-      textBlockWidth = TextLineCalculations.calculateMultilineTextWidth(gc, labels.asSizedProvider(chartSupport), configuration.maxLabelWidth)
+      textBlockWidth = TextLineCalculations.calculateMultilineTextWidth(gc, labels.asSizedProvider(chartSupport), style.maxLabelWidth)
 
 
       //Calculate the bounding box
       val size = Size(
-        width = maxSymbolWidth + configuration.symbolLabelGap + textBlockWidth, height = textBlockHeight
+        width = maxSymbolWidth + style.symbolLabelGap + textBlockWidth, height = textBlockHeight
       )
-      boundingBox = Rectangle(Coordinates(-maxSymbolWidth - configuration.symbolLabelGap / 2.0, 0.0), size)
+      boundingBox = Rectangle(Coordinates(-maxSymbolWidth - style.symbolLabelGap / 2.0, 0.0), size)
     }
   }
 
@@ -180,9 +180,9 @@ class SymbolAndLabelLegendPaintable(
     gc.translate(x, y)
 
     //Apply the text font
-    gc.font(configuration.textFont())
+    gc.font(style.textFont())
 
-    val labels = configuration.labels
+    val labels = style.labels
 
     //Translate to the *center* of the first row
     gc.translate(0.0, paintingVariables.rowHeightWithoutGap / 2.0)
@@ -195,23 +195,23 @@ class SymbolAndLabelLegendPaintable(
       }
 
       gc.saved {
-        val symbol = configuration.symbols.valueAt(index)
-        symbol.paintInBoundingBox(paintingContext, -configuration.symbolLabelGap / 2.0, 0.0, Direction.CenterRight)
+        val symbol = style.symbols.valueAt(index)
+        symbol.paintInBoundingBox(paintingContext, -style.symbolLabelGap / 2.0, 0.0, Direction.CenterRight)
       }
       gc.paintTextBox(
         line = label,
         anchorDirection = Direction.CenterLeft,
-        anchorGapHorizontal = configuration.symbolLabelGap / 2.0,
+        anchorGapHorizontal = style.symbolLabelGap / 2.0,
         anchorGapVertical = 0.0,
-        textColor = configuration.labelColors.valueAt(index),
-        maxStringWidth = configuration.maxLabelWidth
+        textColor = style.labelColors.valueAt(index),
+        maxStringWidth = style.maxLabelWidth
       )
-      gc.translate(0.0, configuration.entriesGap + paintingVariables.rowHeightWithoutGap)
+      gc.translate(0.0, style.entriesGap + paintingVariables.rowHeightWithoutGap)
     }
   }
 
-  @ConfigurationDsl
-  class Configuration(
+  @StyleDsl
+  class Style(
     /**
      * The labels that are shown on the right side of the legend.
      * The labels are shown in the provided order (from top to bottom)
@@ -283,12 +283,12 @@ class SymbolAndLabelLegendPaintable(
       labels: @LegendEntryIndex SizedProvider1<String, ChartSupport>,
       symbolColors: MultiProvider<LegendEntryIndex, Color>,
       symbolSize: @px Size = Size.PX_16,
-      additionalConfiguration: Configuration.() -> Unit = {},
+      styleConfiguration: Style.() -> Unit = {},
     ): SymbolAndLabelLegendPaintable {
       return SymbolAndLabelLegendPaintable(
         labels = labels,
         symbols = defaultSymbols(symbolSize, symbolColors),
-        additionalConfiguration = additionalConfiguration,
+        styleConfiguration = styleConfiguration,
       )
     }
   }

@@ -236,10 +236,10 @@ class Layers(val chartId: ChartId) {
    * Paints all layers - records Repaint stats.
    */
   fun paintLayersWithStats(paintingContext: LayerPaintingContext): PaintingStats {
-    //Layout first
-    for (i in 0 until layersListPainting.size) {
+    //Layout first - in layout order and with the layout index, same as paintLayers
+    layersListLayout.fastForEachIndexed { layerIndexForLayout, layerToLayout ->
       paintingContext.gc.saved {
-        layersListPainting[i].layout(paintingContext)
+        layerToLayout.layout(paintingContext.withLayoutIndex(LayerIndex(layerIndexForLayout)))
       }
     }
 

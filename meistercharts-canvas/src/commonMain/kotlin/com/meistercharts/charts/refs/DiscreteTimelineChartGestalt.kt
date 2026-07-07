@@ -46,6 +46,7 @@ import com.meistercharts.annotations.TimeRelative
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ChartSupport
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.translateOverTime
 import com.meistercharts.charts.AbstractChartGestalt
@@ -413,6 +414,7 @@ class DiscreteTimelineChartGestalt(
     }
   }
 
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * The history storage this chart is based on

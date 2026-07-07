@@ -17,9 +17,9 @@ package com.meistercharts.algorithms.layers.legend
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layout.PaintablesLayouter
-import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.DebugFeature
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintable.AbstractPaintable
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.paintable.PaintablePaintingVariables
@@ -45,10 +45,10 @@ class StackedPaintablesPaintable(
    * Provides the elements of the legend
    */
   elements: SizedProvider1<Paintable, LayerPaintingContext>,
-  additionalConfiguration: Configuration.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : AbstractPaintable() {
 
-  val configuration: Configuration = Configuration(elements = elements).also(additionalConfiguration)
+  val style: Style = Style(elements = elements).also(styleConfiguration)
 
   override fun paintingVariables(): PaintablePaintingVariables {
     return paintingVariables
@@ -65,13 +65,13 @@ class StackedPaintablesPaintable(
 
     override fun performCalculation(paintingContext: LayerPaintingContext) {
       layoutManager.configuration.also {
-        it.layoutOrientation = configuration.layoutOrientation
-        it.horizontalAlignment = configuration.horizontalAlignment
-        it.verticalAlignment = configuration.verticalAlignment
-        it.gap = configuration.entriesGap
+        it.layoutOrientation = style.layoutOrientation
+        it.horizontalAlignment = style.horizontalAlignment
+        it.verticalAlignment = style.verticalAlignment
+        it.gap = style.entriesGap
       }
 
-      layoutManager.calculate(paintingContext, configuration.elements.asSizedProvider(paintingContext))
+      layoutManager.calculate(paintingContext, style.elements.asSizedProvider(paintingContext))
 
       boundingBox = Rectangle.topLeft(layoutManager.totalSize())
     }
@@ -81,7 +81,7 @@ class StackedPaintablesPaintable(
     val gc = paintingContext.gc
 
     gc.translate(x, y)
-    paintingVariables.layoutManager.paintAllPaintables(paintingContext, configuration.elements.asMultiProvider(paintingContext))
+    paintingVariables.layoutManager.paintAllPaintables(paintingContext, style.elements.asMultiProvider(paintingContext))
 
     paintingContext.ifDebug(DebugFeature.ShowBounds) {
       gc.stroke(Color.blue)
@@ -89,8 +89,8 @@ class StackedPaintablesPaintable(
     }
   }
 
-  @ConfigurationDsl
-  class Configuration(
+  @StyleDsl
+  class Style(
     /**
      * Provides the elements of the legend
      */

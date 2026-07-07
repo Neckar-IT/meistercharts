@@ -36,9 +36,9 @@ import it.neckar.open.unit.si.ms
  *
  */
 class TooltipLayer(
-  configuration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
-  val configuration: Configuration = Configuration().also(configuration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override val type: LayerType
     get() = LayerType.Content

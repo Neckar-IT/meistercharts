@@ -26,6 +26,7 @@ import com.meistercharts.algorithms.layers.tileCalculator
 import com.meistercharts.color.Color
 import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.Tile
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
@@ -183,6 +184,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     contentAreaTimeRange: TimeRange,
   )
 
+  @ConfigurationDsl
   open class Configuration(
     /**
      * Where the history is stored

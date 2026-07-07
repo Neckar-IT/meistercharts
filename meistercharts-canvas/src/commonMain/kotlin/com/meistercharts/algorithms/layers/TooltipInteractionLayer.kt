@@ -62,6 +62,7 @@ class TooltipInteractionLayer<T>(
   private fun processEventAt(eventCoordinates: @Window Coordinates?, chartSupport: ChartSupport) {
     if (eventCoordinates == null) {
       configuration.newTooltipLocationHandler(null, chartSupport)
+      return
     }
 
     configuration.newTooltipLocationHandler(eventCoordinates, chartSupport)

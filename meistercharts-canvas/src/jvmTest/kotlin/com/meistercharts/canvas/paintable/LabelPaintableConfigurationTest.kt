@@ -26,11 +26,11 @@ class LabelPaintableConfigurationTest {
    */
   @Test
   fun `default maxWidth is positive infinity, not NaN`() {
-    val configuration = LabelPaintable.Configuration { _, _ -> "label" }
-    assertThat(configuration.maxWidth.isNaN()).isFalse()
+    val style = LabelPaintable.Style { _, _ -> "label" }
+    assertThat(style.maxWidth.isNaN()).isFalse()
 
     // Round-trip through coerceAtMost must not turn the input into NaN.
-    val width = 42.0.coerceAtMost(configuration.maxWidth)
+    val width = 42.0.coerceAtMost(style.maxWidth)
     assertThat(width).isEqualTo(42.0)
   }
 }

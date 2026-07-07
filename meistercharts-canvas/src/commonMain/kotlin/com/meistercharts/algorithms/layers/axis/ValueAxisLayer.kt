@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.font
-import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
@@ -127,7 +127,7 @@ class ValueAxisLayer
   /**
    * Returns the last painted tick values
    */
-  val tickDomainValues: @Domain DoubleMultiCache
+  val tickDomainValues: @Domain DoubleMultiBuffer
     get() = paintingVariables.tickDomainValues
 
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {

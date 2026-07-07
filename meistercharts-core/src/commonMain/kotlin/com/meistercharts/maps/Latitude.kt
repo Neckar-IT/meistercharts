@@ -21,6 +21,7 @@ import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.unit.other.deg
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.math.abs
 
 /**
  * The latitude (90° N - 90° S) of the location in the center of the window
@@ -56,10 +57,11 @@ value class Latitude(
    * more: https://en.wikipedia.org/wiki/Geographic_coordinate_system
    */
   fun format(i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration): String {
-    val latitudeMinutesCalculation = ((value % 1) * 60)
+    val absValue = abs(value)
+    val latitudeMinutesCalculation = ((absValue % 1) * 60)
     val latitudeSecondsCalculation = (latitudeMinutesCalculation % 1) * 60
     return buildString {
-      append(value.toInt())
+      append(absValue.toInt())
       append("°")
       append(latitudeMinutesCalculation.toInt())
       append("'")

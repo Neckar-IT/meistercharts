@@ -98,9 +98,10 @@ fun interface Easing {
     val linear: Easing get() = Easing { it }
 
     /**
-     * Use the sin to ease in
+     * Sine easing: maps 0..1 onto the first quarter of the sine wave, so that the easing
+     * contract holds (f(0) == 0, f(1) == 1).
      */
-    val sin: Easing = Easing { kotlin.math.sin(it) }
+    val sin: Easing = Easing { kotlin.math.sin(it * kotlin.math.PI / 2.0) }
 
     val smooth: Easing get() = Easing { it * it * (3 - 2 * it) }
 

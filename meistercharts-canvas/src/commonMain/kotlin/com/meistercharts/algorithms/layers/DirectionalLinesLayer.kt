@@ -24,8 +24,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
-import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
-import com.meistercharts.canvas.layout.cache.ObjectMultiCache
+import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
+import com.meistercharts.canvas.layout.buffer.ObjectMultiBuffer
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Side
@@ -63,14 +63,14 @@ class DirectionalLinesLayer(
     /**
      * Contains the coordinates for the HUD element
      */
-    override val startCoordinatesMultiCache = @Window @MayBeNaN CoordinatesMultiCache()
+    override val startCoordinatesMultiBuffer = @Window @MayBeNaN CoordinatesMultiBuffer()
 
     /**
      * The coordinates where the line ends
      */
-    override val endCoordinatesMultiCache = @Window @MayBeNaN CoordinatesMultiCache()
+    override val endCoordinatesMultiBuffer = @Window @MayBeNaN CoordinatesMultiBuffer()
 
-    override val directionsCache = ObjectMultiCache(Direction.TopLeft)
+    override val directionsBuffer = ObjectMultiBuffer(Direction.TopLeft)
 
 
     override fun calculate(paintingContext: LayerPaintingContext) {
@@ -79,9 +79,9 @@ class DirectionalLinesLayer(
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
       //Prepare the caches
-      startCoordinatesMultiCache.prepare(size)
-      directionsCache.prepare(size)
-      endCoordinatesMultiCache.prepare(size)
+      startCoordinatesMultiBuffer.prepare(size)
+      directionsBuffer.prepare(size)
+      endCoordinatesMultiBuffer.prepare(size)
 
       //Calculate the min/max values for all lines
 
@@ -115,12 +115,12 @@ class DirectionalLinesLayer(
 
       configuration.locations.fastForEachIndexed(paintingContext) { index: @LineIndex Int, x: @Window @MayBeNaN Double, y: @Window @MayBeNaN Double ->
         val direction = configuration.directions.valueAt(index)
-        directionsCache[index] = direction
+        directionsBuffer[index] = direction
 
         val anchorGapX = direction.opposite().horizontalAlignment.calculateOffsetXForGap(configuration.anchorGapHorizontal.valueAt(index))
         val anchorGapY = direction.opposite().verticalAlignment.calculateOffsetYForGap(configuration.anchorGapVertical.valueAt(index))
 
-        startCoordinatesMultiCache.set(index, x + anchorGapX, y + anchorGapY)
+        startCoordinatesMultiBuffer.set(index, x + anchorGapX, y + anchorGapY)
         //TODO check direction with gap!
 
         val endX: @Window Double = when (direction.horizontalAlignment) {
@@ -136,7 +136,7 @@ class DirectionalLinesLayer(
           VerticalAlignment.Bottom -> maxY
         }
 
-        endCoordinatesMultiCache.set(index, endX, endY)
+        endCoordinatesMultiBuffer.set(index, endX, endY)
       }
     }
   }
@@ -236,7 +236,7 @@ class DirectionalLinesLayer(
 
       return DirectionalLinesLayer(
         Configuration(
-          locations = hudLayerPaintingProperties.coordinatesMultiCache.asCoordinatesProvider().as1(),
+          locations = hudLayerPaintingProperties.coordinatesMultiBuffer.asCoordinatesProvider().as1(),
           directions = MultiProvider.invoke {
             //The anchor direction of the hud
             when (valueAxisLayer.configuration.side) {
@@ -303,17 +303,17 @@ class DirectionalLinesLayer(
     /**
      * Contains the coordinates for the HUD element
      */
-    val startCoordinatesMultiCache: @Window @MayBeNaN CoordinatesMultiCache
+    val startCoordinatesMultiBuffer: @Window @MayBeNaN CoordinatesMultiBuffer
 
     /**
      * The coordinates where the line ends
      */
-    val endCoordinatesMultiCache: @Window @MayBeNaN CoordinatesMultiCache
+    val endCoordinatesMultiBuffer: @Window @MayBeNaN CoordinatesMultiBuffer
 
     /**
      * The directions for the lines
      */
-    val directionsCache: ObjectMultiCache<Direction>
+    val directionsBuffer: ObjectMultiBuffer<Direction>
   }
 }
 
@@ -325,14 +325,14 @@ inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForE
   iterationOrder: IterationOrder,
   callback: (index: @DirectionalLinesLayer.LineIndex Int, startX: @IsFinite @Window Double, startY: @Window @IsFinite Double, endX: @IsFinite @Window Double, endY: @Window @IsFinite Double) -> Unit,
 ) {
-  startCoordinatesMultiCache.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
+  startCoordinatesMultiBuffer.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
     if (startX.isFinite().not() || startY.isFinite().not()) {
       //Skip if x or y are not finite
       return@fastForEachIndexed
     }
 
-    @Window @MayBeNaN val endX = endCoordinatesMultiCache.x(index)
-    @Window @MayBeNaN val endY = endCoordinatesMultiCache.y(index)
+    @Window @MayBeNaN val endX = endCoordinatesMultiBuffer.x(index)
+    @Window @MayBeNaN val endY = endCoordinatesMultiBuffer.y(index)
 
     if (endX.isFinite().not() || endY.isFinite().not()) {
       //Skip if x or y are not finite

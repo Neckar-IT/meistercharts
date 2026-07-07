@@ -40,6 +40,7 @@ import com.meistercharts.algorithms.tooltip.balloon.CategoryBalloonTooltipPlacem
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.MeisterchartBuilder
 import com.meistercharts.charts.AbstractChartGestalt
@@ -338,6 +339,7 @@ class BulletChartGestalt constructor(
     }
   }
 
+  @ConfigurationDsl
   inner class Configuration(
     /**
      * Provides the current values that are visualized in the bullet charts.

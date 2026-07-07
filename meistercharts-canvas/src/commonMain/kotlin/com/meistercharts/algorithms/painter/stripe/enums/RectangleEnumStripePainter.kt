@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter.stripe.enums
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
 import com.meistercharts.canvas.fill
@@ -135,6 +136,7 @@ class RectangleEnumStripePainter(
     }
   }
 
+  @ConfigurationDsl
   class Configuration : AbstractEnumStripePainter.Configuration() {
     /**
      * The snap configuration for the stripes

@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.canvas.calculateOffsetXForGap
 import com.meistercharts.canvas.calculateOffsetYForGap
 import com.meistercharts.canvas.i18nConfiguration
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.textService
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
@@ -38,9 +39,9 @@ import it.neckar.open.unit.other.px
  */
 class LabelPaintable(
   label: (textService: TextService, i18nConfiguration: I18nConfiguration) -> String?,
-  additionalConfiguration: Configuration.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : AbstractPaintable() {
-  val configuration: Configuration = Configuration(label).also(additionalConfiguration)
+  val style: Style = Style(label).also(styleConfiguration)
 
   override fun paintingVariables(): PaintablePaintingVariables {
     return paintingVariables
@@ -51,12 +52,12 @@ class LabelPaintable(
 
     override fun performCalculation(paintingContext: LayerPaintingContext) {
       val gc = paintingContext.gc
-      gc.font(configuration.font)
+      gc.font(style.font)
       val fontMetrics = gc.getFontMetrics()
       @px val lineHeight = fontMetrics.totalHeight
 
       val chartSupport = paintingContext.chartSupport
-      val label = configuration.label(chartSupport.textService, chartSupport.i18nConfiguration)
+      val label = style.label(chartSupport.textService, chartSupport.i18nConfiguration)
       this.label = label
 
       if (label.isNullOrEmpty()) {
@@ -65,12 +66,12 @@ class LabelPaintable(
         return
       }
 
-      @px val textWidth = gc.calculateTextWidth(label).coerceAtMost(configuration.maxWidth)
+      @px val textWidth = gc.calculateTextWidth(label).coerceAtMost(style.maxWidth)
 
-      val anchorDirection = configuration.anchorDirection
+      val anchorDirection = style.anchorDirection
 
-      val relevantX = anchorDirection.calculateOffsetXForGap(configuration.anchorGapHorizontal)
-      val relevantY = anchorDirection.calculateOffsetYForGap(configuration.anchorGapVertical)
+      val relevantX = anchorDirection.calculateOffsetXForGap(style.anchorGapHorizontal)
+      val relevantY = anchorDirection.calculateOffsetYForGap(style.anchorGapVertical)
 
       @px val left = relevantX + when (anchorDirection.horizontalAlignment) {
         HorizontalAlignment.Left -> 0.0
@@ -99,13 +100,14 @@ class LabelPaintable(
 
     val gc = paintingContext.gc
 
-    gc.fill(configuration.labelColor())
+    gc.fill(style.labelColor())
 
-    gc.font(configuration.font)
-    gc.fillText(label, x, y, configuration.anchorDirection, configuration.anchorGapHorizontal, configuration.anchorGapVertical, configuration.maxWidth)
+    gc.font(style.font)
+    gc.fillText(label, x, y, style.anchorDirection, style.anchorGapHorizontal, style.anchorGapVertical, style.maxWidth)
   }
 
-  class Configuration(
+  @StyleDsl
+  class Style(
     var label: (textService: TextService, i18nConfiguration: I18nConfiguration) -> String?,
   ) {
 

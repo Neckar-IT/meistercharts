@@ -23,7 +23,7 @@ import com.meistercharts.axis.LinearAxisTickCalculator
 import com.meistercharts.axis.LinearAxisTickCalculator.calculateTickValues
 import com.meistercharts.calc.domain2rad
 import com.meistercharts.canvas.ArcType
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.canvas.stroke
 import com.meistercharts.font.FontDescriptorFragment
@@ -42,31 +42,31 @@ import kotlin.math.PI
  * Paints a class compass base
  */
 class CompassBasePainter(
-  styleConfiguration: Style.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : GaugeBasePainter {
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   override fun paintBase(gaugePaintable: GaugePaintable, paintingContext: LayerPaintingContext, radius: Double, startAngle: Double, extendWithRotationDirection: Double, valueRange: ValueRange) {
     val gc = paintingContext.gc
 
-    gc.fill(style.backgroundColor)
+    gc.fill(configuration.backgroundColor)
     gc.fillArcCenter(0.0, 0.0, radius, startAngle, extendWithRotationDirection, ArcType.Round)
 
-    gc.stroke(style.compassColor)
+    gc.stroke(configuration.compassColor)
     gc.strokeArcCenter(0.0, 0.0, radius, startAngle, extendWithRotationDirection, ArcType.Open)
 
     // paint inner circles
-    gc.stroke(style.tickColor)
-    for (circle in 1..style.numberInnerCircles) {
-      gc.strokeArcCenter(0.0, 0.0, (radius / (style.numberInnerCircles + 1)) * circle, startAngle, extendWithRotationDirection, ArcType.Open)
+    gc.stroke(configuration.tickColor)
+    for (circle in 1..configuration.numberInnerCircles) {
+      gc.strokeArcCenter(0.0, 0.0, (radius / (configuration.numberInnerCircles + 1)) * circle, startAngle, extendWithRotationDirection, ArcType.Open)
     }
 
     // paint ticks
-    gc.fill(style.labelsColor)
-    gc.font(style.font)
+    gc.fill(configuration.labelsColor)
+    gc.font(configuration.font)
 
-    style.ticksProvider.calculateTicks(valueRange).forEach { tickValue: Double ->
+    configuration.ticksProvider.calculateTicks(valueRange).forEach { tickValue: Double ->
       @rad val tickAngle = domain2rad(tickValue, valueRange, startAngle, extendWithRotationDirection)
       gc.strokeLine(
         Coordinates.origin.x,
@@ -77,16 +77,16 @@ class CompassBasePainter(
 
       // paint tick label
       gc.fillText(
-        style.valueFormat.format(tickValue),
-        PolarCoordinates.toCartesianX(radius + style.labelsGap, tickAngle),
-        PolarCoordinates.toCartesianY(radius + style.labelsGap, tickAngle),
+        configuration.valueFormat.format(tickValue),
+        PolarCoordinates.toCartesianX(radius + configuration.labelsGap, tickAngle),
+        PolarCoordinates.toCartesianY(radius + configuration.labelsGap, tickAngle),
         Direction.Center
       )
     }
 
     // check whether to draw start and end lines
     if (gaugePaintable.style.extend != PI * 2) {
-      gc.stroke(style.compassColor)
+      gc.stroke(configuration.compassColor)
       gc.strokeLine(
         Coordinates.origin.x,
         Coordinates.origin.y,
@@ -102,8 +102,8 @@ class CompassBasePainter(
     }
   }
 
-  @StyleDsl
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
     /**
      * Provides the ticks
      */

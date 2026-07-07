@@ -161,7 +161,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * Applies the symbol size for the legend
    */
   fun applyLegendSymbolSize(symbolSize: Size) {
-    symbolAndLegendPaintable.configuration.symbols = createSymbolsProvider(symbolSize)
+    symbolAndLegendPaintable.style.symbols = createSymbolsProvider(symbolSize)
   }
 
   /**
@@ -175,7 +175,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
       )
     ) {
     }.also {
-      it.tooltipPainter.configuration.noseSide = {
+      it.tooltipPainter.style.noseSide = {
         tooltipPlacement.tooltipSide.flipped()
       }
     }.visibleIf {

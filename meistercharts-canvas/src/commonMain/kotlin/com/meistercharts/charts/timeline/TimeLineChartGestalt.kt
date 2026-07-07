@@ -87,10 +87,10 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
-import com.meistercharts.canvas.layout.cache.DoubleMultiCache
-import com.meistercharts.canvas.layout.cache.IntMultiCache
-import com.meistercharts.canvas.layout.cache.ObjectMultiCache
-import com.meistercharts.canvas.layout.cache.StringMultiCache
+import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
+import com.meistercharts.canvas.layout.buffer.IntMultiBuffer
+import com.meistercharts.canvas.layout.buffer.ObjectMultiBuffer
+import com.meistercharts.canvas.layout.buffer.StringMultiBuffer
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
@@ -674,28 +674,28 @@ class TimeLineChartGestalt
      *
      * This size of this cache is used to get the number of labels
      */
-    val locationsYCache = @Window DoubleMultiCache()
+    val locationsYBuffer = @Window DoubleMultiBuffer()
 
     /**
      * Contains the domain values (that are later used for formatting)
      */
     @Deprecated("Not used???")
-    val domainValuesCache = @Domain DoubleMultiCache()
+    val domainValuesBuffer = @Domain DoubleMultiBuffer()
 
     /**
      * The label texts
      */
-    val labelsCache = StringMultiCache()
+    val labelsBuffer = StringMultiBuffer()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectMultiCache(BoxStyle.modernBlue)
+    val boxStylesBuffer = ObjectMultiBuffer(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectMultiCache<Color>(Color.pink())
+    val labelTextColorBuffer = ObjectMultiBuffer<Color>(Color.pink())
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = configuration.actualVisibleDecimalSeriesIndices.size()
@@ -744,16 +744,16 @@ class TimeLineChartGestalt
       configuration.actualVisibleDecimalSeriesIndices.fastForEachIndexed { index, dataSeriesIndex ->
         //Find the value for this at the given location
         @Domain val valueAtCrossWire = searchResult.chunk.getDecimalValue(dataSeriesIndex, searchResult.timeStampIndex)
-        domainValuesCache[index] = valueAtCrossWire
+        domainValuesBuffer[index] = valueAtCrossWire
 
         @DomainRelative val relativeValueAtCrossWire = configuration.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
-        locationsYCache[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
+        locationsYBuffer[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
 
-        labelsCache[index] = configuration.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
+        labelsBuffer[index] = configuration.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
 
         //Update the formats
-        boxStylesCache[index] = configuration.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
-        labelTextColorCache[index] = configuration.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex)
+        boxStylesBuffer[index] = configuration.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
+        labelTextColorBuffer[index] = configuration.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex)
       }
     }
 
@@ -765,23 +765,23 @@ class TimeLineChartGestalt
     }
 
     private fun prepare(visibleLinesCount: Int) {
-      locationsYCache.prepare(visibleLinesCount)
-      domainValuesCache.prepare(visibleLinesCount)
-      labelsCache.prepare(visibleLinesCount)
-      boxStylesCache.prepare(visibleLinesCount)
-      labelTextColorCache.prepare(visibleLinesCount)
+      locationsYBuffer.prepare(visibleLinesCount)
+      domainValuesBuffer.prepare(visibleLinesCount)
+      labelsBuffer.prepare(visibleLinesCount)
+      boxStylesBuffer.prepare(visibleLinesCount)
+      labelTextColorBuffer.prepare(visibleLinesCount)
     }
 
     override fun locationAt(index: Int): Double {
-      return locationsYCache[index]
+      return locationsYBuffer[index]
     }
 
     override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return labelsCache[index]
+      return labelsBuffer[index]
     }
 
     override fun size(): Int {
-      return locationsYCache.size
+      return locationsYBuffer.size
     }
   }
 
@@ -808,10 +808,10 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireDecimalValuesLabelsProvider.boxStylesCache[labelIndex]
+      crossWireDecimalValuesLabelsProvider.boxStylesBuffer[labelIndex]
     }
     valueLabelTextColor = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireDecimalValuesLabelsProvider.labelTextColorCache[labelIndex]
+      crossWireDecimalValuesLabelsProvider.labelTextColorBuffer[labelIndex]
     }
   }
 
@@ -828,32 +828,32 @@ class TimeLineChartGestalt
      *
      * This size of this cache is used to get the number of labels
      */
-    val locationsYCache: @Window @MayBeNaN DoubleMultiCache = DoubleMultiCache()
+    val locationsYBuffer: @Window @MayBeNaN DoubleMultiBuffer = DoubleMultiBuffer()
 
     /**
      * Contains the history enums at the given location
      */
-    val historyEnumsCache = ObjectMultiCache(HistoryEnum.Boolean)
+    val historyEnumsBuffer = ObjectMultiBuffer(HistoryEnum.Boolean)
 
     /**
      * The enum set at the cross wire
      */
-    val valuesAtCrossWireCache: @HistoryEnumSetInt IntMultiCache = IntMultiCache()
+    val valuesAtCrossWireBuffer: @HistoryEnumSetInt IntMultiBuffer = IntMultiBuffer()
 
     /**
      * The translated labels
      */
-    val labelsCache = StringMultiCache()
+    val labelsBuffer = StringMultiBuffer()
 
     /**
      * Contains the box style for the label
      */
-    val boxStylesCache = ObjectMultiCache(BoxStyle.modernBlue)
+    val boxStylesBuffer = ObjectMultiBuffer(BoxStyle.modernBlue)
 
     /**
      * Contains the label text colors
      */
-    val labelTextColorCache = ObjectMultiCache<Color>(Color.pink())
+    val labelTextColorBuffer = ObjectMultiBuffer<Color>(Color.pink())
 
     /**
      * Clears all labels
@@ -863,12 +863,12 @@ class TimeLineChartGestalt
     }
 
     private fun prepare(visibleLinesCount: Int) {
-      locationsYCache.prepare(visibleLinesCount)
-      labelsCache.prepare(visibleLinesCount)
-      valuesAtCrossWireCache.prepare(visibleLinesCount)
-      historyEnumsCache.prepare(visibleLinesCount)
-      boxStylesCache.prepare(visibleLinesCount)
-      labelTextColorCache.prepare(visibleLinesCount)
+      locationsYBuffer.prepare(visibleLinesCount)
+      labelsBuffer.prepare(visibleLinesCount)
+      valuesAtCrossWireBuffer.prepare(visibleLinesCount)
+      historyEnumsBuffer.prepare(visibleLinesCount)
+      boxStylesBuffer.prepare(visibleLinesCount)
+      labelTextColorBuffer.prepare(visibleLinesCount)
     }
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
@@ -922,34 +922,34 @@ class TimeLineChartGestalt
           return@fastForEachIndexed
         }
 
-        valuesAtCrossWireCache[visibleSeriesIndex] = valueAtCrossWire.bitset
+        valuesAtCrossWireBuffer[visibleSeriesIndex] = valueAtCrossWire.bitset
 
         @Zoomed val center = layout.calculateCenter(BoxIndex(visibleSeriesIndex))
-        locationsYCache[visibleSeriesIndex] = center + enumAreaViewportMarginTop
+        locationsYBuffer[visibleSeriesIndex] = center + enumAreaViewportMarginTop
 
         val historyEnum: HistoryEnum = historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
-        historyEnumsCache[visibleSeriesIndex] = historyEnum
+        historyEnumsBuffer[visibleSeriesIndex] = historyEnum
 
         val firstSetOrdinal = valueAtCrossWire.firstSetOrdinal()
         val firstValue = historyEnum.value(firstSetOrdinal)
-        labelsCache[visibleSeriesIndex] = firstValue.key.resolve(textService, i18nConfiguration)
+        labelsBuffer[visibleSeriesIndex] = firstValue.key.resolve(textService, i18nConfiguration)
 
         //Update the formats
-        boxStylesCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex.value, firstSetOrdinal, historyEnum)
-        labelTextColorCache[visibleSeriesIndex] = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
+        boxStylesBuffer[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex.value, firstSetOrdinal, historyEnum)
+        labelTextColorBuffer[visibleSeriesIndex] = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
       }
     }
 
     override fun locationAt(index: Int): @Window @MayBeNaN Double {
-      return locationsYCache[index]
+      return locationsYBuffer[index]
     }
 
     override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return labelsCache[index]
+      return labelsBuffer[index]
     }
 
     override fun size(): Int {
-      return locationsYCache.size
+      return locationsYBuffer.size
     }
   }
 
@@ -981,11 +981,11 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { index: @LabelIndex Int ->
-      crossWireEnumValuesLabelsProvider.boxStylesCache[index]
+      crossWireEnumValuesLabelsProvider.boxStylesBuffer[index]
     }
 
     valueLabelTextColor = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireEnumValuesLabelsProvider.labelTextColorCache[labelIndex]
+      crossWireEnumValuesLabelsProvider.labelTextColorBuffer[labelIndex]
     }
   }
 

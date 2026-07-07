@@ -23,7 +23,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.WindowRelative
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
-import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
@@ -74,7 +74,7 @@ class MultiValueAxisLayer constructor(
      *
      * Use [visibleAxisCount] to determine the number of visible axis
      */
-    override val locationsX: @Window DoubleMultiCache = DoubleMultiCache()
+    override val locationsX: @Window DoubleMultiBuffer = DoubleMultiBuffer()
 
     /**
      * The number of visible axis - that have enough space!
@@ -94,7 +94,7 @@ class MultiValueAxisLayer constructor(
       //Reset all variables
       visibleAxisCount = 0
       locationsX.reset()
-      locationsX.ensureSize(size)
+      locationsX.resize(size)
       totalWidth = 0.0
       //The current left side (start) of the *next* axis
       var currentX = 0.0
@@ -177,7 +177,7 @@ interface ValueAxesPaintingVariables : PaintingVariables {
   /**
    * The x-coordinates of the visible value axes
    */
-  val locationsX: @Window DoubleMultiCache
+  val locationsX: @Window DoubleMultiBuffer
 
   /**
    * The total width used for the visible value axes

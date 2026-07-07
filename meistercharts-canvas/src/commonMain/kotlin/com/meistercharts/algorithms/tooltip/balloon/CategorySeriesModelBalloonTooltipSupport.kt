@@ -130,7 +130,7 @@ class CategorySeriesModelBalloonTooltipSupport(
    * Applies the symbol size for the legend
    */
   fun applyLegendSymbolSize(symbolSize: Size) {
-    tooltipContentPaintable.delegate.configuration.symbols = SymbolAndLabelLegendPaintable.defaultSymbols(symbolSize, colorsFilteredAndSorted)
+    tooltipContentPaintable.delegate.style.symbols = SymbolAndLabelLegendPaintable.defaultSymbols(symbolSize, colorsFilteredAndSorted)
   }
 
   /**
@@ -144,7 +144,7 @@ class CategorySeriesModelBalloonTooltipSupport(
       )
     ) {
     }.also {
-      it.tooltipPainter.configuration.noseSide = {
+      it.tooltipPainter.style.noseSide = {
         tooltipPlacement.tooltipSide.flipped()
       }
     }

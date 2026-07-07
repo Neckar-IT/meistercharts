@@ -22,8 +22,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
 import com.meistercharts.canvas.calculateOffsetYWithAnchor
-import com.meistercharts.canvas.layout.cache.CoordinatesMultiCache
-import com.meistercharts.canvas.layout.cache.ObjectMultiCache
+import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
+import com.meistercharts.canvas.layout.buffer.ObjectMultiBuffer
 import com.meistercharts.canvas.paintMark
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -70,13 +70,13 @@ class PaintablesLayouter(
     /**
      * Stores the upper left corner of each [Paintable] previously laid out
      */
-    val locationsTopLeft = CoordinatesMultiCache()
+    val locationsTopLeft = CoordinatesMultiBuffer()
 
     /**
      * Contains the bounding boxes for each paintable.
      * The bounding boxes do *not* contain any translation from the layout process.
      */
-    val boundingBoxes = ObjectMultiCache(Rectangle.zero)
+    val boundingBoxes = ObjectMultiBuffer(Rectangle.zero)
 
     /**
      * The total size over *all* paintables
@@ -97,8 +97,8 @@ class PaintablesLayouter(
       ) {
       val gc = paintingContext.gc
 
-      locationsTopLeft.ensureSize(paintables.size())
-      boundingBoxes.ensureSize(paintables.size())
+      locationsTopLeft.resize(paintables.size())
+      boundingBoxes.resize(paintables.size())
 
       //collect the bounding boxes
       paintables.fastForEachIndexed { index, paintable ->

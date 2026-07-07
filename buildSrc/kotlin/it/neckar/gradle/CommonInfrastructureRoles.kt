@@ -29,7 +29,7 @@ private class CommonInfrastructureRole(
 }
 
 private val CommonTraefikCompose = CommonInfrastructureRole(
-  sourceSubdir = "traefik",
+  sourceSubdir = CommonComposeRole.Traefik.sourceSubdir,
   includePattern = "docker-compose-common-*.yml",
   destinationSubdir = "docker-compose",
 )
@@ -47,25 +47,25 @@ private val CommonRestrictedEgressAssets = CommonInfrastructureRole(
 )
 
 private val CommonOtelAgentCompose = CommonInfrastructureRole(
-  sourceSubdir = "otel-agent",
+  sourceSubdir = CommonComposeRole.OtelAgent.sourceSubdir,
   includePattern = "*.yml",
   destinationSubdir = "docker-compose",
 )
 
 private val CommonHostExportersCompose = CommonInfrastructureRole(
-  sourceSubdir = "host-exporters",
+  sourceSubdir = CommonComposeRole.HostExporters.sourceSubdir,
   includePattern = "*.yml",
   destinationSubdir = "docker-compose",
 )
 
 private val CommonHostManagementCompose = CommonInfrastructureRole(
-  sourceSubdir = "host-management",
+  sourceSubdir = CommonComposeRole.HostManagement.sourceSubdir,
   includePattern = "docker-compose-common-*.yml",
   destinationSubdir = "docker-compose",
 )
 
 private val CommonHostLogsCompose = CommonInfrastructureRole(
-  sourceSubdir = "host-logs",
+  sourceSubdir = CommonComposeRole.HostLogs.sourceSubdir,
   includePattern = "docker-compose-common-*.yml",
   destinationSubdir = "docker-compose",
 )
@@ -181,12 +181,20 @@ fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.
  * host-stack deploys through the same plugin as every other container, instead of a
  * hand-rolled `processResources` configuration.
  */
-enum class CommonComposeRole {
-  Traefik,
-  OtelAgent,
-  HostExporters,
-  HostManagement,
-  HostLogs,
+enum class CommonComposeRole(
+  /**
+   * The role's asset directory under `internal/infrastructure/common/`. Single home of the
+   * subdir string (the role objects above reference it), and the join key for the
+   * continuous-deploy common-fragment edge: a changed file under this subdir marks every
+   * continuous-deploy module consuming the role (`ContinuousDeployResolver`, #2341).
+   */
+  val sourceSubdir: String,
+) {
+  Traefik("traefik"),
+  OtelAgent("otel-agent"),
+  HostExporters("host-exporters"),
+  HostManagement("host-management"),
+  HostLogs("host-logs"),
 }
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */

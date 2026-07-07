@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.painter.stripe.enums
 
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
@@ -74,6 +75,7 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
     }
   }
 
+  @ConfigurationDsl
   open class Configuration {
     /**
      * How the enums are displayed when down sampled

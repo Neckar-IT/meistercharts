@@ -57,7 +57,7 @@ class LegendLayer constructor(
 
   override fun layout(paintingContext: LayerPaintingContext) {
     super.layout(paintingContext)
-    stackedPaintablesPaintable.configuration.entriesGap = configuration.entriesGap
+    stackedPaintablesPaintable.style.entriesGap = configuration.entriesGap
     stackedPaintablesPaintable.layout(paintingContext)
   }
 

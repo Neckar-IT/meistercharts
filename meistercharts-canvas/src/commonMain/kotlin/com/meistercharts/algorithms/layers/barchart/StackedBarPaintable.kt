@@ -90,7 +90,7 @@ class StackedBarPaintable(
    */
   var height: @Zoomed Double,
 
-  styleConfigurer: Style.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : Paintable {
 
   override fun boundingBox(paintingContext: LayerPaintingContext): @Zoomed Rectangle {
@@ -121,7 +121,7 @@ class StackedBarPaintable(
     return Rectangle(x, y, width, height)
   }
 
-  val style: Style = Style().also(styleConfigurer)
+  val style: Style = Style().also(styleConfiguration)
 
   internal inner class Layout {
     /**

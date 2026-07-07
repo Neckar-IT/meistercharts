@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.ArrowHead
 import com.meistercharts.annotations.Window
 import com.meistercharts.calc.ChartCalculator
+import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProviderNullable
@@ -33,30 +34,30 @@ import it.neckar.open.unit.other.px
  * Paints overflow indicators (e.g., for bars).
  */
 class OverflowIndicatorPainter(
-  additionalConfiguration: Configuration.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) {
-  val configuration: Configuration = Configuration().also(additionalConfiguration)
+  val style: Style = Style().also(styleConfiguration)
 
   /**
    * Paints the overflow marker at/to the top
    */
   fun paintOverflowMarkerTop(paintingContext: LayerPaintingContext, contentViewportMinY: @Window @px Double) {
-    configuration.topIndicator.paint(paintingContext, 0.0, contentViewportMinY)
+    style.topIndicator.paint(paintingContext, 0.0, contentViewportMinY)
   }
 
   fun paintOverflowMarkerLeft(paintingContext: LayerPaintingContext, contentViewportMinX: @Window @px Double) {
-    configuration.leftIndicator.paint(paintingContext, contentViewportMinX, 0.0)
+    style.leftIndicator.paint(paintingContext, contentViewportMinX, 0.0)
   }
 
   fun paintOverflowMarkerRight(paintingContext: LayerPaintingContext, contentViewportMaxX: @Window @px Double) {
-    configuration.rightIndicator.paint(paintingContext, contentViewportMaxX, 0.0)
+    style.rightIndicator.paint(paintingContext, contentViewportMaxX, 0.0)
   }
 
   /**
    * Paints the overflow marker at/to the bottom
    */
   fun paintOverflowMarkerBottom(paintingContext: LayerPaintingContext, contentViewportMaxY: @Window @px Double) {
-    configuration.bottomIndicator.paint(paintingContext, 0.0, contentViewportMaxY)
+    style.bottomIndicator.paint(paintingContext, 0.0, contentViewportMaxY)
   }
 
   fun paintIndicators(indicatorSelection: MutableOverflowIndicatorsSelection, paintingContext: LayerPaintingContext) {
@@ -120,7 +121,8 @@ class OverflowIndicatorPainter(
     }
   }
 
-  class Configuration {
+  @StyleDsl
+  class Style {
     /**
      * Applies the default indicators with the provided values
      */

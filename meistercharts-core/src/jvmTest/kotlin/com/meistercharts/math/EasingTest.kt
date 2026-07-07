@@ -30,10 +30,10 @@ class EasingTest {
 
   @Test
   fun testSin() {
-    assertThat(Easing.sin(0.0)).isEqualTo(0.0)
-    assertThat(Easing.sin(0.5)).isEqualTo(0.479425538604203)
-    assertThat(Easing.sin(0.9)).isEqualTo(0.7833269096274834)
-    assertThat(Easing.sin(1.0)).isEqualTo(0.8414709848078965)
+    assertThat(Easing.sin(0.0)).isCloseTo(0.0, 0.000000001)
+    assertThat(Easing.sin(0.5)).isCloseTo(0.7071067811865476, 0.000000001)
+    assertThat(Easing.sin(0.9)).isCloseTo(0.9876883405951378, 0.000000001)
+    assertThat(Easing.sin(1.0)).isCloseTo(1.0, 0.000000001)
   }
 
   @Test

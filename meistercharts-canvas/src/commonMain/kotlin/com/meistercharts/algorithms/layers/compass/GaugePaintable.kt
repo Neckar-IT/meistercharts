@@ -38,14 +38,14 @@ class GaugePaintable(
   val valueRangeProvider: ValueRangeProvider,
   val currentValueProvider: @Domain DoubleProvider,
   initialSize: Size,
-  styleConfigurer: Style.() -> Unit = {},
+  styleConfiguration: Style.() -> Unit = {},
 ) : Paintable,
   AbstractResizablePaintable(
     initialSize,
     { size -> Rectangle.centered(size) }
   ) {
 
-  val style: Style = Style().also(styleConfigurer)
+  val style: Style = Style().also(styleConfiguration)
 
   /**
    * The painting variables that have been calculated

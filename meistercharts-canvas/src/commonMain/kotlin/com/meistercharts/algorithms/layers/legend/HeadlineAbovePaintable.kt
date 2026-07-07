@@ -53,7 +53,7 @@ class HeadlineAbovePaintable<Delegate : Paintable>(
    */
   val stackedPaintablesPaintable: StackedPaintablesPaintable = StackedPaintablesPaintable(object : SizedProvider1<Paintable, LayerPaintingContext> {
     override fun size(param1: LayerPaintingContext): Int {
-      val labelIsBlank = headlinePaintable.configuration.label.invoke(param1.chartSupport).isNullOrBlank()
+      val labelIsBlank = headlinePaintable.style.label.invoke(param1.chartSupport).isNullOrBlank()
 
       if (labelIsBlank) {
         //Only show the delegate - do *not* show the headline
@@ -64,7 +64,7 @@ class HeadlineAbovePaintable<Delegate : Paintable>(
     }
 
     override fun valueAt(index: Int, param1: LayerPaintingContext): Paintable {
-      val headline = headlinePaintable.configuration.label.invoke(param1.chartSupport)
+      val headline = headlinePaintable.style.label.invoke(param1.chartSupport)
       if (headline.isNullOrBlank()) {
         //Only show the delegate - do *not* show the headline
         require(index == 0) {

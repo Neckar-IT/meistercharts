@@ -72,7 +72,7 @@ class ChartConfigParsingSupport(
         }
 
         else -> {
-          println("Not a HTML element: $it")
+          logger.trace { "Not a HTML element: $it" }
         }
       }
 
@@ -86,7 +86,7 @@ class ChartConfigParsingSupport(
         return scriptElement.text
 
       } else {
-        println("*NOT* a Script tag: ${it.nodeName}")
+        logger.trace { "Not a script tag: ${it.nodeName}" }
       }
     }
 

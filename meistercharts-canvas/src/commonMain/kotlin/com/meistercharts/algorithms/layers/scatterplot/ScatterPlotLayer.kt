@@ -35,7 +35,7 @@ import it.neckar.open.provider.fastForEachIndexed
  */
 class ScatterPlotLayer(
   val configuration: Configuration,
-  addtionalConfiguration: Configuration.() -> Unit = {}
+  additionalConfiguration: Configuration.() -> Unit = {}
 ) : AbstractLayer() {
 
   constructor(
@@ -43,11 +43,11 @@ class ScatterPlotLayer(
     yValues: @Domain DoublesProvider,
     valueRangeXProvider: ValueRangeProvider,
     valueRangeYProvider: ValueRangeProvider,
-    addtionalConfiguration: Configuration.() -> Unit = {}
-  ): this(Configuration(xValues, yValues, valueRangeXProvider, valueRangeYProvider), addtionalConfiguration)
+    additionalConfiguration: Configuration.() -> Unit = {}
+  ): this(Configuration(xValues, yValues, valueRangeXProvider, valueRangeYProvider), additionalConfiguration)
 
   init {
-    configuration.addtionalConfiguration()
+    configuration.additionalConfiguration()
   }
 
   override val type: LayerType

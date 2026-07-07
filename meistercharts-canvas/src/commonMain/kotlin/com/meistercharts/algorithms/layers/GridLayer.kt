@@ -36,10 +36,10 @@ import kotlin.jvm.JvmOverloads
  */
 class GridLayer @JvmOverloads constructor(
   val configuration: Configuration,
-  dataConfiguration: Configuration.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractLayer() {
   init {
-    configuration.also(dataConfiguration)
+    configuration.also(additionalConfiguration)
   }
 
   override val type: LayerType
@@ -125,7 +125,7 @@ class GridLayer @JvmOverloads constructor(
   }
 
   /**
-   * Grid line index provided by the values provider ([Data.valuesProvider]).
+   * Grid line index provided by the values provider ([Configuration.valuesProvider]).
    */
   @Target(AnnotationTarget.TYPE)
   @MustBeDocumented
@@ -138,7 +138,7 @@ class GridLayer @JvmOverloads constructor(
  * Creates a grid for a [CategoryAxisLayer]
  */
 @JvmOverloads
-fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -> Unit = {}): GridLayer {
+fun CategoryAxisLayer.createGrid(additionalConfiguration: GridLayer.Configuration.() -> Unit = {}): GridLayer {
   return GridLayer(
     GridLayer.Configuration(
       valuesProvider = object : DoublesProvider1<LayerPaintingContext> {
@@ -165,6 +165,6 @@ fun CategoryAxisLayer.createGrid(dataConfiguration: GridLayer.Configuration.() -
       },
       orientationProvider = MultiProvider { configuration.orientation.opposite() }
     ),
-    dataConfiguration = dataConfiguration
+    additionalConfiguration = additionalConfiguration
   )
 }

@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers.axis
 
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.layout.cache.DoubleMultiCache
+import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
 
 /**
  * Painting variables for a value axis with offsets
@@ -25,7 +25,7 @@ interface ValueAxisWithOffsetPaintingVariables : ValueAxisPaintingVariables {
   /**
    * The ticks for the offsets
    */
-  val offsetTicks: @Domain DoubleMultiCache
+  val offsetTicks: @Domain DoubleMultiBuffer
 
   /**
    * Current magnitude of the delta between [startDomainValue] and [endDomainValue]
@@ -54,7 +54,7 @@ abstract class ValueAxisWithOffsetPaintingVariablesImpl : ValueAxisPaintingVaria
   /**
    * The ticks for the offset
    */
-  override var offsetTicks: @Domain DoubleMultiCache = DoubleMultiCache()
+  override var offsetTicks: @Domain DoubleMultiBuffer = DoubleMultiBuffer()
 
   /**
    * Current magnitude of the delta between [startDomainValue] and [endDomainValue]

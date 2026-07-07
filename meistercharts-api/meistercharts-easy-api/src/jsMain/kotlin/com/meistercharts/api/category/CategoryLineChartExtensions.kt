@@ -128,16 +128,16 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     }
 
     jsTooltipStyle.tooltipBoxStyle?.toModel()?.let {
-      this.balloonTooltipLayer.tooltipPainter.configuration.boxStyle = it
+      this.balloonTooltipLayer.tooltipPainter.style.boxStyle = it
     }
 
     jsTooltipStyle.tooltipBoxStyle?.color?.toColor()?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.labelColors = MultiProvider.always(it)
-      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.configuration.labelColor = it.asProvider()
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.labelColors = MultiProvider.always(it)
+      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.style.labelColor = it.asProvider()
     }
 
     jsTooltipStyle.labelWidth?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.maxLabelWidth = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.maxLabelWidth = it
     }
 
     jsTooltipStyle.symbolSizes?.toModelSizes()?.let {
@@ -145,23 +145,23 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
     }
 
     jsTooltipStyle.symbolLabelGap?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.symbolLabelGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.symbolLabelGap = it
     }
 
     jsTooltipStyle.entriesGap?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.entriesGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.entriesGap = it
     }
 
     jsTooltipStyle.tooltipFont?.toFontDescriptorFragment()?.let { it ->
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.textFont = it.asProvider()
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.textFont = it.asProvider()
     }
 
     jsTooltipStyle.headlineFont?.toFontDescriptorFragment()?.let { it ->
-      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.configuration.font = it
+      this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.style.font = it
     }
 
     jsTooltipStyle.headlineMarginBottom?.let { it ->
-      this.balloonTooltipSupport.tooltipContentPaintable.stackedPaintablesPaintable.configuration.entriesGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.stackedPaintablesPaintable.style.entriesGap = it
     }
   }
 
