@@ -26,6 +26,7 @@ import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.open.annotations.Internal
 import it.neckar.open.unit.other.px
+import kotlin.math.min
 
 /**
  * Provides a paintable for a given layer painting context.
@@ -272,31 +273,37 @@ interface Paintable {
       }
 
       ObjectFit.ContainNoGrow -> {
-        //The target size
-        val targetSize = currentSize.withMax(width, height).fitWithAspectRatio(currentSize.aspectRatio)
+        //Scale that fits the paintable into the box while keeping the aspect ratio - but never grows it.
+        //Scalar math (no intermediate Size objects): this method runs per element per frame in legends/tooltips.
+        val scale = min(1.0, min(width / currentSize.width, height / currentSize.height))
 
-        //Keep aspect ratio
-        val scaleX = 1.0 / currentSize.width * targetSize.width
-        val scaleY = 1.0 / currentSize.height * targetSize.height
+        if (scale >= 1.0) {
+          //Fits already - paint centered with the unchanged size (allocation-free fast path)
+          @px val deltaX = currentSize.width - width
+          @px val deltaY = currentSize.height - height
+          paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, currentSize)
+        } else {
+          @px val targetWidth = currentSize.width * scale
+          @px val targetHeight = currentSize.height * scale
 
-        @px val deltaX = currentSize.width * scaleX - width
-        @px val deltaY = currentSize.height * scaleY - height
+          @px val deltaX = targetWidth - width
+          @px val deltaY = targetHeight - height
 
-        paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
+          paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, Size(targetWidth, targetHeight))
+        }
       }
 
       ObjectFit.Contain -> {
-        //The target size
-        val targetSize = Size(width, height).fitWithAspectRatio(currentSize.aspectRatio)
+        //Scale that fits the paintable into the box while keeping the aspect ratio (may grow)
+        val scale = min(width / currentSize.width, height / currentSize.height)
 
-        //Keep aspect ratio
-        val scaleX = 1.0 / currentSize.width * targetSize.width
-        val scaleY = 1.0 / currentSize.height * targetSize.height
+        @px val targetWidth = currentSize.width * scale
+        @px val targetHeight = currentSize.height * scale
 
-        @px val deltaX = currentSize.width * scaleX - width
-        @px val deltaY = currentSize.height * scaleY - height
+        @px val deltaX = targetWidth - width
+        @px val deltaY = targetHeight - height
 
-        paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, targetSize)
+        paintSizeForced(paintingContext, alignmentX - deltaX / 2.0, alignmentY - deltaY / 2.0, Size(targetWidth, targetHeight))
       }
 
       ObjectFit.Fill -> {

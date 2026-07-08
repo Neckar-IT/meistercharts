@@ -133,28 +133,18 @@ class PathPaintable(
     return boundingBox
   }
 
-  @Suppress("ReplaceManualRangeWithIndicesCalls") //avoid instantiation of iterable
   override fun paint(paintingContext: LayerPaintingContext, x: Double, y: Double) {
     val gc = paintingContext.gc
     gc.translate(x + offset.x + alignmentPoint.x, y + offset.y + alignmentPoint.y)
 
-    gc.beginPath()
-
-    val actions = pathActions.actions
-    for (i in 0 until actions.size) {
-      gc.pathAction(actions[i], scale, scale)
-    }
+    gc.applyPathActions(pathActions, factorX = scale, factorY = scale)
 
     fill.get()?.let {
       gc.fill(it)
       gc.fill()
     }
     stroke.get()?.let {
-
-      strokeWidth?.let {
-        gc.lineWidth = it
-      }
-
+      gc.lineWidth = strokeWidth
       gc.stroke(it)
       gc.stroke()
     }

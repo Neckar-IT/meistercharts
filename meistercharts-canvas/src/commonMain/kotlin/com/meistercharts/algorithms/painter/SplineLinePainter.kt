@@ -17,10 +17,9 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.DebugConfiguration
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.painter.AbstractLinePainter
-import it.neckar.open.collections.DoubleArrayList
+import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import it.neckar.open.collections.first
 import it.neckar.open.collections.last
 import it.neckar.open.kotlin.lang.sqrt
@@ -40,65 +39,55 @@ class SplineLinePainter(
   var smoothingFactor: Double = 0.5
 
   /**
-   * Contains the x values for the points itself
+   * Contains the points itself
    */
-  private val pointsX: DoubleArrayList = DoubleArrayList(10)
-
-  /**
-   * Contains the Y values for the points itself
-   */
-  private val pointsY: DoubleArrayList = DoubleArrayList(10)
+  private val points: CoordinatesArrayList = CoordinatesArrayList(10)
 
   override fun begin(gc: CanvasRenderingContext) {
-    pointsX.clear()
-    pointsY.clear()
+    points.clear()
   }
 
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
-    pointsX.add(x)
-    pointsY.add(y)
+    points.add(x, y)
   }
 
   /**
    * Contains the coords for the control points
    */
-  private val controlPointsX: DoubleArrayList = DoubleArrayList(10)
-  private val controlPointsY: DoubleArrayList = DoubleArrayList(10)
+  private val controlPoints: CoordinatesArrayList = CoordinatesArrayList(10)
 
   /**
    * Calculates all control points in this method
    */
   override fun paint(gc: CanvasRenderingContext) {
-    if (pointsX.size < 2) {
+    if (points.size < 2) {
       //Less than 2 points - do nothing
       return
     }
 
-    if (pointsX.size == 2) {
+    if (points.size == 2) {
       //Only 2 points, just connect them directly
-      gc.strokeLine(pointsX[0], pointsY[0], pointsX[1], pointsY[1])
+      gc.strokeLine(points.xAt(0), points.yAt(0), points.xAt(1), points.yAt(1))
       return
     }
 
     //We have at least 3 points, calculate the control points first
-    controlPointsX.clear()
-    controlPointsY.clear()
+    controlPoints.clear()
 
 
     //Add the artificial control point for the first one
-    controlPointsX.add(pointsX[0])
-    controlPointsY.add(pointsY[0])
+    controlPoints.add(points.xAt(0), points.yAt(0))
 
     //First and last point are not visited
-    for (i in 1 until pointsX.size - 1) {
-      val startPointX = pointsX[i - 1]
-      val startPointY = pointsY[i - 1]
+    for (i in 1 until points.size - 1) {
+      val startPointX = points.xAt(i - 1)
+      val startPointY = points.yAt(i - 1)
 
-      val midPointX = pointsX[i]
-      val midPointY = pointsY[i]
+      val midPointX = points.xAt(i)
+      val midPointY = points.yAt(i)
 
-      val endPointX = pointsX[i + 1]
-      val endPointY = pointsY[i + 1]
+      val endPointX = points.xAt(i + 1)
+      val endPointY = points.yAt(i + 1)
 
 
       /**
@@ -128,42 +117,38 @@ class SplineLinePainter(
       val controlEndX = midPointX + scale2End * deltaStartEndX
       val controlEndY = midPointY + scale2End * deltaStartEndY
 
-      controlPointsX.add(controlStartX)
-      controlPointsY.add(controlStartY)
-
-      controlPointsX.add(controlEndX)
-      controlPointsY.add(controlEndY)
+      controlPoints.add(controlStartX, controlStartY)
+      controlPoints.add(controlEndX, controlEndY)
     }
 
     //Add the artificial control point for the last one
-    controlPointsX.add(pointsX.last())
-    controlPointsY.add(pointsY.last())
+    controlPoints.add(points.lastX(), points.lastY())
 
 
     //Check we have the right amount of control points
-    val expectedControlPointsCount = pointsX.size * 2 - 2
-    require(controlPointsX.size == expectedControlPointsCount) {
-      "Expected $expectedControlPointsCount control points but was <${controlPointsX.size}>"
+    val expectedControlPointsCount = points.size * 2 - 2
+    require(controlPoints.size == expectedControlPointsCount) {
+      "Expected $expectedControlPointsCount control points but was <${controlPoints.size}>"
     }
 
     //Now paint the path
     gc.beginPath()
 
     //Start at the first coordinate
-    gc.moveTo(pointsX[0], pointsY[0])
+    gc.moveTo(points.xAt(0), points.yAt(0))
 
     /**
      * Iterate over all points but the first
      */
-    for (i in 1 until pointsX.size) {
-      val controlX1 = controlPointsX[(i - 1) * 2]
-      val controlY1 = controlPointsY[(i - 1) * 2]
+    for (i in 1 until points.size) {
+      val controlX1 = controlPoints.xAt((i - 1) * 2)
+      val controlY1 = controlPoints.yAt((i - 1) * 2)
 
-      val controlX2 = controlPointsX[(i - 1) * 2 + 1]
-      val controlY2 = controlPointsY[(i - 1) * 2 + 1]
+      val controlX2 = controlPoints.xAt((i - 1) * 2 + 1)
+      val controlY2 = controlPoints.yAt((i - 1) * 2 + 1)
 
-      val x = pointsX[i]
-      val y = pointsY[i]
+      val x = points.xAt(i)
+      val y = points.yAt(i)
 
       gc.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, x, y)
     }
@@ -174,27 +159,24 @@ class SplineLinePainter(
      * Debugging code
      */
 
-    if (DebugFeature.BezierControlPoints.enabled(DebugConfiguration())) {
+    if (DebugFeature.BezierControlPoints.enabled(gc.debug)) {
       //Paint the control points
-      for (i in 0 until controlPointsX.size) {
-        val controlX1 = controlPointsX[i]
-        val controlY1 = controlPointsY[i]
-
-        gc.strokeOvalCenter(controlX1, controlY1, 5.0, 5.0)
+      controlPoints.fastForEachIndexed { _, controlX, controlY ->
+        gc.strokeOvalCenter(controlX, controlY, 5.0, 5.0)
       }
 
       //Paint the connected control points
       gc.beginPath()
-      gc.moveTo(pointsX.first(), pointsY.first())
+      gc.moveTo(points.xAt(0), points.yAt(0))
 
-      for (i in 1 until pointsX.size) {
-        val controlX1 = controlPointsX[(i - 1) * 2]
-        val controlY1 = controlPointsY[(i - 1) * 2]
+      for (i in 1 until points.size) {
+        val controlX1 = controlPoints.xAt((i - 1) * 2)
+        val controlY1 = controlPoints.yAt((i - 1) * 2)
 
         gc.lineTo(controlX1, controlY1)
 
-        val controlX2 = controlPointsX[(i - 1) * 2 + 1]
-        val controlY2 = controlPointsY[(i - 1) * 2 + 1]
+        val controlX2 = controlPoints.xAt((i - 1) * 2 + 1)
+        val controlY2 = controlPoints.yAt((i - 1) * 2 + 1)
 
         gc.lineTo(controlX2, controlY2)
         gc.strokeLine(controlX1, controlY1, controlX2, controlY2)

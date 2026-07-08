@@ -118,6 +118,9 @@ object Plugins {
 
   const val jibCli: String = "it.neckar.jib-cli-plugin"
   const val jibService: String = "it.neckar.jib-service"
+
+  /** Bakes the Neckar OTel agent-extension JAR into the service image. Bundled via `serviceApplication`. */
+  const val otelAgentExtension: String = "it.neckar.otel-agent-extension"
   const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"

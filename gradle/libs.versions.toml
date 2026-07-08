@@ -96,7 +96,7 @@ kover = "0.9.8"
 
 node-gradle = "7.1.0"
 
-shadow = "9.4.2"
+shadow = "9.5.1"
 
 de-undercouch-download = "5.7.0"
 

@@ -87,10 +87,7 @@ import com.meistercharts.canvas.DirtyReason
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.devicePixelRatioSupport
 import com.meistercharts.canvas.i18nConfiguration
-import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
-import com.meistercharts.canvas.layout.buffer.IntMultiBuffer
-import com.meistercharts.canvas.layout.buffer.ObjectMultiBuffer
-import com.meistercharts.canvas.layout.buffer.StringMultiBuffer
+import com.meistercharts.canvas.layout.buffer.ValueLabelsBuffer
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.canvas.textService
 import com.meistercharts.canvas.translateOverTime
@@ -116,11 +113,11 @@ import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DecimalDataSeriesIndexProvider
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.EnumDataSeriesIndexProvider
+import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
-import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.HistoryStorage
 import com.meistercharts.history.HistoryUnit
 import com.meistercharts.history.InMemoryHistoryStorage
@@ -612,10 +609,21 @@ class TimeLineChartGestalt
 
 
     /**
+     * Cached value for [enumsAreaViewportMargin] - avoids creating a new [Insets] instance on every frame
+     */
+    private var enumsAreaViewportMarginCache: @Zoomed Insets = Insets.empty
+
+    /**
      * The margin for the viewport of the decimals area
      */
     fun enumsAreaViewportMargin(windowHeight: @MayBeZero @Zoomed Double): @Zoomed Insets {
-      return Insets.of(enumAreaViewportMarginTop(windowHeight), 0.0, enumsAreaViewportMarginBottom(), 0.0)
+      @Zoomed val newTop = enumAreaViewportMarginTop(windowHeight)
+      @Zoomed val newBottom = enumsAreaViewportMarginBottom()
+
+      if (enumsAreaViewportMarginCache.top != newTop || enumsAreaViewportMarginCache.bottom != newBottom) {
+        enumsAreaViewportMarginCache = Insets.of(newTop, 0.0, newBottom, 0.0)
+      }
+      return enumsAreaViewportMarginCache
     }
 
     /**
@@ -634,17 +642,46 @@ class TimeLineChartGestalt
     }
 
     /**
+     * Cached value for [decimalsAreaViewportMargin] - avoids creating a new [Insets] instance on every frame
+     */
+    private var decimalsAreaViewportMarginCache: @Zoomed Insets = Insets.empty
+
+    /**
      * The margin for the decimals area viewport
      */
     fun decimalsAreaViewportMargin(): @Zoomed Insets {
-      return contentViewportMargin.withTopBottom(newTop = decimalsAreaViewportMarginTop(), newBottom = decimalsAreaViewportMarginBottom())
+      val base = contentViewportMargin
+      @Zoomed val newTop = decimalsAreaViewportMarginTop()
+      @Zoomed val newBottom = decimalsAreaViewportMarginBottom()
+
+      val cached = decimalsAreaViewportMarginCache
+      val topBottomUnchanged = cached.top == newTop && cached.bottom == newBottom
+      val leftRightUnchanged = cached.left == base.left && cached.right == base.right
+
+      if (topBottomUnchanged && leftRightUnchanged) {
+        return cached
+      }
+
+      return base.withTopBottom(newTop = newTop, newBottom = newBottom).also {
+        decimalsAreaViewportMarginCache = it
+      }
     }
+
+    /**
+     * Cached value for [decimalsAreaViewportClipMargin] - avoids creating a new [Insets] instance on every frame
+     */
+    private var decimalsAreaViewportClipMarginCache: @Zoomed Insets = Insets.empty
 
     /**
      * Only clips below - to avoid painting into the other layers
      */
     fun decimalsAreaViewportClipMargin(): @Zoomed Insets {
-      return Insets.onlyBottom(decimalsAreaViewportMarginBottom())
+      @Zoomed val newBottom = decimalsAreaViewportMarginBottom()
+
+      if (decimalsAreaViewportClipMarginCache.bottom != newBottom) {
+        decimalsAreaViewportClipMarginCache = Insets.onlyBottom(newBottom)
+      }
+      return decimalsAreaViewportClipMarginCache
     }
   }
 
@@ -666,40 +703,70 @@ class TimeLineChartGestalt
   }
 
   /**
+   * Caches the history query results for the cross wire labels.
+   * Shared between [crossWireDecimalValuesLabelsProvider] and [crossWireEnumValuesLabelsProvider] -
+   * both query with identical parameters each frame.
+   *
+   * Avoids querying the history storage (and allocating the result list) on every frame.
+   */
+  private val crossWireHistoryQueryCache = object {
+    private var start: @ms Double = Double.NaN
+    private var end: @ms Double = Double.NaN
+    private var samplingPeriod: SamplingPeriod? = null
+    private var result: List<HistoryBucket> = emptyList()
+
+    /**
+     * Cached search constraint - recreated only when the max distance changes
+     */
+    private var andBefore: AndBefore = AndBefore(0.0)
+
+    /**
+     * Queries the history storage - returns the cached result if the query parameters have not changed
+     */
+    fun query(start: @ms Double, end: @ms Double, samplingPeriod: SamplingPeriod): List<HistoryBucket> {
+      if (this.start != start || this.end != end || this.samplingPeriod != samplingPeriod) {
+        this.result = configuration.historyStorage.query(start, end, samplingPeriod)
+        this.start = start
+        this.end = end
+        this.samplingPeriod = samplingPeriod
+      }
+      return result
+    }
+
+    /**
+     * Returns the (cached) search constraint for the given max distance
+     */
+    fun andBefore(maxDistance: @ms Double): AndBefore {
+      if (andBefore.maxDistance != maxDistance) {
+        andBefore = AndBefore(maxDistance)
+      }
+      return andBefore
+    }
+
+    /**
+     * Invalidates the cached query result - e.g. when the history storage content has changed
+     */
+    fun invalidate() {
+      start = Double.NaN
+      end = Double.NaN
+      samplingPeriod = null
+      result = emptyList()
+    }
+  }
+
+  /**
    * Provides the cross wire labels - for the decimal values
    */
   private val crossWireDecimalValuesLabelsProvider = object : CrossWireLayer.ValueLabelsProvider {
     /**
-     * Contains the y locations for each label.
-     *
-     * This size of this cache is used to get the number of labels
+     * Contains the label locations, texts and styles.
+     * The size of this buffer is used to get the number of labels.
      */
-    val locationsYBuffer = @Window DoubleMultiBuffer()
-
-    /**
-     * Contains the domain values (that are later used for formatting)
-     */
-    @Deprecated("Not used???")
-    val domainValuesBuffer = @Domain DoubleMultiBuffer()
-
-    /**
-     * The label texts
-     */
-    val labelsBuffer = StringMultiBuffer()
-
-    /**
-     * Contains the box style for the label
-     */
-    val boxStylesBuffer = ObjectMultiBuffer(BoxStyle.modernBlue)
-
-    /**
-     * Contains the label text colors
-     */
-    val labelTextColorBuffer = ObjectMultiBuffer<Color>(Color.pink())
+    val valueLabels: @Window ValueLabelsBuffer = ValueLabelsBuffer(BoxStyle.modernBlue, Color.pink())
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
       val visibleLinesCount = configuration.actualVisibleDecimalSeriesIndices.size()
-      prepare(visibleLinesCount)
+      valueLabels.prepare(visibleLinesCount)
 
       //The labels should show the value of the visible lines at the cross wire position x.
       //If there are no visible line we do not show any labels.
@@ -727,15 +794,14 @@ class TimeLineChartGestalt
       //The sampling period that is used for the currently visible tiles
       @ms val samplingPeriod = chartSupport.paintingProperties.retrieve(PaintingPropertyKey.SamplingPeriod)
 
-      //TODO add some kind of caching(?)
       //Use the same sampling period as the tiles visualize, to ensure the cross wire labels have the same values as the painted lines
-      val historyBuckets = configuration.historyStorage.query(start, end, samplingPeriod)
+      val historyBuckets = crossWireHistoryQueryCache.query(start, end, samplingPeriod)
       if (historyBuckets.isEmpty()) {
         return clearLabels()
       }
 
       //We have to find the best time stamp / value for end.
-      val searchResult = historyBuckets.search(end, AndBefore(minGapSize)) ?: return clearLabels()
+      val searchResult = historyBuckets.search(end, crossWireHistoryQueryCache.andBefore(minGapSize)) ?: return clearLabels()
 
 
       val historyConfiguration = configuration.historyConfiguration
@@ -744,16 +810,16 @@ class TimeLineChartGestalt
       configuration.actualVisibleDecimalSeriesIndices.fastForEachIndexed { index, dataSeriesIndex ->
         //Find the value for this at the given location
         @Domain val valueAtCrossWire = searchResult.chunk.getDecimalValue(dataSeriesIndex, searchResult.timeStampIndex)
-        domainValuesBuffer[index] = valueAtCrossWire
 
         @DomainRelative val relativeValueAtCrossWire = configuration.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
-        locationsYBuffer[index] = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire)
 
-        labelsBuffer[index] = configuration.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire)
-
-        //Update the formats
-        boxStylesBuffer[index] = configuration.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex)
-        labelTextColorBuffer[index] = configuration.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex)
+        valueLabels.set(
+          index = index,
+          locationY = chartCalculator.domainRelative2windowY(relativeValueAtCrossWire),
+          label = configuration.crossWireDecimalFormat.valueAt(dataSeriesIndex).format(valueAtCrossWire),
+          boxStyle = configuration.crossWireDecimalsLabelBoxStyles.valueAt(dataSeriesIndex),
+          textColor = configuration.crossWireDecimalsLabelTextColors.valueAt(dataSeriesIndex),
+        )
       }
     }
 
@@ -761,27 +827,19 @@ class TimeLineChartGestalt
      * Clears all labels
      */
     private fun clearLabels() {
-      prepare(0)
-    }
-
-    private fun prepare(visibleLinesCount: Int) {
-      locationsYBuffer.prepare(visibleLinesCount)
-      domainValuesBuffer.prepare(visibleLinesCount)
-      labelsBuffer.prepare(visibleLinesCount)
-      boxStylesBuffer.prepare(visibleLinesCount)
-      labelTextColorBuffer.prepare(visibleLinesCount)
+      valueLabels.prepare(0)
     }
 
     override fun locationAt(index: Int): Double {
-      return locationsYBuffer[index]
+      return valueLabels.locationYAt(index)
     }
 
     override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return labelsBuffer[index]
+      return valueLabels.labelAt(index)
     }
 
     override fun size(): Int {
-      return locationsYBuffer.size
+      return valueLabels.size
     }
   }
 
@@ -808,10 +866,10 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireDecimalValuesLabelsProvider.boxStylesBuffer[labelIndex]
+      crossWireDecimalValuesLabelsProvider.valueLabels.boxStyleAt(labelIndex)
     }
     valueLabelTextColor = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireDecimalValuesLabelsProvider.labelTextColorBuffer[labelIndex]
+      crossWireDecimalValuesLabelsProvider.valueLabels.textColorAt(labelIndex)
     }
   }
 
@@ -824,51 +882,16 @@ class TimeLineChartGestalt
     var enumAreaViewportMarginTop: @Window Double = Double.NaN
 
     /**
-     * Contains the y locations for each label.
-     *
-     * This size of this cache is used to get the number of labels
+     * Contains the label locations, texts and styles.
+     * The size of this buffer is used to get the number of labels.
      */
-    val locationsYBuffer: @Window @MayBeNaN DoubleMultiBuffer = DoubleMultiBuffer()
-
-    /**
-     * Contains the history enums at the given location
-     */
-    val historyEnumsBuffer = ObjectMultiBuffer(HistoryEnum.Boolean)
-
-    /**
-     * The enum set at the cross wire
-     */
-    val valuesAtCrossWireBuffer: @HistoryEnumSetInt IntMultiBuffer = IntMultiBuffer()
-
-    /**
-     * The translated labels
-     */
-    val labelsBuffer = StringMultiBuffer()
-
-    /**
-     * Contains the box style for the label
-     */
-    val boxStylesBuffer = ObjectMultiBuffer(BoxStyle.modernBlue)
-
-    /**
-     * Contains the label text colors
-     */
-    val labelTextColorBuffer = ObjectMultiBuffer<Color>(Color.pink())
+    val valueLabels: @Window @MayBeNaN ValueLabelsBuffer = ValueLabelsBuffer(BoxStyle.modernBlue, Color.pink())
 
     /**
      * Clears all labels
      */
     private fun clearLabels() {
-      prepare(0)
-    }
-
-    private fun prepare(visibleLinesCount: Int) {
-      locationsYBuffer.prepare(visibleLinesCount)
-      labelsBuffer.prepare(visibleLinesCount)
-      valuesAtCrossWireBuffer.prepare(visibleLinesCount)
-      historyEnumsBuffer.prepare(visibleLinesCount)
-      boxStylesBuffer.prepare(visibleLinesCount)
-      labelTextColorBuffer.prepare(visibleLinesCount)
+      valueLabels.prepare(0)
     }
 
     override fun layout(wireLocation: @Window Double, paintingContext: LayerPaintingContext) {
@@ -884,7 +907,7 @@ class TimeLineChartGestalt
       windowHeight = paintingContext.height
       enumAreaViewportMarginTop = viewportSupport.enumAreaViewportMarginTop(windowHeight)
 
-      prepare(configuration.actualVisibleEnumSeriesIndices.size()) //prepare for the max number
+      valueLabels.prepare(configuration.actualVisibleEnumSeriesIndices.size()) //prepare for the max number
 
       //The max time until a value is interpreted as gap
       //TODO different gap for cross wire and lines
@@ -898,15 +921,14 @@ class TimeLineChartGestalt
       //The sampling period that is used for the currently visible tiles
       @ms val samplingPeriod = chartSupport.paintingProperties.retrieve(PaintingPropertyKey.SamplingPeriod)
 
-      //TODO add some kind of caching(?)
       //Use the same sampling period as the tiles visualize, to ensure the cross wire labels have the same values as the painted lines
-      val historyBuckets = configuration.historyStorage.query(start, end, samplingPeriod)
+      val historyBuckets = crossWireHistoryQueryCache.query(start, end, samplingPeriod)
       if (historyBuckets.isEmpty()) {
         return clearLabels()
       }
 
       //We have to find the best time stamp / value for end.
-      val searchResult = historyBuckets.search(end, AndBefore(minGapSize)) ?: return clearLabels()
+      val searchResult = historyBuckets.search(end, crossWireHistoryQueryCache.andBefore(minGapSize)) ?: return clearLabels()
 
       val historyConfiguration = configuration.historyConfiguration
       //endregion
@@ -922,34 +944,33 @@ class TimeLineChartGestalt
           return@fastForEachIndexed
         }
 
-        valuesAtCrossWireBuffer[visibleSeriesIndex] = valueAtCrossWire.bitset
-
         @Zoomed val center = layout.calculateCenter(BoxIndex(visibleSeriesIndex))
-        locationsYBuffer[visibleSeriesIndex] = center + enumAreaViewportMarginTop
 
         val historyEnum: HistoryEnum = historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
-        historyEnumsBuffer[visibleSeriesIndex] = historyEnum
 
         val firstSetOrdinal = valueAtCrossWire.firstSetOrdinal()
         val firstValue = historyEnum.value(firstSetOrdinal)
-        labelsBuffer[visibleSeriesIndex] = firstValue.key.resolve(textService, i18nConfiguration)
 
-        //Update the formats
-        boxStylesBuffer[visibleSeriesIndex] = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex.value, firstSetOrdinal, historyEnum)
-        labelTextColorBuffer[visibleSeriesIndex] = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex)
+        valueLabels.set(
+          index = visibleSeriesIndex,
+          locationY = center + enumAreaViewportMarginTop,
+          label = firstValue.key.resolve(textService, i18nConfiguration),
+          boxStyle = configuration.crossWireEnumsLabelBoxStyles.valueAt(dataSeriesIndex.value, firstSetOrdinal, historyEnum),
+          textColor = configuration.crossWireEnumsLabelTextColors.valueAt(dataSeriesIndex),
+        )
       }
     }
 
     override fun locationAt(index: Int): @Window @MayBeNaN Double {
-      return locationsYBuffer[index]
+      return valueLabels.locationYAt(index)
     }
 
     override fun labelAt(index: Int, textService: TextService, i18nConfiguration: I18nConfiguration): String {
-      return labelsBuffer[index]
+      return valueLabels.labelAt(index)
     }
 
     override fun size(): Int {
-      return locationsYBuffer.size
+      return valueLabels.size
     }
   }
 
@@ -981,11 +1002,11 @@ class TimeLineChartGestalt
     }
 
     valueLabelBoxStyle = MultiProvider.invoke { index: @LabelIndex Int ->
-      crossWireEnumValuesLabelsProvider.boxStylesBuffer[index]
+      crossWireEnumValuesLabelsProvider.valueLabels.boxStyleAt(index)
     }
 
     valueLabelTextColor = MultiProvider.invoke { labelIndex: @LabelIndex Int ->
-      crossWireEnumValuesLabelsProvider.labelTextColorBuffer[labelIndex]
+      crossWireEnumValuesLabelsProvider.valueLabels.textColorAt(labelIndex)
     }
   }
 
@@ -1127,6 +1148,7 @@ class TimeLineChartGestalt
           // for every client.
           val tileInvalidator: HistoryTileInvalidator = DefaultHistoryTileInvalidator()
           (configuration.historyStorage as? ObservableHistoryStorage)?.observe { updateInfo ->
+            crossWireHistoryQueryCache.invalidate()
             val validationResult = tileInvalidator.historyHasBeenUpdated(updateInfo, tileProvider.canvasTiles(), chartSupport)
 
             if (validationResult == HistoryTilesInvalidationResult.TilesInvalidated) {
@@ -1312,12 +1334,23 @@ class TimeLineChartGestalt
      * Returns the fill color for the min/max area.
      * Will only be called, if there is a [AreaBetweenLinesPainter] provided by [minMaxAreaPainters]
      */
-    var minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = MultiProvider {
-      val averageLineStyle = lineStyles.valueAt(it)
+    var minMaxAreaColors: MultiProvider<DecimalDataSeriesIndex, Color> = object : MultiProvider<DecimalDataSeriesIndex, Color> {
+      /**
+       * Caches the area colors - avoids calling withAlpha (which allocates) on every frame
+       */
+      private val cache = PerIndexColorKeyedCache<Color>()
 
-      when (val lineStyleColor = averageLineStyle.color.invoke()) {
-        is RgbaColor -> lineStyleColor.withAlpha(0.3)
-        is UnparsedWebColor -> Color.gray.withAlpha(0.3)()
+      override fun valueAt(index: Int): Color {
+        val averageLineStyle = lineStyles.valueAt(index)
+        val lineStyleColor = averageLineStyle.color.invoke()
+
+        return cache.getCached(index, lineStyleColor) ?: cache.store(
+          index, lineStyleColor,
+          when (lineStyleColor) {
+            is RgbaColor -> lineStyleColor.withAlpha(0.3)
+            is UnparsedWebColor -> Color.gray.withAlpha(0.3)()
+          }
+        )
       }
     }
 
@@ -1457,15 +1490,27 @@ class TimeLineChartGestalt
     /**
      * The cross wire label styles - for the cross wire for decimal values
      */
-    var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = MultiProvider { index ->
+    var crossWireDecimalsLabelBoxStyles: MultiProvider<DecimalDataSeriesIndex, BoxStyle> = object : MultiProvider<DecimalDataSeriesIndex, BoxStyle> {
+      /**
+       * Caches the box styles - avoids creating a new box style (+ shadow) on every frame
+       */
+      private val cache = PerIndexColorKeyedCache<BoxStyle>()
 
-      BoxStyle(
-        fill = Theme.chartColors.valueAt(index),
-        borderColor = Theme.borderColorConverter.forColor(Theme.chartColors.valueAt(index)),
-        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
-        radii = BorderRadius.all2,
-        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
-      )
+      override fun valueAt(index: Int): BoxStyle {
+        @Suppress("DEPRECATION")
+        val currentFillColor = Theme.chartColors.resolve().valueAt(index)
+
+        return cache.getCached(index, currentFillColor) ?: cache.store(
+          index, currentFillColor,
+          BoxStyle(
+            fill = Theme.chartColors.valueAt(index),
+            borderColor = Theme.borderColorConverter.forColor(Theme.chartColors.valueAt(index)),
+            padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
+            radii = BorderRadius.all2,
+            shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
+          )
+        )
+      }
     }
 
     /**
@@ -1496,17 +1541,33 @@ class TimeLineChartGestalt
      *
      * If the background is set to null, the color for the current value will be used (as provided by [RectangleEnumStripePainter.Configuration.fillProvider])
      */
-    var crossWireEnumsLabelBoxStyles: MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> = MultiProvider2 { dataSeriesIndexAsInt, firstSetOrdinal, historyEnum ->
-      val guessedFillColor = historyEnumLayer.guessFillColor(EnumDataSeriesIndex(dataSeriesIndexAsInt), firstSetOrdinal, historyEnum)
-      val borderColor = Theme.borderColorConverter.resolve()(guessedFillColor)
+    var crossWireEnumsLabelBoxStyles: MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> = object : MultiProvider2<EnumDataSeriesIndex, BoxStyle, HistoryEnumOrdinal, HistoryEnum> {
+      /**
+       * Caches the box styles - avoids creating a new box style (+ shadow) on every frame
+       */
+      private val cache = PerIndexColorKeyedCache<BoxStyle>()
 
-      BoxStyle(
-        fill = guessedFillColor.asProvider(),
-        borderColor = borderColor.asProvider(),
-        padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
-        radii = BorderRadius.all2,
-        shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
-      )
+      override fun valueAt(index: Int, param1: HistoryEnumOrdinal, param2: HistoryEnum): BoxStyle {
+        val guessedFillColor = historyEnumLayer.guessFillColor(EnumDataSeriesIndex(index), param1, param2)
+
+        return cache.getCached(index, guessedFillColor) ?: createBoxStyle(index, guessedFillColor)
+      }
+
+      private fun createBoxStyle(index: Int, guessedFillColor: Color): BoxStyle {
+        @Suppress("DEPRECATION")
+        val borderColor = Theme.borderColorConverter.resolve()(guessedFillColor)
+
+        return cache.store(
+          index, guessedFillColor,
+          BoxStyle(
+            fill = guessedFillColor.asProvider(),
+            borderColor = borderColor.asProvider(),
+            padding = CrossWireLayer.Configuration.DefaultLabelBoxPadding,
+            radii = BorderRadius.all2,
+            shadow = Shadow.LightDrop.copy(color = Theme.shadowColor.provider())
+          )
+        )
+      }
     }
 
     var crossWireEnumsLabelTextColors: MultiProvider<EnumDataSeriesIndex, Color> = Theme.primaryBackgroundColor.multiProviderAlways()
@@ -1524,6 +1585,39 @@ class TimeLineChartGestalt
       applyMinimumSamplingPeriod()
       showAllDecimalSeries()
       showEnumSeriesAtMost(3)
+    }
+  }
+
+  /**
+   * Caches one value per index - keyed by a color that is compared by identity.
+   * Used to avoid recreating styles/colors on every frame.
+   */
+  private class PerIndexColorKeyedCache<T : Any> {
+    private val keys = ArrayList<Color?>()
+    private val values = ArrayList<T?>()
+
+    /**
+     * Returns the cached value for the given index - or null if no value has been stored for [index] and [key]
+     */
+    fun getCached(index: Int, key: Color): T? {
+      if (index >= values.size) {
+        return null
+      }
+      val cachedValue = values[index] ?: return null
+      return cachedValue.takeIf { keys[index] === key }
+    }
+
+    /**
+     * Stores the value for the given index and key. Returns [value]
+     */
+    fun store(index: Int, key: Color, value: T): T {
+      while (keys.size <= index) {
+        keys.add(null)
+        values.add(null)
+      }
+      keys[index] = key
+      values[index] = value
+      return value
     }
   }
 

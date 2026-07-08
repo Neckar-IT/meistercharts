@@ -196,11 +196,37 @@ class PixelValuesGestalt @JvmOverloads constructor(
     }
 
     configuration.lineStyles = object : MultiProvider<LinesChartModelIndex, LineStyle> {
+      /**
+       * Cached line styles per line index for [PixelValueVisualizationMode.Standard].
+       * Avoids allocating a [LineStyle] on every paint. Invalidated when the color provider for the index changes.
+       */
+      val standardStyles = HashMap<Int, LineStyle>()
+
+      /**
+       * Cached line styles per line index for [PixelValueVisualizationMode.HeldAverages]
+       */
+      val heldAveragesStyles = HashMap<Int, LineStyle>()
+
       override fun valueAt(index: Int): LineStyle {
         if (!this@PixelValuesGestalt.configuration.showLines) {
           return LineStyle.Continuous // don't care
         }
-        val lineWidth = when (model.mode) {
+
+        val mode = model.mode
+        val color = this@PixelValuesGestalt.configuration.getLineColor(mode, index)
+
+        val cache = when (mode) {
+          PixelValueVisualizationMode.Standard -> standardStyles
+          PixelValueVisualizationMode.HeldAverages -> heldAveragesStyles
+        }
+
+        cache[index]?.let { cached ->
+          if (cached.color === color) {
+            return cached
+          }
+        }
+
+        val lineWidth = when (mode) {
           PixelValueVisualizationMode.Standard -> if (index == 1) {
             //The average is painted with a width of 2 px
             2.0
@@ -215,7 +241,9 @@ class PixelValuesGestalt @JvmOverloads constructor(
             1.0
           }
         }
-        return LineStyle(lineWidth = lineWidth, color = this@PixelValuesGestalt.configuration.getLineColor(model.mode, index))
+        return LineStyle(lineWidth = lineWidth, color = color).also {
+          cache[index] = it
+        }
       }
     }
   }.clipped()
@@ -419,6 +447,12 @@ class PixelValuesGestalt @JvmOverloads constructor(
     var showLines: Boolean by showLinesProperty
 
     /**
+     * Cached line color providers for [PixelValueVisualizationMode.HeldAverages] - keyed by series index.
+     * The color is a pure function of the series index - safe to cache. Avoids allocating a color + provider per paint.
+     */
+    private val heldAveragesLineColors = HashMap<Int, ColorProvider>()
+
+    /**
      * Returns the line color for the series
      */
     internal fun getLineColor(mode: PixelValueVisualizationMode, seriesIndex: Int): ColorProvider {
@@ -434,8 +468,10 @@ class PixelValuesGestalt @JvmOverloads constructor(
         }
 
         PixelValueVisualizationMode.HeldAverages -> {
-          val opacity = (1 - seriesIndex * 0.1)
-          Color.rgba(0, 0, 0, opacity).asProvider()
+          heldAveragesLineColors.getOrPut(seriesIndex) {
+            val opacity = (1 - seriesIndex * 0.1)
+            Color.rgba(0, 0, 0, opacity).asProvider()
+          }
         }
       }
     }

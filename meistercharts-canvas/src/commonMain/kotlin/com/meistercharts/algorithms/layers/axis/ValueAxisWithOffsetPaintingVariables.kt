@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers.axis
 
 import com.meistercharts.annotations.Domain
-import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
+import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
 
 /**
  * Painting variables for a value axis with offsets
@@ -25,7 +25,7 @@ interface ValueAxisWithOffsetPaintingVariables : ValueAxisPaintingVariables {
   /**
    * The ticks for the offsets
    */
-  val offsetTicks: @Domain DoubleMultiBuffer
+  val offsetTickLabels: @Domain TickLabelsBuffer
 
   /**
    * Current magnitude of the delta between [startDomainValue] and [endDomainValue]
@@ -54,7 +54,7 @@ abstract class ValueAxisWithOffsetPaintingVariablesImpl : ValueAxisPaintingVaria
   /**
    * The ticks for the offset
    */
-  override var offsetTicks: @Domain DoubleMultiBuffer = DoubleMultiBuffer()
+  override val offsetTickLabels: @Domain TickLabelsBuffer = TickLabelsBuffer()
 
   /**
    * Current magnitude of the delta between [startDomainValue] and [endDomainValue]
@@ -80,7 +80,7 @@ abstract class ValueAxisWithOffsetPaintingVariablesImpl : ValueAxisPaintingVaria
 
   override fun reset() {
     super.reset()
-    offsetTicks.reset()
+    offsetTickLabels.reset()
 
     deltaMagnitude = 1
     integerDigits = 6

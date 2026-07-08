@@ -21,10 +21,10 @@ import com.meistercharts.algorithms.layers.AxisPaintingVariablesImpl
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Zoomed
-import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
-import com.meistercharts.canvas.layout.buffer.StringMultiBuffer
+import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
 import it.neckar.geometry.Side
 import com.meistercharts.range.ValueRange
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.unit.other.px
 import kotlin.math.max
@@ -50,9 +50,9 @@ interface ValueAxisPaintingVariables : AxisPaintingVariables {
   val contentAreaValueRange: @Domain ValueRange
 
   /**
-   * Contains the tick values
+   * Contains the tick values and their formatted labels
    */
-  val tickDomainValues: @Domain DoubleMultiBuffer
+  val tickLabels: @Domain TickLabelsBuffer
 }
 
 /**
@@ -76,8 +76,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    */
   override var contentAreaValueRange: @Domain ValueRange = ValueRange.default
 
-  override var tickDomainValues: @Domain DoubleMultiBuffer = DoubleMultiBuffer()
-
+  override val tickLabels: @Domain TickLabelsBuffer = TickLabelsBuffer()
 
   /**
    * The estimated(!) maximum length of the formatted tick values.
@@ -86,9 +85,10 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   var estimatedTickFormatMaxLength: @px Double = 0.0
 
   /**
-   * Contains the formatted tick labels
+   * Reusable target for [TickProvider.fillTicks] - avoids allocating a fresh tick array on every layout pass.
+   * Only valid during the current layout pass; the values are copied into [tickLabels] by [storeTicks].
    */
-  val ticksFormatted: StringMultiBuffer = StringMultiBuffer()
+  val tickValuesScratch: @Domain DoubleArrayList = DoubleArrayList()
 
   /**
    * Resets all variables to their default values
@@ -103,8 +103,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
 
     contentAreaValueRange = ValueRange.default
 
-    tickDomainValues.reset()
-    ticksFormatted.reset()
+    tickLabels.reset()
   }
 
   override fun calculateTickLabelsMaxWidthHorizontal(): Double {
@@ -119,12 +118,26 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
     paintingContext: LayerPaintingContext,
     style: ValueAxisLayer.Configuration,
   ) {
-    tickDomainValues.resize(tickValues.size)
-    ticksFormatted.resize(tickValues.size)
+    tickLabels.resize(tickValues.size)
 
     tickValues.fastForEachIndexed { index, value ->
-      tickDomainValues[index] = value
-      ticksFormatted[index] = style.ticksFormat.format(value, paintingContext.i18nConfiguration)
+      tickLabels.set(index, value, style.ticksFormat.format(value, paintingContext.i18nConfiguration))
+    }
+  }
+
+  /**
+   * Stores the ticks from the given list (usually [tickValuesScratch] filled by [TickProvider.fillTicks]) - allocation-free variant.
+   */
+  fun storeTicks(
+    tickValues: @Domain DoubleArrayList,
+    paintingContext: LayerPaintingContext,
+    style: ValueAxisLayer.Configuration,
+  ) {
+    tickLabels.resize(tickValues.size)
+
+    for (index in 0 until tickValues.size) {
+      val value = tickValues[index]
+      tickLabels.set(index, value, style.ticksFormat.format(value, paintingContext.i18nConfiguration))
     }
   }
 

@@ -26,6 +26,7 @@ import com.meistercharts.annotations.ContentArea
 import com.meistercharts.annotations.ContentAreaRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.calc.InternalCalculations
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.clipToContentViewport
 import com.meistercharts.canvas.saved
@@ -93,13 +94,20 @@ class TilesLayer(
     val gc = paintingContext.gc
     gc.clipToContentViewport(chartCalculator)
 
+    //Convert the tile size to content-area units once per frame (not per tile)
+    val tileSize = tileProvider.tileSize
+    @ContentArea val tileWidthContentArea = chartCalculator.zoomed2contentAreaX(tileSize.width)
+    @ContentArea val tileHeightContentArea = chartCalculator.zoomed2contentAreaY(tileSize.height)
+
     TileIndex.iterateOverTileIndices(paintingVariables.tileIndexUpperLeft, paintingVariables.tileIndexLowerRight) { mainX, subX, mainY, subY ->
       val tileIdentifier = TileIdentifier.of(paintingContext.chartId, mainX, subX, mainY, subY, paintingVariables.zoom)
       val tile: Tile = tileProvider.getTile(tileIdentifier) ?: return@iterateOverTileIndices
 
       gc.saved {
-        @Window val tileOrigin = chartCalculator.tileIndex2window(tileIdentifier.tileIndex, tileProvider.tileSize)
-        it.translate(snapConfiguration.snapXValue(tileOrigin.x), snapConfiguration.snapYValue(tileOrigin.y))
+        //Scalar variant of ChartCalculator.tileIndex2window - avoids allocating Coordinates per tile
+        @Window val tileOriginX = chartCalculator.contentArea2windowX(InternalCalculations.calculateTileOriginX(tileIdentifier.tileIndex, tileWidthContentArea))
+        @Window val tileOriginY = chartCalculator.contentArea2windowY(InternalCalculations.calculateTileOriginY(tileIdentifier.tileIndex, tileHeightContentArea))
+        it.translate(snapConfiguration.snapXValue(tileOriginX), snapConfiguration.snapYValue(tileOriginY))
         tile.paint(it, paintingContext)
       }
     }

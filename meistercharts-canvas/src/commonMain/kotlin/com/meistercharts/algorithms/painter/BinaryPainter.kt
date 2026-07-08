@@ -33,20 +33,44 @@ class BinaryPainter(
    * Snapped baseline y
    */
   @px @Window
-  val baseLineY: Double,
+  baseLineY: Double,
   /**
    * The maximum width for the lines.
    * The lines are fitted *within* this width
    */
   @px
-  val maxWidth: Double,
+  maxWidth: Double,
   /**
    * The maximum height for the lines.
    * The lines are fitted *within* this height
    */
   @px
-  val maxHeight: Double,
+  maxHeight: Double,
 ) : AbstractXyLinePainter(snapXValuesToPixel, snapYValuesToPixel) {
+
+  /**
+   * Snapped baseline y.
+   * Mutable to allow reuse of the painter instance ([reset]).
+   */
+  @px @Window
+  var baseLineY: Double = baseLineY
+    private set
+
+  /**
+   * The maximum width for the lines.
+   * The lines are fitted *within* this width
+   */
+  @px
+  var maxWidth: Double = maxWidth
+    private set
+
+  /**
+   * The maximum height for the lines.
+   * The lines are fitted *within* this height
+   */
+  @px
+  var maxHeight: Double = maxHeight
+    private set
 
   var shadowOffsetX: Double = 4.0
   var shadowOffsetY: Double = 4.0
@@ -68,16 +92,25 @@ class BinaryPainter(
     path.beginPath()
   }
 
-  override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
-    val currentPoint = path.currentPointOrNull
+  /**
+   * Resets the painter for reuse with updated bounds.
+   * Allows keeping a single instance instead of instantiating a new painter per layout pass.
+   */
+  fun reset(@px @Window baseLineY: Double, @px maxWidth: Double, @px maxHeight: Double) {
+    this.baseLineY = baseLineY
+    this.maxWidth = maxWidth
+    this.maxHeight = maxHeight
+    reset()
+  }
 
+  override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
     //Ensure the line is always visible
     @Window val snappedX = ChartingUtils.lineWithin(snapXPosition(x), 0.0, maxWidth, lineWidth)
 
     //Verify that y is always visible
     @Window val snappedY = ChartingUtils.lineWithin(snapYPosition(y), 0.0, maxHeight, lineWidth)
 
-    if (currentPoint == null) {
+    if (path.isEmpty()) {
       //The first point. Start at bottom
       path.moveTo(snappedX, ChartingUtils.lineWithin(snapYPosition(baseLineY), 0.0, maxHeight, lineWidth))
 
@@ -88,7 +121,7 @@ class BinaryPainter(
       firstX = snappedX
 
     } else {
-      @px @Window val lastY = currentPoint.y
+      @px @Window val lastY = path.currentPointYOrNaN()
 
       if (lastY != snappedY) {
         //The y value has changed. continue line on last y value
@@ -110,23 +143,26 @@ class BinaryPainter(
     areaFill?.invoke()?.let {
       gc.fillStyle(it)
 
-      val fillPath = path.copy()
+      @px @Window val x = path.currentPointXOrNaN()
+      //The first action is the initial moveTo (at the snapped baseline) - required to close the path
+      @px @Window val firstPointX = path.firstPointXOrNaN()
+      @px @Window val firstPointY = path.firstPointYOrNaN()
 
-      val x = fillPath.currentPoint.x
-      val y = fillPath.currentPoint.y
-
-      //Complete the path to be able to fill the area
+      //Complete the path (in place - avoids copying the path) to be able to fill the area
 
       //move down
-      fillPath.lineTo(x, baseLineY)
+      path.lineTo(x, baseLineY)
 
       //Complete path to be able to fill
-      fillPath.lineTo(firstX, baseLineY)
+      path.lineTo(firstX, baseLineY)
 
-      //close the path
-      fillPath.closePath()
+      //close the path (back to the first point - same as closePath())
+      path.lineTo(firstPointX, firstPointY)
 
-      gc.fill(fillPath)
+      gc.fill(path)
+
+      //Remove the three actions added above - the strokes below must only paint the line itself
+      path.removeLastActions(3)
     }
 
     shadow.get()?.let {

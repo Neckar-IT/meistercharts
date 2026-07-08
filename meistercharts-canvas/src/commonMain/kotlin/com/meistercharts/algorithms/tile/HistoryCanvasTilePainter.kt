@@ -71,12 +71,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     if (visibleDecimalSeriesIndices.isEmpty()) {
       return TileCreationInfo(
         isEmpty = true,
-        values = mapOf(
-          emptyReason to "No visible data series indices",
-          visibleTimeRangeKey to visibleTimeRange,
-          samplingPeriodKey to renderedSamplingPeriod,
-          timeRangeToPaintKey to timeRangeToPaint,
-        )
+        values = creationInfoValues(visibleTimeRange, renderedSamplingPeriod, timeRangeToPaint, emptyReasonValue = "No visible data series indices")
       )
     }
 
@@ -85,12 +80,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     if (buckets.isEmpty()) {
       return TileCreationInfo(
         isEmpty = true,
-        values = mapOf(
-          emptyReason to "No buckets found",
-          visibleTimeRangeKey to visibleTimeRange,
-          samplingPeriodKey to renderedSamplingPeriod,
-          timeRangeToPaintKey to timeRangeToPaint,
-        )
+        values = creationInfoValues(visibleTimeRange, renderedSamplingPeriod, timeRangeToPaint, emptyReasonValue = "No buckets found")
       )
     }
 
@@ -161,13 +151,32 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
 
     return TileCreationInfo(
       Meistercharts.renderLoop.currentFrameTimestamp,
-      values = mapOf(
-        visibleTimeRangeKey to visibleTimeRange,
-        samplingPeriodKey to renderedSamplingPeriod,
-        timeRangeToPaintKey to timeRangeToPaint,
-        queryResultTimeRangeKey to TimeRange(buckets.first().start, buckets.last().end),
-      )
+      values = creationInfoValues(visibleTimeRange, renderedSamplingPeriod, timeRangeToPaint, queryResultTimeRange = TimeRange(buckets.first().start, buckets.last().end))
     )
+  }
+
+  /**
+   * Creates the values map for [TileCreationInfo].
+   * Fills a presized [HashMap] directly - avoids the [Pair] and vararg array allocations of `mapOf(...)` on every tile paint.
+   */
+  private fun creationInfoValues(
+    visibleTimeRange: @Tile TimeRange,
+    renderedSamplingPeriod: SamplingPeriod,
+    timeRangeToPaint: @Tile TimeRange,
+    emptyReasonValue: String? = null,
+    queryResultTimeRange: TimeRange? = null,
+  ): Map<TileCreationInfoKey<*>, Any?> {
+    val values = HashMap<TileCreationInfoKey<*>, Any?>(8)
+    if (emptyReasonValue != null) {
+      values[emptyReason] = emptyReasonValue
+    }
+    values[visibleTimeRangeKey] = visibleTimeRange
+    values[samplingPeriodKey] = renderedSamplingPeriod
+    values[timeRangeToPaintKey] = timeRangeToPaint
+    if (queryResultTimeRange != null) {
+      values[queryResultTimeRangeKey] = queryResultTimeRange
+    }
+    return values
   }
 
   /**

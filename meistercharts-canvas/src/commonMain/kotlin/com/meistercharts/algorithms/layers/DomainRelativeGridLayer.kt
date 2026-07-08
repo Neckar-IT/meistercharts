@@ -153,11 +153,11 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
 fun ValueAxisLayer.createGrid(additionalConfiguration: DomainRelativeGridLayer.Configuration.() -> Unit = {}): DomainRelativeGridLayer {
   return DomainRelativeGridLayer(valuesProvider = object : DoublesProvider {
     override fun size(): Int {
-      return tickDomainValues.size
+      return tickLabels.size
     }
 
     override fun valueAt(index: Int): @DomainRelative Double {
-      return configuration.valueRangeProvider().toDomainRelative(tickDomainValues[index])
+      return configuration.valueRangeProvider().toDomainRelative(tickLabels.valueAt(index))
     }
   }, orientationProvider = {
     configuration.orientation.opposite()

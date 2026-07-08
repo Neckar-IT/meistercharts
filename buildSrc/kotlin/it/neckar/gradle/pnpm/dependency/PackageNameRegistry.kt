@@ -2,6 +2,7 @@ package it.neckar.gradle.pnpm.dependency
 
 import it.neckar.projects.ConfiguredProject
 import it.neckar.projects.GradleProjectPath
+import it.neckar.projects.OtherProjects
 import it.neckar.projects.Projects
 import org.gradle.api.GradleException
 import org.gradle.api.logging.Logging
@@ -36,7 +37,7 @@ class PackageNameRegistry private constructor(
      * @param pnpmProjects List of pnpm projects to scan (defaults to all pnpm projects)
      */
     fun create(
-      pnpmProjects: List<ConfiguredProject> = Projects.pnpmProjects(),
+      pnpmProjects: List<ConfiguredProject> = Projects.pnpmProjects() + OtherProjects.pnpmProjects(),
     ): PackageNameRegistry {
       val parser = PackageJsonParser()
 

@@ -13,34 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.color
+package com.meistercharts.charts
 
 import assertk.assertThat
-import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
-import assertk.assertions.isNull
-import assertk.assertions.isTrue
-import com.meistercharts.algorithms.painter.Path
 import org.junit.jupiter.api.Test
 
-/**
- */
-class PathTest {
+class ScatterPlotGestaltTest {
   @Test
-  internal fun testAdd() {
-    val path = Path()
-    assertThat(path.isEmpty()).isTrue()
+  fun testCreateDefaultDataPointCount() {
+    val configuration = ScatterPlotGestalt.createDefaultData()
 
-    assertThat(path.currentPointOrNull).isNull()
-    assertThat(path.firstPointOrNull).isNull()
-
-    path.lineTo(1.0, 2.0)
-
-    assertThat(path.currentPointOrNull).isNotNull()
-    assertThat(path.actions).hasSize(1)
-
-    assertThat(path.currentPointOrNull).isEqualTo(path.firstPointOrNull)
-    assertThat(path.currentPoint).isEqualTo(path.firstPoint)
+    //4 clouds with 100 points each - the providers must not contain capacity slack of the fill buffers
+    assertThat(configuration.xValues.size()).isEqualTo(400)
+    assertThat(configuration.yValues.size()).isEqualTo(400)
   }
 }

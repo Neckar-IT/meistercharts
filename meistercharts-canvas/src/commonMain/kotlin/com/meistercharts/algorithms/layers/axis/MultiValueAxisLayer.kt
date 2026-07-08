@@ -112,8 +112,10 @@ class MultiValueAxisLayer constructor(
         visibleAxisCount++
         locationsX[index] = currentX //Remember the location
 
-        //Update the margin accordingly
-        valueAxisLayer.configuration.margin = valueAxisLayer.configuration.margin.withLeft(currentX)
+        //Update the margin accordingly - only when the left value actually changed (avoids allocating a new Insets every layout)
+        if (valueAxisLayer.configuration.margin.left != currentX) {
+          valueAxisLayer.configuration.margin = valueAxisLayer.configuration.margin.withLeft(currentX)
+        }
         //Calculate the layout for the current value axis layer
         paintingContext.gc.saved {
           valueAxisLayer.layout(paintingContext)

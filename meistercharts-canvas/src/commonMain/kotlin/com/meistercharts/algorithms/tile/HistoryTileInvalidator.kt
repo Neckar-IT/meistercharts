@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.PaintingPropertyKey
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.history.HistoryUpdateInfo
+import it.neckar.open.collections.IntMap
 import it.neckar.open.collections.fastForEach
 
 /**
@@ -72,6 +73,16 @@ object InvalidateAll : HistoryTileInvalidator {
  */
 class DefaultHistoryTileInvalidator : HistoryTileInvalidator {
 
+  /**
+   * Reusable buffer that contains the clear decision per tile column (key: [xDataHashCode]).
+   * - `true`: the column has relevant changes - all its tiles are cleared
+   * - `false`: the column has no relevant changes
+   * - missing key: no decision has been made (yet) for that column
+   *
+   * Kept as field (and cleared per updated time range) to avoid allocating a map, lists and boxed keys on every history update.
+   */
+  private val columnClearDecisions: IntMap<Boolean> = IntMap()
+
   override fun historyHasBeenUpdated(updateInfo: HistoryUpdateInfo, tiles: Collection<CanvasTile>, chartSupport: ChartSupport): HistoryTilesInvalidationResult {
     val relevantSamplingPeriod = chartSupport.paintingProperties.retrieveOrNull(PaintingPropertyKey.SamplingPeriod)
     if (relevantSamplingPeriod == null) {
@@ -86,31 +97,36 @@ class DefaultHistoryTileInvalidator : HistoryTileInvalidator {
 
     var tilesInvalidated = false
 
-    //Sort the tiles by x - all tiles in the same column and of the same zoom are invalided together
-    val groupedByTileX = tiles.groupBy { it.identifier.xDataHashCode() }
-
     updateInfo.updatedTimeRanges.fastForEach { updatedTimeRange ->
-      //Iterate over all groups - calculate for each group
-      groupedByTileX.values.forEach { tilesInColumn ->
-        require(tilesInColumn.isNotEmpty()) { "tilesInColumn must not be empty \u2014 empty groups should have been filtered out by groupBy" }
+      columnClearDecisions.clear()
 
-        //Find the first tile that is not empty
-        val firstTile = tilesInColumn.firstOrNull {
-          it.creationInfo != null
-        } ?: return@forEach //skip the column, if no tile could be found that contains any data - all tiles have been cleared already
+      //Decide for each column (all tiles with the same [xDataHashCode] - same column, same zoom) whether it has relevant changes.
+      //The decision is based on the first tile (in iteration order) of the column that is not empty.
+      //If no tile of a column contains any data (all tiles have been cleared already), no decision is stored - the column is skipped.
+      tiles.forEach { tile ->
+        val columnKey = tile.identifier.xDataHashCode()
+        if (columnKey in columnClearDecisions) {
+          //Decision for this column has already been made
+          return@forEach
+        }
+
+        //Skip tiles without data - they cannot be used to decide for the column
+        val creationInfo = tile.creationInfo ?: return@forEach
 
         //Extract the painted time range (that contains the gaps)
-        val timeRangeToPaintKey = firstTile.creationInfo?.get(HistoryCanvasTilePainter.timeRangeToPaintKey) ?: throw IllegalStateException("No <timeRangeToPaintKey> found")
+        val timeRangeToPaint = creationInfo.get(HistoryCanvasTilePainter.timeRangeToPaintKey) ?: throw IllegalStateException("No <timeRangeToPaintKey> found")
 
-        //Check if there are any changes for this tile
-        if (updatedTimeRange.start <= timeRangeToPaintKey.end && updatedTimeRange.end >= timeRangeToPaintKey.start) {
-          //We have relevant changes in that column, therefore clear all tiles
-          tilesInColumn.fastForEach { tile ->
-            val snapshotClearResult = tile.clearSnapshot()
+        //Check if there are any changes for this column
+        columnClearDecisions[columnKey] = updatedTimeRange.start <= timeRangeToPaint.end && updatedTimeRange.end >= timeRangeToPaint.start
+      }
 
-            if (snapshotClearResult == SnapshotClearResult.Cleared) {
-              tilesInvalidated = true
-            }
+      //Clear all tiles of the columns that have relevant changes
+      tiles.forEach { tile ->
+        if (columnClearDecisions[tile.identifier.xDataHashCode()] == true) {
+          val snapshotClearResult = tile.clearSnapshot()
+
+          if (snapshotClearResult == SnapshotClearResult.Cleared) {
+            tilesInvalidated = true
           }
         }
       }

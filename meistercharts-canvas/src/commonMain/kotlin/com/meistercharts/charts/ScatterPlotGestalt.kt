@@ -35,7 +35,7 @@ import it.neckar.geometry.Side
 import com.meistercharts.model.Vicinity
 import it.neckar.open.provider.DoublesProvider
 import com.meistercharts.provider.ValueRangeProvider
-import it.neckar.open.collections.DoubleArrayList
+import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import it.neckar.open.kotlin.lang.randomNormal
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.kotlin.lang.fastFor
@@ -157,8 +157,7 @@ class ScatterPlotGestalt(
       valueRangeX: ValueRange = ValueRange.linear(0.0, 100.0),
       valueRangeY: ValueRange = ValueRange.linear(0.0, 100.0),
     ): Configuration {
-      val xValues = DoubleArrayList()
-      val yValues = DoubleArrayList()
+      val coordinates = CoordinatesArrayList()
 
       // fill model with demo data
       for (cloudIndex in 0 until 4) {
@@ -166,14 +165,13 @@ class ScatterPlotGestalt(
         val centerY = if (cloudIndex % 2 == 0) 25.0 else 75.0
 
         100.fastFor {
-          xValues.add(randomNormal(centerX, 12.0))
-          yValues.add(randomNormal(centerY, 12.0))
+          coordinates.add(randomNormal(centerX, 12.0), randomNormal(centerY, 12.0))
         }
       }
 
       return Configuration(
-        DoublesProvider.forValues(*xValues.data),
-        DoublesProvider.forValues(*yValues.data),
+        DoublesProvider.forValues(*coordinates.toXDoubleArray()),
+        DoublesProvider.forValues(*coordinates.toYDoubleArray()),
         {
           valueRangeX
         }, {

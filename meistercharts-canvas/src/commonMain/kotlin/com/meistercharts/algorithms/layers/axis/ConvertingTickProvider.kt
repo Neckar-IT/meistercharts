@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers.axis
 
 import com.meistercharts.axis.AxisEndConfiguration
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.unit.conversion.Converter
 
@@ -44,6 +45,18 @@ class ConvertingTickProvider(
 
     return ticks.fastMapDouble {
       converter.reverseValue(it)
+    }
+  }
+
+  override fun fillTicks(lowerValue: Double, upperValue: Double, maxTickCount: Int, minTickDistance: Double, axisEndConfiguration: AxisEndConfiguration, target: DoubleArrayList) {
+    val lowerValueConverted = converter.convertValue(lowerValue)
+    val upperValueConverted = converter.convertValue(upperValue)
+
+    delegate.fillTicks(lowerValueConverted, upperValueConverted, maxTickCount, minTickDistance, axisEndConfiguration, target)
+
+    //Convert back (in place)!
+    for (i in 0 until target.size) {
+      target[i] = converter.reverseValue(target[i])
     }
   }
 }

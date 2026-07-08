@@ -25,7 +25,7 @@ import com.meistercharts.algorithms.layers.barchart.AbstractAxisLayer
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.font
-import com.meistercharts.canvas.layout.buffer.DoubleMultiBuffer
+import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
 import com.meistercharts.canvas.text.CanvasStringShortener
 import com.meistercharts.model.Vicinity
 import com.meistercharts.provider.ValueRangeProvider
@@ -35,7 +35,6 @@ import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
-import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
 import it.neckar.open.unit.other.px
@@ -110,14 +109,15 @@ class ValueAxisLayer
       calculateTickLabelsMaxWidth(configuration)
       calculateLocations(paintingContext, configuration)
 
-      storeTicks(calculateTickValues(paintingContext), paintingContext, configuration)
+      calculateTickValues(paintingContext)
+      storeTicks(tickValuesScratch, paintingContext, configuration)
     }
 
     /**
-     * Calculate the tick values that are painted
+     * Calculate the tick values that are painted - into [tickValuesScratch] (allocation-free)
      */
-    private fun calculateTickValues(paintingContext: LayerPaintingContext): @Domain DoubleArray {
-      return when (configuration.orientation) {
+    private fun calculateTickValues(paintingContext: LayerPaintingContext) {
+      when (configuration.orientation) {
         Orientation.Vertical -> calculateTickValuesValueRangeVertically(fontHeight = tickFontMetrics.totalHeight)
         Orientation.Horizontal -> calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth = estimatedTickFormatMaxLength)
       }
@@ -125,10 +125,10 @@ class ValueAxisLayer
   }
 
   /**
-   * Returns the last painted tick values
+   * Returns the last painted ticks (values and formatted labels)
    */
-  val tickDomainValues: @Domain DoubleMultiBuffer
-    get() = paintingVariables.tickDomainValues
+  val tickLabels: @Domain TickLabelsBuffer
+    get() = paintingVariables.tickLabels
 
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {
     val chartCalculator = paintingContext.chartCalculator
@@ -141,7 +141,7 @@ class ValueAxisLayer
 
     val valueRange = configuration.valueRangeProvider()
 
-    paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
+    paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, formattedTick ->
       @px val currentY = chartCalculator.domain2windowY(tickValue, valueRange)
 
       //The tick line
@@ -154,7 +154,6 @@ class ValueAxisLayer
       }
 
       //The tick label
-      val formattedTick = paintingVariables.ticksFormatted[index]
       if (formattedTick.isNotEmpty()) {
         gc.fillText(
           text = formattedTick,
@@ -182,7 +181,7 @@ class ValueAxisLayer
 
     val valueRange = configuration.valueRangeProvider()
 
-    paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
+    paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, tickValueLabel ->
       @px val currentX = chartCalculator.domain2windowX(tickValue, valueRange)
 
       //The tick line
@@ -195,7 +194,6 @@ class ValueAxisLayer
       }
 
       //The tick label
-      val tickValueLabel = paintingVariables.ticksFormatted[index]
       if (tickValueLabel.isNotEmpty()) {
         //Calculate available space in window
         val width = paintingContext.width
@@ -228,29 +226,31 @@ class ValueAxisLayer
   }
 
   /**
-   * Calculates the ticks - only for the area that is visible!
+   * Calculates the ticks (into [ValueAxisPaintingVariablesImpl.tickValuesScratch]) - only for the area that is visible!
    */
-  private fun calculateTickValuesValueRangeVertically(fontHeight: @px Double): @Domain DoubleArray {
+  private fun calculateTickValuesValueRangeVertically(fontHeight: @px Double) {
     //If we are below or above the screen, the relevant height is negative
     if (paintingVariables.axisLength <= 0) {
-      return emptyDoubleArray()
+      paintingVariables.tickValuesScratch.clear()
+      return
     }
 
     val maxTickCount = (paintingVariables.axisLength / (fontHeight * 2.0) + 0.5).roundToInt()
-    return configuration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
+    configuration.ticks.fillTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration, paintingVariables.tickValuesScratch)
   }
 
   /**
-   * Calculates the ticks - only for the area that is visible!
+   * Calculates the ticks (into [ValueAxisPaintingVariablesImpl.tickValuesScratch]) - only for the area that is visible!
    */
-  private fun calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth: @px Double): @Domain DoubleArray {
+  private fun calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth: @px Double) {
     //If we are below or above the screen, the relevant height is negative
     if (paintingVariables.axisLength <= 0) {
-      return emptyDoubleArray()
+      paintingVariables.tickValuesScratch.clear()
+      return
     }
 
     val maxTickCount = (paintingVariables.axisLength / maxFormattedLabelWidth + 0.5).roundToInt()
-    return configuration.ticks.getTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
+    configuration.ticks.fillTicks(paintingVariables.startDomainValue, paintingVariables.endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration, paintingVariables.tickValuesScratch)
   }
 
   companion object {

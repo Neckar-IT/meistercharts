@@ -20,6 +20,7 @@ import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.axis.LinearAxisTickCalculator
 import com.meistercharts.axis.LogarithmicAxisTickCalculator
 import com.meistercharts.annotations.Domain
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyDoubleArray
 
 /**
@@ -61,19 +62,50 @@ fun interface TickProvider {
     axisEndConfiguration: AxisEndConfiguration,
   ): @Domain DoubleArray
 
+  /**
+   * Fills the ticks into [target] (cleared first) - same semantics as [getTicks].
+   *
+   * Use this variant on the hot path: the built-in providers fill the buffer without allocating
+   * a fresh array on every layout pass. The default implementation delegates to [getTicks].
+   */
+  fun fillTicks(
+    lowerValue: @Domain Double,
+    upperValue: @Domain Double,
+    maxTickCount: Int,
+    minTickDistance: @Domain Double,
+    axisEndConfiguration: AxisEndConfiguration,
+    target: @Domain DoubleArrayList,
+  ) {
+    target.clear()
+    val ticks = getTicks(lowerValue, upperValue, maxTickCount, minTickDistance, axisEndConfiguration)
+    for (i in ticks.indices) {
+      target.add(ticks[i])
+    }
+  }
+
   companion object {
     /**
      * Default implementation for linear value axis
      */
-    val linear: TickProvider =
-      TickProvider { lowerValue, upperValue, maxTickCount, minTickDistance, axisEndConfiguration ->
-        LinearAxisTickCalculator.calculateTickValues(lowerValue, upperValue, axisEndConfiguration, maxTickCount, minTickDistance, IntermediateValuesMode.Also5and2)
+    val linear: TickProvider = object : TickProvider {
+      override fun getTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration): @Domain DoubleArray {
+        return LinearAxisTickCalculator.calculateTickValues(lowerValue, upperValue, axisEndConfiguration, maxTickCount, minTickDistance, IntermediateValuesMode.Also5and2)
       }
 
-    val logarithmic: TickProvider =
-      TickProvider { lowerValue, upperValue, maxTickCount, minTickDistance, _ ->
-        LogarithmicAxisTickCalculator.calculateTickValues(lowerValue, upperValue, maxTickCount, minTickDistance)
+      override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
+        LinearAxisTickCalculator.calculateTickValuesInto(target, lowerValue, upperValue, axisEndConfiguration, maxTickCount, minTickDistance, IntermediateValuesMode.Also5and2)
       }
+    }
+
+    val logarithmic: TickProvider = object : TickProvider {
+      override fun getTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration): @Domain DoubleArray {
+        return LogarithmicAxisTickCalculator.calculateTickValues(lowerValue, upperValue, maxTickCount, minTickDistance)
+      }
+
+      override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
+        LogarithmicAxisTickCalculator.calculateTickValuesInto(target, lowerValue, upperValue, maxTickCount, minTickDistance)
+      }
+    }
   }
 }
 
@@ -81,8 +113,12 @@ fun interface TickProvider {
  * Does not provide any ticks at all
  */
 object NoTicksProvider : TickProvider {
-  override fun getTicks(lowerValue: Double, upperValue: Double, maxTickCount: Int, minTickDistance: Double, axisEndConfiguration: AxisEndConfiguration): DoubleArray {
+  override fun getTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration): @Domain DoubleArray {
     return emptyDoubleArray()
+  }
+
+  override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
+    target.clear()
   }
 }
 
@@ -94,6 +130,13 @@ open class ConstantTicksProvider(
 ) : TickProvider {
   override fun getTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration): @Domain DoubleArray {
     return ticks
+  }
+
+  override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
+    target.clear()
+    for (i in ticks.indices) {
+      target.add(ticks[i])
+    }
   }
 
   companion object {
@@ -110,6 +153,10 @@ open class ConstantTicksProvider(
 class MaxNumberOfTicksProvider(val maxTickCount: Int, val delegate: TickProvider) : TickProvider {
   override fun getTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration): @Domain DoubleArray {
     return delegate.getTicks(lowerValue, upperValue, maxTickCount.coerceAtMost(this.maxTickCount), minTickDistance, axisEndConfiguration)
+  }
+
+  override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
+    delegate.fillTicks(lowerValue, upperValue, maxTickCount.coerceAtMost(this.maxTickCount), minTickDistance, axisEndConfiguration, target)
   }
 }
 

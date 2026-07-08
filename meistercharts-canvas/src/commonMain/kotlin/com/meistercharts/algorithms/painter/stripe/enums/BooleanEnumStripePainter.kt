@@ -35,9 +35,10 @@ class BooleanEnumStripePainter(
   override val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   /**
-   * The binary painter that is used to paint - initialized with a default value to avoid null checks
+   * The binary painter that is used to paint.
+   * A single instance is reused - [BinaryPainter.reset] is called in [layoutBegin] to avoid allocations per layout pass.
    */
-  private var binaryPainter: BinaryPainter = BinaryPainter(false, false, 0.0, 0.0, 0.0)
+  private val binaryPainter: BinaryPainter = BinaryPainter(false, false, 0.0, 0.0, 0.0)
 
   override fun layoutBegin(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
     super.layoutBegin(paintingContext, height, dataSeriesIndex, historyConfiguration)
@@ -59,8 +60,8 @@ class BooleanEnumStripePainter(
       }
     }
 
-    //Prepare the binary painter
-    binaryPainter = BinaryPainter(false, false, height, paintingContext.width, height)
+    //Prepare the binary painter - reuse the existing instance
+    binaryPainter.reset(baseLineY = height, maxWidth = paintingContext.width, maxHeight = height)
   }
 
   override fun beginPainting(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex) {

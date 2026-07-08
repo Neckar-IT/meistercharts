@@ -167,9 +167,10 @@ class LabelPainter2(
     }
 
     /**
-     * Compares the layouted labels by the preferred center
+     * Compares the layouted labels by the preferred center.
+     * Explicit comparator to avoid boxing the double selector value on every comparison (as `compareBy` would).
      */
-    private val layoutedLabelByPreferredYComparator: Comparator<LayoutedLabel2> = compareBy { it.preferredCenterY }
+    private val layoutedLabelByPreferredYComparator: Comparator<LayoutedLabel2> = Comparator { a, b -> a.preferredCenterY.compareTo(b.preferredCenterY) }
 
     /**
      * Calculates the optimal positions for all labels

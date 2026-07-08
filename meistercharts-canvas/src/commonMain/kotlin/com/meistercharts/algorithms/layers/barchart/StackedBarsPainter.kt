@@ -18,12 +18,13 @@ package com.meistercharts.algorithms.layers.barchart
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
-import com.meistercharts.model.category.valuesAt
+import com.meistercharts.model.category.SeriesIndex
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.StyleDsl
 import com.meistercharts.canvas.saved
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
+import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.unit.other.px
 
 /**
@@ -51,6 +52,30 @@ class StackedBarsPainter(
     override var actualSize: @Zoomed Double = 0.0
   }
 
+  /**
+   * The category model the [valuesProvider] reads from - updated before each category is painted
+   */
+  private var currentCategoryModel: CategorySeriesModel? = null
+
+  /**
+   * The category index the [valuesProvider] reads from - updated before each category is painted
+   */
+  private var currentCategoryIndex: CategoryIndex = CategoryIndex.zero
+
+  /**
+   * Reusable values provider for the current category - avoids allocating a provider per category per frame
+   */
+  private val valuesProvider: DoublesProvider = object : DoublesProvider {
+    override fun size(): Int {
+      return currentCategoryModel?.numberOfSeries ?: 0
+    }
+
+    override fun valueAt(index: Int): Double {
+      val categoryModel = requireNotNull(currentCategoryModel) { "currentCategoryModel must be set" }
+      return categoryModel.valueAt(currentCategoryIndex, SeriesIndex(index))
+    }
+  }
+
   override fun layout(paintingContext: LayerPaintingContext, categorySize: Double, categoryModel: CategorySeriesModel, categoryOrientation: Orientation) {
     paintingVariables.actualSize = categorySize.coerceAtMost(style.maxBarSize)
   }
@@ -64,11 +89,12 @@ class StackedBarsPainter(
    *```
    */
   override fun paintCategoryVertical(paintingContext: LayerPaintingContext, categoryWidth: Double, categoryIndex: CategoryIndex, isLast: Boolean, categoryModel: CategorySeriesModel) {
-    val valuesProvider = categoryModel.valuesAt(categoryIndex)
-
-    if (valuesProvider.isEmpty()) {
+    if (categoryModel.numberOfSeries == 0) {
       return
     }
+
+    currentCategoryModel = categoryModel
+    currentCategoryIndex = categoryIndex
 
     val chartCalculator = paintingContext.chartCalculator
     @Zoomed val height = chartCalculator.contentAreaRelative2zoomedY(1.0)
@@ -114,11 +140,12 @@ class StackedBarsPainter(
    *```
    */
   override fun paintCategoryHorizontal(paintingContext: LayerPaintingContext, categoryHeight: Double, categoryIndex: CategoryIndex, isLast: Boolean, categoryModel: CategorySeriesModel) {
-    val valuesProvider = categoryModel.valuesAt(categoryIndex)
-
-    if (valuesProvider.isEmpty()) {
+    if (categoryModel.numberOfSeries == 0) {
       return
     }
+
+    currentCategoryModel = categoryModel
+    currentCategoryIndex = categoryIndex
 
     val chartCalculator = paintingContext.chartCalculator
     @Zoomed val width = chartCalculator.contentAreaRelative2zoomedX(1.0)

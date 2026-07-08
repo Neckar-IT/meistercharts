@@ -97,6 +97,15 @@ data class LayerPaintingContext(
    * The dirty reasons
    */
   val dirtyReasons: DirtyReasonBitSet,
+
+  /**
+   * Contains the missing resources for the given frame.
+   *
+   * Declared as constructor parameter (with default) so that the copies created by
+   * [withLayoutIndex]/[withPaintIndex] share the *same* instance: resources reported by one
+   * layer must be visible to the framework and to other layers of the same frame.
+   */
+  val missingResources: MissingResources = MissingResources(),
 ) {
   val chartSupport: ChartSupport
     get() = layerSupport.chartSupport
@@ -168,12 +177,6 @@ data class LayerPaintingContext(
       debugAction()
     }
   }
-
-  /**
-   * Contains the missing resources for the given frame
-   */
-  val missingResources: MissingResources = MissingResources()
-
 
   /**
    * Creates a new copy of this context with given [layerPaintIndex]

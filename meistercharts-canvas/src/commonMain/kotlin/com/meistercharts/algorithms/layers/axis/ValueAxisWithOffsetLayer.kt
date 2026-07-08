@@ -34,7 +34,7 @@ import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
-import it.neckar.open.collections.emptyDoubleArray
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.format
 import it.neckar.open.provider.MultiProvider
@@ -86,7 +86,6 @@ class ValueAxisWithOffsetLayer(
 
   //Painting variable - stores intermediate results required for painting
   private val paintingVariables = object : ValueAxisWithOffsetPaintingVariablesImpl() {
-
     override fun calculate(paintingContext: LayerPaintingContext) {
       reset()
 
@@ -106,7 +105,8 @@ class ValueAxisWithOffsetLayer(
 
       calculateOffsetMagnitudes()
 
-      storeOffsetTicks(calculateTickValues(paintingContext), paintingContext)
+      calculateTickValues(paintingContext)
+      storeOffsetTicks(tickValuesScratch, paintingContext)
       calculateOffsetBandTicks()
     }
 
@@ -134,31 +134,31 @@ class ValueAxisWithOffsetLayer(
     /**
      * Stores the tick domain values and their formatted *remainder* labels (value minus the band offset).
      */
-    private fun storeOffsetTicks(tickValues: @Domain DoubleArray, paintingContext: LayerPaintingContext) {
-      tickDomainValues.resize(tickValues.size)
-      ticksFormatted.resize(tickValues.size)
+    private fun storeOffsetTicks(tickValues: @Domain DoubleArrayList, paintingContext: LayerPaintingContext) {
+      tickLabels.resize(tickValues.size)
 
-      val remainderFormat = decimalFormat(maximumFractionDigits = fractionDigits, minimumFractionDigits = fractionDigits)
+      //decimalFormat delegates to the global DecimalFormatsCache - same instance (and string cache) for the same fractionDigits
+      val remainderFormat = decimalFormat(fractionDigits)
 
-      tickValues.forEachIndexed { index, value ->
-        tickDomainValues[index] = value
+      for (index in 0 until tickValues.size) {
+        val value = tickValues[index]
         @Domain val remainder = value - offsetForValue(value)
-        ticksFormatted[index] = remainderFormat.format(remainder, paintingContext.i18nConfiguration)
+        tickLabels.set(index, value, remainderFormat.format(remainder, paintingContext.i18nConfiguration))
       }
     }
 
     /**
-     * Calculates the offset band boundaries within the visible range and stores them in [offsetTicks].
+     * Calculates the offset band boundaries within the visible range and stores them in [ValueAxisWithOffsetPaintingVariablesImpl.offsetTickLabels].
      */
     private fun calculateOffsetBandTicks() {
       if (startDomainValue.isFinite().not() || endDomainValue.isFinite().not()) {
-        offsetTicks.resize(0)
+        offsetTickLabels.resize(0)
         return
       }
 
       @Domain val bandSize = currentBandSize()
       if (bandSize <= 0.0) {
-        offsetTicks.resize(0)
+        offsetTickLabels.resize(0)
         return
       }
 
@@ -167,42 +167,45 @@ class ValueAxisWithOffsetLayer(
 
       val count = endIndex - startIndex + 1
       if (count <= 0 || count > MaxOffsetBandCount) {
-        offsetTicks.resize(0)
+        offsetTickLabels.resize(0)
         return
       }
 
-      offsetTicks.resize(count)
+      offsetTickLabels.resize(count)
       for (i in 0 until count) {
-        offsetTicks[i] = (startIndex + i) * bandSize
+        @Domain val offsetValue = (startIndex + i) * bandSize
+        offsetTickLabels.set(i, offsetValue, formatOffset(offsetValue))
       }
     }
 
     /**
-     * Calculate the tick values that are painted - only for the visible range.
+     * Calculate the tick values that are painted (into [tickValuesScratch]) - only for the visible range.
      */
-    private fun calculateTickValues(paintingContext: LayerPaintingContext): @Domain DoubleArray {
-      return when (configuration.orientation) {
+    private fun calculateTickValues(paintingContext: LayerPaintingContext) {
+      when (configuration.orientation) {
         Orientation.Vertical -> calculateTickValuesValueRangeVertically(fontHeight = tickFontMetrics.totalHeight)
         Orientation.Horizontal -> calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth = estimatedTickFormatMaxLength)
       }
     }
 
-    private fun calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth: @px Double): @Domain DoubleArray {
+    private fun calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth: @px Double) {
       if (axisLength <= 0.0 || maxFormattedLabelWidth <= 0.0) {
-        return emptyDoubleArray()
+        tickValuesScratch.clear()
+        return
       }
 
       val maxTickCount = (axisLength / maxFormattedLabelWidth + 0.5).roundToInt()
-      return configuration.ticks.getTicks(startDomainValue, endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
+      configuration.ticks.fillTicks(startDomainValue, endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration, tickValuesScratch)
     }
 
-    private fun calculateTickValuesValueRangeVertically(fontHeight: @px Double): @Domain DoubleArray {
+    private fun calculateTickValuesValueRangeVertically(fontHeight: @px Double) {
       if (axisLength <= 0.0 || fontHeight <= 0.0) {
-        return emptyDoubleArray()
+        tickValuesScratch.clear()
+        return
       }
 
       val maxTickCount = (axisLength / (fontHeight * 2.0) + 0.5).roundToInt()
-      return configuration.ticks.getTicks(startDomainValue, endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration)
+      configuration.ticks.fillTicks(startDomainValue, endDomainValue, maxTickCount, 0.0, configuration.axisEndConfiguration, tickValuesScratch)
     }
   }
 
@@ -242,7 +245,7 @@ class ValueAxisWithOffsetLayer(
     gc.font(configuration.tickFont())
     gc.lineWidth = configuration.tickLineWidth
 
-    paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
+    paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, formattedTick ->
       @px @Window val currentY = chartCalculator.domain2windowY(tickValue, valueRange)
 
       if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
@@ -253,7 +256,6 @@ class ValueAxisWithOffsetLayer(
         }
       }
 
-      val formattedTick = paintingVariables.ticksFormatted[index]
       if (formattedTick.isNotEmpty()) {
         gc.fillText(
           text = formattedTick,
@@ -282,7 +284,7 @@ class ValueAxisWithOffsetLayer(
     gc.lineWidth = configuration.tickLineWidth
     gc.font(configuration.tickFont())
 
-    paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue ->
+    paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, tickValueLabel ->
       @px @Window val currentX = chartCalculator.domain2windowX(tickValue, valueRange)
 
       if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
@@ -293,7 +295,6 @@ class ValueAxisWithOffsetLayer(
         }
       }
 
-      val tickValueLabel = paintingVariables.ticksFormatted[index]
       if (tickValueLabel.isNotEmpty()) {
         gc.fillText(
           text = tickValueLabel,
@@ -315,8 +316,8 @@ class ValueAxisWithOffsetLayer(
    * The offset area is painted beyond the tick value labels (away from the origin).
    */
   private fun paintOffsetAreaVertically(paintingContext: LayerPaintingContext, direction: Direction, valueRange: ValueRange) {
-    val offsetTicks = paintingVariables.offsetTicks
-    if (offsetTicks.size <= 0) {
+    val offsetTickLabels = paintingVariables.offsetTickLabels
+    if (offsetTickLabels.size <= 0) {
       return
     }
 
@@ -338,9 +339,9 @@ class ValueAxisWithOffsetLayer(
 
     gc.font(configuration.offsetTickFont())
 
-    offsetTicks.fastForEachIndexed { index, offsetValue: @Domain Double ->
+    offsetTickLabels.fastForEachIndexed { index, offsetValue: @Domain Double, formatted: String ->
       @Domain val bandLowerValue = offsetValue
-      @Domain val bandUpperValue = if (index < offsetTicks.size - 1) offsetTicks[index + 1] else offsetValue + currentBandSize()
+      @Domain val bandUpperValue = if (index < offsetTickLabels.size - 1) offsetTickLabels.valueAt(index + 1) else offsetValue + currentBandSize()
 
       @px @Window val yAtLower = chartCalculator.domain2windowY(bandLowerValue, valueRange)
       @px @Window val yAtUpper = chartCalculator.domain2windowY(bandUpperValue, valueRange)
@@ -356,7 +357,6 @@ class ValueAxisWithOffsetLayer(
       gc.fillRectCoordinates(areaLeft, bandTop, areaLeft + size, bandBottom)
 
       @Zoomed val availableHeight = bandBottom - bandTop
-      val formatted = formatOffset(offsetValue)
       @px val textWidth = gc.calculateTextWidth(formatted)
 
       if (availableHeight > textWidth) {
@@ -375,8 +375,8 @@ class ValueAxisWithOffsetLayer(
    * The offset area is painted beyond the tick value labels (away from the origin).
    */
   private fun paintOffsetAreaHorizontally(paintingContext: LayerPaintingContext, direction: Direction, valueRange: ValueRange) {
-    val offsetTicks = paintingVariables.offsetTicks
-    if (offsetTicks.size <= 0) {
+    val offsetTickLabels = paintingVariables.offsetTickLabels
+    if (offsetTickLabels.size <= 0) {
       return
     }
 
@@ -398,9 +398,9 @@ class ValueAxisWithOffsetLayer(
 
     gc.font(configuration.offsetTickFont())
 
-    offsetTicks.fastForEachIndexed { index, offsetValue: @Domain Double ->
+    offsetTickLabels.fastForEachIndexed { index, offsetValue: @Domain Double, formatted: String ->
       @Domain val bandLowerValue = offsetValue
-      @Domain val bandUpperValue = if (index < offsetTicks.size - 1) offsetTicks[index + 1] else offsetValue + currentBandSize()
+      @Domain val bandUpperValue = if (index < offsetTickLabels.size - 1) offsetTickLabels.valueAt(index + 1) else offsetValue + currentBandSize()
 
       @px @Window val xAtLower = chartCalculator.domain2windowX(bandLowerValue, valueRange)
       @px @Window val xAtUpper = chartCalculator.domain2windowX(bandUpperValue, valueRange)
@@ -416,7 +416,6 @@ class ValueAxisWithOffsetLayer(
       gc.fillRectCoordinates(bandLeft, areaTop, bandRight, areaTop + size)
 
       @Zoomed val availableWidth = bandRight - bandLeft
-      val formatted = formatOffset(offsetValue)
       @px val textWidth = gc.calculateTextWidth(formatted)
 
       if (availableWidth > textWidth) {

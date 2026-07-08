@@ -16,6 +16,7 @@
 package com.meistercharts.axis
 
 import com.meistercharts.annotations.Domain
+import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.kotlin.lang.or0ifNanOrInfinite
@@ -51,6 +52,30 @@ object LogarithmicAxisTickCalculator {
 
     return calculateExponents(logLower, logUpper, maxTickCount, minTickDistanceLog).fastMapDouble {
       10.0.pow(it)
+    }
+  }
+
+  /**
+   * Same as [calculateTickValues] - but fills the provided [target] (cleared first).
+   *
+   * Use this variant on the hot path: it avoids allocating fresh arrays on every layout pass.
+   */
+  fun calculateTickValuesInto(
+    target: @Domain DoubleArrayList,
+    lower: @Domain Double,
+    upper: @Domain Double,
+    maxTickCount: Int,
+    minTickDistance: @Domain Double = 0.0,
+  ) {
+    val logLower: Double = log10(lower)
+    val logUpper: Double = log10(upper)
+    val minTickDistanceLog = log10(minTickDistance).or1ifInfinite()
+
+    LinearAxisTickCalculator.calculateTickValuesInto(target, logLower, logUpper, AxisEndConfiguration.Default, maxTickCount, minTickDistanceLog, IntermediateValuesMode.Only10)
+
+    //Convert the exponents (in place) to the tick values
+    for (i in 0 until target.size) {
+      target[i] = 10.0.pow(target[i])
     }
   }
 

@@ -50,11 +50,36 @@ object LinearAxisTickCalculator {
     minTickDistance: @Domain Double = 0.0,
     intermediateValuesMode: IntermediateValuesMode,
   ): @Domain DoubleArray {
+    val ticks = DoubleArrayList()
+    calculateTickValuesInto(ticks, lower, upper, axisEndConfiguration, maxTickCount, minTickDistance, intermediateValuesMode)
+
+    if (ticks.isEmpty()) {
+      return emptyDoubleArray()
+    }
+    return ticks.toDoubleArray()
+  }
+
+  /**
+   * Same as [calculateTickValues] - but fills the provided [target] (cleared first).
+   *
+   * Use this variant on the hot path: it avoids allocating a fresh array on every layout pass.
+   */
+  fun calculateTickValuesInto(
+    target: @Domain DoubleArrayList,
+    lower: @Domain Double,
+    upper: @Domain Double,
+    axisEndConfiguration: AxisEndConfiguration = AxisEndConfiguration.Exact,
+    maxTickCount: Int,
+    minTickDistance: @Domain Double = 0.0,
+    intermediateValuesMode: IntermediateValuesMode,
+  ) {
+    target.clear()
+
     require(maxTickCount >= 0) {
       "Max tick count must be greater than 0 but was <$maxTickCount>"
     }
     if (maxTickCount == 0) {
-      return emptyDoubleArray()
+      return
     }
     require(minTickDistance >= 0) {
       "Min tick distance must be greater than or equal to 0 but was <$minTickDistance>"
@@ -82,11 +107,10 @@ object LinearAxisTickCalculator {
     }.coerceAtLeast(minTickDistance)
     val tickBase = calculateTickBase(lowerRounded, tickDistance)
 
-    @Domain val ticks = DoubleArrayList()
     var current = tickBase
     var index = 0
-    while (current <= upperRounded && ticks.size < maxTickCount) {
-      ticks.add(current)
+    while (current <= upperRounded && target.size < maxTickCount) {
+      target.add(current)
 
       //Calculate the next current
       index++
@@ -95,26 +119,29 @@ object LinearAxisTickCalculator {
 
     //Handle special case where no ticks have been found - but there are possible ticks
     //we could have at least two ticks, but don't, add additional ticks as fallback
-    if (maxTickCount == 1 && ticks.isEmpty()) {
+    if (maxTickCount == 1 && target.isEmpty()) {
       //No ticks, only one possible, add both
-      return doubleArrayOf(lower)
+      target.add(lower)
+      return
     }
 
-    if (maxTickCount > 1 && ticks.isEmpty()) {
+    if (maxTickCount > 1 && target.isEmpty()) {
       //No ticks, but two are possible, add both
-      return doubleArrayOf(lower, upper)
+      target.add(lower)
+      target.add(upper)
+      return
     }
 
-    if (maxTickCount > 1 && ticks.size == 1) {
+    if (maxTickCount > 1 && target.size == 1) {
       //Only one tick, but two are possible, add the other one, if possible
 
-      when (ticks[0]) {
+      when (target[0]) {
         lower -> {
-          ticks.add(upper) //add upper, since lower already in list
+          target.add(upper) //add upper, since lower already in list
         }
 
         upper -> {
-          ticks.insertAt(0, lower) //add lower, since upper already in list
+          target.insertAt(0, lower) //add lower, since upper already in list
         }
 
         else -> {
@@ -124,10 +151,8 @@ object LinearAxisTickCalculator {
     }
 
     if (axisEndConfiguration == AxisEndConfiguration.Exact) {
-      ensureContainsLowerUpper(ticks, lower, upper)
+      ensureContainsLowerUpper(target, lower, upper)
     }
-
-    return ticks.toDoubleArray()
   }
 
   /**

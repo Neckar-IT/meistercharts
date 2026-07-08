@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.painter.LineTo
 import com.meistercharts.algorithms.painter.MoveTo
 import com.meistercharts.algorithms.painter.Path
 import com.meistercharts.algorithms.painter.PathAction
+import com.meistercharts.algorithms.painter.PathActionType
 import com.meistercharts.algorithms.painter.PathActions
 import com.meistercharts.algorithms.painter.QuadraticCurveTo
 import com.meistercharts.algorithms.painter.SupportsPathActions
@@ -45,7 +46,6 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.RightTriangleType
 import it.neckar.geometry.Size
-import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
@@ -587,13 +587,48 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Applies the given path actions
    */
   fun applyPathActions(pathActions: PathActions) {
-    beginPath()
-    pathActions.actions.fastForEach {
-      pathAction(it)
-    }
+    applyPathActions(pathActions, factorX = 1.0, factorY = 1.0)
 
     pathActions.fillRule?.let {
       fillRule(it)
+    }
+  }
+
+  /**
+   * Applies the given path actions - all coordinates are multiplied with the given factors.
+   *
+   * Begins a new path. Iterates the flat buffers of [PathActions] - does not allocate.
+   * Does *not* apply the fill rule of [pathActions].
+   */
+  fun applyPathActions(pathActions: PathActions, factorX: Double, factorY: Double) {
+    beginPath()
+
+    var coordinatePairIndex = 0
+    for (actionIndex in 0 until pathActions.actionCount) {
+      val actionType = pathActions.actionTypeAt(actionIndex)
+
+      when (actionType) {
+        PathActionType.MoveTo -> moveTo(
+          pathActions.coordinateXAt(coordinatePairIndex) * factorX, pathActions.coordinateYAt(coordinatePairIndex) * factorY,
+        )
+
+        PathActionType.LineTo -> lineTo(
+          pathActions.coordinateXAt(coordinatePairIndex) * factorX, pathActions.coordinateYAt(coordinatePairIndex) * factorY,
+        )
+
+        PathActionType.QuadraticCurveTo -> quadraticCurveTo(
+          pathActions.coordinateXAt(coordinatePairIndex) * factorX, pathActions.coordinateYAt(coordinatePairIndex) * factorY,
+          pathActions.coordinateXAt(coordinatePairIndex + 1) * factorX, pathActions.coordinateYAt(coordinatePairIndex + 1) * factorY,
+        )
+
+        PathActionType.BezierCurveTo -> bezierCurveTo(
+          pathActions.coordinateXAt(coordinatePairIndex) * factorX, pathActions.coordinateYAt(coordinatePairIndex) * factorY,
+          pathActions.coordinateXAt(coordinatePairIndex + 1) * factorX, pathActions.coordinateYAt(coordinatePairIndex + 1) * factorY,
+          pathActions.coordinateXAt(coordinatePairIndex + 2) * factorX, pathActions.coordinateYAt(coordinatePairIndex + 2) * factorY,
+        )
+      }
+
+      coordinatePairIndex += actionType.coordinatePairCount
     }
   }
 

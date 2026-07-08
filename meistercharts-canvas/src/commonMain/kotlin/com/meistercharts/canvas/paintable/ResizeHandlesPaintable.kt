@@ -42,7 +42,7 @@ open class ResizeHandlesPaintable(
       handleBoundsProvider.minX(Direction.TopLeft),
       handleBoundsProvider.minY(Direction.TopLeft),
       handleBoundsProvider.maxX(Direction.BottomRight),
-      handleBoundsProvider.maxX(Direction.BottomRight),
+      handleBoundsProvider.maxY(Direction.BottomRight),
     )
   }
 

@@ -18,7 +18,6 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.color.Color
-import it.neckar.geometry.Coordinates
 import it.neckar.open.unit.other.px
 
 
@@ -44,7 +43,7 @@ class XyAreaPainter(
   private var firstX: Double = 0.toDouble()
 
   override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
-    if (path.isEmpty()) {
+    if (points.isEmpty()) {
       firstX = x
     }
 
@@ -52,21 +51,19 @@ class XyAreaPainter(
   }
 
   override fun finish(gc: CanvasRenderingContext) {
-    if (path.size < 2) {
+    if (points.size < 2) {
+      //Delegate to the super implementation - which clears the buffers
+      super.finish(gc)
       return
     }
 
     //Fill the area
-    val toFill = path.toMutableList()
-
-    val currentPoint = toFill.last()
-    toFill.add(Coordinates(currentPoint.x, baseLineY))
-    toFill.add(Coordinates(firstX, baseLineY))
-
     gc.beginPath()
-    toFill.forEach {
-      gc.lineTo(it)
+    points.fastForEachIndexed { _, x, y ->
+      gc.lineTo(x, y)
     }
+    gc.lineTo(points.lastX(), baseLineY)
+    gc.lineTo(firstX, baseLineY)
 
     fill?.let {
       gc.fill(it)

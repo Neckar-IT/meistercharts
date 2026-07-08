@@ -26,7 +26,7 @@ import it.neckar.open.provider.CoordinatesProvider1
 /**
  * Buffers coordinates (x,y) without creating any objects
  *
- * Must only be used for layout objects in layers.
+ * Used for layout objects in layers and as reusable painting buffer (e.g. [com.meistercharts.algorithms.painter.Path]).
  *
  * Is *NOT* thread safe!
  */
@@ -78,6 +78,43 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
     resize(newSize)
 
     set(newSize - 1, x, y)
+  }
+
+  /**
+   * Increases the size by two and adds both points
+   */
+  fun add(x1: @Window Double, y1: @Window Double, x2: @Window Double, y2: @Window Double) {
+    val startIndex = size
+    resize(startIndex + 2)
+
+    set(startIndex, x1, y1)
+    set(startIndex + 1, x2, y2)
+  }
+
+  /**
+   * Increases the size by three and adds all three points
+   */
+  fun add(x1: @Window Double, y1: @Window Double, x2: @Window Double, y2: @Window Double, x3: @Window Double, y3: @Window Double) {
+    val startIndex = size
+    resize(startIndex + 3)
+
+    set(startIndex, x1, y1)
+    set(startIndex + 1, x2, y2)
+    set(startIndex + 2, x3, y3)
+  }
+
+  /**
+   * Returns the x value of the last point - or [Double.NaN] if the buffer is empty
+   */
+  fun lastXOrNaN(): @Window Double {
+    return xValues.lastOrNaN()
+  }
+
+  /**
+   * Returns the y value of the last point - or [Double.NaN] if the buffer is empty
+   */
+  fun lastYOrNaN(): @Window Double {
+    return yValues.lastOrNaN()
   }
 
   /**

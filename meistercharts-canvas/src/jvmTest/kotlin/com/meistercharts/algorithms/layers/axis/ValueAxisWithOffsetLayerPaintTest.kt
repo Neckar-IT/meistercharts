@@ -53,8 +53,8 @@ class ValueAxisWithOffsetLayerPaintTest {
     layer.layout(paintingContext)
 
     val paintingVariables = layer.paintingVariables()
-    assertThat(paintingVariables.tickDomainValues.size).isGreaterThan(0)
-    assertThat(paintingVariables.offsetTicks.size).isGreaterThan(0)
+    assertThat(paintingVariables.tickLabels.size).isGreaterThan(0)
+    assertThat(paintingVariables.offsetTickLabels.size).isGreaterThan(0)
     assertThat(paintingVariables.offsetStep).isEqualTo(1_000.0)
 
     //Both vertical anchor directions (Outside / Inside)
@@ -73,8 +73,8 @@ class ValueAxisWithOffsetLayerPaintTest {
     layer.layout(paintingContext)
 
     val paintingVariables = layer.paintingVariables()
-    assertThat(paintingVariables.tickDomainValues.size).isGreaterThan(0)
-    assertThat(paintingVariables.offsetTicks.size).isGreaterThan(0)
+    assertThat(paintingVariables.tickLabels.size).isGreaterThan(0)
+    assertThat(paintingVariables.offsetTickLabels.size).isGreaterThan(0)
 
     //Both horizontal anchor directions (Outside / Inside)
     layer.paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
@@ -96,11 +96,11 @@ class ValueAxisWithOffsetLayerPaintTest {
 
     vertical.layout(paintingContext)
     vertical.paintTicksWithLabelsVertically(paintingContext, Direction.CenterRight)
-    assertThat(vertical.paintingVariables().tickDomainValues.size).isGreaterThan(0)
+    assertThat(vertical.paintingVariables().tickLabels.size).isGreaterThan(0)
 
     horizontal.layout(paintingContext)
     horizontal.paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
-    assertThat(horizontal.paintingVariables().tickDomainValues.size).isGreaterThan(0)
+    assertThat(horizontal.paintingVariables().tickLabels.size).isGreaterThan(0)
   }
 
   private fun paintingContext(canvasSize: Size): LayerPaintingContext {

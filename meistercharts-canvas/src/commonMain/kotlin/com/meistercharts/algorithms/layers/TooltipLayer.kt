@@ -75,9 +75,13 @@ class TooltipLayer(
     val tooltipContent = tooltipSupport.tooltip.value
 
     if (tooltipContent != null) {
-      lastVisibleTooltipInfo = VisibleTooltipInfo(
-        mousePosition with Size(100.0, 15.0), paintingContext.frameTimestamp
-      )
+      //Only allocate a new info if the tooltip has just become visible or the mouse has been moved
+      val previousInfo = lastVisibleTooltipInfo
+      if (previousInfo == null || previousInfo.bounds.location != mousePosition) {
+        lastVisibleTooltipInfo = VisibleTooltipInfo(
+          mousePosition with Size(100.0, 15.0), paintingContext.frameTimestamp
+        )
+      }
 
       gc.translate(mousePosition.x, mousePosition.y)
       gc.paintTextBox(tooltipContent.lines, Direction.BottomLeft, 3.0, 3.0, configuration.boxStyle, configuration.textColor(), gc.width)

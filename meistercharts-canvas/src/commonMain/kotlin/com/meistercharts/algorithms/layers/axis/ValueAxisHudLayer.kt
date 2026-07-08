@@ -399,9 +399,22 @@ fun ValueAxisLayer.hudLayer(
           Orientation.Horizontal -> paintingVariables().axisLineLocation
         }
       }
-    }, labels = { index, _ ->
-      val value = domainValues.valueAt(index)
-      listOf(configuration.ticksFormat.format(value))
+    }, labels = object : HudLabelsProvider {
+      /**
+       * Reused single-element label lists - one per HUD element index.
+       * Avoids allocating a new list per element on every calculate.
+       */
+      private val reusedLabelLists = ArrayList<MutableList<String>>()
+
+      override fun valueAt(index: Int, param1: LayerPaintingContext): List<String> {
+        while (reusedLabelLists.size <= index) {
+          reusedLabelLists.add(mutableListOf(""))
+        }
+
+        val labelList = reusedLabelLists[index]
+        labelList[0] = configuration.ticksFormat.format(domainValues.valueAt(index))
+        return labelList
+      }
     }
   ) {
     anchorDirections = MultiProvider {

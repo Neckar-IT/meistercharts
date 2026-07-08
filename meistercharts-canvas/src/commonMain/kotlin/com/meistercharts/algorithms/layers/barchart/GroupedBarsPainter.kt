@@ -46,7 +46,6 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.model.category.CategorySeriesModel
 import com.meistercharts.model.category.SeriesIndex
-import com.meistercharts.model.category.valuesAt
 import com.meistercharts.provider.BoxProvider1
 import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
@@ -59,7 +58,6 @@ import it.neckar.geometry.VerticalAlignment
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.isNegative
-import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 import kotlin.math.min
@@ -108,9 +106,9 @@ class GroupedBarsPainter(
     isLast: Boolean,
     categoryModel: CategorySeriesModel,
   ) {
-    val valuesProvider = categoryModel.valuesAt(categoryIndex) //TODO necessary?
+    val numberOfSeries = categoryModel.numberOfSeries
 
-    if (valuesProvider.isEmpty()) {
+    if (numberOfSeries == 0) {
       return
     }
     if (!configuration.showBars && !configuration.showValueLabel) {
@@ -136,7 +134,8 @@ class GroupedBarsPainter(
       @Window @px val barStart = coerceInViewportY(barStartUnbound)
       @Snapped val boxSizeSnapped = snapConfiguration.snapXSize(layout.boxSize)
 
-      valuesProvider.fastForEachIndexed { index, barValue: @Domain Double ->
+      for (index in 0 until numberOfSeries) {
+        @Domain val barValue = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
         @Window @px val barEndUnbound = domain2windowY(barValue, valueRange)
 
         outOfBoundsIndicatorsSelection.reset()
@@ -252,9 +251,9 @@ class GroupedBarsPainter(
     isLast: Boolean,
     categoryModel: CategorySeriesModel,
   ) {
-    val valuesProvider = categoryModel.valuesAt(categoryIndex) //TODO necessary?
+    val numberOfSeries = categoryModel.numberOfSeries
 
-    if (valuesProvider.isEmpty()) {
+    if (numberOfSeries == 0) {
       return
     }
     if (!configuration.showBars && !configuration.showValueLabel) {
@@ -281,7 +280,8 @@ class GroupedBarsPainter(
       @Window @px val barStart = coerceInViewportX(barStartUnbound)
       @Snapped val boxSizeSnapped = snapConfiguration.snapYSize(layout.boxSize)
 
-      valuesProvider.fastForEachIndexed { index, barValue: @Domain Double ->
+      for (index in 0 until numberOfSeries) {
+        @Domain val barValue = categoryModel.valueAt(categoryIndex, SeriesIndex(index))
         @Window @px val barEndUnbound = domain2windowX(barValue, valueRange)
         outOfBoundsIndicatorsSelection.reset()
         outOfBoundsIndicatorsSelection.updateHorizontal(barStartUnbound, chartCalculator)

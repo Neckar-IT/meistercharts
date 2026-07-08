@@ -46,6 +46,7 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.range.LinearValueRange
 import com.meistercharts.range.ValueRange
+import com.meistercharts.state.ChartState
 import com.meistercharts.state.withContentAreaSize
 import com.meistercharts.style.Palette.chartColors
 import it.neckar.geometry.AxisOrientationX
@@ -93,6 +94,12 @@ class StackedBarPaintable(
   styleConfiguration: Style.() -> Unit = {},
 ) : Paintable {
 
+  /**
+   * The cached bounding box - reused as long as location and size stay unchanged.
+   * [boundingBox] is called multiple times per paint.
+   */
+  private var cachedBoundingBox: Rectangle? = null
+
   override fun boundingBox(paintingContext: LayerPaintingContext): @Zoomed Rectangle {
     val chartSupport = paintingContext.chartSupport
 
@@ -118,7 +125,15 @@ class StackedBarPaintable(
       }
     }
 
-    return Rectangle(x, y, width, height)
+    cachedBoundingBox?.let { cached ->
+      if (cached.getX() == x && cached.getY() == y && cached.getWidth() == width && cached.getHeight() == height) {
+        return cached
+      }
+    }
+
+    return Rectangle(x, y, width, height).also {
+      cachedBoundingBox = it
+    }
   }
 
   val style: Style = Style().also(styleConfiguration)
@@ -445,8 +460,45 @@ class StackedBarPaintable(
    */
   internal val layout = Layout()
 
+  /**
+   * The cached content area size - reused as long as [width]/[height] stay unchanged
+   */
+  private var cachedContentAreaSize: Size = Size.zero
+
+  /**
+   * The chart state [cachedOverrideChartState] delegates to
+   */
+  private var cachedOverrideChartStateDelegate: ChartState? = null
+
+  /**
+   * The cached chart state with the content area size override.
+   * Reused as long as [cachedContentAreaSize] and [cachedOverrideChartStateDelegate] stay unchanged.
+   */
+  private var cachedOverrideChartState: ChartState? = null
+
+  /**
+   * Returns the (cached) chart state with the content area size ([width] x [height]) override applied
+   */
+  private fun overrideChartState(currentChartState: ChartState): ChartState {
+    if (cachedContentAreaSize.width != width || cachedContentAreaSize.height != height) {
+      cachedContentAreaSize = Size(width, height)
+      cachedOverrideChartState = null
+    }
+
+    cachedOverrideChartState?.let { cached ->
+      if (cachedOverrideChartStateDelegate === currentChartState) {
+        return cached
+      }
+    }
+
+    return currentChartState.withContentAreaSize(cachedContentAreaSize).also {
+      cachedOverrideChartState = it
+      cachedOverrideChartStateDelegate = currentChartState
+    }
+  }
+
   override fun paint(paintingContext: LayerPaintingContext, x: @Window Double, y: @Window Double) {
-    paintingContext.withCurrentChartState({ withContentAreaSize(Size(width, height)) }) {
+    paintingContext.withCurrentChartState(overrideChartState(paintingContext.chartState)) {
       layout.calculateLayout(paintingContext.chartCalculator)
 
       if (layout.visibleSegments == 0) {
@@ -514,8 +566,9 @@ class StackedBarPaintable(
     //The right value for the right most label (large @Zoomed values)
     @Zoomed var rightModeLabelRight = rightX
 
-    @Zoomed var barMinX: Double? = null
-    @Zoomed var barMaxX: Double? = null
+    //NaN is used as sentinel for "not yet set" - avoids boxing of nullable doubles
+    @Zoomed var barMinX: Double = Double.NaN
+    @Zoomed var barMaxX: Double = Double.NaN
 
     data.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
       if (value == 0.0) {
@@ -530,14 +583,14 @@ class StackedBarPaintable(
       @Zoomed val segmentEndX = calculator.domainRelative2zoomedX(segmentEnd)
       @Zoomed val segmentWidth = segmentEndX - segmentStartX
 
-      if (barMinX == null) {
+      if (barMinX.isNaN()) {
         barMinX = segmentStartX
       }
-      if (barMaxX == null) {
+      if (barMaxX.isNaN()) {
         barMaxX = segmentStartX
       }
-      barMinX = barMinX?.coerceAtMost(segmentStartX)?.coerceAtMost(segmentEndX)
-      barMaxX = barMaxX?.coerceAtLeast(segmentStartX)?.coerceAtLeast(segmentEndX)
+      barMinX = barMinX.coerceAtMost(segmentStartX).coerceAtMost(segmentEndX)
+      barMaxX = barMaxX.coerceAtLeast(segmentStartX).coerceAtLeast(segmentEndX)
 
       val segmentColor = style.colorsProvider.valueAt(index)
       gc.fill(segmentColor)
@@ -602,13 +655,11 @@ class StackedBarPaintable(
     }
 
     if (style.showBorder) {
-      val barMinimumX = barMinX
-      val barMaximumX = barMaxX
-      if (barMinimumX != null && barMaximumX != null) {
+      if (barMinX.isNaN().not() && barMaxX.isNaN().not()) {
         gc.stroke(style.borderColor)
         gc.lineWidth = style.borderLineWidth
-        if (barMinimumX < barMaximumX) {
-          gc.strokeRoundedRect(barMinimumX, boundingBox.top, barMaximumX - barMinimumX, boundingBox.getHeight(), style.segmentRadii, StrokeLocation.Inside)
+        if (barMinX < barMaxX) {
+          gc.strokeRoundedRect(barMinX, boundingBox.top, barMaxX - barMinX, boundingBox.getHeight(), style.segmentRadii, StrokeLocation.Inside)
         }
       }
     }
@@ -686,8 +737,9 @@ class StackedBarPaintable(
     //The lowest value for the under most label (large @Zoomed values)
     @Zoomed var undermostLabelBottom = bottomY
 
-    @Zoomed var barMinY: Double? = null
-    @Zoomed var barMaxY: Double? = null
+    //NaN is used as sentinel for "not yet set" - avoids boxing of nullable doubles
+    @Zoomed var barMinY: Double = Double.NaN
+    @Zoomed var barMaxY: Double = Double.NaN
 
     data.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
       if (value == 0.0) {
@@ -702,14 +754,14 @@ class StackedBarPaintable(
       @Zoomed val segmentEndY = calculator.domainRelative2zoomedY(segmentEnd)
       @Zoomed val segmentHeight = segmentEndY - segmentStartY
 
-      if (barMinY == null) {
+      if (barMinY.isNaN()) {
         barMinY = segmentStartY
       }
-      if (barMaxY == null) {
+      if (barMaxY.isNaN()) {
         barMaxY = segmentStartY
       }
-      barMinY = barMinY?.coerceAtMost(segmentStartY)?.coerceAtMost(segmentEndY)
-      barMaxY = barMaxY?.coerceAtLeast(segmentStartY)?.coerceAtLeast(segmentEndY)
+      barMinY = barMinY.coerceAtMost(segmentStartY).coerceAtMost(segmentEndY)
+      barMaxY = barMaxY.coerceAtLeast(segmentStartY).coerceAtLeast(segmentEndY)
 
       val segmentColor = style.colorsProvider.valueAt(index)
       gc.fill(segmentColor)
@@ -772,13 +824,11 @@ class StackedBarPaintable(
     }
 
     if (style.showBorder) {
-      val barMinimumY = barMinY
-      val barMaximumY = barMaxY
-      if (barMinimumY != null && barMaximumY != null) {
+      if (barMinY.isNaN().not() && barMaxY.isNaN().not()) {
         gc.stroke(style.borderColor)
         gc.lineWidth = style.borderLineWidth
-        if (barMinimumY < barMaximumY) {
-          gc.strokeRoundedRect(boundingBox.left, barMinimumY, boundingBox.getWidth(), barMaximumY - barMinimumY, style.segmentRadii, StrokeLocation.Inside)
+        if (barMinY < barMaxY) {
+          gc.strokeRoundedRect(boundingBox.left, barMinY, boundingBox.getWidth(), barMaxY - barMinY, style.segmentRadii, StrokeLocation.Inside)
         }
       }
     }

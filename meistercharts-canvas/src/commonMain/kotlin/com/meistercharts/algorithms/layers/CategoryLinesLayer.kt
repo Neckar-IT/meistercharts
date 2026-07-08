@@ -28,6 +28,7 @@ import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
 import com.meistercharts.canvas.whatsAt
+import com.meistercharts.color.Color
 import com.meistercharts.design.Theme
 import com.meistercharts.design.valueAt
 import com.meistercharts.model.category.CategoryIndex
@@ -239,8 +240,33 @@ class CategoryLinesLayer(
      * Provides styles for lines of a certain series.
      * Please also set crossWireLabelBoxStyles in the corresponding cross-wire layer.
      */
-    var lineStyles: MultiProvider<SeriesIndex, LineStyle> = MultiProvider {
-      LineStyle(color = Theme.chartColors.valueAt(it), lineWidth = 1.0)
+    var lineStyles: MultiProvider<SeriesIndex, LineStyle> = object : MultiProvider<SeriesIndex, LineStyle> {
+      /**
+       * Caches the line styles per series index - keyed by the current theme color (compared by identity).
+       * Avoids creating a new [LineStyle] on every paint.
+       */
+      private val cachedColors = ArrayList<Color?>()
+      private val cachedStyles = ArrayList<LineStyle?>()
+
+      override fun valueAt(index: Int): LineStyle {
+        @Suppress("DEPRECATION")
+        val currentColor = Theme.chartColors.resolve().valueAt(index)
+
+        while (cachedStyles.size <= index) {
+          cachedColors.add(null)
+          cachedStyles.add(null)
+        }
+
+        val cached = cachedStyles[index]
+        if (cached != null && cachedColors[index] === currentColor) {
+          return cached
+        }
+
+        return LineStyle(color = Theme.chartColors.valueAt(index), lineWidth = 1.0).also {
+          cachedColors[index] = currentColor
+          cachedStyles[index] = it
+        }
+      }
     }
 
     /**

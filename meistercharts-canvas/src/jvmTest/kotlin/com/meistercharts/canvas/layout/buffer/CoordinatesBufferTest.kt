@@ -17,6 +17,7 @@ package com.meistercharts.canvas.layout.buffer
 
 import assertk.*
 import assertk.assertions.*
+import it.neckar.open.test.utils.isNaN
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -67,6 +68,43 @@ class CoordinatesBufferTest {
     assertThat(provider.size()).isEqualTo(1)
     assertThat(provider.xAt(0)).isEqualTo(7.0)
     assertThat(provider.yAt(0)).isEqualTo(8.0)
+  }
+
+  @Test
+  fun `add two pairs at once`() {
+    coordinatesMultiBuffer.add(1.0, 2.0)
+    coordinatesMultiBuffer.add(3.0, 4.0, 5.0, 6.0)
+
+    assertThat(coordinatesMultiBuffer.size).isEqualTo(3)
+    assertThat(coordinatesMultiBuffer.x(1)).isEqualTo(3.0)
+    assertThat(coordinatesMultiBuffer.y(1)).isEqualTo(4.0)
+    assertThat(coordinatesMultiBuffer.x(2)).isEqualTo(5.0)
+    assertThat(coordinatesMultiBuffer.y(2)).isEqualTo(6.0)
+  }
+
+  @Test
+  fun `add three pairs at once`() {
+    coordinatesMultiBuffer.add(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+
+    assertThat(coordinatesMultiBuffer.size).isEqualTo(3)
+    assertThat(coordinatesMultiBuffer.x(0)).isEqualTo(1.0)
+    assertThat(coordinatesMultiBuffer.y(0)).isEqualTo(2.0)
+    assertThat(coordinatesMultiBuffer.x(1)).isEqualTo(3.0)
+    assertThat(coordinatesMultiBuffer.y(1)).isEqualTo(4.0)
+    assertThat(coordinatesMultiBuffer.x(2)).isEqualTo(5.0)
+    assertThat(coordinatesMultiBuffer.y(2)).isEqualTo(6.0)
+  }
+
+  @Test
+  fun `last values or NaN`() {
+    assertThat(coordinatesMultiBuffer.lastXOrNaN()).isNaN()
+    assertThat(coordinatesMultiBuffer.lastYOrNaN()).isNaN()
+
+    coordinatesMultiBuffer.add(1.0, 2.0)
+    coordinatesMultiBuffer.add(3.0, 4.0)
+
+    assertThat(coordinatesMultiBuffer.lastXOrNaN()).isEqualTo(3.0)
+    assertThat(coordinatesMultiBuffer.lastYOrNaN()).isEqualTo(4.0)
   }
 
   @Test

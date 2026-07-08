@@ -156,11 +156,10 @@ class TimeAxisLayer(
       if (guessedIdealTickDistance == 0.0) {
         //zoomed in way too far!
         offsetTickDistance = DistanceMillis.smallest
-        offsetTickDomainValues.reset()
+        offsetTickLabels.reset()
 
-        tickDistance =  DistanceMillis.smallest
-        tickDomainValues.reset()
-        ticksFormatted.reset()
+        tickDistance = DistanceMillis.smallest
+        tickLabels.reset()
         return
       }
 
@@ -173,11 +172,9 @@ class TimeAxisLayer(
       offsetTickDistance = TimeTickDistance.forOffsets(endTimestamp - startTimestamp)
       val offsetTicks = offsetTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
-      offsetTickDomainValues.prepare(offsetTicks.size)
-      offsetTicksFormatted.prepare(offsetTicks.size)
+      offsetTickLabels.prepare(offsetTicks.size)
       offsetTicks.fastForEachIndexed { index, value ->
-        offsetTickDomainValues[index] = value
-        offsetTicksFormatted[index] = offsetTickDistance.formatAsOffset(value, paintingContext.i18nConfiguration)
+        offsetTickLabels.set(index, value, offsetTickDistance.formatAsOffset(value, paintingContext.i18nConfiguration))
       }
 
       //The minimum tick distance that is supported
@@ -194,16 +191,13 @@ class TimeAxisLayer(
         TimestampsMode.Relative -> style.relativeTimestampsTickFormat
       }
 
-      tickDomainValues.prepare(allTicks.size)
-      ticksFormatted.prepare(allTicks.size)
+      tickLabels.prepare(allTicks.size)
 
       allTicks.fastForEachIndexed { index, value ->
         if (offsetTicks.fastContains(value)) {
-          tickDomainValues[index] = Double.NaN
-          ticksFormatted[index] = "-" //no value shall be painted, there is an offset tick already
+          tickLabels.set(index, Double.NaN, "-") //no value shall be painted, there is an offset tick already
         } else {
-          tickDomainValues[index] = value
-          ticksFormatted[index] = formatter.format(value, timeTickDistance, paintingContext.i18nConfiguration)
+          tickLabels.set(index, value, formatter.format(value, timeTickDistance, paintingContext.i18nConfiguration))
         }
       }
     }
@@ -230,7 +224,7 @@ class TimeAxisLayer(
       //Save the total height
       paintingVariables.spaceForTickLabels = gc.getFontMetrics().totalHeight
 
-      paintingVariables.tickDomainValues.fastForEachIndexed { index, tickValue: @Time Double ->
+      paintingVariables.tickLabels.fastForEachIndexed { _, tickValue: @Time Double, tickValueLabel: String ->
         if (tickValue.isFinite().not()) {
           return@fastForEachIndexed
         }
@@ -245,8 +239,6 @@ class TimeAxisLayer(
             else -> throw IllegalArgumentException("Unsupported anchor direction: $textAnchor")
           }
         }
-
-        val tickValueLabel = paintingVariables.ticksFormatted[index]
 
         //Debug output the bounds
         val snappedX = paintingContext.snapConfiguration.snapXValue(currentX)
@@ -272,13 +264,13 @@ class TimeAxisLayer(
     @ms val end = paintingVariables.endTimestamp
 
     //Check if there is at least one tick visible
-    val atLeastOneTickVisible = paintingVariables.offsetTickDomainValues.fastAny {
+    val atLeastOneTickVisible = paintingVariables.offsetTickLabels.values.fastAny {
       it.betweenInclusive(start, end)
     }
 
     if (atLeastOneTickVisible) {
       //First paint the areas
-      paintingVariables.offsetTickDomainValues.fastForEachIndexed { index, tickValue: @ms Double ->
+      paintingVariables.offsetTickLabels.values.fastForEachIndexed { index, tickValue: @ms Double ->
         if (tickValue.isFinite().not()) {
           return@fastForEachIndexed
         }
@@ -289,11 +281,11 @@ class TimeAxisLayer(
         //Calculate the "bounds" for the *visible* offset area
         val minX: @Window Double = max(paintingVariables.axisStart, tickLocationX)
 
-        val maxX: @Window Double = if (index < paintingVariables.offsetTickDomainValues.size - 1) {
+        val maxX: @Window Double = if (index < paintingVariables.offsetTickLabels.size - 1) {
           //At most until the next tick
 
           //Calculate the tick location for the *next* tick
-          @ms val nextMillis = paintingVariables.offsetTickDomainValues[index + 1]
+          @ms val nextMillis = paintingVariables.offsetTickLabels.valueAt(index + 1)
           @Window val nextMillisLocation = time2windowX(nextMillis)
 
           min(gc.width, nextMillisLocation)
@@ -309,7 +301,7 @@ class TimeAxisLayer(
         @Zoomed val availableWidth = maxX - minX
 
         //Paint the label at the *right* side of the tick
-        val formatted = paintingVariables.offsetTicksFormatted.get(index)
+        val formatted = paintingVariables.offsetTickLabels.formattedAt(index)
         val textWidth = gc.calculateTextWidth(formatted)
 
         if (availableWidth > textWidth) {
@@ -323,7 +315,7 @@ class TimeAxisLayer(
       }
 
       //Now paint the ticks - *over* the previously painted areas
-      paintingVariables.offsetTickDomainValues.fastForEachIndexed { index, millis: @ms Double ->
+      paintingVariables.offsetTickLabels.values.fastForEachIndexed { index, millis: @ms Double ->
         //The tick location of the *current* tick
         @Window val tickLocationX = time2windowX(millis)
 
@@ -343,7 +335,7 @@ class TimeAxisLayer(
       //We do not have any tick visible
 
       // Paint the last tick *before* the window in the middle of the window
-      @ms val millis = paintingVariables.offsetTickDomainValues.lastOr(paintingVariables.startTimestamp) {
+      @ms val millis = paintingVariables.offsetTickLabels.values.lastOr(paintingVariables.startTimestamp) {
         it < paintingVariables.startTimestamp
       }
 

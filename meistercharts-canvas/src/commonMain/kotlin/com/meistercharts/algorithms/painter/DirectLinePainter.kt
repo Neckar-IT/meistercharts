@@ -16,9 +16,8 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import com.meistercharts.painter.LinePainter
-import it.neckar.open.collections.DoubleArrayList
-import it.neckar.open.collections.fastForEachIndexed
 
 /**
  * A class for drawing a single line on a canvas.
@@ -28,15 +27,13 @@ class DirectLinePainter(
   snapYValues: Boolean,
 ) : AbstractPainter(snapXValues, snapYValues), LinePainter {
 
-  private val xLocations = DoubleArrayList(10)
-  private val yLocations = DoubleArrayList(10)
+  private val locations = CoordinatesArrayList(10)
 
   /**
    * Clears the existing line coordinates.
    */
   override fun begin(gc: CanvasRenderingContext) {
-    xLocations.clear()
-    yLocations.clear()
+    locations.clear()
   }
 
   /**
@@ -50,8 +47,7 @@ class DirectLinePainter(
     require(x.isFinite()) { "x must be a finite number but was $x" }
     require(y.isFinite()) { "y must be a finite number but was $y" }
 
-    xLocations.add(x)
-    yLocations.add(y)
+    locations.add(x, y)
   }
 
   /**
@@ -60,14 +56,14 @@ class DirectLinePainter(
    * @param gc The canvas rendering context used for drawing.
    */
   override fun paint(gc: CanvasRenderingContext) {
-    if (xLocations.size < 2 || yLocations.size < 2) return
+    if (locations.size < 2) return
 
     gc.beginPath()
-    gc.moveTo(xLocations[0], yLocations[0])
+    gc.moveTo(locations.xAt(0), locations.yAt(0))
 
-    xLocations.fastForEachIndexed { index, x ->
+    locations.fastForEachIndexed { index, x, y ->
       if (index > 0) {
-        gc.lineTo(x, yLocations[index])
+        gc.lineTo(x, y)
       }
     }
 
@@ -75,6 +71,6 @@ class DirectLinePainter(
   }
 
   override fun toString(): String {
-    return "SimpleLinePainter"
+    return "DirectLinePainter"
   }
 }

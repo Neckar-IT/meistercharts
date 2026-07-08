@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.LayoutDirection
 import com.meistercharts.algorithms.painter.stripe.StripePainter
 import com.meistercharts.annotations.ContentArea
+import com.meistercharts.calc.TimeChartCalculator
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
@@ -69,6 +70,13 @@ abstract class AbstractHistoryStripeLayer<
   override val type: LayerType = LayerType.Content
 
   abstract override fun paintingVariables(): HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
+
+  /**
+   * The time chart calculator for the current frame.
+   * Calculated once per frame in [DefaultHistoryStripeLayerPaintingVariables.calculate] and reused in [paint] -
+   * avoids creating a second calculator in the paint phase.
+   */
+  private var currentTimeChartCalculator: TimeChartCalculator? = null
 
   /**
    * Abstract base class for painting variables
@@ -130,6 +138,7 @@ abstract class AbstractHistoryStripeLayer<
     override fun calculate(paintingContext: LayerPaintingContext) {
       val chartSupport = paintingContext.chartSupport
       val chartCalculator = paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
+      currentTimeChartCalculator = chartCalculator
 
       historyConfiguration = configuration.historyConfiguration()
 
@@ -243,7 +252,7 @@ abstract class AbstractHistoryStripeLayer<
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    val chartCalculator = paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
+    val chartCalculator = currentTimeChartCalculator ?: paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
 
     //Fill the background
     configuration.background?.let { background ->

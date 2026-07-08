@@ -17,10 +17,8 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import com.meistercharts.canvas.layout.buffer.AreaBandArrayList
 import com.meistercharts.painter.AreaBetweenLinesPainter
-import it.neckar.open.collections.DoubleArrayList
-import it.neckar.open.collections.fastForEachIndexed
-import it.neckar.open.collections.fastForEachIndexedReversed
 import it.neckar.open.unit.number.IsFinite
 
 /**
@@ -31,14 +29,10 @@ open class SimpleAreaBetweenLinesPainter(
   snapYValues: Boolean,
 ) : AbstractPainter(snapXValues, snapYValues), AreaBetweenLinesPainter {
 
-  private val xLocations = DoubleArrayList(10)
-  private val y1Locations = DoubleArrayList(10)
-  private val y2Locations = DoubleArrayList(10)
+  private val bandPoints = AreaBandArrayList(10)
 
   override fun begin(gc: CanvasRenderingContext) {
-    xLocations.clear()
-    y1Locations.clear()
-    y2Locations.clear()
+    bandPoints.clear()
   }
 
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed @IsFinite Double, y1: @Zoomed @IsFinite Double, y2: @Zoomed @IsFinite Double) {
@@ -46,28 +40,26 @@ open class SimpleAreaBetweenLinesPainter(
     require(y1.isFinite()) { "y1 must be a finite number but was $y1" }
     require(y2.isFinite()) { "y2 must be a finite number but was $y2" }
 
-    xLocations.add(x)
-    y1Locations.add(y1)
-    y2Locations.add(y2)
+    bandPoints.add(x, y1, y2)
   }
 
   override fun paint(gc: CanvasRenderingContext, strokeLines: Boolean) {
-    if (xLocations.size < 2 || y1Locations.size < 2 || y2Locations.size < 2) return
+    if (bandPoints.size < 2) return
 
     // Draw and fill the area between the lines
     gc.beginPath()
 
     // Draw line1
-    gc.moveTo(xLocations[0], y1Locations[0])
-    xLocations.fastForEachIndexed { index, x ->
+    gc.moveTo(bandPoints.xAt(0), bandPoints.y1At(0))
+    bandPoints.fastForEachIndexed { index, x, y1, _ ->
       if (index > 0) {
-        gc.lineTo(x, y1Locations[index])
+        gc.lineTo(x, y1)
       }
     }
 
     // Draw line2 in reverse
-    xLocations.fastForEachIndexedReversed { index, x ->
-      gc.lineTo(x, y2Locations[index])
+    bandPoints.fastForEachIndexedReversed { _, x, _, y2 ->
+      gc.lineTo(x, y2)
     }
 
     // Close the path
@@ -85,11 +77,11 @@ open class SimpleAreaBetweenLinesPainter(
   private fun strokeLines(gc: CanvasRenderingContext) {
     // Draw and stroke line1
     gc.beginPath()
-    gc.moveTo(xLocations[0], y1Locations[0])
+    gc.moveTo(bandPoints.xAt(0), bandPoints.y1At(0))
 
-    xLocations.fastForEachIndexed { index, x ->
+    bandPoints.fastForEachIndexed { index, x, y1, _ ->
       if (index > 0) {
-        gc.lineTo(x, y1Locations[index])
+        gc.lineTo(x, y1)
       }
     }
 
@@ -97,10 +89,10 @@ open class SimpleAreaBetweenLinesPainter(
 
     // Draw and stroke line2
     gc.beginPath()
-    gc.moveTo(xLocations[0], y2Locations[0])
-    xLocations.fastForEachIndexed { index, x ->
+    gc.moveTo(bandPoints.xAt(0), bandPoints.y2At(0))
+    bandPoints.fastForEachIndexed { index, x, _, y2 ->
       if (index > 0) {
-        gc.lineTo(x, y2Locations[index])
+        gc.lineTo(x, y2)
       }
     }
     gc.stroke()

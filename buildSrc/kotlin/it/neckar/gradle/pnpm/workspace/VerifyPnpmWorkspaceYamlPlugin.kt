@@ -1,6 +1,7 @@
 package it.neckar.gradle.pnpm.workspace
 
 import it.neckar.gradle.Plugins
+import it.neckar.projects.OtherProjects
 import it.neckar.projects.Projects
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
@@ -21,7 +22,8 @@ import java.io.File
 
 /**
  * Verifies that the committed `pnpm-workspace.yaml` `packages:` list matches the set of pnpm projects
- * declared in [Projects.pnpmProjects] plus [VerifyPnpmWorkspaceYamlPluginExtension.manualEntries].
+ * declared in [Projects.pnpmProjects] and [OtherProjects.pnpmProjects] plus
+ * [VerifyPnpmWorkspaceYamlPluginExtension.manualEntries].
  *
  * Fails fast if entries are missing, unknown, or duplicated. Order is not enforced.
  */
@@ -35,14 +37,14 @@ class VerifyPnpmWorkspaceYamlPlugin : Plugin<Project> {
 
     target.tasks.register<VerifyPnpmWorkspaceYamlTask>(VerifyTaskName) {
       group = "verification"
-      description = "Verifies that pnpm-workspace.yaml lists the same packages as Projects.pnpmProjects() + manualEntries"
+      description = "Verifies that pnpm-workspace.yaml lists the same packages as Projects.pnpmProjects() + OtherProjects.pnpmProjects() + manualEntries"
 
       workspaceYamlFile = extension.workspaceYamlFile
       manualEntries = extension.manualEntries
-      // Provider defers Projects.pnpmProjects() until task realization — GradleContext.initialize
+      // Provider defers the pnpmProjects() calls until task realization — GradleContext.initialize
       // runs in the root build.gradle.kts body, which is after the plugins {} block.
       expectedProjectPaths.set(target.provider {
-        Projects.pnpmProjects().map { it.path.filePath }
+        (Projects.pnpmProjects() + OtherProjects.pnpmProjects()).map { it.path.filePath }
       })
       markerFile = target.layout.buildDirectory.file("verifyPnpmWorkspaceYaml/marker.txt")
     }

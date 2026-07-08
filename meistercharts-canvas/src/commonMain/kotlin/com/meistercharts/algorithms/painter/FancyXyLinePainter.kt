@@ -22,7 +22,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
-import it.neckar.geometry.Coordinates
+import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import it.neckar.open.unit.other.px
 
 /**
@@ -35,9 +35,10 @@ open class FancyXyLinePainter(
 ) : AbstractPainter(snapXValues, snapYValues), XYPainter {
 
   /**
-   * The path
+   * Contains the points of the path.
+   * Reusable buffer - cleared in [finish] to avoid unbounded growth across frames.
    */
-  protected val path: MutableList<Coordinates> = mutableListOf()
+  protected val points: CoordinatesArrayList = CoordinatesArrayList(10)
 
   /**
    * The color of the line
@@ -64,37 +65,42 @@ open class FancyXyLinePainter(
   var shadowOffset: Double = 2.0
 
   override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
-    path.add(Coordinates(x, y))
+    points.add(x, y)
   }
 
   override fun finish(gc: CanvasRenderingContext) {
-    if (path.size < 2) {
-      return
-    }
-
-    //Paint the shadow if there is one
-    shadowColor.get()?.let {
-      gc.strokeStyle(it)
-      gc.translate(shadowOffset, shadowOffset)
-
-      gc.beginPath()
-      path.forEach { coordinates ->
-        gc.lineTo(coordinates)
+    try {
+      if (points.size < 2) {
+        return
       }
 
-      gc.lineWidth = width
+      //Paint the shadow if there is one
+      shadowColor.get()?.let {
+        gc.strokeStyle(it)
+        gc.translate(shadowOffset, shadowOffset)
+
+        gc.beginPath()
+        points.fastForEachIndexed { _, x, y ->
+          gc.lineTo(x, y)
+        }
+
+        gc.lineWidth = width
+        gc.stroke()
+        gc.translate(-shadowOffset, -shadowOffset)
+      }
+
+
+      //Paint the path
+      gc.beginPath()
+      points.fastForEachIndexed { _, x, y ->
+        gc.lineTo(x, y)
+      }
+
+      gc.strokeStyle(color)
       gc.stroke()
-      gc.translate(-shadowOffset, -shadowOffset)
+    } finally {
+      //Clear the buffer for the next paint cycle
+      points.clear()
     }
-
-
-    //Paint the path
-    gc.beginPath()
-    path.forEach { coordinates ->
-      gc.lineTo(coordinates)
-    }
-
-    gc.strokeStyle(color)
-    gc.stroke()
   }
 }

@@ -72,7 +72,7 @@ class CategoryAxisLayer(
      * Calculates all painting variables
      */
     override fun calculate(paintingContext: LayerPaintingContext) {
-      logger.trace("Calculate painting variables - Window size: ${paintingContext.chartState.windowSize.format()}")
+      logger.trace { "Calculate painting variables - Window size: ${paintingContext.chartState.windowSize.format()}" }
 
       reset()
 
@@ -87,7 +87,7 @@ class CategoryAxisLayer(
 
       calculateLocations(paintingContext, configuration)
 
-      logger.trace("Finished Calculate painting variables - layout: $categoryLayout")
+      logger.trace { "Finished Calculate painting variables - layout: $categoryLayout" }
     }
   }
 
