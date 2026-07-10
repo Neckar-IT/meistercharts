@@ -42,10 +42,7 @@ import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.fastForEachIndexed
 import it.neckar.open.unit.number.MayBeNaN
-import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Paints labels on the Y axis (above each other).
@@ -64,6 +61,13 @@ class LabelPainter2(
   fun paintingVariables(): LabelPainterPaintingVariables {
     return paintingVariables
   }
+
+  /**
+   * The labels that have been laid out by [layout] (sorted by preferred center y).
+   * Internal access for tests.
+   */
+  internal val layoutedLabels: List<LayoutedLabel2>
+    get() = paintingVariables.layoutedLabelsBuffer.values
 
   private val paintingVariables = object : LabelPainterPaintingVariables {
     /**
@@ -113,8 +117,6 @@ class LabelPainter2(
       layoutedLabelsBuffer.prepare(preferredLabelsCount)
 
       //Fill the cache with the values - these are then used to calculate the layout
-      @px var availableSpace = max - min
-
       labelLocations.fastForEachIndexed(paintingContext) { labelIndex: @LabelIndex Int, labelLocation: @MayBeNaN @Window Double ->
         layoutedLabelsBuffer.values[labelIndex].let { layoutedLabel ->
           layoutedLabel.index = labelIndex
@@ -139,22 +141,12 @@ class LabelPainter2(
             return@fastForEachIndexed
           }
 
-          //Is there enough space for this label remaining
-          if (availableSpace < layoutedLabel.height) {
-            //Not enough space!
-            layoutedLabel.visible = false
-            return@fastForEachIndexed
-          }
-          //subtract the height and gap
-          availableSpace = availableSpace - layoutedLabel.height - style.labelSpacing
-
-
           //Label is visible, update all other properties
           layoutedLabel.text = labelTexts.valueAt(labelIndex, textService, i18nConfiguration)
           layoutedLabel.visible = true
 
           layoutedLabel.preferredCenterY = snappedYLocation
-          layoutedLabel.setActualCenterY(layoutedLabel.preferredCenterY) //also save the value to actual center
+          layoutedLabel.actualCenterY = snappedYLocation //also save the value to actual center
         }
       }
 
@@ -163,7 +155,62 @@ class LabelPainter2(
         it.visible.not()
       }
 
-      calculateOptimalPositions(min, max)
+      calculateOptimalPositions(min, max, paintingContext)
+    }
+
+    /**
+     * Drops labels until the remaining labels fit into the space between [min] and [max].
+     *
+     * Deterministic drop rules:
+     * 1. Labels taller than the available space are dropped - they can never be painted and must not
+     *    evict labels that would fit.
+     * 2. While the remaining labels do not fit, the label with the highest [LayoutedLabel2.index]
+     *    (= lowest priority) is dropped.
+     *
+     * The feasibility check calls [VerticalLabelPlacementSolver.requiredSpace] on the filled solver -
+     * the exact computation [VerticalLabelPlacementSolver.solve] enforces, so the drop decision and the
+     * solver can never disagree (not even by floating-point rounding).
+     *
+     * Side effect: [placementSolver] is filled with the remaining labels.
+     */
+    private fun dropLabelsExceedingAvailableSpace(labelSpacing: @Zoomed Double, min: @Window Double, max: @Window Double) {
+      @px val availableSpace = max - min
+
+      layoutedLabelsBuffer.removeAll {
+        it.height > availableSpace
+      }
+
+      fillPlacementSolver()
+      while (placementSolver.labelCount > 0 && placementSolver.requiredSpace(labelSpacing) > availableSpace) {
+        removeLabelWithHighestIndex()
+        fillPlacementSolver()
+      }
+    }
+
+    /**
+     * Fills [placementSolver] with the current buffer content.
+     * The buffer must be sorted by [LayoutedLabel2.preferredCenterY].
+     */
+    private fun fillPlacementSolver() {
+      placementSolver.clear()
+      layoutedLabelsBuffer.fastForEach { label ->
+        placementSolver.addLabel(label.preferredCenterY, label.height)
+      }
+    }
+
+    /**
+     * Removes the label with the highest [LayoutedLabel2.index] (= lowest priority) from the buffer
+     */
+    private fun removeLabelWithHighestIndex() {
+      var highestIndex = -1
+      layoutedLabelsBuffer.fastForEach { label ->
+        if (label.index > highestIndex) {
+          highestIndex = label.index
+        }
+      }
+      layoutedLabelsBuffer.removeAll {
+        it.index == highestIndex
+      }
     }
 
     /**
@@ -173,148 +220,64 @@ class LabelPainter2(
     private val layoutedLabelByPreferredYComparator: Comparator<LayoutedLabel2> = Comparator { a, b -> a.preferredCenterY.compareTo(b.preferredCenterY) }
 
     /**
-     * Calculates the optimal positions for all labels
+     * The solver that computes the exact collision-free positions
      */
-    private fun calculateOptimalPositions(min: @Window Double, max: @Window Double) {
+    private val placementSolver: VerticalLabelPlacementSolver = VerticalLabelPlacementSolver()
+
+    /**
+     * Calculates the optimal positions for all labels: overlap-free, within min/max, minimizing the
+     * squared deviations from the preferred positions (exact solution, see [VerticalLabelPlacementSolver]).
+     * Labels that do not fit into the available space are dropped deterministically first
+     * (see [dropLabelsExceedingAvailableSpace]).
+     */
+    private fun calculateOptimalPositions(min: @Window Double, max: @Window Double, paintingContext: LayerPaintingContext) {
       //Sort the labels by Y location
       layoutedLabelsBuffer.sortWith(layoutedLabelByPreferredYComparator)
 
-      // Step 1: Calculate absolute min/max values for each label
-      // These are the absolute min/max values - when the labels are stacked at the top/bottom
-      // min/max values do *not* consider the preferred location
-      calculateAbsoluteMin(min)
-      calculateAbsoluteMax(max)
+      //A negative configured spacing would break the solver's chain-constraint transformation - treat it as 0
+      @Zoomed val labelSpacing = style.labelSpacing.coerceAtLeast(0.0)
 
-      //Layout from min to max  (simple stack)
-      minToMaxLayout(min)
+      dropLabelsExceedingAvailableSpace(labelSpacing, min, max)
 
-      //(re)overlap labels for 50%
-      revertPercent(0.5)
+      //The stacked-at-top/bottom bounds are only consumed by the ShowMinMax debug overlay
+      paintingContext.ifDebug(DebugFeature.ShowMinMax) {
+        calculateAbsoluteMin(labelSpacing, min)
+        calculateAbsoluteMax(labelSpacing, max)
+      }
 
-      //stack from current position from max to min
-      maxToMinLayout(max)
+      placementSolver.solve(spacing = labelSpacing, min = min, max = max)
 
-      //Optimize the layout locally (each label within the bounds of its neighbors)
-      optimizeLayoutYLocally()
+      layoutedLabelsBuffer.fastForEachWithIndex { index, label ->
+        label.actualCenterY = placementSolver.placedCenterYAt(index)
+      }
     }
 
     /**
-     * Sets the min value for each label
+     * Sets [LayoutedLabel2.centerYMin] for each label: the center when all labels are stacked at the top.
+     * Only used for the [DebugFeature.ShowMinMax] overlay.
      */
-    private fun calculateAbsoluteMin(min: @Window Double) {
-      var lastMaxY = min - style.labelSpacing
+    private fun calculateAbsoluteMin(labelSpacing: @Zoomed Double, min: @Window Double) {
+      var lastMaxY = min - labelSpacing
 
       layoutedLabelsBuffer.fastForEach { label ->
-        label.setCenterYMin(lastMaxY + style.labelSpacing + label.halfHeight)
+        label.centerYMin = lastMaxY + labelSpacing + label.halfHeight
         lastMaxY = label.centerYMin + label.halfHeight
       }
     }
 
     /**
-     * Sets the max values for each label
+     * Sets [LayoutedLabel2.centerYMax] for each label: the center when all labels are stacked at the bottom.
+     * Only used for the [DebugFeature.ShowMinMax] overlay.
      */
-    private fun calculateAbsoluteMax(max: @Window Double) {
-      var lastMinY = max + style.labelSpacing
+    private fun calculateAbsoluteMax(labelSpacing: @Zoomed Double, max: @Window Double) {
+      var lastMinY = max + labelSpacing
 
       layoutedLabelsBuffer.fastForEachReversed { label ->
-        label.setCenterYMax(lastMinY - style.labelSpacing - label.halfHeight)
+        label.centerYMax = lastMinY - labelSpacing - label.halfHeight
         lastMinY = label.centerYMax - label.halfHeight
       }
     }
 
-
-    /**
-     * Stack from low y values to high y values.
-     *
-     * Initially the actual values are set to the preferred values!
-     */
-    private fun minToMaxLayout(min: @Window Double) {
-      @px var lastMaxY = min - style.labelSpacing
-
-      layoutedLabelsBuffer.fastForEach { label ->
-        //Check the min y with the last stored top y
-        if (label.actualMinY < lastMaxY + style.labelSpacing) {
-          //We are too low - move up
-          label.setActualCenterY(lastMaxY + style.labelSpacing + label.halfHeight)
-        }
-
-        lastMaxY = label.actualMaxY
-      }
-    }
-
-    /**
-     * Move 50% towards the natural position
-     */
-    private fun revertPercent(@pct correctionFactor: Double) {
-      layoutedLabelsBuffer.fastForEachFiltered({ it.hasModifiedActualY() }) { label ->
-        //The delta to the preferred center
-        @px val delta = label.actualCenterY - label.preferredCenterY
-        label.setActualCenterY(label.actualCenterY - delta * correctionFactor)
-      }
-    }
-
-    /**
-     * Layout from high y values to low y values
-     */
-    private fun maxToMinLayout(max: @Window Double) {
-      @px var lastMinY = max + style.labelSpacing
-
-      layoutedLabelsBuffer.fastForEachReversed { label ->
-        //Check the max y with the last stored bottom y
-        if (label.actualMaxY > lastMinY - style.labelSpacing) {
-          //We are too high - move down
-          label.setActualCenterY(lastMinY - style.labelSpacing - label.halfHeight)
-        }
-
-        lastMinY = label.actualMinY
-      }
-    }
-
-    /**
-     * Optimize the layout locally
-     */
-    private fun optimizeLayoutYLocally() {
-      if (layoutedLabelsBuffer.isEmpty()) {
-        return
-      }
-
-      layoutedLabelsBuffer.fastForEachWithIndex { index, middleLabel ->
-        val topLabel: LayoutedLabel2? = if (index == 0) {
-          null
-        } else {
-          layoutedLabelsBuffer[index - 1]
-        }
-
-        val bottomLabel: LayoutedLabel2? = if (index == layoutedLabelsBuffer.size - 1) {
-          null
-        } else {
-          layoutedLabelsBuffer[index + 1]
-        }
-
-        avoidOverlap(topLabel, middleLabel, bottomLabel)
-      }
-    }
-
-    /**
-     * Avoids overlaps between the labels by moving [label]
-     */
-    fun avoidOverlap(topLabel: LayoutedLabel2?, label: LayoutedLabel2, bottomLabel: LayoutedLabel2?) {
-      if (topLabel != null && label.overlapsActualY(topLabel)) {
-        //label is overlapping with the top label
-
-        //The smallest y value that does not overlap with the lower label
-        @px val minY = topLabel.actualMaxY + style.labelSpacing + label.height / 2.0
-        label.setActualCenterY(max(label.preferredCenterY, minY))
-        return
-      }
-
-      if (bottomLabel != null && label.overlapsActualY(bottomLabel)) {
-        //Label is overlapping with the bottom label:
-
-        @px val maxY = bottomLabel.actualMinY - style.labelSpacing - label.height / 2.0
-        label.setActualCenterY(min(label.preferredCenterY, maxY))
-      }
-    }
   }
 
   /**
@@ -417,17 +380,11 @@ class LabelPainter2(
           gc.stroke(labelFillStyle.fill.get() ?: Color.darkgray())
 
           //Vertical line
-          if (label.centerYMin > label.centerYMax) {
-            //Reversed order, max is smaller than min (not enough space!)
-            gc.setLineDash(1.0, 2.0)
-          }
-
           gc.strokeLine(0.0, label.centerYMin, 0.0, label.centerYMax)
 
           //Lines to the label itself
           gc.strokeLine(innerX, actualCenterY, 0.0, label.centerYMin)
           gc.strokeLine(innerX, actualCenterY, 0.0, label.centerYMax)
-          //"normal" order
         }
 
         //Translate to the box location
@@ -536,42 +493,26 @@ class LayoutedLabel2 : LayoutVariable {
   var preferredCenterY: @Window Double = 0.0
 
   /**
-   * The min value (center) for this label.
-   * *Might* be larger then [centerYMax] if there is not enough space for all labels
+   * The min value (center) for this label - the center when all labels are stacked at the top.
+   * Only calculated when the [DebugFeature.ShowMinMax] overlay is enabled.
    *
    * The min value is independent form the [preferredCenterY]. It just depends on the min value and other labels.
    */
   var centerYMin: @Window Double = -Double.MAX_VALUE
-    private set
-
-  fun setCenterYMin(newValue: @Window Double) {
-    this.centerYMin = newValue
-    this.actualCenterY = actualCenterY.coerceAtLeast(centerYMin)
-  }
 
   /**
-   * The max value (center) for this label
-   * Might* be smaller then [centerYMin] if there is not enough space for all labels
+   * The max value (center) for this label - the center when all labels are stacked at the bottom.
+   * Only calculated when the [DebugFeature.ShowMinMax] overlay is enabled.
+   *
    * The max value is independent form the [preferredCenterY]. It just depends on the max value and other labels.
    */
   var centerYMax: @Window Double = Double.MAX_VALUE
-    private set
-
-  fun setCenterYMax(newValue: @Window Double) {
-    this.centerYMax = newValue
-    this.actualCenterY = actualCenterY.coerceAtMost(centerYMax)
-  }
 
   /**
    * The actual position where the label is painted.
    * Is calculated and depends on the amount and location of other labels
    */
   var actualCenterY: @Window Double = 0.0
-    private set
-
-  fun setActualCenterY(value: @Window Double) {
-    this.actualCenterY = value.coerceIn(centerYMin, centerYMax)
-  }
 
   /**
    * The minimum y value (top side of the label)
@@ -586,20 +527,6 @@ class LayoutedLabel2 : LayoutVariable {
   @Window
   val actualMaxY: Double
     get() = actualCenterY + height / 2.0
-
-  /**
-   * Returns whether the given y value is within the actual range of this label info
-   */
-  fun containsActual(@px @Window y: Double): Boolean {
-    return y in actualMinY..actualMaxY
-  }
-
-  /**
-   * Returns true if the actual y is different than the natural y
-   */
-  fun hasModifiedActualY(): Boolean {
-    return preferredCenterY != actualCenterY
-  }
 
   /**
    * Returns true if the actual y values overlaps with the actual bounds of the other label

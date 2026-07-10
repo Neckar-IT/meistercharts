@@ -15,7 +15,6 @@
  */
 package com.meistercharts.algorithms.layers
 
-import com.meistercharts.annotations.Zoomed
 import com.meistercharts.axis.AxisEndConfiguration
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
@@ -86,17 +85,6 @@ open class AxisConfiguration {
    */
   @px
   var margin: Insets = Insets.empty
-
-  /**
-   * The passpartout for the axis.
-   * If set, the axis (line) will not be drawn in the area of the set insets.
-   *
-   * Beware that
-   * * the left and right values are taken into account if [side] is [Side.Top] or [Side.Bottom]
-   * * the top and bottom values are taken into account if [side] is [Side.Left] or [Side.Right]
-   */
-  @Deprecated("Use content viewport instead")
-  var axisPasspartout: () -> @Zoomed Insets = { Insets.empty }
 
   /**
    * Provides the label for the axis

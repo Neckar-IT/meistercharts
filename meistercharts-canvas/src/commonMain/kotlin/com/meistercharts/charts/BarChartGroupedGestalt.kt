@@ -99,7 +99,6 @@ import it.neckar.open.i18n.TextService
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.kotlin.lang.fastFor
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProvider1
@@ -443,8 +442,8 @@ class BarChartGroupedGestalt constructor(
       layers.addClearBackground()
       layers.addFillCanvasBackground()
 
-      layers.addAboveBackground(gridLayer.visibleIfWithState(configuration.showGridProperty))
-      layers.addLayer(toolbarInteractionLayer.visibleIfWithState(configuration.showTooltipsProperty))
+      layers.addAboveBackground(gridLayer.visibleIf { configuration.showGrid })
+      layers.addLayer(toolbarInteractionLayer.visibleIf { configuration.showTooltip })
 
       valueAxisSupport.addLayers(this)
       thresholdsSupport.addLayers(this)
@@ -590,8 +589,7 @@ class BarChartGroupedGestalt constructor(
     /**
      * Whether the grid is visible (true) or not (false)
      */
-    val showGridProperty: ObservableBoolean = ObservableBoolean(true)
-    var showGrid: Boolean by showGridProperty
+    var showGrid: Boolean = true
 
     /**
      * The orientation of the chart
@@ -602,8 +600,7 @@ class BarChartGroupedGestalt constructor(
     /**
      * Whether to show tooltips (using the cross wire)
      */
-    val showTooltipsProperty: ObservableBoolean = ObservableBoolean(true)
-    var showTooltip: Boolean by showTooltipsProperty
+    var showTooltip: Boolean = true
 
     /**
      * Format used for the labels of the cross wire

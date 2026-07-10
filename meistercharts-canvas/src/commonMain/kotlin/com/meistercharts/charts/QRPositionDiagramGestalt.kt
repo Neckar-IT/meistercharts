@@ -43,7 +43,6 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
 import it.neckar.open.kotlin.lang.asProvider1
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ObservableString
@@ -131,7 +130,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
 
         layers.addLayer(paintableTranslateRotateLayer)
 
-        layers.addLayer(domainAxisMarkersLayer.visibleIfWithState(configuration.paintDomainAxisMarkersProperty))
+        layers.addLayer(domainAxisMarkersLayer.visibleIf { configuration.paintDomainAxisMarkers })
 
         layers.addVersionNumberHidden()
       }
@@ -140,19 +139,15 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
 
   @ConfigurationDsl
   class Configuration {
-    val valueRangeXProperty: ObservableObject<ValueRange> = ObservableObject(ValueRange.default)
-
     /**
      * The value range in X direction
      */
-    var valueRangeX: ValueRange by valueRangeXProperty
-
-    val valueRangeYProperty: ObservableObject<ValueRange> = ObservableObject(ValueRange.default)
+    var valueRangeX: ValueRange = ValueRange.default
 
     /**
      * The value range in Y direction
      */
-    var valueRangeY: ValueRange by valueRangeYProperty
+    var valueRangeY: ValueRange = ValueRange.default
 
     val xAxisCaptionProperty: ObservableString = ObservableString("")
 
@@ -220,12 +215,10 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     var image: Paintable = RectanglePaintable(Size.PX_90, Color.red)
 
 
-    val paintDomainAxisMarkersProperty: ObservableBoolean = ObservableBoolean(true)
-
     /**
      * whether to paint the domain axis markers
      */
-    var paintDomainAxisMarkers: Boolean by paintDomainAxisMarkersProperty
+    var paintDomainAxisMarkers: Boolean = true
   }
 }
 

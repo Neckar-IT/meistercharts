@@ -31,11 +31,10 @@ import it.neckar.open.provider.delegate
 import it.neckar.open.formatting.decimalFormat
 
 /**
- * Configures a chart with thresholds
+ * Configures a chart with thresholds using a self-contained [ThresholdsLayer] (no value axis required).
  *
- * Attention: You should probably use [ThresholdsSupport] instead.
+ * For thresholds tied to an existing value axis use [ThresholdsSupport] instead.
  */
-@Deprecated("Use ThresholdsHudGestalt instead")
 @MeisterChartsBuilderDsl
 class ThresholdsGestalt(
   /**

@@ -108,13 +108,6 @@ fun <T : Layer> T.translatedWindow(translateX: @Zoomed DoubleProvider, translate
 }
 
 
-/**
- * Old layer name - defined as type alias to help finding the renamed class
- */
-@Deprecated("Use TransformingChartStateLayer instead")
-typealias CompartmentLayer<T> = TransformingChartStateLayer<T>
-
-
 interface TransformingChartStateLayerVariables : PaintingVariables {
   /**
    * The updated chart state

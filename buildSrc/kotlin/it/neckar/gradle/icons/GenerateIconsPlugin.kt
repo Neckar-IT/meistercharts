@@ -28,7 +28,7 @@ import it.neckar.gradle.toCamelCase
 @Suppress("unused")
 class GenerateIconsPlugin : Plugin<Project> {
   override fun apply(target: Project) {
-    val extension = target.extensions.create<GenerateIconsExtension>(GenerateIconsExtensionName)
+    val extension = target.extensions.create<GenerateIconsExtension>(ExtensionName)
 
     target.tasks.register<CreateBasicIconsDeclarationTask>(CreateIconDeclarationsTaskName) {
       group = "Build"
@@ -46,7 +46,7 @@ class GenerateIconsPlugin : Plugin<Project> {
   }
 
   companion object {
-    const val GenerateIconsExtensionName: String = "createIcons"
+    const val ExtensionName: String = "createIcons"
     const val CreateIconDeclarationsTaskName: String = "createIconDeclarations"
   }
 }
@@ -54,36 +54,36 @@ class GenerateIconsPlugin : Plugin<Project> {
 /**
  * Extension for the generate icons plugin
  */
-abstract class GenerateIconsExtension {
+interface GenerateIconsExtension {
   /**
    * The class name of the generated object
    */
-  abstract val objectName: Property<String>
+  val objectName: Property<String>
 
   /**
    * The directory where the svg source icons are located
    */
-  abstract val svgIconsSourceDir: DirectoryProperty
+  val svgIconsSourceDir: DirectoryProperty
 
   /**
    * If set, generates the Basic Icons file that contains the icon IDs
    */
-  abstract val basicIconsFile: RegularFileProperty
+  val basicIconsFile: RegularFileProperty
 
   /**
    * If set, generates the svg paths object
    */
-  abstract val svgPathsFile: RegularFileProperty
+  val svgPathsFile: RegularFileProperty
 
   /**
    * If set, generates the svg paintable providers object
    */
-  abstract val svgPaintableProvidersFile: RegularFileProperty
+  val svgPaintableProvidersFile: RegularFileProperty
 
   /**
    * The svg paintables provider factory
    */
-  abstract val svgPaintablesProviderProviderFile: RegularFileProperty
+  val svgPaintablesProviderProviderFile: RegularFileProperty
 }
 
 @CacheableTask
@@ -170,4 +170,4 @@ abstract class CreateBasicIconsDeclarationTask : DefaultTask() {
  */
 @Suppress("unused")
 fun Project.generateIcons(configure: GenerateIconsExtension.() -> Unit): Unit =
-  (this as org.gradle.api.plugins.ExtensionAware).extensions.configure(GenerateIconsPlugin.GenerateIconsExtensionName, configure)
+  (this as org.gradle.api.plugins.ExtensionAware).extensions.configure(GenerateIconsPlugin.ExtensionName, configure)

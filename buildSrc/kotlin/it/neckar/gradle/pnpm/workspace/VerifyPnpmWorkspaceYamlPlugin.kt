@@ -56,17 +56,17 @@ class VerifyPnpmWorkspaceYamlPlugin : Plugin<Project> {
   }
 }
 
-abstract class VerifyPnpmWorkspaceYamlPluginExtension {
+interface VerifyPnpmWorkspaceYamlPluginExtension {
   /**
    * Path to the `pnpm-workspace.yaml` to verify. Defaults to `<projectDir>/pnpm-workspace.yaml`.
    */
-  abstract val workspaceYamlFile: RegularFileProperty
+  val workspaceYamlFile: RegularFileProperty
 
   /**
    * Additional entries that must appear in the `packages:` list beyond [Projects.pnpmProjects].
    * Use for build-output paths or other locations not covered by the Gradle project graph.
    */
-  abstract val manualEntries: ListProperty<String>
+  val manualEntries: ListProperty<String>
 }
 
 abstract class VerifyPnpmWorkspaceYamlTask : DefaultTask() {

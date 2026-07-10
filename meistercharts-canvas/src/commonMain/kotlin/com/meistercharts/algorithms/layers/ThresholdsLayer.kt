@@ -49,12 +49,11 @@ import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
 
 /**
- * Visualizes thresholds (as lines with an optional label) horizontally or vertically
+ * Visualizes thresholds (as lines with an optional label) horizontally or vertically.
  *
- * ATTENTION: This layer paints the lines and labels itself.
- * A new (and maybe better?) alternative: [ValueAxisHudLayer] + [DirectionalLinesLayer]
+ * This layer paints the lines and labels itself and does not require a value axis.
+ * For thresholds tied to an existing value axis use [ThresholdsSupport] ([ValueAxisHudLayer] + [DirectionalLinesLayer]) instead.
  */
-@Deprecated("Do no use anymore. Use ThresholdsSupport with new layers instead")
 class ThresholdsLayer @JvmOverloads constructor(
   val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},

@@ -384,7 +384,6 @@ class TimeAxisLayer(
     /**
      * The factor that is used to calculate the required space. Use with care.
      */
-    @Deprecated("required???")
     var tickLabelWidthFactor: Double = 1.3
 
     /**
@@ -401,12 +400,6 @@ class TimeAxisLayer(
      * Is used to format the ticks with relative timestamps
      */
     var relativeTimestampsTickFormat: RelativeTickFormat = RelativeToNowTickFormat
-
-    /**
-     * If set to true an offset is painted in an own area
-     */
-    @Deprecated("offset is always used")
-    var useOffset: Boolean = true
 
     /**
      * The size of the offset area
@@ -450,43 +443,6 @@ interface TimeAxisTickFormat {
    * @param i18nConfiguration the locale to be used to format the tick
    */
   fun format(tick: @ms Double, tickDistance: TimeTickDistance, i18nConfiguration: I18nConfiguration): String
-}
-
-/**
- * Formats ticks in accordance to their distance to each other
- */
-@Deprecated("No longer used in production")
-object TickDistanceAwareTickFormat : TimeAxisTickFormat {
-  /**
-   * Computes the [DateTimeFormat] to be used for the given timestamp
-   */
-  @Suppress("UNUSED_PARAMETER")
-  private fun computeDateFormat(tickDistance: TimeTickDistance): DateTimeFormat {
-    throw UnsupportedOperationException("Not implemented anymore!")
-    //return when (tickDistance) {
-    //  is DistanceMillis -> dateTimeFormatWithMillis
-    //  is DistanceSeconds -> dateTimeFormatWithMillis
-    //  is DistanceMinutes -> dateFormat
-    //  is DistanceHours -> dateTimeFormat
-    //  is DistanceDays -> dateTimeFormat
-    //  is DistanceMonths -> dateFormat
-    //  is DistanceYears -> dateFormat
-    //}
-  }
-
-  override fun format(tick: @ms Double, tickDistance: TimeTickDistance, i18nConfiguration: I18nConfiguration): String {
-    return computeDateFormat(tickDistance).format(tick, i18nConfiguration)
-  }
-
-  override fun computeMaxTickLength(paintingContext: LayerPaintingContext, tickDistance: TimeTickDistance): @px Double {
-    return paintingContext.gc.calculateTextWidth(
-      format(
-        1605705138944.777, //an arbitrary timestamp with a milliseconds part not equal to 0
-        tickDistance,
-        paintingContext.i18nConfiguration
-      )
-    )
-  }
 }
 
 /**

@@ -177,7 +177,6 @@ import it.neckar.open.kotlin.lang.fastMap
 import it.neckar.open.kotlin.lang.getModulo
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.kotlin.lang.random
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.provider.CachedMultiProvider
@@ -277,9 +276,10 @@ class TimeLineChartGestalt
   }
 
   /**
-   * Configures this gestalt to show candles
+   * Configures this gestalt to show candles.
+   *
+   * Enables the candle tile painter (which the [ConfigurationAssistant] does not do on its own).
    */
-  @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
   fun configureForCandle() {
     tilePainter = createCandleHistoryCanvasTilePainter()
     historyRenderPropertiesCalculatorLayer.samplingPeriodCalculator = MinDistanceSamplingPeriodCalculator(3.0).withMinimum { configuration.minimumSamplingPeriod }
@@ -1066,11 +1066,6 @@ class TimeLineChartGestalt
       timeAxisLayer.configuration.size = it
       //updateValueAxisLayers()
     },
-    configuration.showTimeAxisProperty.consumeImmediately {
-      //The margins used for the value axes depends on the visibility of the time axis
-      //TODO
-      //updateValueAxisLayers()
-    },
     configuration.historyGapCalculatorProperty.consume {
       tileProvider.clear()
     },
@@ -1185,16 +1180,16 @@ class TimeLineChartGestalt
             totalHeightRequiredForEnumsLayer() > 0.0
           })
 
-          layers.addLayer(timeAxisLayer.visibleIfWithState(configuration.showTimeAxisProperty))
+          layers.addLayer(timeAxisLayer.visibleIf { configuration.showTimeAxis })
           layers.addLayer(crossWireLayerDecimalValues.clipped {
             //Do not paint behind the enum layer
             viewportSupport.decimalsAreaViewportClipMargin()
-          }.visibleIfWithState(configuration.showCrossWireProperty))
+          }.visibleIf { configuration.showCrossWire })
 
           layers.addLayer(crossWireLayerEnumValues.clipped {
             //Do not paint behind the decimals and timeline layer
             viewportSupport.enumsAreaViewportMargin(it.height)
-          }.visibleIfWithState(configuration.showCrossWireProperty))
+          }.visibleIf { configuration.showCrossWire })
 
           layers.addTilesDebugLayer(chartSupport.debug)
 
@@ -1225,10 +1220,8 @@ class TimeLineChartGestalt
     /**
      * The smallest sampling period that is used when creating the tiles
      */
-    @Deprecated("required? Or obsolete now?")
     val minimumSamplingPeriodProperty: ObservableObject<SamplingPeriod> = ObservableObject(defaultMinimumSamplingPeriod)
 
-    @Deprecated("required? Or obsolete now?")
     var minimumSamplingPeriod: SamplingPeriod by minimumSamplingPeriodProperty
 
     /**
@@ -1428,7 +1421,7 @@ class TimeLineChartGestalt
     val requestedVisibleEnumSeriesIndicesProperty: ObservableObject<EnumDataSeriesIndexProvider> = ObservableObject(EnumDataSeriesIndexProvider.empty())
 
     var requestVisibleEnumSeriesIndices: EnumDataSeriesIndexProvider by requestedVisibleEnumSeriesIndicesProperty
-      @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
+      @Deprecated("Do not read! Use actualVisibleEnumSeriesIndices instead", level = DeprecationLevel.WARNING)
       get
 
     val actualVisibleEnumSeriesIndices: EnumDataSeriesIndexProvider = ::requestVisibleEnumSeriesIndices.atMost {
@@ -1464,8 +1457,7 @@ class TimeLineChartGestalt
     /**
      * Whether to show the time axis
      */
-    val showTimeAxisProperty: ObservableBoolean = ObservableBoolean(true)
-    var showTimeAxis: Boolean by showTimeAxisProperty
+    var showTimeAxis: Boolean = true
 
     /**
      * Configures this chart to visualize the value axis title on top of the value axis
@@ -1478,8 +1470,7 @@ class TimeLineChartGestalt
     /**
      * Whether the cross wire layer (for decimals and enums) is visible.
      */
-    val showCrossWireProperty: ObservableBoolean = ObservableBoolean(true)
-    var showCrossWire: Boolean by showCrossWireProperty
+    var showCrossWire: Boolean = true
 
     /**
      * The position of the cross wire along the x-axis
@@ -1574,10 +1565,10 @@ class TimeLineChartGestalt
 
     /**
      * Computes the duration of the content area by ensuring that at least 600 samples are visible for the given sampling period.
+     *
+     * Simple alternative to configuring the content area duration through the [ConfigurationAssistant].
      */
-    @Deprecated("Bitte stattdessen den [ConfigurationAssistant] benutzen")
     fun applyMinimumSamplingPeriod(samplingPeriod: SamplingPeriod = defaultMinimumSamplingPeriod) {
-      //TODO replace this method with some kind of configuration/wizard/... object
       contentAreaDuration = samplingPeriod.distance * 600 //600 samples
     }
 

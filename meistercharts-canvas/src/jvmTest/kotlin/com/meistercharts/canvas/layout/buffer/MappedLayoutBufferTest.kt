@@ -98,6 +98,68 @@ class MappedLayoutBufferTest {
     assertThat(buffer.get(index7).xLocation).isEqualTo(7.7)
     assertThat(buffer.get(index8).xLocation).isEqualTo(8.8)
   }
+
+  @Test
+  fun testTrimsStaleKeysAfterSustainedDecline() {
+    var factoryCallCount = 0
+
+    val buffer = MappedLayoutBuffer<ReferenceEntryDataSeriesIndex, MyLayoutVariable>(
+      HighWaterMarkTrimmer(windowSize = 2, slackFactor = 0.0)
+    ) {
+      factoryCallCount++
+      MyLayoutVariable()
+    }
+
+    val allKeys: List<ReferenceEntryDataSeriesIndex> = (1..5).map { ReferenceEntryDataSeriesIndex(it) }
+    val activeKeys: List<ReferenceEntryDataSeriesIndex> = (1..2).map { ReferenceEntryDataSeriesIndex(it) }
+
+    //Loop 0: five active keys fill the stock
+    buffer.resetIfNewLoopIndex(PaintingLoopIndex(0))
+    allKeys.forEach { buffer.get(it) }
+    assertThat(buffer.objectsStock).hasSize(5)
+    assertThat(factoryCallCount).isEqualTo(5)
+
+    //Loop 1: demand drops to two keys - the window boundary here still records a peak of 5
+    buffer.resetIfNewLoopIndex(PaintingLoopIndex(1))
+    activeKeys.forEach { buffer.get(it) }
+    assertThat(buffer.objectsStock).hasSize(5)
+
+    //Loop 2: still two keys - a fresh window starts with peak 2
+    buffer.resetIfNewLoopIndex(PaintingLoopIndex(2))
+    activeKeys.forEach { buffer.get(it) }
+    assertThat(buffer.objectsStock).hasSize(5)
+
+    //Loop 3: window boundary with peak 2 - stale keys 3,4,5 are evicted, active keys survive
+    buffer.resetIfNewLoopIndex(PaintingLoopIndex(3))
+    assertThat(buffer.objectsStock).hasSize(2)
+    assertThat(buffer.objectsStock.keys).containsOnly(*activeKeys.toTypedArray())
+    //No key was recreated up to here: the stock keys were reused since loop 0
+    assertThat(factoryCallCount).isEqualTo(5)
+
+    //An evicted key is recreated (in reset state) on the next request; a surviving key is not
+    assertThat(buffer.get(ReferenceEntryDataSeriesIndex(3)).xLocation).isNaN()
+    assertThat(factoryCallCount).isEqualTo(6)
+    assertThat(buffer.get(ReferenceEntryDataSeriesIndex(1)).xLocation).isNaN()
+    assertThat(factoryCallCount).isEqualTo(6)
+  }
+
+  @Test
+  fun testKeepsStockWhileDemandStaysHigh() {
+    val buffer = MappedLayoutBuffer<ReferenceEntryDataSeriesIndex, MyLayoutVariable>(
+      HighWaterMarkTrimmer(windowSize = 2, slackFactor = 0.0)
+    ) {
+      MyLayoutVariable()
+    }
+
+    val allKeys: List<ReferenceEntryDataSeriesIndex> = (1..5).map { ReferenceEntryDataSeriesIndex(it) }
+
+    //All keys stay active across several window boundaries - nothing must be evicted
+    (0..5).forEach { loopIndex ->
+      buffer.resetIfNewLoopIndex(PaintingLoopIndex(loopIndex))
+      allKeys.forEach { buffer.get(it) }
+      assertThat(buffer.objectsStock).hasSize(5)
+    }
+  }
 }
 
 class MyLayoutVariable : LayoutVariable {

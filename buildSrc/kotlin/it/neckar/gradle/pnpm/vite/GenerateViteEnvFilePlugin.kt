@@ -89,16 +89,16 @@ object ViteVariableNames {
   const val BuildDate: String = "VITE_BUILD_DATE"
 }
 
-abstract class GenerateViteEnvFilePluginExtension {
+interface GenerateViteEnvFilePluginExtension {
   /**
    * Where to write the generated .env file
    */
-  abstract val targetFile: RegularFileProperty
+  val targetFile: RegularFileProperty
 
   /**
    * Map of Vite environment variables to generate
    */
-  abstract val viteVariables: MapProperty<String, String>
+  val viteVariables: MapProperty<String, String>
 }
 
 abstract class GenerateViteEnvFileTask : DefaultTask() {

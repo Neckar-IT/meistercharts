@@ -24,8 +24,8 @@ import it.neckar.open.provider.DoubleProvider
  * Translates a wrapped [Layer]
  *
  * Translation does only occur during painting not while computing the layout.
+ * For a translation that also shifts the layout coordinate system use [TransformingChartStateLayer].
  */
-@Deprecated("Use TransformingChartStateLayer instead - if possible")
 class TranslationLayer(
   val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},

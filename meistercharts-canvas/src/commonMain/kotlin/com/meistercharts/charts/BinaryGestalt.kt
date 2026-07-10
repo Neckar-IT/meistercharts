@@ -36,7 +36,6 @@ import it.neckar.open.observable.ObservableObject
 /**
  * Paints a binary value 0..1
  */
-@Deprecated("probably no longer required")
 class BinaryGestalt(
   val configuration: Configuration,
   additionalConfiguration: Configuration.() -> Unit = {},

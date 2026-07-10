@@ -31,7 +31,7 @@ object Plugins {
   const val generateIcons: String = "it.neckar.generate-icons"
   const val provideSourceCodeFromBuildSrc: String = "it.neckar.source-code-from-build-src"
 
-  const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts-plugin"
+  const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts"
 
   const val gitLabDb: String = "it.neckar.gitlab.db"
   const val gitlabPipelines: String = "it.neckar.gitlab.pipelines"
@@ -41,7 +41,7 @@ object Plugins {
   const val taskInfo: String = "org.barfuin.gradle.taskinfo"
   const val detekt: String = "dev.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
-  const val pnpmKotlinInterop: String = "it.neckar.gradle.pnpm.kotlin-interop"
+  const val pnpmKotlinInterop: String = "it.neckar.pnpm.kotlin-interop"
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
 
@@ -65,8 +65,8 @@ object Plugins {
 
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
   const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
-  const val generateAuditReport: String = "it.neckar.gradle.dependencies.audit-report"
-  const val buildProfileReport: String = "it.neckar.gradle.report.build-profile"
+  const val generateAuditReport: String = "it.neckar.dependencies.audit-report"
+  const val buildProfileReport: String = "it.neckar.report.build-profile"
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
@@ -103,6 +103,7 @@ object Plugins {
    */
   const val python: String = "it.neckar.python"
   const val base: String = "org.gradle.base"
+  const val application: String = "application"
 
   /**
    * JMH micro benchmarking framework
@@ -116,7 +117,7 @@ object Plugins {
 
   const val spotless: String = "com.diffplug.spotless"
 
-  const val jibCli: String = "it.neckar.jib-cli-plugin"
+  const val jibCli: String = "it.neckar.jib-cli"
   const val jibService: String = "it.neckar.jib-service"
 
   /** Bakes the Neckar OTel agent-extension JAR into the service image. Bundled via `serviceApplication`. */
@@ -158,8 +159,8 @@ object Plugins {
    */
   const val provisioning: String = "it.neckar.provisioning"
   const val openapiValidator: String = "it.neckar.openapi.validator"
-  const val openapiGenerationConfig: String = "it.neckar.gradle.openapi.generation-config"
-  const val orvalConvert: String = "it.neckar.gradle.openapi.orval-convert"
+  const val openapiGenerationConfig: String = "it.neckar.openapi.generation-config"
+  const val orvalConvert: String = "it.neckar.openapi.orval-convert"
 
   /**
    * Only for JavaFX 17+
@@ -168,7 +169,7 @@ object Plugins {
 
 
   const val ksp: String = "com.google.devtools.ksp"
-  const val kspBoxing: String = "it.neckar.ksp.boxing-plugin"
+  const val kspBoxing: String = "it.neckar.ksp.boxing"
   const val specHarvest: String = "it.neckar.ksp.spec-harvest"
 
   const val tailwind: String = "it.neckar.tailwind"
@@ -185,5 +186,5 @@ object Plugins {
   /**
    * Verifies serialization related stuff (ser `it.neckar.ksp.serialization.SerializationVerifierProcessor`)
    */
-  const val kspSerialization: String = "it.neckar.ksp.serialization-plugin"
+  const val kspSerialization: String = "it.neckar.ksp.serialization"
 }

@@ -59,7 +59,6 @@ import it.neckar.geometry.Side
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
 
@@ -199,7 +198,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
 
       valueAxisSupport.addLayers(this, Unit)
 
-      layers.addAboveBackground(gridLayer.visibleIfWithState(configuration.showGridProperty))
+      layers.addAboveBackground(gridLayer.visibleIf { configuration.showGrid })
       layers.addLayer(categoryLayer.clipped {
         /*
          * Only clip the sides where the axes are.
@@ -300,8 +299,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     /**
      * Whether the grid is visible (true) or not (false)
      */
-    val showGridProperty: ObservableBoolean = ObservableBoolean(true)
-    var showGrid: Boolean by showGridProperty
+    var showGrid: Boolean = true
 
     /**
      * The orientation of the chart

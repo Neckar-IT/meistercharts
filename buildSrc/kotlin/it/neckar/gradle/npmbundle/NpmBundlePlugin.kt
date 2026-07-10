@@ -22,7 +22,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * The extension that configures the npm bundle (production)
      */
-    val npmBundleExtensionProduction = target.extensions.create<NpmBundleExtension>(NpmBundleExtensionName).apply {
+    val npmBundleExtensionProduction = target.extensions.create<NpmBundleExtension>(ExtensionName).apply {
       moduleName.convention(target.name)
       dirNameInArchive.convention(target.name)
       archiveFileName.convention(target.name)
@@ -48,7 +48,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * The extension that configures the npm bundle (development)
      */
-    val npmBundleExtensionDevelopment = target.extensions.create<NpmBundleExtension>(NpmBundleDevelopmentExtensionName).apply {
+    val npmBundleExtensionDevelopment = target.extensions.create<NpmBundleExtension>(DevelopmentExtensionName).apply {
       moduleName.convention(target.name)
       dirNameInArchive.convention(target.name)
       archiveFileName.convention(target.name)
@@ -78,7 +78,7 @@ class NpmBundlePlugin : Plugin<Project> {
      * Task that copies the NPM content (production)
      */
     val npmCopyBundleContentTask = target.tasks.register<CopyBundleContentTask>(NpmCopyBundleContentTaskName) {
-      group = Group
+      group = TaskGroup
       description = "Collects the content to the working directory"
 
       destinationDir = npmBundleExtensionProduction.workingDir
@@ -96,7 +96,7 @@ class NpmBundlePlugin : Plugin<Project> {
     }
 
     val npmCopyBundleContentDevelopmentTask = target.tasks.register<CopyBundleContentTask>(NpmCopyBundleContentTaskNameDevelopment) {
-      group = Group
+      group = TaskGroup
       description = "Collects the content to the working directory (Development)"
 
       destinationDir = npmBundleExtensionDevelopment.workingDir
@@ -115,7 +115,7 @@ class NpmBundlePlugin : Plugin<Project> {
     }
 
     val verifyBundleContentTask = target.tasks.register<VerifyBundleContentTask>(VerifyBundleContentTaskName) {
-      group = Group
+      group = TaskGroup
       description = "Verifies the content of the bundle"
 
       dependsOn(npmCopyBundleContentTask)
@@ -124,7 +124,7 @@ class NpmBundlePlugin : Plugin<Project> {
     }
 
     val verifyBundleContentTaskDevelopment = target.tasks.register<VerifyBundleContentTask>(VerifyBundleContentDevelopmentTaskName) {
-      group = Group
+      group = TaskGroup
       description = "Verifies the content of the bundle (Development)"
 
       dependsOn(npmCopyBundleContentDevelopmentTask)
@@ -140,7 +140,7 @@ class NpmBundlePlugin : Plugin<Project> {
      * Production task
      */
     val gzipTask = target.tasks.register<GzipNpmModuleTask>(NpmBundleTaskName) {
-      group = Group
+      group = TaskGroup
       description = "Creates the npm bundle (*.tar.gz)"
 
       dependsOn(npmCopyBundleContentTask)
@@ -155,7 +155,7 @@ class NpmBundlePlugin : Plugin<Project> {
      * Development task
      */
     target.tasks.register<GzipNpmModuleTask>(NpmBundleDevelopmentTaskName) {
-      group = Group
+      group = TaskGroup
       description = "Creates the npm bundle (*.tar.gz) - (Development)"
 
       dependsOn(npmCopyBundleContentDevelopmentTask)
@@ -173,10 +173,10 @@ class NpmBundlePlugin : Plugin<Project> {
   }
 
   companion object {
-    const val Group: String = "Neckar IT - NPM Bundle"
+    const val TaskGroup: String = "Neckar IT - NPM Bundle"
 
-    const val NpmBundleExtensionName: String = "npmBundle"
-    const val NpmBundleDevelopmentExtensionName: String = "npmBundleDevelopment"
+    const val ExtensionName: String = "npmBundle"
+    const val DevelopmentExtensionName: String = "npmBundleDevelopment"
 
     const val NpmCopyBundleContentTaskName: String = "npmCopyBundleContent"
     const val NpmCopyBundleContentTaskNameDevelopment: String = "npmCopyBundleContentDevelopment"

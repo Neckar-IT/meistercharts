@@ -43,7 +43,6 @@ import com.meistercharts.range.ValueRange
 import com.meistercharts.style.Palette
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.kotlin.lang.getModulo
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.provider.DefaultDoublesProvider
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.SizedProvider1
@@ -86,7 +85,7 @@ class MapWithPaintablesGestalt(
 
     meisterChartBuilder.configure {
       layers.addLayer(paintablesLayer)
-      layers.addLayer(legendLayer.visibleIfWithState(configuration.showLegendProperty))
+      layers.addLayer(legendLayer.visibleIf { configuration.showLegend })
 
       layers.addVersionNumberHidden()
     }
@@ -102,9 +101,7 @@ class MapWithPaintablesGestalt(
     /**
      * Whether to show the legend or not
      */
-    val showLegendProperty: ObservableBoolean = ObservableBoolean(true)
-
-    var showLegend: Boolean by showLegendProperty
+    var showLegend: Boolean = true
   }
 
   companion object {

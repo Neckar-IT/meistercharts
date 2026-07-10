@@ -42,13 +42,16 @@ interface SlippyMapProvider {
 
   companion object {
     /**
-     * Contains a list of all known slippy map providers
+     * Contains all base map providers (opaque tiles that render as the map itself).
      */
     val all: List<SlippyMapProvider> = listOf(
       CartoDBPositron,
       CartoDBPositronNoLabels,
       CartoDBDarkMatter,
+      CartoDBDarkMatterNoLabels,
       CartoDBVoyager,
+      CartoDBVoyagerNoLabels,
+      CartoDBVoyagerLabelsUnder,
       MtbMap,
       OpenTopoMap,
       MemoMaps,
@@ -58,11 +61,38 @@ interface SlippyMapProvider {
       OpenStreetMap,
       OpenStreetMapDe,
       OpenStreetMapHumanitarian,
-      OpenStreetMapBlackAndWhite,
-      OpenStreetMapTerrain,
       WikimediaMaps
     )
+
+    /**
+     * Contains all overlay providers (transparent tiles meant to be painted on top of a base map from [all]).
+     */
+    val overlays: List<SlippyMapProvider> = listOf(
+      OpenRailwayMap,
+      OpenSeaMap,
+      WaymarkedTrailsHiking,
+      WaymarkedTrailsCycling,
+      CartoDBLightOnlyLabels
+    )
   }
+}
+
+/**
+ * Returns the leftmost host label for the given [tileIndex] as a single lowercase letter, distributing tiles
+ * across [subDomainCount] parallel tile hosts.
+ *
+ * Tile servers publish their tiles under several sibling subdomains that differ only in that first letter, so
+ * a browser can open more parallel connections. The letters are always `a`, `b`, `c`, … (never `a1` or the
+ * like); this label is prepended to the rest of the host in [SlippyMapProvider.url]:
+ * - `subDomainCount = 3` → `a.tile.openstreetmap.org`, `b.tile.openstreetmap.org`, `c.tile.openstreetmap.org`
+ * - `subDomainCount = 4` → `a.basemaps.cartocdn.com` … `d.basemaps.cartocdn.com`
+ *
+ * The letter is derived deterministically from the tile position, so the same tile always resolves to the
+ * same host - which keeps the tile caches warm.
+ */
+private fun rotatingSubDomain(tileIndex: TileIndex, subDomainCount: Int): String {
+  val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % subDomainCount
+  return ('a' + modulo).toString()
 }
 
 /**
@@ -89,13 +119,7 @@ fun KProperty0<SlippyMapProvider>.delegate(): SlippyMapProvider {
  */
 data object OpenStreetMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile.openstreetmap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -110,13 +134,7 @@ data object OpenStreetMap : SlippyMapProvider {
  */
 data object OpenStreetMapDe : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile.openstreetmap.de/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
@@ -132,80 +150,11 @@ data object OpenStreetMapDe : SlippyMapProvider {
  */
 data object OpenStreetMapHumanitarian : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 2) {
-      0 -> "a"
-      1 -> "b"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 2)}.tile.openstreetmap.fr/hot/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
   // see also https://www.openstreetmap.org/copyright/en
-  override val legalNotice: String? = "© OpenStreetMap contributors"
-
-}
-
-/**
- * wmflabs OSM B&W
- *
- * mapnik map grayscale
- *
- * [Policies](https://operations.osmfoundation.org/policies/tiles/)
- */
-@Deprecated("Does not work anymore")
-data object OpenStreetMapGrayscale : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url.absolute("https://tiles.wmflabs.org/bw-mapnik/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
-  }
-
-  // see also https://www.openstreetmap.org/copyright/en
-  override val legalNotice: String? = "© OpenStreetMap contributors"
-
-}
-
-/**
- * High-contrast B+W (black and white) maps
- *
- * [Stamen](http://maps.stamen.com/#toner/12/37.7706/-122.3782)
- */
-data object OpenStreetMapBlackAndWhite : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("http://$subDomain.tile.stamen.com/toner/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
-  }
-
-  // see also https://www.openstreetmap.org/copyright/en
-  override val legalNotice: String? = "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL"
-
-}
-
-/**
- * Terrain maps
- *
- * [Stamen](http://maps.stamen.com/#toner/12/37.7706/-122.3782)
- *
- * Does only support zoom levels up to 16!
- */
-data object OpenStreetMapTerrain : SlippyMapProvider {
-  override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("http://$subDomain.tile.stamen.com/terrain/${zoom}/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
-  }
-
-  // see also https://www.openstreetmap.org/copyright/en
-  override val legalNotice: String? = "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL"
+  override val legalNotice: String = "© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team"
 
 }
 
@@ -220,51 +169,33 @@ data object WikimediaMaps : SlippyMapProvider {
   }
 
   // https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use
-  override val legalNotice: String? = "© OpenStreetMap contributors / Wikimedia"
+  override val legalNotice: String = "© OpenStreetMap contributors, Wikimedia"
 
 }
 
 // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
 data object Cyclosm : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile-cyclosm.openstreetmap.fr/cyclosm/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors, Tiles style by CyclOSM, hosted by OpenStreetMap France"
 }
 
 data object CyclosmLite : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile-cyclosm.openstreetmap.fr/cyclosm-lite/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile-cyclosm.openstreetmap.fr/cyclosm-lite/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors, Tiles style by CyclOSM, hosted by OpenStreetMap France"
 }
 
 data object OsmFrance : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile.openstreetmap.fr/osmfr/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile.openstreetmap.fr/osmfr/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors, Tiles hosted by OpenStreetMap France"
 }
 
 data object MemoMaps : SlippyMapProvider {
@@ -272,97 +203,157 @@ data object MemoMaps : SlippyMapProvider {
     return Url.absolute("https://tile.memomaps.de/tilegen/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors, Tiles: ÖPNVKarte / MeMoMaps"
 }
 
 data object OpenTopoMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 3) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.tile.opentopomap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tile.opentopomap.org/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors, SRTM, Map style: © OpenTopoMap (CC-BY-SA)"
 }
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=MtbMap
 data object MtbMap : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    return Url.absolute("http://tile.mtbmap.cz/mtbmap_tiles/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://tile.mtbmap.cz/mtbmap_tiles/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors & USGS"
 }
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.Positron
 data object CartoDBPositron : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/light_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/light_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
 }
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.PositronNoLabels
 data object CartoDBPositronNoLabels : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/light_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/light_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
 }
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.DarkMatter
 data object CartoDBDarkMatter : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/dark_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/dark_all/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.DarkMatterNoLabels
+data object CartoDBDarkMatterNoLabels : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/dark_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
 }
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 // http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.Voyager
 data object CartoDBVoyager : SlippyMapProvider {
   override fun url(tileIndex: TileIndex, zoom: Int): Url {
-    val subDomain = when (val modulo = (abs(tileIndex.subX.value) + abs(tileIndex.subY.value)) % 4) {
-      0 -> "a"
-      1 -> "b"
-      2 -> "c"
-      3 -> "d"
-      else -> throw IllegalStateException("fix modulo computation: $modulo")
-    }
-    return Url.absolute("https://$subDomain.basemaps.cartocdn.com/rastertiles/voyager/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/rastertiles/voyager/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
   }
 
-  override val legalNotice: String = "TODO"
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.VoyagerNoLabels
+data object CartoDBVoyagerNoLabels : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
+}
+
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+// http://leaflet-extras.github.io/leaflet-providers/preview/index.html#filter=CartoDB.VoyagerLabelsUnder
+data object CartoDBVoyagerLabelsUnder : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
+}
+
+/**
+ * Label-only overlay (transparent tiles) from CARTO.
+ * Meant to be painted on top of a label-free base map.
+ */
+data object CartoDBLightOnlyLabels : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 4)}.basemaps.cartocdn.com/light_only_labels/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors © CARTO"
+}
+
+/**
+ * Railway network overlay (transparent tiles).
+ *
+ * [OpenRailwayMap](https://www.openrailwaymap.org/)
+ */
+data object OpenRailwayMap : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://${rotatingSubDomain(tileIndex, 3)}.tiles.openrailwaymap.org/standard/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors, Style: © OpenRailwayMap (CC-BY-SA 2.0)"
+}
+
+/**
+ * Nautical seamark overlay (transparent tiles).
+ *
+ * [OpenSeaMap](https://www.openseamap.org/)
+ */
+data object OpenSeaMap : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://tiles.openseamap.org/seamark/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors, © OpenSeaMap contributors"
+}
+
+/**
+ * Hiking route overlay (transparent tiles).
+ *
+ * [Waymarked Trails](https://hiking.waymarkedtrails.org/)
+ */
+data object WaymarkedTrailsHiking : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://tile.waymarkedtrails.org/hiking/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors, © waymarkedtrails.org (CC-BY-SA)"
+}
+
+/**
+ * Cycling route overlay (transparent tiles).
+ *
+ * [Waymarked Trails](https://cycling.waymarkedtrails.org/)
+ */
+data object WaymarkedTrailsCycling : SlippyMapProvider {
+  override fun url(tileIndex: TileIndex, zoom: Int): Url {
+    return Url.absolute("https://tile.waymarkedtrails.org/cycling/$zoom/${tileIndex.xAsInt()}/${tileIndex.yAsInt()}.png")
+  }
+
+  override val legalNotice: String = "© OpenStreetMap contributors, © waymarkedtrails.org (CC-BY-SA)"
 }

@@ -229,7 +229,6 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   ) {
     //Calculate start/end of the axis
     val chartCalculator = paintingContext.chartCalculator
-    //@Zoomed val axisPasspartout = style.axisPasspartout()
 
     when (style.orientation) {
       // |

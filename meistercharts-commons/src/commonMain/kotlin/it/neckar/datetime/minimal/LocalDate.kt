@@ -36,6 +36,11 @@ import kotlinx.serialization.Serializable
  * Represents a local date.
  *
  * Attention: This is a very minimalistic implementation without any special checks.
+ *
+ * **Use this only where a Kotlin/JS target is involved** (types shared into a Kotlin/JS frontend).
+ * For JVM-only code (Ktor services with a TypeScript frontend, CLIs, migrations) prefer
+ * `kotlinx.datetime.LocalDate` — it has proper, tested timezone handling and serializes to the same
+ * ISO `yyyy-MM-dd` wire form, so it is interchangeable on the wire.
  */
 @CrossLayer("Calendar date — a single ISO yyyy-MM-dd scalar that lives identically in Domain, Mongo Entity, and on the REST wire, like NativeInstant and NativeUuid. Serializes as a primitive string, so embedding it in a DataView exposes no business internals.")
 @Serializable(with = LocalDateSerializer::class)

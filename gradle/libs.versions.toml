@@ -78,7 +78,7 @@ org-commonmark = "0.29.0"
 
 org-bouncycastle = "1.84"
 
-ktor = "3.5.0"
+ktor = "3.5.1"
 
 com-github-docker-java = "3.7.1"
 

@@ -45,7 +45,6 @@ import it.neckar.geometry.AxisSelection
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
 import it.neckar.open.kotlin.lang.asProvider
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableObject
 
 /**
@@ -134,8 +133,8 @@ class MapGestalt(
         layers.addClearBackground()
         layers.addFillCanvasBackground()
         layers.addLayer(slippyMapLayer)
-        layers.addLayer(legalNoticeLayer.visibleIfWithState(configuration.showCopyrightMarkerProperty))
-        layers.addLayer(toolbarLayer.visibleIfWithState(configuration.showToolbarProperty))
+        layers.addLayer(legalNoticeLayer.visibleIf { configuration.showCopyrightMarker })
+        layers.addLayer(toolbarLayer.visibleIf { configuration.showToolbar })
 
         layers.addMouseWheelWithoutModifierHint(listOf(MouseWheelWithoutModifierMessageLayer.textKeyUseCtrlZoom))
       }
@@ -164,16 +163,12 @@ class MapGestalt(
     /**
      * If set to true the copy right marker is shown at the bottom left
      */
-    val showCopyrightMarkerProperty: ObservableBoolean = ObservableBoolean(true)
-
-    var showCopyrightMarker: Boolean by showCopyrightMarkerProperty
+    var showCopyrightMarker: Boolean = true
 
     /**
      * Whether to show the toolbar or not
      */
-    val showToolbarProperty: ObservableBoolean = ObservableBoolean(true)
-
-    var showToolbar: Boolean by showToolbarProperty
+    var showToolbar: Boolean = true
 
     /**
      * Provides the color to be used as background for toolbar buttons

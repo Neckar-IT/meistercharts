@@ -470,7 +470,7 @@ class DiscreteTimelineChartGestalt(
     val requestedVisibleReferenceEntrySeriesIndicesProperty: ObservableObject<ReferenceEntryDataSeriesIndexProvider> = ObservableObject(ReferenceEntryDataSeriesIndexProvider.indices { 10 })
 
     var requestedVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider by requestedVisibleReferenceEntrySeriesIndicesProperty
-      @Deprecated("Do not read! Use actualVisibleDecimalSeriesIndices instead", level = DeprecationLevel.WARNING)
+      @Deprecated("Do not read! Use actualVisibleReferenceEntrySeriesIndices instead", level = DeprecationLevel.WARNING)
       get
 
     /**

@@ -72,9 +72,7 @@ import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.randomNormal
-import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ObservableDouble
-import it.neckar.open.observable.ObservableObject
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.asSizedProvider
@@ -437,14 +435,12 @@ class PixelValuesGestalt @JvmOverloads constructor(
     /**
      * If set to true dots are painted
      */
-    val showDotsProperty: ObservableBoolean = ObservableBoolean(true)
-    var showDots: Boolean by showDotsProperty
+    var showDots: Boolean = true
 
     /**
      * If set to true line are painted
      */
-    val showLinesProperty: ObservableBoolean = ObservableBoolean(true)
-    var showLines: Boolean by showLinesProperty
+    var showLines: Boolean = true
 
     /**
      * Cached line color providers for [PixelValueVisualizationMode.HeldAverages] - keyed by series index.
@@ -485,14 +481,12 @@ class PixelValuesGestalt @JvmOverloads constructor(
     /**
      * The value range for the x axis
      */
-    val xValueRangeProperty: ObservableObject<@Domain ValueRange> = ObservableObject(ValueRange.default)
-    var xValueRange: ValueRange by xValueRangeProperty
+    var xValueRange: @Domain ValueRange = ValueRange.default
 
     /**
      * The value range for the y axis
      */
-    val yValueRangeProperty: ObservableObject<@Domain ValueRange> = ObservableObject(ValueRange.default)
-    var yValueRange: ValueRange by yValueRangeProperty
+    var yValueRange: @Domain ValueRange = ValueRange.default
 
     /**
      * The maximum value that shall be visible at the top of the chart

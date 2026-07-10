@@ -19,8 +19,17 @@ import com.meistercharts.loop.PaintingLoopIndex
 
 /**
  * Contains a layout variable for each key.
+ *
+ * The [objectsStock] is grow-only: it keeps one entry per key that was ever requested. With volatile
+ * key sets (e.g. changing data series in a timeline chart) this binds memory forever. [trimmer]
+ * evicts stale keys some loops after a sustained decline in the number of active keys.
  */
 class MappedLayoutBuffer<Key, LayoutVariableType : LayoutVariable>(
+  /**
+   * Trim policy for the grow-only [objectsStock]. Driven by the painting loop index via
+   * [resetIfNewLoopIndex].
+   */
+  private val trimmer: HighWaterMarkTrimmer = HighWaterMarkTrimmer(),
   /**
    * Creates a new element - if necessary
    */
@@ -68,9 +77,33 @@ class MappedLayoutBuffer<Key, LayoutVariableType : LayoutVariable>(
    * Remembers the new loop index.
    */
   fun resetIfNewLoopIndex(paintingLoopIndex: PaintingLoopIndex) {
-    if (currentLoopIndex != paintingLoopIndex) {
-      values.clear()
-      currentLoopIndex = paintingLoopIndex
+    if (currentLoopIndex == paintingLoopIndex) {
+      return
+    }
+
+    //A new loop starts. [values] still holds the working set of the loop that just finished.
+    trimStock(paintingLoopIndex)
+    values.clear()
+    currentLoopIndex = paintingLoopIndex
+  }
+
+  /**
+   * Trims [objectsStock] down to the high-water-mark target at epoch boundaries.
+   * Keeps the keys used in the loop that just finished ([values]); evicts stale keys first.
+   */
+  private fun trimStock(paintingLoopIndex: PaintingLoopIndex) {
+    val targetCapacity: Int = trimmer.pollTrimTarget(
+      paintingLoopIndex,
+      demand = values.size,
+      currentCapacity = objectsStock.size,
+    ) ?: return
+
+    val recentlyUsedKeys: Set<Key> = values.keys
+    val stockIterator: MutableIterator<Map.Entry<Key, LayoutVariableType>> = objectsStock.iterator()
+    while (objectsStock.size > targetCapacity && stockIterator.hasNext()) {
+      if (stockIterator.next().key !in recentlyUsedKeys) {
+        stockIterator.remove()
+      }
     }
   }
 }

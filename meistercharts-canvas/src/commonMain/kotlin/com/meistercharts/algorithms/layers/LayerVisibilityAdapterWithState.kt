@@ -18,9 +18,12 @@ package com.meistercharts.algorithms.layers
 import it.neckar.open.observable.ObservableBoolean
 
 /**
- * Holds an [Layer] delegate and paints it depending on value of visible property
+ * Holds an [Layer] delegate and paints it depending on value of visible property.
+ *
+ * Use this variant when the visibility must be held as mutable, observable state (e.g. toggled by a
+ * shortcut or hidden after a timeout). For visibility that is re-read at paint time use the stateless
+ * [LayerVisibilityAdapter].
  */
-@Deprecated("Use the LayerVisibilityAdapter without state")
 class LayerVisibilityAdapterWithState<out T : Layer>(
   delegate: T,
   /**
