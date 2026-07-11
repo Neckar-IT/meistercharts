@@ -40,7 +40,9 @@ fun interface Disposable {
 
   companion object {
     /**
-     * Combines multiple disposable into on
+     * Combines multiple disposables into one. Disposing the result disposes every element even if
+     * an earlier one throws; the first thrown exception is rethrown afterwards (later ones attached
+     * as suppressed).
      */
     fun all(vararg disposables: Disposable): Disposable {
       if (disposables.isEmpty()) {
@@ -48,7 +50,19 @@ fun interface Disposable {
       }
 
       return Disposable {
-        disposables.fastForEach { it.dispose() }
+        var firstThrown: Throwable? = null
+        disposables.fastForEach { disposable ->
+          try {
+            disposable.dispose()
+          } catch (e: Throwable) {
+            if (firstThrown == null) {
+              firstThrown = e
+            } else {
+              firstThrown.addSuppressed(e)
+            }
+          }
+        }
+        firstThrown?.let { throw it }
       }
     }
 

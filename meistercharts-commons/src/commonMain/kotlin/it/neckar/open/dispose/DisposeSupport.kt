@@ -54,7 +54,11 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
 
   /**
    * Executes all registered (by calling [onDispose]) actions.
-   * Marks this as disposed ([disposed])
+   * Marks this as disposed ([disposed]).
+   *
+   * Every action is executed even if an earlier one throws, so a single failing action never
+   * leaves the remaining resources undisposed. The first thrown exception is rethrown afterwards
+   * (later ones attached as suppressed).
    */
   override fun dispose() {
     //Copy the dispose actions to avoid endless loops / recursions
@@ -63,11 +67,24 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
     //Clear all actions that have been disposed
     disposeActions.clear()
 
-    copy.fastForEach {
-      it()
+    //Mark as disposed up front so a re-entrant onDispose during an action fails fast instead of
+    //silently registering an action that would never run.
+    disposed = true
+
+    var firstThrown: Throwable? = null
+    copy.fastForEach { action ->
+      try {
+        action()
+      } catch (e: Throwable) {
+        if (firstThrown == null) {
+          firstThrown = e
+        } else {
+          firstThrown.addSuppressed(e)
+        }
+      }
     }
 
-    disposed = true
+    firstThrown?.let { throw it }
   }
 
   /**

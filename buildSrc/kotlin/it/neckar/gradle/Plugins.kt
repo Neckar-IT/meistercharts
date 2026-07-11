@@ -120,8 +120,12 @@ object Plugins {
   const val jibCli: String = "it.neckar.jib-cli"
   const val jibService: String = "it.neckar.jib-service"
 
-  /** Bakes the Neckar OTel agent-extension JAR into the service image. Bundled via `serviceApplication`. */
-  const val otelAgentExtension: String = "it.neckar.otel-agent-extension"
+  /**
+   * Single default source for the OTel agent config: `-javaagent` + `OTEL_*` env defaults on the
+   * Jib image and the local `run` task, `otelAgent { }` DSL, extension-JAR bake (#2381).
+   * Bundled via `serviceApplication`.
+   */
+  const val otelAgent: String = "it.neckar.otel-agent"
   const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
 
   const val asciidoctor: String = "org.asciidoctor.jvm.convert"

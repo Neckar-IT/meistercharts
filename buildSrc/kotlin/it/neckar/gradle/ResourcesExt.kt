@@ -178,11 +178,18 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
  * (e.g. `short=\${fqdn%%.*}` inside an `ssh "root@$host" "…"` block, where `$host` is expanded
  * locally but `${fqdn%%.*}` must run remotely). Such escaped occurrences are not unresolved
- * placeholders and are ignored. An unescaped `${key}` that no replacement filled is a real error
+ * placeholders and are ignored.
+ *
+ * A `${VAR:-default}` is Docker-Compose runtime interpolation with an explicit default (the
+ * `.env`-friendly override pattern, e.g. `OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-agent:4317}`, #2381).
+ * Deploy-time placeholders never carry a `:-` default, so these are not unresolved placeholders
+ * either. An unescaped, default-less `${key}` that no replacement filled is a real error
  * and is returned.
  */
 internal fun findUnresolvedVariable(line: String): String? {
-  return variablePattern.find(line)?.value
+  return variablePattern.findAll(line)
+    .map { it.value }
+    .firstOrNull { it.contains(":-").not() }
 }
 
 /**
@@ -190,4 +197,4 @@ internal fun findUnresolvedVariable(line: String): String? {
  * `${…}` escaped with a leading backslash (`\${…}`), which denotes an intentional runtime shell
  * expansion rather than an unresolved deployment placeholder.
  */
-private val variablePattern = "(?<!\\\\)\\$\\{.*}".toRegex()
+private val variablePattern = "(?<!\\\\)\\$\\{[^}]*}".toRegex()

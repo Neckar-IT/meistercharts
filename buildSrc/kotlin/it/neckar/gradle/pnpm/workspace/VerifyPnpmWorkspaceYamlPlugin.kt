@@ -1,6 +1,7 @@
 package it.neckar.gradle.pnpm.workspace
 
 import it.neckar.gradle.Plugins
+import it.neckar.projects.ExternalProjects
 import it.neckar.projects.OtherProjects
 import it.neckar.projects.Projects
 import com.charleskorn.kaml.Yaml
@@ -37,14 +38,14 @@ class VerifyPnpmWorkspaceYamlPlugin : Plugin<Project> {
 
     target.tasks.register<VerifyPnpmWorkspaceYamlTask>(VerifyTaskName) {
       group = "verification"
-      description = "Verifies that pnpm-workspace.yaml lists the same packages as Projects.pnpmProjects() + OtherProjects.pnpmProjects() + manualEntries"
+      description = "Verifies that pnpm-workspace.yaml lists the same packages as the pnpm projects from Projects/ExternalProjects/OtherProjects + manualEntries"
 
       workspaceYamlFile = extension.workspaceYamlFile
       manualEntries = extension.manualEntries
-      // Provider defers the pnpmProjects() calls until task realization — GradleContext.initialize
+      // Provider defers pnpmProjects() until task realization — GradleContext.initialize
       // runs in the root build.gradle.kts body, which is after the plugins {} block.
       expectedProjectPaths.set(target.provider {
-        (Projects.pnpmProjects() + OtherProjects.pnpmProjects()).map { it.path.filePath }
+        (Projects.pnpmProjects() + ExternalProjects.pnpmProjects() + OtherProjects.pnpmProjects()).map { it.path.filePath }
       })
       markerFile = target.layout.buildDirectory.file("verifyPnpmWorkspaceYaml/marker.txt")
     }
