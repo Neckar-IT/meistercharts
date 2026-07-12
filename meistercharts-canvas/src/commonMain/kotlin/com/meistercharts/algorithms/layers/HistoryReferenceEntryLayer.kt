@@ -71,6 +71,25 @@ class HistoryReferenceEntryLayer(
     return getReferenceEntryData(visibleDataSeriesIndex, referenceEntryId)
   }
 
+  override fun layoutDataPoint(
+    paintingContext: LayerPaintingContext,
+    stripePainter: ReferenceEntryStripePainter,
+    dataSeriesIndex: ReferenceEntryDataSeriesIndex,
+    chunk: HistoryChunk,
+    timestampIndex: TimestampIndex,
+    startX: Double,
+    endX: Double,
+    startTime: Double,
+    endTime: Double,
+    activeTimeStamp: Double,
+  ): Double {
+    val id = chunk.getReferenceEntryId(dataSeriesIndex, timestampIndex)
+    val differentIdsCount = chunk.getReferenceEntryIdsCount(dataSeriesIndex, timestampIndex)
+    val status = chunk.getReferenceEntryStatus(dataSeriesIndex, timestampIndex)
+    val data = chunk.getReferenceEntryData(dataSeriesIndex, id)
+    return stripePainter.layoutValueChange(paintingContext, dataSeriesIndex, startX, endX, startTime, endTime, activeTimeStamp, id, differentIdsCount, status, data)
+  }
+
   override fun value1Default(): ReferenceEntryId {
     return ReferenceEntryId.NoValue
   }

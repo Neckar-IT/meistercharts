@@ -15,18 +15,25 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
+import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Abstract base class for referenceEntry stripe painters
  */
-abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>(), ReferenceEntryStripePainter {
+abstract class AbstractReferenceEntryStripePainter :
+  AbstractStripePainter<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainterPaintingVariablesForOneDataSeries.Segment, ReferenceEntryStripePainterPaintingVariablesForOneDataSeries>(),
+  ReferenceEntryStripePainter {
   /**
    * Provides the current aggregation mode
    */
@@ -41,16 +48,46 @@ abstract class AbstractReferenceEntryStripePainter : AbstractStripePainter<Refer
    */
   private val paintingVariables = ReferenceEntryStripePainterPaintingVariables()
 
-
-  override fun haveRelevantValuesChanged(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value1: ReferenceEntryId, value2: ReferenceEntryDifferentIdsCount, value3: HistoryEnumSet, value4: ReferenceEntryData?): Boolean {
+  override fun layoutValueChange(
+    paintingContext: LayerPaintingContext,
+    dataSeriesIndex: ReferenceEntryDataSeriesIndex,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    id: @MayBeNoValueOrPending ReferenceEntryId,
+    differentIdsCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
+    status: @MayBeNoValueOrPending HistoryEnumSet,
+    data: ReferenceEntryData?,
+  ): @Window @MayBeNaN Double {
     val paintingVariablesForDataSeries = forDataSeriesIndex(dataSeriesIndex)
 
-    val currentId = paintingVariablesForDataSeries.currentValue1
-    val currentCount = paintingVariablesForDataSeries.currentValue2
-    val currentEnumSet = paintingVariablesForDataSeries.currentValue3
-    val currentReferenceData = paintingVariablesForDataSeries.currentValue4 //do not check - these values must never change for the same [ReferenceEntryId]
+    if (haveRelevantValuesChanged(paintingVariablesForDataSeries, id, differentIdsCount, status).not()) {
+      //Values have not changed, just update the end - but do not paint
+      paintingVariablesForDataSeries.updateCurrentEnd(endX, endTime)
+      return Double.NaN
+    }
 
-    return currentId != value1 || currentCount != value2 || currentEnumSet != value3
+    paintingVariablesForDataSeries.storeNextValues(id.id, differentIdsCount.value, status.bitset, data)
+    paintingVariablesForDataSeries.recordValueChange(startX, endX, startTime, endTime, activeTimeStamp)
+    return paintingVariablesForDataSeries.layoutSegment()
+  }
+
+  /**
+   * Returns true if the *relevant* values have changed.
+   * The reference entry data ([data]) is intentionally excluded - it must never change for the same [ReferenceEntryId].
+   * Compares raw ints, no allocation.
+   */
+  private fun haveRelevantValuesChanged(
+    paintingVariablesForDataSeries: ReferenceEntryStripePainterPaintingVariablesForOneDataSeries,
+    newId: @MayBeNoValueOrPending ReferenceEntryId,
+    newCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
+    newStatus: @MayBeNoValueOrPending HistoryEnumSet,
+  ): Boolean {
+    return paintingVariablesForDataSeries.currentId != newId.id ||
+      paintingVariablesForDataSeries.currentCount != newCount.value ||
+      paintingVariablesForDataSeries.currentStatus != newStatus.bitset
   }
 
   @ConfigurationDsl

@@ -899,6 +899,64 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
 }
 
 /**
+ * Returns true if the opt-in `wasmJs` target is enabled for this build: `-PwasmJs=true`
+ * (or `wasmJs=true` in gradle.properties).
+ *
+ * Default is OFF: the wasmJs target is perspective work (issue #1261) that no product needs yet.
+ * Disabled, the build skips all wasm tasks (~830 tasks / ~9% of the full build task graph).
+ * The shared webMain source sets stay active - they are compiled and tested by the js target.
+ */
+fun Project.isWasmJsEnabled(): Boolean {
+  return findProperty("wasmJs")?.toString().toBoolean()
+}
+
+/**
+ * Adds a `wasmJs` browser target to a multiplatform module - only when the build runs
+ * with `-PwasmJs=true` (see [isWasmJsEnabled]), otherwise a no-op.
+ *
+ * Opt-in per module — called from the module's own `kotlin {}` block after the shared
+ * [applyMultiplatformKotlinConfiguration] has already set up the jvm + js targets. Keeping it opt-in
+ * prevents the wasmJs target requirement from cascading onto every multiplatform module in the build
+ * (a wasmJs consumer requires every commonMain dependency to also expose a wasmJs variant).
+ *
+ * Browser tests are disabled: the wasm test code is still compiled (which verifies wasmJs
+ * source-compatibility), but not executed, so CI needs no browser to run the build.
+ */
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+fun KotlinMultiplatformExtension.addWasmJsBrowserTarget(
+  project: Project,
+  /**
+   * Whether to build a browser executable (webpack bundle) for the wasmJs target
+   */
+  executable: Boolean = false,
+  /**
+   * Dependencies for the wasmJsMain source set. Passed as lambda so the module build files
+   * never have to test the wasmJs flag themselves - the source-set accessor only exists
+   * when the target is registered.
+   */
+  wasmJsMainDependencies: (org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.() -> Unit)? = null,
+) {
+  if (project.isWasmJsEnabled().not()) {
+    return
+  }
+
+  wasmJs {
+    if (executable) {
+      binaries.executable()
+    }
+    browser {
+      testTask {
+        enabled = false
+      }
+    }
+  }
+
+  if (wasmJsMainDependencies != null) {
+    sourceSets.getByName("wasmJsMain").dependencies(wasmJsMainDependencies)
+  }
+}
+
+/**
  * Apply Kotlin configuration for JVM-only multiplatform projects.
  * Similar to applyMultiplatformKotlinConfiguration but without JS target.
  */

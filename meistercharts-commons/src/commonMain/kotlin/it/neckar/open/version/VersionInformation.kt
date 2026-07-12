@@ -31,8 +31,9 @@ package it.neckar.open.version
  * Application related information.
  *
  * The stable value (version) comes from generated [VersionConstants].
- * Volatile git info is loaded at runtime from resources (JVM)
- * or returns "unknown" (JS) to avoid unnecessary Kotlin recompilation on every commit.
+ * Volatile git info is loaded at runtime from resources (JVM) or a generated source object (JS).
+ * Off CI and off the main branch the git values are stable placeholders (all-zero hash, epoch
+ * commit date/time), which avoids unnecessary recompilation on every commit.
  */
 object VersionInformation {
   /**
@@ -47,25 +48,25 @@ object VersionInformation {
 
   /**
    * The git commit date and time (ISO 8601 format).
-   * Loaded at runtime from git.properties (JVM). Returns "unknown" on JS.
+   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
    */
   val gitCommitDateTime: String by lazy { resolveGitInfo(GitProperty.CommitDateTime) }
 
   /**
    * The git hash of the current commit.
-   * Loaded at runtime from git.properties (JVM). Returns "unknown" on JS.
+   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
    */
   val gitHash: String by lazy { resolveGitInfo(GitProperty.Hash) }
 
   /**
    * The short git hash of the current commit.
-   * Loaded at runtime from git.properties (JVM). Returns "unknown" on JS.
+   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
    */
   val gitHashShort: String by lazy { resolveGitInfo(GitProperty.HashShort) }
 
   /**
    * The git branch name.
-   * Loaded at runtime from git.properties (JVM). Returns "unknown" on JS.
+   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
    */
   val branch: String by lazy { resolveGitInfo(GitProperty.Branch) }
 
@@ -80,10 +81,12 @@ object VersionInformation {
 
 /**
  * Resolves a volatile git property at runtime.
- * On JVM, reads from git.properties resource file.
- * On JS, returns "unknown" (no synchronous resource loading in ESM context).
+ * On JVM, reads from the git.properties resource file.
+ * On JS, reads from the generated GitInfoJs source object (no synchronous resource loading in an
+ * ESM context, so the values are generated into a source file at build time).
  *
- * [GitProperty] enum is generated from [BuildInfoVars] in buildSrc/ResourcesExt.kt.
+ * The [GitProperty] enum is generated 1:1 from the GitProperty enum in build-logic
+ * ResourcesExt.kt (single source of truth).
  */
 internal expect fun resolveGitInfo(property: GitProperty): String
 

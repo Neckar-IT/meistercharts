@@ -15,18 +15,24 @@
  */
 package com.meistercharts.algorithms.painter.stripe.enums
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.AbstractStripePainter
+import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
  * Abstract base class for enum stripe painters
  */
-abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesIndex, @MayBeNoValueOrPending HistoryEnumSet, @MayBeNoValueOrPending HistoryEnumOrdinal, Unit, Unit>(), EnumStripePainter {
+abstract class AbstractEnumStripePainter :
+  AbstractStripePainter<EnumDataSeriesIndex, EnumStripePainterPaintingVariablesForOneDataSeries.Segment, EnumStripePainterPaintingVariablesForOneDataSeries>(),
+  EnumStripePainter {
   /**
    * Provides the current aggregation mode
    */
@@ -45,32 +51,58 @@ abstract class AbstractEnumStripePainter : AbstractStripePainter<EnumDataSeriesI
    * Returns the history enum value for the given index
    */
   fun getHistoryEnum(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnum {
-    val historyConfiguration = requireNotNull(paintingVariables().historyConfiguration) { "historyConfiguration not yet set" }
-    return historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
+    return paintingVariables().historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
+  }
+
+  override fun layoutValueChange(
+    paintingContext: LayerPaintingContext,
+    dataSeriesIndex: EnumDataSeriesIndex,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    enumSet: @MayBeNoValueOrPending HistoryEnumSet,
+    mostTimeOrdinal: @MayBeNoValueOrPending HistoryEnumOrdinal,
+  ): @Window @MayBeNaN Double {
+    val paintingVariablesForDataSeries = forDataSeriesIndex(dataSeriesIndex)
+
+    if (haveRelevantValuesChanged(paintingVariablesForDataSeries, enumSet, mostTimeOrdinal).not()) {
+      //Values have not changed, just update the end - but do not paint
+      paintingVariablesForDataSeries.updateCurrentEnd(endX, endTime)
+      return Double.NaN
+    }
+
+    paintingVariablesForDataSeries.storeNextValues(enumSet.bitset, mostTimeOrdinal.value)
+    paintingVariablesForDataSeries.recordValueChange(startX, endX, startTime, endTime, activeTimeStamp)
+    return paintingVariablesForDataSeries.layoutSegment()
   }
 
   /**
-   * Returns true if the relevant value has changed - depending on the
+   * Returns true if the *relevant* value has changed - depending on the aggregation mode.
+   * Reads the current values as raw ints and wraps them into value classes only for the comparison (no allocation).
    */
-  override fun haveRelevantValuesChanged(dataSeriesIndex: EnumDataSeriesIndex, value1: @MayBeNoValueOrPending HistoryEnumSet, value2: @MayBeNoValueOrPending HistoryEnumOrdinal, value3: Unit, value4: Unit): Boolean {
-    @MayBeNoValueOrPending val currentEnumSet = forDataSeriesIndex(dataSeriesIndex).currentValue1
-    @MayBeNoValueOrPending val currentEnumOrdinalMostTime = forDataSeriesIndex(dataSeriesIndex).currentValue2
-
+  private fun haveRelevantValuesChanged(
+    paintingVariablesForDataSeries: EnumStripePainterPaintingVariablesForOneDataSeries,
+    newEnumSet: @MayBeNoValueOrPending HistoryEnumSet,
+    newMostTimeOrdinal: @MayBeNoValueOrPending HistoryEnumOrdinal,
+  ): Boolean {
     return when (configuration.aggregationMode) {
       EnumAggregationMode.ByOrdinal -> {
+        @MayBeNoValueOrPending val currentEnumSet = HistoryEnumSet(paintingVariablesForDataSeries.currentEnumSet)
         //Check if the enum set is the same first
-        if (currentEnumSet == value1) {
+        if (currentEnumSet == newEnumSet) {
           //necessary for NoValue/Pending
           false
         } else {
           //Now check *only* the first ordinal
-          currentEnumSet.firstSetOrdinal() != value1.firstSetOrdinal()
+          currentEnumSet.firstSetOrdinal() != newEnumSet.firstSetOrdinal()
         }
       }
 
       EnumAggregationMode.MostTime -> {
         //Check if the ordinal most time is the same
-        currentEnumOrdinalMostTime != value2
+        paintingVariablesForDataSeries.currentOrdinal != newMostTimeOrdinal.value
       }
     }
   }

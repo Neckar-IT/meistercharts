@@ -16,6 +16,7 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.canvas.layer.LayerSupport
+import it.neckar.open.annotations.JsExportForTs
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.OnDispose
 import kotlin.js.JsExport
@@ -23,7 +24,7 @@ import kotlin.js.JsExport
 /**
  * The(!) MeisterChart interface
  */
-@JsExport
+@JsExportForTs
 interface Meisterchart : Disposable, OnDispose {
   /**
    * The [ChartSupport] for this chart

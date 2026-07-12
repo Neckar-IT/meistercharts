@@ -28,6 +28,7 @@
 package it.neckar.geometry
 
 import com.meistercharts.annotations.Zoomed
+import it.neckar.open.annotations.JsExportForTs
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.betweenInclusive
@@ -40,7 +41,6 @@ import it.neckar.open.unit.other.deg
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.si.mm
 import it.neckar.open.unit.si.rad
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 import kotlin.js.JsName
 import kotlin.jvm.JvmField
@@ -55,12 +55,13 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlinx.serialization.Serializable
 
 /**
  * Represents a coordinate
  *
  */
-@JsExport
+@JsExportForTs
 @Serializable
 data class Coordinates(
   val x: Double,

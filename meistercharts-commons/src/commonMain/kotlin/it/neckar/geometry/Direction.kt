@@ -27,6 +27,7 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.JsExportForTs
 import kotlin.js.JsExport
 
 /**
@@ -34,7 +35,7 @@ import kotlin.js.JsExport
  *
  * Attention: The order of the direction should *not* matter.
  */
-@JsExport
+@JsExportForTs
 enum class Direction(
   val verticalAlignment: VerticalAlignment,
   val horizontalAlignment: HorizontalAlignment

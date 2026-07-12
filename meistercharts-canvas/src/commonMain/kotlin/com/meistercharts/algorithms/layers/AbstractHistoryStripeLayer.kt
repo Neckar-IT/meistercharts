@@ -58,7 +58,7 @@ import it.neckar.open.unit.si.ms
 abstract class AbstractHistoryStripeLayer<
   DataSeriesIndexProviderType : DataSeriesIndexProvider<DataSeriesIndexType>,
   DataSeriesIndexType : DataSeriesIndex,
-  StripePainterType : StripePainter<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>,
+  StripePainterType : StripePainter<DataSeriesIndexType>,
   Value1Type, Value2Type, Value3Type, Value4Type,
   >(
   /**
@@ -213,16 +213,10 @@ abstract class AbstractHistoryStripeLayer<
             @Window val startX = chartCalculator.time2windowX(startTime)
             @Window val endX = chartCalculator.time2windowX(endTime)
 
-            val value1 = chunk.getValue1(visibleDataSeriesIndex, timestampIndex)
-            val value2 = chunk.getValue2(visibleDataSeriesIndex, timestampIndex)
-            val value3 = chunk.getValue3(visibleDataSeriesIndex, timestampIndex)
-            val value4 = chunk.getValue4(visibleDataSeriesIndex, timestampIndex)
-
-
             if (startTime > visibleTimeRange.end) {
               //Skip all data points that are no longer visible on this tile
-              activeInformation.geometricalCenterIfFinite = stripePainter.layoutValueChange(
-                paintingContext = paintingContext, dataSeriesIndex = visibleDataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
+              activeInformation.geometricalCenterIfFinite = layoutDataPoint(
+                paintingContext, stripePainter, visibleDataSeriesIndex, chunk, timestampIndex, startX, endX, startTime, endTime, relevantActiveTimeStamp
               )
               break
             }
@@ -239,8 +233,8 @@ abstract class AbstractHistoryStripeLayer<
             //update the last time stuff
             lastTime = startTime
 
-            activeInformation.geometricalCenterIfFinite = stripePainter.layoutValueChange(
-              paintingContext = paintingContext, dataSeriesIndex = visibleDataSeriesIndex, startX = startX, endX = endX, startTime = startTime, endTime = endTime, activeTimeStamp = relevantActiveTimeStamp, newValue1 = value1, newValue2 = value2, newValue3 = value3, newValue4 = value4
+            activeInformation.geometricalCenterIfFinite = layoutDataPoint(
+              paintingContext, stripePainter, visibleDataSeriesIndex, chunk, timestampIndex, startX, endX, startTime, endTime, relevantActiveTimeStamp
             )
           }
         }
@@ -310,6 +304,26 @@ abstract class AbstractHistoryStripeLayer<
   abstract fun HistoryChunk.getValue3(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value3Type
   abstract fun HistoryChunk.getValue4(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value4Type
 
+  /**
+   * Reads the relevant values for a single data point from the [chunk] and feeds them to the painter's
+   * `layoutValueChange`. Implemented per concrete layer with concrete value classes so no boxing happens in the
+   * per-data-point hot loop.
+   *
+   * @return the geometrical center of the segment - if the [activeTimeStamp] is within the segment, [Double.NaN] otherwise.
+   */
+  protected abstract fun layoutDataPoint(
+    paintingContext: LayerPaintingContext,
+    stripePainter: StripePainterType,
+    dataSeriesIndex: DataSeriesIndexType,
+    chunk: HistoryChunk,
+    timestampIndex: TimestampIndex,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+  ): @Window @MayBeNaN Double
+
 
   /**
    * Contains the visible indices
@@ -320,7 +334,7 @@ abstract class AbstractHistoryStripeLayer<
   abstract class Configuration<
     SeriesIndexProviderType : DataSeriesIndexProvider<DataSeriesIndexType>,
     DataSeriesIndexType : DataSeriesIndex,
-    StripePainterType : StripePainter<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>,
+    StripePainterType : StripePainter<DataSeriesIndexType>,
     Value1Type, Value2Type, Value3Type, Value4Type,
     >(
     /**

@@ -53,18 +53,14 @@ class RectangleReferenceEntryStripePainter(
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: ReferenceEntryDataSeriesIndex,
-    startX: @Window Double, //might be out of the screen
-    endX: @Window Double, //might be out of the screen
-    activeTimeStamp: @ms @MayBeNaN Double,
-    value1ToPaint: @MayBeNoValueOrPending ReferenceEntryId,
-    value2ToPaint: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
-    value3ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
-    value4ToPaint: ReferenceEntryData?,
+    segment: ReferenceEntryStripePainterPaintingVariablesForOneDataSeries.Segment,
   ) {
-    @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = value1ToPaint
-    @Suppress("UnnecessaryVariable") @MayBeNoValueOrPending val count = value2ToPaint
-    @Suppress("UnnecessaryVariable") val statusEnumSet: HistoryEnumSet = value3ToPaint
-    @Suppress("UnnecessaryVariable") val entryData = value4ToPaint
+    @Window val startX = segment.startX //might be out of the screen
+    @Window val endX = segment.endX //might be out of the screen
+    @MayBeNoValueOrPending val idToPaint: ReferenceEntryId = ReferenceEntryId(segment.id)
+    @MayBeNoValueOrPending val count: ReferenceEntryDifferentIdsCount = ReferenceEntryDifferentIdsCount(segment.count)
+    val statusEnumSet: HistoryEnumSet = HistoryEnumSet(segment.status)
+    val entryData: ReferenceEntryData? = segment.data
 
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator

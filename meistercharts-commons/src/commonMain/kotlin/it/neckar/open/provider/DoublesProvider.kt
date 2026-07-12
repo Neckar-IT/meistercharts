@@ -96,7 +96,7 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
       throw NoSuchElementException("Can not return max value")
     }
 
-    var currentMax: Double = Double.MIN_VALUE
+    var currentMax: Double = -Double.MAX_VALUE
     currentSize.fastFor {
       currentMax = currentMax.coerceAtLeast(get(it))
     }

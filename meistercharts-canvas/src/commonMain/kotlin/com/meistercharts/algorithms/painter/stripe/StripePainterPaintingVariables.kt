@@ -28,31 +28,12 @@ import com.meistercharts.history.HistoryConfiguration
  *
  * This painting variables supports multiple data series by using [MappedLayoutBuffer] with the data series index as key
  */
-abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type>(
+abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIndex, PaintingVariablesForOneDataSeriesType : StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, *>>(
   /**
    * Defaults value for data series index - will be set initially and on reset
    */
   val dataSeriesIndexDefault: DataSeriesIndexType,
-  /**
-   * The default value for value1* - will be set initially and on reset
-   */
-  val value1Default: Value1Type,
-  /**
-   * The default value for value2* - will be set initially and on reset
-   */
-  val value2Default: Value2Type,
-
-  /**
-   * The default value for value3 - will be set initially and on reset
-   */
-  val value3Default: Value3Type,
-
-  /**
-   * The default value for value4 - will be set initially and on reset
-   */
-  val value4Default: Value4Type,
-
-  ) : LoopIndexAware {
+) : LoopIndexAware {
 
   /**
    * Contains the current loop index - required to be able to detect when the [paintingVariables4DataSeries] should be reset
@@ -67,14 +48,19 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
   /**
    * Contains the delegate painting variables for each data series
    */
-  private val paintingVariables4DataSeries = MappedLayoutBuffer<DataSeriesIndexType, StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>> {
-    StripePainterPaintingVariablesForOneDataSeries(dataSeriesIndexDefault, value1Default, value2Default, value3Default, value4Default)
+  private val paintingVariables4DataSeries = MappedLayoutBuffer<DataSeriesIndexType, PaintingVariablesForOneDataSeriesType> {
+    createForOneDataSeries()
   }
+
+  /**
+   * Creates the (data-series specific) painting variables for one data series
+   */
+  protected abstract fun createForOneDataSeries(): PaintingVariablesForOneDataSeriesType
 
   /**
    * Returns the painting variables for the provided data series index
    */
-  fun forDataSeriesIndex(dataSeriesIndex: DataSeriesIndexType): StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type> {
+  fun forDataSeriesIndex(dataSeriesIndex: DataSeriesIndexType): PaintingVariablesForOneDataSeriesType {
     return paintingVariables4DataSeries.get(dataSeriesIndex)
   }
 
@@ -116,4 +102,3 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
     paintingVariables4DataSeries.resetIfNewLoopIndex(loopIndex)
   }
 }
-

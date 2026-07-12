@@ -27,8 +27,8 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.JsExportForTs
 import it.neckar.open.unit.si.rad
-import kotlin.js.JsExport
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -36,7 +36,7 @@ import kotlin.math.sin
 /**
  * Represents polar coordinates
  */
-@JsExport
+@JsExportForTs
 data class PolarCoordinates(
   val r: Double,
   val theta: @rad Double,

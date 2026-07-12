@@ -27,12 +27,12 @@
  */
 package it.neckar.datetime.minimal
 
-import kotlin.js.JsExport
+import it.neckar.open.annotations.JsExportForTs
 
 /**
  * Represents a time zone
  */
-@JsExport
+@JsExportForTs
 data class TimeZone(val zoneId: String) {
   init {
     require(zoneId.isNotEmpty()) {

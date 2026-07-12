@@ -16,23 +16,16 @@
 package com.meistercharts.algorithms.painter.stripe.refentry
 
 import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariables
-import com.meistercharts.history.HistoryEnumSet
-import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
-import com.meistercharts.history.ReferenceEntryDifferentIdsCount
-import com.meistercharts.history.ReferenceEntryId
 
 /**
- * Painting variables for enums
+ * Painting variables for reference-entry stripes
  */
 open class ReferenceEntryStripePainterPaintingVariables :
-  StripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount, HistoryEnumSet, ReferenceEntryData?>(
+  StripePainterPaintingVariables<ReferenceEntryDataSeriesIndex, ReferenceEntryStripePainterPaintingVariablesForOneDataSeries>(
     dataSeriesIndexDefault = ReferenceEntryDataSeriesIndex.zero,
-    value1Default = ReferenceEntryId.NoValue,
-    value2Default = ReferenceEntryDifferentIdsCount.NoValue,
-    value3Default = HistoryEnumSet.NoValue,
-    value4Default = null,
-
-    ) {
-  //TODO add
+  ) {
+  override fun createForOneDataSeries(): ReferenceEntryStripePainterPaintingVariablesForOneDataSeries {
+    return ReferenceEntryStripePainterPaintingVariablesForOneDataSeries()
+  }
 }

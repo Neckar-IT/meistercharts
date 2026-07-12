@@ -27,7 +27,7 @@
  */
 package it.neckar.geometry
 
-import kotlin.js.JsExport
+import it.neckar.open.annotations.JsExportForTs
 
 /**
  * The orientation within the chart.

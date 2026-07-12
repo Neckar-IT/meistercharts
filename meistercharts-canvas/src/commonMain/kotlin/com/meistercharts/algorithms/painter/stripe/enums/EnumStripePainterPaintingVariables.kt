@@ -20,25 +20,23 @@ import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariable
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
-import com.meistercharts.history.HistoryEnumOrdinal
-import com.meistercharts.history.HistoryEnumSet
 
 /**
  * Painting variables for enum stripes
  */
 open class EnumStripePainterPaintingVariables :
-  StripePainterPaintingVariables<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>(
+  StripePainterPaintingVariables<EnumDataSeriesIndex, EnumStripePainterPaintingVariablesForOneDataSeries>(
     dataSeriesIndexDefault = EnumDataSeriesIndex.zero,
-    value1Default = HistoryEnumSet.NoValue,
-    value2Default = HistoryEnumOrdinal.NoValue,
-    value3Default = Unit,
-    value4Default = Unit,
   ) {
   /**
-   * The current history enum for [currentDataSeriesIndex]
+   * The current history enum for the visible data series index
    */
   var historyEnum: HistoryEnum = HistoryEnum.Boolean
     private set
+
+  override fun createForOneDataSeries(): EnumStripePainterPaintingVariablesForOneDataSeries {
+    return EnumStripePainterPaintingVariablesForOneDataSeries()
+  }
 
   override fun prepareLayout(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
     super.prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)

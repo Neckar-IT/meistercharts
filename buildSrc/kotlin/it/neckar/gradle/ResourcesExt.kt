@@ -39,6 +39,31 @@ enum class BuildInfoVars(val value: String, val useAsInput: Boolean = true) {
 }
 
 /**
+ * The volatile git properties that are resolved at runtime by version-info.
+ *
+ * Single source of truth: `version-info` generates the runtime `GitProperty` enum
+ * (`it.neckar.open.version`) 1:1 from these constants, `version-info-volatile` generates the
+ * volatile artifacts (`git.properties` resource for the JVM, `GitInfoJs` source object for JS)
+ * carrying one entry per constant.
+ */
+enum class GitProperty(
+  /**
+   * The build-info variable this property exposes; its [BuildInfoVars.value] is the property key
+   * in the generated artifacts.
+   */
+  val buildInfoVar: BuildInfoVars,
+) {
+  Hash(BuildInfoVars.GitHash),
+  HashShort(BuildInfoVars.GitHashShort),
+  Branch(BuildInfoVars.Branch),
+  CommitDateTime(BuildInfoVars.GitCommitDateTime),
+  ;
+
+  val propertyKey: String
+    get() = buildInfoVar.value
+}
+
+/**
  * Returns the value of the given [BuildInfoVars] variable.
  */
 fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
@@ -57,13 +82,17 @@ fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
 fun Project.expandHtmlResourcesWithGitInfo(filePattern: String = "index.html") {
   val var2value = gitInfoVarMap()
 
-  tasks.named<ProcessResources>("jsProcessResources") {
-    filesMatching(filePattern) {
-      expand(
-        var2value,
-      )
+  //matching + configureEach instead of named: the wasmJs task only exists with -PwasmJs=true
+  //and is registered after this method runs - configureEach applies lazily when it appears
+  tasks.withType(ProcessResources::class.java)
+    .matching { it.name == "jsProcessResources" || it.name == "wasmJsProcessResources" }
+    .configureEach {
+      filesMatching(filePattern) {
+        expand(
+          var2value,
+        )
+      }
     }
-  }
 }
 
 /**

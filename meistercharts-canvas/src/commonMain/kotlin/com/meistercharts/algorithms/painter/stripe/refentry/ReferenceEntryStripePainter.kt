@@ -15,19 +15,55 @@
  */
 package com.meistercharts.algorithms.painter.stripe.refentry
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.StripePainter
+import com.meistercharts.annotations.Window
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
-
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
- * Visualizes a reference entry value as horizontal bar with different styles - depending on the enum value
+ * Visualizes a reference entry value as horizontal bar with different styles - depending on the value.
+ *
+ * The relevant values ([ReferenceEntryId] / [ReferenceEntryDifferentIdsCount] / [HistoryEnumSet] / [ReferenceEntryData])
+ * are concrete types here - not on a generic seam - so no boxing happens when the layer feeds the values in the hot loop.
  */
-typealias ReferenceEntryStripePainter = StripePainter<ReferenceEntryDataSeriesIndex, ReferenceEntryId, ReferenceEntryDifferentIdsCount,
+interface ReferenceEntryStripePainter : StripePainter<ReferenceEntryDataSeriesIndex> {
   /**
-   * Represents the Reference Entry Status
+   * Adds a value change event at the given x location.
+   *
+   * Call [layoutFinish] when done.
+   *
+   * @return the optical *center* of the segment - if the activeTimeStamp is within the segment, [Double.NaN] otherwise.
    */
-  HistoryEnumSet, ReferenceEntryData?>
+  fun layoutValueChange(
+    paintingContext: LayerPaintingContext,
+    dataSeriesIndex: ReferenceEntryDataSeriesIndex,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    /**
+     * The updated reference entry id
+     */
+    id: @MayBeNoValueOrPending ReferenceEntryId,
+    /**
+     * The number of different ids (for down sampled data)
+     */
+    differentIdsCount: @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount,
+    /**
+     * The reference entry status
+     */
+    status: @MayBeNoValueOrPending HistoryEnumSet,
+    /**
+     * The reference entry data - context information required to paint. Must never change for the same [id].
+     */
+    data: ReferenceEntryData?,
+  ): @Window @MayBeNaN Double
+}

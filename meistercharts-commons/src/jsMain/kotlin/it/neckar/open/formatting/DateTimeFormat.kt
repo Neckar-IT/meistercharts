@@ -73,13 +73,6 @@ actual class TimeFormatIso8601 : DateTimeFormat {
 }
 
 /**
- * ATTENTION! This method must only be used for positive values
- */
-private fun @PositiveOrZero Int.formatWithLeadingZeros(length: Int = 2): String {
-  return this.toString().padStart(length, '0')
-}
-
-/**
  * The formatted date is always UTC.
  */
 actual class DateTimeFormatUTC : DateTimeFormat {
@@ -224,33 +217,6 @@ fun localeOptions(timeZone: TimeZone, additionalConfig: Date.LocaleOptions.() ->
   }
 }
 
-/**
- * Inserts [millis] milliseconds into the formatted date [formattedWithoutMillis] which has no milliseconds part yet
- */
-private fun insertMillis(formattedWithoutMillis: String, millis: Int): String {
-  try {
-    // This is a crude workaround to display milliseconds for the most common locales (which use ':' as a separator between hour, minute and second).
-    // Unfortunately there is no browser supported way to format a date with milliseconds directly.
-    val firstIndexOfSeparator = formattedWithoutMillis.indexOf(":")
-    if (firstIndexOfSeparator != -1) {
-      val secondIndexOfSeparator = formattedWithoutMillis.indexOf(":", firstIndexOfSeparator + 1)
-      if (secondIndexOfSeparator != -1) {
-        var indexAfterLastDigit = secondIndexOfSeparator + 1
-        while (indexAfterLastDigit < formattedWithoutMillis.length) {
-          if (!formattedWithoutMillis[indexAfterLastDigit].isDigit()) {
-            break
-          }
-          ++indexAfterLastDigit
-        }
-        val formattedMillisPart = millis.toString().padStart(3, '0')
-        return formattedWithoutMillis.substring(0, indexAfterLastDigit) + '.' + formattedMillisPart + formattedWithoutMillis.substring(indexAfterLastDigit)
-      }
-    }
-  } catch (e: Exception) {
-    println("failed to format date <$formattedWithoutMillis> with milliseconds: $e")
-  }
-  return formattedWithoutMillis
-}
 
 private fun Char.isDigit(): Boolean {
   return when (this) {

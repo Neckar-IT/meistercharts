@@ -21,7 +21,6 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import it.neckar.open.unit.number.MayBeNaN
-import it.neckar.open.unit.si.ms
 
 /**
  * Base interface for stripe painters.
@@ -29,22 +28,21 @@ import it.neckar.open.unit.si.ms
  *
  * This painter has a (complex) layout phase.
  *
+ * The relevant values of a value change are *not* part of this interface - they are concrete value classes and are
+ * added by the concrete stripe painter interfaces (e.g. [com.meistercharts.algorithms.painter.stripe.enums.EnumStripePainter]).
+ * This keeps the value classes off the generic seam and avoids boxing in the hot loop.
  *
  * ### Layout phase
  * * 1: [layoutBegin] is called once for each data series
- * * 0-n: [layoutValueChange] is called for every value change
+ * * 0-n: `layoutValueChange` (declared by the concrete painter) is called for every value change
  * * 1: [layoutFinish] is called once for each data series
  *
  * ### Paining phase:
  * * 1: [paint]
  *
  * @param DataSeriesIndexType: Type of: the data series index
- * @param ValueType1: Type of: the first relevant value
- * @param ValueType2: Type of: the second relevant value
- * @param ValueType3: Type of: the third relevant value
- * @param ValueType4: Type of: the fourth relevant value
  */
-interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, ValueType2, ValueType3, ValueType4> {
+interface StripePainter<DataSeriesIndexType : DataSeriesIndex> {
   /**
    * Is called when beginning to lay out a data series
    */
@@ -64,62 +62,6 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
     historyConfiguration: HistoryConfiguration,
   )
 
-
-  /**
-   * Adds a value change event at the given x location
-   *
-   * Call [layoutFinish] when done.
-   *
-   * @return the optical *center* of the segment - if the activeTimeStamp is within the segment. The center can be used for tooltips or other purposes.
-   * Will return [Double.NaN] if `activeTimeStamp` is [Double.NaN] or outside the current segment.
-   */
-  fun layoutValueChange(
-    paintingContext: LayerPaintingContext,
-    /**
-     * The data series index that is currently layouted
-     */
-    dataSeriesIndex: DataSeriesIndexType,
-
-    /**
-     * The start location of the stripe segment
-     */
-    startX: @Window Double,
-
-    /**
-     * The end location of the stripe segment
-     */
-    endX: @Window Double,
-
-    startTime: @ms Double,
-    endTime: @ms Double,
-
-    /**
-     * The active timestamp - is [Double.NaN] if there is no active timestamp
-     */
-    activeTimeStamp: @ms @MayBeNaN Double,
-
-    /**
-     * The updated value
-     */
-    newValue1: ValueType1,
-
-    /**
-     * The second updated value (usually some kind of merged type - e.g. "most of the time")
-     */
-    newValue2: ValueType2,
-
-    /**
-     * The third updated value
-     */
-    newValue3: ValueType3,
-
-    /**
-     * The fourth updated value (usually some kind of context information - e.g. a map with additional information required to paint)
-     */
-    newValue4: ValueType4,
-  ): @Window @MayBeNaN Double
-
-
   /**
    * Is called at the end of the stripe
    */
@@ -127,7 +69,6 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex, ValueType1, Value
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DataSeriesIndexType,
   ): @Window @MayBeNaN Double
-
 
   /**
    * Paints the data series.

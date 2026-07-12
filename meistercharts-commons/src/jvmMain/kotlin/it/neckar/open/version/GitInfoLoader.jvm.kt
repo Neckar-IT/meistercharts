@@ -30,8 +30,11 @@ package it.neckar.open.version
 import java.util.Properties
 
 /**
- * JVM implementation: resolves git info from git.properties resource file.
- * This avoids Kotlin recompilation when only the git hash changes.
+ * JVM implementation: resolves git info from the git.properties resource file.
+ *
+ * The resource is generated into the version-info-volatile leaf module (an implementation dependency,
+ * so it is present on the runtime classpath). Keeping the volatile values out of this module's
+ * sources and jar avoids Kotlin recompilation and artifact churn when only the git hash changes.
  */
 internal actual fun resolveGitInfo(property: GitProperty): String {
   return gitProperties.getProperty(property.propertyKey)

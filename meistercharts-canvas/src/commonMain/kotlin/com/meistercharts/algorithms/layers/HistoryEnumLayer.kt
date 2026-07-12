@@ -73,6 +73,23 @@ class HistoryEnumLayer(
     return //do nothing
   }
 
+  override fun layoutDataPoint(
+    paintingContext: LayerPaintingContext,
+    stripePainter: EnumStripePainter,
+    dataSeriesIndex: EnumDataSeriesIndex,
+    chunk: HistoryChunk,
+    timestampIndex: TimestampIndex,
+    startX: Double,
+    endX: Double,
+    startTime: Double,
+    endTime: Double,
+    activeTimeStamp: Double,
+  ): Double {
+    val enumSet = chunk.getEnumValue(dataSeriesIndex, timestampIndex)
+    val mostTimeOrdinal = chunk.getEnumOrdinalMostTime(dataSeriesIndex, timestampIndex)
+    return stripePainter.layoutValueChange(paintingContext, dataSeriesIndex, startX, endX, startTime, endTime, activeTimeStamp, enumSet, mostTimeOrdinal)
+  }
+
   override fun value1Default(): HistoryEnumSet {
     return HistoryEnumSet.NoValue
   }

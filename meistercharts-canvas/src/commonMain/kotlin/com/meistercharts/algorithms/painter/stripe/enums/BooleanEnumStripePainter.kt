@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.painter.stripe.enums
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.BinaryPainter
+import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.SnapConfiguration
@@ -69,7 +70,12 @@ class BooleanEnumStripePainter(
     binaryPainter.reset()
   }
 
-  override fun paintSegment(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex, startX: Double, endX: Double, activeTimeStamp: Double, value1ToPaint: HistoryEnumSet, value2ToPaint: HistoryEnumOrdinal, value3ToPaint: Unit, value4ToPaint: Unit) {
+  override fun paintSegment(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex, segment: EnumStripePainterPaintingVariablesForOneDataSeries.Segment) {
+    @Window val startX = segment.startX
+    @Window val endX = segment.endX
+    val value1ToPaint: HistoryEnumSet = HistoryEnumSet(segment.enumSet)
+    val value2ToPaint: HistoryEnumOrdinal = HistoryEnumOrdinal(segment.ordinal)
+
     if (value1ToPaint.isNoValue()) {
       return
     }

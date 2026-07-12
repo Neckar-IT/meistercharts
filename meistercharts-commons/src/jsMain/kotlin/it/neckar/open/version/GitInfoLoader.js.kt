@@ -27,13 +27,18 @@
  */
 package it.neckar.open.version
 
+import it.neckar.open.version.git.GitInfoJs
+
 /**
- * JS implementation: returns "unknown" for all git properties.
+ * JS implementation: resolves git info from the generated [GitInfoJs] object.
  *
- * Unlike JVM (which loads from a git.properties resource file),
- * Kotlin/JS has no synchronous resource-loading mechanism in ESM context.
- * See #786 for potential future improvements.
+ * Unlike the JVM (which loads from a git.properties resource file), Kotlin/JS has no synchronous
+ * classpath-resource API in an ESM context, so the values are generated into a source object at
+ * build time. [GitInfoJs] lives in the version-info-volatile leaf module (consumed via implementation,
+ * never api), so the per-commit value changes on CI/main do not alter this module's compiled
+ * output — the Kotlin/JS recompile cascade stops at the two version-info modules (#2398).
  */
 internal actual fun resolveGitInfo(property: GitProperty): String {
-  return "unknown"
+  return GitInfoJs.properties[property.propertyKey]
+    ?: throw IllegalStateException("Git property '${property.propertyKey}' not found in generated GitInfoJs")
 }

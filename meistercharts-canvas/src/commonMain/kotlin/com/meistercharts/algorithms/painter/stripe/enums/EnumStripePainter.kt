@@ -15,13 +15,45 @@
  */
 package com.meistercharts.algorithms.painter.stripe.enums
 
+import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.painter.stripe.StripePainter
+import com.meistercharts.annotations.Window
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
-
+import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.unit.number.MayBeNaN
+import it.neckar.open.unit.si.ms
 
 /**
- * Visualizes an enum value as horizontal bar with different styles - depending on the enum value
+ * Visualizes an enum value as horizontal bar with different styles - depending on the enum value.
+ *
+ * The relevant values ([HistoryEnumSet] / [HistoryEnumOrdinal]) are concrete value classes here - not on a generic
+ * seam - so no boxing happens when the layer feeds the values in the hot loop.
  */
-typealias EnumStripePainter = StripePainter<EnumDataSeriesIndex, HistoryEnumSet, HistoryEnumOrdinal, Unit, Unit>
+interface EnumStripePainter : StripePainter<EnumDataSeriesIndex> {
+  /**
+   * Adds a value change event at the given x location.
+   *
+   * Call [layoutFinish] when done.
+   *
+   * @return the optical *center* of the segment - if the activeTimeStamp is within the segment, [Double.NaN] otherwise.
+   */
+  fun layoutValueChange(
+    paintingContext: LayerPaintingContext,
+    dataSeriesIndex: EnumDataSeriesIndex,
+    startX: @Window Double,
+    endX: @Window Double,
+    startTime: @ms Double,
+    endTime: @ms Double,
+    activeTimeStamp: @ms @MayBeNaN Double,
+    /**
+     * The updated enum set
+     */
+    enumSet: @MayBeNoValueOrPending HistoryEnumSet,
+    /**
+     * The updated "most of the time" ordinal
+     */
+    mostTimeOrdinal: @MayBeNoValueOrPending HistoryEnumOrdinal,
+  ): @Window @MayBeNaN Double
+}

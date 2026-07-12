@@ -21,37 +21,21 @@ import com.meistercharts.canvas.layout.buffer.LayoutVariable
 import com.meistercharts.canvas.layout.buffer.LayoutVariablesObjectBuffer
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
-import com.meistercharts.history.MayBeNoValueOrPending
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
 /**
- * Contains the painting variables for a single data series
+ * Contains the painting variables for a single data series.
+ *
+ * The concrete relevant values (enum set / ordinal, reference-entry id / count / status / data) are held by the
+ * subclasses as raw primitives / references - not as boxed value classes. This avoids boxing in the timeline hot loop.
+ * Only the (value-class agnostic) x/time state and the segment bookkeeping live here.
  */
-class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataSeriesIndex, Value1Type, Value2Type, Value3Type, Value4Type>
-  (
+abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataSeriesIndex, SegmentType : StripePainterPaintingVariablesForOneDataSeries.SegmentLayoutVariables>(
   /**
    * Defaults value for data series index - will be set initially and on reset
    */
   val dataSeriesIndexDefault: DataSeriesIndexType,
-  /**
-   * The default value for value1* - will be set initially and on reset
-   */
-  val value1Default: Value1Type,
-  /**
-   * The default value for value2* - will be set initially and on reset
-   */
-  val value2Default: Value2Type,
-
-  /**
-   * The default value for value3 - will be set initially and on reset
-   */
-  val value3Default: Value3Type,
-
-  /**
-   * The default value for value4 - will be set initially and on reset
-   */
-  val value4Default: Value4Type,
 ) : LayoutVariable {
 
   /**
@@ -69,19 +53,6 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
    */
   var visibleDataSeriesIndex: DataSeriesIndexType = dataSeriesIndexDefault
 
-  // Contains the previous values
-  var previousValue1: Value1Type = value1Default
-  var previousValue2: Value2Type = value2Default
-  var previousValue3: Value3Type = value3Default
-  var previousValue4: Value4Type = value4Default
-
-
-  //Contains the current values - that will be painted, soon
-  var currentValue1: Value1Type = value1Default
-  var currentValue2: Value2Type = value2Default
-  var currentValue3: Value3Type = value3Default
-  var currentValue4: Value4Type = value4Default
-
   var currentStartX: @Window Double = Double.NaN
   var currentEndX: @Window Double = Double.NaN
   var currentStartTime: @Window Double = Double.NaN
@@ -89,26 +60,24 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
   var currentEndTime: @Window Double = Double.NaN
   var activeTimeStamp: @ms @MayBeNaN Double = Double.NaN
 
-
-  //Contains the next values - that are painted in the next segment
-  var nextValue1: @MayBeNoValueOrPending Value1Type = value1Default
-  var nextValue2: @MayBeNoValueOrPending Value2Type = value2Default
-  var nextValue3: @MayBeNoValueOrPending Value3Type = value3Default
-  var nextValue4: @MayBeNoValueOrPending Value4Type = value4Default
-
   var nextStartX: @Window Double = Double.NaN
   var nextEndX: @Window Double = Double.NaN
   var nextStartTime: @Window Double = Double.NaN
   var nextEndTime: @Window Double = Double.NaN
 
-
   /**
    * Contains the information about the segments.
-   * Each segment might have a different length (and span multiple data points)
+   * Each segment might have a different length (and span multiple data points).
+   *
+   * The segment objects are reused across painting loops (object pool). The concrete subclass stores the per-segment
+   * values as raw primitives / references in [SegmentType].
    */
-  val segments: LayoutVariablesObjectBuffer<SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>> = LayoutVariablesObjectBuffer {
-    SegmentLayoutVariables(value1Default, value2Default, value3Default, value4Default)
-  }
+  val segments: LayoutVariablesObjectBuffer<SegmentType> = LayoutVariablesObjectBuffer { createSegment() }
+
+  /**
+   * Creates a new (empty) segment. Called once per pool slot; the created objects are reused.
+   */
+  protected abstract fun createSegment(): SegmentType
 
   /**
    * Is called *once* in each painting loop
@@ -119,13 +88,11 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
     this.visibleDataSeriesIndex = dataSeriesIndex
   }
 
-  fun relevantValuesChanged(newValue1: Value1Type, newValue2: Value2Type, newValue3: Value3Type, newValue4: Value4Type, startX: @Window Double, endX: @Window Double, startTime: @ms Double, endTime: @ms Double, activeTimeStamp: @ms @MayBeNaN Double) {
-    //Remember the updated properties - for the next paint
-    nextValue1 = newValue1
-    nextValue2 = newValue2
-    nextValue3 = newValue3
-    nextValue4 = newValue4
-
+  /**
+   * Remembers the x/time state of a value change. The subclass stores the concrete next values itself before/after
+   * calling this method.
+   */
+  fun recordValueChange(startX: @Window Double, endX: @Window Double, startTime: @ms Double, endTime: @ms Double, activeTimeStamp: @ms @MayBeNaN Double) {
     nextStartX = startX
     nextEndX = endX
     nextStartTime = startTime
@@ -140,24 +107,25 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
 
   /**
    * Is called every time a segment should be layouted.
-   * This method will then prepare a new segment.
+   * Appends a new segment for the *current* values and prepares for the next value.
+   *
+   * @return the geometrical center - if the active timestamp is within the segment, [Double.NaN] otherwise.
    */
-  fun layoutSegment(): @Window Double {
-    @MayBeNoValueOrPending val value1ToPaint = currentValue1
-    @MayBeNoValueOrPending val value2ToPaint = currentValue2
-    @MayBeNoValueOrPending val value3ToPaint = currentValue3
-    @MayBeNoValueOrPending val value4ToPaint = currentValue4
-
+  fun layoutSegment(): @Window @MayBeNaN Double {
     @Window val startX = currentStartX
     @Window val endX = currentEndX
-
     @Window val startTime = currentStartTime
     @Window val endTime = currentEndTime
-
     @ms @MayBeNaN val activeTimeStamp = activeTimeStamp
 
+    val segment = segments.addNewElement()
+    segment.startX = startX
+    segment.endX = endX
+    segment.activeTimeStamp = activeTimeStamp
+    writeCurrentValuesToSegment(segment)
+
     try {
-      @MayBeNaN @Window val opticalCenter = layoutSegment(startX, endX, activeTimeStamp, value1ToPaint, value2ToPaint, value3ToPaint, value4ToPaint)
+      @MayBeNaN @Window val opticalCenter = (startX + endX) / 2.0
       if (activeTimeStamp in startTime..endTime) {
         return opticalCenter //Only return if this is relevant for the active time stamp
       }
@@ -170,23 +138,9 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
   }
 
   /**
-   * Is called during the layout phase to store the next segment that will then be painted in the painting phase
-   *
-   * @return the geometrical center
+   * Writes the *current* values into the given segment.
    */
-  fun layoutSegment(startX: @Window Double, endX: @Window Double, activeTimeStamp: @ms @MayBeNaN Double, value1ToPaint: Value1Type, value2ToPaint: Value2Type, value3ToPaint: Value3Type, value4ToPaint: Value4Type): @Window Double {
-    val segmentLayoutVariable = segments.addNewElement()
-
-    segmentLayoutVariable.startX = startX
-    segmentLayoutVariable.endX = endX
-    segmentLayoutVariable.activeTimeStamp = activeTimeStamp
-    segmentLayoutVariable.value1ToPaint = value1ToPaint
-    segmentLayoutVariable.value2ToPaint = value2ToPaint
-    segmentLayoutVariable.value3ToPaint = value3ToPaint
-    segmentLayoutVariable.value4ToPaint = value4ToPaint
-
-    return (startX + endX) / 2.0
-  }
+  protected abstract fun writeCurrentValuesToSegment(segment: SegmentType)
 
   override fun reset() {
     historyConfiguration = HistoryConfiguration.empty
@@ -196,41 +150,29 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
 
     visibleDataSeriesIndex = dataSeriesIndexDefault
 
-    currentValue1 = value1Default
-    currentValue2 = value2Default
-    currentValue3 = value3Default
-    currentValue4 = value4Default
-
     currentStartX = Double.NaN
     currentEndX = Double.NaN
     currentStartTime = Double.NaN
     currentEndTime = Double.NaN
 
-    previousValue1 = value1Default
-    previousValue2 = value2Default
-    previousValue3 = value3Default
-    previousValue4 = value4Default
-
     activeTimeStamp = Double.NaN
 
+    resetCurrentAndPreviousValues()
     resetNextValues()
+    resetNextXTime()
   }
+
+  /**
+   * Resets the current and previous values to their defaults.
+   */
+  protected abstract fun resetCurrentAndPreviousValues()
 
   /**
    * Prepares for the next value
    */
   fun prepareForNextValue() {
-    //Save current to previous
-    previousValue1 = currentValue1
-    previousValue2 = currentValue2
-    previousValue3 = currentValue3
-    previousValue4 = currentValue4
-
-    //Save next to current
-    currentValue1 = nextValue1
-    currentValue2 = nextValue2
-    currentValue3 = nextValue3
-    currentValue4 = nextValue4
+    //Save current to previous, next to current
+    moveNextValuesToCurrentAndCurrentToPrevious()
 
     currentStartX = nextStartX
     currentEndX = nextEndX
@@ -239,18 +181,20 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
 
     //Reset next
     resetNextValues()
+    resetNextXTime()
   }
 
   /**
-   * Resets the next values to their defaults
+   * Copies the current values to previous and the next values to current.
    */
-  private fun resetNextValues() {
-    //reset the next
-    nextValue1 = value1Default
-    nextValue2 = value2Default
-    nextValue3 = value3Default
-    nextValue4 = value4Default
+  protected abstract fun moveNextValuesToCurrentAndCurrentToPrevious()
 
+  /**
+   * Resets the next values to their defaults.
+   */
+  protected abstract fun resetNextValues()
+
+  private fun resetNextXTime() {
     nextStartX = Double.NaN
     nextEndX = Double.NaN
     nextStartTime = Double.NaN
@@ -266,35 +210,25 @@ class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexType : DataS
   }
 
   /**
-   * Contains the variables for a single segment
+   * Contains the (value class agnostic) variables for a single segment.
+   * Subclasses add the concrete per-segment values as raw primitives / references.
    */
-  class SegmentLayoutVariables<Value1Type, Value2Type, Value3Type, Value4Type>(
-    val defaultValue1ToPaint: Value1Type,
-    val defaultValue2ToPaint: Value2Type,
-    val defaultValue3ToPaint: Value3Type,
-    val defaultValue4ToPaint: Value4Type,
-
-    ) : LayoutVariable {
-
+  abstract class SegmentLayoutVariables : LayoutVariable {
     var startX: @Window Double = Double.NaN
     var endX: @Window Double = Double.NaN
     var activeTimeStamp: @ms @MayBeNaN Double = Double.NaN
 
-    var value1ToPaint: Value1Type = defaultValue1ToPaint
-    var value2ToPaint: Value2Type = defaultValue2ToPaint
-    var value3ToPaint: Value3Type = defaultValue3ToPaint
-    var value4ToPaint: Value4Type = defaultValue4ToPaint
-
-
-    override fun reset() {
+    final override fun reset() {
       startX = Double.NaN
       endX = Double.NaN
       activeTimeStamp = Double.NaN
 
-      value1ToPaint = defaultValue1ToPaint
-      value2ToPaint = defaultValue2ToPaint
-      value3ToPaint = defaultValue3ToPaint
-      value4ToPaint = defaultValue4ToPaint
+      resetValues()
     }
+
+    /**
+     * Resets the concrete per-segment values to their defaults.
+     */
+    protected abstract fun resetValues()
   }
 }

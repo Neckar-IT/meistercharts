@@ -39,7 +39,7 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   fun skip(count: Int) = run { offset += count }
 
   fun skipToAlign(count: Int) {
-    val nextPosition = offset.nextAlignedTo(offset)
+    val nextPosition = offset.nextAlignedTo(count)
     skip((nextPosition - offset).toInt())
   }
 
@@ -124,12 +124,12 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   }
 
   // String
-  fun readString(len: Int) = readBytes(len).toString()
+  fun readString(len: Int) = readBytes(len).decodeToString()
 
   fun readStringz(len: Int): String {
     val res = readBytes(len)
     val index = res.indexOf(0.toByte())
-    return res.copyOf(if (index < 0) len else index).toString()
+    return res.decodeToString(0, if (index < 0) len else index)
   }
 
   fun readStringz(): String {

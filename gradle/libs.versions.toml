@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.7.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.8.0" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -64,11 +64,11 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.9"
 
-org-mongodb = "5.8.0"
+org-mongodb = "5.9.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.2"
+aws-sdk-kotlin = "1.8.3"
 
 apache-poi = "5.5.1"
 
@@ -111,6 +111,8 @@ junit = "4.13.2"
 junit-jupiter = "6.1.1"
 
 keycloak-mock = "0.20.0"
+
+kotlinx-browser = "0.5.0"
 
 kotlinx-cli = "0.3.6"
 
@@ -197,7 +199,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.37"
+logback-classic = "ch.qos.logback:logback-classic:1.5.38"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -300,7 +302,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.47.3"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.47.4"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -322,7 +324,7 @@ loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-playwright = "com.microsoft.playwright:playwright:1.60.0"
+playwright = "com.microsoft.playwright:playwright:1.61.0"
 
 com-atlassian-commonmark-commonmark = { group = "com.atlassian.commonmark", name = "commonmark", version.ref = "com-atlassian-commonmark" }
 
@@ -525,6 +527,8 @@ kotlin-test-common = { group = "org.jetbrains.kotlin", name = "kotlin-test-commo
 kotlin-test-js = { group = "org.jetbrains.kotlin", name = "kotlin-test-js", version.ref = "kotlin" }
 
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
+
+kotlinx-browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "kotlinx-browser" }
 
 kotlinx-cli = { group = "org.jetbrains.kotlinx", name = "kotlinx-cli", version.ref = "kotlinx-cli" }
 

@@ -28,6 +28,8 @@
 package it.neckar.open.http
 
 import it.neckar.open.annotations.CrossLayer
+import it.neckar.open.annotations.JsExportForTs
+import it.neckar.open.annotations.JsNameForTs
 import it.neckar.open.http.io.UrlSerializer
 import it.neckar.open.kotlin.lang.fromBase64
 import it.neckar.open.kotlin.lang.toBase64
@@ -36,7 +38,6 @@ import it.neckar.runtime.context.Hostname
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
-import kotlin.js.JsName
 import kotlin.uuid.Uuid
 
 
@@ -44,8 +45,8 @@ import kotlin.uuid.Uuid
  * Represents a URL (relative or absolute)
  */
 @CrossLayer("URL value type — same shape on Domain side and over the wire (REST/event/cache)")
-@JsExport
-@JsName("Url")
+@JsExportForTs
+@JsNameForTs("Url")
 @Serializable(with = UrlSerializer::class)
 sealed interface Url {
   /**

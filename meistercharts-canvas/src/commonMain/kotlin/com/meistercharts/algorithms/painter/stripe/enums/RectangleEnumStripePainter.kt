@@ -46,16 +46,12 @@ class RectangleEnumStripePainter(
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: EnumDataSeriesIndex,
-    startX: @Window Double,
-    endX: @Window Double,
-    activeTimeStamp: @ms @MayBeNaN Double,
-    value1ToPaint: @MayBeNoValueOrPending HistoryEnumSet,
-    value2ToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal,
-    value3ToPaint: Unit,
-    value4ToPaint: Unit,
+    segment: EnumStripePainterPaintingVariablesForOneDataSeries.Segment,
   ) {
-    val valueToPaint: @MayBeNoValueOrPending HistoryEnumSet = value1ToPaint
-    val valueMostTimeToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal = value2ToPaint
+    @Window val startX = segment.startX
+    @Window val endX = segment.endX
+    val valueToPaint: @MayBeNoValueOrPending HistoryEnumSet = HistoryEnumSet(segment.enumSet)
+    val valueMostTimeToPaint: @MayBeNoValueOrPending HistoryEnumOrdinal = HistoryEnumOrdinal(segment.ordinal)
 
     if (valueToPaint == HistoryEnumSet.NoValue) {
       //the value is NoValue, do *not* paint anything

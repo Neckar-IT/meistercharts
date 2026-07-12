@@ -28,13 +28,13 @@
 package it.neckar.open.i18n
 
 import it.neckar.datetime.minimal.TimeZone
-import kotlin.js.JsExport
+import it.neckar.open.annotations.JsExportForTs
 import kotlin.jvm.JvmStatic
 
 /**
  * Contains the configuration for I18n
  */
-@JsExport
+@JsExportForTs
 data class I18nConfiguration(
   /**
    * The locale that is used to resolve texts
