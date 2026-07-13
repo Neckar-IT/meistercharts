@@ -293,3 +293,67 @@ fun <T> Assert<List<T>?>.doesNotContainNull() {
     }
   }
 }
+
+/**
+ * Asserts that the value is not null and runs the given [assertions] on the non-null value.
+ *
+ * Replaces the common pattern of `assertThat(value).isNotNull(); assertThat(value!!.x).isEqualTo(...)`
+ * with a single readable chain. All [assertions] are grouped inside `all { }` so multiple failures
+ * are collected.
+ *
+ * Example:
+ * ```
+ * val name: String? = fetch()
+ * assertThat(name).isNotNullAnd {
+ *   isEqualTo("Alice")
+ *   hasLength(5)
+ * }
+ * ```
+ */
+fun <T> Assert<T?>.isNotNullAnd(assertions: Assert<T & Any>.() -> Unit) {
+  isNotNull().all(assertions)
+}
+
+/**
+ * Asserts that the list has exactly one element and runs the given [assertions] on it.
+ *
+ * Combines the size check + single element extraction + property assertions into one readable
+ * operation. Multiple failures inside [assertions] are collected via `all { }`.
+ *
+ * Example:
+ * ```
+ * assertThat(loaded.editions).hasSingleElement {
+ *   prop(BookEdition::copies).isEqualTo(Edition.Copies(5000))
+ * }
+ * ```
+ */
+fun <T> Assert<List<T>>.hasSingleElement(assertions: Assert<T>.() -> Unit) {
+  single().all(assertions)
+}
+
+/**
+ * Asserts that the throwable's message contains every given fragment (each fragment must appear
+ * somewhere in the message; order and position are not checked).
+ *
+ * Requires at least one fragment ([firstFragment] is separate from [additionalFragments] so the
+ * empty-call is a compile error rather than a runtime failure).
+ *
+ * Example:
+ * ```
+ * assertFailure { doSomething() }.messageContainsAllOf(
+ *   "Serializer for class 'Foo' is not found",
+ *   "Please provide",
+ * )
+ * ```
+ */
+fun Assert<Throwable>.messageContainsAllOf(firstFragment: String, vararg additionalFragments: String): Unit = given { actual ->
+  val allFragments = listOf(firstFragment) + additionalFragments
+
+  val message = actual.message
+    ?: expected("message to contain ${show(allFragments)} but message was null")
+
+  val missing = allFragments.filterNot { message.contains(it) }
+  if (missing.isNotEmpty()) {
+    expected("message to contain all of ${show(allFragments)} but missing ${show(missing)} in ${show(message)}")
+  }
+}

@@ -25,8 +25,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.annotations
+package it.neckar.open.annotations.meta
 
-actual typealias JsExportForTs = kotlin.js.JsExport
-
-actual typealias JsNameForTs = kotlin.js.JsName
+/**
+ * Marks annotations that describe an **allocation/hot-path contract** — i.e. code where per-frame
+ * allocation (value-class boxing in particular) is forbidden.
+ *
+ * Parallel to [ThreadDescribingAnnotation]: it groups a family of contract annotations (currently
+ * just `@Hot`) so that tooling can recognize them uniformly. `OverrideMustRepeatContractAnnotation`
+ * uses this meta-annotation to force an override to repeat the contract, and the `@Hot`-specific
+ * Detekt rules key off the annotations meta-annotated here.
+ */
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class AllocationDescribingAnnotation(
+  /**
+   * An allocation-context descriptor identifying the contract this annotation refers to
+   * (for example `"hot-path"`).
+   */
+  val value: String,
+)

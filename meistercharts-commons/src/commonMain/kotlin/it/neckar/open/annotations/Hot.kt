@@ -27,27 +27,34 @@
  */
 package it.neckar.open.annotations
 
-/**
- * Marks a declaration for export into the generated TypeScript definitions of the Kotlin/JS target.
- *
- * On JS this aliases `kotlin.js.JsExport`, so the TypeScript-generation pipeline is unchanged. On
- * Wasm and JVM it is a no-op — `kotlin.js.JsExport` is invalid on `interface`s in Kotlin/Wasm, so it
- * cannot live directly in `commonMain` of a module that also targets `wasmJs`.
- */
-@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.BINARY)
-expect annotation class JsExportForTs()
+import it.neckar.open.annotations.meta.AllocationDescribingAnnotation
 
 /**
- * Sets the name a declaration is exported under in the generated TypeScript definitions.
+ * Marks a method as part of the **hot path** — code executed per frame / per tick, where allocation
+ * is a measurable cost.
  *
- * On JS this aliases `kotlin.js.JsName`; on Wasm and JVM it is a no-op. See [JsExportForTs].
+ * Static analysis cannot detect "hot" on its own; the hot code must be marked explicitly. Two
+ * Detekt rules key off this marker:
+ *
+ * - `HotFunctionMustNotBoxValueClass` flags value-class boxing inside a `@Hot` body (a value-class
+ *   value obtained through a generic position — `provider.valueAt(i)`, `list[i]`, a generic
+ *   `getValue(): T = Vc` — is boxed at the erased boundary).
+ * - `HotFunctionMustOnlyCallHotFunctions` enforces function coloring: a `@Hot` function may only
+ *   call `@Hot` functions (plus provably-neutral ones: `inline`, stdlib, JDK). The contract is
+ *   contagious and propagates transitively along the call chain, like `suspend`.
+ *
+ * Because method annotations are not inherited, `OverrideMustRepeatContractAnnotation` forces every
+ * override of a `@Hot` declaration to repeat `@Hot`.
+ *
+ * The runtime allocation recorder (see MR !15550) remains the stronger guardrail; these static
+ * rules are the early, compile-time complement.
  */
-@Target(
-  AnnotationTarget.CLASS,
-  AnnotationTarget.PROPERTY,
-  AnnotationTarget.FUNCTION,
-  AnnotationTarget.CONSTRUCTOR,
-)
+@MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
-expect annotation class JsNameForTs(val name: String)
+@Target(AnnotationTarget.FUNCTION)
+@AllocationDescribingAnnotation(Hot.ALLOCATION_DESCRIPTOR)
+annotation class Hot {
+  companion object {
+    const val ALLOCATION_DESCRIPTOR: String = "hot-path"
+  }
+}
