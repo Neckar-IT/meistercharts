@@ -52,16 +52,18 @@ object KClassSerializer : KSerializer<KClass<*>> {
   }
 
   fun getKotlinClassByName(name: String): KClass<*> {
+    // serialize() emits value.java.name, which for primitive KClasses is the JVM primitive name
+    // ("int", "long", …), not "kotlin.Int". Dispatch on those so primitive KClasses round-trip;
+    // Class.forName("int") would otherwise throw ClassNotFoundException.
     return when (name) {
-      "kotlin.Int" -> Int::class
-      "kotlin.Long" -> Long::class
-      "kotlin.Double" -> Double::class
-      "kotlin.Float" -> Float::class
-      "kotlin.Boolean" -> Boolean::class
-      "kotlin.Char" -> Char::class
-      "kotlin.Byte" -> Byte::class
-      "kotlin.Short" -> Short::class
-      "kotlin.String" -> String::class
+      "int" -> Int::class
+      "long" -> Long::class
+      "double" -> Double::class
+      "float" -> Float::class
+      "boolean" -> Boolean::class
+      "char" -> Char::class
+      "byte" -> Byte::class
+      "short" -> Short::class
       else -> Class.forName(name).kotlin
     }
   }

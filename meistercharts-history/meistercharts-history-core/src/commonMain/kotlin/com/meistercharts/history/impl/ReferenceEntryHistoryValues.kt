@@ -27,6 +27,8 @@ import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
@@ -139,6 +141,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns a set of entry data for the provided IDs
    */
+  @Allocates(AllocationCost.Linear)
   fun getDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
     return dataMap.getAll(referenceEntryIds)
   }
@@ -194,6 +197,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns the reference entry ids for the given [timeStampIndex]
    */
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryIds(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
 
@@ -203,6 +207,7 @@ data class ReferenceEntryHistoryValues(
     return values.data.copyOfRange(startIndex, endIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
@@ -216,6 +221,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns the different ids counts for the given [timeStampIndex]
    */
+  @Allocates(AllocationCost.Linear)
   fun getDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryDifferentIdsCountInt IntArray? {
     if (differentIdsCount == null) {
       return null

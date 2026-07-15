@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.painter
 
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 
 /**
  * Represents an action within the path
@@ -30,6 +32,7 @@ sealed class PathAction(
    */
   val endPointY: Double
 ) {
+  @Allocates(AllocationCost.Constant)
   fun toCoordinates(): Coordinates = Coordinates(endPointX, endPointY)
 }
 

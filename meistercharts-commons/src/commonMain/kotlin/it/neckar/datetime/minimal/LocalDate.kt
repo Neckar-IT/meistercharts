@@ -113,8 +113,12 @@ data class LocalDate(
       return this
     }
 
-    val newMonthValue = (month.value - 1 + monthsToAdd + 12) % 12 + 1
-    val newYearValue = year.value + (month.value - 1 + monthsToAdd) / 12
+    // Zero-based month index across the epoch, so floorMod/floorDiv work for negative monthsToAdd
+    // across any number of year boundaries (plain % / integer division truncate toward zero and
+    // give the wrong year when crossing backwards).
+    val totalMonths = (month.value - 1) + monthsToAdd
+    val newMonthValue = totalMonths.mod(12) + 1
+    val newYearValue = year.value + totalMonths.floorDiv(12)
 
     val newYear = Year(newYearValue)
     val newMonth = Month(newMonthValue)

@@ -28,6 +28,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import kotlin.math.floor
@@ -123,6 +125,7 @@ object InternalCalculations {
    * Calculates the origin of a tile.
    * The origin of the tile is returned relative to the contentArea.
    */
+  @Allocates(AllocationCost.Constant)
   fun calculateTileOrigin(tileIndex: TileIndex, @ContentArea tileSize: Size): @ContentArea Coordinates {
     val x = calculateTileOriginX(tileIndex, tileSize.width)
     val y = calculateTileOriginY(tileIndex, tileSize.height)
@@ -219,6 +222,7 @@ object InternalCalculations {
   /**
    * Converts the contentArea coordinates to tile relative coordinates
    */
+  @Allocates(AllocationCost.Constant)
   @Tile
   fun calculateCoordsInTile(contentAreaCoordinates: @ContentArea Coordinates, tileSize: @ContentArea Size): Coordinates {
     val x = contentAreaCoordinates.x % tileSize.width
@@ -230,6 +234,7 @@ object InternalCalculations {
   /**
    * Converts a contentArea coordinate to a tile coordinate relative to the tile with the given tile-index
    */
+  @Allocates(AllocationCost.Constant)
   fun contentArea2TileCoordinates(tileIndex: TileIndex, @ContentArea contentAreaCoordinates: Coordinates, @ContentArea tileSize: Size): TileCoordinates {
     val tileOrigin = calculateTileOrigin(tileIndex, tileSize)
     return TileCoordinates.of(tileIndex, contentAreaCoordinates.minusAsCoordinates(tileOrigin))

@@ -42,6 +42,8 @@ import com.meistercharts.time.TimeRange
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.BSearchResult
 import it.neckar.open.collections.DoubleArrayList
@@ -351,31 +353,37 @@ data class HistoryChunk(
   /**
    * Returns the significands for the given time stamp index.
    */
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getDecimalValues(timeStampIndex: TimestampIndex): @Domain DoubleArray {
     return values.getDecimalValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getDecimalMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
     return values.getDecimalMinValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getDecimalMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
     return values.getDecimalMaxValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return values.getEnumValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getReferenceEntryIds(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray {
     return values.getReferenceEntryIds(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return values.getReferenceEntryStatuses(timeStampIndex)
@@ -384,6 +392,7 @@ data class HistoryChunk(
   /**
    * Returns the counts for the different entry IDs
    */
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getReferenceEntryDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryDifferentIdsCountInt IntArray? {
     return values.getReferenceEntryDifferentIdsCounts(timeStampIndex)
@@ -430,10 +439,12 @@ data class HistoryChunk(
   /**
    * Returns the reference entry data list for the reference entry ids
    */
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
     return values.getReferenceEntryDataSet(referenceEntryIds)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray2): Set<ReferenceEntryData> {
     return values.getReferenceEntryDataSet(referenceEntryIds.data)
   }
@@ -441,6 +452,7 @@ data class HistoryChunk(
   /**
    * Creates a new chunk with the added values for the given timestamp
    */
+  @Allocates(AllocationCost.Linear)
   fun withAddedValues(
     additionalTimeStamp: @ms Double,
 
@@ -538,6 +550,7 @@ data class HistoryChunk(
    * The resulting [HistoryChunk] *must* only contain data between [start] and [end]
    *
    */
+  @Allocates(AllocationCost.Linear)
   fun merge(other: HistoryChunk, start: @Inclusive Double, end: @Exclusive Double): HistoryChunk? {
     require(start < end) { "start must be before end. Was ${start.formatUtc()} - ${end.formatUtc()}" }
     logger.debug { "merge($other, ${start.formatUtc()}, ${end.formatUtc()})" }
@@ -802,6 +815,7 @@ data class HistoryChunk(
    *
    * The returning chunk will only contain data between [start] and [end]
    */
+  @Allocates(AllocationCost.Linear)
   internal fun append(other: HistoryChunk, start: @Inclusive Double, end: @Exclusive Double): HistoryChunk? {
     require(this.lastTimeStamp() < other.firstTimeStamp()) {
       "other must be after this"
@@ -924,6 +938,7 @@ data class HistoryChunk(
   /**
    * Returns only the given range
    */
+  @Allocates(AllocationCost.Linear)
   fun range(start: @Inclusive @ms Double, end: @Exclusive @ms Double): HistoryChunk? {
     require(start < end) { "start ${start.formatUtc()} must be smaller than end ${end.formatUtc()}" }
 
@@ -1030,6 +1045,7 @@ data class HistoryChunk(
   /**
    * Returns a new history chunk without any values (and time stamps) but the same data model
    */
+  @Allocates(AllocationCost.Constant)
   fun withoutValues(): HistoryChunk {
     return HistoryChunk(configuration, doubleArrayOf(), HistoryValues.empty(recordingType), recordingType)
   }
@@ -1212,6 +1228,7 @@ data class HistoryChunk(
    *
    * Will throw an exception if start/end do not match the descriptor
    */
+  @Allocates(AllocationCost.Constant)
   fun toBucket(descriptor: HistoryBucketDescriptor): HistoryBucket {
     return HistoryBucket(descriptor, this)
   }
@@ -1304,6 +1321,7 @@ data class HistoryChunk(
 /**
  * Creates a new  chunk for the given configuration
  */
+@Allocates(AllocationCost.Constant)
 fun HistoryConfiguration.chunk(
   /**
    * The time stamps for the history chunk. Each entry in [values] corresponds to
@@ -1327,6 +1345,7 @@ fun HistoryConfiguration.chunk(
 /**
  * Returns the time range for this history chunk
  */
+@Allocates(AllocationCost.Constant)
 fun HistoryChunk.timeRange(): TimeRange {
   return TimeRange(firstTimestamp, lastTimestamp)
 }

@@ -31,6 +31,8 @@ import com.meistercharts.history.valueAt
 import com.meistercharts.time.TimeRange
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.kotlin.lang.requireFinite
@@ -147,6 +149,7 @@ class HistoryChunkGenerator(
    *
    * @return null if [historyStorage] already contains samples for the computed timestamps or if no value generator are defined
    */
+  @Allocates(AllocationCost.Linear)
   override fun next(until: @ms Double): HistoryChunk? {
     if (totalDataSeriesCount < 1) {
       return null
@@ -186,6 +189,7 @@ class HistoryChunkGenerator(
    *
    * @return null if [historyStorage] already contains samples for the time range or if no value generator are defined
    */
+  @Allocates(AllocationCost.Linear)
   fun forTimeRange(timeRange: TimeRange): HistoryChunk? {
     if (totalDataSeriesCount < 1) {
       return null
@@ -206,10 +210,12 @@ class HistoryChunkGenerator(
    *
    * @return null if [historyStorage] already contains a sample for the computed timestamp
    */
+  @Allocates(AllocationCost.Linear)
   fun forNow(): HistoryChunk? {
     return generate(listOf(nowMillis()))
   }
 
+  @Allocates(AllocationCost.Linear)
   private fun generate(timestamps: List<@ms @IsFinite Double>): HistoryChunk? {
     logger.debug("Generating chunk for ${timestamps.size} timestamps: ${timestamps.joinToString { it.formatUtc() }}")
 

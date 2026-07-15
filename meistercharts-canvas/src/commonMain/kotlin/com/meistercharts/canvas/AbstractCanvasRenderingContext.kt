@@ -19,6 +19,8 @@ import com.meistercharts.environment
 import com.meistercharts.annotations.PhysicalPixel
 import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.si.rad
 
@@ -62,6 +64,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
 
   override val debug: DebugConfiguration = DebugConfiguration()
 
+  @Allocates(AllocationCost.Constant)
   final override var translation: Distance
     get() = currentTransform.translation.divide(scaleX, scaleY)
     set(value) {
@@ -85,6 +88,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
       translate(0.0, deltaY)
     }
 
+  @Allocates(AllocationCost.Constant)
   final override var translationPhysical: Distance
     get() = currentTransform.translation
     set(value) {
@@ -163,6 +167,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
     currentTransform.translatePhysical(deltaX, deltaY)
   }
 
+  @Allocates(AllocationCost.Constant)
   final override var scale: Zoom
     get() = currentTransform.scale
     set(value) {

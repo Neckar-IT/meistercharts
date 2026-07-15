@@ -19,6 +19,8 @@ import com.meistercharts.annotations.PhysicalPixel
 import com.meistercharts.canvas.geometry.Matrix
 import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.si.rad
 
 /**
@@ -42,6 +44,7 @@ class CurrentTransform {
   /**
    * Returns the current translation - does *not* include the scale
    */
+  @Allocates(AllocationCost.Constant)
   var translation: @PhysicalPixel Distance
     get() = Distance.of(matrix.tx, matrix.ty)
     set(value) {
@@ -67,6 +70,7 @@ class CurrentTransform {
       matrix.ty = value
     }
 
+  @Allocates(AllocationCost.Constant)
   var scale: Zoom
     get() = Zoom.of(matrix.a, matrix.d)
     set(value) {

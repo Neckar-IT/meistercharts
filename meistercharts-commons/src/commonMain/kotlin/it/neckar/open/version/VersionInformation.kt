@@ -27,15 +27,28 @@
  */
 package it.neckar.open.version
 
+import kotlin.time.Instant
+
 /**
  * Application related information.
  *
  * The stable value (version) comes from generated [VersionConstants].
- * Volatile git info is loaded at runtime from resources (JVM) or a generated source object (JS).
- * Off CI and off the main branch the git values are stable placeholders (all-zero hash, epoch
- * commit date/time), which avoids unnecessary recompilation on every commit.
+ * Git info is a deploy metadatum, not a compile input (#2413): it is injected at the artifact
+ * edges (service image env, fat-jar resource, serve-time HTML) and resolved from there at
+ * runtime. No compiled artifact carries it, so builds stay a pure function of the sources.
+ * Where nothing is injected (local development, plain tests) the git values are [UnknownGitValue].
  */
 object VersionInformation {
+  /**
+   * Resolver result when no injection source provides a value (local development, plain tests).
+   */
+  const val UnknownGitValue: String = "unknown"
+
+  /**
+   * Length of [gitHashShort], derived from [gitHash].
+   */
+  private const val ShortHashLength: Int = 12
+
   /**
    * The version number (main version number of the repository)
    */
@@ -48,27 +61,36 @@ object VersionInformation {
 
   /**
    * The git commit date and time (ISO 8601 format).
-   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
+   * Resolved at runtime from the injected deploy metadata (see [resolveGitInfo]).
    */
   val gitCommitDateTime: String by lazy { resolveGitInfo(GitProperty.CommitDateTime) }
 
   /**
+   * The git commit date and time as [Instant] — null when unresolved ([UnknownGitValue]),
+   * e.g. in local development where no deploy metadata is injected.
+   */
+  val gitCommitInstantOrNull: Instant?
+    get() = gitCommitDateTime.takeUnless { it == UnknownGitValue }?.let { Instant.parse(it) }
+
+  /**
    * The git hash of the current commit.
-   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
+   * Resolved at runtime from the injected deploy metadata (see [resolveGitInfo]).
    */
   val gitHash: String by lazy { resolveGitInfo(GitProperty.Hash) }
 
   /**
-   * The short git hash of the current commit.
-   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
+   * The git hash of the current commit — null when unresolved ([UnknownGitValue]),
+   * e.g. in local development where no deploy metadata is injected.
    */
-  val gitHashShort: String by lazy { resolveGitInfo(GitProperty.HashShort) }
+  val gitHashOrNull: String?
+    get() = gitHash.takeUnless { it == UnknownGitValue }
 
   /**
-   * The git branch name.
-   * Loaded at runtime from git.properties (JVM) or the generated GitInfoJs object (JS).
+   * The short git hash of the current commit — derived from [gitHash] (single source, no drift).
+   * [UnknownGitValue] is shorter than [ShortHashLength] and passes through unchanged.
    */
-  val branch: String by lazy { resolveGitInfo(GitProperty.Branch) }
+  val gitHashShort: String
+    get() = gitHash.take(ShortHashLength)
 
   /**
    * Verbose version string that contains the git information
@@ -80,13 +102,19 @@ object VersionInformation {
 }
 
 /**
- * Resolves a volatile git property at runtime.
- * On JVM, reads from the git.properties resource file.
- * On JS, reads from the generated GitInfoJs source object (no synchronous resource loading in an
- * ESM context, so the values are generated into a source file at build time).
+ * Resolves a git property from the injected deploy metadata at runtime.
+ *
+ * JVM chain: system property ([GitProperty.systemProperty]) → environment variable
+ * ([GitProperty.envVar], baked into service images at image build) → the
+ * `META-INF/app-git-info.properties` resource ([GitProperty.propertyKey] as key, packed
+ * exclusively into leaf fat-jars) → [VersionInformation.UnknownGitValue].
+ *
+ * JS chain: `window.__APP_GIT_INFO__[propertyKey]` (filled at serve time) → `<meta
+ * name="app-version">` (hash only) → [VersionInformation.UnknownGitValue]. Non-browser runtimes
+ * (Node, tests) resolve to the fallback without throwing.
  *
  * The [GitProperty] enum is generated 1:1 from the GitProperty enum in build-logic
- * ResourcesExt.kt (single source of truth).
+ * ResourcesExt.kt (single source of truth), so injection and resolution cannot drift.
  */
 internal expect fun resolveGitInfo(property: GitProperty): String
 

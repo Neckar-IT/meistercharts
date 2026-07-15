@@ -473,12 +473,12 @@ class Inflector {
    * @return the string with the number and ordinal suffix
    */
   fun ordinalize(number: Int): String {
-    var remainder = number % 100
     val numberStr = number.toString()
-    if (11 <= number && number <= 13) {
+    // 11th/12th/13th — and the teens of every hundred (111th, 212th, …) — take "th".
+    if (number % 100 in 11..13) {
       return numberStr + "th"
     }
-    remainder = number % 10
+    val remainder = number % 10
     if (remainder == 1) {
       return numberStr + "st"
     }

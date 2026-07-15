@@ -19,6 +19,8 @@ import it.neckar.open.unit.number.MayBeNegative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Rectangle
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 
 /**
  * Buffers bounds (x,y,width,height) for one object.
@@ -93,6 +95,7 @@ class BoundsBuffer : LayoutVariablesBuffer {
    *
    * Attention: A new object is instantiated every time this method is called
    */
+  @Allocates(AllocationCost.Constant)
   fun asRect(): Rectangle {
     return Rectangle(
       x,

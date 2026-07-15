@@ -16,6 +16,8 @@
 package com.meistercharts.history
 
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastMapNotNull
 import it.neckar.open.dispose.OnDispose
@@ -49,6 +51,7 @@ interface HistoryStorage : OnDispose {
    *
    * This method will return a list of buckets that span at least the complete time range that has been requested - usually more.
    */
+  @Allocates(AllocationCost.Linear)
   fun query(start: @Inclusive @ms Double, end: @Inclusive @ms Double, samplingPeriod: SamplingPeriod): List<HistoryBucket> {
     val range = HistoryBucketRange.find(samplingPeriod)
 
@@ -69,6 +72,7 @@ interface HistoryStorage : OnDispose {
   /**
    * Queries the time range. Start and end inclusive
    */
+  @Allocates(AllocationCost.Linear)
   fun query(timeRange: @ms @Inclusive TimeRange, samplingPeriod: SamplingPeriod): List<HistoryBucket> {
     return query(timeRange.start, timeRange.end, samplingPeriod)
   }
@@ -86,6 +90,7 @@ interface HistoryStorage : OnDispose {
    * The returned list contains only the history buckets that have been found.
    * The returned list may contain less elements than the given descriptors
    */
+  @Allocates(AllocationCost.Linear)
   fun get(descriptors: List<HistoryBucketDescriptor>): List<HistoryBucket> {
     return descriptors.fastMapNotNull {
       get(it)
@@ -95,6 +100,7 @@ interface HistoryStorage : OnDispose {
   /**
    * Returns min and max values for the given time range and sampling period
    */
+  @Allocates(AllocationCost.Linear)
   fun queryMinMax(timeRange: TimeRange, samplingPeriod: SamplingPeriod, dataSeriesndices: List<DecimalDataSeriesIndex>): MinMaxValues {
     val builder = MinMaxValues.Builder(dataSeriesndices)
 

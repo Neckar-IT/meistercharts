@@ -27,6 +27,8 @@ import com.meistercharts.time.TimeRanges
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastMap
 import it.neckar.open.dispose.Disposable
@@ -118,6 +120,7 @@ open class DownSamplingService<HistoryStorageType>(val historyStorage: HistorySt
   /**
    * Creates down sampling jobs for the given time ranges and bucket range
    */
+  @Allocates(AllocationCost.Linear)
   fun createJobs(dirtyRanges: TimeRanges, historyBucketRange: HistoryBucketRange): @Sorted List<DownSamplingJob> {
     logger.debug { "Creating jobs for dirtyRanges: $dirtyRanges" }
 
@@ -258,6 +261,7 @@ data class DownSamplingJob(
     /**
      * Creates down sampling jobs for the given descriptors and time range
      */
+    @Allocates(AllocationCost.Linear)
     fun create(forRange: List<HistoryBucketDescriptor>, timeRange: TimeRange): List<DownSamplingJob> {
       return forRange.fastMap {
         val refreshRange: RefreshRange =

@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.ChartSupport
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.provider.BooleanProvider1
 
 /**
@@ -39,6 +41,7 @@ open class LayerVisibilityAdapter<out T : Layer>(
   }
 ) {
 
+  @Allocates(AllocationCost.Constant)
   override val description: String
     get() = "VisibilityAdapter{${delegate.description}}"
 

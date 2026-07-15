@@ -44,8 +44,9 @@ open class CacheMap<K, V> private constructor(
   fun updateMaxSize(newMaxSize: Int) {
     this.maxSize = newMaxSize
 
-    //Reduce the size of the map
-    while (size >= maxSize) remove(map.keys.first())
+    //Reduce the size of the map. Use > (not >=) so exactly maxSize entries are kept, matching put(),
+    //and so updateMaxSize(0) empties the map instead of calling first() on an empty key set.
+    while (size > maxSize) remove(map.keys.first())
   }
 
   /**

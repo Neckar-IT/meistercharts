@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.orNanIfNull
 import it.neckar.open.unit.other.fps
 import it.neckar.open.unit.si.ms
@@ -33,6 +35,7 @@ class PaintStatisticsSupport(
   /**
    * The average duration of the painted frames
    */
+  @Allocates(AllocationCost.Linear)
   @ms
   val averageDuration: Double
     get() {
@@ -43,6 +46,7 @@ class PaintStatisticsSupport(
         .average()
     }
 
+  @Allocates(AllocationCost.Linear)
   @ms
   val maxDuration: Double
     get() {
@@ -53,6 +57,7 @@ class PaintStatisticsSupport(
         .maxOrNull().orNanIfNull()
     }
 
+  @Allocates(AllocationCost.Linear)
   @ms
   val minDuration: Double
     get() {

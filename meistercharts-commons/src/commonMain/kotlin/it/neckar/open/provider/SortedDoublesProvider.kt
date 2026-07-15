@@ -27,7 +27,8 @@
  */
 package it.neckar.open.provider
 
-import it.neckar.open.annotations.CreatesObjects
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.DoublesComparator
 import it.neckar.open.provider.impl.SortedIndexMappingSupport
 
@@ -80,7 +81,7 @@ class SortedDoublesProvider(
  *
  * Attention: A new object is created!
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun DoublesProvider.sorted(comparator: DoublesComparator = DoublesComparator.natural): SortedDoublesProvider {
   return SortedDoublesProvider(this, comparator)
 }

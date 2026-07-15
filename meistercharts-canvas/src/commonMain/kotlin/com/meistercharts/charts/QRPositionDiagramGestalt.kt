@@ -42,6 +42,8 @@ import it.neckar.geometry.AxisOrientationY
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Side
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.observable.ObservableDouble
 import it.neckar.open.observable.ObservableObject
@@ -190,6 +192,7 @@ class QRPositionDiagramGestalt @JvmOverloads constructor(
     /**
      * The coordinates
      */
+    @Allocates(AllocationCost.Constant)
     val coordinates: @Domain Coordinates
       get() {
         return Coordinates(x, y)

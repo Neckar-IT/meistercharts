@@ -57,7 +57,8 @@ object CookiesSupport {
   internal fun findCookieValue(cookiesFromDocument: String, cookieName: CookieName): String? {
     cookiesFromDocument.split(';').filter { it.isNotBlank() }
       .fastForEach { cookieValue ->
-        val splitToken = cookieValue.split("=")
+        // Split on the first '=' only: cookie values legitimately contain '=' (base64, JWT).
+        val splitToken = cookieValue.split("=", limit = 2)
         if (splitToken.size != 2) {
           console.error("Invalid Cookie token [$cookieValue]. Could not split token at '='")
           return@fastForEach
@@ -87,7 +88,8 @@ object CookiesSupport {
       .map { it.trim() }
       .filter { it.isNotBlank() }
       .forEach { token: String ->
-      val splitToken = token.split("=")
+      // Split on the first '=' only: cookie values legitimately contain '=' (base64, JWT).
+      val splitToken = token.split("=", limit = 2)
         if (splitToken.size != 2) {
           //Invalid cookie - ignore
           console.error("Invalid Cookie token [$token]. Could not split token at '='")

@@ -57,7 +57,7 @@ class DefaultCachedLocalDateFormat @JvmOverloads constructor(
 ) : CachedLocalDateFormat {
 
   init {
-    require(format !is CachedNumberFormat) { "cannot cache an already cached localDate format" }
+    require(format !is CachedLocalDateFormat) { "cannot cache an already cached localDate format" }
   }
 
   /**

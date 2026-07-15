@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas.geometry
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.niceStr
 import it.neckar.open.unit.si.rad
 import kotlin.jvm.JvmInline
@@ -139,14 +141,18 @@ data class Point(
     else -> throw IndexOutOfBoundsException("Point doesn't have $index component")
   }
 
+  @Allocates(AllocationCost.Constant)
   val mutable: Point get() = Point(_x, _y)
+  @Allocates(AllocationCost.Constant)
   val immutable: Point get() = Point(_x, _y)
   fun copy() = Point(_x, _y)
 
 
+  @Allocates(AllocationCost.Constant)
   val unit: Point get() = this / this.length
   val length: Double get() = hypot(_x, _y)
   val magnitude: Double get() = hypot(_x, _y)
+  @Allocates(AllocationCost.Constant)
   val normalized: Point
     get() {
       val imag = 1.0 / magnitude
@@ -168,6 +174,7 @@ data class Point(
 }
 
 
+@Allocates(AllocationCost.Constant)
 val Point.unit: Point get() = this / length
 
 inline fun Point.setTo(x: Number, y: Number): Point = setTo(x.toDouble(), y.toDouble())
@@ -213,8 +220,10 @@ operator fun PointInt.rem(that: PointInt) = PointInt(this.x % that.x, this.y % t
 fun Point.asInt(): PointInt = PointInt(this)
 fun PointInt.asDouble(): Point = this.p
 
+@Allocates(AllocationCost.Constant)
 val IPointInt.int get() = PointInt(x.toInt(), y.toInt())
 
+@Allocates(AllocationCost.Constant)
 val PointInt.float get() = Point(x.toDouble(), y.toDouble())
 
 fun List<Point>.getPolylineLength(): Double {

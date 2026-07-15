@@ -18,6 +18,8 @@ package com.meistercharts.history
 import com.meistercharts.time.TimeRange
 import com.meistercharts.time.TimeRanges
 import com.meistercharts.history.impl.HistoryChunk
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import kotlinx.serialization.Serializable
 
 /**
@@ -44,6 +46,7 @@ data class HistoryUpdateInfo(
   /**
    * Appends the given update
    */
+  @Allocates(AllocationCost.Linear)
   fun merge(other: TimeRange): HistoryUpdateInfo {
     return HistoryUpdateInfo(samplingPeriod, updatedTimeRanges.merge(other))
   }
@@ -52,10 +55,12 @@ data class HistoryUpdateInfo(
     /**
      * Creates an update info that uses start and end of the given chunk
      */
+    @Allocates(AllocationCost.Constant)
     fun fromChunk(chunk: HistoryChunk, samplingPeriod: SamplingPeriod): HistoryUpdateInfo {
       return HistoryUpdateInfo(samplingPeriod, TimeRanges.of(TimeRange(chunk.firstTimestamp, chunk.lastTimestamp)))
     }
 
+    @Allocates(AllocationCost.Constant)
     fun from(descriptor: HistoryBucketDescriptor): HistoryUpdateInfo {
       return HistoryUpdateInfo(descriptor.bucketRange.samplingPeriod, descriptor.timeRange)
     }

@@ -28,7 +28,8 @@
 package it.neckar.open.provider
 
 import it.neckar.open.annotations.Boxed
-import it.neckar.open.annotations.CreatesObjects
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.DoubleArrayList
@@ -311,7 +312,7 @@ fun KProperty0<DoublesProvider>.delegate(): DoublesProvider {
  *
  * `::baseProvider.delegate().map{...}`
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun DoublesProvider.mapped(mapFunction: Double2Double): DoublesProvider {
   return object : DoublesProvider {
     override fun size(): Int {
@@ -328,7 +329,7 @@ fun DoublesProvider.mapped(mapFunction: Double2Double): DoublesProvider {
 /**
  * Maps the double values to another value
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun <T> DoublesProvider.mapped(mapFunction: DoubleMapFunction<T>): SizedProvider<T> {
   return object : SizedProvider<T> {
     override fun size(): Int {

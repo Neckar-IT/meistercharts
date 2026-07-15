@@ -15,6 +15,8 @@
  */
 package com.meistercharts.algorithms.layers
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.observable.ObservableBoolean
 
 /**
@@ -43,6 +45,7 @@ class LayerVisibilityAdapterWithState<out T : Layer>(
    */
   var visible: Boolean by visibleProperty
 
+  @Allocates(AllocationCost.Constant)
   override val description: String
     get() = "VisibilityAdapterWithState{${delegate.description}}"
 

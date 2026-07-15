@@ -15,6 +15,8 @@
  */
 package com.meistercharts.axis.time
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.si.ms
 
 /**
@@ -35,6 +37,7 @@ enum class TimeUnits(@ms val span: Double, val unit: String) {
     val timeUnitsAscending: List<TimeUnits>
       get() = entries
 
+    @Allocates(AllocationCost.Linear)
     val timeUnitsDescending: List<TimeUnits>
       get() = entries.reversed()
 

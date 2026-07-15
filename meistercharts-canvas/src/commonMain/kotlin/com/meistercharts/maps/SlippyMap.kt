@@ -27,6 +27,8 @@ import com.meistercharts.tile.SubIndex
 import com.meistercharts.tile.TileIndex
 import com.meistercharts.zoom.ZoomAndTranslationModifier
 import com.meistercharts.zoom.ZoomAndTranslationModifiersBuilder
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.atan
 import it.neckar.open.kotlin.lang.sinh
 import it.neckar.open.kotlin.lang.toDegrees
@@ -77,6 +79,7 @@ val SlippyMapTilePhysicalSize: Size = @PhysicalPixel Size(256.0, 256.0)
 /**
  * Returns the tile size for slippy map - depending on the current device pixel ratio
  */
+@Allocates(AllocationCost.Constant)
 fun calculateSlippyMapTileSize(): Size {
   return Size(
     SlippyMapTilePhysicalSize.width / environment.devicePixelRatio,
@@ -87,6 +90,7 @@ fun calculateSlippyMapTileSize(): Size {
 /**
  * The content area size for slippy maps - depending on the current device pixel ratio
  */
+@Allocates(AllocationCost.Constant)
 fun calculateSlippyMapContentAreaSize(): Size {
   return calculateSlippyMapTileSize().times(2.0.pow(SlippyMapDefaultZoom))
 }

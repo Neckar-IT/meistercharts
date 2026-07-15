@@ -16,6 +16,8 @@
 package com.meistercharts.canvas.geometry
 
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.pct
 
 
@@ -84,6 +86,7 @@ object BezierCalculations {
    * // Convert the tangent vector to an angle
    * val angle = Math.atan2(tangent.y, tangent.x)
    */
+  @Allocates(AllocationCost.Constant)
   fun calculateTangentOnPath(percent: Double, coordinates: List<Coordinates>, controlCoordinates: List<Coordinates>): Coordinates {
     val numSegments = coordinates.size - 1
     val t = percent * numSegments
@@ -99,6 +102,7 @@ object BezierCalculations {
     return calculateBezierTangent(segmentT, p0, p1, p2, p3)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun calculateBezierTangent(percentage: @pct Double, start: Coordinates, control1: Coordinates, control2: Coordinates, end: Coordinates): Coordinates {
     val u = 1 - percentage
     val tt = percentage * percentage
@@ -121,6 +125,7 @@ object BezierCalculations {
    *
    * @return The calculated coordinates of the point on the Bézier curve at the progression [percentage].
    */
+  @Allocates(AllocationCost.Constant)
   fun calculateBezierCoordinates(
     percentage: @pct Double,
     startPoint: Coordinates,
@@ -149,6 +154,7 @@ object BezierCalculations {
     return Coordinates(xCoordinate, yCoordinate)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun calculateCoordinatesOnPath(percent: @pct Double, points: List<Coordinates>, controlPoints: List<Coordinates>): Coordinates {
     val numSegments = points.size - 1
     val t = percent * numSegments

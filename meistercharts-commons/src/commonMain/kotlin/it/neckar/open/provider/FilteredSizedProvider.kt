@@ -27,7 +27,8 @@
  */
 package it.neckar.open.provider
 
-import it.neckar.open.annotations.CreatesObjects
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.impl.IndexMappingSupport
 
@@ -73,7 +74,7 @@ class FilteredSizedProvider<T>(
  *
  * Attention: A new object is created!
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun <T> SizedProvider<T>.filtered(filter: MultiProviderFilter<T>): FilteredSizedProvider<T> {
   return FilteredSizedProvider(this, filter)
 }

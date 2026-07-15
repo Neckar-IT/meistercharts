@@ -20,6 +20,8 @@ import com.meistercharts.state.withAdditionalTranslation
 import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Distance
 import com.meistercharts.state.ChartState
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.provider.DoubleProvider
 
 /**
@@ -69,6 +71,7 @@ class TransformingChartStateLayer<T : Layer>(
     }
   }
 
+  @Allocates(AllocationCost.Constant)
   override val description: String
     get() = "TransformingChartStateLayer(${delegate.description})"
 }

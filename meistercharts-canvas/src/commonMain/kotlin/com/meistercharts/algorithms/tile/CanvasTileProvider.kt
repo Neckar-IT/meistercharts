@@ -25,6 +25,8 @@ import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.CanvasType
 import com.meistercharts.canvas.Image
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.dispose.DisposeSupport
 import it.neckar.open.annotations.Slow
 import it.neckar.open.unit.si.ms
@@ -51,6 +53,7 @@ class CanvasTileProvider(
    * Returns the tile size.
    * The size depends on the current device pixel ratio
    */
+  @Allocates(AllocationCost.Constant)
   override val tileSize: Size
     get() = physicalTileSize.divide(environment.devicePixelRatio)
 

@@ -31,6 +31,8 @@ import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.IntArray2
@@ -43,6 +45,7 @@ import it.neckar.open.unit.si.ms
 /**
  * Copy of range for time stamps
  */
+@Allocates(AllocationCost.Linear)
 inline fun DoubleArray.copyOfRange(fromIndex: TimestampIndex, toIndex: TimestampIndex): DoubleArray {
   return this.copyOfRange(fromIndex.value, toIndex.value)
 }

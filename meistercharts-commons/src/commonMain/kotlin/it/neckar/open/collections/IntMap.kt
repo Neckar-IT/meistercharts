@@ -620,7 +620,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   }
 
   override fun equals(other: Any?): Boolean {
-    if (other !is IntMap<*>) return false
+    if (other !is IntIntMap) return false
     fastForEach { key, value -> if (other[key] != value) return false }
     return true
   }

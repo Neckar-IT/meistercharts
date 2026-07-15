@@ -15,6 +15,8 @@
  */
 package com.meistercharts.animation
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.NotBoxed
 import it.neckar.open.unit.other.pct
 import kotlin.math.PI
@@ -95,6 +97,7 @@ fun interface Easing {
     /**
      * Linear - just returns the same value as the input
      */
+    @Allocates(AllocationCost.Constant)
     val linear: Easing get() = Easing { it }
 
     /**
@@ -103,6 +106,7 @@ fun interface Easing {
      */
     val sin: Easing = Easing { kotlin.math.sin(it * kotlin.math.PI / 2.0) }
 
+    @Allocates(AllocationCost.Constant)
     val smooth: Easing get() = Easing { it * it * (3 - 2 * it) }
 
     val incoming: Easing = Easing { it * it * it }

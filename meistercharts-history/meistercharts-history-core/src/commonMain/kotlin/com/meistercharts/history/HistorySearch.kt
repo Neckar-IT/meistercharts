@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachReversed
 import it.neckar.open.unit.si.ms
@@ -32,6 +34,7 @@ data class HistorySearchResult(val chunk: HistoryChunk, val timeStampIndex: Time
  *
  * Attention: values equal to [HistoryChunk.Pending] will not be found
  */
+@Allocates(AllocationCost.Constant)
 fun List<HistoryBucket>.search(time: @ms Double, searchConstraint: SearchConstraint): HistorySearchResult? {
   if (isEmpty()) {
     return null
@@ -95,6 +98,7 @@ fun List<HistoryBucket>.search(time: @ms Double, searchConstraint: SearchConstra
  * @param startIndex the index to start the search from
  * @param earliestTimestamp the earliest possible timestamp; timestamps before this timestamp will be ignored
  */
+@Allocates(AllocationCost.Constant)
 private fun searchNonPendingAndBefore(chunk: HistoryChunk, startIndex: TimestampIndex, earliestTimestamp: @ms Double): HistorySearchResult? {
   var index = startIndex
   if (chunk.timestampCenter(index) < earliestTimestamp) {

@@ -27,18 +27,54 @@
  */
 package it.neckar.open.version
 
-import it.neckar.open.version.git.GitInfoJs
-
 /**
- * JS implementation: resolves git info from the generated [GitInfoJs] object.
+ * JS implementation: resolves git info from the injected deploy metadata (#2413).
  *
- * Unlike the JVM (which loads from a git.properties resource file), Kotlin/JS has no synchronous
- * classpath-resource API in an ESM context, so the values are generated into a source object at
- * build time. [GitInfoJs] lives in the version-info-volatile leaf module (consumed via implementation,
- * never api), so the per-commit value changes on CI/main do not alter this module's compiled
- * output — the Kotlin/JS recompile cascade stops at the two version-info modules (#2398).
+ * Chain: `globalThis.__APP_GIT_INFO__[propertyKey]` (a plain object filled at serve time —
+ * Ktor templating or the nginx entrypoint) → `<meta name="app-version">` (hash only) →
+ * [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node, tests) resolve to the
+ * fallback without throwing: `globalThis` exists everywhere, `document` is guarded.
  */
 internal actual fun resolveGitInfo(property: GitProperty): String {
-  return GitInfoJs.properties[property.propertyKey]
-    ?: throw IllegalStateException("Git property '${property.propertyKey}' not found in generated GitInfoJs")
+  return findAppGitInfoValue(property.propertyKey)
+    ?: findMetaAppVersionValue(property)
+    ?: VersionInformation.UnknownGitValue
+}
+
+private fun findAppGitInfoValue(propertyKey: String): String? {
+  val appGitInfo: dynamic = js("globalThis.__APP_GIT_INFO__")
+  if (appGitInfo == null) {
+    return null
+  }
+  //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
+  val value: String = appGitInfo[propertyKey] as? String ?: return null
+  return sanitizeInjectedValue(value)
+}
+
+/**
+ * Treats an empty string (envsubst ran without the env var) and an unreplaced `${…}` placeholder
+ * (HTML served without the injecting entrypoint, e.g. local webpack dev server) as absent.
+ */
+private fun sanitizeInjectedValue(value: String): String? {
+  return if (value.isEmpty() || value.startsWith("\${")) null else value
+}
+
+private fun findMetaAppVersionValue(property: GitProperty): String? {
+  return when (property) {
+    GitProperty.Hash -> {
+      val documentOrNull: dynamic = js("typeof document !== 'undefined' ? document : null")
+      if (documentOrNull == null) {
+        return null
+      }
+      val metaElement = documentOrNull.querySelector("meta[name='app-version']")
+      if (metaElement == null) {
+        return null
+      }
+      //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
+      val content: String = metaElement.getAttribute("content") as? String ?: return null
+      sanitizeInjectedValue(content)
+    }
+
+    GitProperty.CommitDateTime -> null
+  }
 }

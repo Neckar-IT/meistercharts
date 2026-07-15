@@ -46,6 +46,8 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.RightTriangleType
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
@@ -73,6 +75,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Attention: Creates a new object on every call
    */
+  @Allocates(AllocationCost.Constant)
   val boundingBox: Rectangle
     get() {
       return Rectangle(0.0, 0.0, width, height)
@@ -99,6 +102,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Returns the center of the canvas
    */
+  @Allocates(AllocationCost.Constant)
   val center: @Window Coordinates
     get() {
       return Coordinates.of(centerX, centerY)

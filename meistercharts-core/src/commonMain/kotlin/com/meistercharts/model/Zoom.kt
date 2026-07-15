@@ -15,6 +15,8 @@
  */
 package com.meistercharts.model
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.number.Positive
 import it.neckar.open.kotlin.lang.isPositive
 import it.neckar.open.formatting.CachedNumberFormat
@@ -55,10 +57,12 @@ data class Zoom(
   /**
    * Creates new zoom and ensures the minimum is respected
    */
+  @Allocates(AllocationCost.Constant)
   fun withMin(minScaleXY: @Positive Double): Zoom {
     return withMin(minScaleXY, minScaleXY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withMin(minScaleX: @Positive Double, minScaleY: @Positive Double): Zoom {
     if (minScaleX <= scaleX && minScaleY <= scaleY) {
       return this
@@ -70,6 +74,7 @@ data class Zoom(
   /**
    * Returns a new zoom object with the given min zoom for x
    */
+  @Allocates(AllocationCost.Constant)
   fun withMinX(minScaleX: @Positive Double): Zoom {
     if (minScaleX <= scaleX) {
       return this
@@ -78,10 +83,12 @@ data class Zoom(
     return of(max(minScaleX, scaleX), scaleY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withMax(maxScaleXY: @Positive Double): Zoom {
     return withMax(maxScaleXY, maxScaleXY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withMax(maxScaleX: @Positive Double, maxScaleY: @Positive Double): Zoom {
     if (maxScaleX >= scaleX && maxScaleY >= scaleY) {
       return this
@@ -90,6 +97,7 @@ data class Zoom(
     return of(min(maxScaleX, scaleX), min(maxScaleY, scaleY))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withX(updatedZoomScaleX: @Positive Double): Zoom {
     if (updatedZoomScaleX == this.scaleX) {
       return this
@@ -98,6 +106,7 @@ data class Zoom(
     return Zoom(updatedZoomScaleX, scaleY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withY(updatedZoomScaleY: @Positive Double): Zoom {
     if (updatedZoomScaleY == this.scaleY) {
       return this
@@ -110,6 +119,7 @@ data class Zoom(
     return "${format.format(scaleX)}/${format.format(scaleY)}"
   }
 
+  @Allocates(AllocationCost.Constant)
   fun multiply(x: @Positive Double, y: @Positive Double): Zoom {
     if (x == 1.0 && y == 1.0) {
       return this
@@ -121,6 +131,7 @@ data class Zoom(
   /**
    * Returns a new zoom object that has the same values for both axis
    */
+  @Allocates(AllocationCost.Constant)
   fun smallerValueForBoth(): Zoom {
     if (scaleX == scaleY) {
       return this

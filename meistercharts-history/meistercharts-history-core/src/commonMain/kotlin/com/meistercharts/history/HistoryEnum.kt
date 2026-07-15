@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.i18n.TextKey
 import kotlinx.serialization.Serializable
 
@@ -82,6 +84,7 @@ data class HistoryEnum(
       return create(enumDescription, valueNames.map { TextKey(it) })
     }
 
+    @Allocates(AllocationCost.Linear)
     fun create(
       enumDescription: String,
       valueNames: List<TextKey>,

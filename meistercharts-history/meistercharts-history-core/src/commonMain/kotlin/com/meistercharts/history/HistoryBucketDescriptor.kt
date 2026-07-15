@@ -17,6 +17,8 @@ package com.meistercharts.history
 
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.other.Inclusive
@@ -50,6 +52,7 @@ internal constructor(
    * The time range of the bucket (start inclusive, end exclusive)
    * The start date has to be placed on "even" ranges depending on the bucket range
    */
+  @Allocates(AllocationCost.Constant)
   val timeRange: TimeRange
     get() {
       return TimeRange(start, end)
@@ -103,6 +106,7 @@ internal constructor(
    * Returns the next descriptor (directly after this one)
    * @param distance describes the distance to the neighbor. A distance of 1 describes the direct neighbor
    */
+  @Allocates(AllocationCost.Constant)
   fun next(distance: Int = 1): HistoryBucketDescriptor {
     require(distance > 0) { "Invalid distance <${distance}>" }
     return HistoryBucketDescriptor(index + distance, bucketRange)
@@ -112,6 +116,7 @@ internal constructor(
    * Returns the previous descriptor (directly before this one)
    * @param distance describes the distance to the neighbor. A distance of 1 describes the direct neighbor
    */
+  @Allocates(AllocationCost.Constant)
   fun previous(distance: Int = 1): HistoryBucketDescriptor {
     require(distance > 0) { "Invalid distance <${distance}>" }
 
@@ -125,6 +130,7 @@ internal constructor(
    *
    * Returns an empty list if there are no children (for the lowest level)
    */
+  @Allocates(AllocationCost.Linear)
   fun children(): List<HistoryBucketDescriptor> {
     val lowerRange = bucketRange.lower() ?: return emptyList()
     return forRange(start, end, lowerRange, false)
@@ -137,6 +143,7 @@ internal constructor(
    *
    * Returns null if there is no parent (for the highest level)
    */
+  @Allocates(AllocationCost.Constant)
   fun parent(): HistoryBucketDescriptor? {
     val upperRange = bucketRange.upper() ?: return null
     return forTimestamp(start, upperRange)
@@ -181,6 +188,7 @@ internal constructor(
      *
      * Attention: It is necessary that the given start date is an exact date for the given bucket range
      */
+    @Allocates(AllocationCost.Constant)
     fun forStart(start: @ms Double, bucketRange: HistoryBucketRange): HistoryBucketDescriptor {
       val exactStart = bucketRange.calculateStart(start)
       require(exactStart == start) {
@@ -194,6 +202,7 @@ internal constructor(
     /**
      * Returns the descriptor that contains the given timestamp for the given bucket range
      */
+    @Allocates(AllocationCost.Constant)
     fun forTimestamp(timestamp: @ms Double, bucketRange: HistoryBucketRange): HistoryBucketDescriptor {
       val index = bucketRange.calculateIndex(timestamp)
       return HistoryBucketDescriptor(index, bucketRange)
@@ -202,6 +211,7 @@ internal constructor(
     /**
      * Returns the descriptor that contains the given timestamp for the given sampling period
      */
+    @Allocates(AllocationCost.Constant)
     fun forTimestamp(timestamp: @ms Double, samplingPeriod: SamplingPeriod): HistoryBucketDescriptor {
       return forTimestamp(timestamp, samplingPeriod.toHistoryBucketRange())
     }
@@ -210,6 +220,7 @@ internal constructor(
      * Returns all descriptors which contains (potential) data in the chunk.
      * This method also works for chunks with a (very) large span
      */
+    @Allocates(AllocationCost.Linear)
     fun fromChunk(chunk: HistoryChunk, samplingPeriod: SamplingPeriod): List<HistoryBucketDescriptor> {
       if (chunk.isEmpty()) {
         //No time stamps found
@@ -270,6 +281,7 @@ internal constructor(
      * Returns the descriptors for the given range.
      * Attention: When looking for descriptors for a chunk, use [fromChunk] instead.
      */
+    @Allocates(AllocationCost.Linear)
     fun forRange(start: @ms @Inclusive Double, end: @ms Double, range: HistoryBucketRange, includeEnd: Boolean = true, maxDescriptorsCount: Int = MaxSupportedDescriptorsCount): List<HistoryBucketDescriptor> {
       @ms val delta = end - start
       val estimatedDescriptorsCount = (delta / range.duration).roundToInt()
@@ -290,6 +302,7 @@ internal constructor(
       return descriptors
     }
 
+    @Allocates(AllocationCost.Constant)
     fun forIndex(index: Double, bucketRange: HistoryBucketRange): HistoryBucketDescriptor {
       return HistoryBucketDescriptor(index, bucketRange)
     }
@@ -306,6 +319,7 @@ internal constructor(
 /**
  * Returns all [HistoryBucketDescriptor]s for all [HistoryBucket]s this chunk contains data for
  */
+@Allocates(AllocationCost.Linear)
 fun HistoryChunk.calculateAllDescriptorsFor(samplingPeriod: SamplingPeriod): List<HistoryBucketDescriptor> {
   return HistoryBucketDescriptor.fromChunk(this, samplingPeriod)
 }

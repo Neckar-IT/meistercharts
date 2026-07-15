@@ -29,6 +29,8 @@ import com.meistercharts.history.impl.RecordingType
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
@@ -49,6 +51,7 @@ private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.history.
  *
  * This is the target descriptor.
  */
+@Allocates(AllocationCost.Linear)
 fun HistoryBucketDescriptor.calculateDownSampled(
   /**
    * The buckets that are used to calculate the down sampled bucket
@@ -78,6 +81,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
  *
  * This is the target descriptor.
  */
+@Allocates(AllocationCost.Linear)
 fun HistoryBucketDescriptor.calculateDownSampled(
   /**
    * Provides the child chunks
@@ -183,6 +187,7 @@ fun HistoryBucketDescriptor.calculateDownSampled(
 /**
  * Collects all entry data for the provided IDs
  */
+@Allocates(AllocationCost.Linear)
 fun SizedProvider<HistoryChunk>.collectReferenceEntryData(referenceEntryIds: @ReferenceEntryIdInt @MayBeNoValueOrPending IntArray): Set<ReferenceEntryData> {
   return referenceEntryIds.mapIndexed { referenceEntryDataSeriesIdAsInt, referenceEntryIdAsInt ->
     val referenceEntryDataSeriesIndex = ReferenceEntryDataSeriesIndex(referenceEntryDataSeriesIdAsInt)
@@ -226,6 +231,7 @@ private fun List<HistoryBucket>.ensureSorted() {
  * Returns the "ideal" time stamps for the descriptor.
  * These time stamps are used for down sampling.
  */
+@Allocates(AllocationCost.Linear)
 fun HistoryBucketDescriptor.calculateTimeStamps(): DoubleArray {
   return DoubleArray(bucketRange.entriesCount) {
     start + (it + 0.5) * bucketRange.distance
@@ -238,6 +244,7 @@ fun HistoryBucketDescriptor.calculateTimeStamps(): DoubleArray {
  *
  * @param numberToCombine the number of values that are used to calculate one mean value
  */
+@Allocates(AllocationCost.Linear)
 fun IntArray2.calculateMeanValues(numberToCombine: Int): IntArray2 {
   val newHeight = (width.toDouble() / numberToCombine).toIntCeil()
 
@@ -265,6 +272,7 @@ fun IntArray2.calculateMeanValues(numberToCombine: Int): IntArray2 {
 /**
  * Calculates the average array
  */
+@Allocates(AllocationCost.Linear)
 fun DoubleArray.calculateMeanValues(numberToCombine: Int): DoubleArray {
   val count = (size.toDouble() / numberToCombine).toIntCeil()
 
@@ -289,6 +297,7 @@ fun DoubleArray.calculateMeanValues(numberToCombine: Int): DoubleArray {
 /**
  * Calculates the max value for each segment
  */
+@Allocates(AllocationCost.Linear)
 fun IntArray.calculateMax(numberToCombine: Int): IntArray {
   val count = (size.toDouble() / numberToCombine).toIntCeil()
 
@@ -311,6 +320,7 @@ fun IntArray.calculateMax(numberToCombine: Int): IntArray {
 /**
  * Calculates the min values for each segment
  */
+@Allocates(AllocationCost.Linear)
 fun IntArray.calculateMin(numberToCombine: Int): IntArray {
   val count = (size.toDouble() / numberToCombine).toIntCeil()
 
@@ -334,6 +344,7 @@ fun IntArray.calculateMin(numberToCombine: Int): IntArray {
  * Calculates the standard deviation.
  * The mean for each segment is provided.
  */
+@Allocates(AllocationCost.Linear)
 fun DoubleArray.calculateStandardDeviation(numberToCombine: Int, means: DoubleArray): DoubleArray {
   val count = (size.toDouble() / numberToCombine).toIntCeil()
 
@@ -369,6 +380,7 @@ fun DoubleArray.calculateStandardDeviation(numberToCombine: Int, means: DoubleAr
  *
  * The mean for each segment is provided.
  */
+@Allocates(AllocationCost.Linear)
 fun DoubleArray.combineStandardDeviations(numberToCombine: Int): DoubleArray {
   val count = (size.toDouble() / numberToCombine).toIntCeil()
 

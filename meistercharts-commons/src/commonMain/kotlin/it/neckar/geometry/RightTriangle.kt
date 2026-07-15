@@ -56,8 +56,8 @@ enum class RightTriangleType {
 
   fun format(): String {
     return when (this) {
-      MissingCornerInFirstQuadrant -> "Ecke fehlt links oben"
-      MissingCornerInSecondQuadrant -> "Ecke fehlt rechts uten"
+      MissingCornerInFirstQuadrant -> "Ecke fehlt rechts oben"
+      MissingCornerInSecondQuadrant -> "Ecke fehlt rechts unten"
       MissingCornerInThirdQuadrant -> "Ecke fehlt links unten"
       MissingCornerInFourthQuadrant -> "Ecke fehlt links oben"
     }

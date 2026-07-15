@@ -19,6 +19,8 @@ import com.meistercharts.history.cleanup.HistoryCleanupService
 import com.meistercharts.history.cleanup.MaxHistorySizeConfiguration
 import com.meistercharts.history.downsampling.DownSamplingService
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.dispose.DisposeSupport
@@ -194,6 +196,7 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
   /**
    * Deletes the described history buckets and all buckets before - with the same range
    */
+  @Allocates(AllocationCost.Linear)
   fun deleteAndBefore(toDelete: HistoryBucketDescriptor): DeletionReport {
     val earliest = bookKeeping.earliestBound(toDelete.bucketRange) ?: return DeletionReport.empty
 

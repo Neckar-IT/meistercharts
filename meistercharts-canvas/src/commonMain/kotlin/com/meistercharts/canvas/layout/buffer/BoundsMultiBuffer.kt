@@ -20,6 +20,8 @@ import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.withinSized
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.unit.number.MayBeNegative
 
@@ -266,6 +268,7 @@ open class BoundsMultiBuffer : LayoutVariableWithSize {
    *
    * Attention: A new object is instantiated every time this method is called
    */
+  @Allocates(AllocationCost.Constant)
   fun asRect(index: Int): Rectangle {
     return Rectangle(
       x(index),

@@ -25,35 +25,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.logging
-
-import kotlin.jvm.JvmInline
+package it.neckar.open.annotations
 
 /**
- * Represents a logger name.
+ * Structural cost class of an allocation marked with [Allocates].
+ *
+ * Deliberately an objective classification (decidable by reading the code), not a subjective
+ * severity: the two values differ in *how the allocation scales*, which is what matters for
+ * hot-path prioritization. Both classes are denied in `@Hot` bodies and can be acknowledged with
+ * [HotAllocation]; a [Linear] acknowledgement needs a much better reason than a [Constant] one.
  */
-@JvmInline
-value class LoggerName(val value: String) {
+enum class AllocationCost {
   /**
-   * Returns a shortened version of the logger name.
+   * A fixed number of small objects per call (typically 1-3), independent of input size — e.g.
+   * one `Coordinates` per conversion, a `copy()` of a data class, a SAM instance per read.
    */
-  fun shortened(): ShortenedLoggerName {
-    val parts = value.split('.')
-    if (parts.isEmpty()) return ShortenedLoggerName(value)
+  Constant,
 
-    return ShortenedLoggerName(buildString {
-      for (i in 0 until parts.size - 1) {
-        // firstOrNull guards against empty segments (leading dot, doubled dots), which would
-        // otherwise throw StringIndexOutOfBoundsException on parts[i][0].
-        parts[i].firstOrNull()?.let { append(it) } //add the first char of the part
-        append('.')
-      }
-
-      append(parts.last())
-    })
-  }
-
-  override fun toString(): String {
-    return value
-  }
+  /**
+   * Allocation scales with input size — e.g. `copyOfRange`, `map`/`filter`/`toList`,
+   * `reversed()`, `joinToString`, builders producing collections.
+   */
+  Linear,
 }

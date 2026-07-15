@@ -17,6 +17,8 @@ package com.meistercharts.history.downsampling
 
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.si.ms
 
 /**
@@ -74,6 +76,7 @@ class DownSamplingTargetTimestampsIterator(
     /**
      * Returns the down sampling iterator for the given descriptor.
      */
+    @Allocates(AllocationCost.Linear)
     fun create(sourceDescriptor: HistoryBucketDescriptor): DownSamplingTargetTimestampsIterator {
       return DownSamplingTargetTimestampsIterator(sourceDescriptor.calculateTimeStamps(), sourceDescriptor.bucketRange.distance)
     }

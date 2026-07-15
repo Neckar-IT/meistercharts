@@ -16,6 +16,8 @@
 package com.meistercharts.history
 
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.kotlin.lang.requireNotNull
 import it.neckar.open.unit.other.Exclusive
@@ -140,6 +142,7 @@ enum class HistoryBucketRange(
    * Calculates the time range for the given time - for this bucket range
    * @return the time range from (inclusive) until to (exclusive)
    */
+  @Allocates(AllocationCost.Constant)
   fun calculateTimeRange(@ms time: Double): TimeRange {
     @ms val from = calculateStart(time)
     @ms val to = from + duration

@@ -33,6 +33,8 @@ import com.meistercharts.history.impl.HistoryChunk.Companion.isNoValue
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import com.meistercharts.history.impl.HistoryChunk.Companion.maxHistoryAware
 import com.meistercharts.history.impl.HistoryChunk.Companion.minHistoryAware
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
@@ -322,6 +324,7 @@ class DownSamplingCalculator(
   /**
    * Returns the enum ordinal values that have been recorded most of the time
    */
+  @Allocates(AllocationCost.Linear)
   internal fun enumMostTimeOrdinalValues(): @HistoryEnumOrdinalInt IntArray {
     return IntArray(enumMostTimeOrdinalCounters.size) {
       enumMostTimeOrdinalCounters[it].winner().value
@@ -331,6 +334,7 @@ class DownSamplingCalculator(
   /**
    * Returns the "winners"
    */
+  @Allocates(AllocationCost.Linear)
   internal fun referenceEntryIds(): @ReferenceEntryIdInt @MayBeNoValueOrPending IntArray {
     return referenceEntryCounters.mapToIntArray { it.winnerMostOfTheTime().id }
   }
@@ -338,6 +342,7 @@ class DownSamplingCalculator(
   /**
    * Returns the count of the different entry ids
    */
+  @Allocates(AllocationCost.Linear)
   internal fun referenceEntryDifferentIdsCount(): @ReferenceEntryDifferentIdsCountInt @MayBeNoValueOrPending IntArray {
     return referenceEntryCounters.mapToIntArray { it.differentIdsCount().value }
   }

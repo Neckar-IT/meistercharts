@@ -41,7 +41,11 @@ import it.neckar.open.annotations.meta.AllocationDescribingAnnotation
  *   `getValue(): T = Vc` — is boxed at the erased boundary).
  * - `HotFunctionMustOnlyCallHotFunctions` enforces function coloring: a `@Hot` function may only
  *   call `@Hot` functions (plus provably-neutral ones: `inline`, stdlib, JDK). The contract is
- *   contagious and propagates transitively along the call chain, like `suspend`.
+ *   contagious and propagates transitively along the call chain, like `suspend`. [Slow] and
+ *   [Allocates] act as explicit anti-hot markers: calling such a function — or reading such
+ *   a property — from a `@Hot` body is always flagged, before any neutral exemption. Plain
+ *   property reads are neutral (accessors are assumed allocation-free; `@Allocates` declares
+ *   the exception).
  *
  * Because method annotations are not inherited, `OverrideMustRepeatContractAnnotation` forces every
  * override of a `@Hot` declaration to repeat `@Hot`.

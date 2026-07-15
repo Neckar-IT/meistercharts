@@ -21,6 +21,8 @@ import com.meistercharts.canvas.LayerPaintDurations
 import com.meistercharts.canvas.PaintingStats
 import com.meistercharts.canvas.saved
 import com.meistercharts.charts.ChartId
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import kotlin.time.DurationUnit
@@ -86,6 +88,7 @@ class Layers(val chartId: ChartId) {
   /**
    * Returns the layers in the order they process mouse/keyboard events
    */
+  @Allocates(AllocationCost.Linear)
   val layersOrderedForInteraction: List<Layer>
     get() = layers.reversed()
 

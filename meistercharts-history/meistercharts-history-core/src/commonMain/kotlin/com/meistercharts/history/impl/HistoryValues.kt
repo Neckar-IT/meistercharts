@@ -33,6 +33,8 @@ import com.meistercharts.history.ReferenceEntryIdInt
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
@@ -219,26 +221,32 @@ data class HistoryValues(
   /**
    * Returns the significands for the given timestamp (instantiates a new array)
    */
+  @Allocates(AllocationCost.Linear)
   fun getDecimalValues(timeStampIndex: TimestampIndex): @Domain DoubleArray {
     return decimalHistoryValues.getDecimalValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getDecimalMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
     return decimalHistoryValues.getMinValues(timeStampIndex)
 
   }
+  @Allocates(AllocationCost.Linear)
   fun getDecimalMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
     return decimalHistoryValues.getMaxValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return enumHistoryValues.getEnumValues(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryIds(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray {
     return referenceEntryHistoryValues.getReferenceEntryIds(timeStampIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   @ForOnePointInTime
   fun getReferenceEntryStatuses(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     return referenceEntryHistoryValues.getReferenceEntryStatuses(timeStampIndex)
@@ -247,6 +255,7 @@ data class HistoryValues(
   /**
    * Returns the counts for the different entry IDs
    */
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryDifferentIdsCounts(timeStampIndex: TimestampIndex): @ReferenceEntryIdInt IntArray? {
     return referenceEntryHistoryValues.getDifferentIdsCounts(timeStampIndex)
   }
@@ -258,6 +267,7 @@ data class HistoryValues(
     return referenceEntryHistoryValues.getData(id)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getReferenceEntryDataSet(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
     return referenceEntryHistoryValues.getDataSet(referenceEntryIds)
   }
@@ -382,6 +392,7 @@ data class HistoryValues(
     /**
      * Returns an empty values object
      */
+    @Allocates(AllocationCost.Constant)
     fun empty(recordingType: RecordingType): HistoryValues {
       return when (recordingType) {
         RecordingType.Measured -> HistoryValues(

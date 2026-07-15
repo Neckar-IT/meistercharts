@@ -23,6 +23,8 @@ import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
@@ -123,6 +125,7 @@ data class EnumHistoryValues(
     return HistoryEnumSet(values[dataSeriesIndex.value, timeStampsCount - 1])
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getEnumValues(timeStampIndex: TimestampIndex): @HistoryEnumSetInt IntArray {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
 

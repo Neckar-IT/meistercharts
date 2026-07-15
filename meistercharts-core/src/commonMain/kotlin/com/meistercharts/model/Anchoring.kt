@@ -18,6 +18,8 @@ package com.meistercharts.model
 import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 
 /**
@@ -53,6 +55,7 @@ data class Anchoring(
    *
    * ATTENTION: Creates an object when called
    */
+  @Allocates(AllocationCost.Constant)
   val anchor: Coordinates
     get() {
       return Coordinates(anchorX, anchorY)

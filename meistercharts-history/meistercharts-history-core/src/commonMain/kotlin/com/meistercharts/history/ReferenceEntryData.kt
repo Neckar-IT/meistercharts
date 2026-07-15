@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.unit.number.MayBeNaN
@@ -65,6 +67,7 @@ data class ReferenceEntryData(
     /**
      * Creates a minimal data objet
      */
+    @Allocates(AllocationCost.Constant)
     @TestOnly
     fun create(id: @ReferenceEntryIdInt Int, label: String): ReferenceEntryData {
       return ReferenceEntryData(ReferenceEntryId(id), TextKey.simple(label))

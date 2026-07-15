@@ -5,6 +5,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import it.neckar.gradle.formatAsMegaBytes
 import it.neckar.gradle.lib
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.named
@@ -17,6 +18,12 @@ import org.gradle.kotlin.dsl.named
  * - ZIP64 format for large JARs
  * - Archive naming (baseName only, no appendix/version/classifier)
  * - Main-Class manifest attribute
+ * - A `META-INF/app-git-info.properties` resource packed only into the fat jar (the fat-jar is
+ *   a leaf artifact — nobody consumes it as a build input, so the volatile git values cannot
+ *   churn any build cache; VersionInformation resolves the resource at runtime, #2413).
+ *   Deliberately a resource, not manifest attributes: the Shadow plugin shares manifest state
+ *   with the jar task, so manifest attributes leak into the plain library jar and make it
+ *   volatile per commit.
  * - Default minimize exclusions (Kotlin Reflect, Logback, Clikt)
  * - Service file merging
  * - Logging of created JAR size
@@ -31,6 +38,8 @@ fun Project.configureServiceShadowJar(
   mainClass: String,
   minimizeExclusions: DependencyFilter.() -> Unit = {},
 ): TaskProvider<ShadowJar> {
+  val createFatJarGitInfoTask = registerCreateFatJarGitInfoTask()
+
   return tasks.named<ShadowJar>("shadowJar") {
     isZip64 = true
 
@@ -45,6 +54,9 @@ fun Project.configureServiceShadowJar(
     manifest {
       attributes["Main-Class"] = mainClass
     }
+
+    //Packs META-INF/app-git-info.properties into the fat jar only (see registerCreateFatJarGitInfoTask)
+    from(createFatJarGitInfoTask)
 
     // Default exclusions are always applied
     minimize {
@@ -62,6 +74,47 @@ fun Project.configureServiceShadowJar(
     doLast {
       val fatJar = archiveFile.get().asFile
       logger.lifecycle("Shadow jar created: ${fatJar.path} (${fatJar.length().formatAsMegaBytes()} MB)")
+    }
+  }
+}
+
+/**
+ * Registers the task creating `META-INF/app-git-info.properties`, packed exclusively into the
+ * fat jar (#2413). The file never exists in library jars or module outputs, so the volatile git
+ * values cannot churn any build input. VersionInformation resolves it at runtime
+ * (chain: system property -> env -> this resource -> "unknown").
+ *
+ * Real values only on CI/main; locally the file carries no entries so VersionInformation falls
+ * back to "unknown" instead of a placeholder hash.
+ */
+private fun Project.registerCreateFatJarGitInfoTask(): TaskProvider<Task> {
+  val gitInfoDirProvider = layout.buildDirectory.dir("generated/fatJarGitInfo")
+  val gitInfoEntries: Map<String, String> = if (inCi || onMainBranch) {
+    GitProperty.entries.associate { gitProperty ->
+      gitProperty.propertyKey to getBuildInfoVarValue(gitProperty.buildInfoVar)
+    }
+  } else {
+    emptyMap()
+  }
+
+  return tasks.register("createFatJarGitInfo") {
+    group = "Build"
+    description = "Creates the META-INF/app-git-info.properties resource packed into the fat jar"
+
+    inputs.property("gitInfoEntries", gitInfoEntries)
+    outputs.dir(gitInfoDirProvider)
+
+    doLast {
+      val targetFile = gitInfoDirProvider.get().file("META-INF/app-git-info.properties").asFile
+      targetFile.parentFile.mkdirs()
+      //Written by hand instead of Properties.store() (which prepends a timestamp comment and
+      //would break rebuild idempotence). No escaping needed: keys are enum constants, values
+      //are a hex hash and an ISO-8601 datetime - neither contains '=' or a leading backslash.
+      targetFile.writeText(
+        gitInfoEntries.entries.joinToString(separator = "\n", postfix = "\n") { (propertyKey, value) ->
+          "$propertyKey=$value"
+        }
+      )
     }
   }
 }

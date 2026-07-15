@@ -30,24 +30,33 @@ package it.neckar.open.version
 import java.util.Properties
 
 /**
- * JVM implementation: resolves git info from the git.properties resource file.
+ * JVM implementation: resolves git info from the injected deploy metadata (#2413).
  *
- * The resource is generated into the version-info-volatile leaf module (an implementation dependency,
- * so it is present on the runtime classpath). Keeping the volatile values out of this module's
- * sources and jar avoids Kotlin recompilation and artifact churn when only the git hash changes.
+ * Chain: system property (local override, e.g. set by a run task) → environment variable
+ * (baked into service images by Jib at image build) → the `META-INF/app-git-info.properties`
+ * resource (packed exclusively into CLI leaf fat-jars by `configureServiceShadowJar`) →
+ * [VersionInformation.UnknownGitValue].
  */
 internal actual fun resolveGitInfo(property: GitProperty): String {
-  return gitProperties.getProperty(property.propertyKey)
-    ?: throw IllegalStateException("Git property '${property.propertyKey}' not found in git.properties resource")
+  return System.getProperty(property.systemProperty)
+    ?: System.getenv(property.envVar)
+    ?: findFatJarGitInfoValue(property.propertyKey)
+    ?: VersionInformation.UnknownGitValue
+}
+
+private fun findFatJarGitInfoValue(propertyKey: String): String? {
+  return fatJarGitInfo?.getProperty(propertyKey)?.ifEmpty { null }
 }
 
 /**
- * Lazily loaded git properties from the classpath resource.
+ * The git info resource packed into CLI leaf fat-jars at packaging time, or null when absent.
+ *
+ * The file is created only when a fat jar is assembled — it never exists in library jars or
+ * module outputs, so the volatile values cannot churn any build input. Services in containers
+ * resolve via the environment variables instead.
  */
-private val gitProperties: Properties by lazy {
-  val properties = Properties()
-  val stream = VersionInformation::class.java.getResourceAsStream("/git.properties")
-    ?: throw IllegalStateException("git.properties resource not found on classpath")
-  stream.use { properties.load(it) }
-  properties
+private val fatJarGitInfo: Properties? by lazy {
+  VersionInformation::class.java.getResourceAsStream("/META-INF/app-git-info.properties")?.use { stream ->
+    Properties().apply { load(stream) }
+  }
 }

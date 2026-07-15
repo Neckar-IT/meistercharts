@@ -16,6 +16,8 @@
 package com.meistercharts.history.impl.io
 
 import com.meistercharts.history.impl.HistoryValues
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.DoubleArray2Serializer
@@ -25,6 +27,7 @@ import kotlinx.serialization.Serializable
 /**
  * Converts the int array to an int array with relative values
  */
+@Allocates(AllocationCost.Linear)
 fun IntArray2.makeAbsolute(): IntArray2 {
   if (width == 0 || height == 0) {
     return IntArray2(width, height, 0)
@@ -49,6 +52,7 @@ fun IntArray2.makeAbsolute(): IntArray2 {
   return absolute
 }
 
+@Allocates(AllocationCost.Linear)
 fun DoubleArray2.makeAbsolute(): DoubleArray2 {
   if (width == 0 || height == 0) {
     return DoubleArray2(width, height, 0.0)
@@ -76,6 +80,7 @@ fun DoubleArray2.makeAbsolute(): DoubleArray2 {
 /**
  * Returns a copy with relative values (relative to the previous value)
  */
+@Allocates(AllocationCost.Linear)
 fun IntArray2.makeRelative(): IntArray2 {
   if (width == 0 || height == 0) {
     return IntArray2(width, height, 0)
@@ -100,6 +105,7 @@ fun IntArray2.makeRelative(): IntArray2 {
   return relative
 }
 
+@Allocates(AllocationCost.Linear)
 fun DoubleArray2.makeRelative(): DoubleArray2 {
   if (width == 0 || height == 0) {
     return DoubleArray2(width, height, 0.0)

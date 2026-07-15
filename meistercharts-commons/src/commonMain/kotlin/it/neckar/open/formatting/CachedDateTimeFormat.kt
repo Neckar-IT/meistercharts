@@ -57,7 +57,7 @@ class DefaultCachedDateTimeFormat @JvmOverloads constructor(
 ) : CachedDateTimeFormat {
 
   init {
-    require(format !is CachedNumberFormat) { "cannot cache an already cached dateTime format" }
+    require(format !is CachedDateTimeFormat) { "cannot cache an already cached dateTime format" }
   }
 
   /**

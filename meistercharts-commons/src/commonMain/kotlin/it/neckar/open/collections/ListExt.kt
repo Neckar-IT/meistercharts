@@ -34,7 +34,9 @@ fun <T> List<T>.shifted(shiftCount: Int): List<T> {
   val size = this.size
   if (size == 0 || shiftCount % size == 0) return this
 
-  val effectiveShift = shiftCount % size
+  // Normalize into 0 until size: Kotlin's % keeps the dividend's sign, so a negative shiftCount
+  // would otherwise make drop()/take() throw. A negative shift rotates the other way.
+  val effectiveShift = ((shiftCount % size) + size) % size
   return this.drop(effectiveShift) + this.take(effectiveShift)
 }
 

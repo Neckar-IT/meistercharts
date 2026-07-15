@@ -15,6 +15,8 @@
  */
 package com.meistercharts.time
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.other.Sorted
 import it.neckar.open.unit.si.ms
@@ -56,6 +58,7 @@ data class TimeRanges(
   /**
    * Returns a new time ranges object that contains all time ranges of this and the additional time range
    */
+  @Allocates(AllocationCost.Linear)
   fun merge(additionalTimeRange: TimeRange, maxAcceptedGap: @ms Double = 0.0): TimeRanges {
     return createMerged(timeRanges.plus(additionalTimeRange).sorted(), maxAcceptedGap)
   }

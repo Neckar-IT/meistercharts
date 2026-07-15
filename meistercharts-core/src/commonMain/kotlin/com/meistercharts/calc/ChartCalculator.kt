@@ -44,6 +44,8 @@ import it.neckar.geometry.AxisOrientationY
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
@@ -179,6 +181,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domainRelative2contentAreaRelative(@DomainRelative @pct size: Size): @ContentAreaRelative Size {
     return Size.of(
       domainRelative2contentAreaRelativeX(size.width),
@@ -213,6 +216,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts content-area-relative coordinates to content-area pixel coordinates.
    */
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2contentArea(@ContentAreaRelative @pct coordinates: Coordinates): @ContentArea Coordinates {
     return Coordinates.of(
       contentAreaRelative2contentAreaX(coordinates.x),
@@ -223,6 +227,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts a content-area-relative size to content-area pixel size.
    */
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2contentArea(@ContentAreaRelative @pct size: Size): @ContentArea Size {
     return Size.of(
       contentAreaRelative2contentAreaX(size.width),
@@ -249,6 +254,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts a content-area size to a zoomed size, applying the current zoom factors.
    */
+  @Allocates(AllocationCost.Constant)
   fun contentArea2zoomed(@ContentArea @px size: Size): @Zoomed Size {
     return Size.of(
       contentArea2zoomedX(size.width),
@@ -259,6 +265,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts content-area coordinates to zoomed coordinates, applying the current zoom factors.
    */
+  @Allocates(AllocationCost.Constant)
   fun contentArea2zoomed(@ContentArea @px coordinates: Coordinates): @Zoomed Coordinates {
     return Coordinates.of(
       contentArea2zoomedX(coordinates.x),
@@ -285,6 +292,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts zoomed coordinates to window coordinates.
    */
+  @Allocates(AllocationCost.Constant)
   fun zoomed2window(@Zoomed @px coordinates: Coordinates): @Window Coordinates {
     return Coordinates.of(
       zoomed2windowX(coordinates.x),
@@ -295,6 +303,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts a zoomed size to window coordinates.
    */
+  @Allocates(AllocationCost.Constant)
   fun zoomed2window(@Zoomed @px size: Size): @Window Coordinates {
     return Coordinates.of(
       zoomed2windowX(size.width),
@@ -325,6 +334,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts a domain-relative size directly to a zoomed size.
    */
+  @Allocates(AllocationCost.Constant)
   fun domainRelative2zoomed(@DomainRelative @pct size: Size): @Zoomed Size {
     return Size.of(
       domainRelative2zoomedX(size.width),
@@ -395,6 +405,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts a domain size to a zoomed size.
    */
+  @Allocates(AllocationCost.Constant)
   fun domain2zoomed(@Domain size: Size, valueRangeX: ValueRange, valueRangeY: ValueRange): @Zoomed Size {
     return Size.of(
       domain2zoomedX(size.width, valueRangeX),
@@ -413,6 +424,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaRelative2contentAreaY(domainRelative2contentAreaRelativeY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domainRelative2contentArea(@DomainRelative @pct coordinates: Coordinates): @ContentArea Coordinates {
     return Coordinates.of(
       domainRelative2contentAreaX(coordinates.x),
@@ -430,6 +442,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentArea2zoomedY(contentAreaRelative2contentAreaY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2zoomed(@ContentAreaRelative @pct width: Double, @ContentAreaRelative @pct height: Double): @Zoomed Size {
     return Size.of(
       contentAreaRelative2zoomedX(width),
@@ -447,6 +460,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return zoomed2windowY(contentArea2zoomedY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentArea2window(@ContentArea coordinates: Coordinates): @Window Coordinates {
     return Coordinates.of(
       contentArea2windowX(coordinates.x),
@@ -498,6 +512,7 @@ open class ChartCalculator(val chartState: ChartState) {
       .coerceIn(contentViewportMinY(), contentViewportMaxY())
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2window(@ContentAreaRelative @pct x: Double, @ContentAreaRelative @pct y: Double): @Window @px Coordinates {
     return Coordinates.of(
       contentAreaRelative2windowX(x),
@@ -525,6 +540,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaRelative2windowY(contentAreaRelativeY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domainRelative2window(@DomainRelative @pct coordinates: Coordinates): @Window @px Coordinates {
     return Coordinates.of(
       domainRelative2windowX(coordinates.x),
@@ -540,6 +556,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return domainRelative2contentAreaY(valueRange.toDomainRelative(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domain2contentArea(@Domain coordinates: Coordinates, valueRangeX: ValueRange, valueRangeY: ValueRange): @ContentArea Coordinates {
     return Coordinates.of(
       domain2contentAreaX(coordinates.x, valueRangeX),
@@ -562,6 +579,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return coerceInViewportY(domain2windowY(y, valueRange))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domain2window(@Domain coordinates: Coordinates, valueRangeX: ValueRange, valueRangeY: ValueRange): @Window @px Coordinates {
     return Coordinates.of(
       domain2windowX(coordinates.x, valueRangeX),
@@ -592,6 +610,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return InternalCalculations.window2zoomed(y, translateY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2zoomed(@Window @px coordinates: Coordinates): @Zoomed Coordinates {
     return Coordinates.of(
       window2zoomedX(coordinates.x),
@@ -599,6 +618,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2zoomed(@Window @px size: Size): @Zoomed Size {
     return Size.of(
       window2zoomedX(size.width),
@@ -618,6 +638,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return InternalCalculations.zoomed2contentArea(y, zoomFactorY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2contentArea(@Zoomed @px coordinates: Coordinates): @ContentArea Coordinates {
     return Coordinates.of(
       zoomed2contentAreaX(coordinates.x),
@@ -625,6 +646,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2contentArea(@Zoomed @px size: Size): @ContentArea Size {
     return Size.of(
       zoomed2contentAreaX(size.width),
@@ -642,6 +664,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return InternalCalculations.contentArea2contentAreaRelative(y, chartState.contentAreaHeight)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentArea2contentAreaRelative(@ContentArea @px coordinates: Coordinates): @ContentAreaRelative Coordinates {
     return Coordinates.of(
       contentArea2contentAreaRelativeX(coordinates.x),
@@ -649,6 +672,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentArea2contentAreaRelative(@ContentArea @px size: Size): @ContentAreaRelative Size {
     return Size.of(
       contentArea2contentAreaRelativeX(size.width),
@@ -666,6 +690,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return InternalCalculations.contentAreaRelative2domainRelative(y, chartState.axisOrientationY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2domainRelative(@ContentAreaRelative @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
       contentAreaRelative2domainRelativeX(coordinates.x),
@@ -673,6 +698,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentAreaRelative2domainRelative(@ContentAreaRelative @px size: Size): @DomainRelative Size {
     return Size.of(
       contentAreaRelative2domainRelativeX(size.width),
@@ -714,6 +740,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return zoomed2contentAreaY(zoomedY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2contentArea(@Window @px coordinates: Coordinates): @ContentArea Coordinates {
     return Coordinates.of(
       window2contentAreaX(coordinates.x),
@@ -721,6 +748,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2contentArea(@Window @px x: Double, @Window @px y: Double): @ContentArea Coordinates {
     return Coordinates.of(
       window2contentAreaX(x),
@@ -739,6 +767,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentArea2contentAreaRelativeY(window2contentAreaY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2contentAreaRelative(@Window @px x: Double, @Window @px y: Double): @ContentAreaRelative Coordinates {
     return Coordinates.of(
       window2contentAreaRelativeX(x),
@@ -746,6 +775,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2contentAreaRelative(@Window coordinates: Coordinates): @ContentAreaRelative Coordinates {
     return Coordinates.of(
       window2contentAreaRelativeX(coordinates.x),
@@ -763,6 +793,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaRelative2domainRelativeY(window2contentAreaRelativeY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2domainRelative(@Window @px x: Double, @Window @px y: Double): @DomainRelative Coordinates {
     return Coordinates.of(
       window2domainRelativeX(x),
@@ -770,6 +801,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2domainRelative(@Window @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
       window2domainRelativeX(coordinates.x),
@@ -785,6 +817,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return valueRange.toDomain(window2domainRelativeY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2domain(@Window @px x: Double, @Window @px y: Double, valueRange: ValueRange): @Domain Coordinates {
     return Coordinates.of(
       window2domainX(x, valueRange),
@@ -792,6 +825,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2domain(@Window @px coordinates: Coordinates, valueRangeX: ValueRange, valueRangeY: ValueRange): @Domain Coordinates {
     return Coordinates.of(
       window2domainX(coordinates.x, valueRangeX),
@@ -799,6 +833,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2domainDelta(@Zoomed @px coordinates: Coordinates, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
     return Coordinates.of(
       zoomed2domainDeltaX(coordinates.x, valueRangeX),
@@ -806,6 +841,7 @@ open class ChartCalculator(val chartState: ChartState) {
     )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2domainDelta(@Zoomed @px distance: Distance, valueRangeX: LinearValueRange, valueRangeY: LinearValueRange): @Domain Coordinates {
     return Coordinates.of(
       zoomed2domainDeltaX(distance.x, valueRangeX),
@@ -861,6 +897,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentArea2contentAreaRelativeY(zoomed2contentAreaY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2contentAreaRelative(@Zoomed @px size: Size): @ContentAreaRelative Size {
     return Size.of(
       zoomed2contentAreaRelativeX(size.width),
@@ -878,6 +915,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaRelative2domainRelativeY(zoomed2contentAreaRelativeY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2domainRelative(@Zoomed @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
       zoomed2domainRelativeX(coordinates.x),
@@ -910,6 +948,7 @@ open class ChartCalculator(val chartState: ChartState) {
     return contentAreaRelative2domainRelativeY(contentArea2contentAreaRelativeY(y))
   }
 
+  @Allocates(AllocationCost.Constant)
   fun contentArea2domainRelative(@ContentArea @px coordinates: Coordinates): @DomainRelative Coordinates {
     return Coordinates.of(
       contentArea2domainRelativeX(coordinates.x),
@@ -927,6 +966,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Converts the tile index to window coordinates
    */
+  @Allocates(AllocationCost.Constant)
   fun tileIndex2window(tileIndex: TileIndex, tileSize: @Zoomed Size): @Window Coordinates {
     @ContentArea val tileOrigin = tileIndex2contentArea(tileIndex, tileSize)
     return contentArea2window(tileOrigin)
@@ -946,6 +986,7 @@ open class ChartCalculator(val chartState: ChartState) {
   /**
    * Returns the content area values for a given tile index
    */
+  @Allocates(AllocationCost.Constant)
   fun tileIndex2contentArea(tileIndex: TileIndex, tileSize: @Zoomed Size): @ContentArea Coordinates {
     val tileSizeContentArea = zoomed2contentArea(tileSize)
     return InternalCalculations.calculateTileOrigin(tileIndex, tileSizeContentArea)

@@ -18,6 +18,8 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.canvas.FillRule
 import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.unit.other.px
 
@@ -114,6 +116,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Returns the current point of the path
    */
+  @Allocates(AllocationCost.Constant)
   val currentPointOrNull: Coordinates?
     get() {
       if (isEmpty()) {
@@ -125,6 +128,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Returns the current point or throws a [NoSuchElementException]
    */
+  @Allocates(AllocationCost.Constant)
   val currentPoint: Coordinates
     get() {
       if (isEmpty()) {
@@ -152,6 +156,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Returns the first point of the path
    */
+  @Allocates(AllocationCost.Constant)
   val firstPointOrNull: Coordinates?
     get() {
       if (isEmpty()) {
@@ -160,6 +165,7 @@ class Path : PathActions, SupportsPathActions {
       return Coordinates(firstPointXOrNaN(), firstPointYOrNaN())
     }
 
+  @Allocates(AllocationCost.Constant)
   val firstPoint: Coordinates
     get() {
       if (isEmpty()) {
@@ -193,6 +199,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Returns the first point of the last part (the coordinates of move to)
    */
+  @Allocates(AllocationCost.Constant)
   val firstPointOfLastPart: Coordinates
     get() {
       val coordinatePairIndex = lastMoveToCoordinatePairIndex()

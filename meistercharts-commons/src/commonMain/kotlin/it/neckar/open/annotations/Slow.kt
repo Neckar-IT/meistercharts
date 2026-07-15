@@ -30,8 +30,15 @@ package it.neckar.open.annotations
 /**
  * Annotates methods that are slow (relatively speaking) and should not be used in performance
  * critical methods
+ *
+ * Acts as an explicit negative marker for the hot path: `HotFunctionMustOnlyCallHotFunctions`
+ * flags any call to a `@Slow` function (and any read of a `@Slow` property) from a `@Hot` body —
+ * regardless of `inline` or whitelist exemptions.
+ *
+ * BINARY retention so the marker stays visible to static analysis when the callee comes from an
+ * already-compiled module.
  */
-@Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.BINARY)
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.ANNOTATION_CLASS,
@@ -45,7 +52,6 @@ package it.neckar.open.annotations
   AnnotationTarget.PROPERTY_GETTER,
   AnnotationTarget.PROPERTY_SETTER,
   AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
   AnnotationTarget.FILE,
   AnnotationTarget.TYPEALIAS
 )

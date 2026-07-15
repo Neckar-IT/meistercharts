@@ -18,6 +18,8 @@ package com.meistercharts.history.impl
 import com.meistercharts.annotations.Domain
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.TimestampIndex
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.kotlin.serializers.DoubleArray2Serializer
 import kotlinx.serialization.Serializable
@@ -129,6 +131,7 @@ data class DecimalHistoryValues(
   /**
    * Returns the significands for the given timestamp (instantiates a new array)
    */
+  @Allocates(AllocationCost.Linear)
   fun getDecimalValues(timeStampIndex: TimestampIndex): @Domain DoubleArray {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
 
@@ -138,6 +141,7 @@ data class DecimalHistoryValues(
     return values.data.copyOfRange(startIndex, endIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getMinValues(timeStampIndex: TimestampIndex): DoubleArray? {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
 
@@ -147,6 +151,7 @@ data class DecimalHistoryValues(
     return minValues?.data?.copyOfRange(startIndex, endIndex)
   }
 
+  @Allocates(AllocationCost.Linear)
   fun getMaxValues(timeStampIndex: TimestampIndex): DoubleArray? {
     require(timeStampIndex < values.height) { "Invalid time stamp index <$timeStampIndex>. Time stamp count <${values.height}>" }
 

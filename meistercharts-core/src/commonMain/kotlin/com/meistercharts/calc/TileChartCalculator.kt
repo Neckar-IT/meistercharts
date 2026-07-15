@@ -27,6 +27,8 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Size
 import com.meistercharts.state.ChartState
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
@@ -217,6 +219,7 @@ class TileChartCalculator(
   /**
    * Converts the given tile value to a content area value
    */
+  @Allocates(AllocationCost.Constant)
   fun tile2contentArea(tile: @Tile Coordinates): @ContentArea Coordinates {
     val relativeInContentArea = zoomed2contentArea(tile)
 
@@ -226,6 +229,7 @@ class TileChartCalculator(
       )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun tile2contentArea(tileX: @Tile Double, tileY: @Tile Double): @ContentArea Coordinates {
     val relativeInContentAreaX = zoomed2contentAreaX(tileX)
     val relativeInContentAreaY = zoomed2contentAreaY(tileY)
@@ -236,6 +240,7 @@ class TileChartCalculator(
       )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun tile2window(tile: @Tile Coordinates): @Window Coordinates {
     return tileIndex2window(tileIndex, tileSize)
       .plus(
@@ -243,6 +248,7 @@ class TileChartCalculator(
       )
   }
 
+  @Allocates(AllocationCost.Constant)
   fun tile2window(tileX: @Tile Double, tileY: @Tile Double): @Window Coordinates {
     return tileIndex2window(tileIndex, tileSize)
       .plus(

@@ -26,6 +26,8 @@ import com.meistercharts.canvas.stroke
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 
 /**
@@ -100,6 +102,7 @@ class NeckarItFlowPaintable(
     /**
      * Returns the optimal size for a given width
      */
+    @Allocates(AllocationCost.Constant)
     fun calculateSizeForWidth(width: Double): Size {
       return Size(width, optimalHeight(width))
     }

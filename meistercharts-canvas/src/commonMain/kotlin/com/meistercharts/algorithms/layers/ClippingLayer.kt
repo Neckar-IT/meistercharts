@@ -19,6 +19,8 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import com.meistercharts.model.SidesSelection
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 
@@ -52,6 +54,7 @@ class ClippingLayer<T : Layer>(
     super.paint(paintingContext)
   }
 
+  @Allocates(AllocationCost.Constant)
   override val description: String
     get() = "ClippingLayer{${delegate.description}}"
 

@@ -50,7 +50,7 @@ data class LocalTime(
     val formattedHour = hour.toString().padStart(2, '0')
     val formattedMinute = minute.toString().padStart(2, '0')
     val formattedSecond = second.toString().padStart(2, '0')
-    val formattedMillis = millis.toString().padEnd(3, '0')
+    val formattedMillis = millis.toString().padStart(3, '0')
 
     return "$formattedHour:$formattedMinute:$formattedSecond.$formattedMillis"
   }

@@ -11,15 +11,15 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.register
-import org.gradle.language.jvm.tasks.ProcessResources
 import java.io.File
 
 /**
- * Contains all build information variables that can be used in the resources.
+ * Contains all build information variables.
  *
- * The variables are used to replace the values in the HTML files.
+ * Used as manifest attribute names on leaf fat-jars, as Vite env file values, and as the
+ * property keys behind [GitProperty].
  */
-enum class BuildInfoVars(val value: String, val useAsInput: Boolean = true) {
+enum class BuildInfoVars(val value: String) {
   /**
    * The build date (day only) — derived from the last commit date, not the wall clock,
    * so expanded resources stay reproducible and cacheable (#792)
@@ -39,28 +39,52 @@ enum class BuildInfoVars(val value: String, val useAsInput: Boolean = true) {
 }
 
 /**
- * The volatile git properties that are resolved at runtime by version-info.
+ * The git properties that are injected at the artifact edges (image env, fat-jar resource,
+ * serve-time HTML) and resolved at runtime by version-info (#2413).
+ *
+ * Only values that are deterministic per commit are listed — an artifact is a pure function of
+ * the commit. Build date (build-process metadata, breaks rebuild idempotence) and branch
+ * (a commit can belong to multiple branches) are deliberately absent. The short hash is derived
+ * from [Hash] at runtime.
  *
  * Single source of truth: `version-info` generates the runtime `GitProperty` enum
- * (`it.neckar.open.version`) 1:1 from these constants, `version-info-volatile` generates the
- * volatile artifacts (`git.properties` resource for the JVM, `GitInfoJs` source object for JS)
- * carrying one entry per constant.
+ * (`it.neckar.open.version`) 1:1 from these constants. The injection sites read
+ * [envVar]/[propertyKey] from here, so injection and resolution cannot drift.
  */
 enum class GitProperty(
   /**
    * The build-info variable this property exposes; its [BuildInfoVars.value] is the property key
-   * in the generated artifacts.
+   * used in the fat-jar `app-git-info.properties` resource and in `window.__APP_GIT_INFO__`.
    */
   val buildInfoVar: BuildInfoVars,
+  /**
+   * The environment variable injected into service images at image build.
+   */
+  val envVar: String,
+  /**
+   * The JVM system property that overrides the environment variable (highest resolver priority).
+   */
+  val systemProperty: String,
 ) {
-  Hash(BuildInfoVars.GitHash),
-  HashShort(BuildInfoVars.GitHashShort),
-  Branch(BuildInfoVars.Branch),
-  CommitDateTime(BuildInfoVars.GitCommitDateTime),
+  Hash(BuildInfoVars.GitHash, "APP_GIT_HASH", "app.git.hash"),
+  CommitDateTime(BuildInfoVars.GitCommitDateTime, "APP_GIT_COMMIT_DATETIME", "app.git.commitDateTime"),
   ;
 
   val propertyKey: String
     get() = buildInfoVar.value
+}
+
+/**
+ * Returns the environment map injected into service images at image build:
+ * one entry per [GitProperty] ([GitProperty.envVar] to its gated value).
+ *
+ * Off CI and off the main branch the values are stable placeholders (see [getBuildInfoVarValue]),
+ * so local image builds stay reproducible.
+ */
+fun Project.gitPropertyEnvironment(): Map<String, String> {
+  return GitProperty.entries.associate { gitProperty ->
+    gitProperty.envVar to getBuildInfoVarValue(gitProperty.buildInfoVar)
+  }
 }
 
 /**
@@ -74,57 +98,6 @@ fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
     BuildInfoVars.GitHashShort -> if (inCi || onMainBranch) gitHashShort else "0000000"
     BuildInfoVars.Branch -> branch
   }
-}
-
-/**
- * Configures resource expansion with the default values
- */
-fun Project.expandHtmlResourcesWithGitInfo(filePattern: String = "index.html") {
-  val var2value = gitInfoVarMap()
-
-  //matching + configureEach instead of named: the wasmJs task only exists with -PwasmJs=true
-  //and is registered after this method runs - configureEach applies lazily when it appears
-  tasks.withType(ProcessResources::class.java)
-    .matching { it.name == "jsProcessResources" || it.name == "wasmJsProcessResources" }
-    .configureEach {
-      filesMatching(filePattern) {
-        expand(
-          var2value,
-        )
-      }
-    }
-}
-
-/**
- * Returns the map that maps the build infor vars to strings.
- *
- * The returned map can be used to filter files
- */
-fun Project.gitInfoVarMap(): Map<String, String> {
-  val var2value = BuildInfoVars.entries
-    .filter {
-      it.useAsInput
-    }
-    .associate {
-      it.value to getBuildInfoVarValue(it)
-    }
-
-  return var2value
-}
-
-/**
- * Helper function to replace the build information variables.
- *
- * ATTENTION: Try to avoid this method. Use [expandHtmlResourcesWithGitInfo] instead - if possible.
- */
-fun Project.replaceVersionVars(toReplace: String): String {
-  var replaced = toReplace
-
-  BuildInfoVars.entries.forEach {
-    replaced = replaced.replace("""$${it.value}""", getBuildInfoVarValue(it))
-  }
-
-  return replaced
 }
 
 /**

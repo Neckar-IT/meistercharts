@@ -22,6 +22,8 @@ import com.meistercharts.range.LinearValueRange
 import com.meistercharts.state.ChartState
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
 
@@ -59,6 +61,7 @@ class DomainChartCalculator(
     return domain2windowX(domain, domainRangeX)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun domain2window(@Domain @ms domain: Coordinates): @px @Window Coordinates {
     return domain2window(domain, domainRangeX, domainRangeY)
   }
@@ -75,6 +78,7 @@ class DomainChartCalculator(
     return window2domainY(value, domainRangeY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun window2domain(@px @Window value: Coordinates): @Domain Coordinates {
     return window2domain(value, domainRangeX, domainRangeY)
   }
@@ -87,10 +91,12 @@ class DomainChartCalculator(
     return domain2windowY(domain, domainRangeY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2domainDelta(@Zoomed @px coordinates: Coordinates): @Domain Coordinates {
     return zoomed2domainDelta(coordinates, domainRangeX, domainRangeY)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun zoomed2domainDelta(@Zoomed @px distance: Distance): @Domain Coordinates {
     return zoomed2domainDelta(distance, domainRangeX, domainRangeY)
   }

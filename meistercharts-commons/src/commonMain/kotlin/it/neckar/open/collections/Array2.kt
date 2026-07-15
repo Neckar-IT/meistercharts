@@ -86,7 +86,7 @@ data class Array2<TGen>(val width: Int, val height: Int, val data: Array<TGen>) 
         .map {
           val res = it.trim()
           if (res.startsWith(marginChar)) {
-            res.substring(0, res.length)
+            res.substring(1)
           } else {
             res
           }
@@ -244,7 +244,7 @@ data class IntArray2(val width: Int, val height: Int, val data: IntArray) : Iter
         .map {
           val res = it.trim()
           if (res.startsWith(marginChar)) {
-            res.substring(0, res.length)
+            res.substring(1)
           } else {
             res
           }
@@ -402,7 +402,7 @@ data class DoubleArray2(val width: Int, val height: Int, val data: DoubleArray) 
         .map {
           val res = it.trim()
           if (res.startsWith(marginChar)) {
-            res.substring(0, res.length)
+            res.substring(1)
           } else {
             res
           }
@@ -550,7 +550,7 @@ data class FloatArray2(val width: Int, val height: Int, val data: FloatArray) : 
         .map {
           val res = it.trim()
           if (res.startsWith(marginChar)) {
-            res.substring(0, res.length)
+            res.substring(1)
           } else {
             res
           }

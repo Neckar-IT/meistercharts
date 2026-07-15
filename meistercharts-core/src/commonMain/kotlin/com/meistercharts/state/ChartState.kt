@@ -29,6 +29,8 @@ import it.neckar.geometry.Distance
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.number.MayBeZero
 import it.neckar.open.unit.number.Positive
 
@@ -152,6 +154,7 @@ interface ChartState {
   /**
    * Returns the center of the window
    */
+  @Allocates(AllocationCost.Constant)
   val windowCenter: @Window @MayBeZero Coordinates
     get() {
       return Coordinates(windowWidth / 2.0, windowHeight / 2.0)
@@ -367,6 +370,7 @@ class TranslationAddedChartState(
   override val windowTranslationY: Double
     get() = additionalTranslation.y + delegate.windowTranslationY
 
+  @Allocates(AllocationCost.Constant)
   override val windowTranslation: Distance
     get() = additionalTranslation.plus(delegate.windowTranslation)
 }

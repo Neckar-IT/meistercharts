@@ -16,6 +16,8 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.model.Insets
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 
 /**
@@ -74,6 +76,7 @@ enum class SnapConfiguration(
   /**
    * Snaps the value to *physical* pixels
    */
+  @Allocates(AllocationCost.Constant)
   @px
   fun snapInsets(@px insets: Insets): Insets {
     return Insets(

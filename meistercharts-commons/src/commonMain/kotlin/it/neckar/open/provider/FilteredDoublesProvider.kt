@@ -27,7 +27,8 @@
  */
 package it.neckar.open.provider
 
-import it.neckar.open.annotations.CreatesObjects
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.kotlin.lang.DoublesFilter
 import it.neckar.open.kotlin.lang.fastFor
@@ -109,7 +110,7 @@ class FilteredDoublesProvider(
  *
  * Attention: A new object is created!
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun DoublesProvider.filtered(filter: DoublesFilter): FilteredDoublesProvider {
   return FilteredDoublesProvider(this, filter)
 }
@@ -117,7 +118,7 @@ fun DoublesProvider.filtered(filter: DoublesFilter): FilteredDoublesProvider {
 /**
  * Returns only the finite values
  */
-@CreatesObjects
+@Allocates(AllocationCost.Constant)
 fun DoublesProvider.filteredOnlyFinite(): FilteredDoublesProvider {
   return filtered(DoublesFilter.finite)
 }

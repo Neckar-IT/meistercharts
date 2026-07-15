@@ -15,6 +15,8 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.i18n.TextKey
@@ -37,6 +39,7 @@ sealed interface ReferenceEntriesDataMap {
   /**
    * Returns all entries - in a newly instantiated list
    */
+  @Allocates(AllocationCost.Linear)
   fun getAll(referenceEntryIds: @ReferenceEntryIdInt IntArray): Set<ReferenceEntryData> {
     return referenceEntryIds.map { idAsInt: @ReferenceEntryIdInt Int ->
       get(ReferenceEntryId(idAsInt))
@@ -48,6 +51,7 @@ sealed interface ReferenceEntriesDataMap {
     /**
      * Creates a new map containing exactly the provided values
      */
+    @Allocates(AllocationCost.Linear)
     fun of(vararg data: ReferenceEntryData): ReferenceEntriesDataMap {
       return DefaultReferenceEntriesDataMap(data.associateBy { it.id })
     }

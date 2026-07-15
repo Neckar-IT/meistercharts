@@ -19,6 +19,8 @@ import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Side
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
@@ -39,10 +41,12 @@ data class Insets(
   val bottom: Double,
   val left: Double,
 ) {
+  @Allocates(AllocationCost.Constant)
   operator fun plus(other: Insets): @Zoomed Insets {
     return Insets(top + other.top, right + other.right, bottom + other.bottom, left + other.left)
   }
 
+  @Allocates(AllocationCost.Constant)
   operator fun minus(other: Insets): @Zoomed Insets {
     return Insets(top - other.top, right - other.right, bottom - other.bottom, left - other.left)
   }
@@ -50,6 +54,7 @@ data class Insets(
   /**
    * Creates a copy of this [Insets] whose top value is changed to [newTop]
    */
+  @Allocates(AllocationCost.Constant)
   fun withTop(newTop: Double): Insets {
     return Insets(newTop, right, bottom, left)
   }
@@ -57,6 +62,7 @@ data class Insets(
   /**
    * Creates a copy of this [Insets] whose right value is changed to [newRight]
    */
+  @Allocates(AllocationCost.Constant)
   fun withRight(newRight: Double): Insets {
     return Insets(top, newRight, bottom, left)
   }
@@ -64,10 +70,12 @@ data class Insets(
   /**
    * Creates a copy of this [Insets] whose bottom value is changed to [newBottom]
    */
+  @Allocates(AllocationCost.Constant)
   fun withBottom(newBottom: Double): Insets {
     return Insets(top, right, newBottom, left)
   }
 
+  @Allocates(AllocationCost.Constant)
   fun withTopBottom(newTop: Double, newBottom: Double): Insets {
     return Insets(newTop, right, newBottom, left)
   }
@@ -75,6 +83,7 @@ data class Insets(
   /**
    * Creates a copy of this [Insets] whose left value is changed to [newLeft]
    */
+  @Allocates(AllocationCost.Constant)
   fun withLeft(newLeft: Double): Insets {
     return Insets(top, right, bottom, newLeft)
   }
@@ -82,6 +91,7 @@ data class Insets(
   /**
    * Creates a copy of this [Insets] whose [side] value is changed to [newValue]
    */
+  @Allocates(AllocationCost.Constant)
   fun withSide(side: Side, newValue: Double): Insets {
     return when (side) {
       Side.Left -> withLeft(newValue)
@@ -181,21 +191,25 @@ data class Insets(
   /**
    * Returns the top left coordinates
    */
+  @Allocates(AllocationCost.Constant)
   val topLeft: Coordinates
     get() {
       return Coordinates(left, top)
     }
 
+  @Allocates(AllocationCost.Constant)
   val topRight: Coordinates
     get() {
       return Coordinates(right, top)
     }
 
+  @Allocates(AllocationCost.Constant)
   val bottomLeft: Coordinates
     get() {
       return Coordinates(left, bottom)
     }
 
+  @Allocates(AllocationCost.Constant)
   fun plusBottom(additionalBottom: Double): @Zoomed Insets {
     return copy(bottom = bottom + additionalBottom)
   }
@@ -210,6 +224,7 @@ data class Insets(
    * @param selection the `SidesSelection` indicating which sides to include in the returned `Insets` object.
    * @return a new `Insets` object with values only for the selected sides, or an empty `Insets` object if [SidesSelection.none] is passed as an argument.
    */
+  @Allocates(AllocationCost.Constant)
   fun only(selection: SidesSelection): Insets {
     return when (selection) {
       SidesSelection.all -> this
