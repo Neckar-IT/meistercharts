@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.painter
 
 import com.meistercharts.annotations.Window
 import it.neckar.open.unit.other.px
+import it.neckar.open.annotations.Hot
 
 /**
  * Base class for a painter
@@ -38,6 +39,7 @@ interface Painter {
    */
   @px
   @Window
+  @Hot
   fun snapXPosition(@px @Window xValue: Double): Double
 
   /**
@@ -46,6 +48,7 @@ interface Painter {
    */
   @px
   @Window
+  @Hot
   fun snapWidth(@px @Window xValue: Double): Double
 
   /**
@@ -54,6 +57,7 @@ interface Painter {
    */
   @px
   @Window
+  @Hot
   fun snapYPosition(@px @Window yValue: Double): Double
 
   /**
@@ -62,5 +66,6 @@ interface Painter {
    */
   @px
   @Window
+  @Hot
   fun snapHeight(@px @Window yValue: Double): Double
 }

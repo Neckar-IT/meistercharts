@@ -20,6 +20,7 @@ import com.meistercharts.canvas.layout.buffer.CoordinatesMultiBuffer
 import it.neckar.geometry.Coordinates
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.unit.other.px
 
@@ -33,6 +34,7 @@ class Path : PathActions, SupportsPathActions {
 
   override var fillRule: FillRule = FillRule.NonZero
 
+  @Hot
   override fun fillRule(fillRule: FillRule) {
     this.fillRule = fillRule
   }
@@ -51,14 +53,17 @@ class Path : PathActions, SupportsPathActions {
   override val actionCount: Int
     get() = actionTypeOrdinals.size
 
+  @Hot
   override fun actionTypeAt(actionIndex: Int): PathActionType {
     return PathActionType.entries[actionTypeOrdinals.getAt(actionIndex)]
   }
 
+  @Hot
   override fun coordinateXAt(coordinatePairIndex: Int): @px Double {
     return coordinates.x(coordinatePairIndex)
   }
 
+  @Hot
   override fun coordinateYAt(coordinatePairIndex: Int): @px Double {
     return coordinates.y(coordinatePairIndex)
   }
@@ -141,6 +146,7 @@ class Path : PathActions, SupportsPathActions {
    * Returns the x value of the current point of the path - without allocating [Coordinates].
    * Returns [Double.NaN] if the path is empty.
    */
+  @Hot
   fun currentPointXOrNaN(): @px Double {
     return coordinates.lastXOrNaN()
   }
@@ -149,6 +155,7 @@ class Path : PathActions, SupportsPathActions {
    * Returns the y value of the current point of the path - without allocating [Coordinates].
    * Returns [Double.NaN] if the path is empty.
    */
+  @Hot
   fun currentPointYOrNaN(): @px Double {
     return coordinates.lastYOrNaN()
   }
@@ -178,6 +185,7 @@ class Path : PathActions, SupportsPathActions {
    * Returns the x value of the end point of the first action - without allocating [Coordinates].
    * Returns [Double.NaN] if the path is empty.
    */
+  @Hot
   fun firstPointXOrNaN(): @px Double {
     if (isEmpty()) {
       return Double.NaN
@@ -189,6 +197,7 @@ class Path : PathActions, SupportsPathActions {
    * Returns the y value of the end point of the first action - without allocating [Coordinates].
    * Returns [Double.NaN] if the path is empty.
    */
+  @Hot
   fun firstPointYOrNaN(): @px Double {
     if (isEmpty()) {
       return Double.NaN
@@ -212,6 +221,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Returns the coordinate-pair index of the last [PathActionType.MoveTo] action - or -1 if there is none
    */
+  @Hot
   private fun lastMoveToCoordinatePairIndex(): Int {
     var coordinatePairIndex = coordinates.size
 
@@ -227,16 +237,19 @@ class Path : PathActions, SupportsPathActions {
     return -1
   }
 
+  @Hot
   override fun beginPath() {
     actionTypeOrdinals.clear()
     coordinates.resize(0)
   }
 
+  @Hot
   override fun moveTo(x: Double, y: Double) {
     actionTypeOrdinals.add(PathActionType.MoveTo.ordinal)
     coordinates.add(x, y)
   }
 
+  @Hot
   override fun lineTo(x: Double, y: Double) {
     actionTypeOrdinals.add(PathActionType.LineTo.ordinal)
     coordinates.add(x, y)
@@ -245,6 +258,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Adds a quadratic curve
    */
+  @Hot
   override fun quadraticCurveTo(control1X: Double, control1Y: Double, x: Double, y: Double) {
     actionTypeOrdinals.add(PathActionType.QuadraticCurveTo.ordinal)
     coordinates.add(control1X, control1Y, x, y)
@@ -253,11 +267,13 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Adds a bezier curve
    */
+  @Hot
   override fun bezierCurveTo(control1X: Double, control1Y: Double, control2X: Double, control2Y: Double, x: Double, y: Double) {
     actionTypeOrdinals.add(PathActionType.BezierCurveTo.ordinal)
     coordinates.add(control1X, control1Y, control2X, control2Y, x, y)
   }
 
+  @Hot
   @Deprecated("not yet implemented!")
   override fun arcTo(controlX: Double, controlY: Double, x: Double, y: Double, radius: Double) {
     TODO("Not yet implemented")
@@ -271,6 +287,7 @@ class Path : PathActions, SupportsPathActions {
     //When implementing, store the additional arc parameters out of band (e.g. in a separate buffer).
   }
 
+  @Hot
   fun isEmpty(): Boolean {
     return actionTypeOrdinals.isEmpty()
   }
@@ -279,6 +296,7 @@ class Path : PathActions, SupportsPathActions {
    * Removes the last [count] actions - including their coordinate pairs.
    * E.g. used to strip temporary fill-closing segments after filling ([BinaryPainter]).
    */
+  @Hot
   fun removeLastActions(count: Int) {
     repeat(count) {
       val lastActionType = actionTypeAt(actionCount - 1)
@@ -302,6 +320,7 @@ class Path : PathActions, SupportsPathActions {
   /**
    * Closes the path
    */
+  @Hot
   override fun closePath() {
     val coordinatePairIndex = lastMoveToCoordinatePairIndex()
     if (coordinatePairIndex < 0) {

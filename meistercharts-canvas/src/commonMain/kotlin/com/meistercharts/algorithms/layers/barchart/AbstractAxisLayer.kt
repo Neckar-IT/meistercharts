@@ -36,6 +36,9 @@ import com.meistercharts.model.Vicinity
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.trace
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.unit.other.px
 
 /**
@@ -44,6 +47,7 @@ import it.neckar.open.unit.other.px
  */
 abstract class AbstractAxisLayer : AbstractLayer() {
 
+  @Hot
   abstract override fun paintingVariables(): AxisPaintingVariables
 
   abstract val configuration: AxisConfiguration
@@ -51,6 +55,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Translates the graphics context to the axis origin - including the title (using the painting properties)
    */
+  @Hot
   fun CanvasRenderingContext.translateToAxisTitleOrigin() {
     val gc = this.canvas.gc
     when (configuration.side) {
@@ -62,6 +67,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Translates to the start at the *center* of the axis line.
    */
+  @Hot
   fun CanvasRenderingContext.translateToAxisLineOrigin() {
     val gc = this.canvas.gc
     when (configuration.side) {
@@ -73,6 +79,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Translates to the "inner" origin of the axis - without a title
    */
+  @Hot
   fun CanvasRenderingContext.translateToAxisInnerOrigin() {
     val gc = this.canvas.gc
     when (configuration.side) {
@@ -85,6 +92,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints the title
    */
+  @Hot
   fun paintTitle(paintingContext: LayerPaintingContext) {
     val titleText = configuration.resolveTitle(paintingContext) ?: return
     paintTitleAtCenter(titleText, paintingContext)
@@ -93,14 +101,17 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints the title at the center of the axis
    */
+  @Hot
   fun paintTitleAtCenter(titleText: String, paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
     gc.translateToAxisTitleOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisTitleOrigin", color = Color.brown())
     }
 
+    @HotAllocation("Once per frame per axis title - the fragment-to-descriptor conversion is cached")
     gc.font(configuration.titleFont)
     gc.fillStyle(configuration.titleColor())
 
@@ -113,6 +124,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         debugAxisCenterLocation(paintingContext, gc)
         //to the center height of the canvas
         gc.rotateDegrees(-90.0)
+        @HotAllocation("Once per frame per axis title - platform text rendering")
         gc.fillText(titleText, 0.0, 0.0, Direction.TopCenter, maxWidth = maxTextWidth) //TopCenter because we rotated the view!
       }
 
@@ -121,6 +133,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         debugAxisCenterLocation(paintingContext, gc)
         //to the center height of the canvas
         gc.rotateDegrees(-90.0)
+        @HotAllocation("Once per frame per axis title - platform text rendering")
         gc.fillText(titleText, 0.0, 0.0, Direction.BottomCenter, maxWidth = maxTextWidth)
       }
 
@@ -128,6 +141,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         gc.translate(axisCenter, 0.0)
         debugAxisCenterLocation(paintingContext, gc)
         //To the center width of the canvas
+        @HotAllocation("Once per frame per axis title - platform text rendering")
         gc.fillText(titleText, 0.0, 0.0, Direction.TopCenter, maxWidth = maxTextWidth)
       }
 
@@ -135,13 +149,16 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         gc.translate(axisCenter, 0.0)
         debugAxisCenterLocation(paintingContext, gc)
         //To the center width of the canvas
+        @HotAllocation("Once per frame per axis title - platform text rendering")
         gc.fillText(titleText, 0.0, 0.0, Direction.BottomCenter, maxWidth = maxTextWidth)
       }
     }
   }
 
+  @Hot
   private fun debugAxisCenterLocation(paintingContext: LayerPaintingContext, gc: CanvasRenderingContext) {
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisCenter", color = Color.green())
     }
   }
@@ -149,6 +166,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints the axis - respects the paint range from the style
    */
+  @Hot
   fun paintAxisLine(paintingContext: LayerPaintingContext) {
     if (configuration.axisLineWidth == 0.0) {
       return
@@ -158,6 +176,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
 
     gc.translateToAxisLineOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisLineOrigin", color = Color.cadetblue())
     }
 
@@ -179,6 +198,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
    *
    * Paint from left to right. Always translate the gc after each segment
    */
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     logger.trace { "${this::class} paint with side ${configuration.side}" }
 
@@ -193,6 +213,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints horizontally (at the bottom).
    */
+  @Hot
   fun paintBottom(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
@@ -210,6 +231,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     //To the top of the title
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
@@ -220,6 +242,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         //to the center of the axis
         gc.translate(0.0, configuration.axisLineWidth / 2.0 + configuration.tickLength + configuration.tickLabelGap)
         //to text top
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
       }
 
@@ -230,12 +253,14 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         //to the top side of the axis
         gc.translate(0.0, -configuration.tickLabelGap - configuration.tickLength)
         //to text bottom
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsHorizontally(paintingContext, Direction.BottomCenter)
       }
     }
   }
 
 
+  @Hot
   fun paintTop(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
@@ -249,6 +274,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
@@ -259,6 +285,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         //to the center of the axis
         gc.translate(0.0, -configuration.axisLineWidth / 2.0 - configuration.tickLength - configuration.tickLabelGap)
         //to text bottom
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsHorizontally(paintingContext, Direction.BottomCenter)
       }
 
@@ -269,6 +296,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         //to the bottom side of the axis
         gc.translate(0.0, configuration.tickLabelGap + configuration.tickLength)
         //to text top
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsHorizontally(paintingContext, Direction.TopCenter)
       }
     }
@@ -277,6 +305,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints vertically (at the left)
    */
+  @Hot
   fun paintLeft(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
@@ -290,6 +319,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
@@ -298,11 +328,13 @@ abstract class AbstractAxisLayer : AbstractLayer() {
       Vicinity.Outside -> {
         gc.translate(paintingVariables().tickValueLabelMaxWidth, 0.0)
         //to the right side of the tick value labels
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterRight)
       }
 
       Vicinity.Inside -> {
         gc.translate(configuration.axisLineWidth + configuration.tickLabelGap + configuration.tickLength, 0.0)
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterLeft)
       }
     }
@@ -311,6 +343,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paints vertically (at the right)
    */
+  @Hot
   fun paintRight(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
@@ -324,6 +357,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
     }
     gc.translateToAxisInnerOrigin()
     paintingContext.ifDebug(DebugFeature.ShowAnchors) {
+      @HotAllocation("Debug-only overlay - executes only when DebugFeature.ShowAnchors is enabled")
       gc.paintLocation(label = "axisInner", color = Color.fuchsia())
     }
 
@@ -334,6 +368,7 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         @px val maxTickValueWidth = paintingVariables().tickValueLabelMaxWidth
         gc.translate(-maxTickValueWidth, 0.0)
         //to the left side of the tick value labels
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterLeft)
         gc.translate(-configuration.tickLabelGap - configuration.tickLength - configuration.axisLineWidth / 2.0, 0.0)
       }
@@ -345,11 +380,13 @@ abstract class AbstractAxisLayer : AbstractLayer() {
         //to the left side of the axis
         gc.translate(-configuration.tickLabelGap - configuration.tickLength, 0.0)
         //to the right side of the label
+        @HotBoundary("Axis subclass dispatch - deliberately un-colored abstract, see declaration")
         paintTicksWithLabelsVertically(paintingContext, Direction.CenterRight)
       }
     }
   }
 
+  @Hot
   private fun fillBackground(paintingContext: LayerPaintingContext, side: Side) {
     configuration.background.get()?.let { background ->
       val gc = paintingContext.gc
@@ -369,12 +406,18 @@ abstract class AbstractAxisLayer : AbstractLayer() {
   /**
    * Paint (only) the ticks and labels - not the axis!
    * Must be called with the graphics context translated to the *edge* of the tick value labels
+   *
+   * Deliberately not `@Hot`: coloring this abstract declaration would force the marker onto all subclass
+   * implementations at once (incl. the label-painter chains of `CategoryAxisLayer` and `ValueAxisWithOffsetLayer`,
+   * which are colored in their own batch). The dispatch is acknowledged with `@HotBoundary` at the call sites.
    */
   abstract fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction)
 
   /**
    * Paint (only) the ticks and labels - not the axis!
    * Must be called with the graphics context translated to the *edge* of the tick value labels
+   *
+   * Deliberately not `@Hot`: see [paintTicksWithLabelsVertically].
    */
   abstract fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction)
 

@@ -17,6 +17,7 @@ package com.meistercharts.range
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.Positive
 import kotlin.math.log10
 import kotlin.math.pow
@@ -49,6 +50,7 @@ class LogarithmicValueRange(
    */
   val logDelta: Double = logEnd - logStart
 
+  @Hot
   override fun toDomainRelative(domainValue: @Domain Double): @DomainRelative Double {
     if (domainValue <= 0.0) {
       //values less than or equal to 0 are not supported -> fall back to 0 percent of the domain
@@ -58,6 +60,7 @@ class LogarithmicValueRange(
     return delta / logDelta
   }
 
+  @Hot
   override fun toDomain(domainRelative: @DomainRelative Double): @Domain Double {
     val logValue = domainRelative * logDelta + logStart
     return 10.0.pow(logValue)

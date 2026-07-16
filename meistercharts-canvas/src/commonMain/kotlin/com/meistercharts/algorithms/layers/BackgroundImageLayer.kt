@@ -21,8 +21,9 @@ import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
-import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 
 /**
  * Shows a background image - in the window.
@@ -39,16 +40,21 @@ class BackgroundImageLayer(
     configuration.additionalConfiguration()
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     gc.fill(configuration.background)
-    gc.fillRect(gc.boundingBox)
+    gc.fillRect(0.0, 0.0, gc.width, gc.height)
 
     configuration.backgroundImage?.let {
+      @HotAllocation("optional static background image - one polymorphic bounding-box query per frame, not per data point")
       val imageSize = it.boundingBox(paintingContext).size
+
+      @HotAllocation("one Size for the aspect-ratio fit per frame, not per data point")
       val boundingBoxSize = gc.canvasSize.containWithAspectRatio(imageSize.aspectRatio)
 
-      it.paintInBoundingBox(paintingContext, Coordinates.of(0.0, gc.height), Direction.BottomLeft, boundingBoxSize, ObjectFit.Contain)
+      @HotAllocation("optional static background image - one polymorphic Paintable.paintInBoundingBox per frame, not per data point")
+      it.paintInBoundingBox(paintingContext, 0.0, gc.height, Direction.BottomLeft, 0.0, 0.0, boundingBoxSize.width, boundingBoxSize.height, ObjectFit.Contain)
     }
   }
 

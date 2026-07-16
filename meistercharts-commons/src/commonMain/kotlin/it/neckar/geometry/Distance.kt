@@ -27,6 +27,7 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.kotlin.lang.or0ifNaN
@@ -137,6 +138,7 @@ data class Distance(
     return this
   }
 
+  @Hot
   fun isZero(): Boolean {
     return x == 0.0 && y == 0.0
   }

@@ -27,6 +27,7 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.si.rad
 import kotlin.math.tan
@@ -56,12 +57,14 @@ interface Shape : Box {
   /**
    * The width which might be negative
    */
+  @Hot
   @MayBeNegative
   override fun getWidth(): Double = size.width
 
   /**
    * The height which might be negative
    */
+  @Hot
   @MayBeNegative
   override fun getHeight(): Double = size.height
 

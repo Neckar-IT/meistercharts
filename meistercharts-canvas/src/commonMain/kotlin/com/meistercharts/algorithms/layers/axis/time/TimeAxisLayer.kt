@@ -62,6 +62,10 @@ import it.neckar.open.formatting.dateTimeFormatIso8601
 import it.neckar.open.formatting.secondMillisFormat
 import it.neckar.open.formatting.timeFormat
 import it.neckar.open.formatting.yearFormat
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.betweenInclusive
 import it.neckar.open.provider.MultiProvider
@@ -98,6 +102,7 @@ class TimeAxisLayer(
   override val type: LayerType
     get() = LayerType.Content
 
+  @Hot
   override fun paintingVariables(): TimeAxisPaintingVariables {
     return paintingVariables
   }
@@ -111,6 +116,7 @@ class TimeAxisLayer(
     /**
      * Clears all variables
      */
+    @Hot
     override fun calculate(paintingContext: LayerPaintingContext) {
       reset()
 
@@ -132,6 +138,7 @@ class TimeAxisLayer(
     /**
      * Calculate the tick values that are painted
      */
+    @Hot
     private fun calculateTickValues(paintingContext: LayerPaintingContext, style: Configuration) {
       return when (style.orientation) {
         Orientation.Vertical -> throw UnsupportedOperationException("Only implemented for horizontal orientation at the moment!")
@@ -142,6 +149,7 @@ class TimeAxisLayer(
     /**
      * Calculates the tick values
      */
+    @Hot
     private fun calculateTickValuesValueRangeHorizontally(paintingContext: LayerPaintingContext, style: Configuration) {
       //Note: in order to know how many formatted ticks may be displayed along this axis
       //we need to know the text length of one formatted tick. However, to compute the
@@ -166,23 +174,33 @@ class TimeAxisLayer(
       /**
        * Calculate the offset ticks
        */
+      @HotAllocation("Once per frame per layer - calculator factory allocation. Fix candidate: cache in ChartState (TODO exists at the factory)")
       val timeChartCalculator = paintingContext.chartSupport.timeChartCalculator(contentAreaTimeRange)
 
       //The distance between the offset ticks
-      offsetTickDistance = TimeTickDistance.forOffsets(endTimestamp - startTimestamp)
-      val offsetTicks = offsetTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
+      @HotAllocation("Once per frame per layer - allocates the selected TimeTickDistance instance")
+      val newOffsetTickDistance = TimeTickDistance.forOffsets(endTimestamp - startTimestamp)
+      offsetTickDistance = newOffsetTickDistance
+
+      @HotAllocation("Once per frame per layer - allocates the offset tick list (a handful of entries). Fix candidate: fill-into variant on TimeTickDistance")
+      val offsetTicks = newOffsetTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
       offsetTickLabels.prepare(offsetTicks.size)
       offsetTicks.fastForEachIndexed { index, value ->
-        offsetTickLabels.set(index, value, offsetTickDistance.formatAsOffset(value, paintingContext.i18nConfiguration))
+        @HotAllocation("Once per offset tick per frame - formatted offset label string. Fix candidate: cache formatted labels per tick value; tick values only change on zoom/pan")
+        val formatted = newOffsetTickDistance.formatAsOffset(value, paintingContext.i18nConfiguration)
+        offsetTickLabels.set(index, value, formatted)
       }
 
       //The minimum tick distance that is supported
       @Domain @ms val minTickDistance = timeChartCalculator.zoomed2timeDeltaX(calculateTickValueLabelWidth())
 
-      val smallestPossibleTickDistance = offsetTickDistance.smallestPossibleTickDistance()
+      val smallestPossibleTickDistance = newOffsetTickDistance.smallestPossibleTickDistance()
+
+      @HotAllocation("Once per frame per layer - allocates the selected TimeTickDistance instance")
       val timeTickDistance: TimeTickDistance = TimeTickDistance.forTicks(minTickDistance).coerceAtLeast(smallestPossibleTickDistance)
 
+      @HotAllocation("Once per frame per layer - allocates the tick list, size = visible tick count. Fix candidate: fill-into variant on TimeTickDistance")
       val allTicks: @ms DoubleArrayList = timeTickDistance.calculateTicks(startTimestamp, endTimestamp, paintingContext.timeZone)
 
 
@@ -197,17 +215,22 @@ class TimeAxisLayer(
         if (offsetTicks.fastContains(value)) {
           tickLabels.set(index, Double.NaN, "-") //no value shall be painted, there is an offset tick already
         } else {
-          tickLabels.set(index, value, formatter.format(value, timeTickDistance, paintingContext.i18nConfiguration))
+          @HotAllocation("Once per tick per frame - formatted tick label string. Fix candidate: cache formatted labels per tick value; tick values only change on zoom/pan")
+          val formatted = formatter.format(value, timeTickDistance, paintingContext.i18nConfiguration)
+          tickLabels.set(index, value, formatted)
         }
       }
     }
   }
 
+  @Hot
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {
     throw UnsupportedOperationException("Not implemented vertically!")
   }
 
+  @Hot
   override fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction) {
+    @HotAllocation("Once per frame per layer - calculator factory allocation. Fix candidate: cache in ChartState (TODO exists at the factory)")
     val timeChartCalculator = paintingContext.chartSupport.timeChartCalculator(paintingVariables.contentAreaTimeRange)
 
     //TODO why not in painting variables?
@@ -219,6 +242,7 @@ class TimeAxisLayer(
       gc.fillStyle(configuration.tickLabelColor())
       gc.strokeStyle(configuration.lineColor())
       gc.lineWidth = configuration.tickLineWidth
+      @HotAllocation("Once per frame per axis - the fragment-to-descriptor conversion is cached")
       gc.font(configuration.tickFont())
 
       //Save the total height
@@ -242,6 +266,7 @@ class TimeAxisLayer(
 
         //Debug output the bounds
         val snappedX = paintingContext.snapConfiguration.snapXValue(currentX)
+        @HotAllocation("Once per tick per frame - platform text rendering; tick count is bounded by axis length / label width")
         gc.fillText(tickValueLabel, snappedX, 0.0, textAnchor, 0.0, 0.0, maxTickValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
       }
     }
@@ -256,6 +281,7 @@ class TimeAxisLayer(
    * Paints the offset area.
    * GC at the *top* of the offset area
    */
+  @Hot
   private fun TimeChartCalculator.paintOffsetAreaHorizontal(paintingContext: LayerPaintingContext) {
     val timeZone = paintingContext.timeZone
     val gc = paintingContext.gc
@@ -294,6 +320,7 @@ class TimeAxisLayer(
         }
 
         //Paint the background
+        @HotAllocation("Once per offset tick per frame - date decomposition to estimate the global index; offset tick count is a handful per frame")
         val estimatedIndex = paintingVariables.offsetTickDistance.calculateEstimatedIndex(tickValue, timeZone)
         gc.fill(configuration.offsetAreaFills.valueAt(estimatedIndex))
         gc.fillRectCoordinates(minX, 0.0, maxX, configuration.offsetAreaSize)
@@ -307,9 +334,11 @@ class TimeAxisLayer(
         if (availableWidth > textWidth) {
           //We have enough space for the label, paint at center
           @Window val textCenter = minX + (maxX - minX) / 2.0
+          @HotAllocation("Once per offset tick per frame - the fragment-to-descriptor conversion is cached")
           gc.font(configuration.offsetTickFont())
           gc.fill(configuration.offsetTickLabelColor)
           val snappedX = paintingContext.snapConfiguration.snapXValue(textCenter)
+          @HotAllocation("Once per offset tick per frame - platform text rendering; offset tick count is a handful per frame")
           gc.fillText(formatted, snappedX, configuration.offsetAreaSize / 2.0, Direction.Center)
         }
       }
@@ -340,19 +369,26 @@ class TimeAxisLayer(
       }
 
       //Paint the background
-      gc.fill(configuration.offsetAreaFills.valueAt(paintingVariables.offsetTickDistance.calculateEstimatedIndex(millis, timeZone)))
+      @HotAllocation("Once per frame per layer (no visible offset tick) - date decomposition to estimate the global index")
+      val estimatedIndex = paintingVariables.offsetTickDistance.calculateEstimatedIndex(millis, timeZone)
+      gc.fill(configuration.offsetAreaFills.valueAt(estimatedIndex))
       gc.fillRectCoordinates(paintingVariables.axisStart, 0.0, paintingVariables.axisEnd, configuration.offsetAreaSize)
 
       val x = gc.width / 2.0
+      @HotAllocation("Once per frame per layer (no visible offset tick) - the fragment-to-descriptor conversion is cached")
       gc.font(configuration.offsetTickFont())
       gc.fill(configuration.offsetTickLabelColor)
-      gc.fillText(paintingVariables.offsetTickDistance.formatAsOffset(millis, paintingContext.i18nConfiguration), x, configuration.offsetAreaSize / 2.0, Direction.Center)
+      @HotAllocation("Once per frame per layer (no visible offset tick) - formatted offset label string")
+      val formattedOffset = paintingVariables.offsetTickDistance.formatAsOffset(millis, paintingContext.i18nConfiguration)
+      @HotAllocation("Once per frame per layer (no visible offset tick) - platform text rendering")
+      gc.fillText(formattedOffset, x, configuration.offsetAreaSize / 2.0, Direction.Center)
     }
   }
 
   /**
    * Returns the max width for the tick value labels depending on the side of the axis
    */
+  @Hot
   private fun calculateTickValueLabelWidth(): @px Double {
     return when (configuration.side) {
       Side.Bottom -> paintingVariables.tickValueLabelMaxWidth
@@ -442,6 +478,7 @@ interface TimeAxisTickFormat {
    * @param tickDistance the distance between two ticks
    * @param i18nConfiguration the locale to be used to format the tick
    */
+  @Allocates(AllocationCost.Constant)
   fun format(tick: @ms Double, tickDistance: TimeTickDistance, i18nConfiguration: I18nConfiguration): String
 }
 

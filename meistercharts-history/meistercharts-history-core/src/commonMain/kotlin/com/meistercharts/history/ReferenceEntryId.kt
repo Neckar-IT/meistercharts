@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.MultiProvider
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -25,10 +26,12 @@ import kotlin.jvm.JvmInline
 @Serializable
 @JvmInline
 value class ReferenceEntryId(val id: Int) {
+  @Hot
   fun isPending(): Boolean {
     return this == Pending
   }
 
+  @Hot
   fun isNoValue(): Boolean {
     return this == NoValue
   }

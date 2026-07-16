@@ -17,6 +17,8 @@ package com.meistercharts.history
 
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.cache
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.i18n.TextKey
@@ -34,6 +36,7 @@ sealed interface ReferenceEntriesDataMap {
   /**
    * Returns the reference data for the provided id
    */
+  @Hot
   fun get(id: ReferenceEntryId): ReferenceEntryData?
 
   /**
@@ -73,6 +76,7 @@ sealed interface ReferenceEntriesDataMap {
   @Serializable
   @SerialName("Empty")
   data object Empty : ReferenceEntriesDataMap {
+    @Hot
     override fun get(id: ReferenceEntryId): ReferenceEntryData? {
       return null
     }
@@ -86,10 +90,21 @@ sealed interface ReferenceEntriesDataMap {
   data object Generated : ReferenceEntriesDataMap {
     private val cache = cache<ReferenceEntryId, ReferenceEntryData>("ReferenceEntriesDataMap.generated", 100)
 
+    @Hot
     override fun get(id: ReferenceEntryId): ReferenceEntryData {
-      return cache.getOrStore(id) {
-        ReferenceEntryData(id, TextKey.simple("Label $id"))
+      @HotAllocation("Cache miss only - the generated demo data is created once per id and cached")
+      val data = cache.getOrStore(id) {
+        createGeneratedData(id)
       }
+      return data
+    }
+
+    /**
+     * Creates the generated demo data for the provided id.
+     */
+    @Allocates(AllocationCost.Constant)
+    private fun createGeneratedData(id: ReferenceEntryId): ReferenceEntryData {
+      return ReferenceEntryData(id, TextKey.simple("Label $id"))
     }
   }
 }
@@ -107,6 +122,7 @@ data class DefaultReferenceEntriesDataMap(
   internal val entries: Map<ReferenceEntryId, ReferenceEntryData>,
 ) : ReferenceEntriesDataMap {
 
+  @Hot
   override fun get(id: ReferenceEntryId): ReferenceEntryData? {
     return this.entries[id]
   }

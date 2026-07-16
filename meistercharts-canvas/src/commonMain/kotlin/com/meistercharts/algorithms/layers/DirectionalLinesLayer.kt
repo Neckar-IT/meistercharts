@@ -31,6 +31,7 @@ import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Side
 import it.neckar.geometry.VerticalAlignment
 import com.meistercharts.model.Vicinity
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.IterationOrder
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.CoordinatesProvider1
@@ -141,6 +142,7 @@ class DirectionalLinesLayer(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 

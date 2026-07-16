@@ -19,6 +19,7 @@ import it.neckar.open.unit.number.IsFinite
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Hot
 
 /**
  * Represents painters that paints a line.
@@ -28,6 +29,7 @@ interface LinePainter {
   /**
    * Begins a new line
    */
+  @Hot
   fun begin(gc: CanvasRenderingContext)
 
   /**
@@ -37,6 +39,7 @@ interface LinePainter {
    *
    * Attention: Do *not* call with NaN or Infinity
    */
+  @Hot
   fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed @IsFinite Double, y: @Zoomed @IsFinite Double)
 
   fun addCoordinate(gc: CanvasRenderingContext, location: @Zoomed @IsFinite Coordinates) {
@@ -46,5 +49,6 @@ interface LinePainter {
   /**
    * Finishes the line previously defined by [addCoordinates]
    */
+  @Hot
   fun paint(gc: CanvasRenderingContext)
 }

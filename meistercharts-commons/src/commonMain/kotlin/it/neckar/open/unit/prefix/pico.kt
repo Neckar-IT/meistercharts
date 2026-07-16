@@ -51,7 +51,7 @@ import kotlin.reflect.KClass
 )
 @MustBeDocumented
 @Suppress("ClassName")
-@Prefix(0.000001)
+@Prefix(0.000_000_000_001)
 annotation class pico(
   /**
    * The base unit

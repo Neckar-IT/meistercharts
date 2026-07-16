@@ -21,6 +21,8 @@ import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.unit.si.rad
 
 /**
@@ -93,7 +95,9 @@ class CurrentTransform {
       matrix.d = value
     }
 
+  @Hot
   fun rotate(theta: @rad Double) {
+    @HotAllocation("Only on gc.rotate calls - one temporary Matrix per rotation; axis titles rotate twice per frame per vertical axis. Fix candidate: prerotate in place without the temp Matrix")
     matrix.prerotate(theta)
   }
 
@@ -136,6 +140,7 @@ class CurrentTransform {
    *
    * ATTENTION: Scale is respected!
    */
+  @Hot
   fun translateScaled(deltaX: Double, deltaY: Double) {
     if (deltaX != 0.0) {
       translationX += deltaX * scaleX
@@ -148,6 +153,7 @@ class CurrentTransform {
   /**
    * Translates by the given amount - does *not* respect the current scale
    */
+  @Hot
   fun translatePhysical(deltaX: @PhysicalPixel Double, deltaY: @PhysicalPixel Double) {
     translationX += deltaX
     translationY += deltaY

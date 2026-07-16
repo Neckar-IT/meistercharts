@@ -21,14 +21,18 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
+import it.neckar.open.annotations.Hot
 
 /**
  * Provides the colors for the status
  */
 fun interface ReferenceEntryStatusColorProvider {
   /**
-   * Returns the color for the given reference entry id
+   * Returns the color for the given reference entry id.
+   *
+   * Is called once per segment in the paint phase - implementations must not allocate.
    */
+  @Hot
   fun color(dataSeriesIndex: ReferenceEntryDataSeriesIndex, value: ReferenceEntryId, statusEnumSet: HistoryEnumSet, historyConfiguration: HistoryConfiguration): Color
 
   companion object {

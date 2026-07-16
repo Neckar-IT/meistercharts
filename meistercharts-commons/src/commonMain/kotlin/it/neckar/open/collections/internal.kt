@@ -27,6 +27,8 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.Hot
+
 @PublishedApi
 internal infix fun Int.divCeil(that: Int): Int = if (this % that != 0) (this / that) + 1 else (this / that)
 
@@ -74,6 +76,7 @@ internal fun <T> arraycopy(src: Array<T>, srcPos: Int, dst: Array<T>, dstPos: In
 internal fun arraycopy(src: ByteArray, srcPos: Int, dst: ByteArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)
 
+@Hot
 @IgnorableReturnValue
 internal fun arraycopy(src: IntArray, srcPos: Int, dst: IntArray, dstPos: Int, size: Int) =
   src.copyInto(dst, dstPos, srcPos, srcPos + size)

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.color
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -28,6 +29,7 @@ data class LinearGradient(
 
   val color1: Color
 ) : CanvasPaintProvider {
+  @Hot
   override fun toCanvasPaint(x0: @px Double, y0: @px Double, x1: @px Double, y1: @px Double): CanvasPaint {
     return CanvasLinearGradient(x0, y0, x1, y1, color0, color1)
   }

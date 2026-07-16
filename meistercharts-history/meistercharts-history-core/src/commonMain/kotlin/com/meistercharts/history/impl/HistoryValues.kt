@@ -35,6 +35,7 @@ import com.meistercharts.history.annotations.ForOnePointInTime
 import com.meistercharts.history.impl.HistoryChunk.Companion.isPending
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.DoubleArray2
 import it.neckar.open.collections.IntArray2
@@ -184,6 +185,7 @@ data class HistoryValues(
     return decimalHistoryValues.getDecimalValue(dataSeriesIndex, timeStampIndex)
   }
 
+  @Hot
   fun getEnumValue(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): HistoryEnumSet {
     return enumHistoryValues.getEnumValue(dataSeriesIndex, timeStampIndex)
   }
@@ -191,6 +193,7 @@ data class HistoryValues(
   /**
    * Returns the reference entry id (measured or most-of-the-time)
    */
+  @Hot
   fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryId {
     return referenceEntryHistoryValues.getReferenceEntryId(dataSeriesIndex, timeStampIndex)
   }
@@ -199,10 +202,12 @@ data class HistoryValues(
    * Returns the count of different IDs.
    * Returns [ReferenceEntryDifferentIdsCount.one] for measured values.
    */
+  @Hot
   fun getReferenceEntryDifferentIdsCount(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount {
     return referenceEntryHistoryValues.getDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  @Hot
   fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
     return referenceEntryHistoryValues.getReferenceEntryStatus(dataSeriesIndex, timeStampIndex)
   }
@@ -263,6 +268,7 @@ data class HistoryValues(
   /**
    * Returns the [ReferenceEntryData] for the provided [dataSeriesIndex] and [id]
    */
+  @Hot
   fun getReferenceEntryData(@Suppress("UNUSED_PARAMETER") dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
     return referenceEntryHistoryValues.getData(id)
   }
@@ -311,6 +317,7 @@ data class HistoryValues(
   /**
    * Returns the enum value that has been measured most of the time - falls back to the measured value
    */
+  @Hot
   fun getEnumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumOrdinal {
     return enumHistoryValues.getEnumOrdinalMostTime(dataSeriesIndex, timeStampIndex)
   }

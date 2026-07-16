@@ -23,6 +23,7 @@ import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
 import com.meistercharts.model.SidesSelection
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 import kotlin.math.min
@@ -76,6 +77,7 @@ open class RectangleAreaPainter(
     return this
   }
 
+  @Hot
   fun paintArea(gc: CanvasRenderingContext, @Window @px fromX: Double, @Window @px fromY: Double, @Window @px toX: Double, @Window @px toY: Double) {
     @px @Window val largerY = max(fromY, toY)
     @px @Window val smallerY = min(fromY, toY)

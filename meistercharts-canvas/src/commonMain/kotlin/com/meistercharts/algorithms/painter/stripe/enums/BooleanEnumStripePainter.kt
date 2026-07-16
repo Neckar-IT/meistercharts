@@ -25,6 +25,7 @@ import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import it.neckar.open.annotations.Hot
 
 /**
  * Uses the fill and stroke settings of the context, so set the colors before calling BooleanEnumStripePainter.paint()
@@ -41,6 +42,7 @@ class BooleanEnumStripePainter(
    */
   private val binaryPainter: BinaryPainter = BinaryPainter(false, false, 0.0, 0.0, 0.0)
 
+  @Hot
   override fun layoutBegin(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
     super.layoutBegin(paintingContext, height, dataSeriesIndex, historyConfiguration)
     //Additional verifications
@@ -65,11 +67,13 @@ class BooleanEnumStripePainter(
     binaryPainter.reset(baseLineY = height, maxWidth = paintingContext.width, maxHeight = height)
   }
 
+  @Hot
   override fun beginPainting(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex) {
     super.beginPainting(paintingContext, dataSeriesIndex)
     binaryPainter.reset()
   }
 
+  @Hot
   override fun paintSegment(paintingContext: LayerPaintingContext, dataSeriesIndex: EnumDataSeriesIndex, segment: EnumStripePainterPaintingVariablesForOneDataSeries.Segment) {
     @Window val startX = segment.startX
     @Window val endX = segment.endX
@@ -107,6 +111,7 @@ class BooleanEnumStripePainter(
     binaryPainter.addCoordinate(gc, endX, if (current) 0.0 else height)
   }
 
+  @Hot
   override fun finishPainting(paintingContext: LayerPaintingContext) {
     super.finishPainting(paintingContext)
     binaryPainter.finish(paintingContext.gc)

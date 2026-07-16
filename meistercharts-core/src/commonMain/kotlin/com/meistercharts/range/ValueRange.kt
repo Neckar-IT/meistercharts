@@ -17,6 +17,7 @@ package com.meistercharts.range
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import it.neckar.open.annotations.Hot
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
@@ -95,11 +96,13 @@ abstract class ValueRange protected constructor(
    * ATTENTION: Only works for *absolute* domain values.
    * For deltas between two domain values use [LinearValueRange.deltaToDomainRelative] instead.
    */
+  @Hot
   abstract fun toDomainRelative(domainValue: @Domain Double): @DomainRelative Double
 
   /**
    * Converts a domain relative value back to a domain value
    */
+  @Hot
   abstract fun toDomain(domainRelative: @DomainRelative Double): @Domain Double
 
   /**

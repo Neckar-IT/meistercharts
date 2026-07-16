@@ -26,6 +26,7 @@ import com.meistercharts.provider.LimitsProvider
 import it.neckar.geometry.AxisOrientationX
 import it.neckar.geometry.AxisOrientationY
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.fastForEach
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
@@ -53,6 +54,7 @@ class LimitsLayer @JvmOverloads constructor(
 
   private val areaPainter = RectangleAreaPainter(snapXValues = false, snapYValues = false)
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     areaPainter.apply {
       fill = configuration.fill
@@ -83,6 +85,7 @@ class LimitsLayer @JvmOverloads constructor(
    * XXXXXXX
    *```
    */
+  @Hot
   private fun paintVertical(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: RectangleAreaPainter) {
     val gc = paintingContext.gc
     @Window val limitWindow = paintingContext.chartCalculator.domainRelative2windowY(limit.limit)
@@ -123,6 +126,7 @@ class LimitsLayer @JvmOverloads constructor(
    *  X┃   ┃X
    *```
    */
+  @Hot
   private fun paintHorizontal(paintingContext: LayerPaintingContext, limit: Limit, areaPainter: RectangleAreaPainter) {
     val gc = paintingContext.gc
     @Window val limitWindow = paintingContext.chartCalculator.domainRelative2windowX(limit.limit)

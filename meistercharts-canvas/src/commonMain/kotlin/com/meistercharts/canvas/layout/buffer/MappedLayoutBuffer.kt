@@ -16,6 +16,9 @@
 package com.meistercharts.canvas.layout.buffer
 
 import com.meistercharts.loop.PaintingLoopIndex
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 
 /**
  * Contains a layout variable for each key.
@@ -52,8 +55,12 @@ class MappedLayoutBuffer<Key, LayoutVariableType : LayoutVariable>(
   internal val values: MutableMap<Key, LayoutVariableType> = mutableMapOf()
 
   /**
-   * Returns the object for the given key
+   * Returns the object for the given key.
+   *
+   * Allocates on the first access per key and loop: [values] is cleared at every loop start and re-populated
+   * (map entries), and a missing stock object is created via [factory].
    */
+  @Allocates(AllocationCost.Constant)
   fun get(key: Key): LayoutVariableType {
     return values.getOrPut(key) {
       objectsStock.getOrPut(key) {
@@ -76,6 +83,7 @@ class MappedLayoutBuffer<Key, LayoutVariableType : LayoutVariable>(
    * Resets everything if the loop index has changed.
    * Remembers the new loop index.
    */
+  @Hot
   fun resetIfNewLoopIndex(paintingLoopIndex: PaintingLoopIndex) {
     if (currentLoopIndex == paintingLoopIndex) {
       return
@@ -91,6 +99,7 @@ class MappedLayoutBuffer<Key, LayoutVariableType : LayoutVariable>(
    * Trims [objectsStock] down to the high-water-mark target at epoch boundaries.
    * Keeps the keys used in the loop that just finished ([values]); evicts stale keys first.
    */
+  @Hot
   private fun trimStock(paintingLoopIndex: PaintingLoopIndex) {
     val targetCapacity: Int = trimmer.pollTrimTarget(
       paintingLoopIndex,

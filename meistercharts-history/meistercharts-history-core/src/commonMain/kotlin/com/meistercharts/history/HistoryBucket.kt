@@ -18,6 +18,7 @@ package com.meistercharts.history
 import com.meistercharts.time.TimeRange
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.HistoryValues
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.unit.number.MayBeNaN
@@ -163,7 +164,8 @@ fun @Sorted List<HistoryBucket>.findReferenceEntryIdValueAt(dataSeriesIndex: Ref
  * Else:
  * The callback will be called with the timestamp index *before* the provided [timestamp] - if within the span defined by the [SamplingPeriod] of the [HistoryBucket].
  */
-fun @Sorted List<HistoryBucket>.find(timestamp: @ms Double, callback: (bucket: HistoryBucket, timestampIndex: TimestampIndex) -> Unit) {
+@Hot
+inline fun @Sorted List<HistoryBucket>.find(timestamp: @ms Double, callback: (bucket: HistoryBucket, timestampIndex: TimestampIndex) -> Unit) {
   contract {
     callsInPlace(callback, kotlin.contracts.InvocationKind.AT_MOST_ONCE)
   }
@@ -197,7 +199,7 @@ fun @Sorted List<HistoryBucket>.find(timestamp: @ms Double, callback: (bucket: H
     @ms val distance = timestamp - relevantTimestamp
 
     require(distance > 0.0) {
-      "?????? $distance ${relevantTimestamp.formatUtc()} ${timestamp.formatUtc()}"
+      "Invalid distance <$distance> - relevantTimestamp <$relevantTimestamp> must be before timestamp <$timestamp>"
     }
 
     @ms val maxDistance = bucket.descriptor.bucketRange.distance

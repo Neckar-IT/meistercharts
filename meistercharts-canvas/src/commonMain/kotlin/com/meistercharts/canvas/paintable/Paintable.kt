@@ -24,6 +24,8 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.Internal
 import it.neckar.open.unit.other.px
 import kotlin.math.min
@@ -97,14 +99,25 @@ interface Paintable {
    * The x/y coordinates of the bounding box describe where the alignment point is located:
    * * x/y = 0/0: the alignment point coincides with the upper left corner of the bounding box
    * * x/y = -width/-height: the alignment point coincides with the lower right corner of the bounding box
+   *
+   * Marked [Allocates]: `Paintable` is a polymorphic boundary — implementations give no
+   * allocation guarantee, and the returned [Rectangle] is a fresh object on most paths. A `@Hot`
+   * caller acknowledges the query deliberately with `@HotAllocation("reason")` at the call site.
    */
+  @Allocates(AllocationCost.Constant)
   fun boundingBox(paintingContext: LayerPaintingContext): @Zoomed Rectangle
 
   /**
    * Paints this [Paintable] using the original width and height of this [Paintable].
    *
    * [x]/[y] is where the alignment point of the paintable should be painted.
+   *
+   * Marked [Allocates]: `Paintable` is a polymorphic boundary — implementations give no
+   * allocation guarantee (image scaling, path building, text layout). Coloring the interface
+   * `@Hot` would cascade the contract onto every implementation. A `@Hot` caller therefore
+   * acknowledges the painting deliberately with `@HotAllocation("reason")` at the call site.
    */
+  @Allocates(AllocationCost.Constant)
   fun paint(
     paintingContext: LayerPaintingContext,
     @Zoomed x: Double = 0.0,
@@ -235,7 +248,13 @@ interface Paintable {
    * @param width the width
    * @param height the height
    * @param objectFit how the object is fitted into the bounding box
+   *
+   * Marked [Allocates]: `Paintable` is a polymorphic boundary — implementations give no
+   * allocation guarantee (image scaling, path building, text layout). Coloring the interface
+   * `@Hot` would cascade the contract onto every implementation. A `@Hot` caller therefore
+   * acknowledges the painting deliberately with `@HotAllocation("reason")` at the call site.
    */
+  @Allocates(AllocationCost.Constant)
   fun paintInBoundingBox(
     paintingContext: LayerPaintingContext,
     x: @Zoomed Double = 0.0,

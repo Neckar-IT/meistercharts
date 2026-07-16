@@ -27,6 +27,8 @@ import com.meistercharts.color.ColorProvider
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Direction.BottomRight
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.provider.MultiProvider
 import it.neckar.open.provider.MultiProviderIndexContextAnnotation
 import it.neckar.open.provider.SizedProvider
@@ -58,13 +60,16 @@ class TextsLayer(
 
   override var type: LayerType = LayerType.Content
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
+    @HotAllocation("Once per frame - combining the font fragment into a FontDescriptor allocates")
     gc.font(configuration.font)
     gc.fill(configuration.textColor)
 
     configuration.texts.fastForEachIndexed { index, value ->
       @Window val location = configuration.locationProvider.valueAt(index)
+      @HotAllocation("Per text per frame - text rendering allocates")
       gc.fillText(
         value, location.x, location.y, configuration.anchorDirection, configuration.anchorGapHorizontal,
         configuration.anchorGapVertical, configuration.maxWidth, configuration.maxHeight

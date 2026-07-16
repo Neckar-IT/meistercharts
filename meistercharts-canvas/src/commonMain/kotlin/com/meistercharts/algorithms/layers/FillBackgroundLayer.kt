@@ -22,7 +22,8 @@ import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.design.Theme
 import com.meistercharts.zoom.OriginToContentViewport.provider
-import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.kotlin.lang.asProvider
 
 /**
@@ -39,12 +40,14 @@ class FillBackgroundLayer(
     this.background = backgroundColor.asProvider()
   })
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     gc.fill(configuration.background)
-    gc.fillRect(gc.boundingBox)
+    gc.fillRect(0.0, 0.0, gc.width, gc.height)
 
-    configuration.backgroundImage?.paint(paintingContext, Coordinates.origin)
+    @HotAllocation("optional static background image - one polymorphic Paintable.paint per frame, not per data point")
+    configuration.backgroundImage?.paint(paintingContext)
   }
 
   @ConfigurationDsl

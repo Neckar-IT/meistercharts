@@ -17,19 +17,23 @@ package com.meistercharts.painter
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * A [LinePainter] that paints nothing
  */
 object NoLinePainter : LinePainter {
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     // do nothing
   }
 
+  @Hot
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     // do nothing
   }
 
+  @Hot
   override fun paint(gc: CanvasRenderingContext) {
     // do nothing
   }

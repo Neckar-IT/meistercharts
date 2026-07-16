@@ -15,6 +15,9 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
+
 /**
  * A layout variable that has a size.
  *
@@ -26,10 +29,13 @@ interface LayoutVariableWithSize : LayoutVariable {
    *
    * This is the safe default: after [prepare] the buffer has the requested size and all values are defined.
    */
+  @Hot
   fun prepare(size: Int) {
+    @HotBoundary("LayoutVariableWithSize dispatch - the interface stays un-colored to avoid forcing @Hot onto every buffer implementation; the hot-path buffers color their resize individually")
     resize(size)
     //It is important to reset *after* the resize
     //because the reset implementation might use the size
+    @HotBoundary("LayoutVariableWithSize dispatch - the interface stays un-colored to avoid forcing @Hot onto every buffer implementation; the hot-path buffers color their reset individually")
     reset()
   }
 
@@ -58,6 +64,7 @@ interface LayoutVariableWithSize : LayoutVariable {
   /**
    * Throws an exception if the index is invalid
    */
+  @Hot
   fun verifyIndex(index: Int) {
     if (index < 0 || index >= size) {
       throw IndexOutOfBoundsException("Index $index is out of bounds [0, $size)")

@@ -17,6 +17,7 @@ package com.meistercharts.canvas.layout.buffer
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 import it.neckar.geometry.Coordinates
 import it.neckar.open.collections.IterationOrder
 import it.neckar.open.collections.fastForEachWithIndex
@@ -53,6 +54,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
    *
    * ATTENTION: Might lose the content!
    */
+  @Hot
   override fun resize(size: Int) {
     xValues.resize(size)
     yValues.resize(size)
@@ -64,6 +66,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Sets the x and y values for the given index
    */
+  @Hot
   fun set(index: Int, x: Double, y: Double) {
     verifyIndex(index)
     this.xValues[index] = x
@@ -73,6 +76,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Increases the size by one and adds the new point
    */
+  @Hot
   fun add(x: Double, y: Double) {
     val newSize = size + 1
     resize(newSize)
@@ -83,6 +87,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Increases the size by two and adds both points
    */
+  @Hot
   fun add(x1: @Window Double, y1: @Window Double, x2: @Window Double, y2: @Window Double) {
     val startIndex = size
     resize(startIndex + 2)
@@ -94,6 +99,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Increases the size by three and adds all three points
    */
+  @Hot
   fun add(x1: @Window Double, y1: @Window Double, x2: @Window Double, y2: @Window Double, x3: @Window Double, y3: @Window Double) {
     val startIndex = size
     resize(startIndex + 3)
@@ -106,6 +112,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Returns the x value of the last point - or [Double.NaN] if the buffer is empty
    */
+  @Hot
   fun lastXOrNaN(): @Window Double {
     return xValues.lastOrNaN()
   }
@@ -113,6 +120,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Returns the y value of the last point - or [Double.NaN] if the buffer is empty
    */
+  @Hot
   fun lastYOrNaN(): @Window Double {
     return yValues.lastOrNaN()
   }
@@ -127,6 +135,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Returns the x value for the given index
    */
+  @Hot
   fun x(index: Int): Double {
     return this.xValues[index]
   }
@@ -141,6 +150,7 @@ class CoordinatesMultiBuffer : LayoutVariableWithSize {
   /**
    * Returns the y value for the given index
    */
+  @Hot
   fun y(index: Int): Double {
     return this.yValues[index]
   }

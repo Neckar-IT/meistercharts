@@ -43,6 +43,7 @@ import com.meistercharts.range.ValueRange
 import com.meistercharts.whatsat.ResultElementType
 import com.meistercharts.whatsat.WhatsAtResultElement
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.provider.MultiProvider
 
@@ -134,11 +135,13 @@ class CategoryLinesLayer(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     paintLines(paintingContext)
     paintPoints(paintingContext)
   }
 
+  @Hot
   private fun paintLines(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
@@ -148,7 +151,7 @@ class CategoryLinesLayer(
 
       val linePainter = configuration.linePainters.valueAt(seriesIndex)
       gc.saved {
-        configuration.lineStyles.valueAt(seriesIndexAsInt).apply(gc)
+        configuration.lineStyles.valueAt(seriesIndex).apply(gc)
         linePainter.begin(gc)
         foreachCategory(chartCalculator, seriesIndex) { centerX, y, categoryIndex, value ->
           if (centerX.isFinite() && y.isFinite()) {
@@ -164,6 +167,7 @@ class CategoryLinesLayer(
     }
   }
 
+  @Hot
   private fun paintPoints(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator

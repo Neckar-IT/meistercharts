@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas.geometry
 
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Allocates
 import it.neckar.open.unit.si.rad
 import kotlin.math.PI
 import kotlin.math.abs
@@ -132,6 +134,10 @@ data class Matrix(
   @IgnorableReturnValue
   fun pretranslate(dx: Double, dy: Double): Matrix = this.apply { tx += a * dx + c * dy; ty += b * dx + d * dy }
 
+  /**
+   * Allocates a temporary [Matrix] per call - a `@Hot` caller acknowledges this with `@HotAllocation`.
+   */
+  @Allocates(AllocationCost.Constant)
   @IgnorableReturnValue
   fun prerotate(theta: @rad Double): Matrix = this.apply {
     val m = Matrix()

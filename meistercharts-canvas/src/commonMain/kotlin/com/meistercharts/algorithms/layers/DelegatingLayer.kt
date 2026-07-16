@@ -43,6 +43,8 @@ import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.provider.BooleanProvider1
 
 /**
@@ -72,7 +74,9 @@ abstract class DelegatingLayer<out T : Layer>(
     delegate.layout(paintingContext)
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
+    @HotBoundary("polymorphic layer delegation - the delegate is colored where it is implemented")
     delegate.paint(paintingContext)
   }
 

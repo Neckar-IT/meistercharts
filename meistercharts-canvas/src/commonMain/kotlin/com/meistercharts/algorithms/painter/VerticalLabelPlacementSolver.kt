@@ -15,6 +15,7 @@
  */
 package com.meistercharts.algorithms.painter
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.collections.fastForEach
@@ -87,6 +88,7 @@ class VerticalLabelPlacementSolver {
   /**
    * Removes all labels
    */
+  @Hot
   fun clear() {
     preferredCenters.clear()
     heights.clear()
@@ -96,6 +98,7 @@ class VerticalLabelPlacementSolver {
   /**
    * Adds a label. Labels must be added in ascending order of [preferredCenterY].
    */
+  @Hot
   fun addLabel(preferredCenterY: @px Double, height: @px Double) {
     require(preferredCenterY.isFinite()) { "preferredCenterY must be finite but was $preferredCenterY" }
     require(height.isFinite() && height >= 0.0) { "height must be finite and >= 0 but was $height" }
@@ -115,6 +118,7 @@ class VerticalLabelPlacementSolver {
    *
    * [solve] fails fast on infeasible input - callers must drop labels until this fits.
    */
+  @Hot
   fun requiredSpace(spacing: @px Double): @px Double {
     if (heights.isEmpty()) {
       return 0.0
@@ -130,6 +134,7 @@ class VerticalLabelPlacementSolver {
   /**
    * Solves the placement for all added labels. The results are available via [placedCenterYAt].
    */
+  @Hot
   fun solve(
     /**
      * The minimum space between two labels (edge to edge)
@@ -207,6 +212,7 @@ class VerticalLabelPlacementSolver {
    * Returns the solved center y position for the label at the given index (same order as [addLabel] calls).
    * [solve] must have been called before.
    */
+  @Hot
   fun placedCenterYAt(index: Int): @px Double {
     require(placedCenters.size == labelCount) { "solve() must be called before accessing results" }
     require(index in 0 until placedCenters.size) { "index $index out of bounds for $labelCount labels" }

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.color
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.isPositiveOrZero
 import it.neckar.open.unit.other.px
 import kotlin.math.sqrt
@@ -26,6 +27,7 @@ data class RadialGradient(
   val color0: Color,
   val color1: Color
 ) : CanvasPaintProvider {
+  @Hot
   override fun toCanvasPaint(x0: @px Double, y0: @px Double, x1: @px Double, y1: @px Double): CanvasPaint {
     val dx = x1 - x0
     val dy = y1 - y0

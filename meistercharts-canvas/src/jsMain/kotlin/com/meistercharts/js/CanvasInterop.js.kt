@@ -15,6 +15,7 @@
  */
 package com.meistercharts.js
 
+import it.neckar.open.annotations.Hot
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 
@@ -23,6 +24,23 @@ internal actual fun HTMLCanvasElement.getContext2d(willReadFrequently: Boolean):
   return getContext("2d", arguments) as? CanvasRenderingContext2D
 }
 
+@Hot
 internal actual fun CanvasRenderingContext2D.setLineDashWeb(dashes: DoubleArray) {
   setLineDash(dashes.toTypedArray())
+}
+
+/**
+ * Caches the boxed representation per (stable) dash-array instance.
+ * The [DoubleArray] keys use identity equals/hashCode - the map stays as small as the number of
+ * distinct `Dashes` instances in the application.
+ */
+private val lineDashesConversionCache: HashMap<DoubleArray, Array<Double>> = HashMap()
+
+@Hot
+internal actual fun CanvasRenderingContext2D.setLineDashesWeb(dashes: DoubleArray) {
+  val converted = lineDashesConversionCache.getOrPut(dashes) {
+    //Cache miss: boxes once per array instance instead of once per call
+    dashes.toTypedArray()
+  }
+  setLineDash(converted)
 }

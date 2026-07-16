@@ -22,6 +22,7 @@ import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.range.BinaryValueRange
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.BooleanValuesProvider
 
@@ -44,6 +45,12 @@ class BinaryLayer(
 
   override val type: LayerType = LayerType.Content
 
+  /**
+   * Reused across frames - reconfigured via [BinaryPainter.reset] in every [paint] call.
+   */
+  private val binaryPainter = BinaryPainter(false, false, 0.0, 0.0, 0.0)
+
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator
@@ -56,7 +63,8 @@ class BinaryLayer(
     val maxHeight = chartCalculator.contentAreaRelative2zoomedY(1.0)
     val maxWidth = chartCalculator.contentAreaRelative2zoomedX(1.0)
 
-    val binaryPainter = BinaryPainter(false, false, baseLine, maxWidth, maxHeight).also {
+    binaryPainter.reset(baseLine, maxWidth, maxHeight)
+    binaryPainter.also {
       it.lineWidth = configuration.lineWidth
       it.stroke = configuration.stroke
       it.shadow = configuration.shadow

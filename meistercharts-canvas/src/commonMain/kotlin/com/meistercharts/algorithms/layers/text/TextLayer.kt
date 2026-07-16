@@ -42,6 +42,8 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.i18n.TextService
 import it.neckar.open.i18n.resolve
@@ -71,11 +73,14 @@ class TextLayer(
 
   private val painter = TextPainter()
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
+    @HotAllocation("Once per frame - combining the font fragment into a FontDescriptor allocates")
     gc.font(configuration.font())
 
     gc.saved {
+      @HotAllocation("Once per frame - reading the bounding box allocates one Rectangle for the anchor calculation")
       val anchorPoint = configuration.anchorPointProvider.calculateBasePoint(gc.boundingBox)
       gc.translate(anchorPoint.x, anchorPoint.y)
       if (DebugFeature.ShowBounds.enabled(paintingContext)) {
@@ -299,6 +304,7 @@ fun Layers.addText(
  * Paints the text
  */
 class TextPainter {
+  @Hot
   fun paintText(
     gc: CanvasRenderingContext,
     lines: List<String>,
@@ -320,7 +326,7 @@ class TextPainter {
      */
     textBoxSizeAdjustment: ((textBox: @px Rectangle, gc: CanvasRenderingContext) -> Size)? = null,
   ) {
-    gc.translate(anchoring.anchor.x, anchoring.anchor.y)
+    gc.translate(anchoring.anchorX, anchoring.anchorY)
     gc.paintTextBox(
       lines,
       lineSpacing,
@@ -338,6 +344,7 @@ class TextPainter {
   /**
    * Paints the message at 0/0
    */
+  @Hot
   fun paintText(
     gc: CanvasRenderingContext,
     lines: List<String>,

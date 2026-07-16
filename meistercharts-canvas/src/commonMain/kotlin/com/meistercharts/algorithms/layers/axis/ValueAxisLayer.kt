@@ -35,6 +35,8 @@ import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Direction
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.formatting.decimalFormat1digit
 import it.neckar.open.formatting.decimalFormat2digits
 import it.neckar.open.unit.other.px
@@ -84,6 +86,7 @@ class ValueAxisLayer
   override val type: LayerType
     get() = LayerType.Content
 
+  @Hot
   override fun paintingVariables(): ValueAxisPaintingVariables {
     return paintingVariables
   }
@@ -93,6 +96,7 @@ class ValueAxisLayer
     /**
      * Recalculates all painting variables
      */
+    @Hot
     override fun calculate(paintingContext: LayerPaintingContext) {
       reset()
 
@@ -116,6 +120,7 @@ class ValueAxisLayer
     /**
      * Calculate the tick values that are painted - into [tickValuesScratch] (allocation-free)
      */
+    @Hot
     private fun calculateTickValues(paintingContext: LayerPaintingContext) {
       when (configuration.orientation) {
         Orientation.Vertical -> calculateTickValuesValueRangeVertically(fontHeight = tickFontMetrics.totalHeight)
@@ -130,12 +135,14 @@ class ValueAxisLayer
   val tickLabels: @Domain TickLabelsBuffer
     get() = paintingVariables.tickLabels
 
+  @Hot
   override fun paintTicksWithLabelsVertically(paintingContext: LayerPaintingContext, direction: Direction) {
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
     gc.fillStyle(configuration.tickLabelColor())
     gc.strokeStyle(configuration.lineColor())
+    @HotAllocation("Once per frame per axis - the fragment-to-descriptor conversion is cached")
     gc.font(configuration.tickFont())
     gc.lineWidth = configuration.tickLineWidth
 
@@ -155,6 +162,7 @@ class ValueAxisLayer
 
       //The tick label
       if (formattedTick.isNotEmpty()) {
+        @HotAllocation("Once per tick per frame - platform text rendering; tick count is bounded by axis length / font height")
         gc.fillText(
           text = formattedTick,
           x = 0.0,
@@ -170,6 +178,7 @@ class ValueAxisLayer
     }
   }
 
+  @Hot
   override fun paintTicksWithLabelsHorizontally(paintingContext: LayerPaintingContext, direction: Direction) {
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
@@ -177,6 +186,7 @@ class ValueAxisLayer
     gc.fillStyle(configuration.tickLabelColor())
     gc.strokeStyle(configuration.lineColor())
     gc.lineWidth = configuration.tickLineWidth
+    @HotAllocation("Once per frame per axis - the fragment-to-descriptor conversion is cached")
     gc.font(configuration.tickFont)
 
     val valueRange = configuration.valueRangeProvider()
@@ -211,6 +221,7 @@ class ValueAxisLayer
           HorizontalAlignment.Right -> paintingVariables.tickValueLabelMaxWidth.coerceAtMost(remainingSpaceToRight)
         }
 
+        @HotAllocation("Once per tick per frame - platform text rendering; tick count is bounded by axis length / label width")
         gc.fillText(
           text = tickValueLabel,
           x = currentX,
@@ -228,6 +239,7 @@ class ValueAxisLayer
   /**
    * Calculates the ticks (into [ValueAxisPaintingVariablesImpl.tickValuesScratch]) - only for the area that is visible!
    */
+  @Hot
   private fun calculateTickValuesValueRangeVertically(fontHeight: @px Double) {
     //If we are below or above the screen, the relevant height is negative
     if (paintingVariables.axisLength <= 0) {
@@ -242,6 +254,7 @@ class ValueAxisLayer
   /**
    * Calculates the ticks (into [ValueAxisPaintingVariablesImpl.tickValuesScratch]) - only for the area that is visible!
    */
+  @Hot
   private fun calculateTickValuesValueRangeHorizontally(maxFormattedLabelWidth: @px Double) {
     //If we are below or above the screen, the relevant height is negative
     if (paintingVariables.axisLength <= 0) {

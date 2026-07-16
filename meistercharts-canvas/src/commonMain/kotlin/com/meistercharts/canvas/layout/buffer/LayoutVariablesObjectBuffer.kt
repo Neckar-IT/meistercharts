@@ -15,6 +15,9 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
+
 /**
  * A buffer for [LayoutVariable]s.
  * These will be reused for every layout pass.
@@ -44,6 +47,7 @@ open class LayoutVariablesObjectBuffer<T : LayoutVariable>(
   /**
    * Increases the size by 1, adds a new element
    */
+  @Allocates(AllocationCost.Constant)
   override fun addNewElement(): T {
     return super.addNewElement().also {
       //reset the newly added object

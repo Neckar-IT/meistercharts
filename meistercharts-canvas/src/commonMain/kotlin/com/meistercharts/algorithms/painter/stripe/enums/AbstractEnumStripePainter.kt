@@ -24,6 +24,7 @@ import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -38,6 +39,7 @@ abstract class AbstractEnumStripePainter :
    */
   abstract val configuration: Configuration
 
+  @Hot
   override fun paintingVariables(): EnumStripePainterPaintingVariables {
     return paintingVariables
   }
@@ -50,10 +52,12 @@ abstract class AbstractEnumStripePainter :
   /**
    * Returns the history enum value for the given index
    */
+  @Hot
   fun getHistoryEnum(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnum {
     return paintingVariables().historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
   }
 
+  @Hot
   override fun layoutValueChange(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: EnumDataSeriesIndex,
@@ -82,6 +86,7 @@ abstract class AbstractEnumStripePainter :
    * Returns true if the *relevant* value has changed - depending on the aggregation mode.
    * Reads the current values as raw ints and wraps them into value classes only for the comparison (no allocation).
    */
+  @Hot
   private fun haveRelevantValuesChanged(
     paintingVariablesForDataSeries: EnumStripePainterPaintingVariablesForOneDataSeries,
     newEnumSet: @MayBeNoValueOrPending HistoryEnumSet,

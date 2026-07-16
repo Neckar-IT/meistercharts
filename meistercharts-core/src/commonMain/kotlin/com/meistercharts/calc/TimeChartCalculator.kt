@@ -19,6 +19,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.state.ChartState
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms
@@ -41,10 +42,12 @@ class TimeChartCalculator(
     return window2timeX(value, contentAreaTimeRange = contentAreaTimeRangeX)
   }
 
+  @Hot
   fun zoomed2timeDeltaX(@Zoomed @px x: Double): @Time Double {
     return zoomed2timeDeltaX(x, contentAreaTimeRangeX)
   }
 
+  @Hot
   fun time2windowX(@Time @ms time: Double): @px @Window Double {
     return time2windowX(time, contentAreaTimeRangeX)
   }

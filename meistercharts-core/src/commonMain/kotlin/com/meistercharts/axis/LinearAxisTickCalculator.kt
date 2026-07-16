@@ -16,6 +16,7 @@
 package com.meistercharts.axis
 
 import com.meistercharts.annotations.Domain
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyDoubleArray
 import it.neckar.open.kotlin.lang.isCloseToOrMoreThan
@@ -64,6 +65,7 @@ object LinearAxisTickCalculator {
    *
    * Use this variant on the hot path: it avoids allocating a fresh array on every layout pass.
    */
+  @Hot
   fun calculateTickValuesInto(
     target: @Domain DoubleArrayList,
     lower: @Domain Double,
@@ -159,6 +161,7 @@ object LinearAxisTickCalculator {
    * This method ensures the lower and upper value are within the list.
    * Overwrites the first and last value if necessary
    */
+  @Hot
   private fun ensureContainsLowerUpper(ticks: @Domain DoubleArrayList, lower: @Domain Double, upper: @Domain Double) {
     if (ticks.isEmpty()) {
       return
@@ -206,6 +209,7 @@ object LinearAxisTickCalculator {
    *
    * @return The optimal tick distance.
    */
+  @Hot
   @Deprecated("Do not call this method from outside!")
   fun calculateTickDistance(
     delta: @Domain Double,
@@ -271,6 +275,7 @@ object LinearAxisTickCalculator {
    *
    * The first tick is always >= [lowerRounded].
    */
+  @Hot
   @Domain
   fun calculateTickBase(@Domain lowerRounded: Double, @Domain tickDistance: Double): Double {
     return ceil(lowerRounded / tickDistance) * tickDistance

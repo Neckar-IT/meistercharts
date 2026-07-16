@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.canvas.ChartSupport
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.BooleanProvider1
 
 /**
@@ -51,6 +52,7 @@ open class LayerVisibilityAdapter<out T : Layer>(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     if (visibleCondition(paintingContext.chartSupport)) {
       super.paint(paintingContext)

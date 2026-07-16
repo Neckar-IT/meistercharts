@@ -17,6 +17,7 @@ package com.meistercharts.canvas
 
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.orNanIfNull
 import it.neckar.open.unit.other.fps
 import it.neckar.open.unit.si.ms
@@ -119,6 +120,7 @@ class PaintStatisticsSupport(
   /**
    * Stores new repaint stats
    */
+  @Hot
   fun store(paintingStats: PaintingStats) {
     _paintingStatsList.add(paintingStats)
 

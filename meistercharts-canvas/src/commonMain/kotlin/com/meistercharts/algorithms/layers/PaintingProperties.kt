@@ -19,6 +19,7 @@ import com.meistercharts.time.TimeRange
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.paintingProperties
 import com.meistercharts.history.SamplingPeriod
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.si.ms
 
 /**
@@ -59,6 +60,7 @@ class PaintingProperties {
   /**
    * Must be called before each paint to ensure the properties are always up to date
    */
+  @Hot
   fun clear() {
     entries.clear()
   }

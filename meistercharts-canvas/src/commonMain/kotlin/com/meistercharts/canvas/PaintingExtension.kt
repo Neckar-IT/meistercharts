@@ -37,6 +37,10 @@ import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.geometry.VerticalAlignment
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.kotlin.lang.ifBlank
@@ -335,10 +339,12 @@ fun CanvasRenderingContext.strokeRoundedRect(@Window @px bounds: Rectangle, @Zoo
   strokeRoundedRect(bounds.left, bounds.top, bounds.widthAbs, bounds.heightAbs, radius, strokeLocation)
 }
 
+@Hot
 fun CanvasRenderingContext.strokeRoundedRect(@Window @px bounds: Rectangle, @Zoomed @px radii: BorderRadius?, strokeLocation: StrokeLocation = StrokeLocation.Center) {
   strokeRoundedRect(bounds.left, bounds.top, bounds.widthAbs, bounds.heightAbs, radii, strokeLocation)
 }
 
+@Hot
 fun CanvasRenderingContext.strokeRoundedRect(
   @px x: Double,
   @px y: Double,
@@ -405,10 +411,12 @@ fun CanvasRenderingContext.fillRoundedRect(
   }
 }
 
+@Hot
 fun CanvasRenderingContext.fillRoundedRect(@Window @px bounds: Rectangle, @Zoomed @px radii: BorderRadius?) {
   fillRoundedRect(bounds.left, bounds.top, bounds.widthAbs, bounds.heightAbs, radii)
 }
 
+@Hot
 fun CanvasRenderingContext.fillRoundedRect(
   @px x: Double,
   @px y: Double,
@@ -442,6 +450,7 @@ fun CanvasRenderingContext.roundedRect(x: Double, y: Double, width: @MayBeNegati
 /**
  * Paints a rounded rect
  */
+@Hot
 fun CanvasRenderingContext.roundedRect(
   x: Double,
   y: Double,
@@ -518,6 +527,7 @@ fun CanvasRenderingContext.roundedRect(
  * * if the radii ar larger than width/height, a "normal" rectangle is added instead
  *
  */
+@Hot
 private fun CanvasRenderingContext.roundedRectInternal(
   x: Double,
   y: Double,
@@ -588,6 +598,7 @@ fun CanvasRenderingContext.translateToContentAreaOrigin(chartCalculator: ChartCa
 /**
  * Strokes a cross at [Coordinates] using [baseWidth] to calculate fatness
  */
+@Hot
 fun CanvasRenderingContext.strokeCross(@Window x: Double = 0.0, @Window y: Double = 0.0, @Zoomed size: Double = 5.0) {
   val halfSize = size / 2.0
   strokeLine(x - halfSize, y, x + halfSize, y)
@@ -601,6 +612,7 @@ fun CanvasRenderingContext.strokeCross(@Window location: Coordinates, @Zoomed si
 /**
  * Strokes a cross at 45° angle at [Coordinates] using [baseWidth] to calculate fatness
  */
+@Hot
 fun CanvasRenderingContext.strokeCross45Degrees(@Window x: Double = 0.0, @Window y: Double = 0.0, @Zoomed size: Double = 5.0) {
   val halfSize = size / 2.0
   strokeLine(x - halfSize, y - halfSize, x + halfSize, y + halfSize)
@@ -611,6 +623,7 @@ fun CanvasRenderingContext.strokeCross45Degrees(@Window x: Double = 0.0, @Window
  * Helper methods that marks the current location (translation of the rendering context).
  * Should only be used for debugging
  */
+@Allocates(AllocationCost.Constant)
 fun CanvasRenderingContext.paintLocation(location: Coordinates, color: Color = Color.orangered()) {
   paintLocation(location.x, location.y, color)
 }
@@ -619,6 +632,7 @@ fun CanvasRenderingContext.paintLocation(location: Coordinates, color: Color = C
  * Helper methods that marks the current location (translation of the rendering context).
  * Should only be used for debugging
  */
+@Allocates(AllocationCost.Constant)
 fun CanvasRenderingContext.paintLocation(x: Double = 0.0, y: Double = 0.0, color: Color = Color.orangered(), label: String? = null) {
   //Debug function - should not modify GC
   saved {
@@ -646,6 +660,7 @@ fun CanvasRenderingContext.paintLocation(x: Double = 0.0, y: Double = 0.0, color
  * Paints a mark (circle with cross) at the given location
  *
  */
+@Hot
 fun CanvasRenderingContext.paintMark(location: Coordinates = Coordinates.origin, radius: Double = 5.0, color: Color? = null) {
   paintMark(location.x, location.y, radius, color)
 }
@@ -653,6 +668,7 @@ fun CanvasRenderingContext.paintMark(location: Coordinates = Coordinates.origin,
 /**
  * Paints a mark (circle with cross) at the given location
  */
+@Hot
 fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: Double = 5.0, color: Color? = null, label: String? = null) {
   //Debug function - should not modify GC
   saved {
@@ -665,6 +681,7 @@ fun CanvasRenderingContext.paintMark(x: Double = 0.0, y: Double = 0.0, radius: D
 
     strokeOvalCenter(x, y, radius * 2, radius * 2)
 
+    @HotAllocation("Debug label only - text rendering allocates")
     label?.let {
       stroke(Color.white)
       fill(color ?: Color.black())
@@ -688,6 +705,7 @@ fun CanvasRenderingContext.strokeRectCoordinates(corner0: Coordinates, corner1: 
 /**
  * Fills a rect using coordinates for both sides
  */
+@Hot
 fun CanvasRenderingContext.fillRectCoordinates(x0: Double, y0: Double, x1: Double, y1: Double) {
   fillRect(x0, y0, x1 - x0, y1 - y0)
 }
@@ -937,6 +955,7 @@ const val BlankFallbackText: String = "?"
  * Paints a box with a text in it. The anchor direction and gap describes how the box is painted relative
  * to the current "0/0"
  */
+@Hot
 @IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
@@ -992,6 +1011,7 @@ fun CanvasRenderingContext.paintTextBox(
  *
  * @return the bounds of the box that has been painted
  */
+@Hot
 @IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
@@ -1051,6 +1071,7 @@ fun CanvasRenderingContext.paintTextBox(
  *
  * @return the bounds of the box that has been painted
  */
+@Hot
 @IgnorableReturnValue
 fun CanvasRenderingContext.paintTextBox(
   /**
@@ -1175,6 +1196,7 @@ fun CanvasRenderingContext.paintTextBox(
   fill(textColor)
 
   fixedLines.fastForEach { line ->
+    @HotAllocation("Per line per frame - text rendering allocates")
     fillText(line, textX, currentTextY, horizontalAlignment.toAnchor(), 0.0, 0.0, textBlockWidth)
     currentTextY += fontMetrics.totalHeight + spaceBetweenLines
   }
@@ -1185,6 +1207,7 @@ fun CanvasRenderingContext.paintTextBox(
 /**
  * Calculates the x location of a text box - depending on the anchor direction
  */
+@Hot
 private fun computeTextBoxX(anchorDirection: Direction, boxWidth: @px Double): @px Double {
   val boxOriginXWithoutGapOffset: Double
   when (anchorDirection) {
@@ -1250,6 +1273,7 @@ private fun computeTextBoxX(anchorDirection: Direction, boxWidth: @px Double): @
   return boxOriginXWithoutGapOffset
 }
 
+@Hot
 private fun computeTextBoxY(
   anchorDirection: Direction,
   boxHeight: Double,
@@ -1324,6 +1348,7 @@ private fun computeTextBoxY(
 /**
  * Returns the x position for a text within a text box
  */
+@Hot
 fun computeTextBoxTextX(
   /**
    * The anchor direction
@@ -1366,6 +1391,7 @@ fun computeTextBoxTextX(
 /**
  * Converts a text alignment to an anchor direction
  */
+@Hot
 private fun HorizontalAlignment.toAnchor(): Direction {
   return when (this) {
     HorizontalAlignment.Left -> Direction.BaseLineLeft
@@ -1377,6 +1403,7 @@ private fun HorizontalAlignment.toAnchor(): Direction {
 /**
  * calculates the x offset for a given gap and anchor direction
  */
+@Hot
 @px
 fun Direction.calculateOffsetXForGap(gap: Double): Double {
   return horizontalAlignment.calculateOffsetXForGap(gap)
@@ -1385,6 +1412,7 @@ fun Direction.calculateOffsetXForGap(gap: Double): Double {
 /**
  * calculates the x offset for a given gap and horizontal alignment
  */
+@Hot
 fun HorizontalAlignment.calculateOffsetXForGap(gap: Double): Double {
   return when (this) {
     HorizontalAlignment.Left -> gap
@@ -1396,6 +1424,7 @@ fun HorizontalAlignment.calculateOffsetXForGap(gap: Double): Double {
 /**
  * calculates the y offset for a given gap and anchor direction
  */
+@Hot
 @px
 fun Direction.calculateOffsetYForGap(gap: @px Double): Double {
   return verticalAlignment.calculateOffsetYForGap(gap)
@@ -1404,6 +1433,7 @@ fun Direction.calculateOffsetYForGap(gap: @px Double): Double {
 /**
  * calculates the y offset for a given gap and alignment
  */
+@Hot
 fun VerticalAlignment.calculateOffsetYForGap(gap: @px Double): Double {
   return when (this) {
     VerticalAlignment.Top -> gap

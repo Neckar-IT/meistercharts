@@ -15,6 +15,7 @@
  */
 package com.meistercharts.calc
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -29,6 +30,7 @@ object ChartingUtils {
    *
    * If placing a line at the edge of the canvas only half of the line width is visible by default.
    */
+  @Hot
   @px
   fun lineWithin(@px lineCenter: Double, @px min: Double, @px max: Double, @px lineWidth: Double): Double {
     require(max >= min) { "max must not be less than min" }

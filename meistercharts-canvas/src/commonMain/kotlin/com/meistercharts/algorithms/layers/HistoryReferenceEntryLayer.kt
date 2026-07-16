@@ -31,6 +31,7 @@ import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.provider.TimeRangeProvider
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -43,6 +44,7 @@ class HistoryReferenceEntryLayer(
   configuration.also(additionalConfiguration)
 ) {
 
+  @Hot
   override fun paintingVariables(): HistoryReferenceEntryPaintingVariables {
     return paintingVariables
   }
@@ -54,23 +56,28 @@ class HistoryReferenceEntryLayer(
     return configuration.historyConfiguration().referenceEntryDataSeriesCount
   }
 
+  @Hot
   override fun HistoryChunk.getValue1(visibleDataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): ReferenceEntryId {
     return getReferenceEntryId(visibleDataSeriesIndex, timestampIndex)
   }
 
+  @Hot
   override fun HistoryChunk.getValue2(visibleDataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): ReferenceEntryDifferentIdsCount {
     return getReferenceEntryIdsCount(visibleDataSeriesIndex, timestampIndex)
   }
 
+  @Hot
   override fun HistoryChunk.getValue3(visibleDataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): HistoryEnumSet {
     return getReferenceEntryStatus(visibleDataSeriesIndex, timestampIndex)
   }
 
+  @Hot
   override fun HistoryChunk.getValue4(visibleDataSeriesIndex: ReferenceEntryDataSeriesIndex, timestampIndex: TimestampIndex): ReferenceEntryData? {
     val referenceEntryId = getReferenceEntryId(visibleDataSeriesIndex, timestampIndex)
     return getReferenceEntryData(visibleDataSeriesIndex, referenceEntryId)
   }
 
+  @Hot
   override fun layoutDataPoint(
     paintingContext: LayerPaintingContext,
     stripePainter: ReferenceEntryStripePainter,
@@ -90,18 +97,22 @@ class HistoryReferenceEntryLayer(
     return stripePainter.layoutValueChange(paintingContext, dataSeriesIndex, startX, endX, startTime, endTime, activeTimeStamp, id, differentIdsCount, status, data)
   }
 
+  @Hot
   override fun value1Default(): ReferenceEntryId {
     return ReferenceEntryId.NoValue
   }
 
+  @Hot
   override fun value2Default(): ReferenceEntryDifferentIdsCount {
     return ReferenceEntryDifferentIdsCount.NoValue
   }
 
+  @Hot
   override fun value3Default(): HistoryEnumSet {
     return HistoryEnumSet.NoValue
   }
 
+  @Hot
   override fun value4Default(): ReferenceEntryData? {
     return null
   }

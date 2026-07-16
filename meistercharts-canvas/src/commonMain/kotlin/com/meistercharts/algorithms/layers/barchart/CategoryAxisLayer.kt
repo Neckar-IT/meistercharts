@@ -39,6 +39,8 @@ import it.neckar.geometry.Orientation
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.trace
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -62,6 +64,7 @@ class CategoryAxisLayer(
   override val type: LayerType
     get() = LayerType.Content
 
+  @Hot
   override fun paintingVariables(): AxisPaintingVariables {
     return paintingVariables
   }
@@ -91,6 +94,7 @@ class CategoryAxisLayer(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val categoryLayout = paintingVariables.categoryLayout
 
@@ -101,6 +105,7 @@ class CategoryAxisLayer(
       return
     }
 
+    @HotBoundary("CategoryAxisLabelPainter dispatch - the label painter implementations are colored with the barchart batch")
     configuration.axisLabelPainter.layout(categoryLayout, this.configuration.labelsProvider, this.configuration.labelVisibleCondition)
     super.paint(paintingContext)
   }

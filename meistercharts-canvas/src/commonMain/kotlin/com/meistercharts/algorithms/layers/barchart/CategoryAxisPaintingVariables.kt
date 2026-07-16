@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.layers.barchart
 import com.meistercharts.algorithms.layers.AxisPaintingVariables
 import com.meistercharts.algorithms.layers.AxisPaintingVariablesImpl
 import com.meistercharts.algorithms.layout.EquisizedBoxLayout
+import it.neckar.open.annotations.Hot
 
 interface CategoryAxisPaintingVariables : AxisPaintingVariables {
   /**
@@ -37,6 +38,7 @@ abstract class CategoryAxisPaintingVariablesImpl : CategoryAxisPaintingVariables
   /**
    * Resets all variables to their default values
    */
+  @Hot
   override fun reset() {
     super.reset()
 

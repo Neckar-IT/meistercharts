@@ -22,6 +22,7 @@ import com.meistercharts.algorithms.layout.EquisizedBoxLayout
 import com.meistercharts.algorithms.layout.BoxLayoutCalculator
 import com.meistercharts.canvas.StyleDsl
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.DoubleProvider
 import it.neckar.open.unit.other.px
 
@@ -33,6 +34,7 @@ interface CategoryLayouter {
   /**
    * Calculates the layout for categories
    */
+  @Hot
   fun calculateLayout(
     paintingContext: LayerPaintingContext,
     /**
@@ -56,6 +58,7 @@ class DefaultCategoryLayouter(
 
   val style: Style = Style().also(styleConfiguration)
 
+  @Hot
   override fun calculateLayout(paintingContext: LayerPaintingContext, numberOfSegments: Int, orientation: CategoryChartOrientation): EquisizedBoxLayout {
     //The space that is available for all categories
     val availableSpace = when (orientation.categoryOrientation) {

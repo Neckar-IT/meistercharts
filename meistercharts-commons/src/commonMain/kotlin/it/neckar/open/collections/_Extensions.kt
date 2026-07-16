@@ -27,6 +27,7 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.Exclusive
 import it.neckar.open.unit.other.Inclusive
 import kotlin.jvm.JvmInline
@@ -83,6 +84,7 @@ fun <K> MutableMap<K, Int>.incr(key: K, delta: Int = +1): Int {
  */
 fun IntArray.binarySearch(v: Int, fromIndex: Int = 0, toIndex: Int = size): BSearchResult = (genericBinarySearchResult(fromIndex, toIndex) { this[it].compareTo(v) })
 fun FloatArray.binarySearch(v: Float, fromIndex: Int = 0, toIndex: Int = size): BSearchResult = (genericBinarySearchResult(fromIndex, toIndex) { this[it].compareTo(v) })
+@Hot
 fun DoubleArray.binarySearch(v: Double, fromIndex: Int = 0, toIndex: Int = size): BSearchResult = (genericBinarySearchResult(fromIndex, toIndex) { this[it].compareTo(v) })
 fun IntArrayList.binarySearch(v: Int, fromIndex: Int = 0, toIndex: Int = size): BSearchResult = (genericBinarySearchResult(fromIndex, toIndex) { this.getAt(it).compareTo(v) })
 fun FloatArrayList.binarySearch(v: Float, fromIndex: Int = 0, toIndex: Int = size): BSearchResult = (genericBinarySearchResult(fromIndex, toIndex) { this.getAt(it).compareTo(v) })

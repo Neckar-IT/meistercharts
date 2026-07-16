@@ -37,6 +37,9 @@ import com.meistercharts.provider.LabelsProvider
 import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
 import it.neckar.open.provider.DoublesProvider1
@@ -97,6 +100,7 @@ class CrossWireLayer(
     }
   }
 
+  @Hot
   override fun paintingVariables(): PaintingVariables {
     return paintingVariables
   }
@@ -111,10 +115,12 @@ class CrossWireLayer(
 
     var currentLocationLabelText: String? = null
 
+    @Hot
     override fun calculate(paintingContext: LayerPaintingContext) {
       wireLocation = configuration.locationX(paintingContext)
 
       if (configuration.showValueLabels) {
+        @HotBoundary("LabelPlacementStrategy is a fun interface - implementations are lambdas that coloring cannot reach")
         valueLabelPlacement = configuration.valueLabelPlacementStrategy(wireLocation, paintingContext)
       }
 
@@ -126,10 +132,13 @@ class CrossWireLayer(
     }
   }
 
+  @Hot
   override fun layout(paintingContext: LayerPaintingContext) {
+    @HotBoundary("AbstractLayer.layout is the deliberately un-colored generic layer entry point - it only dispatches initialize (once) and the colored calculate")
     super.layout(paintingContext)
 
     if (configuration.showValueLabels) {
+      @HotBoundary("ValueLabelsProvider implementations live in the gestalts (TimeLineChartGestalt & co.) - colored with the gestalt batches")
       configuration.valueLabelsProvider.layout(paintingVariables.wireLocation, paintingContext)
 
       valueLabelPainter.layout(
@@ -143,6 +152,7 @@ class CrossWireLayer(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
@@ -162,12 +172,14 @@ class CrossWireLayer(
       val currentLocationLabelText = paintingVariables.currentLocationLabelText
       if (currentLocationLabelText != null) {
         gc.saved {
+          @HotAllocation("Once per frame per cross wire (only with visible location label) - the fragment-to-descriptor conversion is cached")
           gc.font(configuration.currentLocationLabelFont)
 
           configuration.currentLocationLabelAnchorPoint(paintingContext).let { anchorPointTranslation ->
             gc.translate(anchorPointTranslation.x, anchorPointTranslation.y)
           }
 
+          @HotAllocation("Once per frame per cross wire (only with visible location label) - text box painting")
           gc.paintTextBox(
             line = currentLocationLabelText,
             anchorDirection = configuration.currentLocationLabelAnchorDirection,

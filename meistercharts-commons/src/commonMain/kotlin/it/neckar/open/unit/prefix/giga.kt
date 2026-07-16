@@ -51,7 +51,7 @@ import kotlin.reflect.KClass
 )
 @MustBeDocumented
 @Suppress("ClassName")
-@Prefix(100000.0)
+@Prefix(1000000000.0)
 annotation class giga(
   /**
    * The base unit

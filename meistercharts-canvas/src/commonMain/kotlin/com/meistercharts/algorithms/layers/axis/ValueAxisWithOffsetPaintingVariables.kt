@@ -17,6 +17,7 @@ package com.meistercharts.algorithms.layers.axis
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
+import it.neckar.open.annotations.Hot
 
 /**
  * Painting variables for a value axis with offsets
@@ -78,6 +79,7 @@ abstract class ValueAxisWithOffsetPaintingVariablesImpl : ValueAxisPaintingVaria
    */
   override var offsetStep: Double = 1.0
 
+  @Hot
   override fun reset() {
     super.reset()
     offsetTickLabels.reset()

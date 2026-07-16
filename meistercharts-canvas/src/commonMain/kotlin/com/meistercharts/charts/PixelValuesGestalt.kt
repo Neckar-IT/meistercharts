@@ -213,7 +213,7 @@ class PixelValuesGestalt @JvmOverloads constructor(
         val mode = model.mode
         val color = this@PixelValuesGestalt.configuration.getLineColor(mode, index)
 
-        val cache = when (mode) {
+        val cache: HashMap<Int, LineStyle> = when (mode) {
           PixelValueVisualizationMode.Standard -> standardStyles
           PixelValueVisualizationMode.HeldAverages -> heldAveragesStyles
         }

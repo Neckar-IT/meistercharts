@@ -21,6 +21,8 @@ import com.meistercharts.font.FontMetrics
 import com.meistercharts.model.Vicinity
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.px
 
@@ -173,6 +175,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Resets all variables to their default values
    */
+  @Hot
   open fun reset() {
     axisTitleLocation = Double.NaN
     axisContentLocation = Double.NaN
@@ -192,10 +195,12 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Updates the tick font metrics
    */
+  @Hot
   fun calculateTickFontMetrics(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
   ) {
+    @HotAllocation("Once per layout pass per axis layer - the fragment-to-descriptor conversion is cached")
     paintingContext.gc.font(style.tickFont())
     tickFontMetrics = paintingContext.gc.getFontMetrics()
   }
@@ -203,6 +208,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates the title related stuff
    */
+  @Hot
   fun calculateTitle(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
@@ -211,6 +217,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
     //Calculate the space for the title
     spaceForTitleIncludingGap = if (style.titleVisible() && style.hasNonBlankTitle(paintingContext.chartSupport)) {
       //Title font related calculations
+      @HotAllocation("Once per layout pass per axis layer with visible title - the fragment-to-descriptor conversion is cached")
       paintingContext.gc.font(style.titleFont())
       titleFontMetrics = paintingContext.gc.getFontMetrics()
 
@@ -223,6 +230,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates axis start and end
    */
+  @Hot
   fun calculateAxisStartEnd(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
@@ -276,6 +284,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
    * For horizontal axis:
    * - currently unlimited
    */
+  @Hot
   fun calculateTickLabelsMaxWidth(
     style: AxisConfiguration,
   ) {
@@ -292,6 +301,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates the tick label width for horizontal axis
    */
+  @Hot
   protected open fun calculateTickLabelsMaxWidthHorizontal(): @Zoomed Double {
     return Double.NaN
   }
@@ -299,6 +309,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates the tick label width for vertical axis
    */
+  @Hot
   protected open fun calculateTickLabelsMaxWidthVertical(style: AxisConfiguration): @Zoomed Double {
     return (style.size
       - style.axisLineWidth
@@ -310,6 +321,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   /**
    * Calculates the locations
    */
+  @Hot
   fun calculateLocations(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,

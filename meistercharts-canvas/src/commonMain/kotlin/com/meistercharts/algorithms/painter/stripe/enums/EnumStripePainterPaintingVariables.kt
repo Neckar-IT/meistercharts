@@ -20,6 +20,7 @@ import com.meistercharts.algorithms.painter.stripe.StripePainterPaintingVariable
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnum
+import it.neckar.open.annotations.Hot
 
 /**
  * Painting variables for enum stripes
@@ -38,6 +39,7 @@ open class EnumStripePainterPaintingVariables :
     return EnumStripePainterPaintingVariablesForOneDataSeries()
   }
 
+  @Hot
   override fun prepareLayout(paintingContext: LayerPaintingContext, height: Double, dataSeriesIndex: EnumDataSeriesIndex, historyConfiguration: HistoryConfiguration) {
     super.prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
     historyEnum = getHistoryEnum(dataSeriesIndex)
@@ -46,6 +48,7 @@ open class EnumStripePainterPaintingVariables :
   /**
    * Returns the history enum value for the given index
    */
+  @Hot
   fun getHistoryEnum(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnum {
     return historyConfiguration.enumConfiguration.getEnum(dataSeriesIndex)
   }

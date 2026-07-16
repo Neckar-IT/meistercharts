@@ -21,8 +21,9 @@ import com.meistercharts.canvas.LayerPaintDurations
 import com.meistercharts.canvas.PaintingStats
 import com.meistercharts.canvas.saved
 import com.meistercharts.charts.ChartId
-import it.neckar.open.annotations.Allocates
-import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachIndexed
 import kotlin.time.DurationUnit
@@ -77,6 +78,7 @@ class Layers(val chartId: ChartId) {
   /**
    * @return whether this [Layers] is empty or not
    */
+  @Hot
   fun isEmpty(): Boolean = layersListPainting.isEmpty()
 
   /**
@@ -86,11 +88,18 @@ class Layers(val chartId: ChartId) {
     get() = layersListPainting
 
   /**
+   * Cached interaction order (reversed [layers]). Invalidated on every mutation of
+   * [layersListPainting]; rebuilt lazily on the next [layersOrderedForInteraction] read.
+   * Deliberately a snapshot copy (not a live reversed view): event handlers may remove their own
+   * layer while the dispatch iterates this list.
+   */
+  private var layersOrderedForInteractionCache: List<Layer>? = null
+
+  /**
    * Returns the layers in the order they process mouse/keyboard events
    */
-  @Allocates(AllocationCost.Linear)
   val layersOrderedForInteraction: List<Layer>
-    get() = layers.reversed()
+    get() = layersOrderedForInteractionCache ?: layers.reversed().also { layersOrderedForInteractionCache = it }
 
   /**
    * Returns the first layer of the given type or null
@@ -126,6 +135,7 @@ class Layers(val chartId: ChartId) {
 
     this.layersListPainting.add(insertionIndex, layer)
     this.layersListLayout.add(insertionIndex, layer)
+    layersOrderedForInteractionCache = null
     return insertionIndex
   }
 
@@ -135,6 +145,7 @@ class Layers(val chartId: ChartId) {
   fun addLayerAt(layer: Layer, paintingIndex: @PaintingOrder Int, layoutIndex: @LayoutOrder Int = paintingIndex) {
     layersListPainting.add(paintingIndex, layer)
     layersListLayout.add(layoutIndex, layer)
+    layersOrderedForInteractionCache = null
   }
 
   /**
@@ -145,6 +156,7 @@ class Layers(val chartId: ChartId) {
     require(index >= 0) { "Anchor layer not found" }
     layersListPainting.add(index, layer)
     layersListLayout.add(index, layer)
+    layersOrderedForInteractionCache = null
   }
 
   fun addLayerAbove(layer: Layer, anchor: Layer) {
@@ -152,6 +164,7 @@ class Layers(val chartId: ChartId) {
     require(index >= 0) { "Anchor layer not found" }
     layersListPainting.add(index + 1, layer)
     layersListLayout.add(index + 1, layer)
+    layersOrderedForInteractionCache = null
   }
 
   /**
@@ -171,6 +184,7 @@ class Layers(val chartId: ChartId) {
     layersListLayout.remove(layer)
     return this.layersListPainting.remove(layer).also {
       if (it) {
+        layersOrderedForInteractionCache = null
         layer.removed()
       }
     }
@@ -183,6 +197,7 @@ class Layers(val chartId: ChartId) {
     val layersToRemove = this.layersListPainting.filter(predicate)
     this.layersListPainting.removeAll(layersToRemove)
     this.layersListLayout.removeAll(layersToRemove)
+    layersOrderedForInteractionCache = null
 
     layersToRemove.fastForEach {
       it.removed()
@@ -212,6 +227,7 @@ class Layers(val chartId: ChartId) {
 
     this.layersListPainting.add(0, layer)
     this.layersListLayout.add(0, layer)
+    layersOrderedForInteractionCache = null
     return 0
   }
 
@@ -238,17 +254,21 @@ class Layers(val chartId: ChartId) {
   /**
    * Paints all layers - records Repaint stats.
    */
+  @Hot
   fun paintLayersWithStats(paintingContext: LayerPaintingContext): PaintingStats {
     //Layout first - in layout order and with the layout index, same as paintLayers
     layersListLayout.fastForEachIndexed { layerIndexForLayout, layerToLayout ->
       paintingContext.gc.saved {
+        @HotBoundary("polymorphic layer dispatch - each layer's layout is colored where it is implemented")
         layerToLayout.layout(paintingContext.withLayoutIndex(LayerIndex(layerIndexForLayout)))
       }
     }
 
+    @HotAllocation("statistics path (opt-in via recordPaintStatistics): one duration list plus one LayerPaintDuration per layer per frame")
     val layerRepaintDurations = layersListPainting.map { layer ->
       val measureTime = measureTime {
         paintingContext.gc.saved {
+          @HotBoundary("polymorphic layer dispatch - each layer's paint is colored where it is implemented")
           layer.paint(paintingContext)
         }
       }
@@ -263,10 +283,12 @@ class Layers(val chartId: ChartId) {
   /**
    * Paints all layers - does not record the paint stats
    */
+  @Hot
   fun paintLayers(paintingContext: LayerPaintingContext) {
     //Layout first
     layersListLayout.fastForEachIndexed { layerIndexForLayout, layerToLayout ->
       paintingContext.gc.saved {
+        @HotBoundary("polymorphic layer dispatch - each layer's layout is colored where it is implemented")
         layerToLayout.layout(paintingContext.withLayoutIndex(LayerIndex(layerIndexForLayout)))
 
         /**
@@ -283,6 +305,7 @@ class Layers(val chartId: ChartId) {
     //Now paint all layers
     layersListPainting.fastForEachIndexed { layerIndexForPaint, layerToPaint ->
       paintingContext.gc.saved {
+        @HotBoundary("polymorphic layer dispatch - each layer's paint is colored where it is implemented")
         layerToPaint.paint(paintingContext.withPaintIndex(LayerIndex(layerIndexForPaint)))
       }
     }

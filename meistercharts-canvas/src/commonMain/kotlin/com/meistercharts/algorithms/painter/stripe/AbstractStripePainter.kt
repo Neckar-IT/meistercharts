@@ -20,6 +20,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 
 /**
@@ -40,24 +41,29 @@ abstract class AbstractStripePainter<
   /**
    * Returns the painting variables for this stripe painter
    */
+  @Hot
   abstract fun paintingVariables(): StripePainterPaintingVariables<DataSeriesIndexType, PaintingVariablesForOneDataSeriesType>
 
   /**
    * Returns the painting variables for the provided data series index
    */
+  @Hot
   protected fun forDataSeriesIndex(dataSeriesIndex: DataSeriesIndexType): PaintingVariablesForOneDataSeriesType {
     return paintingVariables().forDataSeriesIndex(dataSeriesIndex)
   }
 
+  @Hot
   override fun layoutBegin(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
     paintingVariables().prepareLayout(paintingContext, height, dataSeriesIndex, historyConfiguration)
   }
 
+  @Hot
   override fun layoutFinish(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType): @Window @MayBeNaN Double {
     //Paint the last value
     return forDataSeriesIndex(dataSeriesIndex).layoutSegment()
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType) {
     val paintingVariables = paintingVariables()
     paintingVariables.verifyLoopIndex(paintingContext)
@@ -72,6 +78,7 @@ abstract class AbstractStripePainter<
     finishPainting(paintingContext)
   }
 
+  @Hot
   open fun beginPainting(paintingContext: LayerPaintingContext, dataSeriesIndex: DataSeriesIndexType) {
   }
 
@@ -85,12 +92,14 @@ abstract class AbstractStripePainter<
    * * [beginPainting] is called once before
    * * [finishPainting] is called once after
    */
+  @Hot
   abstract fun paintSegment(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DataSeriesIndexType,
     segment: SegmentType,
   )
 
+  @Hot
   open fun finishPainting(paintingContext: LayerPaintingContext) {
   }
 }

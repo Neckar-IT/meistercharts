@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.layers.axis
 
 import com.meistercharts.axis.AxisEndConfiguration
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.unit.conversion.Converter
@@ -48,14 +50,19 @@ class ConvertingTickProvider(
     }
   }
 
+  @Hot
   override fun fillTicks(lowerValue: Double, upperValue: Double, maxTickCount: Int, minTickDistance: Double, axisEndConfiguration: AxisEndConfiguration, target: DoubleArrayList) {
+    @HotBoundary("Converter is a small value-conversion interface - implementations are lambdas/factor converters that coloring cannot reach")
     val lowerValueConverted = converter.convertValue(lowerValue)
+
+    @HotBoundary("Converter is a small value-conversion interface - implementations are lambdas/factor converters that coloring cannot reach")
     val upperValueConverted = converter.convertValue(upperValue)
 
     delegate.fillTicks(lowerValueConverted, upperValueConverted, maxTickCount, minTickDistance, axisEndConfiguration, target)
 
     //Convert back (in place)!
     for (i in 0 until target.size) {
+      @HotBoundary("Converter is a small value-conversion interface - implementations are lambdas/factor converters that coloring cannot reach")
       target[i] = converter.reverseValue(target[i])
     }
   }

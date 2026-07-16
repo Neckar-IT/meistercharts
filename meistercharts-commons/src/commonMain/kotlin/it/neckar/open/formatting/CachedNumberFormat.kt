@@ -81,9 +81,16 @@ class DefaultCachedFormat internal constructor(
     //Calculate the hash code to avoid instantiation of objects
     val key = hashFunction(value, i18nConfiguration, whitespaceConfig)
 
-    return formatCache.getOrStore(key) {
-      format.format(value, i18nConfiguration, whitespaceConfig)
+    //Do *NOT* use #getOrStore: its capturing lambda would allocate on every call - even on cache hits.
+    //This format sits on the per-frame hot path (axis ticks, labels), where the hit path must be allocation-free.
+    val found = formatCache[key]
+    if (found != null) {
+      return found
     }
+
+    val formatted = format.format(value, i18nConfiguration, whitespaceConfig)
+    formatCache.store(key, formatted)
+    return formatted
   }
 
   override val precision: Double

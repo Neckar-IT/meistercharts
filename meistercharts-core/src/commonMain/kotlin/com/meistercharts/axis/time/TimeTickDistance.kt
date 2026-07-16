@@ -26,6 +26,9 @@ import it.neckar.datetime.minimal.Year
 import it.neckar.datetime.minimal.fromMillisCurrentTimeZone
 import it.neckar.datetime.minimal.toMillis
 import it.neckar.datetime.minimal.toMillisAtStartOfDay
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyIntArray
 import it.neckar.open.collections.fastForEach
@@ -69,6 +72,7 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
   /**
    * Calculates the tick values from the given start until the end
    */
+  @Allocates(AllocationCost.Linear)
   fun calculateTicks(
     start: @ms @Inclusive Double,
     end: @ms @Inclusive Double,
@@ -93,6 +97,7 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
   /**
    * Calculates the tick values - without any checks
    */
+  @Allocates(AllocationCost.Linear)
   fun calculateTicksInternal(
     start: @Inclusive @ms Double,
     end: @Inclusive @ms Double,
@@ -102,6 +107,7 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
   /**
    * Formats the given millis as offset
    */
+  @Allocates(AllocationCost.Constant)
   fun formatAsOffset(millis: @ms Double, i18nConfiguration: I18nConfiguration): String
 
   /**
@@ -110,12 +116,14 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
    *
    * Attention: The returned value is *guess*! It should not be used to calculate real values at all.
    */
+  @Allocates(AllocationCost.Constant)
   fun calculateEstimatedIndex(millis: @ms Double, timeZone: TimeZone): GlobalTimeIndex
 
   /**
    * Returns the smallest possible tick distance for this *offset* distance
    * @return null if all tick distances are supported
    */
+  @Hot
   fun smallestPossibleTickDistance(): TimeTickDistance
 
   /**
@@ -151,6 +159,7 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
     /**
      * Returns the ideal time tick distance for the given min tick distance - use when calculating ticks
      */
+    @Allocates(AllocationCost.Constant)
     fun forTicks(minTickDistance: @ms Double): TimeTickDistance {
       require(minTickDistance >= 0.0) { "min tick distance must be greater than or equal to 0 but was <$minTickDistance>" }
 
@@ -195,6 +204,7 @@ sealed interface TimeTickDistance : Comparable<TimeTickDistance> {
     /**
      * Returns the ideal time tick distance when calculating ticks for offsets
      */
+    @Allocates(AllocationCost.Constant)
     fun forOffsets(minTickDistance: @ms Double): TimeTickDistance {
       require(minTickDistance >= 0.0) { "min tick distance must be greater than or equal to 0 but was <$minTickDistance>" }
 
@@ -294,6 +304,7 @@ class DistanceYears(val distanceInYears: @a Int) : TimeTickDistance {
     return GlobalTimeIndex(localDate.year.value / distanceInYears)
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceDays(EveryDay)
   }
@@ -357,6 +368,7 @@ class DistanceMonths(val distanceInMonths: Int) : TimeTickDistance {
     return GlobalTimeIndex(localDate.monthOfEpoche() / distanceInMonths)
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceDays(EveryDay)
   }
@@ -526,6 +538,7 @@ class DistanceDays(val ticksPerMonth: TicksPerMonth) : TimeTickDistance {
     return GlobalTimeIndex(tickOfEpoche)
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceMinutes(1)
   }
@@ -589,6 +602,7 @@ class DistanceHours(val distanceInHours: Int) : TimeTickDistance {
     return GlobalTimeIndex((millis / TimeConstants.millisPerHour).toInt())
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceMillis.smallest
   }
@@ -645,6 +659,7 @@ class DistanceMinutes(val distanceInMinutes: @min Int) : TimeTickDistance {
     return GlobalTimeIndex(minuteOfEpoch / distanceInMinutes)
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceMillis.smallest
   }
@@ -701,6 +716,7 @@ class DistanceSeconds(val distanceInSeconds: @s Int) : TimeTickDistance {
     return GlobalTimeIndex(startSecondOfEpoch.toIntFloor() / distanceInSeconds)
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return DistanceMillis.smallest
   }
@@ -763,6 +779,7 @@ class DistanceMillis(val distanceInMillis: @ms Double) : TimeTickDistance {
     return GlobalTimeIndex(((millis / this.distanceInMillis) % Int.MAX_VALUE).toInt())
   }
 
+  @Hot
   override fun smallestPossibleTickDistance(): TimeTickDistance {
     return smallest
   }

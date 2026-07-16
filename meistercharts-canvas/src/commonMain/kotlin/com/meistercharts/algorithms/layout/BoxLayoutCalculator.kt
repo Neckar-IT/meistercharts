@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.layout
 
 import com.meistercharts.annotations.Zoomed
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.kotlin.lang.ceil
 import it.neckar.open.kotlin.lang.floor
 import it.neckar.open.unit.other.px
@@ -28,6 +30,7 @@ object BoxLayoutCalculator {
   /**
    * Calculates a box layout with (equisized boxes)
    */
+  @Hot
   fun layout(
     /**
      * The available space (for all boxes)
@@ -65,13 +68,17 @@ object BoxLayoutCalculator {
     layoutMode: LayoutMode = Exact,
   ): EquisizedBoxLayout {
     val boxSize = calculateBoxSize(availableSpace, numberOfBoxes, minBoxSize, maxBoxSize, gapSize, layoutMode)
-    return EquisizedBoxLayout(availableSpace, numberOfBoxes, boxSize, gapSize, layoutDirection)
+
+    @HotAllocation("Once per layout call (per frame per layer) - a single small result object, not per box")
+    val result = EquisizedBoxLayout(availableSpace, numberOfBoxes, boxSize, gapSize, layoutDirection)
+    return result
   }
 }
 
 /**
  * Calculates the size for each box
  */
+@Hot
 internal fun calculateBoxSize(
   /**
    * the amount of space that is available
@@ -122,10 +129,13 @@ sealed interface LayoutMode {
   /**
    * Returns the ceil - or exact value
    */
+  @Hot
   fun ceil(value: @px Double): @px Double
 
+  @Hot
   fun floor(value: @px Double?): @px Double?
 
+  @Hot
   fun floor(value: @px Double): @px Double
 }
 
@@ -133,14 +143,17 @@ sealed interface LayoutMode {
  * Exact values - no rounding whatsoever
  */
 object Exact : LayoutMode {
+  @Hot
   override fun ceil(value: Double): Double {
     return value
   }
 
+  @Hot
   override fun floor(value: Double?): Double? {
     return value
   }
 
+  @Hot
   override fun floor(value: Double): Double {
     return value
   }
@@ -150,14 +163,17 @@ object Exact : LayoutMode {
  * Rounded to the nearest integer
  */
 object Rounded : LayoutMode {
+  @Hot
   override fun ceil(value: Double): Double {
     return value.ceil()
   }
 
+  @Hot
   override fun floor(value: Double?): Double? {
     return value?.floor()
   }
 
+  @Hot
   override fun floor(value: Double): Double {
     return value.floor()
   }

@@ -31,6 +31,7 @@ import com.meistercharts.font.FontMetrics
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
 
@@ -71,21 +72,27 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   override fun paintImagePixelPerfect(image: Image, x: Double, y: Double) {
   }
 
+  @Hot
   override fun strokeLine(startX: Double, startY: Double, endX: Double, endY: Double) {
   }
 
+  @Hot
   override fun fillRectInternal(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun ovalCenter(centerX: Double, centerY: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun strokeRectInternal(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun strokeOvalCenter(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun fillOvalCenter(x: Double, y: Double, width: Double, height: Double) {
   }
 
@@ -101,39 +108,50 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   override fun fillArcCenter(x: Double, y: Double, radius: Double, startAngle: Double, arcExtent: Double, arcType: ArcType) {
   }
 
+  @Hot
   override fun beginPath() {
   }
 
   override fun arcCenter(centerX: Double, centerY: Double, radius: Double, startAngle: Double, extend: Double) {
   }
 
+  @Hot
   override fun closePath() {
   }
 
+  @Hot
   override fun moveTo(x: Double, y: Double) {
   }
 
+  @Hot
   override fun lineTo(x: Double, y: Double) {
   }
 
+  @Hot
   override fun bezierCurveTo(controlX1: Double, controlY1: Double, controlX2: Double, controlY2: Double, x2: Double, y2: Double) {
   }
 
+  @Hot
   override fun quadraticCurveTo(controlX: Double, controlY: Double, x: Double, y: Double) {
   }
 
+  @Hot
   override fun arcTo(controlX: Double, controlY: Double, x: Double, y: Double, radius: Double) {
   }
 
+  @Hot
   override fun stroke() {
   }
 
+  @Hot
   override fun fill() {
   }
 
+  @Hot
   override fun shadow(color: Color, blurRadius: Double, offsetX: Double, offsetY: Double) {
   }
 
+  @Hot
   override fun clearShadow() {
   }
 
@@ -153,35 +171,44 @@ class MockCanvasRenderingContext : AbstractCanvasRenderingContext() {
   override fun strokeText(text: String, x: Double, y: Double, anchorDirection: Direction, gapHorizontal: Double, gapVertical: Double, maxWidth: Double?, maxHeight: Double?, stringShortener: CanvasStringShortener) {
   }
 
+  @Hot
   override fun getFontMetrics(): FontMetrics {
     return FontMetrics(10.0, 2.0, 15.0, 4.0)
   }
 
+  @Hot
   override fun clip(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun fillRule(fillRule: FillRule) {
   }
 
   @px
   var mockTextWidth: Double = 20.0
 
+  @Hot
   override fun calculateTextWidth(text: String): Double {
     return mockTextWidth
   }
 
+  @Hot
   override fun rect(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun clearRect(x: Double, y: Double, width: Double, height: Double) {
   }
 
+  @Hot
   override fun strokeStyle(color: CanvasPaint) {
   }
 
+  @Hot
   override fun fillStyle(color: CanvasPaint) {
   }
 
+  @Hot
   override fun setLineDash(vararg dashes: Double) {
   }
 

@@ -21,6 +21,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.SidesSelection
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 
@@ -47,6 +48,7 @@ class ClippingLayer<T : Layer>(
     configuration.additionalConfiguration()
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     val insets = configuration.insets(paintingContext)

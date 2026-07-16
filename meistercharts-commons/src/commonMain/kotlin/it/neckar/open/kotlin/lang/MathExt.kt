@@ -29,6 +29,7 @@
 
 package it.neckar.open.kotlin.lang
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.Inclusive
 import it.neckar.open.unit.other.deg
 import it.neckar.open.unit.other.pct
@@ -77,6 +78,7 @@ fun Double.toDegrees(): @deg Double {
 /**
  * Converts degree to radians
  */
+@Hot
 fun Double.toRadians(): @rad Double {
   return this / 180.0 * PI
 }
@@ -122,6 +124,7 @@ fun Double.isNotCloseTo(targetValue: Double, epsilon: Double = Epsilon): Boolean
 /**
  * Returns true if this is close to the given value - or smaller than the given value
  */
+@Hot
 fun Double.isCloseToOrLessThan(compareTo: @Inclusive Double, epsilon: Double = Epsilon): Boolean {
   if (this <= compareTo) {
     return true
@@ -130,6 +133,7 @@ fun Double.isCloseToOrLessThan(compareTo: @Inclusive Double, epsilon: Double = E
   return this.isCloseTo(compareTo, epsilon)
 }
 
+@Hot
 fun Double.isCloseToOrMoreThan(compareTo: @Inclusive Double, epsilon: Double = Epsilon): Boolean {
   if (this >= compareTo) {
     return true
@@ -165,8 +169,12 @@ fun Double.acos(): Double = acos(this)
 fun Double.atan(): Double = atan(this)
 fun Double.exp(): Double = exp(this)
 fun Double.log10(): Double = log10(this)
+@Hot
 fun Double.sqrt(): Double = sqrt(this)
+@Hot
 fun Double.ceil(): Double = ceil(this)
+
+@Hot
 fun Double.floor(): Double = floor(this)
 fun Double.atan2(x: Double): Double = atan2(this, x)
 
@@ -175,6 +183,7 @@ fun Double.atan2(x: Double): Double = atan2(this, x)
  *
  * Use [roundHalfUp] instead
  */
+@Hot
 fun Double.round(): Double = round(this)
 fun Double.abs(): Double = abs(this)
 fun Double.sinh(): Double = sinh(this)
@@ -204,9 +213,11 @@ inline fun Boolean.toInt() = if (this) 1 else 0
 ////////////////////
 
 /** Converts [this] into [Int] rounding to the ceiling */
+@Hot
 fun Float.toIntCeil(): Int = ceil(this).toInt()
 
 /** Converts [this] into [Int] rounding to the ceiling */
+@Hot
 fun Double.toIntCeil(): Int = ceil(this).toInt()
 
 /** Converts [this] into [Int] rounding to the floor */
@@ -427,6 +438,7 @@ fun almostZero(a: Double) = abs(a) <= 0.0000001
  *
  * ATTENTION: Rounds to the nearest *even* integer. Use [roundDecimalPlacesHalfUp] if necessary
  */
+@Hot
 fun Double.roundDecimalPlaces(places: Int): Double {
   val placesFactor: Double = 10.0.pow(places.toDouble())
   return round(this * placesFactor) / placesFactor

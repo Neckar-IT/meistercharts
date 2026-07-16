@@ -30,6 +30,7 @@ import com.meistercharts.model.Insets
 import com.meistercharts.model.Vicinity
 import it.neckar.geometry.Orientation
 import it.neckar.geometry.Side
+import it.neckar.open.annotations.Hot
 import it.neckar.open.annotations.JavaFriendly
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
@@ -46,6 +47,7 @@ typealias AxisTitleProvider = (textService: TextService, i18nConfiguration: I18n
 /**
  * Extracts the [TextService] and [I18nConfiguration] from the provided chart support
  */
+@Hot
 operator fun AxisTitleProvider.invoke(chartSupport: ChartSupport): String? {
   return this.invoke(chartSupport.textService, chartSupport.i18nConfiguration)
 }
@@ -168,6 +170,7 @@ open class AxisConfiguration {
   /**
    * Returns true if there is a non-blank title
    */
+  @Hot
   fun hasNonBlankTitle(chartSupport: ChartSupport): Boolean {
     return titleProvider?.invoke(chartSupport).isNullOrBlank().not()
   }

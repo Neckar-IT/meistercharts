@@ -20,6 +20,7 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Rectangle
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.pct
 
 
@@ -30,6 +31,7 @@ fun interface BasePointProvider {
   /**
    * Returns the coordinates for a given bounding box
    */
+  @Hot
   fun calculateBasePoint(boundingBox: Rectangle): Coordinates
 
   ///**
@@ -66,6 +68,7 @@ class DirectionBasedBasePointProvider(
     direction = { direction }
   )
 
+  @Hot
   override fun calculateBasePoint(boundingBox: Rectangle): Coordinates {
     return boundingBox.findCoordinates(direction()).plus(translation)
   }
@@ -78,6 +81,7 @@ class RelativeBasePointProvider(
   val xPercentage: @pct Double,
   val yPercentage: @pct Double,
 ) : BasePointProvider {
+  @Hot
   override fun calculateBasePoint(boundingBox: Rectangle): Coordinates {
     return boundingBox.findCoordinatesRelative(xPercentage, yPercentage)
   }

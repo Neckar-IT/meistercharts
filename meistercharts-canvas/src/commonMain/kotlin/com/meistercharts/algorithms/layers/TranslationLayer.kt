@@ -18,6 +18,8 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.saved
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.provider.DoubleProvider
 
 /**
@@ -50,9 +52,11 @@ class TranslationLayer(
     configuration.delegate.layout(paintingContext)
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     paintingContext.gc.saved {
       it.translate(configuration.translateX(), configuration.translateY())
+      @HotBoundary("polymorphic layer delegation - the delegate is colored where it is implemented")
       configuration.delegate.paint(paintingContext)
     }
   }

@@ -21,6 +21,7 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
+import it.neckar.open.annotations.Hot
 
 /**
  * Painting variables for a single enum data series.
@@ -44,6 +45,7 @@ class EnumStripePainterPaintingVariablesForOneDataSeries :
   /**
    * Stores the next values (as raw ints)
    */
+  @Hot
   fun storeNextValues(enumSet: @HistoryEnumSetInt Int, ordinal: @HistoryEnumOrdinalInt Int) {
     nextEnumSet = enumSet
     nextOrdinal = ordinal
@@ -53,6 +55,7 @@ class EnumStripePainterPaintingVariablesForOneDataSeries :
     return Segment()
   }
 
+  @Hot
   override fun writeCurrentValuesToSegment(segment: Segment) {
     segment.enumSet = currentEnumSet
     segment.ordinal = currentOrdinal
@@ -65,6 +68,7 @@ class EnumStripePainterPaintingVariablesForOneDataSeries :
     previousOrdinal = HistoryEnumOrdinal.NoValue.value
   }
 
+  @Hot
   override fun moveNextValuesToCurrentAndCurrentToPrevious() {
     previousEnumSet = currentEnumSet
     previousOrdinal = currentOrdinal
@@ -72,6 +76,7 @@ class EnumStripePainterPaintingVariablesForOneDataSeries :
     currentOrdinal = nextOrdinal
   }
 
+  @Hot
   override fun resetNextValues() {
     nextEnumSet = HistoryEnumSet.NoValueAsInt
     nextOrdinal = HistoryEnumOrdinal.NoValue.value

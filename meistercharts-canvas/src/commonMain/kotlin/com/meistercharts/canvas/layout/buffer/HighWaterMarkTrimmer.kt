@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.layout.buffer
 
 import com.meistercharts.loop.PaintingLoopIndex
+import it.neckar.open.annotations.Hot
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -72,6 +73,7 @@ class HighWaterMarkTrimmer(
    * demand: the number of slots actually needed in the loop that is being processed
    * currentCapacity: the currently allocated capacity of the buffer
    */
+  @Hot
   fun pollTrimTarget(paintingLoopIndex: PaintingLoopIndex, demand: Int, currentCapacity: Int): Int? {
     if (paintingLoopIndex == currentLoopIndex) {
       //Same loop - already processed. Do not advance the epoch or double-count the demand.

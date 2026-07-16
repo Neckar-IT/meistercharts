@@ -19,6 +19,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.FillRule
 import it.neckar.geometry.Coordinates
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.PositiveOrZero
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.rad
@@ -31,14 +32,17 @@ interface SupportsPathActions {
    * Sets the fill rule.
    * Default is [FillRule.NonZero]
    */
+  @Hot
   fun fillRule(fillRule: FillRule)
 
+  @Hot
   fun beginPath()
 
   fun moveTo(point: Coordinates) {
     moveTo(point.x, point.y)
   }
 
+  @Hot
   fun moveTo(x: Double, y: Double)
 
   /**
@@ -53,6 +57,7 @@ interface SupportsPathActions {
    * Adds a line to the current path.
    * If the current path is empty, [moveTo] will automatically be used instead.
    */
+  @Hot
   fun lineTo(x: Double, y: Double)
 
   /**
@@ -65,6 +70,7 @@ interface SupportsPathActions {
   /**
    * Adds a quadratic curve to the current path
    */
+  @Hot
   fun quadraticCurveTo(controlX: Double, controlY: Double, x: Double, y: Double)
 
   fun bezierCurveTo(control1: Coordinates, control2: Coordinates, endPoint: Coordinates) {
@@ -81,6 +87,7 @@ interface SupportsPathActions {
    * @param x2 The x-axis coordinate of the end point.
    * @param y2 The y-axis coordinate of the end point.
    */
+  @Hot
   fun bezierCurveTo(@Window controlX1: Double, @Window controlY1: Double, @Window controlX2: Double, @Window controlY2: Double, @Window x2: Double, @Window y2: Double)
 
   /**
@@ -93,6 +100,7 @@ interface SupportsPathActions {
   /**
    * Adds an arc to the current path
    */
+  @Hot
   fun arcTo(controlX: Double, controlY: Double, x: Double, y: Double, radius: @PositiveOrZero Double)
 
   /**
@@ -133,6 +141,7 @@ interface SupportsPathActions {
    * Closes the path:
    * Adds a straight line from the current point to the start of the current sub-path.
    */
+  @Hot
   fun closePath()
 }
 

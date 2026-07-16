@@ -22,6 +22,7 @@ import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -39,6 +40,7 @@ interface EnumStripePainter : StripePainter<EnumDataSeriesIndex> {
    *
    * @return the optical *center* of the segment - if the activeTimeStamp is within the segment, [Double.NaN] otherwise.
    */
+  @Hot
   fun layoutValueChange(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: EnumDataSeriesIndex,

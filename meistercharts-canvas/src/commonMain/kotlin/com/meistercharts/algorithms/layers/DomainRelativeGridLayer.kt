@@ -23,6 +23,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.kotlin.lang.asProvider1
 import it.neckar.open.provider.DoublesProvider
@@ -68,6 +69,7 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
   override val type: LayerType
     get() = LayerType.Background
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     val chartCalculator = paintingContext.chartCalculator

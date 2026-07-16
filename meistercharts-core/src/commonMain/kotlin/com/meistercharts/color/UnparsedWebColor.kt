@@ -15,6 +15,8 @@
  */
 package com.meistercharts.color
 
+import it.neckar.open.annotations.Hot
+
 /**
  * Represents an unparsed web color.
  * Which might or might not be parsed to a [Color] object.
@@ -29,6 +31,7 @@ data class UnparsedWebColor(override val web: String) : Color, CanvasPaint {
     }
   }
 
+  @Hot
   override fun toCanvasPaint(x0: Double, y0: Double, x1: Double, y1: Double): CanvasPaint {
     return this
   }

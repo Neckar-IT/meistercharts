@@ -27,6 +27,8 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.Hot
+
 
 inline fun IntArrayList.fastForEach(callback: (Int) -> Unit) {
   var n = 0
@@ -118,7 +120,8 @@ inline fun DoubleArrayList.fastForEachIndexedReversed(callback: (index: Int, val
   }
 }
 
-fun DoubleArrayList.fastAny(predicate: DoublePredicate): Boolean {
+@Hot
+inline fun DoubleArrayList.fastAny(predicate: (Double) -> Boolean): Boolean {
   var n = 0
   val currentSize = size
   while (n < currentSize) {

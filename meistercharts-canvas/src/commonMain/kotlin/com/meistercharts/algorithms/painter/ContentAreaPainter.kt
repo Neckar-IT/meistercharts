@@ -20,6 +20,7 @@ import com.meistercharts.calc.ChartCalculator
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.model.SidesSelection
+import it.neckar.open.annotations.Hot
 
 /**
  * Painter that draws the valid area (x and y axis)
@@ -33,6 +34,7 @@ class ContentAreaPainter {
     fill = null
   }
 
+  @Hot
   fun paint(
     gc: CanvasRenderingContext,
     chartCalculator: ChartCalculator

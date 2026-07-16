@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.layout.buffer
 
 import com.meistercharts.annotations.Domain
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 
 /**
@@ -40,11 +41,13 @@ class TickLabelsBuffer : LayoutVariableWithSize {
   override val size: Int
     get() = values.size
 
+  @Hot
   override fun reset() {
     values.reset()
     formattedLabels.reset()
   }
 
+  @Hot
   override fun resize(size: Int) {
     values.resize(size)
     formattedLabels.resize(size)
@@ -53,6 +56,7 @@ class TickLabelsBuffer : LayoutVariableWithSize {
   /**
    * Sets the tick value and its formatted label for the given index
    */
+  @Hot
   fun set(index: Int, value: @Domain @MayBeNaN Double, formatted: String) {
     values[index] = value
     formattedLabels[index] = formatted
@@ -61,6 +65,7 @@ class TickLabelsBuffer : LayoutVariableWithSize {
   /**
    * Returns the tick value for the given index
    */
+  @Hot
   fun valueAt(index: Int): @Domain @MayBeNaN Double {
     return values[index]
   }
@@ -68,6 +73,7 @@ class TickLabelsBuffer : LayoutVariableWithSize {
   /**
    * Returns the formatted label for the given index
    */
+  @Hot
   fun formattedAt(index: Int): String {
     return formattedLabels[index]
   }

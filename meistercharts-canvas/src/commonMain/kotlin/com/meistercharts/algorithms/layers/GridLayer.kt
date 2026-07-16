@@ -24,6 +24,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.model.Insets
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiDoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -45,6 +46,7 @@ class GridLayer @JvmOverloads constructor(
   override val type: LayerType
     get() = LayerType.Background
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 

@@ -15,6 +15,9 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachFiltered
 import it.neckar.open.collections.fastForEachReversed
@@ -73,8 +76,12 @@ abstract class AbstractObjectMultiBuffer<T>(
   }
 
   /**
-   * Increases the size by 1, adds a new element
+   * Increases the size by 1, adds a new element.
+   *
+   * Allocates only when the pool grows beyond its high-water mark ([factory] call + list growth);
+   * steady-state frames reuse the pooled objects.
    */
+  @Allocates(AllocationCost.Constant)
   open fun addNewElement(): T {
     val newSize = size + 1
     resize(newSize)
@@ -86,6 +93,7 @@ abstract class AbstractObjectMultiBuffer<T>(
    *
    * Does *NOT* reset the values
    */
+  @Hot
   override fun resize(size: Int) {
     //Increase the size of the object pool if necessary
     while (objectPool.size < size) {
@@ -141,14 +149,22 @@ abstract class AbstractObjectMultiBuffer<T>(
 
   /**
    * Removes all elements the given predicate returns true for.
+   *
+   * Iterates backwards with index-based removal instead of delegating to the non-inline stdlib
+   * `MutableIterable.removeAll` - keeps the predicate inlined (no lambda instance in hot paths).
    */
-  inline fun removeAll(noinline predicate: (T) -> Boolean) {
-    values.removeAll(predicate)
+  inline fun removeAll(predicate: (T) -> Boolean) {
+    for (index in values.size - 1 downTo 0) {
+      if (predicate(values[index])) {
+        values.removeAt(index)
+      }
+    }
   }
 
   /**
    * Sorts the list using the given comparator
    */
+  @Hot
   fun sortWith(comparator: Comparator<T>) {
     values.sortWith(comparator)
   }

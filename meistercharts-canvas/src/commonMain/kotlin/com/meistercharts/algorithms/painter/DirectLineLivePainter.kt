@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.painter.AbstractLinePainter
+import it.neckar.open.annotations.Hot
 
 /**
  * Paints a line using a direct path.
@@ -30,6 +31,7 @@ open class DirectLineLivePainter(
   snapYValues: Boolean,
 ) : AbstractLinePainter(snapXValues, snapYValues) {
 
+  @Hot
   private fun firstPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     gc.beginPath()
     gc.moveTo(x, y)
@@ -49,10 +51,12 @@ open class DirectLineLivePainter(
   private val empty: Boolean
     get() = pointCount < 1
 
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     pointCount = 0
   }
 
+  @Hot
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     require(x.isFinite()) {
       "x must be a real number required but was $x"
@@ -71,6 +75,7 @@ open class DirectLineLivePainter(
     ++pointCount
   }
 
+  @Hot
   override fun paint(gc: CanvasRenderingContext) {
     if (empty) {
       //No points have been added - just return

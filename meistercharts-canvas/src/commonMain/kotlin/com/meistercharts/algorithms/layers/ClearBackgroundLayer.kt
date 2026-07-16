@@ -15,12 +15,15 @@
  */
 package com.meistercharts.algorithms.layers
 
+import it.neckar.open.annotations.Hot
+
 /**
  * Clears the canvas
  */
 class ClearBackgroundLayer : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     paintingContext.gc.clear()
   }

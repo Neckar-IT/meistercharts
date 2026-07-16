@@ -17,6 +17,7 @@ package com.meistercharts.canvas
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import it.neckar.open.observable.ObservableObject
+import it.neckar.open.annotations.Hot
 
 /**
  * Contains the debug configuration.
@@ -156,6 +157,7 @@ enum class DebugFeature {
   /**
    * Returns true if the debug feature is enabled in the given painting context
    */
+  @Hot
   fun enabled(paintingContext: LayerPaintingContext): Boolean {
     return enabled(paintingContext.debug)
   }
@@ -167,6 +169,7 @@ enum class DebugFeature {
   /**
    * Returns true if this debug feature is enabled in the given debug configuration
    */
+  @Hot
   fun enabled(debugConfiguration: DebugConfiguration): Boolean {
     return debugConfiguration[this]
   }

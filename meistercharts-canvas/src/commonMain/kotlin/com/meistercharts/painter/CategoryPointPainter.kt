@@ -22,11 +22,13 @@ import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.style.Palette.getChartColor
+import it.neckar.open.annotations.Hot
 
 /**
  * Paints points associated with a category
  */
 fun interface CategoryPointPainter {
+  @Hot
   fun paintPoint(
     gc: CanvasRenderingContext,
     x: @Window Double,
@@ -41,6 +43,7 @@ fun interface CategoryPointPainter {
  * A [CategoryPointPainter] that delegates calls to the given [delegate]
  */
 class DelegatingCategoryPointPainter(val delegate: PointPainter) : CategoryPointPainter {
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: @Domain Double) {
     delegate.paintPoint(gc, x, y)
   }
@@ -65,6 +68,7 @@ class CircleCategoryPointPainter(
     pointSize = 15.0
   }
 
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: @Domain Double) {
     circlePointPainter.paintPoint(gc, x, y)
   }
@@ -78,6 +82,8 @@ class DotCategoryPointPainter(
   snapYValues: Boolean
 ) : CategoryPointPainter {
   val pointStylePainter: PointStylePainter = PointStylePainter(PointStyle.Dot, snapXValues = snapXValues, snapYValues = snapYValues)
+
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: @Domain Double) {
     pointStylePainter.paintPoint(gc, x, y)
   }
@@ -91,6 +97,8 @@ class CrossCategoryPointPainter(
   snapYValues: Boolean
 ) : CategoryPointPainter {
   val pointStylePainter: PointStylePainter = PointStylePainter(PointStyle.Cross, snapXValues = snapXValues, snapYValues = snapYValues)
+
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: @Domain Double) {
     pointStylePainter.paintPoint(gc, x, y)
   }
@@ -104,6 +112,8 @@ class Cross45DegreesCategoryPointPainter(
   snapYValues: Boolean
 ) : CategoryPointPainter {
   val pointStylePainter: PointStylePainter = PointStylePainter(PointStyle.Cross45Degrees, snapXValues = snapXValues, snapYValues = snapYValues)
+
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: @Domain Double) {
     pointStylePainter.paintPoint(gc, x, y)
   }

@@ -48,6 +48,7 @@ import it.neckar.geometry.RightTriangleType
 import it.neckar.geometry.Size
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.toRadians
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.number.MayBeZero
@@ -173,6 +174,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    */
   fun paintImagePixelPerfect(image: Image, @Window x: Double, @Window y: Double)
 
+  @Hot
   fun strokeLine(@Window @px startX: Double, @Window @px startY: Double, @Window @px endX: Double, @Window @px endY: Double)
 
   /**
@@ -202,11 +204,13 @@ interface CanvasRenderingContext : SupportsPathActions {
     strokeLine(start.x, start.y, end.x, end.y)
   }
 
+  @Hot
   fun fillRectInternal(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
 
   /**
    * Accepts negative width and height
    */
+  @Hot
   fun fillRect(
     @Window @px x: Double,
     @Window @px y: Double,
@@ -254,6 +258,7 @@ interface CanvasRenderingContext : SupportsPathActions {
     fillRect(bounds.left, bounds.top, bounds.widthAbs, bounds.heightAbs)
   }
 
+  @Hot
   fun strokeRect(@Window @px x: Double, @Window @px y: Double, @MayBeNegative @px @Zoomed width: Double, @MayBeNegative @px @Zoomed height: Double, strokeLocation: StrokeLocation = StrokeLocation.Center) {
     var calculatedWidth = width
     var calculatedX = x
@@ -300,6 +305,7 @@ interface CanvasRenderingContext : SupportsPathActions {
     strokeRectInternal(calculatedX, calculatedY, calculatedWidth, calculatedHeight)
   }
 
+  @Hot
   fun strokeRectInternal(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double)
 
   fun strokeRect(@Window @px location: Coordinates, @px @Zoomed size: Size, strokeLocation: StrokeLocation = StrokeLocation.Center) {
@@ -467,6 +473,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Appends an oval to the current path
    */
+  @Hot
   fun ovalCenter(@Window @px centerX: Double, @Window @px centerY: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 
   /**
@@ -476,6 +483,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * @param width the width
    * @param height the height
    */
+  @Hot
   fun strokeOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width) {
     ovalCenter(x, y, width, height)
     stroke()
@@ -509,6 +517,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * @param width the width
    * @param height the height
    */
+  @Hot
   fun fillOvalCenter(@Window @px x: Double, @Window @px y: Double, @px @Zoomed width: Double, @px @Zoomed height: Double = width)
 
   fun fillOvalCenter(@Window center: Coordinates, @px @Zoomed size: Size) {
@@ -550,11 +559,13 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Stroke the current path
    */
+  @Hot
   fun stroke()
 
   /**
    * Stroke the given path
    */
+  @Hot
   fun stroke(pathActions: PathActions) {
     applyPathActions(pathActions)
     stroke()
@@ -563,6 +574,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Activates the shadow
    */
+  @Hot
   fun shadow(
     color: Color = Shadow.Default.color(),
     blurRadius: @px Double = Shadow.Default.blurRadius,
@@ -574,6 +586,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Activates the shadow.
    * If null is provided, the shadow is reset
    */
+  @Hot
   fun shadow(shadow: Shadow? = Shadow.Default) {
     if (shadow == null) {
       clearShadow()
@@ -585,11 +598,13 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Clears the shadow
    */
+  @Hot
   fun clearShadow()
 
   /**
    * Applies the given path actions
    */
+  @Hot
   fun applyPathActions(pathActions: PathActions) {
     applyPathActions(pathActions, factorX = 1.0, factorY = 1.0)
 
@@ -604,6 +619,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Begins a new path. Iterates the flat buffers of [PathActions] - does not allocate.
    * Does *not* apply the fill rule of [pathActions].
    */
+  @Hot
   fun applyPathActions(pathActions: PathActions, factorX: Double, factorY: Double) {
     beginPath()
 
@@ -665,11 +681,13 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Fill the current path
    */
+  @Hot
   fun fill()
 
   /**
    * Fill the given path
    */
+  @Hot
   fun fill(pathActions: PathActions) {
     applyPathActions(pathActions)
     fill()
@@ -678,6 +696,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Translates the canvas
    */
+  @Hot
   fun translate(deltaX: Double, deltaY: Double)
 
   fun translate(distance: Distance) {
@@ -687,6 +706,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Translates by the physical pixel delta (does *not* respect the current [scale])
    */
+  @Hot
   fun translatePhysical(deltaX: @PhysicalPixel Double, deltaY: @PhysicalPixel Double)
 
   /**
@@ -717,6 +737,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    *
    * For performance reasons [rotateRadians] with radian parameter should be preferred
    */
+  @Hot
   fun rotateDegrees(angleInDegrees: @deg Double) {
     rotateRadians(angleInDegrees.toRadians())
   }
@@ -724,6 +745,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Rotates the canvas *clockwise*
    */
+  @Hot
   fun rotateRadians(angleInRadians: @rad Double)
 
   /**
@@ -739,6 +761,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    *
    * If maxWidth/maxHeight is too
    */
+  @Allocates(AllocationCost.Constant)
   fun fillText(
     text: String,
     x: @Window Double,
@@ -789,6 +812,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Strokes the text relative to the given anchor direction
    */
+  @Allocates(AllocationCost.Constant)
   fun strokeText(
     text: String,
     x: Double,
@@ -847,6 +871,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    * Calculates the width of [text] using the current font.
    * @see calculateTextSize
    */
+  @Hot
   fun calculateTextWidth(text: String): @px Double
 
   /**
@@ -858,6 +883,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Adds the rect to the current path
    */
+  @Hot
   fun rect(@px x: Double, @px y: Double, width: @MayBeNegative Double, height: @MayBeNegative Double)
 
   /**
@@ -865,11 +891,15 @@ interface CanvasRenderingContext : SupportsPathActions {
    *
    * ATTENTION: Do *not* use this method to clear the complete canvas: use [ChartSupport.markAsDirty] instead.
    */
+  @Hot
   fun clearRect(x: @px Double, y: @px Double, width: @px Double, height: @px Double)
 
   /**
-   * Applies the font descriptor fragment
+   * Applies the font descriptor fragment.
+   *
+   * Allocates when the fragment is not empty: [combineWith] creates a new [FontDescriptor].
    */
+  @Allocates(AllocationCost.Constant)
   fun font(fontFragment: FontDescriptorFragment) {
     if (fontFragment.isEmpty()) {
       //do no change anything
@@ -882,6 +912,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Sets the color used for strokes
    */
+  @Hot
   fun strokeStyle(color: CanvasPaint)
 
   var strokeStyle: String
@@ -894,6 +925,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Sets the stroke style
    */
+  @Hot
   fun stroke(color: CanvasPaint) {
     strokeStyle(color)
   }
@@ -901,8 +933,10 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Sets the color used to fill the drawing
    */
+  @Hot
   fun fillStyle(color: CanvasPaint)
 
+  @Hot
   fun fill(color: CanvasPaint) {
     fillStyle(color)
   }
@@ -922,11 +956,26 @@ interface CanvasRenderingContext : SupportsPathActions {
    * For example, `[5, 15, 25]` will become `[5, 15, 25, 5, 15, 25]`.
    * An empty array clears the dashes, so that a solid line will be drawn.
    */
+  @Hot
   fun setLineDash(@px vararg dashes: Double)
+
+  /**
+   * Sets the line-dash pattern from a *stable* array instance (e.g. `Dashes.dashes`).
+   *
+   * In contrast to the vararg [setLineDash] the array is passed through without a spread copy.
+   * Platform implementations cache the converted platform representation *per array instance*:
+   * only call this with long-lived, effectively immutable arrays - every new array instance
+   * creates a new cache entry, and mutating a passed array has no effect on the cached conversion.
+   */
+  @Hot
+  fun setLineDashes(dashes: @px DoubleArray) {
+    setLineDash(*dashes)
+  }
 
   /**
    * Clears the line dash
    */
+  @Hot
   fun clearLineDash() {
     setLineDash()
   }
@@ -934,6 +983,7 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Returns the font metrics for the current font.
    */
+  @Hot
   fun getFontMetrics(): FontMetrics
 
   /**
@@ -952,11 +1002,13 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Sets the clip
    */
+  @Hot
   fun clip(@px x: Double, @px y: Double, @px width: Double, @px height: Double)
 
   /**
    * Clears the complete canvas (physical size)
    */
+  @Hot
   fun clear() {
     clearRect(-translationX, -translationY, canvas.physicalWidth / scaleX, canvas.physicalHeight / scaleY)
   }
@@ -968,6 +1020,7 @@ interface CanvasRenderingContext : SupportsPathActions {
    *
    * The additional values should be <1.0. They are only applied when [snapX] or [snapY] are set to true.
    */
+  @Hot
   fun snapPhysicalTranslation(additionalValueX: @PhysicalPixel Double = 0.0, additionalValueY: @PhysicalPixel Double = 0.0, snapX: Boolean = true, snapY: Boolean = true)
 
   /**
@@ -978,11 +1031,13 @@ interface CanvasRenderingContext : SupportsPathActions {
   /**
    * Calculates a x value that should be added to the current translation to snap to the physical pixel on the x-axis
    */
+  @Hot
   fun calculatePhysicalSnapCorrectionX(translationX: Double, snapX: Boolean = true): @px Double
 
   /**
    * Calculates a y value that should be added to the current translation to snap to the physical pixel on the y-axis
    */
+  @Hot
   fun calculatePhysicalSnapCorrectionY(translationY: Double, snapY: Boolean = true): @px Double
 
   /**

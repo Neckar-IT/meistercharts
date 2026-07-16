@@ -15,6 +15,8 @@
  */
 package com.meistercharts.font
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmOverloads
 
@@ -91,7 +93,10 @@ class FontDescriptor(
  * Applies the given fragment and returns a new font descriptor.
  *
  * The values of the provided [moreImportant] are used - if they exist.
+ *
+ * Allocates a new [FontDescriptor] when [moreImportant] is a non-empty fragment that is not itself a [FontDescriptor].
  */
+@Allocates(AllocationCost.Constant)
 fun FontDescriptor.combineWith(moreImportant: FontDescriptorFragment?): FontDescriptor {
   if (moreImportant == null || moreImportant.isEmpty() || this == moreImportant) {
     return this
@@ -115,7 +120,10 @@ fun FontDescriptor.combineWith(moreImportant: FontDescriptorFragment?): FontDesc
 /**
  * Combines two font descriptor fragments.
  * Takes the values from the more important
+ *
+ * Allocates a new [FontDescriptorFragment] when [moreImportant] is neither null nor a [FontDescriptor].
  */
+@Allocates(AllocationCost.Constant)
 fun FontDescriptorFragment.combineWith(moreImportant: FontDescriptorFragment?): FontDescriptorFragment {
   if (moreImportant == null) {
     return this

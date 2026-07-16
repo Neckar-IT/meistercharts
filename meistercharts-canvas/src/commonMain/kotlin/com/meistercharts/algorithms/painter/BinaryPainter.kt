@@ -20,6 +20,8 @@ import com.meistercharts.calc.ChartingUtils
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.unit.other.px
 
 /**
@@ -87,6 +89,7 @@ class BinaryPainter(
    */
   var areaFill: ColorProviderNullable = { null }
 
+  @Hot
   fun reset() {
     firstX = 0.0
     path.beginPath()
@@ -96,6 +99,7 @@ class BinaryPainter(
    * Resets the painter for reuse with updated bounds.
    * Allows keeping a single instance instead of instantiating a new painter per layout pass.
    */
+  @Hot
   fun reset(@px @Window baseLineY: Double, @px maxWidth: Double, @px maxHeight: Double) {
     this.baseLineY = baseLineY
     this.maxWidth = maxWidth
@@ -103,6 +107,7 @@ class BinaryPainter(
     reset()
   }
 
+  @Hot
   override fun addCoordinate(gc: CanvasRenderingContext, @px @Window x: Double, @px @Window y: Double) {
     //Ensure the line is always visible
     @Window val snappedX = ChartingUtils.lineWithin(snapXPosition(x), 0.0, maxWidth, lineWidth)
@@ -131,6 +136,7 @@ class BinaryPainter(
     }
   }
 
+  @Hot
   override fun finish(gc: CanvasRenderingContext) {
     if (path.isEmpty()) {
       return
@@ -173,7 +179,9 @@ class BinaryPainter(
     }
 
     if (stroke.get() != null) {
-      gc.strokeStyle((stroke.get() ?: return).toRgba())
+      @HotAllocation("Parses the web string only for unparsed colors - RgbaColor returns itself without allocation")
+      val strokeRgba = (stroke.get() ?: return).toRgba()
+      gc.strokeStyle(strokeRgba)
     }
 
     gc.stroke(path)
@@ -182,6 +190,7 @@ class BinaryPainter(
   /**
    * Returns true if the current path is empty
    */
+  @Hot
   fun isPathEmpty(): Boolean {
     return path.isEmpty()
   }

@@ -15,6 +15,7 @@
  */
 package com.meistercharts.color
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.cache
 import it.neckar.open.unit.other.pct
 import kotlin.math.roundToInt
@@ -59,6 +60,7 @@ data class RgbaColor(
     return Colors.toRgbaString(red, green, blue, alpha)
   }
 
+  @Hot
   override fun toCanvasPaint(x0: Double, y0: Double, x1: Double, y1: Double): CanvasPaint {
     return this
   }

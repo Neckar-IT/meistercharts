@@ -18,6 +18,8 @@ package com.meistercharts.canvas.text
 import com.meistercharts.canvas.BlankFallbackText
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.font.FontMetrics
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.allBlank
 import it.neckar.open.provider.SizedProvider
@@ -38,6 +40,7 @@ object TextLineCalculations {
   /**
    * Returns a list that contains at least one line that is not blank
    */
+  @Hot
   fun avoidAllBlankLines(lines: List<String>): List<String> {
     if (lines.isEmpty()) {
       return BlankFallbackLine
@@ -45,7 +48,9 @@ object TextLineCalculations {
 
     if (lines.allBlank()) {
       //TODO introduce cache(?)
-      return List(lines.size) { BlankFallbackText }
+      @HotAllocation("All-blank corner case only - allocates the fallback lines list")
+      val fallbackLines = List(lines.size) { BlankFallbackText }
+      return fallbackLines
     }
 
     return lines
@@ -54,6 +59,7 @@ object TextLineCalculations {
   /**
    * Returns the height of a text block for the given lines
    */
+  @Hot
   fun calculateTextBlockHeight(
     fontMetrics: FontMetrics, linesCount: Int,
     lineSpacing: LineSpacing,
@@ -69,6 +75,7 @@ object TextLineCalculations {
   /**
    * Returns the height of a text block
    */
+  @Hot
   fun calculateTextBlockHeight(
     fontMetrics: FontMetrics, linesCount: Int, spaceBetweenLines: @px Double,
     /**
@@ -86,6 +93,7 @@ object TextLineCalculations {
    *
    * Throws an exception if no lines are provided
    */
+  @Hot
   @Suppress("DuplicatedCode")
   fun calculateMultilineTextWidth(
     renderingContext: CanvasRenderingContext,

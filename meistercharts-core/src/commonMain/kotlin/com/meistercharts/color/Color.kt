@@ -16,6 +16,8 @@
 package com.meistercharts.color
 
 import com.meistercharts.color.Colors.parse2DigitHex
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.unit.other.pct
 import kotlin.jvm.JvmField
@@ -68,8 +70,9 @@ sealed interface Color : CanvasPaint, CanvasPaintProvider {
 
   /**
    * Converts this color to a [RgbaColor].
-   * This method parses the [web] string if necessary.
+   * This method parses the [web] string if necessary - parsing allocates.
    */
+  @Allocates(AllocationCost.Constant)
   fun toRgba(): RgbaColor
 
   companion object {

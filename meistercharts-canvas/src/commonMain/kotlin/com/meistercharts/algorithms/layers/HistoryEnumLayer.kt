@@ -34,6 +34,7 @@ import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
 import com.meistercharts.style.BoxStyle
 import com.meistercharts.style.withFillIfNull
+import it.neckar.open.annotations.Hot
 import it.neckar.open.provider.MultiProvider
 
 /**
@@ -46,6 +47,7 @@ class HistoryEnumLayer(
   configuration.also(additionalConfiguration)
 ) {
 
+  @Hot
   override fun paintingVariables(): HistoryEnumPaintingVariables {
     return paintingVariables
   }
@@ -57,22 +59,27 @@ class HistoryEnumLayer(
     return configuration.historyConfiguration().enumDataSeriesCount
   }
 
+  @Hot
   override fun HistoryChunk.getValue1(visibleDataSeriesIndex: EnumDataSeriesIndex, timestampIndex: TimestampIndex): HistoryEnumSet {
     return this.getEnumValue(visibleDataSeriesIndex, timestampIndex)
   }
 
+  @Hot
   override fun HistoryChunk.getValue2(visibleDataSeriesIndex: EnumDataSeriesIndex, timestampIndex: TimestampIndex): HistoryEnumOrdinal {
     return getEnumOrdinalMostTime(visibleDataSeriesIndex, timestampIndex)
   }
 
+  @Hot
   override fun HistoryChunk.getValue3(visibleDataSeriesIndex: EnumDataSeriesIndex, timestampIndex: TimestampIndex) {
     return //do nothing
   }
 
+  @Hot
   override fun HistoryChunk.getValue4(visibleDataSeriesIndex: EnumDataSeriesIndex, timestampIndex: TimestampIndex) {
     return //do nothing
   }
 
+  @Hot
   override fun layoutDataPoint(
     paintingContext: LayerPaintingContext,
     stripePainter: EnumStripePainter,
@@ -90,18 +97,22 @@ class HistoryEnumLayer(
     return stripePainter.layoutValueChange(paintingContext, dataSeriesIndex, startX, endX, startTime, endTime, activeTimeStamp, enumSet, mostTimeOrdinal)
   }
 
+  @Hot
   override fun value1Default(): HistoryEnumSet {
     return HistoryEnumSet.NoValue
   }
 
+  @Hot
   override fun value2Default(): HistoryEnumOrdinal {
     return HistoryEnumOrdinal.NoValue
   }
 
+  @Hot
   override fun value3Default() {
     //do nothing
   }
 
+  @Hot
   override fun value4Default() {
     //do nothing
   }

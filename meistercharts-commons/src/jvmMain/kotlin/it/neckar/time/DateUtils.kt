@@ -102,7 +102,7 @@ object DateUtils {
   ): String {
     if (durationMillis < 0) return "$durationMillis ms"
     if (durationMillis == 0L) {
-      return "0 seconds"
+      return "0 ${durationI18n.secondsString}"
     }
 
     val durationStr = StringBuilder(
@@ -231,7 +231,7 @@ object DateUtils {
   fun formatDurationWordsWithSeconds(millis: @ms Long): String {
     val sb = StringBuilder()
     var seconds: @s Long = millis / 1000 // skip milliseconds
-    if (seconds >= SECONDS_PER_HOUR || sb.isNotEmpty()) {
+    if (seconds >= SECONDS_PER_HOUR) {
       if (sb.isNotEmpty()) {
         sb.append(" ")
       }

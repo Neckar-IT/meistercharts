@@ -17,6 +17,7 @@ package com.meistercharts.painter
 
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * A line painter that uses LineSegmentStyle for each segment between two points
@@ -36,11 +37,13 @@ class SegmentedLinePainter(
   private var segmentStartX: @Zoomed Double = 0.0
   private var segmentStartY: @Zoomed Double = 0.0
 
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     empty = true
     segmentIndex = 0
   }
 
+  @Hot
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     if (!empty) {
       paintSegment(gc, x, y)
@@ -56,10 +59,12 @@ class SegmentedLinePainter(
   /**
    * Paints the current segment
    */
+  @Hot
   private fun paintSegment(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     provider(segmentIndex).paintSegment(gc, segmentStartX, segmentStartY, x, y)
   }
 
+  @Hot
   override fun paint(gc: CanvasRenderingContext) {
   }
 }

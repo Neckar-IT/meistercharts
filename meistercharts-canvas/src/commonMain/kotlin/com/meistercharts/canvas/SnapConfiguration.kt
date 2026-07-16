@@ -18,6 +18,7 @@ package com.meistercharts.canvas
 import com.meistercharts.model.Insets
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -44,6 +45,7 @@ enum class SnapConfiguration(
   /**
    * Snaps the value to *physical* pixels
    */
+  @Hot
   @px
   fun snapXValue(@px value: Double): Double {
     return PaintingUtils.snapPosition(value, snapX)
@@ -52,6 +54,7 @@ enum class SnapConfiguration(
   /**
    * Snaps the value to *physical* pixels
    */
+  @Hot
   @px
   fun snapXSize(@px size: Double): Double {
     return PaintingUtils.snapSize(size, snapX)
@@ -60,6 +63,7 @@ enum class SnapConfiguration(
   /**
    * Snaps the value to *physical* pixels
    */
+  @Hot
   @px
   fun snapYValue(@px value: Double): Double {
     return PaintingUtils.snapPosition(value, snapY)
@@ -68,6 +72,7 @@ enum class SnapConfiguration(
   /**
    * Snaps the value to *physical* pixels
    */
+  @Hot
   @px
   fun snapYSize(@px size: Double): Double {
     return PaintingUtils.snapSize(size, snapY)
@@ -91,6 +96,7 @@ enum class SnapConfiguration(
 /**
  * Snaps to the physical pixels - depending on the snap configuration
  */
+@Hot
 fun CanvasRenderingContext.snapPhysicalTranslation(snapConfiguration: SnapConfiguration) {
   this.snapPhysicalTranslation(snapX = snapConfiguration.snapX, snapY = snapConfiguration.snapY)
 }

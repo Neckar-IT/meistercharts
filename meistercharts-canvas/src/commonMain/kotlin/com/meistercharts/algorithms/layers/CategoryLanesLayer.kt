@@ -30,6 +30,8 @@ import com.meistercharts.color.get
 import com.meistercharts.model.BorderRadius
 import com.meistercharts.model.category.CategoryIndex
 import com.meistercharts.range.ValueRange
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.MultiProvider
@@ -59,11 +61,14 @@ class CategoryLanesLayer(
    */
   var layout: EquisizedBoxLayout? = null
 
+  @Hot
   override fun layout(paintingContext: LayerPaintingContext) {
+    @HotBoundary("AbstractLayer.layout is deliberately un-colored - coloring it would cascade onto every layer's layout override")
     super.layout(paintingContext)
     layout = configuration.layoutCalculator.calculateLayout(paintingContext, configuration.valuesProvider.size(), configuration.orientation)
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val layout = layout ?: return
 

@@ -17,12 +17,14 @@ package com.meistercharts.range
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import it.neckar.open.annotations.Hot
 
 /**
  * Special class that offers additional methods for binary value range (0..1)
  *
  */
 object BinaryValueRange : LinearValueRange(0.0, 1.0) {
+  @Hot
   @DomainRelative
   fun toDomainRelative(@Domain value: Boolean): Double {
     return if (value) {

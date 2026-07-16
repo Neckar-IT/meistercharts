@@ -24,6 +24,8 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
 import it.neckar.geometry.Side
 import com.meistercharts.range.ValueRange
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.unit.other.px
@@ -93,6 +95,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   /**
    * Resets all variables to their default values
    */
+  @Hot
   override fun reset() {
     super.reset()
 
@@ -106,6 +109,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
     tickLabels.reset()
   }
 
+  @Hot
   override fun calculateTickLabelsMaxWidthHorizontal(): Double {
     return estimatedTickFormatMaxLength
   }
@@ -113,6 +117,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
   /**
    * Stores the ticks
    */
+  @Hot
   fun storeTicks(
     tickValues: @Domain DoubleArray,
     paintingContext: LayerPaintingContext,
@@ -121,13 +126,16 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
     tickLabels.resize(tickValues.size)
 
     tickValues.fastForEachIndexed { index, value ->
-      tickLabels.set(index, value, style.ticksFormat.format(value, paintingContext.i18nConfiguration))
+      @HotAllocation("Once per tick per layout pass - formatted tick label string. Fix candidate: cache formatted labels per tick value; tick values only change on zoom/pan")
+      val formatted = style.ticksFormat.format(value, paintingContext.i18nConfiguration)
+      tickLabels.set(index, value, formatted)
     }
   }
 
   /**
    * Stores the ticks from the given list (usually [tickValuesScratch] filled by [TickProvider.fillTicks]) - allocation-free variant.
    */
+  @Hot
   fun storeTicks(
     tickValues: @Domain DoubleArrayList,
     paintingContext: LayerPaintingContext,
@@ -137,7 +145,9 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
 
     for (index in 0 until tickValues.size) {
       val value = tickValues[index]
-      tickLabels.set(index, value, style.ticksFormat.format(value, paintingContext.i18nConfiguration))
+      @HotAllocation("Once per tick per layout pass - formatted tick label string. Fix candidate: cache formatted labels per tick value; tick values only change on zoom/pan")
+      val formatted = style.ticksFormat.format(value, paintingContext.i18nConfiguration)
+      tickLabels.set(index, value, formatted)
     }
   }
 
@@ -145,6 +155,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    * Calculates the [estimatedTickFormatMaxLength].
    * ATTENTION: Requires the value range to be set!
    */
+  @Hot
   fun calculateEstimatedTickFormatMaxLength(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
@@ -152,9 +163,13 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
     //Calculate the max length of/for the tick labels. We assume that the first (for negative values) or the last one (for positive values) is probably the largest value.
     //Also ensure that we have at least 6 characters if a broken tick format is provided.
 
+    @HotAllocation("Twice per layout pass per axis - formatted range start/end; the value-range bounds rarely change, CachedNumberFormat caches per value")
     val startTickFormatted: String = style.ticksFormat.format(contentAreaValueRange.start, paintingContext.i18nConfiguration)
+
+    @HotAllocation("Twice per layout pass per axis - formatted range start/end; the value-range bounds rarely change, CachedNumberFormat caches per value")
     val endTickFormatted: String = style.ticksFormat.format(contentAreaValueRange.end, paintingContext.i18nConfiguration)
 
+    @Hot
     fun calcTickLength(tickFormatted: String): @Zoomed Double {
       val padEnd = tickFormatted.padEnd(6, 'M')
       return paintingContext.gc.calculateTextWidth(padEnd)
@@ -171,6 +186,7 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
    * Calculates the domain start and end values.
    * Requires [axisStart] and [axisEnd] and [contentAreaValueRange] to be set!
    */
+  @Hot
   fun calculateDomainStartEndValues(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,

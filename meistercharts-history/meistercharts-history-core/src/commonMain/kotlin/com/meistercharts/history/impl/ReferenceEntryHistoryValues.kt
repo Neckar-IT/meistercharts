@@ -29,6 +29,7 @@ import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.annotations.ForOnePointInTime
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
@@ -125,6 +126,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns the reference entry id (measured or most-of-the-time)
    */
+  @Hot
   fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryId {
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. reference entries count: ${values.width}" }
 
@@ -134,6 +136,7 @@ data class ReferenceEntryHistoryValues(
   /**
    * Returns the data for the given series index and id
    */
+  @Hot
   fun getData(id: ReferenceEntryId): ReferenceEntryData? {
     return dataMap.get(id)
   }
@@ -152,6 +155,7 @@ data class ReferenceEntryHistoryValues(
    *
    * Will return [ReferenceEntryDifferentIdsCount.NoValue] if the measured value is [ReferenceEntryId.NoValue]
    */
+  @Hot
   fun getDifferentIdsCount(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount {
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. reference entries count: ${values.width}" }
 
@@ -172,6 +176,7 @@ data class ReferenceEntryHistoryValues(
     return differentIdsCount.getReferenceEntryDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  @Hot
   fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. reference entries count: ${values.width}" }
     return statuses.getReferenceStatus(dataSeriesIndex, timeStampIndex)

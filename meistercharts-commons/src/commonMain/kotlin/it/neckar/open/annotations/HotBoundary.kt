@@ -28,42 +28,36 @@
 package it.neckar.open.annotations
 
 /**
- * Acknowledges a deliberate allocation inside a `@Hot` body, at the call site.
+ * Acknowledges a **polymorphic delegation point** inside a `@Hot` body: a call that dispatches
+ * over an interface which is deliberately not `@Hot`-colored (yet), because coloring it would
+ * cascade onto hundreds of overrides (e.g. `Layer.paint` with ~284 implementations).
  *
- * The hot-path Detekt rules (`HotFunctionMustOnlyCallHotFunctions`,
- * `HotFunctionMustNotBoxValueClass`) flag calls to `@Allocates`/`@Slow` code and value-class
- * boxing inside `@Hot` methods. When the allocation is a conscious decision (e.g. once per frame
- * instead of per data point, a rare branch, a cache-miss path), annotate the expression or local
- * variable with `@HotAllocation("reason")` — the finding is suppressed and the decision stays
- * visible and greppable in the code:
+ * `HotFunctionMustOnlyCallHotFunctions` suppresses its "not itself `@Hot`" finding for the
+ * annotated expression/statement. The `@Hot` guarantee of the caller then explicitly ends at this
+ * boundary — the wrapper itself is allocation-checked, the delegate is checked wherever it is
+ * colored itself:
  *
  * ```
  * @Hot
  * override fun paint(paintingContext: LayerPaintingContext) {
- *   @HotAllocation("bounding box computed once per frame")
- *   val bounds = chartCalculator.contentAreaRelative2window(0.0, 0.0)
+ *   @HotBoundary("polymorphic layer delegation - delegate is colored where implemented")
+ *   delegate.paint(paintingContext)
  * }
  * ```
  *
- * The reason is mandatory: it is the typed, project-conformant alternative to the forbidden
- * `@Suppress`. The density of `@HotAllocation` markers in a method is itself a review signal —
- * acknowledging a [AllocationCost.Linear] allocation needs a much better reason than a
- * [AllocationCost.Constant] one.
+ * Deliberately distinct from [HotAllocation]: that acknowledges a known **allocation**
+ * (`@Slow`/`@Allocates` deny), this acknowledges an **un-colorable dispatch edge**. The reason is
+ * mandatory. Every `@HotBoundary` is a greppable TODO: once the target interface gets colored at
+ * the end of the rollout, the marker is removed and the chain closes end to end.
  *
- * Syntax caveat: `return @HotAllocation("...") expr` does not parse — Kotlin reads `return @…` as
- * a label reference. Bind the expression to an annotated local variable instead:
- * `@HotAllocation("...") val result = expr; return result`.
- *
- * SOURCE retention: the acknowledgement only needs to be visible to the Detekt rule analyzing the
- * same file (and to readers) — it never crosses a module boundary. SOURCE is also required for
- * the `EXPRESSION` target.
+ * SOURCE retention: only the Detekt rule analyzing the same file (and readers) need to see it.
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.EXPRESSION,
   AnnotationTarget.LOCAL_VARIABLE,
 )
-annotation class HotAllocation(
-  /** Why this allocation is acceptable in the hot path (e.g. `"once per frame"`). */
+annotation class HotBoundary(
+  /** Why this dispatch edge cannot be colored yet (e.g. `"polymorphic layer delegation"`). */
   val value: String,
 )

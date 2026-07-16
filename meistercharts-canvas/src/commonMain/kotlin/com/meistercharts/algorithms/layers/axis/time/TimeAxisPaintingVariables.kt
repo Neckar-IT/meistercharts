@@ -27,6 +27,7 @@ import com.meistercharts.axis.time.DistanceMillis
 import it.neckar.open.unit.number.MayBeNaN
 import com.meistercharts.canvas.layout.buffer.TickLabelsBuffer
 import it.neckar.geometry.Side
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.quantity.Time
 import it.neckar.open.unit.si.ms
@@ -110,6 +111,7 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
 
   override val tickLabels: @MayBeNaN @ms @Domain TickLabelsBuffer = TickLabelsBuffer()
 
+  @Hot
   override fun reset() {
     super.reset()
 
@@ -126,11 +128,13 @@ abstract class TimeAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Time
     tickLabels.reset()
   }
 
+  @Hot
   override fun calculateTickLabelsMaxWidthHorizontal(): @px Double {
     //TODO improve calculation somehow!
     return 100.0 //manually measured
   }
 
+  @Hot
   fun calculateDomainStartEndValues(
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,

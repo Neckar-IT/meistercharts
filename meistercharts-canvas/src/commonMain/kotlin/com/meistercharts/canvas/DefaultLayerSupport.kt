@@ -55,6 +55,8 @@ import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.consumeUntil
 import it.neckar.open.unit.si.ms
@@ -274,6 +276,7 @@ class DefaultLayerSupport(
    */
   private val missingResourcesHandlers: MutableList<MissingResourcesHandler> = mutableListOf()
 
+  @Hot
   override fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet) {
     val paintingContext = LayerPaintingContext(
       gc = chartSupport.canvas.gc,
@@ -293,7 +296,9 @@ class DefaultLayerSupport(
     if (layers.isEmpty()) {
       //Show a welcome message to avoid empty charts when no layers are configured
       TextLayer.helloMeisterChart.run {
+        @HotBoundary("welcome-message fallback (chart without layers only) - dispatches over the deliberately un-colored Layer.layout")
         layout(paintingContext)
+        @HotBoundary("welcome-message fallback (chart without layers only) - dispatches over the deliberately un-colored Layer.paint")
         paint(paintingContext)
       }
     } else {
@@ -308,6 +313,7 @@ class DefaultLayerSupport(
         it.isNotEmpty()
       }?.let { missingUrls ->
         missingResourcesHandlers.fastForEach {
+          @HotBoundary("missing-resources callback - handler implementations are colored where they are implemented")
           it.missingResourcesDetected(paintingContext, missingUrls)
         }
       }

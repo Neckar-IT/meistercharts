@@ -29,6 +29,7 @@ import com.meistercharts.painter.PointStylePainter
 import com.meistercharts.provider.ValueRangeProvider
 import it.neckar.open.provider.DoublesProvider
 import it.neckar.open.provider.fastForEachIndexed
+import it.neckar.open.annotations.Hot
 
 /**
  * The layer painting the scatter plot
@@ -98,6 +99,7 @@ class ScatterPlotLayer(
     var pointPainter: PointPainter = object : PointPainter {
       val delegate = PointStylePainter(PointStyle.Cross, 1.0, false, false)
 
+      @Hot
       override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
         gc.stroke(
           if (x < gc.width / 2.0) {

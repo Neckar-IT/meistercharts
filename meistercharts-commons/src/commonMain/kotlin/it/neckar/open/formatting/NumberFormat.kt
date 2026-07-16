@@ -27,6 +27,8 @@
  */
 package it.neckar.open.formatting
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.i18n.CurrentI18nConfiguration
 import it.neckar.open.i18n.DefaultI18nConfiguration
 import it.neckar.open.i18n.I18nConfiguration
@@ -40,8 +42,12 @@ import it.neckar.open.unit.currency.ct
  */
 interface NumberFormat {
   /**
-   * Formats a number to a string
+   * Formats a number to a string.
+   *
+   * Allocates the formatted string. Cached implementations ([CachedNumberFormat]) only allocate on a cache miss -
+   * hot paths must acknowledge the call with `@HotAllocation`.
    */
+  @Allocates(AllocationCost.Constant)
   fun format(value: Double, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String
 
   /**

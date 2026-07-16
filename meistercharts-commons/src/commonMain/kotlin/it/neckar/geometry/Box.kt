@@ -27,6 +27,7 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.isNegative
 import it.neckar.open.unit.number.MayBeNegative
 import it.neckar.open.unit.other.pct
@@ -43,9 +44,11 @@ interface Box {
   @MayBeNegative
   fun getY(): Double
 
+  @Hot
   @MayBeNegative
   fun getWidth(): Double
 
+  @Hot
   @MayBeNegative
   fun getHeight(): Double
 
@@ -158,6 +161,7 @@ interface Box {
    * Top left returns 0.0/0.0
    * Bottom right: right/bottom
    */
+  @Hot
   fun findCoordinates(direction: Direction): Coordinates {
     val x = when (direction.horizontalAlignment) {
       HorizontalAlignment.Left -> left
@@ -203,14 +207,17 @@ interface Box {
   /**
    * Returns the coordinates using relative values for x and y
    */
+  @Hot
   fun findCoordinatesRelative(xPercentage: @pct Double, yPercentage: @pct Double): Coordinates {
     return Coordinates.of(findCoordinatesRelativeX(xPercentage), findCoordinatesRelativeY(yPercentage))
   }
 
+  @Hot
   fun findCoordinatesRelativeX(xPercentage: @pct Double): Double {
     return left + getWidth() * xPercentage
   }
 
+  @Hot
   fun findCoordinatesRelativeY(yPercentage: @pct Double): Double {
     return top + getHeight() * yPercentage
   }

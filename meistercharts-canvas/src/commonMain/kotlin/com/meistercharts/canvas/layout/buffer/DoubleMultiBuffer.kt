@@ -15,8 +15,8 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
-import it.neckar.open.collections.DoublePredicate
 import it.neckar.open.collections.IterationOrder
 import it.neckar.open.collections.fastAny
 import it.neckar.open.collections.fastForEach
@@ -42,6 +42,7 @@ class DoubleMultiBuffer : LayoutVariableWithSize {
   override val size: Int
     get() = values.size
 
+  @Hot
   override fun reset() {
     values.fastForEachIndexed { index, _ ->
       values[index] = Double.NaN
@@ -51,6 +52,7 @@ class DoubleMultiBuffer : LayoutVariableWithSize {
   /**
    * Grows the array to the given size, leaving the values undefined
    */
+  @Hot
   override fun resize(size: Int) {
     values.size = size
   }
@@ -74,6 +76,7 @@ class DoubleMultiBuffer : LayoutVariableWithSize {
   /**
    * Returns the last value or the given fallback if the buffer is empty
    */
+  @Hot
   fun lastOr(fallback: Double): Double {
     if (values.isEmpty()) {
       return fallback
@@ -103,10 +106,12 @@ class DoubleMultiBuffer : LayoutVariableWithSize {
     return lastOr(Double.NaN)
   }
 
+  @Hot
   operator fun set(index: Int, value: Double) {
     values[index] = value
   }
 
+  @Hot
   operator fun get(index: Int): Double {
     return values[index]
   }
@@ -131,7 +136,8 @@ class DoubleMultiBuffer : LayoutVariableWithSize {
     return values.data.contentToString()
   }
 
-  fun fastAny(predicate: DoublePredicate): Boolean {
+  @Hot
+  inline fun fastAny(predicate: (Double) -> Boolean): Boolean {
     return values.fastAny(predicate)
   }
 }

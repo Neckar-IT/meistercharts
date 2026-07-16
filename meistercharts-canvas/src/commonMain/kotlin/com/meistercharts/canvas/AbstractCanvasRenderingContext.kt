@@ -21,6 +21,7 @@ import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.unit.si.rad
 
@@ -64,6 +65,10 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
 
   override val debug: DebugConfiguration = DebugConfiguration()
 
+  /**
+   * Allocates two [Distance] instances per read. In hot paths use the allocation-free
+   * [translationX]/[translationY] instead.
+   */
   @Allocates(AllocationCost.Constant)
   final override var translation: Distance
     get() = currentTransform.translation.divide(scaleX, scaleY)
@@ -104,6 +109,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
   override val translationPhysicalY: @PhysicalPixel Double
     get() = currentTransform.translationY
 
+  @Hot
   override fun calculatePhysicalSnapCorrectionX(translationX: Double, snapX: Boolean): Double {
     if (snapX.not()) {
       return 0.0
@@ -118,6 +124,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
     }
   }
 
+  @Hot
   override fun calculatePhysicalSnapCorrectionY(translationY: Double, snapY: Boolean): Double {
     if (snapY.not()) {
       return 0.0
@@ -132,6 +139,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
     }
   }
 
+  @Hot
   override fun snapPhysicalTranslation(additionalValueX: Double, additionalValueY: Double, snapX: Boolean, snapY: Boolean) {
     if (snapX.not() && snapY.not()) {
       //Do nothing - no snapping at all
@@ -156,6 +164,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
   /**
    * ATTENTION: This method must be overridden by all implementing classes
    */
+  @Hot
   override fun translate(deltaX: Double, deltaY: Double) {
     currentTransform.translateScaled(deltaX, deltaY)
   }
@@ -163,6 +172,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
   /**
    * ATTENTION: This method must be overridden by all implementing classes
    */
+  @Hot
   override fun translatePhysical(deltaX: Double, deltaY: Double) {
     currentTransform.translatePhysical(deltaX, deltaY)
   }
@@ -201,6 +211,7 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
   /**
    * ATTENTION: This method must be overridden by all implementing classes
    */
+  @Hot
   override fun rotateRadians(angleInRadians: @rad Double) {
     currentTransform.rotate(angleInRadians)
   }

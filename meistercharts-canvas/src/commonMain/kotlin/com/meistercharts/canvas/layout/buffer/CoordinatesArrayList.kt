@@ -15,6 +15,7 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastForEachIndexed
 import it.neckar.open.collections.last
@@ -52,6 +53,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Removes all points - the capacity is retained
    */
+  @Hot
   fun clear() {
     xValues.clear()
     yValues.clear()
@@ -60,6 +62,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Appends the point
    */
+  @Hot
   fun add(x: @px Double, y: @px Double) {
     xValues.add(x)
     yValues.add(y)
@@ -68,6 +71,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Returns the x value of the point at the given index
    */
+  @Hot
   fun xAt(index: Int): @px Double {
     return xValues[index]
   }
@@ -75,6 +79,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Returns the y value of the point at the given index
    */
+  @Hot
   fun yAt(index: Int): @px Double {
     return yValues[index]
   }
@@ -82,6 +87,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Returns the x value of the last point - throws if the list is empty
    */
+  @Hot
   fun lastX(): @px Double {
     return xValues.last()
   }
@@ -89,6 +95,7 @@ class CoordinatesArrayList(initialCapacity: Int = 10) {
   /**
    * Returns the y value of the last point - throws if the list is empty
    */
+  @Hot
   fun lastY(): @px Double {
     return yValues.last()
   }

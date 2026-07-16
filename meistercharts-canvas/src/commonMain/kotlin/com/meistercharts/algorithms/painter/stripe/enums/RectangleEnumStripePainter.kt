@@ -31,6 +31,8 @@ import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -43,6 +45,7 @@ class RectangleEnumStripePainter(
 
   override val configuration: Configuration = Configuration().also(additionalConfiguration)
 
+  @Hot
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: EnumDataSeriesIndex,
@@ -76,6 +79,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.red)
         gc.fillRect(startX, 0.0, rectangleWidth, rectangleHeight)
         gc.fill(Color.white)
+        @HotAllocation("DebugFeature.HistoryGaps only - text rendering allocates")
         gc.fillText("-", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
       return
@@ -86,6 +90,7 @@ class RectangleEnumStripePainter(
         gc.fill(Color.orange)
         gc.fillRect(startX, 0.0, rectangleWidth, rectangleHeight)
         gc.fill(Color.white)
+        @HotAllocation("DebugFeature.HistoryGaps only - text rendering allocates")
         gc.fillText("?", startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
       return
@@ -107,6 +112,7 @@ class RectangleEnumStripePainter(
     //Paint the label
     if (gc.debug[DebugFeature.ShowValues]) {
       gc.fill(Color.white)
+      @HotAllocation("DebugFeature.ShowValues only - toString and text rendering allocate")
       gc.fillText(valueToPaint.toString(), startX + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
     }
   }

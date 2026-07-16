@@ -25,6 +25,7 @@ import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -39,6 +40,7 @@ abstract class AbstractReferenceEntryStripePainter :
    */
   abstract val configuration: Configuration
 
+  @Hot
   override fun paintingVariables(): ReferenceEntryStripePainterPaintingVariables {
     return paintingVariables
   }
@@ -48,6 +50,7 @@ abstract class AbstractReferenceEntryStripePainter :
    */
   private val paintingVariables = ReferenceEntryStripePainterPaintingVariables()
 
+  @Hot
   override fun layoutValueChange(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: ReferenceEntryDataSeriesIndex,
@@ -79,6 +82,7 @@ abstract class AbstractReferenceEntryStripePainter :
    * The reference entry data ([data]) is intentionally excluded - it must never change for the same [ReferenceEntryId].
    * Compares raw ints, no allocation.
    */
+  @Hot
   private fun haveRelevantValuesChanged(
     paintingVariablesForDataSeries: ReferenceEntryStripePainterPaintingVariablesForOneDataSeries,
     newId: @MayBeNoValueOrPending ReferenceEntryId,

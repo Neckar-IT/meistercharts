@@ -15,6 +15,7 @@
  */
 package com.meistercharts.canvas.layout.buffer
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.fastForEachWithIndex
 
 /**
@@ -24,6 +25,7 @@ class StringMultiBuffer : AbstractObjectMultiBuffer<String>({
   Uninitialized
 }) {
 
+  @Hot
   override fun reset() {
     values.fastForEachWithIndex { index, _ ->
       values[index] = Uninitialized

@@ -25,6 +25,7 @@ import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.TimestampIndex
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.IntArray2
 import it.neckar.open.kotlin.serializers.IntArray2Serializer
 import kotlinx.serialization.Serializable
@@ -110,6 +111,7 @@ data class EnumHistoryValues(
     }
 
 
+  @Hot
   fun getEnumValue(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): HistoryEnumSet {
     require(dataSeriesIndex.value < values.width) { "Invalid data series index <$dataSeriesIndex>. enum values count: ${values.width}" }
 
@@ -138,6 +140,7 @@ data class EnumHistoryValues(
   /**
    * Returns the enum value that has been measured most of the time - falls back to the measured value
    */
+  @Hot
   fun getEnumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumOrdinal {
     if (mostOfTheTimeValues == null) {
       val enumValue = getEnumValue(dataSeriesIndex, timeStampIndex)

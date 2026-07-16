@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layout
 
 import com.meistercharts.annotations.Zoomed
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.toIntFloor
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmInline
@@ -86,6 +87,7 @@ class EquisizedBoxLayout(
    *
    * ORIGIN is at the *left* or *top*
    */
+  @Hot
   fun calculateCenter(index: BoxIndex): @Zoomed Double {
     @Zoomed val offset = calculateOffset()
     return offset + boxSize * (index.value + 0.5) + gap * index.value
@@ -94,6 +96,7 @@ class EquisizedBoxLayout(
   /**
    * Calculates the offset depending on the layout direction
    */
+  @Hot
   private fun calculateOffset(): @Zoomed Double {
     @Zoomed val offset = when (layoutDirection) {
       LayoutDirection.CenterHorizontal -> remainingSpace / 2.0
@@ -113,6 +116,7 @@ class EquisizedBoxLayout(
    *
    * It holds [calculateEnd] - [calculateStart] = [boxSize] if invoked with the same index.
    */
+  @Hot
   fun calculateStart(index: BoxIndex): @Zoomed Double {
     return calculateCenter(index) - boxSize / 2.0
   }
@@ -157,6 +161,7 @@ class EquisizedBoxLayout(
   /**
    * Returns true if this layout does not contain any boxes
    */
+  @Hot
   fun isEmpty(): Boolean {
     return numberOfBoxes == 0
   }

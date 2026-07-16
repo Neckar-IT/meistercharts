@@ -20,6 +20,7 @@ import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.model.SidesSelection
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -36,6 +37,7 @@ class ContentAreaLayer(
 
   private val contentAreaPainter = ContentAreaPainter()
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     gc.lineWidth = configuration.lineWidth

@@ -90,24 +90,17 @@ data class VersionRange
    * @return true if this contains the other range completely, false otherwise
    */
   fun containsCompletely(other: VersionRange): Boolean {
-    //Verify the lower border
-    val lower: Boolean
-    if (includeLower) {
-      lower = min.sameOrSmallerThan(other.min)
-    } else {
-      lower = min.smallerThan(other.min)
-    }
+    //Verify the lower border. When the borders are equal, this must be at least as inclusive as
+    //other there (this inclusive, or other also exclusive) — otherwise an open range would not even
+    //contain itself.
+    val lower = min.smallerThan(other.min) || (min == other.min && (includeLower || !other.includeLower))
 
     if (!lower) {
       return false
     }
 
-    //Verify the upper border
-    return if (includeUpper) {
-      max.sameOrGreaterThan(other.max)
-    } else {
-      max.greaterThan(other.max)
-    }
+    //Verify the upper border (symmetric to the lower one).
+    return max.greaterThan(other.max) || (max == other.max && (includeUpper || !other.includeUpper))
   }
 
   /**

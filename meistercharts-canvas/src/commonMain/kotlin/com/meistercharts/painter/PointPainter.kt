@@ -17,6 +17,7 @@ package com.meistercharts.painter
 
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * Represents painters that paint a single point
@@ -25,5 +26,6 @@ fun interface PointPainter {
   /**
    * Paints a point at the given location
    */
+  @Hot
   fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double)
 }

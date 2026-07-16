@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.painter
 
 import com.meistercharts.canvas.FillRule
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -33,6 +34,7 @@ interface PathActions {
   /**
    * Returns the type of the action at the given index
    */
+  @Hot
   fun actionTypeAt(actionIndex: Int): PathActionType
 
   /**
@@ -41,12 +43,14 @@ interface PathActions {
    * The coordinate pairs of all actions are stored flat: each action consumes
    * [PathActionType.coordinatePairCount] pairs; the last pair of an action is its end point.
    */
+  @Hot
   fun coordinateXAt(coordinatePairIndex: Int): @px Double
 
   /**
    * Returns the y value of the coordinate pair at the given index.
    * See [coordinateXAt] for the pair layout.
    */
+  @Hot
   fun coordinateYAt(coordinatePairIndex: Int): @px Double
 
   /**

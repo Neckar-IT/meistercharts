@@ -21,6 +21,8 @@ import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.canvas.events.CanvasPointerEventHandler
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import com.meistercharts.canvas.saved
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.kotlin.lang.consumeUntil
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.EventConsumption.Consumed
@@ -145,9 +147,11 @@ class LayerList(
     //Do nothing - we call layout for each layer
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     layers.forEach { layer ->
       paintingContext.gc.saved {
+        @HotBoundary("polymorphic layer delegation - each contained layer is colored where it is implemented")
         layer.paint(paintingContext)
       }
     }

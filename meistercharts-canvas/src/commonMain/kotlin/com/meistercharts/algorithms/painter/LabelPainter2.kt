@@ -37,6 +37,9 @@ import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.provider.LabelsProvider
 import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.kotlin.lang.asProvider
 import it.neckar.open.provider.DoublesProvider1
 import it.neckar.open.provider.MultiProvider
@@ -79,6 +82,7 @@ class LabelPainter2(
       return layoutedLabelsBuffer.isEmpty().not()
     }
 
+    @Hot
     fun update(
       /**
        * Provides the label locations
@@ -110,6 +114,7 @@ class LabelPainter2(
       val preferredLabelsCount = labelLocations.size(paintingContext)
 
       //Ensure the cache is prepared - for the current size
+      @HotAllocation("Once per layout pass per label painter - the fragment-to-descriptor conversion is cached")
       gc.font(style.font())
       @px val lineHeight = gc.getFontMetrics().totalHeight
 
@@ -142,7 +147,9 @@ class LabelPainter2(
           }
 
           //Label is visible, update all other properties
-          layoutedLabel.text = labelTexts.valueAt(labelIndex, textService, i18nConfiguration)
+          @HotBoundary("LabelsProvider implementations are mostly lambdas/anonymous formatters - coloring cannot reach them; the format allocation is reported by the runtime recorder")
+          val labelText = labelTexts.valueAt(labelIndex, textService, i18nConfiguration)
+          layoutedLabel.text = labelText
           layoutedLabel.visible = true
 
           layoutedLabel.preferredCenterY = snappedYLocation
@@ -173,6 +180,7 @@ class LabelPainter2(
      *
      * Side effect: [placementSolver] is filled with the remaining labels.
      */
+    @Hot
     private fun dropLabelsExceedingAvailableSpace(labelSpacing: @Zoomed Double, min: @Window Double, max: @Window Double) {
       @px val availableSpace = max - min
 
@@ -191,6 +199,7 @@ class LabelPainter2(
      * Fills [placementSolver] with the current buffer content.
      * The buffer must be sorted by [LayoutedLabel2.preferredCenterY].
      */
+    @Hot
     private fun fillPlacementSolver() {
       placementSolver.clear()
       layoutedLabelsBuffer.fastForEach { label ->
@@ -201,6 +210,7 @@ class LabelPainter2(
     /**
      * Removes the label with the highest [LayoutedLabel2.index] (= lowest priority) from the buffer
      */
+    @Hot
     private fun removeLabelWithHighestIndex() {
       var highestIndex = -1
       layoutedLabelsBuffer.fastForEach { label ->
@@ -230,6 +240,7 @@ class LabelPainter2(
      * Labels that do not fit into the available space are dropped deterministically first
      * (see [dropLabelsExceedingAvailableSpace]).
      */
+    @Hot
     private fun calculateOptimalPositions(min: @Window Double, max: @Window Double, paintingContext: LayerPaintingContext) {
       //Sort the labels by Y location
       layoutedLabelsBuffer.sortWith(layoutedLabelByPreferredYComparator)
@@ -256,6 +267,7 @@ class LabelPainter2(
      * Sets [LayoutedLabel2.centerYMin] for each label: the center when all labels are stacked at the top.
      * Only used for the [DebugFeature.ShowMinMax] overlay.
      */
+    @Hot
     private fun calculateAbsoluteMin(labelSpacing: @Zoomed Double, min: @Window Double) {
       var lastMaxY = min - labelSpacing
 
@@ -269,6 +281,7 @@ class LabelPainter2(
      * Sets [LayoutedLabel2.centerYMax] for each label: the center when all labels are stacked at the bottom.
      * Only used for the [DebugFeature.ShowMinMax] overlay.
      */
+    @Hot
     private fun calculateAbsoluteMax(labelSpacing: @Zoomed Double, max: @Window Double) {
       var lastMinY = max + labelSpacing
 
@@ -283,6 +296,7 @@ class LabelPainter2(
   /**
    * Calculates the layout
    */
+  @Hot
   fun layout(
     paintingContext: LayerPaintingContext,
 
@@ -324,6 +338,7 @@ class LabelPainter2(
    *
    * ATTENTION: It is required to call [layout] before!
    */
+  @Hot
   fun paintLabels(
     paintingContext: LayerPaintingContext,
 
@@ -342,6 +357,7 @@ class LabelPainter2(
     ) {
     val gc: CanvasRenderingContext = paintingContext.gc
 
+    @HotAllocation("Once per frame per label painter - the fragment-to-descriptor conversion is cached")
     gc.font(style.font())
 
     //Paint the labels
@@ -396,6 +412,7 @@ class LabelPainter2(
         }
 
         val textToDraw = label.text
+        @HotAllocation("Once per visible label per frame - text box painting; label count is bounded by the available vertical space")
         gc.paintTextBox(
           line = textToDraw,
           anchorDirection = boxAnchor,

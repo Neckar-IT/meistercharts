@@ -20,6 +20,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 
 /**
@@ -46,6 +47,7 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex> {
   /**
    * Is called when beginning to lay out a data series
    */
+  @Hot
   fun layoutBegin(
     paintingContext: LayerPaintingContext,
     /**
@@ -65,6 +67,7 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex> {
   /**
    * Is called at the end of the stripe
    */
+  @Hot
   fun layoutFinish(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DataSeriesIndexType,
@@ -74,6 +77,7 @@ interface StripePainter<DataSeriesIndexType : DataSeriesIndex> {
    * Paints the data series.
    * Is called exactly once for each data series
    */
+  @Hot
   fun paint(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: DataSeriesIndexType,

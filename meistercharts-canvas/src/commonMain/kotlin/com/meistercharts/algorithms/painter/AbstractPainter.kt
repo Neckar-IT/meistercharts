@@ -22,6 +22,7 @@ import com.meistercharts.canvas.PaintingUtils
 import it.neckar.open.unit.other.px
 import kotlin.math.max
 import kotlin.math.min
+import it.neckar.open.annotations.Hot
 
 /**
  * Abstract base class for painter
@@ -33,24 +34,28 @@ abstract class AbstractPainter(
 
   @px
   @Window
+  @Hot
   override fun snapXPosition(@px @Window xValue: Double): Double {
     return PaintingUtils.snapPosition(xValue, isSnapXValues)
   }
 
   @px
   @Window
+  @Hot
   override fun snapWidth(@px @Window xValue: Double): Double {
     return PaintingUtils.snapSize(xValue, isSnapXValues)
   }
 
   @px
   @Window
+  @Hot
   override fun snapYPosition(@px @Window yValue: Double): Double {
     return PaintingUtils.snapPosition(yValue, isSnapYValues)
   }
 
   @px
   @Window
+  @Hot
   override fun snapHeight(@px @Window yValue: Double): Double {
     return PaintingUtils.snapSize(yValue, isSnapYValues)
   }

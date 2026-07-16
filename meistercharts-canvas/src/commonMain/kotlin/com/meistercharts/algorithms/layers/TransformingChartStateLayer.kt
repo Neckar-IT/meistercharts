@@ -22,6 +22,8 @@ import it.neckar.geometry.Distance
 import com.meistercharts.state.ChartState
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.provider.DoubleProvider
 
 /**
@@ -65,8 +67,10 @@ class TransformingChartStateLayer<T : Layer>(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     paintingContext.withCurrentChartState(paintingVariables.updatedChartState) {
+      @HotBoundary("polymorphic layer delegation - the delegate is colored where it is implemented")
       delegate.paint(paintingContext)
     }
   }

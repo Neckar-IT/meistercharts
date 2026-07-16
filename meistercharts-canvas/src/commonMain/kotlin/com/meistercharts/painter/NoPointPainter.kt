@@ -16,11 +16,13 @@
 package com.meistercharts.painter
 
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * A [PointPainter] that paints nothing
  */
 object NoPointPainter : PointPainter {
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: Double, y: Double) {
     // do nothing
   }

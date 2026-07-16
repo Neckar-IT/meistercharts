@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.textService
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.nullIfBlank
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextService
@@ -24,6 +25,7 @@ import it.neckar.open.i18n.TextService
  * Returns the title from the axis style.
  * Returns null if there is no title or the title is blank
  */
+@Hot
 fun AxisConfiguration.resolveTitle(paintingContext: LayerPaintingContext): String? {
   return resolveTitle(paintingContext.chartSupport.textService, paintingContext.i18nConfiguration)
 }
@@ -32,6 +34,7 @@ fun AxisConfiguration.resolveTitle(paintingContext: LayerPaintingContext): Strin
  * Returns the title from the axis style.
  * Returns null if there is no title or the title is blank
  */
+@Hot
 fun AxisConfiguration.resolveTitle(textService: TextService, i18nConfiguration: I18nConfiguration): String? {
   if (titleVisible().not()) {
     return null

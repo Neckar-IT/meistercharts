@@ -20,6 +20,7 @@ import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.color.ColorProvider
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.toIntCeil
 
@@ -37,6 +38,7 @@ class FillBackgroundCheckerLayer(
 
   override val type: LayerType = LayerType.Background
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 

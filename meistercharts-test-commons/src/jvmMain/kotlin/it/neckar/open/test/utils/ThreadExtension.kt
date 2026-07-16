@@ -170,6 +170,7 @@ class ThreadExtension @JvmOverloads constructor(
         isJava2dDisposer(threadGroupName, threadName) ||
         isKeepAliveTimer2(threadGroupName, threadName) ||
         isAwtRelatedThread(threadName) ||
+        isJunitTimeoutWatcher(threadName) ||
         isQuantumRenderer(threadGroupName, threadName)
       ) {
         return true
@@ -198,4 +199,10 @@ private fun isKeepAliveSocketCleaner(threadGroupName: String, threadName: String
 private fun isJava2dDisposer(threadGroupName: String, threadName: String) = threadGroupName == "system" && threadName == "Java2D Disposer"
 private fun isAwtRelatedThread(threadName: String) = threadName.startsWith("AWT-")
 private fun isQuantumRenderer(threadGroupName: String, threadName: String) = threadGroupName == "main" && threadName.startsWith("QuantumRenderer")
+
+/**
+ * The JUnit Jupiter timeout watcher is a shared scheduled executor JUnit keeps alive across tests to
+ * enforce `junit.jupiter.execution.timeout.default`. It is framework-owned, not a test leak.
+ */
+private fun isJunitTimeoutWatcher(threadName: String) = threadName == "junit-jupiter-timeout-watcher"
 private fun isKeepAliveTimer2(threadGroupName: String, threadName: String) = threadGroupName == "InnocuousThreadGroup" && threadName.startsWith("Keep-Alive-Timer")

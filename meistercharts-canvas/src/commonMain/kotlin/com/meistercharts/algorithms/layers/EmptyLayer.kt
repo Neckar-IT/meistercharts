@@ -15,9 +15,12 @@
  */
 package com.meistercharts.algorithms.layers
 
+import it.neckar.open.annotations.Hot
+
 object EmptyLayer : AbstractLayer() {
   override val type: LayerType = LayerType.Content
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     //noop
   }

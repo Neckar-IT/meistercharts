@@ -24,6 +24,7 @@ import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.ReferenceEntryIdInt
+import it.neckar.open.annotations.Hot
 
 /**
  * Painting variables for a single reference-entry data series.
@@ -53,6 +54,7 @@ class ReferenceEntryStripePainterPaintingVariablesForOneDataSeries :
   /**
    * Stores the next values (id/count/status as raw ints, data by reference)
    */
+  @Hot
   fun storeNextValues(id: @ReferenceEntryIdInt Int, count: @ReferenceEntryDifferentIdsCountInt Int, status: @HistoryEnumSetInt Int, data: ReferenceEntryData?) {
     nextId = id
     nextCount = count
@@ -64,6 +66,7 @@ class ReferenceEntryStripePainterPaintingVariablesForOneDataSeries :
     return Segment()
   }
 
+  @Hot
   override fun writeCurrentValuesToSegment(segment: Segment) {
     segment.id = currentId
     segment.count = currentCount
@@ -82,6 +85,7 @@ class ReferenceEntryStripePainterPaintingVariablesForOneDataSeries :
     previousData = null
   }
 
+  @Hot
   override fun moveNextValuesToCurrentAndCurrentToPrevious() {
     previousId = currentId
     previousCount = currentCount
@@ -93,6 +97,7 @@ class ReferenceEntryStripePainterPaintingVariablesForOneDataSeries :
     currentData = nextData
   }
 
+  @Hot
   override fun resetNextValues() {
     nextId = ReferenceEntryId.NoValueAsInt
     nextCount = ReferenceEntryDifferentIdsCount.NoValueAsInt

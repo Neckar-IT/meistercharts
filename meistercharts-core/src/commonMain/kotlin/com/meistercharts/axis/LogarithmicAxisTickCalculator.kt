@@ -16,6 +16,7 @@
 package com.meistercharts.axis
 
 import com.meistercharts.annotations.Domain
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.fastMapDouble
 import it.neckar.open.kotlin.lang.or0ifNaN
@@ -60,6 +61,7 @@ object LogarithmicAxisTickCalculator {
    *
    * Use this variant on the hot path: it avoids allocating fresh arrays on every layout pass.
    */
+  @Hot
   fun calculateTickValuesInto(
     target: @Domain DoubleArrayList,
     lower: @Domain Double,

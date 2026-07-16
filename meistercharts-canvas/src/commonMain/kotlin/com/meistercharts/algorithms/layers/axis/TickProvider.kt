@@ -20,6 +20,10 @@ import com.meistercharts.axis.IntermediateValuesMode
 import com.meistercharts.axis.LinearAxisTickCalculator
 import com.meistercharts.axis.LogarithmicAxisTickCalculator
 import com.meistercharts.annotations.Domain
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.collections.emptyDoubleArray
 
@@ -37,6 +41,7 @@ fun interface TickProvider {
    * @param axisEndConfiguration the configuration for the axis end points.
    * @return an array of ticks for the given range of domain values.
    */
+  @Allocates(AllocationCost.Linear)
   fun getTicks(
     /**
      * The lower value
@@ -68,6 +73,7 @@ fun interface TickProvider {
    * Use this variant on the hot path: the built-in providers fill the buffer without allocating
    * a fresh array on every layout pass. The default implementation delegates to [getTicks].
    */
+  @Hot
   fun fillTicks(
     lowerValue: @Domain Double,
     upperValue: @Domain Double,
@@ -77,6 +83,7 @@ fun interface TickProvider {
     target: @Domain DoubleArrayList,
   ) {
     target.clear()
+    @HotAllocation("Fallback for custom TickProvider implementations that only implement getTicks - all built-in providers override fillTicks allocation-free")
     val ticks = getTicks(lowerValue, upperValue, maxTickCount, minTickDistance, axisEndConfiguration)
     for (i in ticks.indices) {
       target.add(ticks[i])
@@ -92,6 +99,7 @@ fun interface TickProvider {
         return LinearAxisTickCalculator.calculateTickValues(lowerValue, upperValue, axisEndConfiguration, maxTickCount, minTickDistance, IntermediateValuesMode.Also5and2)
       }
 
+      @Hot
       override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
         LinearAxisTickCalculator.calculateTickValuesInto(target, lowerValue, upperValue, axisEndConfiguration, maxTickCount, minTickDistance, IntermediateValuesMode.Also5and2)
       }
@@ -102,6 +110,7 @@ fun interface TickProvider {
         return LogarithmicAxisTickCalculator.calculateTickValues(lowerValue, upperValue, maxTickCount, minTickDistance)
       }
 
+      @Hot
       override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
         LogarithmicAxisTickCalculator.calculateTickValuesInto(target, lowerValue, upperValue, maxTickCount, minTickDistance)
       }
@@ -117,6 +126,7 @@ object NoTicksProvider : TickProvider {
     return emptyDoubleArray()
   }
 
+  @Hot
   override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
     target.clear()
   }
@@ -132,6 +142,7 @@ open class ConstantTicksProvider(
     return ticks
   }
 
+  @Hot
   override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
     target.clear()
     for (i in ticks.indices) {
@@ -155,6 +166,7 @@ class MaxNumberOfTicksProvider(val maxTickCount: Int, val delegate: TickProvider
     return delegate.getTicks(lowerValue, upperValue, maxTickCount.coerceAtMost(this.maxTickCount), minTickDistance, axisEndConfiguration)
   }
 
+  @Hot
   override fun fillTicks(lowerValue: @Domain Double, upperValue: @Domain Double, maxTickCount: Int, minTickDistance: @Domain Double, axisEndConfiguration: AxisEndConfiguration, target: @Domain DoubleArrayList) {
     delegate.fillTicks(lowerValue, upperValue, maxTickCount.coerceAtMost(this.maxTickCount), minTickDistance, axisEndConfiguration, target)
   }

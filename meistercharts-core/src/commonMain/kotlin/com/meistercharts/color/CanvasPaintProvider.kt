@@ -15,6 +15,7 @@
  */
 package com.meistercharts.color
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -28,6 +29,7 @@ fun interface CanvasPaintProvider {
    *
    * The given values are relevant when creating a gradient. They are ignored for flat colors
    */
+  @Hot
   fun toCanvasPaint(x0: @px Double, y0: @px Double, x1: @px Double, y1: @px Double): CanvasPaint
 
 }

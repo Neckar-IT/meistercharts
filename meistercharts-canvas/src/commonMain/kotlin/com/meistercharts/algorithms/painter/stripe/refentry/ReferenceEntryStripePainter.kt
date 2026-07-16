@@ -24,6 +24,7 @@ import com.meistercharts.history.ReferenceEntryData
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -41,6 +42,7 @@ interface ReferenceEntryStripePainter : StripePainter<ReferenceEntryDataSeriesIn
    *
    * @return the optical *center* of the segment - if the activeTimeStamp is within the segment, [Double.NaN] otherwise.
    */
+  @Hot
   fun layoutValueChange(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: ReferenceEntryDataSeriesIndex,

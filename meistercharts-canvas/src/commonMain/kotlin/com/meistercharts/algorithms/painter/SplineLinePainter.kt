@@ -23,6 +23,7 @@ import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import it.neckar.open.collections.first
 import it.neckar.open.collections.last
 import it.neckar.open.kotlin.lang.sqrt
+import it.neckar.open.annotations.Hot
 
 /**
  * Paints splines
@@ -43,10 +44,12 @@ class SplineLinePainter(
    */
   private val points: CoordinatesArrayList = CoordinatesArrayList(10)
 
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     points.clear()
   }
 
+  @Hot
   override fun addCoordinates(gc: CanvasRenderingContext, x: @Zoomed Double, y: @Zoomed Double) {
     points.add(x, y)
   }
@@ -59,6 +62,7 @@ class SplineLinePainter(
   /**
    * Calculates all control points in this method
    */
+  @Hot
   override fun paint(gc: CanvasRenderingContext) {
     if (points.size < 2) {
       //Less than 2 points - do nothing

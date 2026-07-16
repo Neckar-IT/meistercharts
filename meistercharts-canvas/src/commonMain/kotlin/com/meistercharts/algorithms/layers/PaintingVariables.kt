@@ -16,6 +16,7 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.loop.PaintingLoopIndex
+import it.neckar.open.annotations.Hot
 
 /**
  * Tagging interface for calculated layout variables.
@@ -54,6 +55,7 @@ interface LoopIndexAware {
   /**
    * Verifies that calculate has been called for the current loop index
    */
+  @Hot
   fun verifyLoopIndex(paintingContext: LayerPaintingContext) {
     verifyLoopIndex(paintingContext.loopIndex)
   }
@@ -61,6 +63,7 @@ interface LoopIndexAware {
   /**
    * Verifies that calculate has been called for the current loop index
    */
+  @Hot
   fun verifyLoopIndex(expectedLoopIndex: PaintingLoopIndex) {
     check(loopIndex == expectedLoopIndex) {
       "Invalid loop index ($loopIndex) but expected $expectedLoopIndex. Call [calculate] in every paint loop"

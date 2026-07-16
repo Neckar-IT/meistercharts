@@ -21,6 +21,7 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.stroke
 import com.meistercharts.color.ColorProvider
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 
 /**
@@ -35,6 +36,7 @@ class ZeroLinesLayer(
   override val type: LayerType
     get() = LayerType.Content
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
     gc.lineWidth = configuration.lineWidth

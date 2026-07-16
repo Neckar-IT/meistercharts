@@ -29,6 +29,8 @@
 
 package it.neckar.open.kotlin.lang
 
+import it.neckar.open.annotations.Hot
+
 /**
  */
 
@@ -216,6 +218,7 @@ inline fun Int.isBitSet(index: Int): Boolean {
  *
  * Returns -1 if no bit has been set
  */
+@Hot
 fun Int.findLowestOneBit(): Int {
   32.fastFor { index ->
     if (isBitSet(index)) {

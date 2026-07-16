@@ -27,6 +27,8 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.Hot
+
 /**
  * Contains extensions for KDS classes
  *
@@ -141,11 +143,13 @@ fun DoubleArray2.setCols(cols: Array<DoubleArray>) {
  */
 fun IntArrayList.isNotEmpty(): Boolean = !isEmpty()
 fun IntArrayList.lastOrNull(): Int? = if (isEmpty()) null else this.getAt(size - 1)
+@Hot
 fun IntArrayList.last(): Int = if (isEmpty()) throw NoSuchElementException("Empty array") else this.getAt(size - 1)
 fun IntArrayList.first(): Int = if (isEmpty()) throw NoSuchElementException("Empty array") else this.getAt(0)
 
 fun DoubleArrayList.isNotEmpty(): Boolean = !isEmpty()
 fun DoubleArrayList.lastOrNull(): Double? = if (isEmpty()) null else this.getAt(size - 1)
+@Hot
 fun DoubleArrayList.last(): Double = if (isEmpty()) throw NoSuchElementException("Empty array") else this.getAt(size - 1)
 fun DoubleArrayList.first(): Double = if (isEmpty()) throw NoSuchElementException("Empty array") else this.getAt(0)
 
@@ -188,6 +192,7 @@ fun DoubleArrayList.removeAll(predicate: (Double) -> Boolean) {
   }
 }
 
+@Hot
 fun DoubleArrayList.fastContains(value: Double): Boolean {
   this.fastForEach {
     if (it == value) {

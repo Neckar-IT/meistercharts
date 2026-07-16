@@ -472,6 +472,14 @@ fun Project.configureNodeJsRootExtension() {
     project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin> {
       project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().version = npmVersion("node")
     }
+
+    // The wasmJs target provisions its own node distribution via WasmNodeJsEnvSpec.
+    // Its default (node 25.0.0 in Kotlin 2.4.0) links against libatomic.so.1, which the
+    // CI runner image does not ship — :kotlinWasmNpmInstall then dies with exit code 127.
+    // Pin the same catalog version as the JS target so both share one known-good distribution.
+    project.plugins.withType<org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsPlugin> {
+      project.the<org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsEnvSpec>().version = npmVersion("node")
+    }
   }
 
   // Make root :kotlinNpmInstall depend on root :kotlinNodeJsSetup so the node distribution
@@ -538,6 +546,13 @@ fun Project.configureJunit() {
       showStackTraces = true
       showStandardStreams = false //do not show standard streams (stdout/stderr) by default
     }
+
+    //Per-test-method timeout: a safety net against a single hanging test blocking the whole
+    //build (a runaway test used to stall the main pipeline for tens of minutes). 120s is far
+    //above any legitimate unit/functional test — anything slower belongs in a separate
+    //integrationTest source set. `disabled_on_debug` keeps interactive debug sessions alive.
+    systemProperty("junit.jupiter.execution.timeout.default", "120s")
+    systemProperty("junit.jupiter.execution.timeout.mode", "disabled_on_debug")
 
     //Set the JVM properties for the tests
     //Set Coroutines Debugging - see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html

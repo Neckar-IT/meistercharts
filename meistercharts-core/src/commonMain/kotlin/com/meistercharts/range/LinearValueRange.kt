@@ -17,6 +17,7 @@ package com.meistercharts.range
 
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.DomainRelative
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.other.pct
 
@@ -37,6 +38,7 @@ open class LinearValueRange(
    *
    * ATTENTION: Will return Nan/Infinity/-Infinity if [delta] of this value range is 0.0
    */
+  @Hot
   override fun toDomainRelative(@Domain domainValue: Double): @DomainRelative @MayBeNaN Double {
     return (domainValue - start) / delta
   }
@@ -49,6 +51,7 @@ open class LinearValueRange(
     return domainDelta / delta
   }
 
+  @Hot
   override fun toDomain(@DomainRelative domainRelative: Double): @Domain Double {
     return domainRelative * delta + start
   }

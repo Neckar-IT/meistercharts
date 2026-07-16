@@ -18,6 +18,8 @@ package com.meistercharts.algorithms.layers
 import com.meistercharts.canvas.paintable.ObjectFit
 import com.meistercharts.canvas.paintable.Paintable
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 
 /**
  * Paints a paintable in the content area
@@ -25,6 +27,7 @@ import it.neckar.geometry.Direction
 class PaintableInContentAreaLayer(var backgroundImage: Paintable) : AbstractLayer() {
   override val type: LayerType = LayerType.Background
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
@@ -36,6 +39,7 @@ class PaintableInContentAreaLayer(var backgroundImage: Paintable) : AbstractLaye
     val width = chartCalculator.contentAreaRelative2zoomedX(1.0)
     val height = chartCalculator.contentAreaRelative2zoomedY(1.0)
 
+    @HotAllocation("static background paintable - one polymorphic Paintable.paintInBoundingBox per frame, not per data point")
     backgroundImage.paintInBoundingBox(paintingContext, x, y, Direction.TopLeft, 0.0, 0.0, width, height, ObjectFit.Contain)
   }
 }

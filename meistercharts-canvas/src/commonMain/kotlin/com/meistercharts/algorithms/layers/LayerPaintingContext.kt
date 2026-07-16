@@ -44,6 +44,10 @@ import com.meistercharts.tile.TileIndex
 import com.meistercharts.time.TimeRange
 import it.neckar.datetime.minimal.TimeZone
 import it.neckar.geometry.Size
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.http.Url
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.i18n.TextKey
@@ -179,17 +183,47 @@ data class LayerPaintingContext(
   }
 
   /**
-   * Creates a new copy of this context with given [layerPaintIndex]
+   * Creates a new copy of this context with given [layerLayoutIndex].
+   *
+   * Explicit constructor call (not the generated `copy`): the generated `copy` cannot carry `@Hot`.
    */
+  @Hot
   fun withLayoutIndex(layerIndexForLayout: LayerIndex): LayerPaintingContext {
-    return copy(layerLayoutIndex = layerIndexForLayout)
+    @HotAllocation("one small context copy per layer per frame - bounded by the layer count, not by data points")
+    val contextWithLayoutIndex = LayerPaintingContext(
+      gc = gc,
+      layerSupport = layerSupport,
+      frameTimestamp = frameTimestamp,
+      frameTimestampDelta = frameTimestampDelta,
+      loopIndex = loopIndex,
+      layerLayoutIndex = layerIndexForLayout,
+      layerPaintIndex = layerPaintIndex,
+      dirtyReasons = dirtyReasons,
+      missingResources = missingResources,
+    )
+    return contextWithLayoutIndex
   }
 
   /**
-   * Creates a new copy of this context with given [layerPaintIndex]
+   * Creates a new copy of this context with given [layerPaintIndex].
+   *
+   * Explicit constructor call (not the generated `copy`): the generated `copy` cannot carry `@Hot`.
    */
+  @Hot
   fun withPaintIndex(layerIndex: LayerIndex): LayerPaintingContext {
-    return copy(layerPaintIndex = layerIndex)
+    @HotAllocation("one small context copy per layer per frame - bounded by the layer count, not by data points")
+    val contextWithPaintIndex = LayerPaintingContext(
+      gc = gc,
+      layerSupport = layerSupport,
+      frameTimestamp = frameTimestamp,
+      frameTimestampDelta = frameTimestampDelta,
+      loopIndex = loopIndex,
+      layerLayoutIndex = layerLayoutIndex,
+      layerPaintIndex = layerIndex,
+      dirtyReasons = dirtyReasons,
+      missingResources = missingResources,
+    )
+    return contextWithPaintIndex
   }
 
   /**
@@ -217,14 +251,14 @@ inline fun TextKey.resolve(chartSupport: ChartSupport): String {
 /**
  * Runs the given action with an updated current chart state from the given provider
  */
-fun LayerPaintingContext.withCurrentChartState(chartStateProvider: ChartState.() -> ChartState, action: () -> Unit) {
+inline fun LayerPaintingContext.withCurrentChartState(chartStateProvider: ChartState.() -> ChartState, action: () -> Unit) {
   withCurrentChartState(chartStateProvider(chartState), action)
 }
 
 /**
  * Runs the given action with an updated current chart state
  */
-fun LayerPaintingContext.withCurrentChartState(chartState: ChartState, action: () -> Unit) {
+inline fun LayerPaintingContext.withCurrentChartState(chartState: ChartState, action: () -> Unit) {
   this.chartSupport.withCurrentChartState(chartState, action)
 }
 
@@ -256,6 +290,7 @@ fun ChartState.tileCalculator(
   return TileChartCalculator(this, tileIndex, tileSize)
 }
 
+@Allocates(AllocationCost.Constant)
 fun ChartSupport.timeChartCalculator(
   contentAreaTimeRangeX: TimeRange,
 ): TimeChartCalculator {
@@ -265,6 +300,7 @@ fun ChartSupport.timeChartCalculator(
 /**
  * Creates a new time chart calculator, that is based on the provided content area time ranges
  */
+@Allocates(AllocationCost.Constant)
 fun ChartState.timeChartCalculator(
   contentAreaTimeRangeX: TimeRange,
 ): TimeChartCalculator {

@@ -34,6 +34,7 @@ import com.meistercharts.provider.ValueRangeProvider
 import com.meistercharts.range.ValueRange
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Orientation
+import it.neckar.open.annotations.Hot
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.open.formatting.format
@@ -80,6 +81,7 @@ class ValueAxisWithOffsetLayer(
   override val type: LayerType
     get() = LayerType.Content
 
+  @Hot
   override fun paintingVariables(): ValueAxisWithOffsetPaintingVariables {
     return paintingVariables
   }

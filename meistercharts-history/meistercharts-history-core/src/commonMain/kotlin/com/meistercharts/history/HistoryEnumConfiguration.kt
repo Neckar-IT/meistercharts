@@ -15,6 +15,7 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.IntArrayList
 import it.neckar.open.collections.emptyIntArray
@@ -57,6 +58,7 @@ class HistoryEnumConfiguration(
   /**
    * Returns the history enum for the given data series index
    */
+  @Hot
   fun getEnum(dataSeriesIndex: EnumDataSeriesIndex): HistoryEnum {
     return enums[dataSeriesIndex.value]
   }

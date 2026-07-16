@@ -21,6 +21,7 @@ import com.meistercharts.algorithms.painter.DirectLinePainter
 import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * Paints lines associated with a category
@@ -29,6 +30,7 @@ interface CategoryLinePainter {
   /**
    * Begins a new line
    */
+  @Hot
   fun begin(gc: CanvasRenderingContext)
 
   /**
@@ -36,6 +38,7 @@ interface CategoryLinePainter {
    *
    * Call [finish] when done.
    */
+  @Hot
   fun addCoordinate(
     gc: CanvasRenderingContext,
     x: @Window Double,
@@ -48,6 +51,7 @@ interface CategoryLinePainter {
   /**
    * Finishes the line created by calls to [addCoordinate]
    */
+  @Hot
   fun finish(gc: CanvasRenderingContext)
 }
 
@@ -57,14 +61,17 @@ interface CategoryLinePainter {
 open class DelegatingCategoryLinePainter(
   val delegate: LinePainter
 ) : CategoryLinePainter {
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     delegate.begin(gc)
   }
 
+  @Hot
   override fun addCoordinate(gc: CanvasRenderingContext, x: Double, y: Double, categoryIndex: CategoryIndex, seriesIndex: SeriesIndex, value: Double) {
     delegate.addCoordinates(gc, x, y)
   }
 
+  @Hot
   override fun finish(gc: CanvasRenderingContext) {
     delegate.paint(gc)
   }

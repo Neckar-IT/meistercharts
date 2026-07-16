@@ -27,6 +27,7 @@
  */
 package it.neckar.open.kotlin.lang
 
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.Inclusive
 
 
@@ -407,6 +408,7 @@ inline fun String?.ifBlank(defaultValue: () -> String): String {
 /**
  * Returns the given default value if this is null or blank
  */
+@Hot
 fun String?.ifBlank(defaultValue: String): String {
   return if (isNullOrBlank()) defaultValue else this
 }
@@ -423,6 +425,7 @@ fun String?.nullIfEmpty(): String? {
 /**
  * Returns this string or null if this string is blank
  */
+@Hot
 fun String?.nullIfBlank(): String? {
   return takeUnless {
     it.isNullOrBlank()
@@ -461,6 +464,7 @@ private val regexStartsWithLetter = "^[a-zA-Z]".toRegex()
 /**
  * Returns true if all lines are blank
  */
+@Hot
 fun List<String>.allBlank(): Boolean {
   return all { it.isBlank() }
 }

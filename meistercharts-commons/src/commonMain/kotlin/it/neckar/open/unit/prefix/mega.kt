@@ -51,7 +51,7 @@ import kotlin.reflect.KClass
 )
 @MustBeDocumented
 @Suppress("ClassName")
-@Prefix(10000.0)
+@Prefix(1000000.0)
 annotation class mega(
   /**
    * The base unit

@@ -19,6 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.resolve
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
+import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.SnapConfiguration
@@ -28,7 +29,9 @@ import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
+import com.meistercharts.font.FontDescriptor
 import com.meistercharts.font.FontDescriptorFragment
+import com.meistercharts.font.combineWith
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.MayBeNoValueOrPending
@@ -37,6 +40,8 @@ import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
 import it.neckar.geometry.Direction
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
@@ -50,6 +55,42 @@ class RectangleReferenceEntryStripePainter(
 
   override val configuration: Configuration = Configuration().also(additionalConfiguration)
 
+  /**
+   * 1-element cache for the label font: [CanvasRenderingContext.font] combines the current canvas font
+   * with [Configuration.labelFont] and allocates a new [FontDescriptor] on *every* call - one per labeled
+   * segment per frame. The combined descriptor only changes when the base font or the fragment changes,
+   * so it is cached here and re-applied via the (allocation-free) [CanvasRenderingContext.font] setter.
+   */
+  private var combinedLabelFontBase: FontDescriptor? = null
+  private var combinedLabelFontFragment: FontDescriptorFragment? = null
+  private var combinedLabelFont: FontDescriptor? = null
+
+  /**
+   * Applies [Configuration.labelFont] to the canvas - using [combinedLabelFont] to avoid the
+   * per-call allocation of [CanvasRenderingContext.font].
+   */
+  @Hot
+  private fun applyLabelFont(gc: CanvasRenderingContext) {
+    val fragment = configuration.labelFont
+    val currentFont = gc.font
+    val cached = combinedLabelFont
+
+    if (cached != null && fragment === combinedLabelFontFragment) {
+      if (currentFont === combinedLabelFontBase || currentFont === cached) {
+        gc.font = cached
+        return
+      }
+    }
+
+    @HotAllocation("cache miss - the combined font descriptor is cached until the base font or the label font changes")
+    val combined = currentFont.combineWith(fragment)
+    combinedLabelFontBase = currentFont
+    combinedLabelFontFragment = fragment
+    combinedLabelFont = combined
+    gc.font = combined
+  }
+
+  @Hot
   override fun paintSegment(
     paintingContext: LayerPaintingContext,
     dataSeriesIndex: ReferenceEntryDataSeriesIndex,
@@ -94,6 +135,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.red)
         gc.fillRect(startXinViewport, 0.0, rectangleWidth, rectangleHeight)
         gc.fill(Color.white)
+        @HotAllocation("DebugFeature.HistoryGaps only - text rendering allocates")
         gc.fillText("-", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
       return
@@ -104,6 +146,7 @@ class RectangleReferenceEntryStripePainter(
         gc.fill(Color.orange)
         gc.fillRect(startXinViewport, 0.0, rectangleWidth, rectangleHeight)
         gc.fill(Color.white)
+        @HotAllocation("DebugFeature.HistoryGaps only - text rendering allocates")
         gc.fillText("?", startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
       return
@@ -135,7 +178,8 @@ class RectangleReferenceEntryStripePainter(
         //Paint the label
         entryData?.label?.resolve(paintingContext)?.let { label ->
           gc.fill(configuration.labelColorProvider(idToPaint, statusEnumSet, historyConfiguration))
-          gc.font(configuration.labelFont)
+          applyLabelFont(gc)
+          @HotAllocation("Label painting - text rendering allocates")
           gc.fillText(label, startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
         }
       }
@@ -150,7 +194,8 @@ class RectangleReferenceEntryStripePainter(
         //gc.strokeOvalCenter(startX + rectangleWidth / 2.0, rectangleHeight / 2.0, 20.0, 20.0)
 
         gc.fill(configuration.countLabelColor)
-        gc.font(configuration.labelFont)
+        applyLabelFont(gc)
+        @HotAllocation("Count-label painting - number formatting (cached, allocates on miss) and text rendering allocate")
         gc.fillText(intFormat.format(count.value.toDouble()), startXinViewport + rectangleWidth / 2.0, rectangleHeight / 2.0, Direction.Center, maxWidth = rectangleWidth, maxHeight = rectangleHeight)
       }
     }

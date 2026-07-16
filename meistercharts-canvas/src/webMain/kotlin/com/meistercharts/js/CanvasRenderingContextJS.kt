@@ -49,6 +49,7 @@ import it.neckar.geometry.Rectangle
 import it.neckar.geometry.Size
 import it.neckar.geometry.VerticalAlignment
 import it.neckar.logging.LoggerFactory
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.isPositiveOrZero
 import it.neckar.open.kotlin.lang.round
 import it.neckar.open.unit.number.MayBeNegative
@@ -139,6 +140,7 @@ class CanvasRenderingContextJS(
     return context.font
   }
 
+  @Hot
   override fun clip(x: Double, y: Double, width: Double, height: Double) {
     context.beginPath()
     context.rect(x, y, width, height)
@@ -216,6 +218,7 @@ class CanvasRenderingContextJS(
       }
     }
 
+  @Hot
   override fun strokeLine(startX: Double, startY: Double, endX: Double, endY: Double) {
     context.beginPath()
     context.moveTo(startX, startY)
@@ -223,10 +226,12 @@ class CanvasRenderingContextJS(
     context.stroke()
   }
 
+  @Hot
   override fun fillRectInternal(x: Double, y: Double, width: Double, height: Double) {
     context.fillRect(x, y, width, height)
   }
 
+  @Hot
   override fun strokeRectInternal(x: Double, y: Double, width: Double, height: Double) {
     context.strokeRect(x, y, width, height)
   }
@@ -256,12 +261,14 @@ class CanvasRenderingContextJS(
     context.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise)
   }
 
+  @Hot
   override fun strokeOvalCenter(x: Double, y: Double, width: Double, height: Double) {
     context.beginPath()
     addEllipseSubPath(x, y, width / 2.0, height / 2.0, 0.0, 0.0, 2 * PI, false)
     context.stroke()
   }
 
+  @Hot
   override fun ovalCenter(centerX: Double, centerY: Double, width: Double, height: Double) {
     context.moveTo(centerX + width / 2.0, centerY)
     addEllipseSubPath(centerX, centerY, width / 2.0, height / 2.0, 0.0, 0.0, 2 * PI, false)
@@ -273,6 +280,7 @@ class CanvasRenderingContextJS(
     context.stroke()
   }
 
+  @Hot
   override fun fillOvalCenter(x: Double, y: Double, width: Double, height: Double) {
     context.beginPath()
     addEllipseSubPath(x, y, width / 2.0, height / 2.0, 0.0, 0.0, 2 * PI, false)
@@ -315,40 +323,49 @@ class CanvasRenderingContextJS(
     context.arc(centerX, centerY, radius, startAngle, startAngle + extend, extend < 0)
   }
 
+  @Hot
   override fun bezierCurveTo(controlX1: Double, controlY1: Double, controlX2: Double, controlY2: Double, x2: Double, y2: Double) {
     context.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, x2, y2)
   }
 
+  @Hot
   override fun quadraticCurveTo(controlX: Double, controlY: Double, x: Double, y: Double) {
     context.quadraticCurveTo(controlX, controlY, x, y)
   }
 
+  @Hot
   override fun arcTo(controlX: Double, controlY: Double, x: Double, y: Double, radius: @PositiveOrZero Double) {
     require(radius.isPositiveOrZero()) { "Radius must be >= 0 but was <$radius>" }
 
     context.arcTo(controlX, controlY, x, y, radius)
   }
 
+  @Hot
   override fun beginPath() {
     context.beginPath()
   }
 
+  @Hot
   override fun closePath() {
     context.closePath()
   }
 
+  @Hot
   override fun moveTo(x: Double, y: Double) {
     context.moveTo(x, y)
   }
 
+  @Hot
   override fun lineTo(x: Double, y: Double) {
     context.lineTo(x, y)
   }
 
+  @Hot
   override fun stroke() {
     context.stroke()
   }
 
+  @Hot
   override fun fill() {
     context.fill()
   }
@@ -361,16 +378,19 @@ class CanvasRenderingContextJS(
     return context.strokeStyle.toString()
   }
 
+  @Hot
   override fun translate(deltaX: Double, deltaY: Double) {
     super.translate(deltaX, deltaY)
     context.translate(deltaX, deltaY)
   }
 
+  @Hot
   override fun translatePhysical(deltaX: Double, deltaY: Double) {
     super.translatePhysical(deltaX, deltaY)
     context.translate(deltaX / scaleX, deltaY / scaleY)
   }
 
+  @Hot
   override fun shadow(color: Color, blurRadius: Double, offsetX: Double, offsetY: Double) {
     context.shadowColor = color.web
     context.shadowBlur = blurRadius
@@ -378,6 +398,7 @@ class CanvasRenderingContextJS(
     context.shadowOffsetY = offsetY
   }
 
+  @Hot
   override fun clearShadow() {
     context.shadowColor = Color.transparent().web
   }
@@ -388,6 +409,7 @@ class CanvasRenderingContextJS(
    * @param angleInRadians The rotation angle, clockwise in radians.
    * @see [rotateDegrees]
    */
+  @Hot
   override fun rotateRadians(@rad angleInRadians: Double) {
     super.rotateRadians(angleInRadians)
     context.rotate(angleInRadians)
@@ -608,22 +630,27 @@ class CanvasRenderingContextJS(
     }
   }
 
+  @Hot
   override fun clearRect(x: Double, y: Double, width: Double, height: Double) {
     context.clearRect(x, y, width, height)
   }
 
+  @Hot
   override fun rect(x: Double, y: Double, width: @MayBeNegative Double, height: @MayBeNegative Double) {
     context.rect(x, y, width, height)
   }
 
+  @Hot
   override fun strokeStyle(color: CanvasPaint) {
     context.strokeStyle = color.toHtml()
   }
 
+  @Hot
   override fun fillStyle(color: CanvasPaint) {
     context.fillStyle = color.toHtml()
   }
 
+  @Hot
   override fun fillRule(fillRule: FillRule) {
     context.fill(fillRule = fillRule.toHtml())
   }
@@ -663,14 +690,22 @@ class CanvasRenderingContextJS(
     return gradient
   }
 
+  @Hot
   override fun setLineDash(vararg dashes: Double) {
     context.setLineDashWeb(dashes)
   }
 
+  @Hot
+  override fun setLineDashes(dashes: DoubleArray) {
+    context.setLineDashesWeb(dashes)
+  }
+
+  @Hot
   override fun getFontMetrics(): FontMetrics {
     return FontMetricsCacheJS.get(font)
   }
 
+  @Hot
   override fun calculateTextWidth(text: String): Double {
     return FontBoundsCacheJS.calculateWidth(text, font) {
       context.measureText(text).width
@@ -729,6 +764,7 @@ class CanvasRenderingContextJS(
   }
 }
 
+@Hot
 private fun FillRule.toHtml(): CanvasFillRule {
   return when (this) {
     FillRule.EvenOdd -> CanvasFillRule.EVENODD
@@ -810,7 +846,17 @@ internal expect fun HTMLCanvasElement.getContext2d(willReadFrequently: Boolean):
 /**
  * Calls `setLineDash` - the array conversion requires target-specific interop (JsArray<JsNumber> on Wasm).
  */
+@Hot
 internal expect fun CanvasRenderingContext2D.setLineDashWeb(dashes: DoubleArray)
+
+/**
+ * Calls `setLineDash` with a converted representation that is cached *per array instance*.
+ *
+ * Only call this with stable, effectively immutable arrays (e.g. `Dashes.dashes`): every new
+ * array instance creates a new cache entry. For throwaway arrays use [setLineDashWeb] instead.
+ */
+@Hot
+internal expect fun CanvasRenderingContext2D.setLineDashesWeb(dashes: DoubleArray)
 
 val HTMLCanvasElement.canvasRenderingContextWebGl: WebGLRenderingContext
   get() = getContext("webgl") as WebGLRenderingContext ?: throw IllegalStateException("context not found")

@@ -30,6 +30,7 @@ import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Size
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.pct
 import it.neckar.open.unit.other.px
 import kotlin.math.floor
@@ -49,6 +50,7 @@ object InternalCalculations {
   //
 
   @ContentAreaRelative
+  @Hot
   fun domainRelative2contentAreaRelative(@DomainRelative domainRelative: Double, axisInversionInformation: AxisInversionInformation): Double {
     return if (axisInversionInformation.axisInverted) {
       1.0 - domainRelative
@@ -60,6 +62,7 @@ object InternalCalculations {
 
   @ContentArea
   @px
+  @Hot
   fun contentAreaRelative2contentArea(@ContentAreaRelative @pct value: Double, factor: Double): Double {
     return value * factor
   }
@@ -68,6 +71,7 @@ object InternalCalculations {
 
   @Zoomed
   @px
+  @Hot
   fun contentArea2zoomed(@px @ContentArea value: Double, zoomFactor: Double): Double {
     return value * zoomFactor
   }
@@ -76,6 +80,7 @@ object InternalCalculations {
 
   @Window
   @px
+  @Hot
   fun zoomed2window(value: @Zoomed Double, translate: @Zoomed Double): Double {
     return value + translate
   }
@@ -88,6 +93,7 @@ object InternalCalculations {
 
   // Window --> Zoomed
 
+  @Hot
   @Zoomed
   @px
   fun window2zoomed(value: @Window Double, translate: @Zoomed Double): Double {
@@ -96,6 +102,7 @@ object InternalCalculations {
 
   // Zoomed --> ContentArea
 
+  @Hot
   @ContentArea
   @px
   fun zoomed2contentArea(@Zoomed @px value: Double, zoomFactor: Double): Double {
@@ -104,6 +111,7 @@ object InternalCalculations {
 
   // ContentArea --> ContentAreaRelative
 
+  @Hot
   @ContentAreaRelative
   @pct
   fun contentArea2contentAreaRelative(@ContentArea @px value: Double, factor: Double): Double {
@@ -112,6 +120,7 @@ object InternalCalculations {
 
   // ContentArea Relative --> DomainRelative
 
+  @Hot
   @DomainRelative
   fun contentAreaRelative2domainRelative(@ContentAreaRelative contentAreaRelative: Double, axisInversionInformation: AxisInversionInformation): Double {
     return if (axisInversionInformation.axisInverted) {

@@ -22,6 +22,8 @@ import com.meistercharts.loop.PaintingLoopIndex
 import com.meistercharts.canvas.layout.buffer.MappedLayoutBuffer
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 
 /**
  * Painting variables for [StripePainter]s.
@@ -60,8 +62,11 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
   /**
    * Returns the painting variables for the provided data series index
    */
+  @Hot
   fun forDataSeriesIndex(dataSeriesIndex: DataSeriesIndexType): PaintingVariablesForOneDataSeriesType {
-    return paintingVariables4DataSeries.get(dataSeriesIndex)
+    @HotAllocation("First access per key and loop only - the per-loop map is re-populated once per data series, afterwards the lookup is allocation-free")
+    val paintingVariables = paintingVariables4DataSeries.get(dataSeriesIndex)
+    return paintingVariables
   }
 
   /**
@@ -84,6 +89,7 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
    * This method is called once for *each* data series index.
    * Therefore, if there are multiple data series shown, this method is called multiple times per loop.
    */
+  @Hot
   open fun prepareLayout(paintingContext: LayerPaintingContext, height: @Zoomed Double, dataSeriesIndex: DataSeriesIndexType, historyConfiguration: HistoryConfiguration) {
     reset(paintingContext.loopIndex)
     this.historyConfiguration = historyConfiguration
@@ -94,6 +100,7 @@ abstract class StripePainterPaintingVariables<DataSeriesIndexType : DataSeriesIn
   /**
    * Reset all values
    */
+  @Hot
   fun reset(loopIndex: PaintingLoopIndex) {
     this.loopIndex = loopIndex
     this.historyConfiguration = HistoryConfiguration.empty

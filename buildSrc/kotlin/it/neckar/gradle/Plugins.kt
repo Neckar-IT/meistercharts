@@ -67,6 +67,12 @@ object Plugins {
   const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val generateAuditReport: String = "it.neckar.dependencies.audit-report"
   const val buildProfileReport: String = "it.neckar.report.build-profile"
+
+  /**
+   * Writes `build/reports/structured/cache-report.json` — per-task build-cache outcomes (from-cache vs
+   * executed vs up-to-date). Apply once to the root project. See [it.neckar.gradle.report.cache.CacheReportPlugin].
+   */
+  const val cacheReport: String = "it.neckar.report.cache"
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"

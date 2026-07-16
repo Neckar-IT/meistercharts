@@ -28,6 +28,7 @@
 package it.neckar.geometry
 
 import com.meistercharts.annotations.Zoomed
+import it.neckar.open.annotations.Hot
 import it.neckar.open.annotations.JsExportForTs
 import it.neckar.open.formatting.CachedNumberFormat
 import it.neckar.open.formatting.decimalFormat
@@ -99,6 +100,7 @@ data class Coordinates(
   /**
    * Adds the given vector and returns the resulting coordinate
    */
+  @Hot
   @JsExport.Ignore
   operator fun plus(vector: Distance): Coordinates {
     if (vector.isZero()) {
@@ -343,6 +345,7 @@ data class Coordinates(
     val NaN: @MayBeNaN Coordinates = Coordinates(Double.NaN, Double.NaN)
     val invalid: @MayBeNaN Coordinates = NaN
 
+    @Hot
     @JvmStatic
     fun of(x: Double, y: Double): Coordinates {
       return Coordinates(x, y)

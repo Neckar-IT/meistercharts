@@ -18,6 +18,7 @@ package com.meistercharts.algorithms.painter
 import com.meistercharts.canvas.CanvasRenderingContext
 import com.meistercharts.canvas.layout.buffer.CoordinatesArrayList
 import com.meistercharts.painter.LinePainter
+import it.neckar.open.annotations.Hot
 
 /**
  * A class for drawing a single line on a canvas.
@@ -32,6 +33,7 @@ class DirectLinePainter(
   /**
    * Clears the existing line coordinates.
    */
+  @Hot
   override fun begin(gc: CanvasRenderingContext) {
     locations.clear()
   }
@@ -43,6 +45,7 @@ class DirectLinePainter(
    * @param x The x coordinate of the point to be added.
    * @param y The y coordinate of the point to be added.
    */
+  @Hot
   override fun addCoordinates(gc: CanvasRenderingContext, x: Double, y: Double) {
     require(x.isFinite()) { "x must be a finite number but was $x" }
     require(y.isFinite()) { "y must be a finite number but was $y" }
@@ -55,6 +58,7 @@ class DirectLinePainter(
    *
    * @param gc The canvas rendering context used for drawing.
    */
+  @Hot
   override fun paint(gc: CanvasRenderingContext) {
     if (locations.size < 2) return
 

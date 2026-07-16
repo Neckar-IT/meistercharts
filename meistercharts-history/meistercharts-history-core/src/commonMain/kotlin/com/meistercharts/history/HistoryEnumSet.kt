@@ -15,6 +15,9 @@
  */
 package com.meistercharts.history
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.fastFor
 import it.neckar.open.kotlin.lang.findLowestOneBit
 import it.neckar.open.kotlin.lang.isBitSet
@@ -29,10 +32,12 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
     isValid(bitset)
   }
 
+  @Hot
   fun isNoValue(): Boolean {
     return isNoValue(bitset)
   }
 
+  @Hot
   fun isPending(): Boolean {
     return isPending(bitset)
   }
@@ -44,6 +49,7 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
     return bitset.isBitSet(index.value)
   }
 
+  @Allocates(AllocationCost.Constant)
   override fun toString(): String {
     if (isNoValue()) {
       return "-"
@@ -61,6 +67,7 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
    *
    * Attention: Will return special values if [isPending] or [isNoValue]
    */
+  @Hot
   fun firstSetOrdinal(): @MayBeNoValueOrPending HistoryEnumOrdinal {
     if (isPending()) {
       return HistoryEnumOrdinal.Pending
@@ -117,10 +124,12 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
       return HistoryEnumSet(1 shl enumOrdinal.value)
     }
 
+    @Hot
     fun isPending(value: @HistoryEnumSetInt Int): Boolean {
       return value == PendingAsInt
     }
 
+    @Hot
     fun isNoValue(value: @HistoryEnumSetInt Int): Boolean {
       return value == NoValueAsInt
     }

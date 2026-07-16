@@ -21,6 +21,8 @@ import com.meistercharts.canvas.layout.buffer.LayoutVariable
 import com.meistercharts.canvas.layout.buffer.LayoutVariablesObjectBuffer
 import com.meistercharts.history.DataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 
@@ -82,6 +84,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
   /**
    * Is called *once* in each painting loop
    */
+  @Hot
   fun prepareLayout(height: @Zoomed Double, historyConfiguration: HistoryConfiguration, dataSeriesIndex: DataSeriesIndexType) {
     this.height = height
     this.historyConfiguration = historyConfiguration
@@ -92,6 +95,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
    * Remembers the x/time state of a value change. The subclass stores the concrete next values itself before/after
    * calling this method.
    */
+  @Hot
   fun recordValueChange(startX: @Window Double, endX: @Window Double, startTime: @ms Double, endTime: @ms Double, activeTimeStamp: @ms @MayBeNaN Double) {
     nextStartX = startX
     nextEndX = endX
@@ -111,6 +115,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
    *
    * @return the geometrical center - if the active timestamp is within the segment, [Double.NaN] otherwise.
    */
+  @Hot
   fun layoutSegment(): @Window @MayBeNaN Double {
     @Window val startX = currentStartX
     @Window val endX = currentEndX
@@ -118,6 +123,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
     @Window val endTime = currentEndTime
     @ms @MayBeNaN val activeTimeStamp = activeTimeStamp
 
+    @HotAllocation("Object pool - allocates only when the segment pool grows beyond its high-water mark; steady-state frames reuse pooled segments")
     val segment = segments.addNewElement()
     segment.startX = startX
     segment.endX = endX
@@ -140,6 +146,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
   /**
    * Writes the *current* values into the given segment.
    */
+  @Hot
   protected abstract fun writeCurrentValuesToSegment(segment: SegmentType)
 
   override fun reset() {
@@ -170,6 +177,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
   /**
    * Prepares for the next value
    */
+  @Hot
   fun prepareForNextValue() {
     //Save current to previous, next to current
     moveNextValuesToCurrentAndCurrentToPrevious()
@@ -187,13 +195,16 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
   /**
    * Copies the current values to previous and the next values to current.
    */
+  @Hot
   protected abstract fun moveNextValuesToCurrentAndCurrentToPrevious()
 
   /**
    * Resets the next values to their defaults.
    */
+  @Hot
   protected abstract fun resetNextValues()
 
+  @Hot
   private fun resetNextXTime() {
     nextStartX = Double.NaN
     nextEndX = Double.NaN
@@ -204,6 +215,7 @@ abstract class StripePainterPaintingVariablesForOneDataSeries<DataSeriesIndexTyp
   /**
    * Updates the end of the current segment
    */
+  @Hot
   fun updateCurrentEnd(endX: @Window Double, endTime: @ms Double) {
     currentEndX = endX
     currentEndTime = endTime

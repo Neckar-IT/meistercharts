@@ -27,6 +27,8 @@
  */
 package it.neckar.geometry
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.formatting.NumberFormat
 import it.neckar.open.formatting.intFormat
 import it.neckar.open.i18n.CurrentI18nConfiguration
@@ -256,7 +258,11 @@ data class Size(
 
   /**
    * Returns a new size that is the same or *larger* than this with the given aspect ratio
+   *
+   * Marked [Allocates]: returns a fresh [Size] per call — a `@Hot` caller acknowledges the
+   * allocation deliberately with `@HotAllocation("reason")` at the call site.
    */
+  @Allocates(AllocationCost.Constant)
   fun containWithAspectRatio(aspectRatio: Double): Size {
     val minWidth = height * aspectRatio
     val minHeight = width / aspectRatio

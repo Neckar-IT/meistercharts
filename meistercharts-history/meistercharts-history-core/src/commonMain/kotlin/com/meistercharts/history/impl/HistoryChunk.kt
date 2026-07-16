@@ -44,6 +44,7 @@ import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
 import it.neckar.open.annotations.Allocates
 import it.neckar.open.annotations.AllocationCost
+import it.neckar.open.annotations.Hot
 import it.neckar.open.annotations.Slow
 import it.neckar.open.collections.BSearchResult
 import it.neckar.open.collections.DoubleArrayList
@@ -151,6 +152,7 @@ data class HistoryChunk(
   /**
    * Returns true if there are no time stamps in this chunk
    */
+  @Hot
   fun isEmpty(): Boolean {
     return timeStampsCount == 0
   }
@@ -186,6 +188,7 @@ data class HistoryChunk(
    * * the exact timestamp ([RecordingType.Measured])
    * * the center of average / bit set
    */
+  @Hot
   fun timestampCenter(timeStampIndex: TimestampIndex): @ms Double {
     if (timeStampIndex.value >= timeStamps.size) {
       throw IndexOutOfBoundsException("timeStampIndex: $timeStampIndex too large. Size is ${timeStamps.size}")
@@ -224,6 +227,7 @@ data class HistoryChunk(
   /**
    * Returns the enum value for the given indices
    */
+  @Hot
   fun getEnumValue(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
     return values.getEnumValue(dataSeriesIndex, timeStampIndex)
   }
@@ -232,6 +236,7 @@ data class HistoryChunk(
    * Returns the reference entry id (measured or most-of-the-time).
    *
    */
+  @Hot
   fun getReferenceEntryId(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryId {
     return values.getReferenceEntryId(dataSeriesIndex, timeStampIndex)
   }
@@ -240,10 +245,12 @@ data class HistoryChunk(
    * Returns the count of different IDs.
    * Returns [ReferenceEntryDifferentIdsCount.one] for measured values.
    */
+  @Hot
   fun getReferenceEntryIdsCount(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending ReferenceEntryDifferentIdsCount {
     return values.getReferenceEntryDifferentIdsCount(dataSeriesIndex, timeStampIndex)
   }
 
+  @Hot
   fun getReferenceEntryStatus(dataSeriesIndex: ReferenceEntryDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumSet {
     return values.getReferenceEntryStatus(dataSeriesIndex, timeStampIndex)
   }
@@ -277,6 +284,7 @@ data class HistoryChunk(
   /**
    * Returns the enum value that has been measured *most* of the time
    */
+  @Hot
   fun getEnumOrdinalMostTime(dataSeriesIndex: EnumDataSeriesIndex, timeStampIndex: TimestampIndex): @MayBeNoValueOrPending HistoryEnumOrdinal {
     return values.getEnumOrdinalMostTime(dataSeriesIndex, timeStampIndex)
   }
@@ -346,6 +354,7 @@ data class HistoryChunk(
    * ## Calculation of negative values
    * The returned index is calculated as: (-(potential insertion index) - 1)
    */
+  @Hot
   fun bestTimestampIndexFor(@ms timeStamp: Double): BSearchResult {
     return timeStamps.binarySearch(timeStamp)
   }
@@ -409,6 +418,7 @@ data class HistoryChunk(
   /**
    * Returns the [ReferenceEntryData] for the provided [dataSeriesIndex] and [id]
    */
+  @Hot
   fun getReferenceEntryData(dataSeriesIndex: ReferenceEntryDataSeriesIndex, id: ReferenceEntryId): ReferenceEntryData? {
     return values.getReferenceEntryData(dataSeriesIndex, id)
   }
@@ -1357,6 +1367,7 @@ fun HistoryChunk.timeRange(): TimeRange {
  * * the exact timestamp ([RecordingType.Measured])
  * * the start of average / bit set (set)
  */
+@Hot
 fun HistoryChunk.timestampStart(
   timeStampIndex: TimestampIndex,
   samplingPeriod: SamplingPeriod,
@@ -1370,6 +1381,7 @@ fun HistoryChunk.timestampStart(
 /**
  * The end time stamp
  */
+@Hot
 fun HistoryChunk.timestampEnd(
   timeStampIndex: TimestampIndex,
   samplingPeriod: SamplingPeriod,

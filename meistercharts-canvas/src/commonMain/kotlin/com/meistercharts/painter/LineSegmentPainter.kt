@@ -18,6 +18,7 @@ package com.meistercharts.painter
 import com.meistercharts.algorithms.layers.linechart.LineStyle
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.canvas.CanvasRenderingContext
+import it.neckar.open.annotations.Hot
 
 /**
  * Paints one segment of a line
@@ -26,6 +27,7 @@ fun interface LineSegmentPainter {
   /**
    * Paints one segment of a line
    */
+  @Hot
   fun paintSegment(
     gc: CanvasRenderingContext,
     startX: @Zoomed Double,
@@ -39,6 +41,7 @@ fun interface LineSegmentPainter {
  * Default implementation that connects two coordinates with a direct line
  */
 class DirectLineSegmentPainter(val lineStyle: LineStyle = LineStyle()) : LineSegmentPainter {
+  @Hot
   override fun paintSegment(gc: CanvasRenderingContext, startX: @Zoomed Double, startY: @Zoomed Double, endX: @Zoomed Double, endY: @Zoomed Double) {
     lineStyle.apply(gc)
 
@@ -49,6 +52,7 @@ class DirectLineSegmentPainter(val lineStyle: LineStyle = LineStyle()) : LineSeg
 //TODO implementations for discrete values (Signal Edge)
 
 class SignalEdgePainter(val lineStyle: LineStyle = LineStyle()) : LineSegmentPainter {
+  @Hot
   override fun paintSegment(gc: CanvasRenderingContext, startX: Double, startY: Double, endX: Double, endY: Double) {
     lineStyle.apply(gc)
 

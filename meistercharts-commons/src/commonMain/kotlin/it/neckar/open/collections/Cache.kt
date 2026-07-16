@@ -27,6 +27,8 @@
  */
 package it.neckar.open.collections
 
+import it.neckar.open.annotations.Allocates
+import it.neckar.open.annotations.AllocationCost
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.async.PlatformReadWriteLock
 import it.neckar.open.async.read
@@ -160,6 +162,7 @@ class Cache<K, V>
    * [set] operator below) legitimately discard it.
    */
   @IgnorableReturnValue
+@Allocates(AllocationCost.Constant)
   fun store(key: K, value: V): V? {
     lock.write {
       return map.put(key, value)

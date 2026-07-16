@@ -45,6 +45,8 @@ import com.meistercharts.history.impl.timestampStart
 import com.meistercharts.history.valueAt
 import com.meistercharts.provider.TimeRangeProvider
 import com.meistercharts.time.TimeRange
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotAllocation
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.provider.MultiProvider
@@ -69,6 +71,7 @@ abstract class AbstractHistoryStripeLayer<
 
   override val type: LayerType = LayerType.Content
 
+  @Hot
   abstract override fun paintingVariables(): HistoryStripeLayerPaintingVariables<DataSeriesIndexType, Value1Type, Value2Type, Value3Type, Value4Type>
 
   /**
@@ -125,6 +128,7 @@ abstract class AbstractHistoryStripeLayer<
           }
         }
 
+      @Hot
       override fun reset() {
         value1 = value1Default()
         value2 = value2Default()
@@ -135,8 +139,11 @@ abstract class AbstractHistoryStripeLayer<
       }
     }
 
+    @Hot
     override fun calculate(paintingContext: LayerPaintingContext) {
       val chartSupport = paintingContext.chartSupport
+
+      @HotAllocation("Once per frame per layer - calculator factory allocation, cached in currentTimeChartCalculator for reuse in paint. Fix candidate: cache in ChartState (TODO exists at the factory)")
       val chartCalculator = paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
       currentTimeChartCalculator = chartCalculator
 
@@ -146,7 +153,9 @@ abstract class AbstractHistoryStripeLayer<
       visibleTimeRange = PaintingPropertyKey.VisibleTimeRangeX.retrieve(chartSupport)
       minGapDistance = PaintingPropertyKey.MinGapDistance.retrieve(chartSupport)
 
-      historyBuckets = configuration.historyStorage.query(visibleTimeRange, currentSamplingPeriod)
+      @HotAllocation("Once per frame per layer - not per data point. Allocates the descriptor and bucket lists, size = number of visible buckets (typically 1-3). The buckets themselves are cached in the storage; only the list wrappers are allocated per query")
+      val queriedBuckets = configuration.historyStorage.query(visibleTimeRange, currentSamplingPeriod)
+      historyBuckets = queriedBuckets
 
       //Y axis
       @Zoomed val availableSpace = chartCalculator.contentAreaRelative2zoomedY(1.0)
@@ -244,8 +253,11 @@ abstract class AbstractHistoryStripeLayer<
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
+
+    @HotAllocation("Fallback only when paint runs without a preceding layout - the layout phase caches the calculator in currentTimeChartCalculator")
     val chartCalculator = currentTimeChartCalculator ?: paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
 
     //Fill the background
@@ -286,9 +298,16 @@ abstract class AbstractHistoryStripeLayer<
   }
 
 
+  @Hot
   protected abstract fun value1Default(): Value1Type
+
+  @Hot
   protected abstract fun value2Default(): Value2Type
+
+  @Hot
   protected abstract fun value3Default(): Value3Type
+
+  @Hot
   protected abstract fun value4Default(): Value4Type
 
   /**
@@ -299,9 +318,16 @@ abstract class AbstractHistoryStripeLayer<
   /**
    * Extracts the value 1
    */
+  @Hot
   abstract fun HistoryChunk.getValue1(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value1Type
+
+  @Hot
   abstract fun HistoryChunk.getValue2(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value2Type
+
+  @Hot
   abstract fun HistoryChunk.getValue3(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value3Type
+
+  @Hot
   abstract fun HistoryChunk.getValue4(visibleDataSeriesIndex: DataSeriesIndexType, timestampIndex: TimestampIndex): Value4Type
 
   /**
@@ -311,6 +337,7 @@ abstract class AbstractHistoryStripeLayer<
    *
    * @return the geometrical center of the segment - if the [activeTimeStamp] is within the segment, [Double.NaN] otherwise.
    */
+  @Hot
   protected abstract fun layoutDataPoint(
     paintingContext: LayerPaintingContext,
     stripePainter: StripePainterType,
@@ -450,6 +477,7 @@ abstract class AbstractHistoryStripeLayer<
       /**
        * Resets all values
        */
+      @Hot
       fun reset()
 
       /**

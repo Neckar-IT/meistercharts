@@ -16,6 +16,8 @@
 package com.meistercharts.algorithms.layers
 
 import com.meistercharts.canvas.saved
+import it.neckar.open.annotations.Hot
+import it.neckar.open.annotations.HotBoundary
 import it.neckar.open.provider.SizedProvider
 import it.neckar.open.provider.fastForEach
 
@@ -42,9 +44,11 @@ class MultipleLayersDelegatingLayer<T : Layer>(
     }
   }
 
+  @Hot
   override fun paint(paintingContext: LayerPaintingContext) {
     delegates.fastForEach { layer ->
       paintingContext.gc.saved {
+        @HotBoundary("polymorphic layer delegation - each delegate is colored where it is implemented")
         layer.paint(paintingContext)
       }
     }

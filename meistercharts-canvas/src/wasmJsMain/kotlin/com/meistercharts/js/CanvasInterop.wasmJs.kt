@@ -15,6 +15,7 @@
  */
 package com.meistercharts.js
 
+import it.neckar.open.annotations.Hot
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 
@@ -24,10 +25,31 @@ internal actual fun HTMLCanvasElement.getContext2d(willReadFrequently: Boolean):
 
 private fun contextOptions(willReadFrequently: Boolean): JsAny = js("({willReadFrequently: willReadFrequently})")
 
+@Hot
 internal actual fun CanvasRenderingContext2D.setLineDashWeb(dashes: DoubleArray) {
   val jsArray = JsArray<JsNumber>()
   for (i in dashes.indices) {
     jsArray[i] = dashes[i].toJsNumber()
   }
   setLineDash(jsArray)
+}
+
+/**
+ * Caches the [JsArray] representation per (stable) dash-array instance.
+ * The [DoubleArray] keys use identity equals/hashCode - the map stays as small as the number of
+ * distinct `Dashes` instances in the application.
+ */
+private val lineDashesConversionCache: HashMap<DoubleArray, JsArray<JsNumber>> = HashMap()
+
+@Hot
+internal actual fun CanvasRenderingContext2D.setLineDashesWeb(dashes: DoubleArray) {
+  val converted = lineDashesConversionCache.getOrPut(dashes) {
+    //Cache miss: converts once per array instance instead of once per call
+    val jsArray = JsArray<JsNumber>()
+    for (i in dashes.indices) {
+      jsArray[i] = dashes[i].toJsNumber()
+    }
+    jsArray
+  }
+  setLineDash(converted)
 }

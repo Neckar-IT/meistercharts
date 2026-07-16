@@ -31,6 +31,7 @@ import com.meistercharts.color.ColorProvider
 import com.meistercharts.color.ColorProviderNullable
 import com.meistercharts.color.get
 import it.neckar.geometry.Rectangle
+import it.neckar.open.annotations.Hot
 import it.neckar.open.kotlin.lang.asProvider
 import kotlin.math.max
 
@@ -63,6 +64,7 @@ class PointStylePainter(
     pointSize = calculatePointSize(pointStyle, lineWidth)
   }
 
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     if (pointStyle == PointStyle.None) {
       return
@@ -108,6 +110,7 @@ class RectanglePointPainter(
 
   var lineWidth: @Zoomed Double = 1.0
 
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     val x1 = snapXPosition(x - pointSize / 2.0)
     val y1 = snapYPosition(y - pointSize / 2.0)
@@ -137,6 +140,7 @@ class CirclePointPainter(
     configuration()
   }
 
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     val centerX = snapXPosition(x)
     val centerY = snapYPosition(y)
@@ -177,6 +181,7 @@ class FancyPointPainter(
   var fillSize: Double = 6.0
 
 
+  @Hot
   override fun paintPoint(gc: CanvasRenderingContext, x: @Window Double, y: @Window Double) {
     val centerX = snapXPosition(x)
     val centerY = snapYPosition(y)

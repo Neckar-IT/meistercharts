@@ -21,6 +21,7 @@ import com.meistercharts.canvas.stroke
 import com.meistercharts.color.Color
 import com.meistercharts.color.ColorProvider
 import com.meistercharts.style.Palette
+import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.px
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
@@ -39,6 +40,7 @@ data class LineStyle @JvmOverloads constructor(
   /**
    * Applies the given line style to the graphics context
    */
+  @Hot
   fun apply(gc: CanvasRenderingContext) {
     gc.stroke(color)
     gc.lineWidth = lineWidth
@@ -104,7 +106,11 @@ data class Dashes(
   }
 
   /**
-   * The dash values
+   * The dash values.
+   *
+   * Stable per [Dashes] instance and must not be mutated: it is passed to
+   * [CanvasRenderingContext.setLineDashes], which caches the converted platform
+   * representation per array instance.
    */
   val dashes: @px DoubleArray = doubleArrayOf(fill, gap)
 
@@ -126,10 +132,12 @@ data class Dashes(
 /**
  * Applies the dash config to the rendering context; null means no dashes
  */
+@Hot
 fun Dashes?.apply(gc: CanvasRenderingContext) {
   if (this == null) {
     gc.clearLineDash()
   } else {
-    gc.setLineDash(*this.dashes)
+    //Deliberately *not* the vararg setLineDash: the spread operator would copy the array on every call
+    gc.setLineDashes(this.dashes)
   }
 }

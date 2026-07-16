@@ -23,6 +23,7 @@ import it.neckar.open.kotlin.lang.isOdd
 import it.neckar.open.kotlin.lang.round
 import it.neckar.open.unit.other.px
 import kotlin.math.ceil
+import it.neckar.open.annotations.Hot
 
 /**
  * Painting utils
@@ -33,6 +34,7 @@ object PaintingUtils {
    * Rounds the given value if snap to pixel is set to true
    */
   @px
+  @Hot
   fun snapPosition(@px value: Double, snapToPixel: Boolean): Double {
     return snapPositionFactor(value, snapToPixel, 1 / environment.devicePixelRatio)
   }
@@ -41,6 +43,7 @@ object PaintingUtils {
    * Returns the rounded down value if snapToPixel is set to true
    */
   @px
+  @Hot
   fun snapSize(@px value: Double, snapToPixel: Boolean): Double {
     if (!snapToPixel) {
       return value
@@ -65,6 +68,7 @@ object PaintingUtils {
   /**
    * Snaps a size to a multiple of a factor (ceil!)
    */
+  @Hot
   fun snapSizeFactor(size: Double, snap: Boolean, factor: Double): Double {
     if (!snap) {
       return size
@@ -76,6 +80,7 @@ object PaintingUtils {
   /**
    * Snaps a position to a multiple of a factor (rounds the value)
    */
+  @Hot
   fun snapPositionFactor(size: Double, snap: Boolean, factor: Double): Double {
     if (!snap) {
       return size
