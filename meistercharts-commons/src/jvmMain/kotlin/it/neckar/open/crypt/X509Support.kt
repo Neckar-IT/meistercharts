@@ -39,8 +39,11 @@ import java.security.Signature
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.security.interfaces.RSAPrivateKey
+import java.security.spec.MGF1ParameterSpec
 import java.security.spec.PKCS8EncodedKeySpec
 import javax.crypto.Cipher
+import javax.crypto.spec.OAEPParameterSpec
+import javax.crypto.spec.PSource
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -71,21 +74,23 @@ open class X509Support(
     get() = privateKey != null
 
   /**
-   * Calculates the cipher text for the given plain text using the private key.
+   * Encrypts the given plain text for confidentiality using the certificate's public key.
+   * Only the holder of the matching private key can [decipher] the result, so the certificate
+   * (which is distributed) is sufficient to encrypt but not to decrypt.
    */
-  @RequiresPrivateKey
   fun cipher(plainText: ByteArray): ByteArray {
-    val cipher = Cipher.getInstance(RSA)
-    cipher.init(Cipher.ENCRYPT_MODE, getPrivateKey())
+    val cipher = Cipher.getInstance(RSA_OAEP)
+    cipher.init(Cipher.ENCRYPT_MODE, certificate.publicKey, OaepParameters)
     return cipher.doFinal(plainText)
   }
 
   /**
-   * Deciphers the given byte array using the certificate.
+   * Decrypts a cipher text produced by [cipher] using the private key.
    */
+  @RequiresPrivateKey
   fun decipher(bytes: ByteArray): ByteArray {
-    val cipher = Cipher.getInstance(RSA)
-    cipher.init(Cipher.DECRYPT_MODE, certificate)
+    val cipher = Cipher.getInstance(RSA_OAEP)
+    cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(), OaepParameters)
     return cipher.doFinal(bytes)
   }
 
@@ -121,8 +126,18 @@ open class X509Support(
 
   companion object {
     const val RSA: String = "RSA"
+    const val RSA_OAEP: String = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
     const val SHA_256_WITH_RSA: String = "SHA256withRSA"
     private const val X_509_CERTIFICATE_TYPE = "X.509"
+
+    /**
+     * OAEP parameters that pin both the label digest and the MGF1 digest to SHA-256.
+     * Without this the JDK keeps MGF1 on its SHA-1 default even when the transformation
+     * string requests SHA-256, silently mixing digests. [cipher] and [decipher] must use
+     * the same parameters.
+     */
+    private val OaepParameters: OAEPParameterSpec =
+      OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT)
 
     /**
      * Creates a new instance of [X509Support] using the given certificate and private key urls.

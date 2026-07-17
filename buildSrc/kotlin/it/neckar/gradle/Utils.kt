@@ -8,6 +8,7 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaCompiler
@@ -506,6 +507,27 @@ fun Project.configureNodeJsRootExtension() {
 
 
 /**
+ * The JUnit Jupiter property that holds the per-test-method timeout.
+ *
+ * Set by [configureJunit] as a hang guard, removed again by [removePerTestTimeout].
+ */
+const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout.default"
+
+/**
+ * Removes the per-test-method hang guard [configureJunit] applies to every [Test] task.
+ *
+ * Separate test suites are the designated place for slow work — browsers, external services,
+ * performance measurements — and legitimately run longer than the 120s guard. Aborting them is
+ * always a false positive, so the suites opt out instead of raising the guard for everyone.
+ *
+ * Must be called after [configureJunit] has been applied to the task, which is the case for every
+ * suite registered from a project's build script.
+ */
+fun Test.removePerTestTimeout() {
+  systemProperties.remove(JunitPerTestTimeoutProperty)
+}
+
+/**
  * Configures JUnit
  */
 fun Project.configureJunit() {
@@ -550,8 +572,9 @@ fun Project.configureJunit() {
     //Per-test-method timeout: a safety net against a single hanging test blocking the whole
     //build (a runaway test used to stall the main pipeline for tens of minutes). 120s is far
     //above any legitimate unit/functional test — anything slower belongs in a separate
-    //integrationTest source set. `disabled_on_debug` keeps interactive debug sessions alive.
-    systemProperty("junit.jupiter.execution.timeout.default", "120s")
+    //test suite, which opts out via `removePerTestTimeout()`.
+    //`disabled_on_debug` keeps interactive debug sessions alive.
+    systemProperty(JunitPerTestTimeoutProperty, "120s")
     systemProperty("junit.jupiter.execution.timeout.mode", "disabled_on_debug")
 
     //Set the JVM properties for the tests
@@ -1191,6 +1214,28 @@ fun String.encodeForDockerTag(): String {
     .replace(' ', '_')
 }
 
+
+/**
+ * Declares the OpenAPI spec produced by [backendModulePath]'s `openapiSpec` task (its
+ * `build/generated/openapi` directory) as an input of this task — typically `pnpmRunBuild`.
+ *
+ * Orval-based frontends generate their TypeScript client from that backend JSON. Once
+ * `pnpmRunBuild` declares inputs/outputs (issue #2501), it would otherwise report the frontend
+ * build UP-TO-DATE after a backend API change and ship stale generated types. Declaring the spec
+ * directory as an input makes the frontend rebuild when the backend API changes.
+ *
+ * The build-order `dependsOn("$backendModulePath:openapiSpec")` is declared separately in each
+ * frontend `build.gradle.kts`; an input directory alone does not create a task dependency. Mirrors
+ * the wiring in `OrvalConvertPlugin`.
+ */
+fun Task.declaresBackendOpenApiSpecInput(backendModulePath: String) {
+  val openapiSpecDir = project.rootProject.project(backendModulePath)
+    .layout.buildDirectory.dir("generated/openapi")
+
+  inputs.dir(openapiSpecDir)
+    .withPropertyName("backendOpenApiSpec")
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+}
 
 /**
  * Returns the instance for the given project

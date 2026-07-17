@@ -21,6 +21,8 @@ import com.meistercharts.algorithms.layers.LayerType
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DirtyReason
+import com.meistercharts.canvas.allocation.AllocationRecordingEngine
+import com.meistercharts.canvas.allocation.format
 import com.meistercharts.canvas.debug
 import com.meistercharts.canvas.events.CanvasKeyEventHandler
 import com.meistercharts.events.EventConsumption
@@ -28,6 +30,8 @@ import it.neckar.events.KeyCode
 import it.neckar.events.KeyDownEvent
 import it.neckar.events.KeyStroke
 import it.neckar.events.ModifierCombination
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.kotlin.lang.toggle
 
 /**
@@ -64,6 +68,20 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
           return EventConsumption.Consumed
         }
 
+        configuration.cycleAllocationRecordingKeyStroke -> {
+          AllocationRecordingEngine.mode = AllocationRecordingEngine.mode.next()
+          chartSupport.layerSupport.markAsDirty(DirtyReason.UserInteraction)
+
+          return EventConsumption.Consumed
+        }
+
+        configuration.dumpAllocationReportKeyStroke -> {
+          //Dump the full report incl. stacktraces to the log - the overlay cannot show stacktraces readably
+          logger.info(AllocationRecordingEngine.currentReport().format())
+
+          return EventConsumption.Consumed
+        }
+
         else -> return EventConsumption.Ignored
       }
 
@@ -74,5 +92,19 @@ class ToggleDebuggingModeLayer : AbstractLayer() {
   class Configuration {
     val toggleDebugKeyStroke: KeyStroke = KeyStroke(KeyCode('D'), ModifierCombination.CtrlShiftAlt)
     val toggleRecordPaintStatisticsKeyStroke: KeyStroke = KeyStroke(KeyCode('P'), ModifierCombination.CtrlShiftAlt)
+
+    /**
+     * Cycles the allocation recording mode: Off -> ByType -> ByTypeAndStacktrace -> Off
+     */
+    val cycleAllocationRecordingKeyStroke: KeyStroke = KeyStroke(KeyCode('A'), ModifierCombination.CtrlShiftAlt)
+
+    /**
+     * Dumps the current allocation report (incl. stacktraces) to the log
+     */
+    val dumpAllocationReportKeyStroke: KeyStroke = KeyStroke(KeyCode('S'), ModifierCombination.CtrlShiftAlt)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.algorithms.layers.debug.ToggleDebuggingModeLayer")
   }
 }

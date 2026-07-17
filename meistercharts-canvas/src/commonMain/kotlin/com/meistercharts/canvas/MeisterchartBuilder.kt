@@ -15,9 +15,11 @@
  */
 package com.meistercharts.canvas
 
+import com.meistercharts.algorithms.layers.debug.AllocationRecordingLayer
 import com.meistercharts.algorithms.layers.debug.ContentAreaDebugLayer
 import com.meistercharts.algorithms.layers.debug.ContentViewportDebugLayer
 import com.meistercharts.algorithms.layers.debug.ToggleDebuggingModeLayer
+import com.meistercharts.canvas.allocation.AllocationRecordingEngine
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationConfiguration
 import com.meistercharts.algorithms.layers.gesture.ZoomAndTranslationLayer
 import com.meistercharts.algorithms.layers.gesture.addZoomAndTranslation
@@ -182,6 +184,7 @@ abstract class MeisterchartBuilder(
       layerSupport.layers.addLayer(ToggleDebuggingModeLayer())
       layerSupport.layers.addLayer(ContentAreaDebugLayer().visibleIf { chartSupport.debug[DebugFeature.ShowContentAreaDebug] })
       layerSupport.layers.addLayer(ContentViewportDebugLayer().visibleIf { chartSupport.debug[DebugFeature.ShowContentViewportDebug] })
+      layerSupport.layers.addLayer(AllocationRecordingLayer().visibleIf { AllocationRecordingEngine.mode.recording })
     }
 
     //Register the zoom and translation layer first

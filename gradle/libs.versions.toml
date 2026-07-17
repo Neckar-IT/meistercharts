@@ -62,13 +62,13 @@ io-gitlab-arturbosch-detekt = "2.0.0-alpha.5"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.9"
+com-google-devtools-ksp = "2.3.10"
 
 org-mongodb = "5.9.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.4"
+aws-sdk-kotlin = "1.8.6"
 
 apache-poi = "5.5.1"
 
@@ -108,7 +108,7 @@ assertj = "3.27.7"
 
 junit = "4.13.2"
 
-junit-jupiter = "6.1.1"
+junit-jupiter = "6.1.2"
 
 keycloak-mock = "0.20.0"
 
@@ -302,7 +302,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.47.5"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.48.0"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
