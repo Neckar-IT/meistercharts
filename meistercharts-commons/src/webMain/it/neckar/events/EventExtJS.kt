@@ -290,14 +290,7 @@ fun MouseEvent.extractModifierCombination(): ModifierCombination = ModifierCombi
  * Returns the mouse button
  */
 fun MouseEvent.extractButton(): MouseButton {
-  return when (button) {
-    0.toShort() -> MouseButton.Primary
-    1.toShort() -> MouseButton.Middle
-    2.toShort() -> MouseButton.Secondary
-    3.toShort() -> MouseButton.Forward
-    4.toShort() -> MouseButton.Back
-    else -> MouseButton.Other
-  }
+  return MouseButton.fromDomButtonCode(button)
 }
 
 

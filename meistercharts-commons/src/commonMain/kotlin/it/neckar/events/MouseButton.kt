@@ -74,4 +74,22 @@ enum class MouseButton {
   fun isSecondary(): Boolean {
     return this == Secondary
   }
+
+  companion object {
+    /**
+     * Maps a DOM `MouseEvent.button` code to a [MouseButton]
+     * (https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button):
+     * 0 = primary, 1 = auxiliary/middle, 2 = secondary, 3 = fourth button (browser back), 4 = fifth button (browser forward)
+     */
+    fun fromDomButtonCode(buttonCode: Short): MouseButton {
+      return when (buttonCode) {
+        0.toShort() -> Primary
+        1.toShort() -> Middle
+        2.toShort() -> Secondary
+        3.toShort() -> Back
+        4.toShort() -> Forward
+        else -> Other
+      }
+    }
+  }
 }

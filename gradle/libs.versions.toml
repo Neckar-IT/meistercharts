@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.16.1" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.17.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -68,7 +68,7 @@ org-mongodb = "5.9.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.6"
+aws-sdk-kotlin = "1.8.7"
 
 apache-poi = "5.5.1"
 
@@ -302,7 +302,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.48.0"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.48.1"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -360,7 +360,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 
 cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4k", version.ref = "cache4k" }
 
-java-jwt = "com.auth0:java-jwt:4.5.2"
+java-jwt = "com.auth0:java-jwt:4.6.0"
 
 micrometer-core = { group = "io.micrometer", name = "micrometer-core", version.ref = "micrometer" }
 
@@ -659,9 +659,9 @@ trove4j = "net.sf.trove4j:trove4j:3.0.3"
 
 detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
 
-jib-core = "com.google.cloud.tools:jib-core:0.28.1"
+jib-core = "com.google.cloud.tools:jib-core:0.28.2"
 
-jib-gradle-plugin = "com.google.cloud.tools:jib-gradle-plugin:3.5.3"
+jib-gradle-plugin = "com.google.cloud.tools:jib-gradle-plugin:3.5.4"
 
 symbol-processing-gradle-plugin = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "com-google-devtools-ksp" }
 

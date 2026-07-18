@@ -20,7 +20,7 @@ import org.gradle.api.logging.Logging
  * ```kotlin
  * val resolver = PnpmWorkspaceDependencyResolver()
  * val dependencies = resolver.resolveWorkspaceDependencies(project)
- * // Returns: [GradleProjectPath(":internal:open:commons:typescript-utils"), ...]
+ * // Returns: [GradleProjectPath(":internal:open:commons:typescript:typescript-utils"), ...]
  * ```
  */
 class PnpmWorkspaceDependencyResolver(

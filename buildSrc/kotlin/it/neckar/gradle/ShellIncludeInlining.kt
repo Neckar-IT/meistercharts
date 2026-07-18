@@ -95,19 +95,28 @@ internal fun expandShellInclude(
  * `:internal:infrastructure:common`. Declared as task inputs so editing one
  * re-materializes the scripts that inline it. Add new entries here.
  *
- * Most entries are sourced libraries; `gitlab-runner/cleanup-runner-cache.sh` is a standalone
- * script (run by cron on the worker/git hosts) inlined into a per-host copy so the single source
- * under `common/gitlab-runner/` stays canonical.
+ * Most entries are sourced libraries; `gitlab-runner/cleanup-runner-cache.sh` (run by cron on the
+ * worker/git hosts) and `host-maintenance/install-maintenance-cron.sh` (piped to the host during
+ * its deploy) are standalone scripts inlined into a per-host copy, so the single source under
+ * `common/` stays canonical.
  */
 private val InlinableLibraries: List<String> = listOf(
   "secret-masking/secret-masking-lib.sh",
+  "docker-lock/docker-lock-lib.sh",
   "host-provisioning/provision-lib.sh",
   "host-deploy/deploy-host-lib.sh",
   "service-deploy/deploy-service-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
+  "host-maintenance/install-maintenance-cron.sh",
 )
 
-private val InlineMarkerRegex = Regex("""^(\s*)#\s*@inline:\s*(\S+)\s*$""")
+/**
+ * Matches an `# @inline: <path>` marker line. Group 1 is the indent, group 2 the path relative to
+ * `:internal:infrastructure:common`. Shared with [ShellIncludeGraph], which walks the same markers
+ * to answer which `common/` subdirs a module consumes — the two must never drift apart, or the
+ * continuous-deploy resolver would miss exactly the includes the inliner folds in.
+ */
+internal val InlineMarkerRegex = Regex("""^(\s*)#\s*@inline:\s*(\S+)\s*$""")
 
 private const val InlineBeginMarker: String =
   "# ======================== BEGIN INCLUDE: "
