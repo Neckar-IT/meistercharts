@@ -102,7 +102,7 @@ fun AbstractCopyTask.includeCommonGitlabRunnerScripts() = CommonGitlabRunnerScri
  * `scripts/restricted-egress/` in the build-output directory. `setup-restricted-runner.sh`
  * scp's them to the target host during `bootstrap`.
  *
- * See `doc/workflow/restricted-egress-runner.md`.
+ * See `docs/workflow/restricted-egress-runner.md`.
  */
 fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgressAssets.applyTo(this)
 

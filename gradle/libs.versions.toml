@@ -68,7 +68,7 @@ org-mongodb = "5.9.0"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.7"
+aws-sdk-kotlin = "1.8.8"
 
 apache-poi = "5.5.1"
 
@@ -96,7 +96,7 @@ kover = "0.9.8"
 
 node-gradle = "7.1.0"
 
-shadow = "9.5.1"
+shadow = "9.6.0"
 
 de-undercouch-download = "5.7.0"
 
@@ -302,7 +302,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.48.1"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.48.2"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

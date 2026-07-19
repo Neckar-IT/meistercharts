@@ -48,7 +48,7 @@ dependencies {
 
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
-  implementation("com.gradleup.shadow:shadow-gradle-plugin:9.5.1")
+  implementation("com.gradleup.shadow:shadow-gradle-plugin:9.6.0")
   implementation("com.github.node-gradle:gradle-node-plugin:7.1.0")
   implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
   implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.9.8")

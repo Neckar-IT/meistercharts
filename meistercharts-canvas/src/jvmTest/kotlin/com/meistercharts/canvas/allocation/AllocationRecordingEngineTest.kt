@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 /**
  * Verifies the aggregation and layer attribution of the recording engine deterministically - without
  * relying on JFR delivering samples (which is timing dependent and sampled). The real JFR pipeline is
- * verified manually, see `doc/allocation-recording.md`.
+ * verified manually, see `docs/allocation-recording.md`.
  */
 class AllocationRecordingEngineTest {
   @AfterEach

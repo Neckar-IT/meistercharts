@@ -69,10 +69,19 @@ object Plugins {
   const val buildProfileReport: String = "it.neckar.report.build-profile"
 
   /**
-   * Writes `build/reports/structured/cache-report.json` — per-task build-cache outcomes (from-cache vs
-   * executed vs up-to-date). Apply once to the root project. See [it.neckar.gradle.report.cache.CacheReportPlugin].
+   * Writes the structured build report under `build/reports/structured/`: the streaming
+   * `build-events.jsonl` (every finished task, written as it happens so a killed build still leaves a
+   * parseable record) plus the aggregates `failures.json` and `cache-report.json`. Apply once to the
+   * root project. See [it.neckar.gradle.report.events.BuildEventsReportPlugin].
    */
-  const val cacheReport: String = "it.neckar.report.cache"
+  const val buildEventsReport: String = "it.neckar.report.build-events"
+
+  /**
+   * Writes `build/reports/structured/logs/<module>/<task>.log` — each task's console output, correctly
+   * attributed under parallel builds via build operations. Apply once to the root project.
+   * See [it.neckar.gradle.report.events.TaskOutputLogPlugin].
+   */
+  const val taskOutputLogs: String = "it.neckar.report.task-output-logs"
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"

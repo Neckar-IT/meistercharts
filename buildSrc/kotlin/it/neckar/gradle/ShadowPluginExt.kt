@@ -40,6 +40,11 @@ fun Project.configureServiceShadowJar(
 ): TaskProvider<ShadowJar> {
   val createFatJarGitInfoTask = registerCreateFatJarGitInfoTask()
 
+  // Shadow 9.6.0 applies @ShadowDsl (a @DslMarker) to ShadowJar and DependencyFilter, which forbids
+  // implicitly calling the outer ShadowJar receiver's `project` from inside minimize {}. Capture the
+  // Project extension receiver explicitly so the lib(...) lookups resolve without an implicit receiver.
+  val project = this
+
   return tasks.named<ShadowJar>("shadowJar") {
     isZip64 = true
 
