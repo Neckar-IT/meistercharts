@@ -42,9 +42,8 @@ fun File.isSymLinkTo(targetFile: File): Boolean {
   if (!exists()) {
     return false
   }
-  val canonicalPath = canonicalPath
-  val absolutePath = absolutePath
-  return absolutePath != canonicalPath
+  //Must be a symlink at all, and its resolved target must be the provided file.
+  return absolutePath != canonicalPath && canonicalFile == targetFile.canonicalFile
 }
 
 /**

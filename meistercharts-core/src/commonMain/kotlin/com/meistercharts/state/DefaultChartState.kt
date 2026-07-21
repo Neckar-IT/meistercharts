@@ -108,6 +108,7 @@ open class DefaultChartState : AbstractChartState(), ObservableChartState {
     windowTranslationProperty.consume { notifyListeners() },
     contentAreaSizeProperty.consume { notifyListeners() },
     windowSizeProperty.consume { notifyListeners() },
+    contentViewportMarginProperty.consume { notifyListeners() },
     axisOrientationXProperty.consume { notifyListeners() },
     axisOrientationYProperty.consume { notifyListeners() },
   )

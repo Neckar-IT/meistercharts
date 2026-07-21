@@ -22,6 +22,14 @@ import org.gradle.api.tasks.AbstractCopyTask
  * The block always requests the optional `offline_access` scope; if the Keycloak client lacks it,
  * Keycloak ignores the request — login never breaks. `${…}` placeholders pass through verbatim:
  * the expansion runs BEFORE the secrets filter, which resolves them like hand-written labels.
+ *
+ * `UnauthorizedBehavior` is deliberately left at the plugin default `Auto` (v0.16.0+): an
+ * unauthenticated request is answered with a redirect to Keycloak only when its `Accept` header
+ * leads with `text/html`, and with a 401 problem document otherwise. The same middleware fronts
+ * browser routes and `/api` routes, so a machine caller is better served by the 401 than by a 302
+ * pointing at an HTML login form. Consequence for diagnosis: a bare `curl -I` against a guarded
+ * host returns 401 while the browser logs in fine — that is health, not an outage (#1427). See
+ * `internal/closed/auth.neckar.it/integration-guide.md` for the reproduction commands.
  */
 fun AbstractCopyTask.expandOidcMiddlewareLabels() {
   // Fingerprint the generated block as task input — template edits must re-materialize consumers.

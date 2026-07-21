@@ -69,6 +69,18 @@ internal class ChartCalculatorTest {
   }
 
   @Test
+  internal fun `delta conversions only scale, never translate`() {
+    //A delta must be scaled by the zoom only - the window translation must cancel out.
+    chartState.windowTranslationX = 50.0
+    chartState.zoomX = 2.0
+
+    // 100 content-area units * zoom 2 = 200 window units (translation must NOT be added)
+    assertThat(calculator.contentAreaDelta2windowX(100.0)).isEqualTo(200.0)
+    // 200 window units / zoom 2 = 100 content-area units (translation must NOT be subtracted)
+    assertThat(calculator.windowDelta2contentAreaX(200.0)).isEqualTo(100.0)
+  }
+
+  @Test
   internal fun testOverride() {
     assertThat(calculator.domainRelative2windowX(1.0)).isEqualTo(800.0)
     val calc2 = calculator.withContentAreaSize(Size(500.0, 500.0))

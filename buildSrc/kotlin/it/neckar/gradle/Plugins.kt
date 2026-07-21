@@ -33,7 +33,6 @@ object Plugins {
 
   const val generateTsDeclaration: String = "it.neckar.ksp.generating.ts"
 
-  const val gitLabDb: String = "it.neckar.gitlab.db"
   const val gitlabPipelines: String = "it.neckar.gitlab.pipelines"
 
   const val npmBundle: String = "it.neckar.npm-bundle"
@@ -172,6 +171,12 @@ object Plugins {
    * Generates a self-contained `deploy` task (host + tag baked into the script) for a module.
    */
   const val deployment: String = "it.neckar.deployment"
+
+  /**
+   * Continuous-deploy opt-in for non-image deploys (#2469): the module declares its own
+   * deploy tasks + target label instead of hosts/compose.
+   */
+  const val customDeployment: String = "it.neckar.custom-deployment"
 
   /**
    * Generates a self-contained `provision` task (host baked into the script) for one-time host provisioning.

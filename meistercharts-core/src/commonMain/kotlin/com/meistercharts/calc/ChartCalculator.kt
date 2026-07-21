@@ -489,16 +489,17 @@ open class ChartCalculator(val chartState: ChartState) {
    * Converts a delta in content area X coordinates to window X coordinates.
    */
   fun contentAreaDelta2windowX(@ContentArea deltaX: Double): @Window Double {
-    val zoomedDeltaX = contentArea2zoomedX(deltaX)
-    return zoomed2windowX(zoomedDeltaX)
+    //A delta must only be scaled, never translated: the window translation cancels out
+    //(f(delta) - f(0)). Applying zoomed2windowX directly would add the translation.
+    return contentArea2windowX(deltaX) - contentArea2windowX(0.0)
   }
 
   /**
    * Converts a delta in window X coordinates to content area X coordinates.
    */
   fun windowDelta2contentAreaX(@Window deltaX: Double): @ContentArea Double {
-    val zoomedDeltaX = window2zoomedX(deltaX)
-    return zoomed2contentAreaX(zoomedDeltaX)
+    //A delta must only be scaled, never translated (f(delta) - f(0)).
+    return window2contentAreaX(deltaX) - window2contentAreaX(0.0)
   }
 
   // ContentAreaRelative --> (ContentArea --> Zoomed) --> Window
