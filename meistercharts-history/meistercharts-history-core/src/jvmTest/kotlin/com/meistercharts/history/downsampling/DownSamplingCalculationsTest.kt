@@ -35,6 +35,7 @@ import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.impl.chunk
 import com.meistercharts.history.isEnumSetPending
 import it.neckar.open.collections.fastForEach
+import it.neckar.open.collections.IntArray2
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.TextKey
 import it.neckar.open.test.utils.DisableLogging
@@ -47,6 +48,28 @@ import kotlin.test.assertNotNull
  */
 @DisableLogging
 class DownSamplingCalculationsTest {
+  @Test
+  fun `IntArray2 calculateMeanValues reduces along the height (timestamp) axis`() {
+    //width = 2 data series, height = 4 timestamps. Reducing 2 timestamps -> 2 rows, 2 columns kept.
+    val array = IntArray2(2, 4, intArrayOf(
+      10, 20,   // row 0
+      30, 40,   // row 1
+      50, 60,   // row 2
+      70, 80,   // row 3
+    ))
+
+    val mean = array.calculateMeanValues(2)
+
+    //Height must be reduced (4 -> 2), width kept (2). The old code used width, giving height 1 and dropping rows.
+    assertThat(mean.width).isEqualTo(2)
+    assertThat(mean.height).isEqualTo(2)
+    //Column 0: mean(10,30)=20, mean(50,70)=60. Column 1: mean(20,40)=30, mean(60,80)=70.
+    assertThat(mean[0, 0]).isEqualTo(20)
+    assertThat(mean[1, 0]).isEqualTo(30)
+    assertThat(mean[0, 1]).isEqualTo(60)
+    assertThat(mean[1, 1]).isEqualTo(70)
+  }
+
   @Test
   fun testIEA() {
     val now = 1.597758912367E12

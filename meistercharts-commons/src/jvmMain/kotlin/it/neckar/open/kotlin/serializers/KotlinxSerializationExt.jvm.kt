@@ -64,6 +64,16 @@ fun <T : Any> KClass<T>.findSerialName(): String? {
 }
 
 /**
+ * Returns the serial name of this enum constant from its [SerialName] annotation, or null.
+ * kotlinx.serialization serializes an enum constant as exactly this value (falling back to [Enum.name]).
+ */
+fun Enum<*>.findSerialName(): String? {
+  // Enum constants with a body compile to anonymous subclasses - the field lives on the enum class itself.
+  val enumJavaClass = javaClass.let { if (it.isEnum) it else it.superclass }
+  return enumJavaClass.getField(name).getAnnotation(SerialName::class.java)?.value
+}
+
+/**
  * Returns all discriminator values from the @SerialName annotations of all sealed subclasses.
  * This is useful for creating filter parameters that match discriminator values of a sealed class hierarchy.
  *

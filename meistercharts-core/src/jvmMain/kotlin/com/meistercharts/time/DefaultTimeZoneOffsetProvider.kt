@@ -27,6 +27,9 @@ actual class DefaultTimeZoneOffsetProvider : TimeZoneOffsetProvider {
     val zoneId = ZoneId.of(timeZone.zoneId)
     val instant = Instant.ofEpochMilli(timestamp.toLong())
     val zoneOffset = zoneId.rules.getOffset(instant)
-    return zoneOffset.totalSeconds * 1000.0
+    //Follow the JS/browser Date.getTimezoneOffset() convention: the offset is UTC minus local time,
+    //so it is negative for zones east of UTC (e.g. Europe/Berlin in winter = -1h). ZoneOffset uses
+    //the opposite ISO convention (local minus UTC), hence the negation.
+    return -zoneOffset.totalSeconds * 1000.0
   }
 }

@@ -246,7 +246,8 @@ fun HistoryBucketDescriptor.calculateTimeStamps(): DoubleArray {
  */
 @Allocates(AllocationCost.Linear)
 fun IntArray2.calculateMeanValues(numberToCombine: Int): IntArray2 {
-  val newHeight = (width.toDouble() / numberToCombine).toIntCeil()
+  //The mean is reduced along the height (timestamp) axis, so the new row count derives from height.
+  val newHeight = (height.toDouble() / numberToCombine).toIntCeil()
 
   //TODO is it possible to use the initializer to calculate the values?
   val meanArray = IntArray2(width, newHeight) { 0 }

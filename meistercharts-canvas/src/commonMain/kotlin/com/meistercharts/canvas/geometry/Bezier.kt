@@ -17,8 +17,6 @@ package com.meistercharts.canvas.geometry
 
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
-import it.neckar.open.collections.maxOrElse
-import it.neckar.open.collections.minOrElse
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.sqrt
@@ -75,8 +73,8 @@ interface Bezier {
     ): T {
       return bezier(
         x0, y0,
-        x0 + 2 / 3 * (xc - x0), y0 + 2 / 3 * (yc - y0),
-        x1 + 2 / 3 * (xc - x1), y1 + 2 / 3 * (yc - y1),
+        x0 + 2.0 / 3.0 * (xc - x0), y0 + 2.0 / 3.0 * (yc - y0),
+        x1 + 2.0 / 3.0 * (xc - x1), y1 + 2.0 / 3.0 * (yc - y1),
         x1, y1
       )
     }
@@ -156,6 +154,8 @@ interface Bezier {
         }
       }
 
+      //Number of extrema roots collected above (j is decremented back to 0 by the loop below).
+      val rootCount = j
       while (j-- > 0) {
         val t = temp.tValues[j]
         val mt = 1 - t
@@ -165,17 +165,22 @@ interface Bezier {
           (t * t * t * y3)
       }
 
-      temp.xValues[temp.tValues.size + 0] = x0
-      temp.xValues[temp.tValues.size + 1] = x3
-      temp.yValues[temp.tValues.size + 0] = y0
-      temp.yValues[temp.tValues.size + 1] = y3
+      //The two endpoints are always part of the bounds.
+      var minX = minOf(x0, x3)
+      var maxX = maxOf(x0, x3)
+      var minY = minOf(y0, y3)
+      var maxY = maxOf(y0, y3)
 
-      return Rectangle(
-        temp.xValues.minOrElse(0.0),
-        temp.yValues.minOrElse(0.0),
-        temp.xValues.maxOrElse(0.0),
-        temp.yValues.maxOrElse(0.0)
-      )
+      //Only the first rootCount entries hold valid extrema - the rest of the arrays is stale.
+      for (i in 0 until rootCount) {
+        minX = minOf(minX, temp.xValues[i])
+        maxX = maxOf(maxX, temp.xValues[i])
+        minY = minOf(minY, temp.yValues[i])
+        maxY = maxOf(maxY, temp.yValues[i])
+      }
+
+      //Rectangle takes (x, y, width, height) - not (left, top, right, bottom).
+      return Rectangle(minX, minY, maxX - minX, maxY - minY)
     }
 
     inline fun <T> cubicCalc(

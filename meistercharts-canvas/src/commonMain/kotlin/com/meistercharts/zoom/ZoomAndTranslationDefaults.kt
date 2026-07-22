@@ -178,7 +178,7 @@ open class FittingWithMargin(
     @Zoomed val windowNetWidth = windowSize.width - margin.offsetWidth
     @Zoomed val windowNetHeight = windowSize.height - margin.offsetHeight
 
-    if (windowNetHeight <= 0.0 || windowNetHeight <= 0.0) {
+    if (windowNetWidth <= 0.0 || windowNetHeight <= 0.0) {
       //not enough space for content area: Cannot calculate the zoom factor
       return Zoom.default
     }

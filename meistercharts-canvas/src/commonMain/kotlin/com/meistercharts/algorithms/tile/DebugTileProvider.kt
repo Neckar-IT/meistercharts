@@ -53,8 +53,9 @@ class DebugTileProvider(
       //use nowMillis() in order to support tests that do not run in the context of a paint operation
       private val creationTime = timeFormatWithMillis.format(nowMillis(), I18nConfiguration.Germany)
 
-      override val identifier: TileIdentifier
-        get() = identifier
+      //Store the parameter directly: a computed `get() = identifier` would resolve to this very
+      //property (the member shadows the getTile parameter) and recurse into a StackOverflowError.
+      override val identifier: TileIdentifier = identifier
 
       override fun paint(gc: CanvasRenderingContext, paintingContext: LayerPaintingContext) {
         gc.stroke(style.borderColor)

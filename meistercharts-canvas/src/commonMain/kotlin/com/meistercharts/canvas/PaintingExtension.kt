@@ -571,7 +571,7 @@ private fun CanvasRenderingContext.roundedRectInternal(
 
   //top left corner
   moveTo(x, y + fixedRadiusTopLeft)
-  arcTo(x, y, x + fixedRadiusTopLeft, y, radiusTopRight)
+  arcTo(x, y, x + fixedRadiusTopLeft, y, fixedRadiusTopLeft)
 
   //top right corner
   arcTo(x + width, y, x + width, y + fixedRadiusTopRight, fixedRadiusTopRight)

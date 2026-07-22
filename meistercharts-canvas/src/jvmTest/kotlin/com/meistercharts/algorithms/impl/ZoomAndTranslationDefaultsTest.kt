@@ -24,7 +24,9 @@ import com.meistercharts.zoom.ZoomAndTranslationSupport
 import it.neckar.geometry.Distance
 import it.neckar.geometry.Size
 import com.meistercharts.model.Zoom
+import com.meistercharts.model.Insets
 import com.meistercharts.state.DefaultChartState
+import com.meistercharts.zoom.FittingWithMargin
 import com.meistercharts.zoom.FittingWithMarginPercentage
 import com.meistercharts.zoom.MoveDomainValueToLocation
 import com.meistercharts.zoom.ZoomAndTranslationDefaults
@@ -73,6 +75,19 @@ class ZoomAndTranslationDefaultsTest {
     ).let {
       assertThat(it.defaultZoom(chartCalculator)).isEqualTo(Zoom.default)
       assertThat(it.defaultTranslation(chartCalculator)).isEqualTo(Distance.zero)
+    }
+  }
+
+  @Test
+  fun `FittingWithMargin returns default zoom when the window is narrower than the horizontal margin`() {
+    //Window is wide 100 but the horizontal margins (left+right) eat 120 -> net width is negative,
+    //while the net height stays positive. Must fall back to Zoom.default, not a negative zoom.
+    chartState.contentAreaSize = Size(800.0, 600.0)
+    chartState.windowSize = Size(100.0, 600.0)
+
+    //Insets(top, right, bottom, left) -> left 60 + right 60 = 120 horizontal margin
+    FittingWithMargin(Insets(0.0, 60.0, 0.0, 60.0)).let {
+      assertThat(it.defaultZoom(chartCalculator)).isEqualTo(Zoom.default)
     }
   }
 }

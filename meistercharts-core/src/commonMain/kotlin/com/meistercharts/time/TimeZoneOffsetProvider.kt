@@ -29,7 +29,19 @@ var timeZoneOffsetProvider: CachedTimeZoneOffsetProvider = DefaultTimeZoneOffset
  */
 fun interface TimeZoneOffsetProvider {
   /**
-   * Provides the offset for the given time-zone at the given timestamp
+   * Provides the offset for the given time-zone at the given timestamp.
+   *
+   * The sign follows the JS/browser `Date.prototype.getTimezoneOffset()` convention:
+   * **offset = UTC minus local time**. This is likely surprising: the offset is
+   * **negative for zones east of UTC** and **positive for zones west of UTC**.
+   *
+   * Examples (Europe/Berlin in winter is UTC+1, America/New_York is UTC-5):
+   * - `Europe/Berlin`  -> `-3_600_000` (-1h)
+   * - `America/New_York` -> `+18_000_000` (+5h)
+   *
+   * Note this is the opposite sign of the ISO `java.time.ZoneOffset` convention
+   * (local minus UTC), which would report Europe/Berlin as +1h.
+   *
    * @param timestamp represents milliseconds since 1 January 1970 UTC
    * @param timeZone the time-zone for which the offset should be provided
    */

@@ -81,6 +81,15 @@ object Plugins {
    * See [it.neckar.gradle.report.events.TaskOutputLogPlugin].
    */
   const val taskOutputLogs: String = "it.neckar.report.task-output-logs"
+
+  /**
+   * Writes `build/reports/structured/artifact-sizes.json` — the size of every deployable artifact this
+   * build produced (frontend bundles, Kotlin/JS bundles, archives, install trees), split by asset type,
+   * raw and gzip-compressed. Exported as OTLP metrics from the main-branch CI build. Apply once to the
+   * root project. See [it.neckar.gradle.report.artifacts.ArtifactSizeReportPlugin].
+   */
+  const val artifactSizeReport: String = "it.neckar.report.artifact-sizes"
+
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"

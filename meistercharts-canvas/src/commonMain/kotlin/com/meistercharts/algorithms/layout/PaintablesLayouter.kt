@@ -171,6 +171,10 @@ class PaintablesLayouter(
      * Calculates the total size of all gaps *between* the paintables
      */
     private fun calculateGapsBetweenSize(): @px Double {
+      //Guard the empty case: (0 - 1) would yield a negative total, producing a negative overall size.
+      if (boundingBoxes.size < 1) {
+        return 0.0
+      }
       return configuration.gap * (boundingBoxes.size - 1)
     }
 

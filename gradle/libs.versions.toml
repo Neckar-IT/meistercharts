@@ -132,7 +132,7 @@ modbus = "1.2.2"
 
 okhttp3 = "5.4.0"
 
-opentelemetry = "1.63.0"
+opentelemetry = "1.64.0"
 
 opentelemetry-instrumentation = "2.29.0-alpha"
 

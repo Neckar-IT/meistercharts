@@ -29,15 +29,17 @@ class TimeZoneOffsetProviderTest {
 
   @Test
   fun testOffsets() {
+    //The offset follows the JS/browser Date.getTimezoneOffset() convention: UTC minus local time,
+    //so it is negative for zones east of UTC and positive for zones west of UTC.
     val timeZoneOffsetProvider = DefaultTimeZoneOffsetProvider()
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Europe/Berlin"))).isEqualTo(1.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Africa/Asmara"))).isEqualTo(3.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("America/Aruba"))).isEqualTo(-4.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Indian/Christmas"))).isEqualTo(7.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Pacific/Guadalcanal"))).isEqualTo(11.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Africa/Algiers"))).isEqualTo(1.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("America/Adak"))).isEqualTo(-10.hours.toDouble(DurationUnit.MILLISECONDS))
-    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Europe/Tallinn"))).isEqualTo(2.hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Europe/Berlin"))).isEqualTo((-1).hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Africa/Asmara"))).isEqualTo((-3).hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("America/Aruba"))).isEqualTo(4.hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Indian/Christmas"))).isEqualTo((-7).hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Pacific/Guadalcanal"))).isEqualTo((-11).hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Africa/Algiers"))).isEqualTo((-1).hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("America/Adak"))).isEqualTo(10.hours.toDouble(DurationUnit.MILLISECONDS))
+    assertThat(timeZoneOffsetProvider.timeZoneOffset(1607867526127.0, TimeZone("Europe/Tallinn"))).isEqualTo((-2).hours.toDouble(DurationUnit.MILLISECONDS))
   }
 
   @Test

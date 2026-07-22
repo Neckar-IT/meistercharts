@@ -76,6 +76,18 @@ private val CommonWorkerHostScripts = CommonInfrastructureRole(
   destinationSubdir = "",
 )
 
+private val CommonHostLandingPageCompose = CommonInfrastructureRole(
+  sourceSubdir = CommonComposeRole.HostLandingPage.sourceSubdir,
+  includePattern = "docker-compose-common-*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonHostLandingPageHtml = CommonInfrastructureRole(
+  sourceSubdir = "${CommonComposeRole.HostLandingPage.sourceSubdir}/html",
+  includePattern = "*",
+  destinationSubdir = "docker-compose/${CommonComposeRole.HostLandingPage.sourceSubdir}",
+)
+
 /**
  * Pulls in the shared Traefik Docker Compose fragment.
  * Host declares explicitly that it plays the reverse-proxy role.
@@ -161,6 +173,22 @@ fun AbstractCopyTask.includeCommonHostManagementCompose() = CommonHostManagement
 fun AbstractCopyTask.includeCommonHostLogsCompose() = CommonHostLogsCompose.applyTo(this)
 
 /**
+ * Pulls in the shared host-landing-page compose fragment plus its static HTML into
+ * `docker-compose/` (nginx serving a deliberate 200 host-info page on the host's root URL,
+ * instead of the error-pages 503 fallback — #1587).
+ *
+ * Opt-in per host via an explicit `composeRole(CommonComposeRole.HostLandingPage)` — NOT part
+ * of `hostStack()`. The page substitutes `${deployTarget}` and `${host-landing-purpose}`
+ * (the latter supplied per host via `deployment { extraReplacements }`) and links `/traefik`
+ * and `logs.<host>`, so a host should enable it only together with working dashboard routing
+ * and the [CommonComposeRole.HostLogs] role.
+ */
+fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
+  CommonHostLandingPageCompose.applyTo(this)
+  CommonHostLandingPageHtml.applyTo(this)
+}
+
+/**
  * Pulls in the shared worker-host runner-registration scripts (`register-runners.sh`,
  * `setup-gitlab-runner.sh`, `setup-restricted-runner.sh`). These scripts sit at the root
  * of the build output directory and are intended to be executed locally against the target
@@ -195,6 +223,7 @@ enum class CommonComposeRole(
   HostExporters("host-exporters"),
   HostManagement("host-management"),
   HostLogs("host-logs"),
+  HostLandingPage("host-landing-page"),
 }
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */
@@ -204,4 +233,5 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
   CommonComposeRole.HostExporters -> includeCommonHostExportersCompose()
   CommonComposeRole.HostManagement -> includeCommonHostManagementCompose()
   CommonComposeRole.HostLogs -> includeCommonHostLogsCompose()
+  CommonComposeRole.HostLandingPage -> includeCommonHostLandingPageCompose()
 }

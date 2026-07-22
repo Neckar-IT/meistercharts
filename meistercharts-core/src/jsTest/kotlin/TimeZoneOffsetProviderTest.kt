@@ -15,12 +15,14 @@
  */
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.algorithms.time.DefaultTimeZoneOffsetProvider
+import com.meistercharts.time.DefaultTimeZoneOffsetProvider
 import it.neckar.datetime.minimal.TimeZone
 import kotlin.test.Test
 
 /**
- *
+ * The offset follows the JS/browser Date.getTimezoneOffset() convention: UTC minus local time, so
+ * it is negative for zones east of UTC (Europe/Berlin in winter = -1h). The JVM implementation
+ * matches this convention (see the jvmTest variant).
  */
 class TimeZoneOffsetProviderTest {
   @Test
