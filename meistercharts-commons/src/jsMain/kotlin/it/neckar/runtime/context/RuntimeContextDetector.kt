@@ -27,7 +27,7 @@
  */
 package it.neckar.runtime.context
 
-import it.neckar.runtime.detection.RuntimeContextEnv
+import it.neckar.runtime.context.RuntimeContextEnv
 
 /**
  * Detects RuntimeContext from a browser environment (window.location, global variables).

@@ -286,6 +286,21 @@ internal class TimeRangeTest {
   }
 
   @Test
+  internal fun `compareTo is antisymmetric for overlapping ranges with equal end`() {
+    val offset = millisSmall + 1_000.0
+    //Two overlapping ranges sharing the same end but different start must not both claim to be greater.
+    val a = TimeRange(offset + 0, offset + 10)
+    val b = TimeRange(offset + 5, offset + 10)
+
+    val ab = a.compareTo(b)
+    val ba = b.compareTo(a)
+
+    assertThat(ab).isNotEqualTo(0)
+    //sign(a.compareTo(b)) == -sign(b.compareTo(a))
+    assertThat(ab > 0).isNotEqualTo(ba > 0)
+  }
+
+  @Test
   fun testOverlap() {
     val timestamp = millisSmall + 1_000.0
     assertThat(TimeRange(timestamp, timestamp).isOverlapping(TimeRange(timestamp, timestamp))).isTrue()

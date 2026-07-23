@@ -76,10 +76,13 @@ enum class GitProperty(
 
 /**
  * Returns the environment map injected into service images at image build:
- * one entry per [GitProperty] ([GitProperty.envVar] to its gated value).
+ * one entry per [GitProperty] ([GitProperty.envVar] to the commit's real value).
  *
- * Off CI and off the main branch the values are stable placeholders (see [getBuildInfoVarValue]),
- * so local image builds stay reproducible.
+ * The values land in the image config JSON, never in a layer — only that JSON changes per commit,
+ * so the layers stay identical. They therefore carry the real commit on every build, on CI and
+ * locally alike: a placeholder would contradict the `org.opencontainers.image.revision` label of
+ * the same image, and [VersionInformation][it.neckar.open.version.VersionInformation] would report
+ * a hash of all zeros where it means "unknown" (#2625).
  */
 fun Project.gitPropertyEnvironment(): Map<String, String> {
   return GitProperty.entries.associate { gitProperty ->
@@ -88,14 +91,20 @@ fun Project.gitPropertyEnvironment(): Map<String, String> {
 }
 
 /**
- * Returns the value of the given [BuildInfoVars] variable.
+ * Returns the value of the given [BuildInfoVars] variable — always the commit's real value.
+ *
+ * Callers that write into a build INPUT (the fat-jar `app-git-info.properties` resource) must gate
+ * the call themselves, otherwise every commit invalidates that input. See
+ * `registerCreateFatJarGitInfoTask`, which writes an empty properties file off CI/main so
+ * VersionInformation falls back to "unknown". Callers that write into image config or a report
+ * use the value unconditionally.
  */
 fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
   return when (buildInfoVar) {
     BuildInfoVars.BuildDate -> buildDate
-    BuildInfoVars.GitCommitDateTime -> if (inCi || onMainBranch) gitCommitDateTime else "1970-01-01T00:00:00Z"
-    BuildInfoVars.GitHash -> if (inCi || onMainBranch) gitHash else "0".repeat(40)
-    BuildInfoVars.GitHashShort -> if (inCi || onMainBranch) gitHashShort else "0000000"
+    BuildInfoVars.GitCommitDateTime -> gitCommitDateTime
+    BuildInfoVars.GitHash -> gitHash
+    BuildInfoVars.GitHashShort -> gitHashShort
     BuildInfoVars.Branch -> branch
   }
 }

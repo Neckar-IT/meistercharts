@@ -859,7 +859,7 @@ internal expect fun CanvasRenderingContext2D.setLineDashWeb(dashes: DoubleArray)
 internal expect fun CanvasRenderingContext2D.setLineDashesWeb(dashes: DoubleArray)
 
 val HTMLCanvasElement.canvasRenderingContextWebGl: WebGLRenderingContext
-  get() = getContext("webgl") as WebGLRenderingContext ?: throw IllegalStateException("context not found")
+  get() = getContext("webgl") as? WebGLRenderingContext ?: throw IllegalStateException("context not found")
 
 
 /**

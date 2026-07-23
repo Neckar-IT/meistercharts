@@ -63,7 +63,6 @@ object Plugins {
   const val openModule: String = "it.neckar.open-module"
 
   const val additionalGitRepository: String = "it.neckar.repos.additional-git-repository"
-  const val generateViteEnvFile: String = "it.neckar.repos.generate-vite-env-file"
   const val generateAuditReport: String = "it.neckar.dependencies.audit-report"
   const val buildProfileReport: String = "it.neckar.report.build-profile"
 
@@ -96,6 +95,13 @@ object Plugins {
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
   const val disableDistTasks: String = "it.neckar.performance.disable-dist-tasks"
+
+  /**
+   * Applies the repository-wide strategy for third-party metadata files in fat jars
+   * (license/notice texts, service-provider registries, build-time-only metadata). Reacts to the
+   * Shadow plugin, so it can be applied to every project unconditionally.
+   */
+  const val fatJarMetadata: String = "it.neckar.shadow.fat-jar-metadata"
 
   /**
    * Convention plugin bundling `application`, `disableDistTasks`, and `verifyMainClassExists`.

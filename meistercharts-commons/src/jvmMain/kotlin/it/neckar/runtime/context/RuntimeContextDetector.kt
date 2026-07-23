@@ -28,8 +28,6 @@
 package it.neckar.runtime.context
 
 import it.neckar.open.net.HostnameSupport
-import it.neckar.runtime.detection.RuntimeContextEnv
-import it.neckar.runtime.detection.RuntimeContextSys
 import java.lang.management.ManagementFactory
 import kotlin.enums.enumEntries
 

@@ -263,9 +263,9 @@ object MaterialColor {
   val DEEP_ORANGE_A700: Color = web("#DD2C00")
 
   val BROWN_50: Color = web("#EFEBE9")
-  val BROWN_100: Color = web("#EFEBE9")
-  val BROWN_200: Color = web("#D7CCC8")
-  val BROWN_300: Color = web("#BCAAA4")
+  val BROWN_100: Color = web("#D7CCC8")
+  val BROWN_200: Color = web("#BCAAA4")
+  val BROWN_300: Color = web("#A1887F")
   val BROWN_400: Color = web("#8D6E63")
   val BROWN_500: Color = web("#795548")
   val BROWN_600: Color = web("#6D4C41")

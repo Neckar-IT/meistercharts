@@ -74,7 +74,14 @@ private fun KotlinMultiplatformExtension.jvm(scope: Scope, configure: KotlinSour
 }
 
 /**
- * Adds "common" annotations to the project
+ * Adds "common" annotations to the project.
+ *
+ * The nullability annotations come from `org.jetbrains:annotations` and must never be taken from
+ * `com.intellij:annotations` again (#2605): both artifacts ship the very same
+ * `org.jetbrains.annotations` and `org.intellij.lang.annotations` classes, but under different
+ * Maven coordinates, so Gradle's conflict resolution cannot collapse them. Having both on the
+ * runtime classpath put ~30 duplicate classes into every fat jar, with the winner decided by
+ * classpath order.
  */
 fun KotlinMultiplatformExtension.addAnnotationDependencies(project: Project, scope: Scope = Scope.Main) {
   jvm(scope) {
@@ -84,7 +91,7 @@ fun KotlinMultiplatformExtension.addAnnotationDependencies(project: Project, sco
       api(project.lib("jsr305"))
       api(project.lib("javax-inject"))
       api(project.lib("javax-annotation-api"))
-      api(project.lib("com-intellij-annotations"))
+      api(project.lib("org-jetbrains-annotations"))
     }
   }
 }
@@ -229,7 +236,7 @@ fun DependencyHandlerScope.addAnnotationDependencies(project: Project, scope: Sc
   add(configurationName, project.lib("jsr305"))
   add(configurationName, project.lib("javax-inject"))
   add(configurationName, project.lib("javax-annotation-api"))
-  add(configurationName, project.lib("com-intellij-annotations"))
+  add(configurationName, project.lib("org-jetbrains-annotations"))
 }
 
 

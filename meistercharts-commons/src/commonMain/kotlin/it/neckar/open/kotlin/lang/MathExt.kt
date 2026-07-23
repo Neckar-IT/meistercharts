@@ -375,7 +375,7 @@ fun Long.toUintClamp(min: Int = 0, max: Int = Int.MAX_VALUE) = this.toIntClamp(m
 ////////////////////
 
 /** Checks if [this] is odd (not multiple of two) */
-val Int.isOdd get() = (this % 2) == 1
+val Int.isOdd get() = (this % 2) != 0
 
 /** Checks if [this] is even (multiple of two) */
 val Int.isEven get() = (this % 2) == 0
@@ -455,15 +455,9 @@ fun Double.roundDecimalPlacesHalfUp(places: Int): Double {
  * Attention: Uses [Epsilon] for comparison with 0.5
  */
 fun Double.roundHalfUp(): Double {
-  val number = this
-  val fractionalPart = number % 1
-  val integralPart = number - fractionalPart
-
-  return when {
-    fractionalPart + Epsilon < 0.5 -> integralPart
-    fractionalPart + Epsilon >= 0.5 -> integralPart + 1.0
-    else -> throw IllegalStateException("Should not happen: number :$number, fractionalPart: $fractionalPart, integralPart: $integralPart")
-  }
+  //floor(x + 0.5) rounds half up (ties toward +infinity) and works for negatives too;
+  //`number % 1` used previously was negative for negative inputs, so it truncated toward zero instead.
+  return floor(this + 0.5 + Epsilon)
 }
 
 fun Double.ceilDecimalPlaces(places: Int): Double {

@@ -296,6 +296,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
 
   override fun equals(other: Any?): Boolean {
     if (other !is IntMap<*>) return false
+    if (size != other.size) return false
     fastForEachNullable { key, value -> if (other[key] != value) return false }
     return true
   }
@@ -621,6 +622,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
 
   override fun equals(other: Any?): Boolean {
     if (other !is IntIntMap) return false
+    if (size != other.size) return false
     fastForEach { key, value -> if (other[key] != value) return false }
     return true
   }

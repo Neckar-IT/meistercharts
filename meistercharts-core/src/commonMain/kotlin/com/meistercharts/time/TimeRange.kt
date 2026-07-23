@@ -60,19 +60,11 @@ class TimeRange(
   fun contains(timestamp0: @Time @ms Double, timestamp1: @Time @ms Double): Boolean = timestamp0 in start..end && timestamp1 in start..end
 
   override fun compareTo(other: TimeRange): Int {
-    if (start == other.start && end == other.end) {
-      return 0
-    }
-    if (start >= other.end) {
-      return 1
-    }
-    if (end <= other.start) {
-      return -1
-    }
-    if (end >= other.end) {
-      return 1
-    }
-    return -1
+    //Order primarily by end, then by start, to guarantee a consistent total order (antisymmetric + transitive).
+    //Ordering by end matches the disjoint-range case (a range that ends earlier is "less"), and the start
+    //tie-breaker keeps overlapping ranges with equal end from both claiming to be greater than the other.
+    end.compareTo(other.end).let { if (it != 0) return it }
+    return start.compareTo(other.start)
   }
 
   /**

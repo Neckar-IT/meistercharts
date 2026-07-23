@@ -140,7 +140,9 @@ class CanvasFontMetricsCalculatorJS(
       //val offsetBlue = baseOffset + 2
       val offsetAlpha = baseOffset + 3
 
-      val alpha = data[offsetAlpha]
+      //data[] returns a signed Byte: a fully opaque alpha of 255 is Byte -1, so `alpha > 0` would
+      //miss every alpha in 128..255. Mask to the unsigned value and test for any non-transparent pixel.
+      val alpha = data[offsetAlpha].toInt() and 0xFF
       //val red = data[offsetRed]
       //val green = data[offsetGreen]
       //val blue = data[offsetBlue]

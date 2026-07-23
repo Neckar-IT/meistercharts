@@ -27,7 +27,6 @@
  */
 package it.neckar.open.time
 
-import it.neckar.open.collections.fastForEach
 import it.neckar.open.collections.fastForEachDelete
 import it.neckar.open.collections.mutableSortedListOf
 import it.neckar.open.dispose.Disposable
@@ -75,17 +74,22 @@ abstract class BaseTimerImplementation : TimerImplementation {
   }
 
   private fun handleRepeatCallbacks(now: @ms Double) {
-    repeatCallbacks.fastForEach {
-      if (it.targetTime <= now) {
-        it.callback()
-        it.targetTime += it.delay
-      } else {
-        //The list is sorted, so we can stop here
-        return
+    var fired = false
+
+    for (entry in repeatCallbacks) {
+      if (entry.targetTime > now) {
+        //The list is sorted, so no later entry is due either
+        break
       }
+      entry.callback()
+      entry.targetTime += entry.delay
+      fired = true
     }
 
-    repeatCallbacks.sort() //manual sort, because we have changed the targetTime
+    if (fired) {
+      //Re-sort because firing a callback mutated its targetTime and may have broken the ascending order.
+      repeatCallbacks.sort()
+    }
   }
 
   override fun delay(delay: Duration, callback: () -> Unit): Disposable {

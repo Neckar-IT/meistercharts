@@ -69,6 +69,9 @@ object LoggerLocalStorage {
     window.localStorage.length.fastFor { index ->
       val key = window.localStorage.key(index) ?: return@fastFor
 
+      //The root level key also starts with the logger prefix - skip it so it is not read as a phantom logger named "rootLevel".
+      if (key == LoggerLocalStorageKeys.RootLevel) return@fastFor
+
       if (key.startsWith(LoggerLocalStorageKeys.LoggerPrefix)) {
         val loggerName = LoggerName(key.substringAfter(LoggerLocalStorageKeys.LoggerPrefix))
 
@@ -98,6 +101,8 @@ object LoggerLocalStorage {
   /**
    * Clears all logger levels from the local storage.
    *
+   * Does *not* clear the root level - use [clearRootLevel] for that.
+   *
    * Collects matching keys first, then removes them — iterating and removing
    * in the same pass shifts the remaining indices and silently skips entries.
    */
@@ -105,6 +110,8 @@ object LoggerLocalStorage {
     val keysToRemove = mutableListOf<String>()
     window.localStorage.length.fastFor { index ->
       val key = window.localStorage.key(index) ?: return@fastFor
+      //The root level key also starts with the logger prefix - skip it so clearLoggers does not wipe the root level.
+      if (key == LoggerLocalStorageKeys.RootLevel) return@fastFor
       if (key.startsWith(LoggerLocalStorageKeys.LoggerPrefix)) {
         keysToRemove.add(key)
       }

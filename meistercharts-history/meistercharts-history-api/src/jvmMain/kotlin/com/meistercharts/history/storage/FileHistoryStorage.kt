@@ -131,23 +131,25 @@ class FileHistoryStorage(
       }
 
       HistoryBucketRange.OneYear -> {
-        return startInUtc.year.toString() + ".json"
+        //360-day buckets are epoch-aligned, not calendar-aligned - two buckets can start in the
+        //same calendar year, so the calendar year is not unique. Use the unique bucket index.
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.FiveYears -> {
-        return startInUtc.year.toString() + ".json"
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.ThirtyYears -> {
-        return startInUtc.year.toString() + ".json"
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.NinetyYears -> {
-        return startInUtc.year.toString() + ".json"
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       HistoryBucketRange.SevenHundredTwentyYears -> {
-        return startInUtc.year.toString() + ".json"
+        return descriptor.index.toLong().toString() + ".json"
       }
 
       else -> {

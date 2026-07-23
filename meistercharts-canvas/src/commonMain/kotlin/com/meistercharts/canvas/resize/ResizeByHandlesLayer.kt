@@ -333,7 +333,7 @@ interface HandleBoundsProvider {
   }
 
   fun maxY(direction: Direction): @Zoomed Double {
-    return minY(direction) + width(direction)
+    return minY(direction) + height(direction)
   }
 }
 
