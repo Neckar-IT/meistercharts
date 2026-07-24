@@ -108,6 +108,7 @@ private val InlinableLibraries: List<String> = listOf(
   "service-deploy/deploy-service-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
   "host-maintenance/install-maintenance-cron.sh",
+  "worker-host/runner-identity-lib.sh",
 )
 
 /**

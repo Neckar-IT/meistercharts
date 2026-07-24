@@ -194,6 +194,10 @@ fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
  * of the build output directory and are intended to be executed locally against the target
  * host (not copied to the host).
  *
+ * `runner-identity-lib.sh` is copied along by the `*.sh` pattern but is never executed from there:
+ * all three scripts fold it in via `# @inline: worker-host/runner-identity-lib.sh`, so the
+ * materialized copies are self-contained.
+ *
  * Target: `*.sh` files from `common/worker-host/` → build-output root.
  *
  * Used by worker hosts that run a GitLab Runner (see `:worker-01-host.neckar.it`,

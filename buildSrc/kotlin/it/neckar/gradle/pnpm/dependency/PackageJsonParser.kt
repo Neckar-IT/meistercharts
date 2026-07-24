@@ -32,6 +32,20 @@ class PackageJsonParser {
   }
 
   /**
+   * Extracts the names of all scripts declared in the `scripts` section of a package.json file.
+   *
+   * Returns an empty set if the file does not exist or declares no scripts.
+   */
+  fun extractScriptNames(packageJsonFile: File): Set<String> {
+    if (packageJsonFile.isFile.not()) {
+      return emptySet()
+    }
+
+    val jsonObject = json.parseToJsonElement(packageJsonFile.readText()).jsonObject
+    return jsonObject["scripts"]?.jsonObject?.keys.orEmpty()
+  }
+
+  /**
    * Extracts the names of all workspace dependencies from a package.json file.
    *
    * Workspace dependencies are identified by the `workspace:` prefix in their version specifier.

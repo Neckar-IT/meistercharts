@@ -40,6 +40,7 @@ object Plugins {
   const val taskInfo: String = "org.barfuin.gradle.taskinfo"
   const val detekt: String = "dev.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
+  const val html2pdf: String = "it.neckar.html2pdf"
   const val pnpmKotlinInterop: String = "it.neckar.pnpm.kotlin-interop"
 
   const val kotlinMultiPlatform: String = "org.jetbrains.kotlin.multiplatform"
@@ -69,8 +70,9 @@ object Plugins {
   /**
    * Writes the structured build report under `build/reports/structured/`: the streaming
    * `build-events.jsonl` (every finished task, written as it happens so a killed build still leaves a
-   * parseable record) plus the aggregates `failures.json` and `cache-report.json`. Apply once to the
-   * root project. See [it.neckar.gradle.report.events.BuildEventsReportPlugin].
+   * parseable record) plus the aggregates `failures.json`, `cache-report.json` and
+   * `cache-metrics.json`. Apply once to the root project.
+   * See [it.neckar.gradle.report.events.BuildEventsReportPlugin].
    */
   const val buildEventsReport: String = "it.neckar.report.build-events"
 
@@ -111,9 +113,10 @@ object Plugins {
 
   /**
    * Convention plugin for Ktor services deployed as Docker images.
-   * Extends `executableApplication` with `jibService` for Docker image building.
+   * Extends `executableApplication` with `jibService` for Docker image building, the OTel agent,
+   * and the Ktor service conventions (dependency backbone, Jib defaults, run-task port override).
    */
-  const val serviceApplication: String = "it.neckar.service-application"
+  const val ktorServiceApplication: String = "it.neckar.ktor-service-application"
   const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
   const val runDockerServices: String = "it.neckar.docker.services"
@@ -152,7 +155,7 @@ object Plugins {
   /**
    * Single default source for the OTel agent config: `-javaagent` + `OTEL_*` env defaults on the
    * Jib image and the local `run` task, `otelAgent { }` DSL, extension-JAR bake (#2381).
-   * Bundled via `serviceApplication`.
+   * Bundled via `ktorServiceApplication`.
    */
   const val otelAgent: String = "it.neckar.otel-agent"
   const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
