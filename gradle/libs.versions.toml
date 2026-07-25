@@ -64,11 +64,11 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.10"
 
-org-mongodb = "5.9.0"
+org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.11"
+aws-sdk-kotlin = "1.8.12"
 
 apache-poi = "5.5.1"
 
@@ -134,9 +134,9 @@ okhttp3 = "5.4.0"
 
 opentelemetry = "1.64.0"
 
-opentelemetry-instrumentation = "2.29.0-alpha"
+opentelemetry-instrumentation = "2.30.0-alpha"
 
-opentelemetry-javaagent = "2.29.0"
+opentelemetry-javaagent = "2.30.0"
 
 micrometer = "1.17.0"
 
@@ -301,7 +301,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.0"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.1"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
