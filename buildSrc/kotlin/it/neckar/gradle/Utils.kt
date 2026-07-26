@@ -9,6 +9,7 @@ import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaCompiler
@@ -288,6 +289,13 @@ fun Project.withTask(name: String, block: (Task) -> Unit) {
 }
 
 /**
+ * The `build` lifecycle task — contributed by any language plugin or [Plugins.base].
+ * Resolving it fails at configuration time instead of task-graph time (#2668).
+ */
+val Project.buildTask: TaskProvider<Task>
+  get() = tasks.named("build")
+
+/**
  * Configures JavaFX for this project
  */
 fun Project.configureJavaFX(modules: List<JavaFXModule> = listOf(JavaFXModule.CONTROLS)) {
@@ -507,17 +515,34 @@ fun Project.configureNodeJsRootExtension() {
 
 
 /**
- * The JUnit Jupiter property that holds the per-test-method timeout.
+ * The JUnit Jupiter property that holds the timeout for test methods — `@Test`, `@ParameterizedTest`
+ * and the other testable methods, but **not** `@BeforeEach` / `@BeforeAll` / `@AfterEach`.
  *
  * Set by [configureJunit] as a hang guard, removed again by [removePerTestTimeout].
  */
-const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout.default"
+const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout.testable.method.default"
 
 /**
- * Removes the per-test-method hang guard [configureJunit] applies to every [Test] task.
+ * The JUnit Jupiter property that holds the timeout for lifecycle methods (`@BeforeEach`,
+ * `@BeforeAll`, `@AfterEach`, `@AfterAll`).
+ *
+ * Separate from [JunitPerTestTimeoutProperty] because the two guard different things. A test method
+ * that runs long is a hanging test. A lifecycle method that runs long is usually infrastructure
+ * coming up — a Testcontainers container, and on a cold Docker cache that includes pulling its image.
+ * That happens on the runner hosts every day: their maintenance cron runs
+ * `docker image prune -a --force --filter 'until=24h'`, which removes tagged images no container is
+ * using, and a test image is only in use while a test runs.
+ *
+ * Sharing one 120s budget made an image pull abort the first Testcontainers test of the day, and the
+ * resulting `TimeoutException` pointed at the test rather than at the pull (#2701).
+ */
+const val JunitLifecycleTimeoutProperty: String = "junit.jupiter.execution.timeout.lifecycle.method.default"
+
+/**
+ * Removes both hang guards [configureJunit] applies to every [Test] task.
  *
  * Separate test suites are the designated place for slow work — browsers, external services,
- * performance measurements — and legitimately run longer than the 120s guard. Aborting them is
+ * performance measurements — and legitimately run longer than the guards. Aborting them is
  * always a false positive, so the suites opt out instead of raising the guard for everyone.
  *
  * Must be called after [configureJunit] has been applied to the task, which is the case for every
@@ -525,6 +550,7 @@ const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout
  */
 fun Test.removePerTestTimeout() {
   systemProperties.remove(JunitPerTestTimeoutProperty)
+  systemProperties.remove(JunitLifecycleTimeoutProperty)
 }
 
 /**
@@ -575,6 +601,14 @@ fun Project.configureJunit() {
     //test suite, which opts out via `removePerTestTimeout()`.
     //`disabled_on_debug` keeps interactive debug sessions alive.
     systemProperty(JunitPerTestTimeoutProperty, "120s")
+
+    //Lifecycle methods (@BeforeEach/@BeforeAll/@AfterEach/@AfterAll) get their own, larger budget:
+    //they are where infrastructure starts, and a Testcontainers container on a cold Docker cache has
+    //to pull its image first. The runner hosts prune unused tagged images daily, so that cold start
+    //is the normal case for the first container test after 06:00 — a pull that the 120s test budget
+    //aborted, reporting a TimeoutException on the test instead of the pull (#2701).
+    //Still bounded: a lifecycle method that hangs indefinitely must not stall the build either.
+    systemProperty(JunitLifecycleTimeoutProperty, "600s")
     systemProperty("junit.jupiter.execution.timeout.mode", "disabled_on_debug")
 
     //Set the JVM properties for the tests
@@ -1164,6 +1198,23 @@ val Project.inCi: Boolean
  */
 fun Project.inSchedule(scheduleVariable: ScheduleVariable): Boolean {
   return ciInformation.inSchedule(scheduleVariable.variableName)
+}
+
+/** Extra-property key: the schedule variable gating a module's `jib`. Set by [gateJibToSchedule], read by `verifyDeploymentImages`. */
+const val ScheduleGatedJibExtraKey: String = "scheduleGatedJibVariable"
+
+/**
+ * Runs the module's `jib` only in [scheduleVariable]'s scheduled pipeline (always outside CI), so a
+ * main-push jib cannot overwrite the schedule's image with an empty build. Records the gate as an
+ * extra property so `verifyDeploymentImages` rejects pairing it with `continuousDeploy()` — that
+ * would deploy an image the main pipeline never builds (#2694). [reason] shows when the task skips.
+ */
+fun Project.gateJibToSchedule(scheduleVariable: ScheduleVariable, reason: String) {
+  val gatingProject: Project = this
+  extra[ScheduleGatedJibExtraKey] = scheduleVariable.variableName
+  tasks.named("jib").configure {
+    onlyIf(reason) { gatingProject.inCi.not() || gatingProject.inSchedule(scheduleVariable) }
+  }
 }
 
 val Project.inContainer: Boolean

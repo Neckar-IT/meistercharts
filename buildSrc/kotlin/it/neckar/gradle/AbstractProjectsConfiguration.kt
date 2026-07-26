@@ -21,6 +21,11 @@ fun AbstractProjects.configureProjects(baseProject: Project) {
     ProjectConfiguration.configureMultiPlatformJvmOnly(this.getProject(baseProject), JvmType.JavaLatestLTS)
   }
 
+  baseProject.configure(multiPlatformNativeOnlyProjects()) {
+    baseProject.logger.debug("Configuring multi-platform native-only project: ${this.path}")
+    ProjectConfiguration.configureMultiPlatformNativeOnly(this.getProject(baseProject))
+  }
+
   baseProject.configure(kspProcessorProjects()) {
     baseProject.logger.debug("Configuring KSP processor project: ${this.path}")
     ProjectConfiguration.configureKspProcessor(this.getProject(baseProject))

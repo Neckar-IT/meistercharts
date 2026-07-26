@@ -51,6 +51,12 @@ object Plugins {
   const val verifyGitlabAccessToken: String = "it.neckar.verify.gitlab-access-token"
 
   /**
+   * Registers the root-project `verify` task that checks the developer machine for all required
+   * tools, versions and configurations. See VerifyDevSetupPlugin.
+   */
+  const val verifyDevSetup: String = "it.neckar.verify.dev-setup"
+
+  /**
    * Forbids project/external dependencies on a per-configuration basis.
    * See [it.neckar.gradle.fence.DependencyFencePlugin].
    */

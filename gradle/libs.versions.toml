@@ -41,7 +41,7 @@ me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 
 [versions]
 
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 
 org-asciidoctor = "4.0.5"
 
@@ -68,7 +68,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.12"
+aws-sdk-kotlin = "1.8.13"
 
 apache-poi = "5.5.1"
 
@@ -110,7 +110,7 @@ junit = "4.13.2"
 
 junit-jupiter = "6.1.2"
 
-keycloak-mock = "0.20.0"
+keycloak-mock = "0.21.0"
 
 kotlinx-browser = "0.5.0"
 
@@ -158,6 +158,8 @@ testfx = "4.0.18"
 
 clikt = "5.1.0"
 
+mordant = "3.0.2"
+
 javafx = "25.0.4"
 
 netty = "4.2.16.Final"
@@ -199,7 +201,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.38"
+logback-classic = "ch.qos.logback:logback-classic:1.6.0"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -301,7 +303,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.1"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.2"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -378,6 +380,8 @@ domrobot = "com.inwx:domrobot:4.0.0"
 gson = "com.google.code.gson:gson:2.14.0"
 
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
+
+mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
 
 dotenv-kotlin = "io.github.cdimascio:dotenv-kotlin:6.5.1"
 
