@@ -18,7 +18,7 @@ package com.meistercharts.algorithms.layers.legend
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.color.Color
 import com.meistercharts.canvas.ChartSupport
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.fill
 import com.meistercharts.font.FontDescriptorFragment
 import com.meistercharts.canvas.text.TextLineCalculations
@@ -48,10 +48,10 @@ class VerticallyStackedLabelsPaintable(
    */
   labels: @LegendEntryIndex SizedProvider1<String, ChartSupport>,
 
-  styleConfiguration: Style.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : AbstractPaintable() {
 
-  val style: Style = Style(labels).also(styleConfiguration)
+  val configuration: Configuration = Configuration(labels).also(additionalConfiguration)
 
   override fun paintingVariables(): PaintablePaintingVariables {
     return paintingVariables
@@ -65,20 +65,20 @@ class VerticallyStackedLabelsPaintable(
       val chartSupport = paintingContext.chartSupport
 
       val gc = chartSupport.canvas.gc
-      gc.font(style.textFont())
+      gc.font(configuration.textFont())
       val fontMetrics = gc.getFontMetrics()
       rowHeightWithoutGap = fontMetrics.totalHeight
 
 
-      val labels = style.labels
+      val labels = configuration.labels
 
       @px val textBlockHeight = TextLineCalculations.calculateTextBlockHeight(
         chartSupport.canvas.gc.getFontMetrics(),
         linesCount = labels.size(chartSupport),
-        spaceBetweenLines = style.entriesGap,
+        spaceBetweenLines = configuration.entriesGap,
       )
 
-      @px val textBlockWidth = TextLineCalculations.calculateMultilineTextWidth(gc, labels.asSizedProvider(chartSupport), style.maxLabelWidth)
+      @px val textBlockWidth = TextLineCalculations.calculateMultilineTextWidth(gc, labels.asSizedProvider(chartSupport), configuration.maxLabelWidth)
 
       val size = Size(
         width = textBlockWidth, height = textBlockHeight
@@ -92,27 +92,27 @@ class VerticallyStackedLabelsPaintable(
     val gc = paintingContext.gc
     gc.translate(x, y)
 
-    gc.font(style.textFont())
+    gc.font(configuration.textFont())
 
     //Translate to the *center* of the first row
     gc.translate(0.0, paintingVariables.rowHeightWithoutGap / 2.0)
 
-    style.labels.fastForEachIndexed(paintingContext.chartSupport) { index, label ->
+    configuration.labels.fastForEachIndexed(paintingContext.chartSupport) { index, label ->
       gc.fill(Color.black)
       gc.paintTextBox(
         line = label,
         anchorDirection = Direction.CenterLeft,
         anchorGapHorizontal = 0.0,
         anchorGapVertical = 0.0,
-        textColor = style.labelColor(),
-        maxStringWidth = style.maxLabelWidth
+        textColor = configuration.labelColor(),
+        maxStringWidth = configuration.maxLabelWidth
       )
-      gc.translate(0.0, style.entriesGap + paintingVariables.rowHeightWithoutGap)
+      gc.translate(0.0, configuration.entriesGap + paintingVariables.rowHeightWithoutGap)
     }
   }
 
-  @StyleDsl
-  class Style(
+  @ConfigurationDsl
+  class Configuration(
     /**
      * The labels that are shown on the right side of the legend.
      * The labels are shown in the provided order (from top to bottom)

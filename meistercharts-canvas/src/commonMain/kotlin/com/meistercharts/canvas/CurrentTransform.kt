@@ -16,7 +16,7 @@
 package com.meistercharts.canvas
 
 import com.meistercharts.annotations.PhysicalPixel
-import com.meistercharts.canvas.geometry.Matrix
+import com.meistercharts.geometry.Matrix
 import it.neckar.geometry.Distance
 import com.meistercharts.model.Zoom
 import it.neckar.open.annotations.Allocates

@@ -19,8 +19,8 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.canvas.geometry.BezierCurve
-import com.meistercharts.canvas.geometry.BezierCurveRect
+import com.meistercharts.geometry.BezierCurve
+import com.meistercharts.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.text.LineSpacing
 import com.meistercharts.canvas.text.TextLineCalculations

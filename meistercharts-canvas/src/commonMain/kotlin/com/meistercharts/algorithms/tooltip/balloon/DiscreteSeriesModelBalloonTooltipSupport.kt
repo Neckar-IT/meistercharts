@@ -161,7 +161,7 @@ class DiscreteSeriesModelBalloonTooltipSupport(
    * Applies the symbol size for the legend
    */
   fun applyLegendSymbolSize(symbolSize: Size) {
-    symbolAndLegendPaintable.style.symbols = createSymbolsProvider(symbolSize)
+    symbolAndLegendPaintable.configuration.symbols = createSymbolsProvider(symbolSize)
   }
 
   /**

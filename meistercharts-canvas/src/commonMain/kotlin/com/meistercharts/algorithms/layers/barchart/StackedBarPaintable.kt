@@ -24,7 +24,7 @@ import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import com.meistercharts.calc.ChartCalculator
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.DebugFeature
 import com.meistercharts.canvas.StrokeLocation
 import com.meistercharts.canvas.calculateOffsetXWithAnchor
@@ -80,8 +80,6 @@ import kotlin.math.min
  * Paint values as a stacked bar
  */
 class StackedBarPaintable(
-  val data: Data = Data(),
-
   /**
    * The width
    */
@@ -91,7 +89,7 @@ class StackedBarPaintable(
    */
   var height: @Zoomed Double,
 
-  styleConfiguration: Style.() -> Unit = {},
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : Paintable {
 
   /**
@@ -106,7 +104,7 @@ class StackedBarPaintable(
     @px val y: Double
     @px val x: Double
 
-    when (style.orientation) {
+    when (configuration.orientation) {
       Orientation.Vertical -> {
         y = when (chartSupport.currentChartState.axisOrientationY) {
           AxisOrientationY.OriginAtBottom -> -height
@@ -136,7 +134,18 @@ class StackedBarPaintable(
     }
   }
 
-  val style: Style = Style().also(styleConfiguration)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
+
+  /**
+   * Migration alias for the single [configuration] instance.
+   *
+   * Kept only so the maintenance-only lizergy charts (which still read `stackedBarPaintable.style`)
+   * keep compiling. This is not a second config object: it points at the same [configuration]
+   * instance, so there is no drift. Remove once the lizergy usage is migrated to [configuration].
+   */
+  @Deprecated("Use configuration", ReplaceWith("configuration"))
+  val style: Configuration
+    get() = configuration
 
   internal inner class Layout {
     /**
@@ -296,12 +305,12 @@ class StackedBarPaintable(
       reset()
       this.calculator = chartCalculator
 
-      val valueRange = data.valueRange
+      val valueRange = configuration.valueRange
 
       //Calculate the sums (both negative and positive)
       var tmpSegmentsSumPositive = 0.0
       var tmpSegmentsSumNegative = 0.0
-      data.valuesProvider.fastForEach { value: @Domain Double ->
+      configuration.valuesProvider.fastForEach { value: @Domain Double ->
         when {
           value > 0.0 -> {
             if (valueRange.end > 0.0) {
@@ -327,7 +336,7 @@ class StackedBarPaintable(
 
 
       //Add the remainder segment - if necessary
-      if (style.showRemainderAsSegment) {
+      if (configuration.showRemainderAsSegment) {
         //Necessary for positive?
         if (segmentsSumPositive < valueRange.end) {
           remainderPositiveVisible = true
@@ -365,26 +374,26 @@ class StackedBarPaintable(
 
       //Check if there is a gap at zero
       val gapAtZero = hasPositiveAndNegativeSegments
-      @Zoomed val totalGapsSizeAtZero = if (gapAtZero) style.segmentsGap else 0.0
+      @Zoomed val totalGapsSizeAtZero = if (gapAtZero) configuration.segmentsGap else 0.0
 
       //Calculate the total size of all gaps (summed up). This value is then distributed to each segment - depending on the size of each segment
-      @Zoomed val totalGapsSizePositive = gapCountPositive * style.segmentsGap + totalGapsSizeAtZero / 2.0
-      @Zoomed val totalGapsSizeNegative = gapCountNegative * style.segmentsGap + totalGapsSizeAtZero / 2.0
+      @Zoomed val totalGapsSizePositive = gapCountPositive * configuration.segmentsGap + totalGapsSizeAtZero / 2.0
+      @Zoomed val totalGapsSizeNegative = gapCountNegative * configuration.segmentsGap + totalGapsSizeAtZero / 2.0
 
       //Convert the total gaps sum to content area relative
-      @ContentAreaRelative val totalGapsSizeContentAreaRelativePositive: Double = when (style.orientation) {
+      @ContentAreaRelative val totalGapsSizeContentAreaRelativePositive: Double = when (configuration.orientation) {
         Orientation.Vertical -> calculator.zoomed2contentAreaRelativeY(totalGapsSizePositive)
         Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(totalGapsSizePositive)
       }
-      @ContentAreaRelative val totalGapsSizeContentAreaRelativeNegative: Double = when (style.orientation) {
+      @ContentAreaRelative val totalGapsSizeContentAreaRelativeNegative: Double = when (configuration.orientation) {
         Orientation.Vertical -> calculator.zoomed2contentAreaRelativeY(totalGapsSizeNegative)
         Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(totalGapsSizeNegative)
       }
 
       //The gap between two segments (the visible gap has the same size for all locations - independent of the size of the adjacent segments)
-      segmentGap = when (style.orientation) {
-        Orientation.Vertical -> calculator.zoomed2contentAreaRelativeY(style.segmentsGap)
-        Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(style.segmentsGap)
+      segmentGap = when (configuration.orientation) {
+        Orientation.Vertical -> calculator.zoomed2contentAreaRelativeY(configuration.segmentsGap)
+        Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(configuration.segmentsGap)
       }
 
 
@@ -402,7 +411,7 @@ class StackedBarPaintable(
         startYNegative -= segmentGap / 2.0
       }
 
-      data.valuesProvider.fastForEachIndexed { index, value: @MayBeNegative @Domain Double ->
+      configuration.valuesProvider.fastForEachIndexed { index, value: @MayBeNegative @Domain Double ->
         if (value == 0.0) {
           //Skip empty segments
           return@fastForEachIndexed
@@ -448,7 +457,7 @@ class StackedBarPaintable(
       remainderEndNegative = if (remainderNegativeVisible) 0.0 else Double.NaN
 
       //Calculate the dead zones for the labels
-      style.valueLabelForbiddenValuesProvider.fastForEach { forbiddenValue: @Domain Double ->
+      configuration.valueLabelForbiddenValuesProvider.fastForEach { forbiddenValue: @Domain Double ->
         @DomainRelative val forbiddenRelative = valueRange.toDomainRelative(forbiddenValue)
         valueLabelForbiddenLocations.add(forbiddenRelative)
       }
@@ -508,13 +517,13 @@ class StackedBarPaintable(
 
       val gc = paintingContext.gc
       gc.translate(x, y)
-      gc.font(style.valueLabelFont)
+      gc.font(configuration.valueLabelFont)
 
       //Paint the background
-      if (style.paintBackground) {
-        gc.lineWidth = style.backgroundLineWidth
-        gc.fill(style.backgroundColor)
-        gc.stroke(style.backgroundBorderColor)
+      if (configuration.paintBackground) {
+        gc.lineWidth = configuration.backgroundLineWidth
+        gc.fill(configuration.backgroundColor)
+        gc.stroke(configuration.backgroundBorderColor)
 
         val boundingBox = boundingBox(paintingContext)
         gc.fillRect(boundingBox)
@@ -522,7 +531,7 @@ class StackedBarPaintable(
       }
 
       //Delegate to the orientation dependent paint methods
-      when (style.orientation) {
+      when (configuration.orientation) {
         Orientation.Vertical -> paintVertically(paintingContext)
         Orientation.Horizontal -> paintHorizontally(paintingContext)
       }
@@ -570,7 +579,7 @@ class StackedBarPaintable(
     @Zoomed var barMinX: Double = Double.NaN
     @Zoomed var barMaxX: Double = Double.NaN
 
-    data.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
+    configuration.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
       if (value == 0.0) {
         //Skip empty segments
         return@fastForEachIndexed
@@ -592,16 +601,16 @@ class StackedBarPaintable(
       barMinX = barMinX.coerceAtMost(segmentStartX).coerceAtMost(segmentEndX)
       barMaxX = barMaxX.coerceAtLeast(segmentStartX).coerceAtLeast(segmentEndX)
 
-      val segmentColor = style.colorsProvider.valueAt(index)
+      val segmentColor = configuration.colorsProvider.valueAt(index)
       gc.fill(segmentColor)
       gc.stroke(segmentColor)
-      gc.fillRoundedRect(segmentStartX, boundingBox.top, segmentWidth, boundingBox.getHeight(), style.segmentRadii)
+      gc.fillRoundedRect(segmentStartX, boundingBox.top, segmentWidth, boundingBox.getHeight(), configuration.segmentRadii)
 
       //Paint the label (if enabled)
-      if (style.showValueLabels && (style.maxValueLabelWidth?.isPositive() == true)) {
+      if (configuration.showValueLabels && (configuration.maxValueLabelWidth?.isPositive() == true)) {
         //The gap of the label
-        @Zoomed val valueLabelGapVertical = height * 0.5 + style.valueLabelGapVertical
-        @Zoomed val valueLabelGapHorizontal = height * 0.5 + style.valueLabelGapHorizontal
+        @Zoomed val valueLabelGapVertical = height * 0.5 + configuration.valueLabelGapVertical
+        @Zoomed val valueLabelGapHorizontal = height * 0.5 + configuration.valueLabelGapHorizontal
 
         //The value-label of the segment is placed at its horizontal center
         @Zoomed var textLocation = segmentStartX + segmentWidth / 2.0
@@ -622,10 +631,10 @@ class StackedBarPaintable(
           }
         }
 
-        val labelText = style.valueLabelFormat.format(value)
+        val labelText = configuration.valueLabelFormat.format(value)
         val labelTextWidth = gc.calculateTextWidth(labelText)
 
-        @Zoomed val currentLabelLeft = textLocation + gc.calculateOffsetXWithAnchor(labelTextWidth, valueLabelGapHorizontal, style.valueLabelAnchorDirection.horizontalAlignment)
+        @Zoomed val currentLabelLeft = textLocation + gc.calculateOffsetXWithAnchor(labelTextWidth, valueLabelGapHorizontal, configuration.valueLabelAnchorDirection.horizontalAlignment)
         @Zoomed val currentLabelRight = currentLabelLeft + labelTextWidth
 
         //Is the label forbidden? (e.g. overlaps an axis?)
@@ -640,33 +649,33 @@ class StackedBarPaintable(
           (currentLabelLeft > rightModeLabelRight //below the lowest
             || currentLabelRight < leftMostLabelLeft) //above the highest
         ) {
-          gc.fill(style.valueLabelColor?.invoke() ?: segmentColor)
-          gc.fillText(labelText, textLocation, 0.0, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
+          gc.fill(configuration.valueLabelColor?.invoke() ?: segmentColor)
+          gc.fillText(labelText, textLocation, 0.0, configuration.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, configuration.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
 
           leftMostLabelLeft = min(leftMostLabelLeft, currentLabelLeft)
           rightModeLabelRight = max(rightModeLabelRight, currentLabelRight)
         } else {
           if (DebugFeature.OverlappingTexts.enabled(paintingContext)) {
             gc.fill(Color.orange)
-            gc.fillText(labelText, textLocation, 0.0, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
+            gc.fillText(labelText, textLocation, 0.0, configuration.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, configuration.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
           }
         }
       }
     }
 
-    if (style.showBorder) {
+    if (configuration.showBorder) {
       if (barMinX.isNaN().not() && barMaxX.isNaN().not()) {
-        gc.stroke(style.borderColor)
-        gc.lineWidth = style.borderLineWidth
+        gc.stroke(configuration.borderColor)
+        gc.lineWidth = configuration.borderLineWidth
         if (barMinX < barMaxX) {
-          gc.strokeRoundedRect(barMinX, boundingBox.top, barMaxX - barMinX, boundingBox.getHeight(), style.segmentRadii, StrokeLocation.Inside)
+          gc.strokeRoundedRect(barMinX, boundingBox.top, barMaxX - barMinX, boundingBox.getHeight(), configuration.segmentRadii, StrokeLocation.Inside)
         }
       }
     }
 
-    if (style.showRemainderAsSegment) {
-      gc.stroke(style.remainderSegmentBorderColor)
-      gc.lineWidth = style.remainderSegmentBorderLineWidth
+    if (configuration.showRemainderAsSegment) {
+      gc.stroke(configuration.remainderSegmentBorderColor)
+      gc.lineWidth = configuration.remainderSegmentBorderLineWidth
 
       //Positive
       if (layout.remainderNetSizePositive > 0.0) {
@@ -674,12 +683,12 @@ class StackedBarPaintable(
         @Zoomed val endX = calculator.domainRelative2zoomedX(layout.remainderStartPositive + layout.remainderNetSizePositive)
         @Zoomed val width = endX - startX
 
-        style.remainderSegmentBackgroundColor.get()?.let {
+        configuration.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
-          gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii)
+          gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), configuration.segmentRadii)
         }
 
-        gc.strokeRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii, StrokeLocation.Inside)
+        gc.strokeRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), configuration.segmentRadii, StrokeLocation.Inside)
       }
 
       //Negative
@@ -688,12 +697,12 @@ class StackedBarPaintable(
         @Zoomed val endX = calculator.domainRelative2zoomedX(layout.remainderStartNegative + layout.remainderNetSizeNegative)
         @Zoomed val width = endX - startX
 
-        style.remainderSegmentBackgroundColor.get()?.let {
+        configuration.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
-          gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii)
+          gc.fillRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), configuration.segmentRadii)
         }
 
-        gc.strokeRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), style.segmentRadii, StrokeLocation.Inside)
+        gc.strokeRoundedRect(startX, boundingBox.top, width, boundingBox.getHeight(), configuration.segmentRadii, StrokeLocation.Inside)
       }
     }
   }
@@ -741,7 +750,7 @@ class StackedBarPaintable(
     @Zoomed var barMinY: Double = Double.NaN
     @Zoomed var barMaxY: Double = Double.NaN
 
-    data.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
+    configuration.valuesProvider.fastForEachIndexed { index, value: @Domain Double ->
       if (value == 0.0) {
         //Skip empty segments
         return@fastForEachIndexed
@@ -763,17 +772,17 @@ class StackedBarPaintable(
       barMinY = barMinY.coerceAtMost(segmentStartY).coerceAtMost(segmentEndY)
       barMaxY = barMaxY.coerceAtLeast(segmentStartY).coerceAtLeast(segmentEndY)
 
-      val segmentColor = style.colorsProvider.valueAt(index)
+      val segmentColor = configuration.colorsProvider.valueAt(index)
       gc.fill(segmentColor)
       gc.stroke(segmentColor)
-      gc.fillRoundedRect(boundingBox.left, segmentStartY, boundingBox.getWidth(), segmentHeight, style.segmentRadii)
+      gc.fillRoundedRect(boundingBox.left, segmentStartY, boundingBox.getWidth(), segmentHeight, configuration.segmentRadii)
 
       //Paint the label (if enabled)
-      if (style.showValueLabels && (style.maxValueLabelWidth?.isPositive() == true)) {
+      if (configuration.showValueLabels && (configuration.maxValueLabelWidth?.isPositive() == true)) {
 
         //The gap of the label
-        @Zoomed val valueLabelGapHorizontal = width * 0.5 + style.valueLabelGapHorizontal
-        @Zoomed val valueLabelGapVertical = height * 0.5 + style.valueLabelGapVertical
+        @Zoomed val valueLabelGapHorizontal = width * 0.5 + configuration.valueLabelGapHorizontal
+        @Zoomed val valueLabelGapVertical = height * 0.5 + configuration.valueLabelGapVertical
 
         //The value-label of the segment is placed at its vertical center
         @Zoomed var textLocation = segmentStartY + segmentHeight / 2.0
@@ -794,7 +803,7 @@ class StackedBarPaintable(
           }
         }
 
-        @Zoomed val currentLabelTop = textLocation + gc.calculateOffsetYWithAnchor(labelHeight, valueLabelGapVertical, style.valueLabelAnchorDirection.verticalAlignment)
+        @Zoomed val currentLabelTop = textLocation + gc.calculateOffsetYWithAnchor(labelHeight, valueLabelGapVertical, configuration.valueLabelAnchorDirection.verticalAlignment)
         @Zoomed val currentLabelBottom = currentLabelTop + labelHeight
 
         //Is the label forbidden? (e.g. overlaps an axis?)
@@ -809,33 +818,33 @@ class StackedBarPaintable(
           (currentLabelTop > undermostLabelBottom //below the lowest
             || currentLabelBottom < topmostLabelTop) //above the highest
         ) {
-          gc.fill(style.valueLabelColor?.invoke() ?: segmentColor)
-          gc.fillText(style.valueLabelFormat.format(value), 0.0, textLocation, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
+          gc.fill(configuration.valueLabelColor?.invoke() ?: segmentColor)
+          gc.fillText(configuration.valueLabelFormat.format(value), 0.0, textLocation, configuration.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, configuration.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
 
           topmostLabelTop = min(topmostLabelTop, currentLabelTop)
           undermostLabelBottom = max(undermostLabelBottom, currentLabelBottom)
         } else {
           if (DebugFeature.OverlappingTexts.enabled(paintingContext)) {
             gc.fill(Color.orange)
-            gc.fillText(style.valueLabelFormat.format(value), 0.0, textLocation, style.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, style.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
+            gc.fillText(configuration.valueLabelFormat.format(value), 0.0, textLocation, configuration.valueLabelAnchorDirection, valueLabelGapHorizontal, valueLabelGapVertical, configuration.maxValueLabelWidth, stringShortener = CanvasStringShortener.AllOrNothing)
           }
         }
       }
     }
 
-    if (style.showBorder) {
+    if (configuration.showBorder) {
       if (barMinY.isNaN().not() && barMaxY.isNaN().not()) {
-        gc.stroke(style.borderColor)
-        gc.lineWidth = style.borderLineWidth
+        gc.stroke(configuration.borderColor)
+        gc.lineWidth = configuration.borderLineWidth
         if (barMinY < barMaxY) {
-          gc.strokeRoundedRect(boundingBox.left, barMinY, boundingBox.getWidth(), barMaxY - barMinY, style.segmentRadii, StrokeLocation.Inside)
+          gc.strokeRoundedRect(boundingBox.left, barMinY, boundingBox.getWidth(), barMaxY - barMinY, configuration.segmentRadii, StrokeLocation.Inside)
         }
       }
     }
 
-    if (style.showRemainderAsSegment) {
-      gc.stroke(style.remainderSegmentBorderColor)
-      gc.lineWidth = style.remainderSegmentBorderLineWidth
+    if (configuration.showRemainderAsSegment) {
+      gc.stroke(configuration.remainderSegmentBorderColor)
+      gc.lineWidth = configuration.remainderSegmentBorderLineWidth
 
       //Positive
       if (layout.remainderNetSizePositive > 0.0) {
@@ -843,12 +852,12 @@ class StackedBarPaintable(
         @Zoomed val endY = calculator.domainRelative2zoomedY(layout.remainderStartPositive + layout.remainderNetSizePositive)
         @Zoomed val height = endY - startY
 
-        style.remainderSegmentBackgroundColor.get()?.let {
+        configuration.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
-          gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii)
+          gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, configuration.segmentRadii)
         }
 
-        gc.strokeRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii, StrokeLocation.Inside)
+        gc.strokeRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, configuration.segmentRadii, StrokeLocation.Inside)
       }
 
       //Negative
@@ -857,34 +866,33 @@ class StackedBarPaintable(
         @Zoomed val endY = calculator.domainRelative2zoomedY(layout.remainderStartNegative + layout.remainderNetSizeNegative)
         @Zoomed val height = endY - startY
 
-        style.remainderSegmentBackgroundColor.get()?.let {
+        configuration.remainderSegmentBackgroundColor.get()?.let {
           gc.fill(it)
-          gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii)
+          gc.fillRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, configuration.segmentRadii)
         }
 
-        gc.strokeRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, style.segmentRadii, StrokeLocation.Inside)
+        gc.strokeRoundedRect(boundingBox.left, startY, boundingBox.getWidth(), height, configuration.segmentRadii, StrokeLocation.Inside)
       }
     }
   }
-
-  class Data(
-    /**
-     * Provides the values (Index: StackedBarValueIndex)
-     */
-    var valuesProvider: @Domain DoublesProvider = DefaultDoublesProvider(listOf(1.0, 5.0, 4.0)),
-    /**
-     * Stacked bars do only make sense with a linear value range
-     */
-    var valueRange: @Domain LinearValueRange = ValueRange.linear(0.0, 10.0),
-  )
 
   @MustBeDocumented
   @Retention(AnnotationRetention.SOURCE)
   @MultiProviderIndexContextAnnotation
   annotation class StackedBarValueIndex
 
-  @StyleDsl
-  class Style {
+  @ConfigurationDsl
+  class Configuration {
+    /**
+     * Provides the values (Index: StackedBarValueIndex)
+     */
+    var valuesProvider: @Domain DoublesProvider = DefaultDoublesProvider(listOf(1.0, 5.0, 4.0))
+
+    /**
+     * Stacked bars do only make sense with a linear value range
+     */
+    var valueRange: @Domain LinearValueRange = ValueRange.linear(0.0, 10.0)
+
     /**
      * The orientation of the bar.
      * The direction of the bar depends on the X/Y axis orientation.

@@ -16,7 +16,7 @@
 package com.meistercharts.algorithms.layers.barchart
 
 import com.meistercharts.algorithms.layers.LayerPaintingContext
-import com.meistercharts.canvas.StyleDsl
+import com.meistercharts.canvas.ConfigurationDsl
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.saved
@@ -41,9 +41,9 @@ import it.neckar.open.unit.other.px
  * Paints a single bar with a label - with a configurable total height
  */
 class StackedBarWithLabelPaintable(
-  val data: Data = Data(),
   width: @px Double = 15.0,
-  height: @px Double = 200.0
+  height: @px Double = 200.0,
+  additionalConfiguration: Configuration.() -> Unit = {},
 ) : Paintable {
 
   constructor(
@@ -53,13 +53,16 @@ class StackedBarWithLabelPaintable(
     colors: List<ColorProvider>,
     width: @px Double = 15.0,
     height: @px Double = 200.0,
-  ) : this(Data(name, valuesProvider, valueRange), width, height) {
-    stackedBarPaintable.style.colorsProvider = MultiProvider.forListModuloProvider(values = colors, fallback = Color.gray())
-  }
+  ) : this(width, height, {
+    this.name = name
+    this.valuesProvider = valuesProvider
+    this.valueRange = valueRange
+    this.colorsProvider = MultiProvider.forListModuloProvider(values = colors, fallback = Color.gray())
+  })
 
-  val style: Style = Style()
+  val stackedBarPaintable: StackedBarPaintable = StackedBarPaintable(width, height)
 
-  val stackedBarPaintable: StackedBarPaintable = StackedBarPaintable(StackedBarPaintable.Data(data.valuesProvider, data.valueRange), width, height)
+  val configuration: Configuration = Configuration().also(additionalConfiguration)
 
   var width: Double by stackedBarPaintable::width
   var height: Double by stackedBarPaintable::height
@@ -81,17 +84,43 @@ class StackedBarWithLabelPaintable(
     }
 
     gc.font(FontDescriptorFragment.L)
-    gc.paintTextBox(line = data.name, anchorDirection = Direction.TopCenter, anchorGapHorizontal = 5.0, anchorGapVertical = 5.0, boxStyle = style.labelBoxStyle, textColor = style.labelColor)
+    gc.paintTextBox(line = configuration.name, anchorDirection = Direction.TopCenter, anchorGapHorizontal = 5.0, anchorGapVertical = 5.0, boxStyle = configuration.labelBoxStyle, textColor = configuration.labelColor)
   }
 
-  class Data(
-    var name: String = "",
-    var valuesProvider: DoublesProvider = DefaultDoublesProvider(listOf(5.0, 6.0, 7.0)),
-    var valueRange: LinearValueRange = ValueRange.default
-  )
+  @ConfigurationDsl
+  inner class Configuration {
+    /**
+     * The label shown above the bar
+     */
+    var name: String = ""
 
-  @StyleDsl
-  class Style {
+    /**
+     * Delegates to the inner stacked bar: the values shown in the bar.
+     */
+    var valuesProvider: DoublesProvider
+      get() = stackedBarPaintable.configuration.valuesProvider
+      set(value) {
+        stackedBarPaintable.configuration.valuesProvider = value
+      }
+
+    /**
+     * Delegates to the inner stacked bar: the value range of the bar.
+     */
+    var valueRange: LinearValueRange
+      get() = stackedBarPaintable.configuration.valueRange
+      set(value) {
+        stackedBarPaintable.configuration.valueRange = value
+      }
+
+    /**
+     * Delegates to the inner stacked bar: the colors of the bar segments.
+     */
+    var colorsProvider: MultiProvider<StackedBarPaintable.StackedBarValueIndex, Color>
+      get() = stackedBarPaintable.configuration.colorsProvider
+      set(value) {
+        stackedBarPaintable.configuration.colorsProvider = value
+      }
+
     /**
      * The color of the label text
      */

@@ -39,7 +39,7 @@ class StackedBarsPainter(
   /**
    * The paintable used to paint the stacked bars
    */
-  val stackedBarPaintable: StackedBarPaintable = StackedBarPaintable(StackedBarPaintable.Data(), 1.0, 1.0) {}
+  val stackedBarPaintable: StackedBarPaintable = StackedBarPaintable(1.0, 1.0) {}
 
   override fun paintingVariables(): CategoryPainterPaintingVariables {
     return paintingVariables
@@ -100,31 +100,31 @@ class StackedBarsPainter(
     @Zoomed val height = chartCalculator.contentAreaRelative2zoomedY(1.0)
 
     paintingContext.gc.saved {
-      stackedBarPaintable.style.orientation = Orientation.Vertical
-      stackedBarPaintable.data.valuesProvider = valuesProvider
+      stackedBarPaintable.configuration.orientation = Orientation.Vertical
+      stackedBarPaintable.configuration.valuesProvider = valuesProvider
       stackedBarPaintable.width = paintingVariables.actualSize
       stackedBarPaintable.height = height
 
       //How much space for the value label?
-      val horizontalAlignment = stackedBarPaintable.style.valueLabelAnchorDirection.horizontalAlignment
+      val horizontalAlignment = stackedBarPaintable.configuration.valueLabelAnchorDirection.horizontalAlignment
       if (horizontalAlignment != HorizontalAlignment.Center) {
         val isFirst = categoryIndex.isFirst
 
-        stackedBarPaintable.style.maxValueLabelWidth =
+        stackedBarPaintable.configuration.maxValueLabelWidth =
           when {
             (isFirst && horizontalAlignment == HorizontalAlignment.Right) ||
               (isLast && horizontalAlignment == HorizontalAlignment.Left) -> {
               //First column. We do *not* want to paint into the axis. Therefore, just very little space is available
-              categoryWidth / 2.0 - stackedBarPaintable.width / 2.0 - stackedBarPaintable.style.valueLabelGapHorizontal
+              categoryWidth / 2.0 - stackedBarPaintable.width / 2.0 - stackedBarPaintable.configuration.valueLabelGapHorizontal
             }
 
             else -> {
               //we use all the space until the next (on the left side) bar. We use twice the value label gab to the neighbor bar (which we are not related to)
-              categoryWidth - stackedBarPaintable.width - stackedBarPaintable.style.valueLabelGapHorizontal * 3
+              categoryWidth - stackedBarPaintable.width - stackedBarPaintable.configuration.valueLabelGapHorizontal * 3
             }
           }
       } else {
-        stackedBarPaintable.style.maxValueLabelWidth = null
+        stackedBarPaintable.configuration.maxValueLabelWidth = null
       }
 
       stackedBarPaintable.paint(paintingContext, 0.0, chartCalculator.domainRelative2windowY(0.0))
@@ -151,13 +151,13 @@ class StackedBarsPainter(
     @Zoomed val width = chartCalculator.contentAreaRelative2zoomedX(1.0)
 
     paintingContext.gc.saved {
-      stackedBarPaintable.style.orientation = Orientation.Horizontal
-      stackedBarPaintable.data.valuesProvider = valuesProvider
+      stackedBarPaintable.configuration.orientation = Orientation.Horizontal
+      stackedBarPaintable.configuration.valuesProvider = valuesProvider
       stackedBarPaintable.width = width
       stackedBarPaintable.height = paintingVariables.actualSize
 
       //How much space for the value label?
-      stackedBarPaintable.style.maxValueLabelWidth = width
+      stackedBarPaintable.configuration.maxValueLabelWidth = width
 
       stackedBarPaintable.paint(paintingContext, chartCalculator.domainRelative2windowX(0.0), 0.0)
     }

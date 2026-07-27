@@ -83,23 +83,23 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.segmentColors?.let { colorCodes ->
-    this.stackedBarsPainter.stackedBarPaintable.style.colorsProvider = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver())
+    this.stackedBarsPainter.stackedBarPaintable.configuration.colorsProvider = MultiProvider.forListModulo(colorCodes.map { it.toColor() }, Color.silver())
   }
 
   jsStyle.remainderSegmentBorderColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBorderColor = it.asProvider()
+    this.stackedBarsPainter.stackedBarPaintable.configuration.remainderSegmentBorderColor = it.asProvider()
   }
 
   jsStyle.remainderSegmentBackgroundColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBackgroundColor = it.asProvider()
+    this.stackedBarsPainter.stackedBarPaintable.configuration.remainderSegmentBackgroundColor = it.asProvider()
   }
 
   jsStyle.remainderSegmentBorderWidth?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.remainderSegmentBorderLineWidth = it
+    this.stackedBarsPainter.stackedBarPaintable.configuration.remainderSegmentBorderLineWidth = it
   }
 
   jsStyle.valueFormat?.toNumberFormat()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.valueLabelFormat = it
+    this.stackedBarsPainter.stackedBarPaintable.configuration.valueLabelFormat = it
   }
 
   jsStyle.categoryAxisStyle?.let { jsCategoryAxisStyle ->
@@ -130,7 +130,7 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
   jsStyle.valueLabelColor?.toColor()?.let {
-    this.stackedBarsPainter.stackedBarPaintable.style.valueLabelColor = it.asProvider()
+    this.stackedBarsPainter.stackedBarPaintable.configuration.valueLabelColor = it.asProvider()
   }
 
 

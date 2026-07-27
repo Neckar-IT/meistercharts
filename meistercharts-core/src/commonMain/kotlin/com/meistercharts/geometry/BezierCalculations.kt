@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas.geometry
+package com.meistercharts.geometry
 
 import it.neckar.geometry.Coordinates
 import it.neckar.open.annotations.Allocates

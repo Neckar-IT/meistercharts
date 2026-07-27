@@ -167,7 +167,7 @@ class BulletChartBalloonTooltipSupport(
   }
 
   fun applyBalloonTooltipSizes(currentValueSymbolSize: Size, barSymbolSize: Size) {
-    tooltipContentPaintable.delegate.style.symbols = createSymbolsForBallonTooltipValueAndRange(currentValueSymbolSize, barSymbolSize)
+    tooltipContentPaintable.delegate.configuration.symbols = createSymbolsForBallonTooltipValueAndRange(currentValueSymbolSize, barSymbolSize)
   }
 
   /**

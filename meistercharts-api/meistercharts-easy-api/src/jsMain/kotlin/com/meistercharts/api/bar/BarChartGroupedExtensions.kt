@@ -180,12 +180,12 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     }
 
     jsTooltipStyle.tooltipBoxStyle?.color?.toColor()?.let {
-      this.balloonTooltipSupport.symbolAndLegendPaintable.style.labelColors = MultiProvider.always(it)
+      this.balloonTooltipSupport.symbolAndLegendPaintable.configuration.labelColors = MultiProvider.always(it)
       this.balloonTooltipSupport.tooltipContentPaintable.headlinePaintable.style.labelColor = it.asProvider()
     }
 
     jsTooltipStyle.labelWidth?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.maxLabelWidth = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.maxLabelWidth = it
     }
 
     jsTooltipStyle.symbolSizes?.toModelSizes()?.let {
@@ -196,15 +196,15 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     }
 
     jsTooltipStyle.symbolLabelGap?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.symbolLabelGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.symbolLabelGap = it
     }
 
     jsTooltipStyle.entriesGap?.let {
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.entriesGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.entriesGap = it
     }
 
     jsTooltipStyle.tooltipFont?.toFontDescriptorFragment()?.let { it ->
-      this.balloonTooltipSupport.tooltipContentPaintable.delegate.style.textFont = it.asProvider()
+      this.balloonTooltipSupport.tooltipContentPaintable.delegate.configuration.textFont = it.asProvider()
     }
 
     jsTooltipStyle.headlineFont?.toFontDescriptorFragment()?.let { it ->
@@ -212,7 +212,7 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     }
 
     jsTooltipStyle.headlineMarginBottom?.let { it ->
-      this.balloonTooltipSupport.tooltipContentPaintable.stackedPaintablesPaintable.style.entriesGap = it
+      this.balloonTooltipSupport.tooltipContentPaintable.stackedPaintablesPaintable.configuration.entriesGap = it
     }
   }
 

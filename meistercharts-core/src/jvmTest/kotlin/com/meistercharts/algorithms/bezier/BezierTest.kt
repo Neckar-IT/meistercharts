@@ -17,8 +17,8 @@ package com.meistercharts.algorithms.bezier
 
 import assertk.*
 import assertk.assertions.*
-import com.meistercharts.canvas.geometry.Bezier
-import com.meistercharts.canvas.geometry.length
+import com.meistercharts.geometry.Bezier
+import com.meistercharts.geometry.length
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Rectangle
 import org.junit.jupiter.api.Test

@@ -32,9 +32,9 @@ import org.junit.jupiter.api.Test
 class StackedBarPaintableTest {
   @Test
   fun testOneValue() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(5.0), ValueRange.linear(-10.0, 10.0))
-
-    val paintable = StackedBarPaintable(data, 10.0, 500.0) {
+    val paintable = StackedBarPaintable(10.0, 500.0) {
+      valuesProvider = DoublesProvider.forDoubles(5.0)
+      valueRange = ValueRange.linear(-10.0, 10.0)
       showRemainderAsSegment = true
       segmentsGap = 2.0
     }
@@ -82,9 +82,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun testVerySimple() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(4.0, -3.0), ValueRange.linear(-10.0, 10.0))
-
-    val paintable = StackedBarPaintable(data, 10.0, 500.0) {
+    val paintable = StackedBarPaintable(10.0, 500.0) {
+      valuesProvider = DoublesProvider.forDoubles(4.0, -3.0)
+      valueRange = ValueRange.linear(-10.0, 10.0)
       showRemainderAsSegment = true
       segmentsGap = 2.0
     }
@@ -132,9 +132,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun testBug() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(10.0, -5.0, -3.0, 0.0), ValueRange.linear(-10.0, 14.0))
-
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(10.0, -5.0, -3.0, 0.0)
+      valueRange = ValueRange.linear(-10.0, 14.0)
       showRemainderAsSegment = true
       segmentsGap = 2.0
     }
@@ -183,9 +183,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun testBug2() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(-10.0, 7.0, 7.0, 0.0), ValueRange.linear(-10.0, 14.0))
-
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(-10.0, 7.0, 7.0, 0.0)
+      valueRange = ValueRange.linear(-10.0, 14.0)
       showRemainderAsSegment = true
       segmentsGap = 2.0
     }
@@ -231,8 +231,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun test1Neg1Pos() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(-2.0, 2.0), ValueRange.linear(-5.0, 5.0))
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(-2.0, 2.0)
+      valueRange = ValueRange.linear(-5.0, 5.0)
       segmentsGap = 2.0
       showRemainderAsSegment = false
     }
@@ -283,8 +284,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun testSimpleRemainder() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(5.0), ValueRange.linear(0.0, 10.0))
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(5.0)
+      valueRange = ValueRange.linear(0.0, 10.0)
       segmentsGap = 2.0
       showRemainderAsSegment = false
     }
@@ -296,7 +298,7 @@ class StackedBarPaintableTest {
     chartState.contentAreaSize = Size(800.0, 600.0)
 
     run {
-      paintable.style.showRemainderAsSegment = false
+      paintable.configuration.showRemainderAsSegment = false
 
       paintable.layout.calculateLayout(ChartCalculator(chartState))
 
@@ -317,7 +319,7 @@ class StackedBarPaintableTest {
     }
 
     run {
-      paintable.style.showRemainderAsSegment = true
+      paintable.configuration.showRemainderAsSegment = true
 
       paintable.layout.calculateLayout(ChartCalculator(chartState))
 
@@ -342,8 +344,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun test2Pos() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(2.0, 2.0), ValueRange.linear(0.0, 10.0))
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(2.0, 2.0)
+      valueRange = ValueRange.linear(0.0, 10.0)
       segmentsGap = 2.0
       showRemainderAsSegment = false
     }
@@ -355,7 +358,7 @@ class StackedBarPaintableTest {
     chartState.contentAreaSize = Size(800.0, 600.0)
 
     run {
-      paintable.style.showRemainderAsSegment = false
+      paintable.configuration.showRemainderAsSegment = false
 
       paintable.layout.calculateLayout(ChartCalculator(chartState))
 
@@ -383,7 +386,7 @@ class StackedBarPaintableTest {
 
     run {
       //With remainder
-      paintable.style.showRemainderAsSegment = true
+      paintable.configuration.showRemainderAsSegment = true
 
       paintable.layout.calculateLayout(ChartCalculator(chartState))
 
@@ -412,8 +415,9 @@ class StackedBarPaintableTest {
 
   @Test
   fun test2Neg() {
-    val data = StackedBarPaintable.Data(valuesProvider = DoublesProvider.forDoubles(-2.0, -2.0), ValueRange.linear(-10.0, 0.0))
-    val paintable = StackedBarPaintable(data, 10.0, 50.0) {
+    val paintable = StackedBarPaintable(10.0, 50.0) {
+      valuesProvider = DoublesProvider.forDoubles(-2.0, -2.0)
+      valueRange = ValueRange.linear(-10.0, 0.0)
       segmentsGap = 2.0
       showRemainderAsSegment = false
     }

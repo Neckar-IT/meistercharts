@@ -89,7 +89,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
    * The painter used by the [categoryLayer]
    */
   val stackedBarsPainter: StackedBarsPainter = StackedBarsPainter().apply {
-    stackedBarPaintable.data.valueRange = defaultValueRange
+    stackedBarPaintable.configuration.valueRange = defaultValueRange
   }
 
   /**
@@ -226,10 +226,10 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      */
     var valueRange: LinearValueRange
       get() {
-        return stackedBarsPainter.stackedBarPaintable.data.valueRange
+        return stackedBarsPainter.stackedBarPaintable.configuration.valueRange
       }
       set(value) {
-        stackedBarsPainter.stackedBarPaintable.data.valueRange = value
+        stackedBarsPainter.stackedBarPaintable.configuration.valueRange = value
       }
 
     /**
@@ -288,7 +288,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
      * Sets the font to be used for the value labels
      */
     fun applyValueLabelFont(font: FontDescriptorFragment) {
-      stackedBarsPainter.stackedBarPaintable.style.valueLabelFont = font
+      stackedBarsPainter.stackedBarPaintable.configuration.valueLabelFont = font
     }
 
     /**
@@ -315,7 +315,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
       categoryLayer.configuration.orientation = CategoryChartOrientation.HorizontalTop
       categoryAxisLayer.configuration.side = Side.Left
       valueAxisLayer.configuration.side = Side.Bottom
-      stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Horizontal)
+      stackedBarsPainter.stackedBarPaintable.configuration.applyOrientation(Orientation.Horizontal)
       contentViewportMargin = Insets.of(10.0, 10.0, 25.0, 80.0)
     }
 
@@ -327,7 +327,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
       categoryLayer.configuration.orientation = CategoryChartOrientation.VerticalLeft
       categoryAxisLayer.configuration.side = Side.Bottom
       valueAxisLayer.configuration.side = Side.Left
-      stackedBarsPainter.stackedBarPaintable.style.applyOrientation(Orientation.Vertical)
+      stackedBarsPainter.stackedBarPaintable.configuration.applyOrientation(Orientation.Vertical)
       contentViewportMargin = Insets.of(10.0, 10.0, 40.0, 30.0)
     }
 
@@ -338,7 +338,7 @@ class BarChartStackedGestalt @JvmOverloads constructor(
     fun applyValueRange(valueRange: LinearValueRange) {
       this.valueRange = valueRange
       valueAxisLayer.configuration.applyLinearScale()
-      stackedBarsPainter.stackedBarPaintable.data.valueRange = valueRange
+      stackedBarsPainter.stackedBarPaintable.configuration.valueRange = valueRange
     }
 
   }

@@ -19,7 +19,7 @@ import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.annotations.DomainRelative
 import com.meistercharts.annotations.Window
 import com.meistercharts.canvas.CanvasRenderingContext
-import com.meistercharts.canvas.geometry.BezierCurveRect
+import com.meistercharts.geometry.BezierCurveRect
 import com.meistercharts.canvas.paintable.Paintable
 import com.meistercharts.canvas.path
 import com.meistercharts.canvas.stroke

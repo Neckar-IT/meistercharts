@@ -130,7 +130,7 @@ class CategorySeriesModelBalloonTooltipSupport(
    * Applies the symbol size for the legend
    */
   fun applyLegendSymbolSize(symbolSize: Size) {
-    tooltipContentPaintable.delegate.style.symbols = SymbolAndLabelLegendPaintable.defaultSymbols(symbolSize, colorsFilteredAndSorted)
+    tooltipContentPaintable.delegate.configuration.symbols = SymbolAndLabelLegendPaintable.defaultSymbols(symbolSize, colorsFilteredAndSorted)
   }
 
   /**
