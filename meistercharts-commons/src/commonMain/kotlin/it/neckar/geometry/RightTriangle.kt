@@ -62,6 +62,34 @@ enum class RightTriangleType {
       MissingCornerInFourthQuadrant -> "Ecke fehlt links oben"
     }
   }
+
+  /**
+   * Returns true if the given point lies on the filled side of the hypotenuse of the triangle that fills the given bounding rectangle.
+   *
+   * Attention: the point is *not* checked against the bounding rectangle itself. Callers that need a point-in-triangle
+   * test check the bounding rectangle first and this method second.
+   */
+  fun isPointOnFilledSide(
+    pointX: Double,
+    pointY: Double,
+    x: Double,
+    y: Double,
+    width: @MayBeNegative Double,
+    height: @MayBeNegative Double,
+  ): Boolean {
+    val left = x
+    val right = x + width
+    val top = y
+    val bottom = y + height
+
+    //Top and bottom are switched because the planner defines y=0 as the bottom of the screen, not the top
+    return when (this) {
+      MissingCornerInFirstQuadrant -> pointIsLeftOfLine(right, top, left, bottom, pointX, pointY)
+      MissingCornerInSecondQuadrant -> pointIsLeftOfLine(left, top, right, bottom, pointX, pointY)
+      MissingCornerInThirdQuadrant -> pointIsLeftOfLine(left, bottom, right, top, pointX, pointY)
+      MissingCornerInFourthQuadrant -> pointIsLeftOfLine(right, bottom, left, top, pointX, pointY)
+    }.not()
+  }
 }
 
 /**

@@ -1267,25 +1267,43 @@ fun String.encodeForDockerTag(): String {
 
 
 /**
- * Declares the OpenAPI spec produced by [backendModulePath]'s `openapiSpec` task (its
- * `build/generated/openapi` directory) as an input of this task — typically `pnpmRunBuild`.
+ * Declares both ends of the Orval code generation that runs inside this task — typically
+ * `pnpmRunBuild`, whose `pnpm run build:noDeps` starts with `openapi:convert`:
  *
- * Orval-based frontends generate their TypeScript client from that backend JSON. Once
- * `pnpmRunBuild` declares inputs/outputs (issue #2501), it would otherwise report the frontend
- * build UP-TO-DATE after a backend API change and ship stale generated types. Declaring the spec
- * directory as an input makes the frontend rebuild when the backend API changes.
+ * - **Input**: the OpenAPI specs produced by the `openapiSpec` task of every module in
+ *   [backendModulePaths] (their `build/generated/openapi` directories). Pass more than one for
+ *   packages that merge several backend specs before generating, as `typescript-utils` does via
+ *   `openapi-merge.sh`. Once `pnpmRunBuild` declares inputs/outputs (issue #2501), it would
+ *   otherwise report the build UP-TO-DATE after a backend API change and ship stale generated
+ *   types.
+ * - **Output**: this project's `build/generated/open-api` directory, where Orval writes the
+ *   generated TypeScript types. `pnpmRunBuild` otherwise only declares `dist`, which lives in
+ *   the project root and therefore survives `gradle clean`. With the generated types undeclared,
+ *   `gradle clean && gradle build` left `dist` in place, found every input unchanged, reported
+ *   `pnpmRunBuild` UP-TO-DATE, and never re-ran Orval — so `build/generated/open-api` stayed
+ *   deleted. A build-cache hit had the same effect, restoring `dist` alone.
  *
- * The build-order `dependsOn("$backendModulePath:openapiSpec")` is declared separately in each
- * frontend `build.gradle.kts`; an input directory alone does not create a task dependency. Mirrors
- * the wiring in `OrvalConvertPlugin`.
+ * The build-order `dependsOn("<backendModulePath>:openapiSpec")` is declared separately in each
+ * consuming `build.gradle.kts`; an input directory alone does not create a task dependency. Mirrors
+ * the wiring in `OrvalConvertPlugin`, which declares the same two directories for the dev-loop
+ * `orvalConvert` task.
  */
-fun Task.declaresBackendOpenApiSpecInput(backendModulePath: String) {
-  val openapiSpecDir = project.rootProject.project(backendModulePath)
-    .layout.buildDirectory.dir("generated/openapi")
+fun Task.declaresOrvalCodegen(vararg backendModulePaths: String) {
+  require(backendModulePaths.isNotEmpty()) {
+    "Expected at least one backend module path for the Orval codegen inputs of <$path>"
+  }
 
-  inputs.dir(openapiSpecDir)
-    .withPropertyName("backendOpenApiSpec")
+  val openapiSpecDirs = backendModulePaths.map { backendModulePath ->
+    project.rootProject.project(backendModulePath)
+      .layout.buildDirectory.dir("generated/openapi")
+  }
+
+  inputs.files(openapiSpecDirs)
+    .withPropertyName("backendOpenApiSpecs")
     .withPathSensitivity(PathSensitivity.RELATIVE)
+
+  outputs.dir(project.layout.buildDirectory.dir("generated/open-api"))
+    .withPropertyName("orvalGeneratedTypes")
 }
 
 /**

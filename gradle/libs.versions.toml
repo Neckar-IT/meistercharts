@@ -76,6 +76,8 @@ com-atlassian-commonmark = "0.17.0"
 
 org-commonmark = "0.29.0"
 
+# BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
+# jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
 org-bouncycastle = "1.85"
 
 ktor = "3.5.1"
@@ -344,8 +346,6 @@ kotlin-react-router-dom = { group = "org.jetbrains.kotlin-wrappers", name = "kot
 kotlin-css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "org-jetbrains-kotlin-wrappers" }
 
 chrome-devtools-kotlin = "org.hildan.chrome:chrome-devtools-kotlin:8.3.0-1589152"
-
-bcprov-jdk15to18 = { group = "org.bouncycastle", name = "bcprov-jdk15to18", version.ref = "org-bouncycastle" }
 
 commons-codec = "commons-codec:commons-codec:1.22.0"
 

@@ -19,7 +19,6 @@ import com.meistercharts.annotations.Window
 import com.meistercharts.annotations.Zoomed
 import it.neckar.geometry.RightTriangleType
 import it.neckar.open.kotlin.lang.betweenInclusive
-import it.neckar.open.kotlin.lang.pointIsLeftOfLine
 import it.neckar.open.unit.number.MayBeNegative
 
 class TriangleBoundsMultiBuffer : BoundsMultiBuffer() {
@@ -101,7 +100,7 @@ class TriangleBoundsMultiBuffer : BoundsMultiBuffer() {
     fastForEachIndexed { index, x, y, width: @MayBeNegative Double, height: @MayBeNegative Double, rightTriangleType: RightTriangleType? ->
       if (locationX.betweenInclusive(x, x + width)
         && locationY.betweenInclusive(y, y + height)
-        && rightTriangleType?.doesOverlap(locationX, locationY, x, y, width, height) == true
+        && rightTriangleType?.isPointOnFilledSide(locationX, locationY, x, y, width, height) == true
         && matcher(index)
       ) {
         return index
@@ -121,7 +120,7 @@ class TriangleBoundsMultiBuffer : BoundsMultiBuffer() {
     fastForEachIndexedReverse { index, x, y, width: @MayBeNegative Double, height: @MayBeNegative Double, rightTriangleType: RightTriangleType? ->
       if (locationX.betweenInclusive(x, x + width)
         && locationY.betweenInclusive(y, y + height)
-        && rightTriangleType?.doesOverlap(locationX, locationY, x, y, width, height) == true
+        && rightTriangleType?.isPointOnFilledSide(locationX, locationY, x, y, width, height) == true
         && matcher(index)
       ) {
         return index
@@ -129,30 +128,5 @@ class TriangleBoundsMultiBuffer : BoundsMultiBuffer() {
     }
 
     return null
-  }
-
-  private fun RightTriangleType.doesOverlap(locationX: Double, locationY: Double, x: Double, y: Double, width: @MayBeNegative Double, height: @MayBeNegative Double): Boolean {
-    val right = x + width
-    val top = y
-    val left = x
-    val bottom = y + height
-    /**
-     * Check for each point of the other shape that it lies "left" of the triangle's hypotenuse
-     * We already know that at this point of the algorithm, the other shape is outside the triangle's bounding rectangle
-     * This basically means that, if all the other shape's points are on the same side of the hypotenuse that is "outside" of the triangle, they do not overlap
-     * In this case, if one point is "inside" the triangle, there is a collision
-     */
-    when (this) {
-      /**
-       * Calculate with the start and end point for the hypotenuse for this triangle
-       * Top and Bottom are switched as the planner defines y=0 as the bottom of the screen, not the top
-       */
-      RightTriangleType.MissingCornerInFirstQuadrant -> if (pointIsLeftOfLine(right, top, left, bottom, locationX, locationY)) return false
-      RightTriangleType.MissingCornerInSecondQuadrant -> if (pointIsLeftOfLine(left, top, right, bottom, locationX, locationY)) return false
-      RightTriangleType.MissingCornerInThirdQuadrant -> if (pointIsLeftOfLine(left, bottom, right, top, locationX, locationY)) return false
-      RightTriangleType.MissingCornerInFourthQuadrant -> if (pointIsLeftOfLine(right, bottom, left, top, locationX, locationY)) return false
-    }
-
-    return true
   }
 }
