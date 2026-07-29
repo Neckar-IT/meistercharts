@@ -39,6 +39,9 @@ de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-unde
 
 me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 
+# Fails the build when two coordinates ship the same classes. Configured in the root build.gradle.kts.
+jvm-dependency-conflict-resolution = { id = "org.gradlex.jvm-dependency-conflict-resolution", version = "2.5" }
+
 [versions]
 
 kotlin = "2.4.10"
@@ -389,8 +392,6 @@ commons-compress = "org.apache.commons:commons-compress:1.28.0"
 
 kotlin-csv = { group = "com.github.doyaaaaaken", name = "kotlin-csv", version.ref = "kotlin-csv" }
 
-docker-java = { group = "com.github.docker-java", name = "docker-java", version.ref = "com-github-docker-java" }
-
 docker-java-transport-httpclient5 = { group = "com.github.docker-java", name = "docker-java-transport-httpclient5", version.ref = "com-github-docker-java" }
 
 miglayout-javafx = { group = "com.miglayout", name = "miglayout-javafx", version.ref = "com-miglayout" }
@@ -471,8 +472,6 @@ netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty
 netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
 
 threeten-extra = "org.threeten:threeten-extra:1.10.0"
-
-javax-mail-api = "javax.mail:javax.mail-api:1.6.2"
 
 javax-mail = "com.sun.mail:javax.mail:1.6.2"
 
