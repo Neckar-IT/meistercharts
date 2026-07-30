@@ -149,7 +149,6 @@ class HistoryBucketFindTest {
 
     assertThat(foundBucket).isSameAs(expectedBucket)
     assertThat(foundTimestampIndex).isEqualTo(expectedTimestampIndex)
-    requireNotNull(foundBucket)
-    assertThat(foundBucket!!.chunk.timestampCenter(expectedTimestampIndex)).isEqualToTimeStamp(expectedTime)
+    assertThat(requireNotNull(foundBucket).chunk.timestampCenter(expectedTimestampIndex)).isEqualToTimeStamp(expectedTime)
   }
 }

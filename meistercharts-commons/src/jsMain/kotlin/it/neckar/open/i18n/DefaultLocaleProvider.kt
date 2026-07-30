@@ -30,7 +30,6 @@ package it.neckar.open.i18n
 import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.logging.debug
-import it.neckar.logging.ifDebug
 import it.neckar.open.formatting.decimalFormat
 import it.neckar.datetime.minimal.TimeZone
 import kotlinx.browser.window
@@ -72,10 +71,7 @@ actual class DefaultLocaleProvider {
     } catch (e: Throwable) {
       //Formatting with the given locale does not work. Fallback to US
       logger.info("Locale <${locale.locale}> not supported. Falling back to ${Locale.US}")
-      logger.ifDebug {
-        logger.debug { "Exception when formatting: ${e.message}\n$e" }
-        e.printStackTrace()
-      }
+      logger.debug { "Exception when formatting with locale <${locale.locale}>: ${e.stackTraceToString()}" }
       Locale.US
     }
   }

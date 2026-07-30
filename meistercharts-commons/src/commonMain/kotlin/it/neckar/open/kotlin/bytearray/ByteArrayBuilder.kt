@@ -52,7 +52,7 @@ class ByteArrayBuilder(var data: ByteArray, size: Int = data.size, val allowGrow
 
   private fun ensure(expected: Int) {
     if (data.size < expected) {
-      if (!allowGrow) throw RuntimeException("ByteArrayBuffer configured to not grow!")
+      if (allowGrow.not()) throw IllegalStateException("ByteArrayBuilder needs $expected bytes but is configured to not grow (capacity ${data.size})")
       data = data.copyOf(max(expected, (data.size + 7) * 5))
     }
   }

@@ -57,6 +57,13 @@ object Plugins {
   const val verifyDevSetup: String = "it.neckar.verify.dev-setup"
 
   /**
+   * Registers the repo-wide verification tasks (source conventions, deploy-script rules, script
+   * check runners, deployment image consistency, verifyMergeRequest aggregator) on the root
+   * project. See VerifyRepositoryChecksPlugin.
+   */
+  const val verifyRepositoryChecks: String = "it.neckar.verify.repository-checks"
+
+  /**
    * Forbids project/external dependencies on a per-configuration basis.
    * See [it.neckar.gradle.fence.DependencyFencePlugin].
    */
@@ -74,7 +81,7 @@ object Plugins {
   const val buildProfileReport: String = "it.neckar.report.build-profile"
 
   /**
-   * Writes the structured build report under `build/reports/structured/`: the streaming
+   * Writes the structured build report under `build-reports/`: the streaming
    * `build-events.jsonl` (every finished task, written as it happens so a killed build still leaves a
    * parseable record) plus the aggregates `failures.json`, `cache-report.json` and
    * `cache-metrics.json`. Apply once to the root project.
@@ -83,14 +90,14 @@ object Plugins {
   const val buildEventsReport: String = "it.neckar.report.build-events"
 
   /**
-   * Writes `build/reports/structured/logs/<module>/<task>.log` — each task's console output, correctly
+   * Writes `build-reports/logs/<module>/<task>.log` — each task's console output, correctly
    * attributed under parallel builds via build operations. Apply once to the root project.
    * See [it.neckar.gradle.report.events.TaskOutputLogPlugin].
    */
   const val taskOutputLogs: String = "it.neckar.report.task-output-logs"
 
   /**
-   * Writes `build/reports/structured/artifact-sizes.json` — the size of every deployable artifact this
+   * Writes `build-reports/artifact-sizes.json` — the size of every deployable artifact this
    * build produced (frontend bundles, Kotlin/JS bundles, archives, install trees), split by asset type,
    * raw and gzip-compressed. Exported as OTLP metrics from the main-branch CI build. Apply once to the
    * root project. See [it.neckar.gradle.report.artifacts.ArtifactSizeReportPlugin].

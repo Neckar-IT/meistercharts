@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.8.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.9.0" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.17.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.18.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -71,7 +71,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.14"
+aws-sdk-kotlin = "1.8.15"
 
 apache-poi = "5.5.1"
 
@@ -308,7 +308,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.3"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.4"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -404,7 +404,7 @@ jfoenix = "com.jfoenix:jfoenix:9.0.10"
 
 fontawesomefx = "de.jensd:fontawesomefx:8.9"
 
-controlsfx = "org.controlsfx:controlsfx:11.2.3"
+controlsfx = "org.controlsfx:controlsfx:11.2.4"
 
 tilesfx = "eu.hansolo:tilesfx:21.0.9"
 

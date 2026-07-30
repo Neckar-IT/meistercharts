@@ -38,6 +38,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.serializer
+import kotlin.reflect.KType
 
 /**
  * Serializer that can be used to serialize <Any> - *if* the object is serializable itself.
@@ -89,17 +90,29 @@ object AnySerializableRawSerializer : KSerializer<Any> {
    * for optional nullable properties.
    */
   fun encodeToJsonElement(elementToEncode: Any, includeOptionals: Boolean = false): JsonElement {
-    val json: Json = if (includeOptionals) {
-      Json {
-        encodeDefaults = true
-        explicitNulls = true
-      }
-    } else {
-      Json {
-        encodeDefaults = false
-      }
-    }
+    return jsonFor(includeOptionals).encodeToJsonElement<Any>(AnySerializableRawSerializer, elementToEncode)
+  }
 
-    return json.encodeToJsonElement<Any>(AnySerializableRawSerializer, elementToEncode)
+  /**
+   * Encodes through the serializer of [type] instead of the one of the value's class.
+   *
+   * The class of a value carries no type arguments, so a value of a generic type has no serializer
+   * that can be looked up from it — the caller states the full type.
+   */
+  fun encodeToJsonElement(elementToEncode: Any, type: KType, includeOptionals: Boolean = false): JsonElement {
+    @Suppress("UNCHECKED_CAST")
+    val typeSerializer = serializer(type) as KSerializer<Any>
+    return jsonFor(includeOptionals).encodeToJsonElement(typeSerializer, elementToEncode)
+  }
+
+  private fun jsonFor(includeOptionals: Boolean): Json = if (includeOptionals) {
+    Json {
+      encodeDefaults = true
+      explicitNulls = true
+    }
+  } else {
+    Json {
+      encodeDefaults = false
+    }
   }
 }

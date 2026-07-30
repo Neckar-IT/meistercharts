@@ -153,7 +153,7 @@ class FileHistoryStorage(
       }
 
       else -> {
-        throw Exception("Bucket Range of descriptor could not be found: $descriptor")
+        throw IllegalArgumentException("Unsupported bucket range <${descriptor.bucketRange}> of descriptor <$descriptor>")
       }
     }
   }
@@ -294,7 +294,7 @@ class FileHistoryStorage(
       }
 
       else -> {
-        throw Exception("Bucket Range of descriptor could not be found!")
+        throw IllegalArgumentException("Unsupported bucket range <${descriptor.bucketRange}> of descriptor <$descriptor>")
       }
     }
   }

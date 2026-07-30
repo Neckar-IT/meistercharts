@@ -326,20 +326,23 @@ fun Tween.interpolate(paintingContext: LayerPaintingContext): @pct Double {
  * Collects missing resources during the paint
  */
 class MissingResources {
+  private val _missingURLs: MutableSet<Url> = mutableSetOf()
+
   /**
    * Contains the missing URLs
    */
-  val missingURLs: Set<Url> = mutableSetOf()
+  val missingURLs: Set<Url>
+    get() = _missingURLs
 
   fun reportMissing(urlPaintable: UrlPaintable) {
     reportMissing(urlPaintable.url)
   }
 
   fun reportMissing(url: Url) {
-    (missingURLs as MutableSet).add(url)
+    _missingURLs.add(url)
   }
 
   fun isEmpty(): Boolean {
-    return missingURLs.isEmpty()
+    return _missingURLs.isEmpty()
   }
 }

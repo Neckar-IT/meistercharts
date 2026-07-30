@@ -176,15 +176,6 @@ data class Array2<TGen>(val width: Int, val height: Int, val data: Array<TGen>) 
 
   fun clone() = Array2<TGen>(width, height, data.copyOf())
 
-  fun dump() {
-    for (y in 0 until height) {
-      for (x in 0 until width) {
-        print(this[x, y])
-      }
-      println()
-    }
-  }
-
   override fun iterator(): Iterator<TGen> = data.iterator()
 
   fun toStringList(charMap: (TGen) -> Char, margin: String = ""): List<String> {
@@ -333,15 +324,6 @@ data class IntArray2(val width: Int, val height: Int, val data: IntArray) : Iter
     data.indices.filter { data[it] == value }.map { Pair(it % width, it / width) }
 
   fun clone() = IntArray2(width, height, data.copyOf())
-
-  fun dump() {
-    for (y in 0 until height) {
-      for (x in 0 until width) {
-        print(this[x, y])
-      }
-      println()
-    }
-  }
 
   override fun iterator(): Iterator<Int> = data.iterator()
 
@@ -492,15 +474,6 @@ data class DoubleArray2(val width: Int, val height: Int, val data: DoubleArray) 
 
   fun clone() = DoubleArray2(width, height, data.copyOf())
 
-  fun dump() {
-    for (y in 0 until height) {
-      for (x in 0 until width) {
-        print(this[x, y])
-      }
-      println()
-    }
-  }
-
   override fun iterator(): Iterator<Double> = data.iterator()
 
   fun toStringList(charMap: (Double) -> Char, margin: String = ""): List<String> {
@@ -639,15 +612,6 @@ data class FloatArray2(val width: Int, val height: Int, val data: FloatArray) : 
     data.indices.filter { data[it] == value }.map { Pair(it % width, it / width) }
 
   fun clone() = FloatArray2(width, height, data.copyOf())
-
-  fun dump() {
-    for (y in 0 until height) {
-      for (x in 0 until width) {
-        print(this[x, y])
-      }
-      println()
-    }
-  }
 
   override fun iterator(): Iterator<Float> = data.iterator()
 

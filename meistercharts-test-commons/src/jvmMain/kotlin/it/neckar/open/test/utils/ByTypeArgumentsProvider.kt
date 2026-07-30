@@ -71,7 +71,7 @@ class ByTypeArgumentsProvider : ArgumentsProvider, AnnotationConsumer<ByTypeSour
           val value = getValue(declaredField, context.testInstance.orElse(null))
           entries.add(toArguments(value))
         } catch (e: Exception) {
-          throw RuntimeException("Error accessing " + declaredField.name, e)
+          throw IllegalStateException("Error accessing field <${declaredField.name}>", e)
         }
       }
     }
@@ -95,7 +95,7 @@ class ByTypeArgumentsProvider : ArgumentsProvider, AnnotationConsumer<ByTypeSour
           val value = getValue(declaredMethod, context.testInstance.orElse(null))
           entries.add(toArguments(value))
         } catch (e: Exception) {
-          throw RuntimeException(e)
+          throw IllegalStateException("Error accessing method <${declaredMethod.name}>", e)
         }
       }
     }

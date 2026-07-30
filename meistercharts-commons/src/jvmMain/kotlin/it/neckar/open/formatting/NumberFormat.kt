@@ -51,6 +51,9 @@ actual class DecimalFormat internal actual constructor(
     this.isGroupingUsed = this@DecimalFormat.useGrouping
   }
 
+  //No implicit default locale: [NumberFormatCache.get] builds the java.text.NumberFormat with
+  //NumberFormat.getInstance(formatLocale), so the locale is bound to the cached instance itself.
+  @Suppress("ImplicitDefaultLocale")
   actual override fun format(value: Double, i18nConfiguration: I18nConfiguration, whitespaceConfig: WhitespaceConfig): String {
     return numberFormatCache[i18nConfiguration.formatLocale].format(value + 0.0) //add 0.0 to avoid "-0.0"
   }

@@ -150,15 +150,12 @@ data class RuntimeContext<HostType: ServiceHost>(
      * The current runtime context.
      *
      * This is set during application startup and must not be modified afterward.
+     *
+     * Stays at the fallback context until `RuntimeContext.initializeFromEnvironment(serviceHostRegistry)`
+     * runs — callers that need to know whether startup already happened ask [isInitialized].
      */
     var current: RuntimeContext<*> = initialValue
       internal set
-      get() {
-        if (field.isInitialValue() && initialValue.inUnitTest.not()) {
-          println("Warning: The current runtime context is still the fallback context. Call `RuntimeContext.initializeFromEnvironment(serviceHostRegistry)`")
-        }
-        return field
-      }
 
     /**
      * Returns true if the runtime context has been initialized to a value different from the initial fallback value.

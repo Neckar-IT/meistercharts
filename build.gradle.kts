@@ -43,8 +43,9 @@ val buildDateDay: String by extra { java.time.LocalDate.now().toString() }
 val gitCommit: String by extra { arrayOf("git", "rev-parse", "--short", "HEAD").getCmdResult(project.projectDir) }
 //The date of the last git commit
 val gitCommitDate: String by extra { arrayOf("git", "log", "-1", "--date=short", "--pretty=format:%cI").getCmdResult(project.projectDir) }
-//The output of git describe
-val gitDescribe: String by extra { arrayOf("git", "describe", "--tags", "--always").getCmdResult(project.projectDir) }
+//The output of git describe. This directory has no .git of its own, so describe runs against the
+//monorepo — --exclude keeps its machine-local backup/* safety tags out of the generated sources.
+val gitDescribe: String by extra { arrayOf("git", "describe", "--tags", "--always", "--exclude", "backup/*").getCmdResult(project.projectDir) }
 
 val branch: String = arrayOf("git", "rev-parse", "--abbrev-ref", "HEAD").getCmdResult(project.projectDir).let {
   try {

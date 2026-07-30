@@ -27,8 +27,23 @@
  */
 package it.neckar.open.collections
 
+/**
+ * Creates an [Iterator] from the two given lambdas.
+ *
+ * [hasNext] must be free of side effects: [next] calls it again to enforce the Iterator contract,
+ * so a stateful [hasNext] would advance twice per element.
+ */
 fun <T> Iterator(hasNext: () -> Boolean, next: () -> T): Iterator<T> = object : Iterator<T> {
   override fun hasNext(): Boolean = hasNext()
-  override fun next(): T = next()
+
+  override fun next(): T {
+    //The Iterator contract requires NoSuchElementException - without this check the [next] lambda
+    //decides what happens beyond the last element (arbitrary exception or a garbage value).
+    if (hasNext().not()) {
+      throw NoSuchElementException("No more elements")
+    }
+
+    return next()
+  }
 }
 

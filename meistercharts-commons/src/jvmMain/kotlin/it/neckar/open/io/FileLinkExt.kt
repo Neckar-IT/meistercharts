@@ -146,7 +146,9 @@ fun createLink(linkTarget: File, linkFile: File, linkType: LinkType): Boolean {
       throw IOException("Creation of link failed: " + IOUtils.toString(process.errorStream, Charset.defaultCharset()))
     }
   } catch (e: InterruptedException) {
-    throw RuntimeException(e)
+    //Restore the interrupt flag - swallowing it hides the cancellation from every caller up the stack.
+    Thread.currentThread().interrupt()
+    throw IOException("Interrupted while waiting for the link creation of [${linkFile.absolutePath}]", e)
   }
   return true
 }

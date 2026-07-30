@@ -106,7 +106,7 @@ fun <T> Array<T>.sanitize(): Array<T> {
 fun <T> List<T>.sanitize(): List<T> {
   @Suppress("USELESS_IS_CHECK") //undefined could be null
   if (this is List<T>) return this
-  if (this is ArrayList<T>) return this
+  //No separate ArrayList check: ArrayList implements List, so the check above already covers it.
   @Suppress("USELESS_IS_CHECK", "UNCHECKED_CAST", "SENSELESS_COMPARISON") //In JS arrays can be passed as lists
   if ((this as Any) is Array<*>) return (this as Array<T>).sanitize().toList()
   throw SanitizingFailedException("Could not sanitize [$this] to List<T>")

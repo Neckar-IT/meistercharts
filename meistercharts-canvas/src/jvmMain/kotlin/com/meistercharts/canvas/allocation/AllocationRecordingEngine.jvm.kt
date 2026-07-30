@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas.allocation
 
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.threads.isFxApplicationThreadName
 import jdk.jfr.consumer.RecordedEvent
 import jdk.jfr.consumer.RecordedFrame
@@ -102,6 +104,7 @@ actual object AllocationRecordingEngine {
       stream = newStream
     } catch (e: Throwable) {
       //JFR not available on this JVM - stay inert
+      logger.debug("Could not start the JFR recording stream, allocation recording stays inert", e)
       stream = null
     }
   }
@@ -232,6 +235,8 @@ actual object AllocationRecordingEngine {
   }
 
   private const val maxStacktraceFrames: Int = 6
+
+  private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.allocation.AllocationRecordingEngine")
 }
 
 /**

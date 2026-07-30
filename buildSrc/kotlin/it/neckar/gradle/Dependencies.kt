@@ -271,7 +271,7 @@ fun DependencyHandlerScope.addKotlinTestDependencies(project: Project, scope: Sc
   add(configurationName, project.lib("measured"))
 }
 
-private fun Scope.configurationName(): String {
+internal fun Scope.configurationName(): String {
   val scopeName = when (this) {
     Scope.Main -> "api"
     Scope.Test -> "testImplementation"

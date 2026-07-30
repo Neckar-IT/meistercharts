@@ -30,5 +30,6 @@ actual object AllocationRecordingEngine {
   }
 
   actual fun reset() {
+    //Nothing to reset: no recording ever happens on JS, so no state is accumulated.
   }
 }

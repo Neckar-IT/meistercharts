@@ -27,6 +27,8 @@
  */
 package it.neckar.open.formatting
 
+import it.neckar.logging.Logger
+import it.neckar.logging.LoggerFactory
 import it.neckar.open.collections.Cache
 import it.neckar.open.collections.cache
 
@@ -78,6 +80,8 @@ data class ParsedNumberFormatPattern(
  * A parser for number format patterns
  */
 object NumberFormatPatternParser {
+  private val logger: Logger = LoggerFactory.getLogger("it.neckar.open.formatting.NumberFormatPatternParser")
+
   /**
    * Maps patterns to [ParsedNumberFormatPattern] instances.
    *
@@ -122,7 +126,7 @@ object NumberFormatPatternParser {
         } else {
           ++minimumIntegerDigits
         }
-        else -> println("unsupported character $c in pattern $pattern found")
+        else -> logger.warn("unsupported character $c in pattern $pattern found")
       }
     }
     if (minimumIntegerDigits < 1) {

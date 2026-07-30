@@ -95,11 +95,6 @@ data class StructuredSerializerModel<T : Any>(
 ) : SerializerModel<T> {
   companion object {
     fun <T : Any> create(descriptor: SerialDescriptor, type: KClass<T>): StructuredSerializerModel<T> {
-
-      descriptor.elementDescriptors.forEach {
-        println("Element: $it")
-      }
-
       val elements: List<SerializerModel<*>> = descriptor.elementDescriptors.map {
         //SerializerModel.create(it.serialName, it.type)
         TODO()
