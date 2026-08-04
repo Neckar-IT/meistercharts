@@ -2,20 +2,6 @@ package it.neckar.gradle
 
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import java.util.Properties
-
-/**
- * Lazily loaded .env properties from the root project directory.
- */
-private val Project.envProperties: Properties
-  get() {
-    val envFile = rootProject.file(".env")
-    return Properties().apply {
-      if (envFile.exists()) {
-        envFile.inputStream().use { load(it) }
-      }
-    }
-  }
 
 /**
  * Resolves a configuration value from multiple sources, returning null if not found.
@@ -30,7 +16,7 @@ fun Project.resolveConfigValueOrNull(
 ): String? {
   return findProperty(propertyName)?.toString()
     ?: System.getenv(propertyName)
-    ?: envProperties.getProperty(propertyName)
+    ?: dotEnv[propertyName]
 }
 
 /**

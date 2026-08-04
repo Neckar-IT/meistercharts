@@ -25,48 +25,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.datetime.minimal
+package it.neckar.open.app.env
 
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
+import kotlinx.io.files.Path
 
 /**
- * A calendar year as a typed [Int] — a year of birth, of publication, of commissioning.
- *
- * Deliberately unbounded: what counts as a plausible year is a property of the field that carries
- * one, not of the type. A PV facility's commissioning year sits between 1900 and 2200, an author's
- * year of birth does not, and a type that picked one of those ranges would be wrong for the other.
+ * The single upwards search: a service started from a module directory sees the same `.env` as one
+ * started from the repository root, and the search stops at the git root — a developer's home
+ * directory is not a configuration source.
  */
-@JvmInline
-@Serializable
-value class Year(val value: Int) : Comparable<Year> {
+object EnvFileLocator {
   /**
-   * Returns true if this year is a leap year.
-   *
-   * ATTENTION: This is a very basic implementation that only works for "normal" values.
-   * We ignore the introduction of leap years in 1582. And assume these have existed for all the time
+   * The path of [envFileName], searched from [startDirectory] upwards and stopping at the git root.
+   * Null when no such file exists on the way up.
    */
-  fun isLeapYear(): Boolean {
-    return (value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)
+  fun findEnvFile(
+    startDirectory: Path,
+    envFileName: EnvFileName,
+    fileSystem: FileSystemAccess,
+  ): Path? {
+    var currentDirectory: Path? = fileSystem.absolutePath(startDirectory)
+
+    while (currentDirectory != null && fileSystem.directoryExists(currentDirectory)) {
+      val candidate = Path(currentDirectory, envFileName.value)
+      if (fileSystem.fileExists(candidate)) {
+        return candidate
+      }
+
+      if (fileSystem.isGitRoot(currentDirectory)) {
+        return null
+      }
+
+      currentDirectory = currentDirectory.parent
+    }
+
+    return null
   }
 
-  override fun compareTo(other: Year): Int {
-    return value.compareTo(other.value)
-  }
-
-  operator fun plus(n: Int): Year {
-    return Year(value + n)
-  }
-
-  operator fun minus(other: Year): Year {
-    return Year(value - other.value)
-  }
-
-  operator fun minus(other: Int): Year {
-    return Year(value - other)
-  }
-
-  override fun toString(): String {
-    return value.toString()
+  /** A worktree's `.git` is a file pointing at the shared directory, a plain checkout's is a directory. */
+  private fun FileSystemAccess.isGitRoot(directory: Path): Boolean {
+    val gitMarker = Path(directory, ".git")
+    return directoryExists(gitMarker) || fileExists(gitMarker)
   }
 }

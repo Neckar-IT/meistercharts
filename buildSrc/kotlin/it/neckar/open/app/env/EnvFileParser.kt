@@ -25,48 +25,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.datetime.minimal
-
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
+package it.neckar.open.app.env
 
 /**
- * A calendar year as a typed [Int] — a year of birth, of publication, of commissioning.
+ * Reads the `KEY=value` lines of an `.env` file: blank lines, `#` comment lines and lines without
+ * `=` are skipped, one layer of matching quotes is stripped, everything after the first `=` is the
+ * value.
  *
- * Deliberately unbounded: what counts as a plausible year is a property of the field that carries
- * one, not of the type. A PV facility's commissioning year sits between 1900 and 2200, an author's
- * year of birth does not, and a type that picked one of those ranges would be wrong for the other.
+ * These files are flat credential lists, so interpolation (`PATH=$HOME/bin`), an `export` prefix,
+ * multi-line values and trailing comments are not supported — `TOKEN=abc # rotated` yields
+ * `abc # rotated`.
  */
-@JvmInline
-@Serializable
-value class Year(val value: Int) : Comparable<Year> {
-  /**
-   * Returns true if this year is a leap year.
-   *
-   * ATTENTION: This is a very basic implementation that only works for "normal" values.
-   * We ignore the introduction of leap years in 1582. And assume these have existed for all the time
-   */
-  fun isLeapYear(): Boolean {
-    return (value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)
-  }
+object EnvFileParser {
+  /** The file's [content] as a map of name to value. */
+  fun parse(content: String): Map<String, String> =
+    content
+      .lineSequence()
+      .map { it.trim() }
+      .filter { it.isNotEmpty() && it.startsWith("#").not() && it.contains('=') }
+      .associate { line ->
+        val name = line.substringBefore('=').trim()
+        val value = line.substringAfter('=').trim().removeSurroundingQuotes()
+        name to value
+      }
 
-  override fun compareTo(other: Year): Int {
-    return value.compareTo(other.value)
-  }
-
-  operator fun plus(n: Int): Year {
-    return Year(value + n)
-  }
-
-  operator fun minus(other: Year): Year {
-    return Year(value - other.value)
-  }
-
-  operator fun minus(other: Int): Year {
-    return Year(value - other)
-  }
-
-  override fun toString(): String {
-    return value.toString()
+  /** Strips one layer of matching single or double quotes. */
+  private fun String.removeSurroundingQuotes(): String = when {
+    length >= 2 && startsWith('"') && endsWith('"') -> substring(1, length - 1)
+    length >= 2 && startsWith('\'') && endsWith('\'') -> substring(1, length - 1)
+    else -> this
   }
 }

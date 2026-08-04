@@ -4,7 +4,6 @@ import java.time.Instant
 import it.neckar.gradle.DevContainerInformation
 import it.neckar.gradle.GitlabCiInformation
 import it.neckar.gradle.GradleContext
-import it.neckar.gradle.JvmType
 import it.neckar.gradle.Plugins
 import it.neckar.gradle.ProjectConfiguration
 import it.neckar.projects.Projects
@@ -195,9 +194,9 @@ allprojects {
 }
 
 
-configure(Projects.multiPlatformProjectsLTS()) {
+configure(Projects.multiplatformProjects()) {
   if (this.enabled) {
-    logger.debug("Configuring multi-platform LTS project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatform(this.getProject(project), JvmType.JavaLatestLTS)
+    logger.debug("Configuring multiplatform project ${this.path} for targets ${this.targets}")
+    ProjectConfiguration.configureMultiplatform(this.getProject(project), this)
   }
 }

@@ -70,6 +70,18 @@ fun Project.configureServiceShadowJar(
       exclude(project.lib("clikt"))
       exclude(project.lib("ktor-serialization-kotlinx-json"))
       exclude(project.lib("ktor-client-okhttp")) // OkHttp engine is loaded via ServiceLoader
+
+      // JavaMail names its store and transport implementations in META-INF/javamail.providers and
+      // instantiates them by name. The minimizer sees com.sun.mail.imap.* and com.sun.mail.smtp.*
+      // as unreachable and drops them, leaving a jar whose provider file points at classes it no
+      // longer contains — the failure surfaces at runtime as "Provider ... not found".
+      //
+      // Excluded centrally rather than per module: a service that pulls in :internal:open:commons:mail
+      // inherits the problem without naming a mail library in its own build file, so there is nothing
+      // there to hint at the cause.
+      exclude(project.lib("mail"))
+      exclude(project.lib("javax-mail"))
+
       minimizeExclusions()
     }
 

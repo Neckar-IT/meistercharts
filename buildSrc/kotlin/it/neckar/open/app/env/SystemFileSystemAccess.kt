@@ -25,48 +25,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.datetime.minimal
+package it.neckar.open.app.env
 
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readString
 
 /**
- * A calendar year as a typed [Int] — a year of birth, of publication, of commissioning.
- *
- * Deliberately unbounded: what counts as a plausible year is a property of the field that carries
- * one, not of the type. A PV facility's commissioning year sits between 1900 and 2200, an author's
- * year of birth does not, and a type that picked one of those ranges would be wrong for the other.
+ * The real file system, through kotlinx-io: one implementation that answers the same on the JVM, on
+ * Kotlin/Native and in a build script.
  */
-@JvmInline
-@Serializable
-value class Year(val value: Int) : Comparable<Year> {
-  /**
-   * Returns true if this year is a leap year.
-   *
-   * ATTENTION: This is a very basic implementation that only works for "normal" values.
-   * We ignore the introduction of leap years in 1582. And assume these have existed for all the time
-   */
-  fun isLeapYear(): Boolean {
-    return (value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)
-  }
+object SystemFileSystemAccess : FileSystemAccess {
+  override fun fileExists(path: Path): Boolean = SystemFileSystem.metadataOrNull(path)?.isRegularFile == true
 
-  override fun compareTo(other: Year): Int {
-    return value.compareTo(other.value)
-  }
+  override fun directoryExists(path: Path): Boolean = SystemFileSystem.metadataOrNull(path)?.isDirectory == true
 
-  operator fun plus(n: Int): Year {
-    return Year(value + n)
-  }
+  /** Null for a directory as well: opening one as a source fails rather than yielding an empty file. */
+  override fun readFileOrNull(path: Path): String? = runCatching { SystemFileSystem.source(path).buffered().use { it.readString() } }.getOrNull()
 
-  operator fun minus(other: Year): Year {
-    return Year(value - other.value)
-  }
-
-  operator fun minus(other: Int): Year {
-    return Year(value - other)
-  }
-
-  override fun toString(): String {
-    return value.toString()
-  }
+  /** An unresolvable path stays as it came in — the upwards search asks about directories that may not exist. */
+  override fun absolutePath(path: Path): Path = runCatching { SystemFileSystem.resolve(path) }.getOrElse { path }
 }

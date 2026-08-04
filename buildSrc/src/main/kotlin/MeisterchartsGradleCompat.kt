@@ -8,6 +8,9 @@
  */
 
 import it.neckar.gradle.Plugins
+import it.neckar.open.app.env.SystemFileSystemAccess
+import it.neckar.open.app.env.readEnvFile
+import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
@@ -17,7 +20,6 @@ import org.gradle.kotlin.dsl.extra
 import org.gradle.api.NamedDomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
-import java.util.Properties
 
 fun Project.hasKotlinMultiplatformPlugin(): Boolean {
   return hasPlugin(Plugins.kotlinMultiPlatform)
@@ -53,20 +55,17 @@ fun Project.packageJsonContainsScript(scriptName: String): Boolean {
   return (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey(scriptName) == true)
 }
 
-private val Project.envProperties: Properties
-  get() {
-    val envFile = rootProject.file(".env")
-    return Properties().apply {
-      if (envFile.exists()) {
-        envFile.inputStream().use { load(it) }
-      }
-    }
-  }
+/**
+ * The root project's `.env`, read the way the monorepo reads it. The source is copied in by
+ * `populateBuildSrc`, which build-logic/core's `ConfigResolution` needs here anyway.
+ */
+private val Project.envValues: Map<String, String>
+  get() = SystemFileSystemAccess.readEnvFile(Path(rootProject.file(".env").path))
 
 fun Project.resolveConfigValueOrNull(propertyName: String): String? {
   return findProperty(propertyName)?.toString()
     ?: System.getenv(propertyName)
-    ?: envProperties.getProperty(propertyName)
+    ?: envValues[propertyName]
 }
 
 fun Project.resolveConfigValue(propertyName: String): String {

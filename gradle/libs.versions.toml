@@ -71,7 +71,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.15"
+aws-sdk-kotlin = "1.8.21"
 
 apache-poi = "5.5.1"
 
@@ -83,7 +83,7 @@ org-commonmark = "0.29.0"
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
 org-bouncycastle = "1.85"
 
-ktor = "3.5.1"
+ktor = "3.5.2"
 
 com-github-docker-java = "3.7.1"
 
@@ -206,7 +206,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.6.0"
+logback-classic = "ch.qos.logback:logback-classic:1.6.1"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -284,7 +284,7 @@ opentelemetry-javaagent = { group = "io.opentelemetry.javaagent", name = "opente
 
 opentelemetry-sdk-testing = { group = "io.opentelemetry", name = "opentelemetry-sdk-testing", version.ref = "opentelemetry" }
 
-jsoup = "org.jsoup:jsoup:1.22.2"
+jsoup = "org.jsoup:jsoup:1.23.1"
 
 jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 
@@ -308,7 +308,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.49.4"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.50.2"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -326,7 +326,7 @@ pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" 
 
 metadata-extractor = { group = "com.drewnoakes", name = "metadata-extractor", version.ref = "metadata-extractor" }
 
-loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.0.3"
+loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.1.0"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
@@ -385,8 +385,6 @@ gson = "com.google.code.gson:gson:2.14.0"
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
-
-dotenv-kotlin = "io.github.cdimascio:dotenv-kotlin:6.5.1"
 
 commons-compress = "org.apache.commons:commons-compress:1.28.0"
 

@@ -43,6 +43,8 @@ dependencies {
   implementation(libs.commons.lang3)
 
   implementation(libs.kotlinx.serialization.json)
+  // The .env rules copied in by populateBuildSrc read the file system through kotlinx-io.
+  implementation(libs.kotlinx.io.core)
   implementation(kotlin("gradle-plugin", kotlinVersion))
   implementation(kotlin("serialization", kotlinVersion))
 

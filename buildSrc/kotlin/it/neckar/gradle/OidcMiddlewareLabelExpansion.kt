@@ -12,12 +12,22 @@ import org.gradle.api.tasks.AbstractCopyTask
  *
  * Parameters:
  * - `name` (mandatory) — Traefik middleware name.
- * - `client-id`, `client-secret` (mandatory) — Keycloak client (literal or `${…}` placeholder).
+ * - `client-id` (mandatory) — Keycloak client (literal or `${…}` placeholder).
+ * - `client-secret` (optional) — omit it for a public client. The block always sets
+ *   `Provider.UsePkce`, which is what secures the code exchange without a secret (#2856).
  * - `callback-uri` (optional) — overrides the plugin default `/oidc/callback` (Traefik dashboards,
  *   jitsi prosody).
  * - `session-max-age` (optional, default 604800 = 7 days) — `SessionCookie.MaxAge` in seconds; the
  *   cookie slides on every silent token renewal, so a login expires only after this long without a
  *   visit (#2306).
+ * - `forward-token` (optional, only value `bearer`) — pass the OIDC session's access token on to
+ *   the upstream as `Authorization: Bearer …`, for services that authorize the request themselves.
+ *   Named rather than spelled out because the header value is a Go template containing spaces
+ *   (`Bearer {{ .accessToken }}`), which this whitespace-separated syntax cannot carry.
+ * - `assert-claim` + `any-of` (optional, only together) — gate the route on a token claim rather
+ *   than on which client fronted the login: `assert-claim=groups any-of=/ops` admits members of
+ *   `/ops` only. `any-of` takes the plugin's comma separated list, e.g. `any-of=/staff,/bots`.
+ *   Without them the middleware admits every authenticated user of the realm.
  *
  * The block always requests the optional `offline_access` scope; if the Keycloak client lacks it,
  * Keycloak ignores the request — login never breaks. `${…}` placeholders pass through verbatim:
@@ -33,7 +43,13 @@ import org.gradle.api.tasks.AbstractCopyTask
  */
 fun AbstractCopyTask.expandOidcMiddlewareLabels() {
   // Fingerprint the generated block as task input — template edits must re-materialize consumers.
-  inputs.property("oidcMiddlewareLabelBlock", expandOidcMiddlewareDirective(FingerprintDirective))
+  // Every optional parameter appears in [FingerprintDirectives], otherwise a change to a label
+  // only some directives produce would leave this property untouched: Gradle would call the
+  // materialization up to date and the edit would never reach a server.
+  inputs.property(
+    "oidcMiddlewareLabelBlock",
+    FingerprintDirectives.joinToString("\n") { expandOidcMiddlewareDirective(it) },
+  )
 
   // Registered at configuration time so this filter runs BEFORE the doFirst-registered secrets
   // filter, which must see the expanded labels to resolve their `${…}` placeholders. Do NOT move
@@ -79,8 +95,27 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
 
   val middlewareName = mandatory("name")
   val clientId = mandatory("client-id")
-  val clientSecret = mandatory("client-secret")
+  val clientSecret = parameters["client-secret"]
   val callbackUri = parameters["callback-uri"]
+
+  // Both or neither: a claim name without accepted values would assert nothing, and accepted
+  // values without a claim name have nothing to assert on. Either half alone is a typo that would
+  // otherwise deploy an unguarded route. Reported separately so the message names the half that
+  // is missing rather than leaving the author to work it out.
+  val assertedClaim = parameters["assert-claim"]
+  val acceptedValues = parameters["any-of"]
+  require(assertedClaim == null || acceptedValues != null) {
+    "@oidc-middleware parameter assert-claim needs any-of alongside it in [$line]"
+  }
+  require(acceptedValues == null || assertedClaim != null) {
+    "@oidc-middleware parameter any-of needs assert-claim alongside it in [$line]"
+  }
+
+  val forwardToken = parameters["forward-token"]
+  require(forwardToken == null || forwardToken == BearerForwardToken) {
+    "@oidc-middleware parameter forward-token accepts only [$BearerForwardToken] but was [$forwardToken] in [$line]"
+  }
+
   val sessionMaxAge = parameters["session-max-age"]?.let { value ->
     value.toIntOrNull().requireNotNull {
       "@oidc-middleware parameter session-max-age must be an integer (seconds) but was [$value] in [$line]"
@@ -98,8 +133,14 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
     // the browser is redirected here for the interactive login.
     add(label("Provider.Url", "https://auth.neckar.it/realms/main"))
     add(label("Provider.ClientId", clientId))
-    add(label("Provider.ClientSecret", clientSecret))
+    clientSecret?.let { add(label("Provider.ClientSecret", it)) }
     add(label("Provider.UsePkce", "true"))
+    if (assertedClaim != null) {
+      // Which token carries the claim only matters once one is asserted, so this stays out of the
+      // block otherwise — a middleware without an assertion keeps its label block byte for byte.
+      // `IdToken` is also the plugin default; naming it makes the choice reviewable.
+      add(label("Provider.TokenValidation", "IdToken"))
+    }
     callbackUri?.let { add(label("CallbackUri", it)) }
     add(label("Secret", $$"${traefik-oidc-encryption-secret}"))
     add(label("Scopes[0]", "openid"))
@@ -108,6 +149,17 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
     add(label("Scopes[3]", "offline_access"))
     add(label("SessionCookie.MaxAge", sessionMaxAge.toString()))
     add(label("AuthorizationHeader.Name", "Authorization"))
+    if (forwardToken == BearerForwardToken) {
+      // Hands the session's access token to the upstream, which then authorizes the request
+      // itself. `AuthorizationHeader.Name` above is the inbound counterpart: it accepts a bearer
+      // token supplied by an API client instead of an OIDC session.
+      add(label("Headers[0].Name", "Authorization"))
+      add(label("Headers[0].Value", "Bearer {{ .accessToken }}"))
+    }
+    if (assertedClaim != null && acceptedValues != null) {
+      add(label("Authorization.AssertClaims[0].Name", assertedClaim))
+      add(label("Authorization.AssertClaims[0].AnyOf", acceptedValues))
+    }
     add("$indent# ==== END oidc-middleware labels: $middlewareName ====")
   }.joinToString("\n")
 }
@@ -115,7 +167,14 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
 /** Persistent-session default (#2306): one interactive login lasts until 7 days pass without a visit. */
 private const val DefaultSessionMaxAgeSeconds: Int = 604800
 
-private val KnownParameters: Set<String> = setOf("name", "client-id", "client-secret", "callback-uri", "session-max-age")
+/** The only accepted `forward-token` value — see [expandOidcMiddlewareDirective]. */
+private const val BearerForwardToken: String = "bearer"
+
+internal val KnownParameters: Set<String> =
+  setOf(
+    "name", "client-id", "client-secret", "callback-uri", "session-max-age",
+    "assert-claim", "any-of", "forward-token",
+  )
 
 private val DirectiveRegex = Regex("""^(\s*)#\s*@oidc-middleware:\s*(.+)$""")
 
@@ -127,6 +186,15 @@ private val MarkerRegex = Regex("""^\s*#\s*@oidc-middleware""")
 
 private val WhitespaceRegex = Regex("""\s+""")
 
-/** Canonical directive used to fingerprint the generated block as a task input property. */
-private const val FingerprintDirective: String =
-  $$"# @oidc-middleware: name=oidc-fingerprint client-id=${fingerprint-client-id} client-secret=${fingerprint-client-secret}"
+/**
+ * Canonical directives used to fingerprint the generated block as a task input property.
+ *
+ * Two of them, because one cannot reach every branch: the minimal directive covers the defaults
+ * (notably [DefaultSessionMaxAgeSeconds], which only applies when `session-max-age` is absent),
+ * the maximal one covers every optional label. A new optional parameter belongs in the maximal
+ * directive — see [expandOidcMiddlewareLabels] for what goes wrong when it is missing.
+ */
+internal val FingerprintDirectives: List<String> = listOf(
+  $$"# @oidc-middleware: name=oidc-fingerprint client-id=${fingerprint-client-id} client-secret=${fingerprint-client-secret}",
+  $$"# @oidc-middleware: name=oidc-fingerprint-full client-id=${fingerprint-client-id} client-secret=${fingerprint-client-secret} callback-uri=/fingerprint/oidc/callback session-max-age=1 forward-token=bearer assert-claim=fingerprint-claim any-of=/fingerprint",
+)

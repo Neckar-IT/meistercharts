@@ -64,6 +64,19 @@ object Plugins {
   const val verifyRepositoryChecks: String = "it.neckar.verify.repository-checks"
 
   /**
+   * Lets a module declare the operating-system packages it needs to build, through a
+   * `systemDependencies { }` block. See SystemDependenciesPlugin.
+   */
+  const val systemDependencies: String = "it.neckar.system-dependencies"
+
+  /**
+   * Root-project counterpart: aggregates the declarations of all modules behind `verify` and
+   * writes both package lists that install them — the Ansible workstation setup's vars file and the
+   * CI image's list. See SystemDependenciesRootPlugin.
+   */
+  const val systemDependenciesRoot: String = "it.neckar.system-dependencies-root"
+
+  /**
    * Forbids project/external dependencies on a per-configuration basis.
    * See [it.neckar.gradle.fence.DependencyFencePlugin].
    */

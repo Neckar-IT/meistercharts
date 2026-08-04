@@ -99,6 +99,39 @@ object VersionInformation {
     get() {
       return "$version ($gitHash)"
     }
+
+  /**
+   * Compact version string for UI display: commit date (no time) plus the short hash,
+   * e.g. `2026-07-15 - 1d79fb128769`. See [formatCommitDateAndShortHash].
+   *
+   * [version] is deliberately absent: it is identical across all services and changes only per
+   * release, so it says nothing about which state is deployed.
+   */
+  val commitDateAndShortHash: String
+    get() = formatCommitDateAndShortHash(gitCommitDateTime, gitHashShort)
+}
+
+/**
+ * Formats the commit date (the date component of [commitDateTime]) and [gitHashShort] as
+ * `2026-07-15 - 1d79fb128769`.
+ *
+ * The verbose form (ISO timestamp plus the 40-character hash, ~66 characters) blows up narrow
+ * layouts: the Lizergy sidebar's position-fixed footer grew past the sidebar column and
+ * intercepted clicks on the main content, which turned the nightly Playwright run red.
+ *
+ * A component that is not resolvable contributes [VersionInformation.UnknownGitValue]; when
+ * neither resolves, the result is that value alone. A build without deploy metadata must stay
+ * recognizable as such instead of rendering a date and a hash nobody can look up.
+ */
+internal fun formatCommitDateAndShortHash(commitDateTime: String, gitHashShort: String): String {
+  val commitDate = commitDateTime.takeUnless { it == VersionInformation.UnknownGitValue }?.substringBefore('T')
+  val hash = gitHashShort.takeUnless { it == VersionInformation.UnknownGitValue }
+
+  if (commitDate == null && hash == null) {
+    return VersionInformation.UnknownGitValue
+  }
+
+  return "${commitDate ?: VersionInformation.UnknownGitValue} - ${hash ?: VersionInformation.UnknownGitValue}"
 }
 
 /**

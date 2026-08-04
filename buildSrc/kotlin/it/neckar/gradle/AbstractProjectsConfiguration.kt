@@ -11,19 +11,9 @@ import org.gradle.api.Project
  * returns only enabled projects.
  */
 fun AbstractProjects.configureProjects(baseProject: Project) {
-  baseProject.configure(multiPlatformProjectsLTS()) {
-    baseProject.logger.debug("Configuring multi-platform LTS project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatform(this.getProject(baseProject), JvmType.JavaLatestLTS)
-  }
-
-  baseProject.configure(multiPlatformJvmOnlyProjectsLTS()) {
-    baseProject.logger.debug("Configuring multi-platform JVM-only LTS project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatformJvmOnly(this.getProject(baseProject), JvmType.JavaLatestLTS)
-  }
-
-  baseProject.configure(multiPlatformNativeOnlyProjects()) {
-    baseProject.logger.debug("Configuring multi-platform native-only project: ${this.path}")
-    ProjectConfiguration.configureMultiPlatformNativeOnly(this.getProject(baseProject))
+  baseProject.configure(multiplatformProjects()) {
+    baseProject.logger.debug("Configuring multiplatform project ${this.path} for targets ${this.targets}")
+    ProjectConfiguration.configureMultiplatform(this.getProject(baseProject), this)
   }
 
   baseProject.configure(kspProcessorProjects()) {

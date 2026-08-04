@@ -32,15 +32,15 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
 ```json
 {
   "name": "npm-meistercharts-minimal",
-  "main": "src/index.js",
-  "author": "NeckarIT",
   "license": "Apache-2.0",
+  "author": "NeckarIT",
+  "main": "src/index.js",
   "dependencies": {
     "@meistercharts/meistercharts": "1.38.0"
   },
   "devDependencies": {
-    "webpack": "5.109.1",
-    "webpack-cli": "7.2.1"
+    "webpack": "5.109.2",
+    "webpack-cli": "7.2.2"
   }
 }
 

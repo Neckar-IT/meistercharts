@@ -25,48 +25,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.datetime.minimal
+package it.neckar.open.test.utils
 
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
+import it.neckar.open.time.VirtualNowProvider
+import kotlin.time.Duration
 
 /**
- * A calendar year as a typed [Int] — a year of birth, of publication, of commissioning.
+ * Advances the virtual clock by [duration].
  *
- * Deliberately unbounded: what counts as a plausible year is a property of the field that carries
- * one, not of the type. A PV facility's commissioning year sits between 1900 and 2200, an author's
- * year of birth does not, and a type that picked one of those ranges would be wrong for the other.
+ * [VirtualNowProvider.advanceBy] takes milliseconds as a [Double], which every test that thinks in
+ * [Duration] would otherwise convert itself:
+ *
+ * ```
+ * nowProvider.advance(6.minutes)     // instead of advanceBy(360_000.0)
+ * ```
  */
-@JvmInline
-@Serializable
-value class Year(val value: Int) : Comparable<Year> {
-  /**
-   * Returns true if this year is a leap year.
-   *
-   * ATTENTION: This is a very basic implementation that only works for "normal" values.
-   * We ignore the introduction of leap years in 1582. And assume these have existed for all the time
-   */
-  fun isLeapYear(): Boolean {
-    return (value % 4 == 0 && value % 100 != 0) || (value % 400 == 0)
-  }
-
-  override fun compareTo(other: Year): Int {
-    return value.compareTo(other.value)
-  }
-
-  operator fun plus(n: Int): Year {
-    return Year(value + n)
-  }
-
-  operator fun minus(other: Year): Year {
-    return Year(value - other.value)
-  }
-
-  operator fun minus(other: Int): Year {
-    return Year(value - other)
-  }
-
-  override fun toString(): String {
-    return value.toString()
-  }
+fun VirtualNowProvider.advance(duration: Duration) {
+  advanceBy(duration.inWholeMilliseconds.toDouble())
 }

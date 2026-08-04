@@ -389,7 +389,10 @@ fun Project.isEnhancedCoroutinesDebuggingEnabled(): Boolean =
   providers.gradleProperty("enhancedCoroutinesDebugging").orNull?.let { it != "false" } ?: false
 
 /**
- * Configures the Kotlin config todo attempt to add flags here
+ * Configures the Kotlin compiler options for a project — JVM, multiplatform, KSP processor alike.
+ *
+ * The `KotlinJvmCompile` / `KotlinJsCompile` blocks match no task in a module without the
+ * corresponding target, so one function serves every target combination.
  */
 fun Project.configureKotlin() {
   //Ensure that this is only called once for each project
@@ -403,15 +406,18 @@ fun Project.configureKotlin() {
 
   tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
   }
 
   tasks.withType<KotlinJvmCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM(project.isEnhancedCoroutinesDebuggingEnabled()))
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
     compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
   }
 
   tasks.withType<KotlinJsCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJS)
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
   }
 
 
@@ -420,46 +426,37 @@ fun Project.configureKotlin() {
 
   //For JVM projects
   extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
-
-  //For Multiplatform projects (JS and JVM)
-  extensions.findByType<KotlinMultiplatformExtension>()?.applyMultiplatformKotlinConfiguration(this, suppressWarnings = true)
-}
-
-/**
- * Configure Kotlin for JVM-only multiplatform projects (no JS target)
- */
-fun Project.configureKotlinJvmOnly() {
-  //Ensure that this is only called once for each project
-  require(project.extra.has("kotlinConfigured").not()) {
-    "Kotlin already configured for project ${project.path}. Do *not* call configureKotlin() multiple times"
-  }
-  project.extra["kotlinConfigured"] = true
-
-  // JS-only projects ("kotlin-js" plugin) are unrepresentable since Kotlin 2.4
-  // (KotlinJsProjectExtension removed). No runtime guard needed.
-
-  tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
-    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
-  }
-
-  tasks.withType<KotlinJvmCompile> {
-    compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM(project.isEnhancedCoroutinesDebuggingEnabled()))
-    compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
-  }
-
-  //for common
-  this.extensions.findByType<KotlinProjectExtension>()?.applyKotlinConfiguration()
-
-  //For JVM projects
-  extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
-
-  //For Multiplatform projects (JVM only)
-  extensions.findByType<KotlinMultiplatformExtension>()?.applyJvmOnlyKotlinConfiguration(this, suppressWarnings = true)
 }
 
 /**
  * Adds all elements that are not already in the list
  */
+/**
+ * The `-XXexplicit-return-types` value for [compileTask], as a provider: a module sets
+ * `kotlin { explicitApi() }` in its own build script, which runs after `configureKotlin`.
+ *
+ * Follows `-Xexplicit-api`, which the compiler rejects at a different value than this one — but only
+ * where that flag applies. The Kotlin plugin exempts test sources from explicit-api mode, so a strict
+ * value on a test compilation would demand return types on `@Test fun`s that no consumer ever sees,
+ * and would clash with the disabled explicit-api of that same compilation.
+ */
+private fun Project.explicitReturnTypesArgFor(compileTask: Task): Provider<String> = provider {
+  KotlinSettings.explicitReturnTypesArg(usesExplicitApiStrict() && compileTask.isTestCompilation().not())
+}
+
+/**
+ * Whether this project turned on `kotlin { explicitApi() }` in strict mode.
+ */
+private fun Project.usesExplicitApiStrict(): Boolean =
+  extensions.findByType<KotlinProjectExtension>()?.explicitApi == org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode.Strict
+
+/**
+ * Whether this compile task builds test sources — `compileTestKotlin`, `compileTestKotlinJvm`,
+ * `compileTestFixturesKotlin`. Production tasks (`compileKotlinJvm`, `compileCommonMainKotlinMetadata`)
+ * never carry `Test` in their name.
+ */
+private fun Task.isTestCompilation(): Boolean = name.contains("Test")
+
 private fun ListProperty<String>.addAllDistinct(elements: List<String>) {
   val newElements = get().toMutableSet()
   newElements.addAll(elements)
@@ -902,23 +899,33 @@ enum class WebpackModuleType {
 }
 
 /**
- * Applies the (default) configuration for multiplatform projects.
- * Registers both JVM and JS projects
+ * Applies the shared configuration for multiplatform projects.
+ *
+ * Declares no target: which platforms a module builds for is its registered target set
+ * (`multiplatform(path, …)` in the project registry), applied by `declareTarget` per entry.
  */
-fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: Project, suppressWarnings: Boolean = true) {
-  applyDefaultHierarchyTemplate()
+fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(suppressWarnings: Boolean = true) {
   applyKotlinConfiguration()
 
   compilerOptions {
     this.suppressWarnings = suppressWarnings
     extraWarnings = true
   }
+}
 
-  //Add an JVM configuration
+/**
+ * Declares the `jvm` target.
+ */
+fun KotlinMultiplatformExtension.declareJvmTarget() {
   jvm {
   }
+}
 
-  //Add the JS configuration
+/**
+ * Declares the `js` target: ES modules, Node.js/Mocha tests, and a webpack setup emitting a
+ * modern module.
+ */
+fun KotlinMultiplatformExtension.declareJsTarget(project: Project) {
   js {
     useEsModules() //if enabled, "*.mjs" files are generated in build/compileSync/js/main/productionExecutable/kotlin
 
@@ -956,10 +963,6 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
     }
   }
 
-  //
-  // Configure JS modules
-  //
-
   //Configure JS Compile tasks to use ES2015 modules
   //It seems necessary to configure this *after* calling useEsModules() on the JS target (to avoid overwriting with "es5")
   project.tasks.withType<KotlinJsCompile>().configureEach {
@@ -968,6 +971,13 @@ fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(project: 
       target = "es2015"
     }
   }
+}
+
+/**
+ * Declares the `linuxX64` target.
+ */
+fun KotlinMultiplatformExtension.declareLinuxX64Target() {
+  linuxX64()
 }
 
 /**
@@ -983,19 +993,40 @@ fun Project.isWasmJsEnabled(): Boolean {
 }
 
 /**
- * Adds a `wasmJs` browser target to a multiplatform module - only when the build runs
- * with `-PwasmJs=true` (see [isWasmJsEnabled]), otherwise a no-op.
- *
- * Opt-in per module — called from the module's own `kotlin {}` block after the shared
- * [applyMultiplatformKotlinConfiguration] has already set up the jvm + js targets. Keeping it opt-in
- * prevents the wasmJs target requirement from cascading onto every multiplatform module in the build
- * (a wasmJs consumer requires every commonMain dependency to also expose a wasmJs variant).
+ * Declares the `wasmJs` browser target — but only when the build runs with `-PwasmJs=true`
+ * (see [isWasmJsEnabled]), otherwise a no-op. A module reaches this by registering
+ * [it.neckar.projects.KotlinTarget.WasmJs]; registering it keeps the target requirement from
+ * cascading onto every multiplatform module in the build, because a wasmJs consumer requires
+ * every commonMain dependency to also expose a wasmJs variant.
  *
  * Browser tests are disabled: the wasm test code is still compiled (which verifies wasmJs
  * source-compatibility), but not executed, so CI needs no browser to run the build.
  */
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
-fun KotlinMultiplatformExtension.addWasmJsBrowserTarget(
+fun KotlinMultiplatformExtension.declareWasmJsTarget(project: Project) {
+  if (project.isWasmJsEnabled().not()) {
+    return
+  }
+
+  wasmJs {
+    browser {
+      testTask {
+        enabled = false
+      }
+    }
+  }
+}
+
+/**
+ * Configures the module's own additions to the `wasmJs` target — a browser [executable] and
+ * `wasmJsMain` [wasmJsMainDependencies]. A no-op when the target does not exist, so a module build
+ * script never tests [isWasmJsEnabled] itself.
+ *
+ * Only for what a module needs on top of the shared setup; the target itself comes from the
+ * registered [it.neckar.projects.KotlinTarget.WasmJs].
+ */
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+fun KotlinMultiplatformExtension.configureWasmJsTarget(
   project: Project,
   /**
    * Whether to build a browser executable (webpack bundle) for the wasmJs target
@@ -1016,41 +1047,11 @@ fun KotlinMultiplatformExtension.addWasmJsBrowserTarget(
     if (executable) {
       binaries.executable()
     }
-    browser {
-      testTask {
-        enabled = false
-      }
-    }
   }
 
   if (wasmJsMainDependencies != null) {
     sourceSets.getByName("wasmJsMain").dependencies(wasmJsMainDependencies)
   }
-}
-
-/**
- * Apply Kotlin configuration for JVM-only multiplatform projects.
- * Similar to applyMultiplatformKotlinConfiguration but without JS target.
- */
-fun KotlinMultiplatformExtension.applyJvmOnlyKotlinConfiguration(
-  project: Project,
-  suppressWarnings: Boolean = true
-) {
-  // Do NOT call applyDefaultHierarchyTemplate() - it creates jsMain/jsTest source sets
-  // which trigger "Source Set Used Without a Corresponding Target" warnings when no JS target is registered.
-  // For JVM-only projects, we only need commonMain, commonTest, jvmMain, jvmTest.
-  applyKotlinConfiguration()
-
-  compilerOptions {
-    this.suppressWarnings = suppressWarnings
-    extraWarnings = true
-  }
-
-  //Add a JVM configuration only
-  jvm {
-  }
-
-  // NO JS target - this is the key difference from applyMultiplatformKotlinConfiguration
 }
 
 /**

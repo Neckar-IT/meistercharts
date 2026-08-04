@@ -71,6 +71,15 @@ object KotlinSettings {
    * `grep "is redundant for the current language version"` — a flag that warns has become the LV default;
    * move it from active into the "already default" list below. See the per-version argument-source links above.
    */
+  /**
+   * Requires explicit return types on public API. Not part of [freeCompilerArgs] because the value has
+   * to match `-Xexplicit-api` whenever a module turns that on — the compiler rejects the two flags
+   * with different values. `Utils.configureKotlin` therefore derives it per project from
+   * `kotlin { explicitApi() }`; a module that does not set it keeps the repo-wide `warning`.
+   */
+  fun explicitReturnTypesArg(explicitApiStrict: Boolean): String =
+    if (explicitApiStrict) "-XXexplicit-return-types=strict" else "-XXexplicit-return-types=warning"
+
   val freeCompilerArgs: List<String> = buildList {
     // Opt-ins for the experimental APIs we use.
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" })
@@ -81,7 +90,6 @@ object KotlinSettings {
     add("-Xwarning-level=NOTHING_TO_INLINE:disabled") // do not warn on intentionally non-inline-worthy `inline` funs
     add("-Xreturn-value-checker=full") // report unused return values... (2.2)
     add("-Xwarning-level=RETURN_VALUE_NOT_USED:error") // ...and treat them as errors
-    add("-XXexplicit-return-types=warning") // require explicit return types on public API (full -Xexplicit-api deferred, see #1944)
 
     // Stabilization-track features (opt-in until they become the language-version default).
     add("-Xexpect-actual-classes") // silence expect/actual-class beta warning — KT-61573
@@ -110,6 +118,9 @@ object KotlinSettings {
     //                                     violations at =warning (24,885 visibility + 485 return-type), far
     //                                     above the cleanup threshold, and warnings are globally suppressed
     //                                     anyway. Active -XXexplicit-return-types=warning covers the return half.
+    //                                     Per-module opt-in exists: `kotlin { explicitApi() }` makes
+    //                                     [explicitReturnTypesArg] follow it (commons/concurrent does).
+    //                                     Rolling it out to the remaining open-source modules: #2829.
     //
     // Available but deliberately off:
     //   -Xreport-all-warnings             no effect — warning-level diagnostics are globally suppressed (suppressWarnings=true)

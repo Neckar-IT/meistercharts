@@ -1,10 +1,13 @@
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import it.neckar.gradle.JvmType
 import it.neckar.gradle.Plugins
+import it.neckar.gradle.applyMultiplatformKotlinConfiguration
 import it.neckar.gradle.configureJunit
 import it.neckar.gradle.configureKotlin
 import it.neckar.gradle.configureToolchain
-import it.neckar.gradle.requireNotNull
+import it.neckar.gradle.declareTargets
+import it.neckar.gradle.multiplatformDetektSourceDirectories
+import it.neckar.projects.ConfiguredProject
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
@@ -26,36 +29,33 @@ object ProjectConfiguration {
    * Stubs for configuration methods referenced by AbstractProjects.kt.
    * These project types are not used in the meistercharts standalone build.
    */
-  fun configureMultiPlatformJvmOnly(project: Project, jvmType: JvmType) {
-    configureMultiPlatform(project, jvmType)
-  }
-
   fun configureKspProcessor(project: Project) {}
   fun configurePnpm(project: Project) {}
   fun configurePython(project: Project) {}
   fun configureJvm(project: Project) {}
   fun configureParentProject(project: Project) {}
 
-  fun configureMultiPlatform(project: Project, jvmType: JvmType) {
+  /**
+   * Declares the module's registered Kotlin targets and the shared setup around them — the same
+   * contract the monorepo's `configureMultiplatform` has, reduced to what this build needs.
+   */
+  fun configureMultiplatform(project: Project, configuredProject: ConfiguredProject) {
     with(project) {
       apply(plugin = Plugins.kotlinMultiPlatform)
       apply(plugin = Plugins.detekt)
       apply(plugin = Plugins.kover)
 
       configureKotlin()
-      configureJunit()
-      configureToolchain(jvmType)
 
-      requireNotNull(extensions.getByType(KotlinMultiplatformExtension::class.java))
+      val kotlinMultiplatformExtension = extensions.getByType(KotlinMultiplatformExtension::class.java)
+      kotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration()
+      kotlinMultiplatformExtension.declareTargets(project, configuredProject.targets)
+
+      configureJunit()
+      configureToolchain(JvmType.JavaLatestLTS)
 
       configureDetekt {
-        source.setFrom(
-          files(
-            "src/commonMain/kotlin",
-            "src/jsMain/kotlin",
-            "src/jvmMain/kotlin",
-          )
-        )
+        source.setFrom(files(multiplatformDetektSourceDirectories()))
       }
 
       configureKover {}
