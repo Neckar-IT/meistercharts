@@ -46,6 +46,20 @@ class PackageJsonParser {
   }
 
   /**
+   * Extracts the command line of one script from a package.json file.
+   *
+   * Returns null if the file does not exist or declares no script of that name.
+   */
+  fun extractScript(packageJsonFile: File, scriptName: String): String? {
+    if (packageJsonFile.isFile.not()) {
+      return null
+    }
+
+    val jsonObject = json.parseToJsonElement(packageJsonFile.readText()).jsonObject
+    return jsonObject["scripts"]?.jsonObject?.get(scriptName)?.jsonPrimitive?.content
+  }
+
+  /**
    * Extracts the names of all workspace dependencies from a package.json file.
    *
    * Workspace dependencies are identified by the `workspace:` prefix in their version specifier.

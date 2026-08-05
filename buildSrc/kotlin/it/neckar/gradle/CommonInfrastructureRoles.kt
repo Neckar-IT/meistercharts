@@ -82,6 +82,18 @@ private val CommonHostLandingPageCompose = CommonInfrastructureRole(
   destinationSubdir = "docker-compose",
 )
 
+private val CommonAutohealCompose = CommonInfrastructureRole(
+  sourceSubdir = CommonComposeRole.Autoheal.sourceSubdir,
+  includePattern = "docker-compose-common-*.yml",
+  destinationSubdir = "docker-compose",
+)
+
+private val CommonAutohealScripts = CommonInfrastructureRole(
+  sourceSubdir = CommonComposeRole.Autoheal.sourceSubdir,
+  includePattern = "*.sh",
+  destinationSubdir = "docker-compose",
+)
+
 private val CommonHostLandingPageHtml = CommonInfrastructureRole(
   sourceSubdir = "${CommonComposeRole.HostLandingPage.sourceSubdir}/html",
   includePattern = "*",
@@ -189,6 +201,25 @@ fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
 }
 
 /**
+ * Pulls in the shared restart-supervision compose fragment (autoheal + restart-guard, ADL 0177)
+ * plus the guard's shell script into `docker-compose/`.
+ *
+ * Part of `hostStack()` — every host stack supervises its containers. Both sidecars act only on
+ * containers labelled `autoheal=true`, so a host without such containers runs them idle.
+ *
+ * Copies two files into `docker-compose/`:
+ * - `docker-compose-common-autoheal.yml` (compose fragment with both sidecars)
+ * - `restart-guard.sh` (mounted into the guard container by the fragment)
+ *
+ * The fragment mounts the script via a relative path, so both files must land side by side on
+ * the deployed host — same arrangement as the OTel agent and its config.
+ */
+fun AbstractCopyTask.includeCommonAutohealCompose() {
+  CommonAutohealCompose.applyTo(this)
+  CommonAutohealScripts.applyTo(this)
+}
+
+/**
  * Pulls in the shared worker-host runner-registration scripts (`register-runners.sh`,
  * `setup-gitlab-runner.sh`, `setup-restricted-runner.sh`). These scripts sit at the root
  * of the build output directory and are intended to be executed locally against the target
@@ -228,6 +259,7 @@ enum class CommonComposeRole(
   HostManagement("host-management"),
   HostLogs("host-logs"),
   HostLandingPage("host-landing-page"),
+  Autoheal("autoheal"),
 }
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */
@@ -238,4 +270,5 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
   CommonComposeRole.HostManagement -> includeCommonHostManagementCompose()
   CommonComposeRole.HostLogs -> includeCommonHostLogsCompose()
   CommonComposeRole.HostLandingPage -> includeCommonHostLandingPageCompose()
+  CommonComposeRole.Autoheal -> includeCommonAutohealCompose()
 }
