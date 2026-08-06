@@ -66,7 +66,6 @@ class DebugTileProvider(
         gc.stroke(style.innerBorderColor)
         gc.strokeRect(10.0, 10.0, tileSize.width - 20.0, tileSize.height - 20.0)
 
-        //stroke the diagonals
         gc.strokeLine(0.0, 0.0, tileSize.width, tileSize.height)
         gc.strokeLine(0.0, tileSize.height, tileSize.width, 0.0)
 

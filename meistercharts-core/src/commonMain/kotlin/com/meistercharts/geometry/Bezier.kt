@@ -97,7 +97,6 @@ interface Bezier {
       t: Double,
       emit: (x: Double, y: Double) -> T
     ): T {
-      //return quadToCubic(x0, y0, xc, yc, x1, y1) { x0, y0, x1, y1, x2, y2, x3, y3 -> cubicCalc(x0, y0, x1, y1, x2, y2, x3, y3, t, emit) }
       val t1 = (1 - t)
       val a = t1 * t1
       val c = t * t

@@ -65,34 +65,26 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
     chartSupport.nativeComponentsSupport.onComponent(object : NativeComponentsHandler {
       override fun textInput(textInput: TextInput) {
         registerPlatformComponent(textInput, document.createElement("input") as HTMLInputElement) {
-          //Configure as text
           it.setAttribute("type", "text")
 
-          //Bind the text
           it.bindTextBidirectional(textInput.textProperty, textInput)
         }
       }
 
       override fun checkBox(checkBox: CheckBox) {
         registerPlatformComponent(checkBox, document.createElement("input") as HTMLInputElement) {
-          //Configure as text
           it.setAttribute("type", "checkbox")
 
-          //Bind the text
           it.bindSelectedBidirectional(checkBox.selectedProperty, checkBox)
         }
       }
 
       override fun comboBox(comboBox: ComboBox) {
         registerPlatformComponent(comboBox, document.createElement("select") as HTMLSelectElement) {
-          //Configure as text
-          //it.setAttribute("type", "checkbox")
-
           comboBox.choicesProperty
             .consumeImmediately { choices ->
               val options = it.options
 
-              //clear first
               while (options.length > 0) {
                 options[0]?.removeFromParent()
               }
@@ -105,7 +97,6 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
               }
             }.disposeOn(comboBox)
 
-          //Bind the selection
           it.bindChoiceBidirectional(comboBox.selectedProperty, comboBox) {
             comboBox.choices
           }
@@ -118,21 +109,17 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
    * Registers a plattform component
    */
   private fun <T : HTMLElement> registerPlatformComponent(nativeComponent: NativeComponent, platformComponent: T, binder: (plattformComponent: T) -> Unit) {
-    //Assign the native element as ide
     nativeComponent.id = platformComponent
 
     //Ensure events are processed by this elements
     platformComponent.style.setProperty("pointer-events", "auto")
 
-    //Update the location
     platformComponent.style.setProperty("position", "absolute")
     platformComponent.bindLocation(nativeComponent)
 
-    //Add the element
     div.appendChild(platformComponent)
 
     nativeComponent.onDispose {
-      //Remove if disposed
       platformComponent.remove()
     }
 

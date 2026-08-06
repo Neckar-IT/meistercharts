@@ -453,7 +453,6 @@ class BulletChartGestalt constructor(
     fun applyValueRange(valueRange: ValueRange) {
       this.valueRange = valueRange
 
-      //Update the value axis layer
       if (valueRange is LinearValueRange) {
         valueAxisLayer.configuration.applyLinearScale()
       } else {

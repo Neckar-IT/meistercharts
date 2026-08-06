@@ -224,7 +224,6 @@ fun BulletChartGestalt.applyConfiguration(jsConfiguration: BulletChartConfigurat
     .coerceAtLeast(categoryAxisSupport.calculateContentViewportMarginTop(Unit, chartSupport()))
   contentViewportMargin = contentViewportMargin.withTop(viewportMarginTop)
 
-  //Apply the content viewport margin
   jsConfiguration.contentViewportMargin?.let {
     contentViewportMargin = contentViewportMargin.withValues(it)
   }

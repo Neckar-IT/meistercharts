@@ -132,7 +132,7 @@ class TimeLineChart internal constructor(
     if (currentVisibleTimeRange == previousVisibleTimeRange) {
       return
     }
-    //We dispatch a CustomEvent of type "VisibleTimeRangeChanged" every time the translation along the x-axis changes
+    //Notify listeners whenever the visible x-axis range changes
     previousVisibleTimeRange = currentVisibleTimeRange
     dispatchCustomEvent("visible-time-range-changed", currentVisibleTimeRange.toJs())
   }
@@ -146,7 +146,6 @@ class TimeLineChart internal constructor(
     //decrease number of repaints
     meisterCharts.chartSupport.translateOverTime.roundingStrategy = RoundingStrategy.round
 
-    //Set the preferred refresh rate
     meisterCharts.chartSupport.targetRenderRate = TargetRefreshRate.veryFast60
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
@@ -224,7 +223,6 @@ class TimeLineChart internal constructor(
         configurationAssistant.setDurationBetweenSamples(duration)
       }
 
-      //configure the gap calculator
       jsHistorySettings.minGapSizeFactor?.sanitize()?.let { factor ->
         configurationAssistant.setGapFactor(factor)
       }
@@ -583,7 +581,7 @@ class TimeLineChart internal constructor(
     //Forget about the know descriptors - will notify the client about the change
     historyStorageQueryMonitor.clearKnownDescriptors()
 
-    //Clear the tile cache for this chart to enforce recreation of the tiles. The [historyStorageQueryMonitor] will then be called
+    //Clear the tile cache to force recreation of the tiles, which re-triggers [historyStorageQueryMonitor]
     gestalt.timeLineChartGestalt.tileProvider.clear()
 
     markAsDirty()

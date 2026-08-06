@@ -238,8 +238,6 @@ abstract class AbstractHistoryStripeLayer<
               stripePainter.layoutBegin(paintingContext, stripesLayout.boxSize, visibleDataSeriesIndex, historyConfiguration)
             }
 
-
-            //update the last time stuff
             lastTime = startTime
 
             activeInformation.geometricalCenterIfFinite = layoutDataPoint(
@@ -260,7 +258,6 @@ abstract class AbstractHistoryStripeLayer<
     @HotAllocation("Fallback only when paint runs without a preceding layout - the layout phase caches the calculator in currentTimeChartCalculator")
     val chartCalculator = currentTimeChartCalculator ?: paintingContext.chartSupport.timeChartCalculator(configuration.contentAreaTimeRange())
 
-    //Fill the background
     configuration.background?.let { background ->
       @Window val y0 = chartCalculator.contentAreaRelative2windowY(0.0)
       @Window val y1 = chartCalculator.contentAreaRelative2windowY(1.0)
@@ -278,7 +275,6 @@ abstract class AbstractHistoryStripeLayer<
     //translate to content area origin
     gc.translate(0.0, chartCalculator.contentAreaRelative2windowY(0.0))
 
-    //Iterate over all visible reference entry data series
     visibleIndices.fastForEachIndexed { visibleIndexAsInt, visibleDataSeriesIndex ->
       val stripePainter = configuration.stripePainters.valueAt(visibleDataSeriesIndex)
 

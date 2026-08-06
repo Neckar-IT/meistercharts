@@ -52,7 +52,6 @@ class TooltipLayer(
    * Initialize the listeners
    */
   override fun initialize(paintingContext: LayerPaintingContext) {
-    //initialize the tool tip layer
     super.initialize(paintingContext)
 
     val layerSupport = paintingContext.layerSupport
@@ -71,7 +70,6 @@ class TooltipLayer(
     val tooltipSupport = paintingContext.chartSupport.tooltipSupport
     val mousePosition = paintingContext.layerSupport.mouseEvents.mousePosition ?: return
 
-    //Check for (new) tooltip
     val tooltipContent = tooltipSupport.tooltip.value
 
     if (tooltipContent != null) {

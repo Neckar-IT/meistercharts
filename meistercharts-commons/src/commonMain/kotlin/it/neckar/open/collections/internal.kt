@@ -47,23 +47,6 @@ internal fun ilog2(v: Int): Int = kotlin.math.log2(v.toDouble()).toInt()
 @PublishedApi
 internal fun ilog2Ceil(v: Int): Int = kotlin.math.ceil(kotlin.math.log2(v.toDouble())).toInt()
 
-//private val ilog2_tab32 = intArrayOf(
-//    0, 9, 1, 10, 13, 21, 2, 29,
-//    11, 14, 16, 18, 22, 25, 3, 30,
-//    8, 12, 20, 28, 15, 17, 24, 7,
-//    19, 27, 23, 6, 26, 5, 4, 31
-//)
-//
-//internal fun ilog2(value: Int): Int {
-//    var v = value
-//    v = v or (v ushr 1)
-//    v = v or (v ushr 2)
-//    v = v or (v ushr 4)
-//    v = v or (v ushr 8)
-//    v = v or (v ushr 16)
-//    return ilog2_tab32[(v * 0x07C4ACDD) ushr 27]
-//}
-
 
 // arraycopy wrappers delegate to kotlin.collections.copyInto, which returns the
 // destination array purely as a convenience. All call sites discard the return.

@@ -87,7 +87,6 @@ class SingleTapGestureSupport(
       //Last finger lifted
       val currentStart = startEventTime ?: return reset()
 
-      //Calculate the press time
       val pressDuration = nowMillis() - currentStart
 
       //Check for the duration of the "press"

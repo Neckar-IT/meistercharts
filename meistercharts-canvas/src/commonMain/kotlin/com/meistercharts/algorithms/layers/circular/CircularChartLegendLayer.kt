@@ -91,7 +91,6 @@ class CircularChartLegendLayer(
           valueFormatted
         }
 
-        //Move to the anchor point
         gc.translate(anchor.anchor.x, anchor.anchor.y)
         paintingContext.paintTextWithPaintable(captionToPaint, paintable, PaintableLocation.PaintableOutside, anchor.anchorDirection)
       }

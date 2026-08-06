@@ -28,7 +28,7 @@
 package it.neckar.open.version
 
 /**
- * JS implementation: resolves git info from the injected deploy metadata (#2413).
+ * JS implementation: resolves git info from the injected deploy metadata.
  *
  * Chain: `globalThis.__APP_GIT_INFO__[propertyKey]` (a plain object filled at serve time —
  * Ktor templating or the nginx entrypoint) → `<meta name="app-version">` (hash only) →

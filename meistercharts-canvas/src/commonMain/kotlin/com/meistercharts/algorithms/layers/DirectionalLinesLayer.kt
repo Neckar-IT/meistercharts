@@ -79,12 +79,9 @@ class DirectionalLinesLayer(
 
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
-      //Prepare the caches
       startCoordinatesMultiBuffer.prepare(size)
       directionsBuffer.prepare(size)
       endCoordinatesMultiBuffer.prepare(size)
-
-      //Calculate the min/max values for all lines
 
       val minX: @Window Double
       val maxX: @Window Double
@@ -329,7 +326,6 @@ inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForE
 ) {
   startCoordinatesMultiBuffer.fastForEachIndexed(iterationOrder) { index: @DirectionalLinesLayer.LineIndex Int, startX: @MayBeNaN @Window Double, startY: @Window @MayBeNaN Double ->
     if (startX.isFinite().not() || startY.isFinite().not()) {
-      //Skip if x or y are not finite
       return@fastForEachIndexed
     }
 
@@ -337,7 +333,6 @@ inline fun DirectionalLinesLayer.DirectionalLinesLayerPaintingVariables.fastForE
     @Window @MayBeNaN val endY = endCoordinatesMultiBuffer.y(index)
 
     if (endX.isFinite().not() || endY.isFinite().not()) {
-      //Skip if x or y are not finite
       return@fastForEachIndexed
     }
 

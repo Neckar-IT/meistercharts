@@ -460,7 +460,6 @@ class CanvasRenderingContextJS(
     if (maxWidth != null && maxWidth.isFinite() && maxWidth > 0.0) {
       if (DebugFeature.ShowMaxTextWidth.enabled(debug)) {
         saved {
-          //Find the starting point
           val left = relevantX + when (horizontalAlignment) {
             HorizontalAlignment.Left -> 0.0
             HorizontalAlignment.Center -> -maxWidth / 2.0
@@ -615,7 +614,6 @@ class CanvasRenderingContextJS(
         saved {
           @px val width = calculateTextWidth(text)
           if (width > maxWidth) {
-            //paint the complete text in silver
             stroke(Color.silver)
             context.strokeText(text, relevantX, relevantY)
           }

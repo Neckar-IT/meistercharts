@@ -169,8 +169,6 @@ class TGenPriorityQueue<TGen>
   override fun addAll(elements: Collection<TGen>): Boolean = run { for (e in elements) add(e); elements.isNotEmpty() }
   override fun clear() = run { size = 0 }
 
-  //fun poll() = head
-
   override fun removeAll(elements: Collection<TGen>): Boolean {
     val temp = ArrayList(toList())
     val res = temp.removeAll(elements)

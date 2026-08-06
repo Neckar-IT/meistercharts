@@ -50,7 +50,7 @@ import it.neckar.open.annotations.meta.AllocationDescribingAnnotation
  * Because method annotations are not inherited, `OverrideMustRepeatContractAnnotation` forces every
  * override of a `@Hot` declaration to repeat `@Hot`.
  *
- * The runtime allocation recorder (see MR !15550) remains the stronger guardrail; these static
+ * The runtime allocation recorder remains the stronger guardrail; these static
  * rules are the early, compile-time complement.
  */
 @MustBeDocumented

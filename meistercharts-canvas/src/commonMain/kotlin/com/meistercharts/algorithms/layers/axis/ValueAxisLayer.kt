@@ -151,7 +151,6 @@ class ValueAxisLayer
     paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, formattedTick ->
       @px val currentY = chartCalculator.domain2windowY(tickValue, valueRange)
 
-      //The tick line
       if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
         when (direction) {
           Direction.CenterLeft -> gc.strokeLine(-configuration.tickLabelGap - configuration.tickLength, currentY, -configuration.tickLabelGap, currentY)
@@ -160,7 +159,6 @@ class ValueAxisLayer
         }
       }
 
-      //The tick label
       if (formattedTick.isNotEmpty()) {
         @HotAllocation("Once per tick per frame - platform text rendering; tick count is bounded by axis length / font height")
         gc.fillText(
@@ -194,7 +192,6 @@ class ValueAxisLayer
     paintingVariables.tickLabels.fastForEachIndexed { _, tickValue, tickValueLabel ->
       @px val currentX = chartCalculator.domain2windowX(tickValue, valueRange)
 
-      //The tick line
       if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
         when (direction) {
           Direction.BottomCenter -> gc.strokeLine(currentX, configuration.tickLabelGap + configuration.tickLength, currentX, configuration.tickLabelGap)
@@ -203,13 +200,10 @@ class ValueAxisLayer
         }
       }
 
-      //The tick label
       if (tickValueLabel.isNotEmpty()) {
-        //Calculate available space in window
         val width = paintingContext.width
 
 
-        //Calculate the max width for the label
         @px val remainingSpaceToRight = width - currentX
 
         @Suppress("UnnecessaryVariable")
@@ -272,7 +266,6 @@ class ValueAxisLayer
      */
     fun linear(title: String, valueRange: LinearValueRange, additionalConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
-        //Configure the ticks for linear
         applyLinearScale()
         additionalConfiguration()
       }
@@ -283,7 +276,6 @@ class ValueAxisLayer
      */
     fun logarithmic(title: String, valueRange: LogarithmicValueRange, additionalConfiguration: Configuration.() -> Unit = {}): ValueAxisLayer {
       return ValueAxisLayer(title, valueRange) {
-        //Configure the ticks for logarithmic
         applyLogarithmicScale()
         additionalConfiguration()
       }

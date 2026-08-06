@@ -120,7 +120,6 @@ class ValueAxisHudLayer(
     override fun calculate(paintingContext: LayerPaintingContext) {
       @HudElementIndex val size = configuration.locations.size(paintingContext)
 
-      //Prepare the caches
       coordinatesMultiBuffer.prepare(size)
       anchorDirectionsBuffer.prepare(size)
       labelsBuffer.prepare(size)
@@ -151,7 +150,6 @@ class ValueAxisHudLayer(
       @Window @MayBeNaN val y = paintingVariables.coordinatesMultiBuffer.y(index)
 
       if (x.isFinite().not() || y.isFinite().not()) {
-        //Skip if x or y are not finite
         return@fastForEach
       }
 
@@ -195,7 +193,6 @@ class ValueAxisHudLayer(
           maxStringWidth = configuration.maxWidth.valueAt(index)
         )
 
-        //Store the bounding box
         paintingVariables.boundingBoxes[index] = boundingBox.plus(x, y)
 
         gc.beginPath()

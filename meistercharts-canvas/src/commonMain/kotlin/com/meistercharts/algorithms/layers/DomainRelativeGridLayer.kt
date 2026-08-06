@@ -82,8 +82,6 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
 
     when (configuration.orientationProvider()) {
       Orientation.Horizontal -> {
-        //Paint horizontal lines
-
         //Lines calculated from @DomainRelative values
         configuration.valuesProvider.fastForEach { value: @DomainRelative Double ->
           @Window val locationY = chartCalculator.domainRelative2windowY(value)
@@ -97,8 +95,6 @@ class DomainRelativeGridLayer @JvmOverloads constructor(
       }
 
       Orientation.Vertical -> {
-        //paint vertical lines
-
         //Lines calculated from @DomainRelative values
         configuration.valuesProvider.fastForEach { value: @DomainRelative Double ->
           @Window val locationX = chartCalculator.domainRelative2windowX(value)

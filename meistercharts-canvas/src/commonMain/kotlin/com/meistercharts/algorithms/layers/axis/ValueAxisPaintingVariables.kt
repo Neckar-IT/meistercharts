@@ -160,8 +160,8 @@ abstract class ValueAxisPaintingVariablesImpl : AxisPaintingVariablesImpl(), Val
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
   ) {
-    //Calculate the max length of/for the tick labels. We assume that the first (for negative values) or the last one (for positive values) is probably the largest value.
-    //Also ensure that we have at least 6 characters if a broken tick format is provided.
+    //The widest tick label is usually the first (negative values) or last (positive values).
+    //Reserve at least 6 characters when a broken tick format is provided.
 
     @HotAllocation("Twice per layout pass per axis - formatted range start/end; the value-range bounds rarely change, CachedNumberFormat caches per value")
     val startTickFormatted: String = style.ticksFormat.format(contentAreaValueRange.start, paintingContext.i18nConfiguration)

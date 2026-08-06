@@ -69,9 +69,8 @@ class SlippyMapLayer @JvmOverloads constructor(
   override val type: LayerType
     get() = LayerType.Content
 
-  // TODO use a slippy-map optimized cache. Such a cache should know that x and y always lie within 0 to 2^zoom - 1.
-  // Furthermore there are 2^zoom x 2^zoom tiles at a certain zoom level. If we know which zoom level to target we
-  // could choose a better cache size.
+  // TODO use a slippy-map optimized cache: x/y lie within 0..2^zoom-1 and there are 2^zoom x 2^zoom tiles
+  // per zoom level, so the cache size could be chosen per target zoom level.
   val tileProvider: CachedTileProvider = MapTileProvider(configuration.slippyMapProvider, configuration).cached(configuration.chartId)
 
   /**

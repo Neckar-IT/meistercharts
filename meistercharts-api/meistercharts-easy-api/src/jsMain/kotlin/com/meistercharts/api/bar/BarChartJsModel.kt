@@ -32,7 +32,7 @@ import com.meistercharts.api.category.CategoriesSeriesData
  */
 @JsExport
 external interface BarChartData : CategoriesSeriesData {
-  //BarChartData sounds nicer than CategoriesData. This interface ensures the nicer name in the external JavaScript API
+  //Alias for CategoriesData that exposes the nicer name in the external JavaScript API
 }
 
 /**

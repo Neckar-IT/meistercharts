@@ -147,7 +147,6 @@ class TooltipInteractionLayer<T>(
 
           val layout: EquisizedBoxLayout = layoutProvider()
 
-          //Convert to content area (relative to the content area
           val boxIndex: BoxIndex? = when (orientation()) {
             Orientation.Horizontal -> {
               @ContentArea val xZoomed = chartSupport.chartCalculator.window2contentAreaX(coordinates.x)
@@ -198,7 +197,6 @@ class TooltipInteractionLayer<T>(
 
           @ContentAreaRelative @TimeRelative val timeRelative = chartCalculator.window2contentAreaRelativeX(coordinates.x)
 
-          //Convert to content area (relative to the content area
           val layout: EquisizedBoxLayout = layoutProvider()
 
           @ContentArea val yContentArea = chartCalculator.window2contentAreaY(coordinates.y)

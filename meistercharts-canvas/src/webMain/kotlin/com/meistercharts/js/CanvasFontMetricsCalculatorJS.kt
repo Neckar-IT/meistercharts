@@ -80,11 +80,9 @@ class CanvasFontMetricsCalculatorJS(
 
       canvasRenderingContext.font = font
 
-      //Set the text alignment stuff
       canvasRenderingContext.textBaseline = verticalAlignment
       canvasRenderingContext.horizontalAlignment = HorizontalAlignment.Left
 
-      //Draw the letter
       canvasRenderingContext.context.fillText(char.toString(), 0.0, 0.0)
     }
 
@@ -106,7 +104,6 @@ class CanvasFontMetricsCalculatorJS(
 
       canvasRenderingContext.font = fontDescriptor
 
-      //Set the text alignment stuff
       canvasRenderingContext.context.textBaseline = textBaseline
       canvasRenderingContext.context.textAlign = CanvasTextAlign.LEFT
 
@@ -135,17 +132,11 @@ class CanvasFontMetricsCalculatorJS(
   override fun ImageData.containsPixel(y: Int): Boolean {
     for (x in 0 until width) {
       val baseOffset = ((width * y) + x) * 4
-      //val offsetRed = baseOffset + 0
-      //val offsetGreen = baseOffset + 1
-      //val offsetBlue = baseOffset + 2
       val offsetAlpha = baseOffset + 3
 
       //data[] returns a signed Byte: a fully opaque alpha of 255 is Byte -1, so `alpha > 0` would
       //miss every alpha in 128..255. Mask to the unsigned value and test for any non-transparent pixel.
       val alpha = data[offsetAlpha].toInt() and 0xFF
-      //val red = data[offsetRed]
-      //val green = data[offsetGreen]
-      //val blue = data[offsetBlue]
 
       if (alpha > 0) {
         //We found a pixel

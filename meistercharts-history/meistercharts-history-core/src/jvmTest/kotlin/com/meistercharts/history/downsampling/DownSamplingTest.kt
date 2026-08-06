@@ -65,37 +65,6 @@ class DownSamplingTest {
     assertThat(timeStamps.last()).isEqualTo(descriptor.end - descriptor.bucketRange.distance / 2.0)
   }
 
-  //@Test
-  //fun testDownSamplingSuperSimple() {
-  //  assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500")
-  //
-  //  val descriptor0 = HistoryBucketDescriptor.forTimestamp(nowForTests, HistoryBucketRange.FiveSeconds)
-  //  assertThat(descriptor0.start.formatUtc()).isEqualTo("2020-05-21T15:00:40.000")
-  //  assertThat(descriptor0.end.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
-  //
-  //  val descriptor1 = descriptor0.next()
-  //  assertThat(descriptor1.start.formatUtc()).isEqualTo("2020-05-21T15:00:45.000")
-  //  assertThat(descriptor1.end.formatUtc()).isEqualTo("2020-05-21T15:00:50.000")
-  //
-  //
-  //  historyChunk()
-  //
-  //  val historyValues = historyValues(0, 1, 3, RecordingType.Measured) {
-  //
-  //  }
-  //
-  //  val bucket0 = HistoryBucket(
-  //    descriptor0,
-  //    HistoryChunk()
-  //
-  //    )
-  //  val parentDescriptor = descriptor0.parent() ?: throw IllegalStateException()
-  //  val downSampled = parentDescriptor.calculateDownSampled(listOf(bucket0))
-  //
-  //  println(downSampled.chunk.enumValuesAsMatrixString())
-  //
-  //}
-
   @Test
   fun testDownSamplingEnum() {
     assertThat(nowForTests.formatUtc()).isEqualTo("2020-05-21T15:00:41.500Z")

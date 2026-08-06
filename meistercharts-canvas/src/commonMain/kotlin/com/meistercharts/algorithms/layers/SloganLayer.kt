@@ -74,7 +74,6 @@ class SloganLayer(
     if (configuration.keepSloganInBounds) {
       val maxTextSize = Size(gc.width * configuration.maxPercentage, gc.height * configuration.maxPercentage)
 
-      //Calculate the max font size
       textSize = gc.guessFontSize(sloganText, maxTextSize, FontSize.XXS) ?: return
     }
 
@@ -82,7 +81,6 @@ class SloganLayer(
     val glowWidth = textSize.width * configuration.glowScaleX
     val glowHeight = textSize.height * configuration.glowScaleY
 
-    //Calculate the optimal translate y
     @px val optimalTranslateY = gc.height / 2.0 + configuration.sloganOffsetY
     val minTranslateY = gc.getFontMetrics().accentLine / 2.0
 

@@ -90,16 +90,13 @@ class GaugePaintable(
     paintingVariables.calculate()
 
     paintingContext.gc.translate(x, y)
-    //to the requested coordinates
 
     val radius = paintingVariables.radius
     val startAngle = paintingVariables.startAngle
     val extendWithRotationDirection = paintingVariables.extendWithRotationDirection
     val valueRange = paintingVariables.valueRange
 
-    //Paints the base
     style.basePainter.paintBase(this, paintingContext, radius, startAngle, extendWithRotationDirection, valueRange)
-    // paint current value
 
     style.valuePainter.paintCurrentValue(
       this,

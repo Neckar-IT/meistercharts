@@ -101,10 +101,8 @@ class CandleHistoryCanvasTilePainter(val configuration: Configuration) : History
           configuration.lineStyles.valueAt(dataSeriesIndex.value).apply(gc)
           gc.strokeLine(x + candleWidth / 2.0, maxY, x + candleWidth / 2.0, minY)
 
-          //stroke max
           gc.strokeLine(x, maxY, x + candleWidth, maxY)
 
-          //stroke min
           gc.strokeLine(x, minY, x + candleWidth, minY)
         }
 

@@ -93,12 +93,10 @@ class CategoryLinesLayer(
       val layout = paintingVariables.layout
 
       return@registerResolverAsFirst buildList<WhatsAtResultElement<*>> {
-        //Find the segment/category
         layout.boxIndexFor(contentAreaX)?.let { foundSegmentIndex ->
 
           val segmentCenterX = layout.calculateCenter(foundSegmentIndex)
 
-          //Add the category itself
           add(
             WhatsAtResultElement(
               ResultElementType.category,
@@ -110,7 +108,6 @@ class CategoryLinesLayer(
 
           val categoryIndex = CategoryIndex(foundSegmentIndex.value)
 
-          //Find the exact point
           configuration.categorySeriesModel.numberOfSeries.fastFor { seriesIndexAsInt ->
             val seriesIndex = SeriesIndex(seriesIndexAsInt)
             @Domain val valueForPoint = configuration.categorySeriesModel.valueAt(categoryIndex, seriesIndex)
@@ -194,7 +191,6 @@ class CategoryLinesLayer(
   ) {
     val layout = paintingVariables.layout
     for (categoryIndexAsInt in 0 until configuration.categorySeriesModel.numberOfCategories) {
-      //Translate to the start of the content area
       @Window val centerX = chartCalculator.zoomed2windowX(layout.calculateCenter(BoxIndex(categoryIndexAsInt)))
 
       val categoryIndex = CategoryIndex(categoryIndexAsInt)

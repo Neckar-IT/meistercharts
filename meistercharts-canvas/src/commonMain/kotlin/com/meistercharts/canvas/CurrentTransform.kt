@@ -174,10 +174,6 @@ class CurrentTransform {
     scaleY *= y
   }
 
-  //fun rotate(angleInRadians: @rad Double) {
-  //  rotation += angleInRadians
-  //}
-
   companion object {
     /**
      * The size of the save/restore stack

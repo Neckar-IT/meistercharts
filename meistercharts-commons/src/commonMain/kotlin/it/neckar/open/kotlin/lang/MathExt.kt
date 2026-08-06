@@ -455,8 +455,7 @@ fun Double.roundDecimalPlacesHalfUp(places: Int): Double {
  * Attention: Uses [Epsilon] for comparison with 0.5
  */
 fun Double.roundHalfUp(): Double {
-  //floor(x + 0.5) rounds half up (ties toward +infinity) and works for negatives too;
-  //`number % 1` used previously was negative for negative inputs, so it truncated toward zero instead.
+  //floor(x + 0.5) rounds half up (ties toward +infinity) and works for negatives too.
   return floor(this + 0.5 + Epsilon)
 }
 

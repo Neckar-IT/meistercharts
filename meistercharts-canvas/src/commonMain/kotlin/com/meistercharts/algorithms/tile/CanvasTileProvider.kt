@@ -121,7 +121,6 @@ class CanvasTile(
     val snapshotValue = requireNotNull(snapshot) { "Snapshot must not be null!" }
     val creationInfoValue = requireNotNull(creationInfo) { "creationInfo must not be null!" }
 
-    //Check if the tile is empty
     if (creationInfoValue.isEmpty) {
       //If the tile is empty there is no need to paint it
       return

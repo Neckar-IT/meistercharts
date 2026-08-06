@@ -50,7 +50,6 @@ class LayerSupportApiTest {
     layerSupport.layers.addLayer(mockLayer)
 
     assertThat(chartSupport.dirtySupport.dirty).isTrue() //initially set to true
-    //reset dirty marker
     chartSupport.dirtySupport.clearIsDirty()
 
     //Not marked as dirty

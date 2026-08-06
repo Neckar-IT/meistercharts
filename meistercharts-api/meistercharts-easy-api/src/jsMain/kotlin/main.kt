@@ -19,7 +19,6 @@ import it.neckar.logging.LogConfigurer
 import it.neckar.logging.console.ConsoleLogFunctionsSupport
 
 fun main() {
-  //Load logger configuration from local storage
   LogConfigurer.initializeFromLocalStorage(Level.WARN)
   ConsoleLogFunctionsSupport.init("meistercharts")
 

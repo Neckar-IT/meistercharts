@@ -173,7 +173,6 @@ class CanvasTouchZoomAndPanSupport {
             //Check for pinch and pan
             event.ifTwoTouches {
               //Begin the gesture
-              //Save the current touches
               storeCoordinates(event.targetTouches[0], event.targetTouches[1])
               return EventConsumption.Consumed
             }
@@ -243,7 +242,6 @@ class CanvasTouchZoomAndPanSupport {
 
             //Releasing the third finger, also results in the start of a two finger gesture
             event.ifTwoTouches {
-              //Save the current touches
               storeCoordinates(event.targetTouches[0], event.targetTouches[1])
               return EventConsumption.Consumed
             }
@@ -291,7 +289,6 @@ class CanvasTouchZoomAndPanSupport {
       val oldDelta = oldDistanceAbs.coerceAtLeast(minDistanceBetweenTouches)
       val newDelta = newDistanceAbs.coerceAtLeast(minDistanceBetweenTouches)
 
-      //Calculate the zoom factor change
       (1 / oldDelta * newDelta)
     } else {
       //Both distances (old and new) between touches are within the dead zone, ignore

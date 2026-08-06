@@ -761,7 +761,6 @@ fun Paintable.strokeBoundingBox(paintingContext: LayerPaintingContext, x: @Windo
   gc.stroke(stroke)
   gc.strokeRect(boundingBox(paintingContext))
 
-  //Paint the origin
   if (showOrigin) {
     gc.strokeLine(-5.0, 0.0, 5.0, 0.0)
     gc.strokeLine(0.0, -5.0, 0.0, 5.0)
@@ -783,7 +782,6 @@ fun LayerPaintingContext.paintTextWithPaintable(
   @px gap: Double = 5.0,
   @Zoomed maxTextWidth: Double? = null,
 ) {
-  //Check if the paintable is placed on the left side
   val paintableOnLeft = when (paintableLocation) {
     PaintableLocation.PaintableLeft -> true
     PaintableLocation.PaintableRight -> false
@@ -837,7 +835,6 @@ fun LayerPaintingContext.paintTextWithPaintable(
       }
     }
 
-    //Paint the text
     gc.saved {
       val textOffsetX: Double
       val horizontalAlignment: HorizontalAlignment
@@ -893,7 +890,6 @@ fun LayerPaintingContext.paintTextWithPaintable(
       }
     }
 
-    //Paint the text
     gc.saved {
       val textOffsetX: Double
       val horizontalAlignment: HorizontalAlignment
@@ -1163,13 +1159,11 @@ fun CanvasRenderingContext.paintTextBox(
     }
   }
 
-  //Calculate the x position of the text
   @px val textX: Double = computeTextBoxTextX(anchorDirection, horizontalAlignment, boxStyle.padding, textBlockWidth) + offsetForGapX
 
-  //Calculate the y position of the text - based upon the box -- text baseline is *always* baseline, therefore add the ascent
+  //Text baseline is always the baseline, so add the ascent to place the text within the box
   val textY: Double = boxOriginY + boxStyle.padding.top + fontMetrics.accentLine
 
-  //Enable shadow - if configured
   boxStyle.shadow?.let {
     shadow(it)
   }
@@ -1184,7 +1178,6 @@ fun CanvasRenderingContext.paintTextBox(
   clearShadow()
 
 
-  //Draw the (optional) border
   boxStyle.borderColor.get()?.let { border ->
     stroke(border)
     lineWidth = boxStyle.borderWidth
@@ -1192,7 +1185,6 @@ fun CanvasRenderingContext.paintTextBox(
   }
 
   var currentTextY = textY
-  //Draw the text
   fill(textColor)
 
   fixedLines.fastForEach { line ->

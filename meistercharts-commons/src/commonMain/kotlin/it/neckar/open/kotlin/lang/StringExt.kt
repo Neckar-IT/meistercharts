@@ -172,7 +172,6 @@ fun String.parseInt(): Int = when {
   else -> this.toInt()
 }
 
-//val String.quoted: String get() = this.quote()
 fun String.toCharArray() = CharArray(length) { this@toCharArray[it] }
 
 fun String.escape(): String {

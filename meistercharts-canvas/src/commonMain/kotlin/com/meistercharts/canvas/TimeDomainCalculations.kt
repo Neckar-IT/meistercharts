@@ -104,7 +104,6 @@ fun ChartCalculator.contentAreaRelative2TimeRangeX(start: @ContentAreaRelative D
  * Returns the time value for a tile relative value
  */
 fun TileChartCalculator.tileRelative2TimeX(tileRelative: @TileRelative Double, contentAreaTimeRange: TimeRange): @ms Double {
-  //Calculate the tile width relative to the content area
   @ContentAreaRelative val contentAreaRelativeTileWidth = contentArea2contentAreaRelativeX(tileWidth * tileRelative)
   return tileOrigin2timeX(contentAreaTimeRange) + contentAreaTimeRange.relative2timeDelta(contentAreaRelativeTileWidth)
 }

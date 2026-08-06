@@ -228,7 +228,6 @@ fun BarChartGroupedGestalt.applyStyle(jsStyle: BarChartGroupedStyle) {
     .coerceAtLeast(categoryAxisSupport.calculateContentViewportMarginTop(Unit, chartSupport()))
   contentViewportMargin = contentViewportMargin.withTop(viewportMarginTop)
 
-  //Apply the content viewport margin
   jsStyle.contentViewportMargin?.let {
     contentViewportMargin = contentViewportMargin.withValues(it)
   }

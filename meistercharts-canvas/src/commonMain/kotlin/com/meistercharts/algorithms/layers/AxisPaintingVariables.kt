@@ -214,9 +214,7 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
     style: AxisConfiguration,
   ) {
     //TODO check orientation!
-    //Calculate the space for the title
     spaceForTitleIncludingGap = if (style.titleVisible() && style.hasNonBlankTitle(paintingContext.chartSupport)) {
-      //Title font related calculations
       @HotAllocation("Once per layout pass per axis layer with visible title - the fragment-to-descriptor conversion is cached")
       paintingContext.gc.font(style.titleFont())
       titleFontMetrics = paintingContext.gc.getFontMetrics()
@@ -235,7 +233,6 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
     paintingContext: LayerPaintingContext,
     style: AxisConfiguration,
   ) {
-    //Calculate start/end of the axis
     val chartCalculator = paintingContext.chartCalculator
 
     when (style.orientation) {
@@ -256,7 +253,6 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
         }
       }
 
-      // ------
       Orientation.Horizontal ->
         when (style.paintRange) {
           AxisConfiguration.PaintRange.ContentArea -> {
@@ -288,7 +284,6 @@ abstract class AxisPaintingVariablesImpl : AxisPaintingVariables {
   fun calculateTickLabelsMaxWidth(
     style: AxisConfiguration,
   ) {
-    //Calculate the max width for the tick value label
     tickValueLabelMaxWidth = when (style.orientation) {
       Orientation.Vertical -> calculateTickLabelsMaxWidthVertical(style)
 

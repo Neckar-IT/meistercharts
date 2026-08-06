@@ -92,7 +92,6 @@ class CachedTileProviderTest {
     assertThat(tile).isNotNull()
     assertThat(cache.size).isEqualTo(1)
 
-    //Check cache
     assertThat(cachedTileProvider.getTile(tileIdentifier)).isSameAs(tile)
 
     var count = 0

@@ -50,7 +50,6 @@ open class LayoutVariablesObjectBuffer<T : LayoutVariable>(
   @Allocates(AllocationCost.Constant)
   override fun addNewElement(): T {
     return super.addNewElement().also {
-      //reset the newly added object
       it.reset()
     }
   }

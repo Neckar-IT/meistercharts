@@ -75,7 +75,6 @@ object LogarithmicAxisTickCalculator {
 
     LinearAxisTickCalculator.calculateTickValuesInto(target, logLower, logUpper, AxisEndConfiguration.Default, maxTickCount, minTickDistanceLog, IntermediateValuesMode.Only10)
 
-    //Convert the exponents (in place) to the tick values
     for (i in 0 until target.size) {
       target[i] = 10.0.pow(target[i])
     }

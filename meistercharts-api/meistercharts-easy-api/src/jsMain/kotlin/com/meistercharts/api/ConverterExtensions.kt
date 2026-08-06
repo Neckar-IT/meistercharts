@@ -575,7 +575,7 @@ fun ValueAxisLayer.Configuration.applyValueAxisStyle(jsStyle: ValueAxisStyle?) {
 
   this.valueLabelStringShortener = CanvasStringShortener.exactButSlowTruncateToLength
 
-  //Title gap is no longer relevant, since we are using top layer
+  //Title gap irrelevant: top layer is used
   //jsStyle?.titleGap
 
   //debug code: uncomment the following lines to check whether the custom element sets all relevant properties
@@ -731,7 +731,6 @@ fun <Key> ThresholdsSupport<Key>.applyThresholdStyles(jsThresholds: Array<Thresh
     jsThresholds.map { jsThreshold -> jsThreshold.labelFont.toFontDescriptorFragment() }
   )
 
-  //Threshold lines layer
   val thresholdLinesLayer = getThresholdLinesLayer(key)
 
   thresholdLinesLayer.configuration.lineStyles = MultiProvider.forListModulo(

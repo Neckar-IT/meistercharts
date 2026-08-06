@@ -33,8 +33,8 @@ import it.neckar.open.unit.number.PositiveOrZero
  * Inserts [millis] milliseconds into the formatted date [formattedWithoutMillis] which has no milliseconds part yet
  */
 internal fun insertMillis(formattedWithoutMillis: String, millis: Int): String {
-  // This is a crude workaround to display milliseconds for the most common locales (which use ':' as a separator between hour, minute and second).
-  // Unfortunately there is no browser supported way to format a date with milliseconds directly.
+  // Crude workaround: no browser API formats milliseconds directly, so insert them after the seconds for the common
+  // locales that use ':' between hour, minute and second.
   try {
     val firstIndexOfSeparator = formattedWithoutMillis.indexOf(":")
     if (firstIndexOfSeparator != -1) {

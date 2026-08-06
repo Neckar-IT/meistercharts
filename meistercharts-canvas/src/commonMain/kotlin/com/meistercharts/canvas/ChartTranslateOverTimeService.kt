@@ -74,7 +74,6 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : ChartRende
       "Invalid chart support. Was $chartSupport but expected ${this.chartSupport}"
     }
 
-    //Calculate the new translation
     translateTo(frameTimestamp, reason = UpdateReason.Animation)
   }
 

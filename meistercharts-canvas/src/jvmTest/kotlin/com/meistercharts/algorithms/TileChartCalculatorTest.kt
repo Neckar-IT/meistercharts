@@ -208,7 +208,6 @@ class TileChartCalculatorTest {
     calculator.testTile2ContentAreaY(100.0, 7 * 300 + 100.0)
     calculator.testTile2ContentAreaY(1000.0, 7 * 300 + 1000.0)
 
-    //Now zoom
     chartState.zoom = Zoom(2.0, 3.0)
 
     calculator.testTile2ContentAreaX(0.0, (4 * 200 + 0.0) / 2)
@@ -397,7 +396,6 @@ class TileChartCalculatorTest {
       assertThat(it.visibleTimeRangeXinTile(timeRange)).isEqualTo(TimeRange(100_000.0 + 2500 * 2, 100_000.0 + 2500 * 3))
     }
 
-    //Set zoom!
     chartState.zoomX = 10.0
     chartState.zoomY = 10.0
 

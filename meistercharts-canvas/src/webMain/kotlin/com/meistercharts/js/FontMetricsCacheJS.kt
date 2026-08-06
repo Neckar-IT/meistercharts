@@ -47,7 +47,6 @@ object FontMetricsCacheJS : FontMetricsCache {
    */
   @Suppress("unused")
   private val fontLoadedSubscription = FontLoadedEventBroker.onLoaded {
-    //Clear the cache whenever a font has been loaded.
     fontMetricsCache.clear()
   }
 

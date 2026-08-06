@@ -99,7 +99,6 @@ class HudAndDirectionLayerActiveConnector(
       }
     }
 
-    //Update the actions
     directionalLinesInteractionLayer.configuration.applyActiveLineAction = {
         activeLayerIndex: @MayBeNegative Int,
         activeLineIndex: @DirectionalLinesLayer.LineIndex @MayBeNegative Int,

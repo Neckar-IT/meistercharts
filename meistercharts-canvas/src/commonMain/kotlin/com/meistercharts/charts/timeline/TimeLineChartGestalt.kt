@@ -338,7 +338,6 @@ class TimeLineChartGestalt
     }
 
     this.topTitleLayerConfiguration = { dataSeriesIndex: DecimalDataSeriesIndex, layer: AxisTopTopTitleLayer ->
-      //Apply the callback from the style
       configuration.valueAxisTopTitleStyleConfiguration.invoke(this, dataSeriesIndex)
     }
   }
@@ -539,7 +538,6 @@ class TimeLineChartGestalt
     override val type: LayerType = LayerType.Content
 
     override fun paint(paintingContext: LayerPaintingContext) {
-      //Paint horizontal line
       val gc = paintingContext.gc
       gc.stroke(enumCategoryAxisLayer.configuration.lineColor())
       val y = gc.height - viewportSupport.decimalsAreaViewportMarginBottom()
@@ -808,7 +806,6 @@ class TimeLineChartGestalt
 
       //Calculate the y location
       configuration.actualVisibleDecimalSeriesIndices.fastForEachIndexed { index, dataSeriesIndex ->
-        //Find the value for this at the given location
         @Domain val valueAtCrossWire = searchResult.chunk.getDecimalValue(dataSeriesIndex, searchResult.timeStampIndex)
 
         @DomainRelative val relativeValueAtCrossWire = configuration.lineValueRanges.valueAt(dataSeriesIndex.value).toDomainRelative(valueAtCrossWire)
@@ -937,7 +934,6 @@ class TimeLineChartGestalt
       val layout = historyEnumPaintingProperties.stripesLayout
 
       configuration.actualVisibleEnumSeriesIndices.fastForEachIndexed(maxSize = configuration.historyConfiguration.enumDataSeriesCount) { visibleSeriesIndex, dataSeriesIndex ->
-        //Find the value for this at the given location
         @MayBeNoValueOrPending val valueAtCrossWire: HistoryEnumSet = searchResult.chunk.getEnumValue(dataSeriesIndex, searchResult.timeStampIndex)
         if (valueAtCrossWire.isNoValue() || valueAtCrossWire.isPending()) {
           //Skip no value
@@ -1108,7 +1104,6 @@ class TimeLineChartGestalt
 
         configure {
           chartSupport.devicePixelRatioSupport.devicePixelRatioProperty.consume {
-            //Delete the tiles on device pixel ratio change
             tileProvider.clear()
           }
 

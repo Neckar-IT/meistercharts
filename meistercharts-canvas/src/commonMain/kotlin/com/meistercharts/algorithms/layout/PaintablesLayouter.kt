@@ -100,19 +100,15 @@ class PaintablesLayouter(
       locationsTopLeft.resize(paintables.size())
       boundingBoxes.resize(paintables.size())
 
-      //collect the bounding boxes
       paintables.fastForEachIndexed { index, paintable ->
         boundingBoxes[index] = paintable.boundingBox(paintingContext)
       }
 
-      //Calculate the bounding box
       totalSize = calculateTotalSize()
 
-      //Calculate the "global offset"
       offsetX = gc.calculateOffsetXWithAnchor(totalSize.width, horizontalGap, anchorDirection.horizontalAlignment)
       offsetY = gc.calculateOffsetYWithAnchor(totalSize.height, verticalGap, anchorDirection.verticalAlignment)
 
-      //layout all paintables
       layoutPaintables()
     }
 
@@ -208,7 +204,6 @@ class PaintablesLayouter(
           VerticalAlignment.Bottom -> 0.0 + height - boundingBoxForPaintable.getHeight()
         }
 
-        //save the current location for this paintable
         locationsTopLeft.set(index, currentX, y)
 
         currentX += boundingBoxForPaintable.getWidth() + configuration.gap
@@ -234,7 +229,6 @@ class PaintablesLayouter(
           HorizontalAlignment.Center -> halfWidth - boundingBoxForPaintable.getWidth() / 2.0
         }
 
-        //save the current location for this paintable
         locationsTopLeft.set(index, x, currentY)
 
         currentY += boundingBoxForPaintable.getHeight() + configuration.gap

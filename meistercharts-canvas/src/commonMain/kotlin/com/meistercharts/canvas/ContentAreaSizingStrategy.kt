@@ -66,10 +66,8 @@ abstract class AbstractContentAreaSizingStrategy(
   override fun bindResize(chartSupport: ChartSupport) {
     val chartState = chartSupport.rootChartState
 
-    //Update the content area size initially
     run {
       val oldContentAreaSize = chartState.contentAreaSize
-      //set the content area size initially
       chartState.contentAreaSize = contentAreaSizeCalculator(chartState)
 
       //Call initially
@@ -135,7 +133,6 @@ abstract class AbstractContentAreaSizingStrategy(
 
     chartState.contentAreaSize = newContentAreaSize
 
-    //call the window resize behavior
     chartSupport.windowResizeBehavior.handleResize(
       chartSupport.zoomAndTranslationSupport, WindowResizeEvent(
         oldWindowSize = oldWindowSize, newWindowSize = newWindowSize, oldContentAreaSize = oldContentAreaSize, newContentAreaSize = newContentAreaSize, contentViewportMargin = chartState.contentViewportMargin

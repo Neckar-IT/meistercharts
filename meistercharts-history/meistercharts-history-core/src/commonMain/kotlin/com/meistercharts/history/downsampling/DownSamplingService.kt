@@ -125,10 +125,9 @@ open class DownSamplingService<HistoryStorageType>(val historyStorage: HistorySt
     logger.debug { "Creating jobs for dirtyRanges: $dirtyRanges" }
 
     return dirtyRanges.flatMap { timeRange ->
-      //Compute the descriptors that contain any part of the given time range.
-      //If a user adds many samples at once that don't quite match the natural sampling period of the history we may exceed the MaxSupportedDescriptorsCount.
-      //So we pass 10000 here to cover the complete dirty time-range. 10000 could still be too small but should suffice for the most scenarios until a more
-      //elaborate implementation is available.
+      //Compute the descriptors that overlap the time range.
+      //Bulk-adding samples that don't match the natural sampling period can exceed MaxSupportedDescriptorsCount,
+      //so pass 10000 to cover the whole dirty range; still a rough limit, but enough for most scenarios.
       val descriptorsToRecalculate = HistoryBucketDescriptor.forRange(timeRange.start, timeRange.end, historyBucketRange, true, 10000)
       DownSamplingJob.create(descriptorsToRecalculate, timeRange)
     }

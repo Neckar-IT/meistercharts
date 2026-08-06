@@ -100,7 +100,6 @@ class DefaultLayerSupport(
   override var recordPaintStatistics: Boolean = false
 
   init {
-    //Register this as paint service
     chartSupport.onPaint(this)
 
     setUpMouseEventsForLayers()

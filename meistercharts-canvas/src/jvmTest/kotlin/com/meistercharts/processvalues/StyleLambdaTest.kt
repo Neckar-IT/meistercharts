@@ -30,7 +30,6 @@ class StyleLambdaTest {
     val style1 = Style1()
     val style2 = Style2()
 
-    //Check default configuration
     assertThat(style1.backgroundColor).isEqualTo(Color.orange)
     assertThat(style2.backgroundColor).isEqualTo(Color.blue) //default value
     assertThat(style2.foregroundColor1).isEqualTo(Color.black) //default value

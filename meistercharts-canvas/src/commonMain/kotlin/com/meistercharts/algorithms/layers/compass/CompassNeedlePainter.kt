@@ -54,7 +54,6 @@ class CompassNeedlePainter(
     //Rotate around the tip location
     gc.rotateRadians(currentValueRad - startAngle)
 
-    //Paint the path
     gc.beginPath()
     gc.moveTo(0.0, 0.0)
     gc.arcTo(needleWidth * 0.5, needleHeight, 0.0, needleHeight, lowerArcRadius)

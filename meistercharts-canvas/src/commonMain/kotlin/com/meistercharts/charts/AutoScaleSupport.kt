@@ -112,7 +112,7 @@ class AutoScaleSupport(
 
     val visibleTimeRange = chartSupport.chartCalculator.visibleTimeRangeXinWindow(gestalt.configuration.contentAreaTimeRange)
 
-    //Contains the updated value ranges. The position of the value range corresponds to the index of the data series index
+    //Updated value ranges, indexed by data series index
     val updatedValueRanges = createUpdatedValueRanges(visibleTimeRange, currentSamplingPeriod, dataSeriesIndices)
 
     val oldProvider = gestalt.configuration.lineValueRanges

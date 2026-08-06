@@ -32,7 +32,6 @@ abstract class AbstractCanvasRenderingContext : CanvasRenderingContext {
     super.applyDefaults()
 
     resetTransform()
-    //Set the scale depending on the device pixel ratio
     scale(environment.devicePixelRatio, environment.devicePixelRatio)
   }
 

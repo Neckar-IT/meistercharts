@@ -130,7 +130,7 @@ data class MaxHistorySizeConfiguration(
      */
     fun forDuration(guaranteedDuration: @ms Double, historyBucketRange: HistoryBucketRange): MaxHistorySizeConfiguration {
       val exactNumber = (guaranteedDuration / historyBucketRange.duration).toIntCeil() //the exact number of buckets that are needed to hold the given duration
-      //We must add one additional bucket for this edge case: Current is at the start of new bucket (which is not yet filled)
+      //Add one bucket for the edge case where current is at the start of a new, not-yet-filled bucket
       val bucketsCount = (exactNumber + 1).coerceAtLeast(2)
       return MaxHistorySizeConfiguration(bucketsCount)
     }

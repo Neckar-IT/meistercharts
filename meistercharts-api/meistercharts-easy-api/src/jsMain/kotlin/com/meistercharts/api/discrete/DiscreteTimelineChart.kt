@@ -83,7 +83,6 @@ class DiscreteTimelineChart internal constructor(
     //decrease number of repaints
     meisterCharts.chartSupport.translateOverTime.roundingStrategy = RoundingStrategy.round
 
-    //Set the preferred refresh rate
     meisterCharts.chartSupport.targetRenderRate = TargetRefreshRate.veryFast60
 
     meisterCharts.chartSupport.rootChartState.windowTranslationProperty.consume {
@@ -231,7 +230,7 @@ class DiscreteTimelineChart internal constructor(
     if (currentVisibleTimeRange == previousVisibleTimeRange) {
       return
     }
-    //We dispatch a CustomEvent of type "VisibleTimeRangeChanged" every time the translation along the x-axis changes
+    //Notify listeners whenever the visible x-axis range changes
     previousVisibleTimeRange = currentVisibleTimeRange
     dispatchCustomEvent("visible-time-range-changed", currentVisibleTimeRange.toJs())
   }

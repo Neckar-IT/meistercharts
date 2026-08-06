@@ -99,7 +99,6 @@ class PaintPerformanceLayer(
     gc.translate(configuration.margin) //margin
     gc.translate(0.0, maxHeight) //y axis to bottom
 
-    //Paint the background
     gc.fill(configuration.backgroundColor)
     gc.fillRect(0.0, -maxHeight, valuesAreaWidth + marginAxis, maxHeight)
 
@@ -167,7 +166,6 @@ class PaintPerformanceLayer(
         return@let
       }
 
-      //Background
       gc.fill(configuration.backgroundColor)
 
       val height = paintDurations.size * lineHeight + 5.0

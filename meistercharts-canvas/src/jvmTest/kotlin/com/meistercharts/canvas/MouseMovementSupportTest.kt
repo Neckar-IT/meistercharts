@@ -56,7 +56,6 @@ internal class MouseMovementSupportTest {
     assertThat(calledCount).isEqualTo(2)
 
 
-    //set mouse position off again
     mousePositionObservable.value = Coordinates(11.0, 10.0)
     assertThat(over).isFalse()
     assertThat(calledCount).isEqualTo(3)

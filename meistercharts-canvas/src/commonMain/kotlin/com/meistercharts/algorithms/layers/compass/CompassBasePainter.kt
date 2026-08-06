@@ -56,13 +56,11 @@ class CompassBasePainter(
     gc.stroke(configuration.compassColor)
     gc.strokeArcCenter(0.0, 0.0, radius, startAngle, extendWithRotationDirection, ArcType.Open)
 
-    // paint inner circles
     gc.stroke(configuration.tickColor)
     for (circle in 1..configuration.numberInnerCircles) {
       gc.strokeArcCenter(0.0, 0.0, (radius / (configuration.numberInnerCircles + 1)) * circle, startAngle, extendWithRotationDirection, ArcType.Open)
     }
 
-    // paint ticks
     gc.fill(configuration.labelsColor)
     gc.font(configuration.font)
 
@@ -75,7 +73,6 @@ class CompassBasePainter(
         PolarCoordinates.toCartesianY(radius, tickAngle)
       )
 
-      // paint tick label
       gc.fillText(
         configuration.valueFormat.format(tickValue),
         PolarCoordinates.toCartesianX(radius + configuration.labelsGap, tickAngle),

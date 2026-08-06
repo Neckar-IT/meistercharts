@@ -183,7 +183,7 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
       }
     }
 
-    // Set the width and height attributes of the HTMLCanvasElement. Depending on the size and the device pixel ratio
+    // Recalculate the canvas rendering size whenever the size or device pixel ratio changes
     sizeProperty.consumeImmediately {
       recalculateCanvasRenderingSize()
     }.disposeOn(disposeSupport)
@@ -212,10 +212,8 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * Updates the width/height of the *rendering* size of the canvas
    */
   internal fun recalculateCanvasRenderingSize() {
-    // 'size' is in logical pixels. We want the canvas rendering context to provide the total amount of physical pixels.
-    // Thus, we must set the width and height attributes (not(!) the CSS properties) of the Html canvas element to the physical
-    // pixel values.
-    // It holds: physical pixel value = logical pixel * device pixel ratio
+    // 'size' is in logical pixels. The rendering context needs physical pixels, so set the width/height
+    // attributes (not the CSS properties) to: physical pixel = logical pixel * device pixel ratio.
     val devicePixelRatio = environment.devicePixelRatio
     @PhysicalPixel val targetRenderingWidth = devicePixelRatio * size.width
     @PhysicalPixel val targetRenderingHeight = devicePixelRatio * size.height
@@ -238,9 +236,8 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     }
     clientSizeHasChanged = false
     scrollOffsetHasChanged = false
-    // getBoundingClientRect takes the scroll offset of the viewport into account.
-    // Hence, we must retrieve it every time the size of the canvas-element or the
-    // scroll-offset of the viewport has changed.
+    // getBoundingClientRect accounts for the viewport scroll offset, so re-read it whenever the
+    // canvas size or scroll offset has changed.
     canvasElement.getBoundingClientRect().let {
       logger.debug { "Updating size from BoundingClientRect: ${it.width}/${it.height}" }
 
@@ -264,10 +261,10 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
   private fun setUpMouseEventListeners() {
     requireMainCanvas()
 
-    // Note that we do not add event listeners for
-    // contextmenu: The event occurs when the user right-clicks on an element to open a context menu -> not needed yet
-    // mouseout: The event occurs when a user moves the mouse pointer out of an element, or out of one of its children -> listen for mouseleave instead
-    // mouseover: The event occurs when the pointer is moved onto an element, or onto one of its children -> listen for mouseenter instead
+    // Deliberately not registered:
+    // contextmenu -> not needed yet
+    // mouseout -> listen for mouseleave instead
+    // mouseover -> listen for mouseenter instead
 
     // The event occurs when the user clicks on an element
     canvasElement.addEventListener("click", { event ->

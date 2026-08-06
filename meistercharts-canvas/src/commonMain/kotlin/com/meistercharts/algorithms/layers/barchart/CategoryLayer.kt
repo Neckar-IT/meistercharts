@@ -125,7 +125,6 @@ class CategoryLayer<T : CategoryModel>(
       }
     }
 
-    //Paint the categories
     for (categoryIndexAsInt in 0 until model.numberOfCategories) {
       @Window val centerX = chartCalculator.zoomed2windowX(layout.calculateCenter(BoxIndex(categoryIndexAsInt)))
       if (centerX < contentStartX || centerX > contentEndX) {
@@ -186,7 +185,6 @@ class CategoryLayer<T : CategoryModel>(
       }
     }
 
-    //Paint the categories
     for (categoryIndexAsInt in 0 until model.numberOfCategories) {
       @Window val centerY = chartCalculator.zoomed2windowY(layout.calculateCenter(BoxIndex(categoryIndexAsInt)))
       if (centerY < contentStartY || centerY > contentEndY) {

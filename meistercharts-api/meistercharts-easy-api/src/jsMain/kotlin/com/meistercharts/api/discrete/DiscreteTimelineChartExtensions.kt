@@ -99,9 +99,7 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
 
   jsConfiguration.discreteDataSeriesConfigurations?.let { dataSeriesConfigurations: Array<DiscreteDataSeriesConfiguration> ->
 
-    //Create the stripe painters - one for each discrete data series
     val stripePainters: List<RectangleReferenceEntryStripePainter> = dataSeriesConfigurations.map { jsDiscreteDataSeriesConfiguration ->
-      //Create the stripe painter for this data series
       RectangleReferenceEntryStripePainter {
         //The stripe styles for the ordinals
         jsDiscreteDataSeriesConfiguration.stripeStyles?.let { jsStripeStyles ->
@@ -167,7 +165,6 @@ fun DiscreteTimelineChartGestalt.applyConfiguration(jsConfiguration: DiscreteTim
   }
 
 
-  //Apply the history configuration
   jsConfiguration.discreteDataSeriesConfigurations?.toHistoryConfiguration()?.let { historyConfiguration ->
     configuration.historyConfiguration = historyConfiguration.asProvider()
     logger.debug {

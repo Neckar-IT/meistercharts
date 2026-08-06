@@ -119,7 +119,7 @@ class StackedBarsPainter(
             }
 
             else -> {
-              //we use all the space until the next (on the left side) bar. We use twice the value label gab to the neighbor bar (which we are not related to)
+              //Use all space up to the neighbor bar on the left, keeping a double value-label gap from it
               categoryWidth - stackedBarPaintable.width - stackedBarPaintable.configuration.valueLabelGapHorizontal * 3
             }
           }

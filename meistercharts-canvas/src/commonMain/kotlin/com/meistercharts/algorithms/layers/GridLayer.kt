@@ -50,11 +50,9 @@ class GridLayer @JvmOverloads constructor(
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
-    //Paint all lines
     configuration.valuesProvider.fastForEachIndexed(paintingContext) { index, value: @Window Double ->
       val orientation = configuration.orientationProvider.valueAt(index)
 
-      //Calculate the min/max values for all sides
       @Window val minX = configuration.paddingLeft.valueAt(index)
       @Window val maxX = paintingContext.width - configuration.paddingRight.valueAt(index)
       @Window val minY = configuration.paddingTop.valueAt(index)

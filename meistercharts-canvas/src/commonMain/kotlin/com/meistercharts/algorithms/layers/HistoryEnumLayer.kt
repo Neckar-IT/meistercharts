@@ -155,7 +155,6 @@ class HistoryEnumLayer(
       firstSetOrdinal: HistoryEnumOrdinal,
       historyEnum: HistoryEnum,
     ): Color {
-      //Get the painter and "guess" the type
       val painter = this.configuration.stripePainters.valueAt(dataSeriesIndex)
 
       return if (painter is RectangleEnumStripePainter) {

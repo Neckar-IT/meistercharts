@@ -33,16 +33,6 @@ fun interface BasePointProvider {
    */
   @Hot
   fun calculateBasePoint(boundingBox: Rectangle): Coordinates
-
-  ///**
-  // * Returns the coordinates for a given bounding box
-  // */
-  //fun calculateBasePoint(
-  //  x: Double,
-  //  y: Double,
-  //  width: @MayBeNegative Double,
-  //  height: @MayBeNegative Double
-  //): Coordinates
 }
 
 /**

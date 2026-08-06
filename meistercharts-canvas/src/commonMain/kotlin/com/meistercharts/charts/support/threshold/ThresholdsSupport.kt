@@ -86,7 +86,6 @@ class ThresholdsSupport<Key>(
    */
   fun getHudLayer(key: Key): ValueAxisHudLayer {
     return hudLayersCache.getOrStore(key) {
-      //Create the values provider
       val values: @Domain DoublesProvider = configuration::thresholdValueProvider.asDoublesProvider(key)
 
       //Get the value axis layer that represents the "base" for the hud layer
@@ -111,7 +110,6 @@ class ThresholdsSupport<Key>(
   fun getThresholdLinesLayer(key: Key): DirectionalLinesLayer {
     return thresholdLinesLayersCache.getOrStore(key) {
 
-      //Get the "base" layers
       val valueAxisLayer = configuration.valueAxisProvider.getAxisLayer(key)
       val hudLayer = getHudLayer(key)
 
@@ -312,14 +310,12 @@ inline fun ThresholdsSupport<Unit>.getThresholdLinesLayer(): DirectionalLinesLay
 inline fun ThresholdsSupport<Unit>.addLayers(layerSupport: LayerSupport, noinline visibleCondition: ((chartSupport: ChartSupport) -> Boolean)? = null) {
   val result = this.addLayers(layerSupport, Unit, visibleCondition)
 
-  //Create the interaction layers
   val directionalLinesInteractionLayer = result.thresholdLinesLayer.mouseOverInteractions()
   val hudLayerInteractionLayer = result.hudLayer.mouseOverInteractions()
 
   //Connect both interaction layers
   HudAndDirectionLayerActiveConnector(directionalLinesInteractionLayer, hudLayerInteractionLayer).connectTo(result.thresholdLinesLayer, result.hudLayer)
 
-  //Add the layers
   layerSupport.layers.addLayer(directionalLinesInteractionLayer)
   layerSupport.layers.addLayer(hudLayerInteractionLayer)
 }

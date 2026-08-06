@@ -191,7 +191,6 @@ class RectangleReferenceEntryStripePainter(
         val snapConfiguration = configuration.snapConfiguration()
         gc.snapPhysicalTranslation(snapConfiguration)
         gc.fillRect(startXinViewport, 0.0, snapConfiguration.snapXSize(rectangleWidth - 2.0), snapConfiguration.snapYSize(rectangleHeight))
-        //gc.strokeOvalCenter(startX + rectangleWidth / 2.0, rectangleHeight / 2.0, 20.0, 20.0)
 
         gc.fill(configuration.countLabelColor)
         applyLabelFont(gc)

@@ -337,14 +337,12 @@ class BalloonTooltipPaintable(
       }
       gc.clearShadow()
 
-      //Stroke the border
       style.boxStyle.borderColor.get()?.let { borderColor ->
         gc.lineWidth = style.boxStyle.borderWidth
         gc.stroke(borderColor)
         gc.stroke()
       }
 
-      //Paint the content
       if (gc.debug[DebugFeature.ShowAnchors]) {
         gc.paintMark(paintingVariables.contentOffsetX, paintingVariables.contentOffsetY)
       }

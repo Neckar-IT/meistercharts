@@ -177,7 +177,6 @@ class TimeAxisLayer(
       @HotAllocation("Once per frame per layer - calculator factory allocation. Fix candidate: cache in ChartState (TODO exists at the factory)")
       val timeChartCalculator = paintingContext.chartSupport.timeChartCalculator(contentAreaTimeRange)
 
-      //The distance between the offset ticks
       @HotAllocation("Once per frame per layer - allocates the selected TimeTickDistance instance")
       val newOffsetTickDistance = TimeTickDistance.forOffsets(endTimestamp - startTimestamp)
       offsetTickDistance = newOffsetTickDistance
@@ -245,7 +244,6 @@ class TimeAxisLayer(
       @HotAllocation("Once per frame per axis - the fragment-to-descriptor conversion is cached")
       gc.font(configuration.tickFont())
 
-      //Save the total height
       paintingVariables.spaceForTickLabels = gc.getFontMetrics().totalHeight
 
       paintingVariables.tickLabels.fastForEachIndexed { _, tickValue: @Time Double, tickValueLabel: String ->
@@ -255,7 +253,6 @@ class TimeAxisLayer(
 
         @Window val currentX = timeChartCalculator.time2windowX(tickValue)
 
-        //The tick
         if (configuration.tickLength > 0.0 && configuration.tickLineWidth > 0.0) {
           when (textAnchor) {
             Direction.BottomCenter -> gc.strokeLine(currentX, configuration.tickLabelGap + configuration.tickLength, currentX, configuration.tickLabelGap)
@@ -289,7 +286,6 @@ class TimeAxisLayer(
     @ms val start = paintingVariables.startTimestamp
     @ms val end = paintingVariables.endTimestamp
 
-    //Check if there is at least one tick visible
     val atLeastOneTickVisible = paintingVariables.offsetTickLabels.values.fastAny {
       it.betweenInclusive(start, end)
     }

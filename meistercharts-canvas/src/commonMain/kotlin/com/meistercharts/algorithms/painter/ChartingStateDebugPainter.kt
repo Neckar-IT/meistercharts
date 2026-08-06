@@ -83,7 +83,6 @@ class ChartingStateDebugPainter {
 
 
     //Calculate the relative start points for content area and window
-    //@ContentArea val sizeAll = maxAll.delta(minAll)
 
     @ContentArea val offsetContent = contentAreaMin.delta(minAll)
     @ContentArea val contentSize = contentAreaMax.delta(contentAreaMin)

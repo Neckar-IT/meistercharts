@@ -72,7 +72,6 @@ class TweenTest {
 
     }
 
-    //enable repeating
     Tween(now, 5_000.0, Easing.linear, AnimationRepeatType.Repeat).let { tween ->
       assertThat(tween.elapsedRatioForTime(now + 5001.0)).isEqualTo(0.0002)
     }

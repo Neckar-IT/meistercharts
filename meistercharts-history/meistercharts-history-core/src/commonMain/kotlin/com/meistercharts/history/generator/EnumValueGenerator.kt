@@ -107,44 +107,5 @@ fun interface EnumValueGenerator {
         }
       }
     }
-
-    ///**
-    // * Generates normally distributed random values within the given [valueRange] - around the *center* of the given value range
-    // *
-    // * @param sigmaAbsolute the sigma to be used for the normal distribution
-    // */
-    //fun normality(
-    //  valueRange: ValueRange,
-    //  /**
-    //   * The sigma - by default 2% of the value range delta
-    //   */
-    //  sigmaAbsolute: Double = valueRange.delta * 0.02,
-    //): RandomNormalDecimalValueGenerator {
-    //  return RandomNormalDecimalValueGenerator(valueRange, sigmaAbsolute)
-    //}
-
-    ///**
-    // * Generates a sine curve within the given [valueRange]
-    // *
-    // * @param angleIncrement is the increment to be used each time the [generate] function is called
-    // */
-    //fun sine(
-    //  valueRange: ValueRange,
-    //  angleIncrement: @rad Double = PI / 100.0,
-    //): SineDecimalValueGenerator {
-    //  return SineDecimalValueGenerator(valueRange, angleIncrement)
-    //}
-
-    ///**
-    // * Generates a cosine curve within the given [valueRange]
-    // *
-    // * @param angleIncrement is the increment to be used each time the [generate] function is called
-    // */
-    //fun cosine(
-    //  valueRange: ValueRange,
-    //  angleIncrement: @rad Double = PI / 100.0,
-    //): CosineDecimalValueGenerator {
-    //  return CosineDecimalValueGenerator(valueRange, angleIncrement)
-    //}
   }
 }

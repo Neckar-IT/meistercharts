@@ -38,22 +38,18 @@ value class SubIndex(val value: @PositiveOrZero Int) : Comparable<SubIndex> {
     return format.format(value.toDouble(), i18nConfiguration)
   }
 
-  // Add one to the sub index, considering the sub index factor.
   fun increment(): SubIndex {
     return SubIndex((value + 1) % TileIndex.SubIndexFactor)
   }
 
-  // Subtract one from the sub index, considering the sub index factor.
   fun decrement(): SubIndex {
     return SubIndex(if (value - 1 >= 0) value - 1 else TileIndex.SubIndexFactor - 1)
   }
 
-  // Checks if the SubIndex is at its minimum value.
   fun atMin(): Boolean {
     return value == 0
   }
 
-  // Checks if the SubIndex is at its maximum value.
   fun atMax(): Boolean {
     return value == TileIndex.SubIndexFactor - 1
   }

@@ -85,7 +85,6 @@ class HistogramGestalt(
 
     //Additional configuration for the histogram
     meisterChartBuilder.configure {
-      //Enable snap configuration
       chartSupport.pixelSnapSupport.snapConfiguration = SnapConfiguration.None
     }
   }

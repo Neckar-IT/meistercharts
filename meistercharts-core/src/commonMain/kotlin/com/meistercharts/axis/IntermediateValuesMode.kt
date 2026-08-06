@@ -55,7 +55,6 @@ enum class IntermediateValuesMode(
   fun findSmaller(upperBound: Double, predicate: (Double) -> Boolean): Double {
     when (this) {
       Only10 -> {
-        //Returns the upper bound directly
         return upperBound
       }
 
@@ -121,7 +120,6 @@ enum class IntermediateValuesMode(
   fun findLarger(lowerBound: Double, predicate: (Double) -> Boolean): Double {
     when (this) {
       Only10 -> {
-        //Returns the lower bound directly
         return lowerBound
       }
 

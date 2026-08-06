@@ -167,8 +167,8 @@ class ReferenceEntryCounter {
 
     //Calculate the sum over all [differentIdsCount]s
 
-    //Assuming that the ID does not change from one value to another exactly at the boundary of a chunk, we can conclude that most of the time, a single ID is contained in both chunks.
-    //Therefore, we remove 1 from the total sum of different values
+    //The ID rarely changes exactly at a chunk boundary, so one ID is usually shared by both chunks.
+    //Subtract 1 from the total to avoid double-counting it.
     if (this.differentIdsCount == ReferenceEntryDifferentIdsCount.zero || lastReferenceEntryId.isPending()) {
       //Special case initially: use the new count
       this.differentIdsCount = differentIdsCount

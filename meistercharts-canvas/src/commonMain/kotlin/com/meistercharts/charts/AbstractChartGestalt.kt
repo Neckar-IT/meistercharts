@@ -123,10 +123,8 @@ abstract class AbstractChartGestalt : ChartGestalt, Disposable, OnDispose {
     builderConfigurationActions.fastForEach { it(meisterChartBuilder) }
 
     meisterChartBuilder.configure {
-      //Save the chart support
       configuredChartSupport = this.chartSupport
 
-      //Apply the layer support configuration actions
       layerSupportConfigurationActions.fastForEach {
         it.invoke(this)
       }

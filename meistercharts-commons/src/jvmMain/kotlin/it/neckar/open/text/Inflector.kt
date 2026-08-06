@@ -104,9 +104,7 @@ class Inflector {
     this.uncountables.addAll(original.uncountables)
   }
 
-  // ------------------------------------------------------------------------------------------------
   // Usage functions
-  // ------------------------------------------------------------------------------------------------
   /**
    * Returns the plural form of the word in the string.
    *
@@ -491,9 +489,7 @@ class Inflector {
     return numberStr + "th"
   }
 
-  // ------------------------------------------------------------------------------------------------
   // Management methods
-  // ------------------------------------------------------------------------------------------------
   /**
    * Determine whether the supplied word is considered uncountable by the [pluralize][.pluralize] and
    * [singularize][.singularize] methods.

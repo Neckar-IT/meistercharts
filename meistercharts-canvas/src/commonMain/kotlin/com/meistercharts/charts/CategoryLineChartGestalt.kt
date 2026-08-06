@@ -524,7 +524,6 @@ class CategoryLineChartGestalt @JvmOverloads constructor(
   fun applyValueRange(valueRange: ValueRange) {
     this.configuration.valueRange = valueRange
 
-    //Update the value axis layer
     if (valueRange is LinearValueRange) {
       valueAxisLayer.configuration.applyLinearScale()
     } else {

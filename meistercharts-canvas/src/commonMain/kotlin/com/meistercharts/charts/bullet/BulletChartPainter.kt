@@ -96,7 +96,6 @@ class BulletChartPainter(
 
     @Domain val valueRange = configuration.valueRange()
 
-    //Paint the range
     @Domain val barRange = categoryModel.barRange(categoryIndex)
     @MayBeNaN @Domain val rangeStartValue = barRange?.start ?: Double.NaN
     @MayBeNaN @Domain val rangeEndValue = barRange?.end ?: Double.NaN
@@ -107,11 +106,9 @@ class BulletChartPainter(
     @MayBeNaN @Window val rangeStartY = chartCalculator.coerceInViewportY(rangeStartYUnbound)
     @MayBeNaN @Window val rangeEndY = chartCalculator.coerceInViewportY(rangeEndYUnbound)
 
-    //Paint the bar
     gc.fill(configuration.barColors.valueAt(categoryIndex))
     gc.fillRect(-configuration.barSize / 2.0, rangeStartY, configuration.barSize, rangeEndY - rangeStartY)
 
-    //Paint the Current Value Indicator
     @Domain val currentValue = categoryModel.currentValue(categoryIndex)
     @Window val currentY = chartCalculator.domain2windowY(currentValue, valueRange)
 
@@ -158,7 +155,6 @@ class BulletChartPainter(
 
     @Domain val valueRange = configuration.valueRange()
 
-    //Paint the range
     @Domain val barRange = categoryModel.barRange(categoryIndex)
     @MayBeNaN @Domain val rangeStartValue = barRange?.start ?: Double.NaN
     @MayBeNaN @Domain val rangeEndValue = barRange?.end ?: Double.NaN
@@ -169,11 +165,9 @@ class BulletChartPainter(
     @MayBeNaN @Window val rangeStartX = chartCalculator.coerceInViewportX(rangeStartXUnbound)
     @MayBeNaN @Window val rangeEndX = chartCalculator.coerceInViewportX(rangeEndXUnbound)
 
-    //Paint the bar
     gc.fill(configuration.barColors.valueAt(categoryIndex))
     gc.fillRect(rangeStartX, -configuration.barSize / 2.0, rangeEndX - rangeStartX, configuration.barSize)
 
-    //Paint the Current Value
     @Domain val currentValue = categoryModel.currentValue(categoryIndex)
     @Window val currentX = chartCalculator.domain2windowX(currentValue, valueRange)
 

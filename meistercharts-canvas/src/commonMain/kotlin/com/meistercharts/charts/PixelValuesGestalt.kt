@@ -410,7 +410,6 @@ class PixelValuesGestalt @JvmOverloads constructor(
       //Add toolbar at top
       toolbarGestalt.configure(this)
 
-      //Add the version number
       VersionNumberGestalt().configure(meisterChartBuilder)
     }
   }
@@ -500,7 +499,6 @@ class PixelValuesGestalt @JvmOverloads constructor(
  * Fills this data model with sample data
  */
 fun PixelValuesModel.fillWithSampleData() {
-  //Initialize the held indices
   10.fastFor {
     heldAverageValues.add(DoubleArray(dataPointCount))
   }
@@ -702,7 +700,6 @@ open class PixelValuesModel(
       heldAverageValues.removeLast()
     }
 
-    //Create a copy and save the values
     heldAverageValues.add(0, averageValues.copyOf())
   }
 }

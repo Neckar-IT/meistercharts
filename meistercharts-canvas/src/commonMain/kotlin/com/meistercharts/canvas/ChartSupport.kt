@@ -124,10 +124,8 @@ class ChartSupport(
    */
   private val disposeSupport: DisposeSupport = DisposeSupport().also {
     it.onDispose {
-      //Cleanup all global caches
       GlobalCacheSupport.cleanup(chartId)
 
-      //Clear listeners
       paintListeners.clear()
       renderLoopListeners.clear()
       renderLoopListenersToRemove.clear()
@@ -205,7 +203,6 @@ class ChartSupport(
       currentChartState = chartState
       return action()
     } finally {
-      //Reset the original current chart state
       @Suppress("DEPRECATION")
       currentChartState = oldCurrentChartState
     }
@@ -303,7 +300,6 @@ class ChartSupport(
       devicePixelRatioSupport.updateDevicePixelRatio(environment.devicePixelRatio)
     }
 
-    //Bind the window size to the canvas size
     windowSizeBindingStrategy.bind(rootChartState, canvas, disposeSupport)
 
     rootChartState.onChange {
@@ -320,10 +316,8 @@ class ChartSupport(
     //Repaint if the paint disabled property is changed
     disabledProperty.consume(false) { newValue ->
       if (newValue) {
-        //Paint painting disabled text
         paintPaintDisabledText(canvas.gc)
       } else {
-        //repaint is necessary after a change
         markAsDirty(DirtyReason.Initial)
       }
     }.disposeOn(disposeSupport)
@@ -435,7 +429,6 @@ class ChartSupport(
           //Therefore it is necessary to set the defaults
           canvas.gc.applyDefaults()
 
-          //Paint with a saved canvas
           canvas.gc.saved {
             @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
             lastPaintTime = frameTimestamp
@@ -444,7 +437,6 @@ class ChartSupport(
               lastPaintingLoopIndex = it
             }
 
-            //Paint the canvas
             CurrentPaintingContext.fill(
               this,
               paintingLoopIndex,
@@ -584,7 +576,6 @@ fun paintPaintDisabledText(gc: CanvasRenderingContext) {
   gc.fillStyle(Color.lightgray)
   gc.fillRect(0.0, 0.0, gc.width, gc.height)
 
-  //Paint a text
   gc.fillStyle(Color.darkgray)
   gc.fillText("Painting is disabled", 0.0, 0.0, Direction.TopLeft)
 }

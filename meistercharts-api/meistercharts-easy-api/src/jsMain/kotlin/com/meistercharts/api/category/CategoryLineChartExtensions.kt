@@ -181,7 +181,6 @@ fun CategoryLineChartGestalt.applyStyle(jsStyle: LineChartSimpleStyle) {
   @px val viewportMarginTop = valueAxisSupport.calculateContentViewportMarginTop(Unit, chartSupport())
   contentViewportMargin = contentViewportMargin.withTop(viewportMarginTop)
 
-  //Apply the content viewport margin
   jsStyle.contentViewportMargin?.let {
     contentViewportMargin = contentViewportMargin.withValues(it)
   }

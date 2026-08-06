@@ -205,20 +205,6 @@ inline fun <T> List<T>.fastForEach(currentSize: Int, callback: (value: T) -> Uni
   }
 }
 
-//inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> FastForEachDeleteResult) {
-//  var index = 0
-//  while (index < size) { //do *not* cache the size, we are removing elements
-//    val currentObject = this[index]
-//    val result = callback(currentObject)
-//
-//    when (result) {
-//      FastForEachDeleteResult.Keep -> index++
-//      FastForEachDeleteResult.Remove -> removeAt(index) //do *not* increase the index
-//      FastForEachDeleteResult.Break -> return
-//    }
-//  }
-//}
-
 inline fun <T> MutableList<T>.fastForEachDelete(callback: (value: T) -> Boolean) {
   var index = 0
   while (index < size) { //do *not* cache the size, we are removing elements

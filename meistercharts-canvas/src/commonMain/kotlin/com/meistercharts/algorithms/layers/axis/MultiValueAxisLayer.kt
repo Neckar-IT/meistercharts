@@ -91,7 +91,6 @@ class MultiValueAxisLayer constructor(
 
       val size = configuration.valueAxesProvider.size()
 
-      //Reset all variables
       visibleAxisCount = 0
       locationsX.reset()
       locationsX.resize(size)
@@ -116,7 +115,6 @@ class MultiValueAxisLayer constructor(
         if (valueAxisLayer.configuration.margin.left != currentX) {
           valueAxisLayer.configuration.margin = valueAxisLayer.configuration.margin.withLeft(currentX)
         }
-        //Calculate the layout for the current value axis layer
         paintingContext.gc.saved {
           valueAxisLayer.layout(paintingContext)
         }

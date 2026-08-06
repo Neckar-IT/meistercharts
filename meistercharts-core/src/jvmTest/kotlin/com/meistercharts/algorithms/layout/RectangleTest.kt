@@ -121,7 +121,6 @@ class RectangleTest {
       assertThat(it.top).isEqualTo(-2.5)
       assertThat(it.bottom).isEqualTo(2.5)
 
-      //Now expand
       it.expand(1.0, 2.0, 3.0, 4.0).let { expanded ->
         assertThat(expanded.left).isEqualTo(-5.0 - 1)
         assertThat(expanded.right).isEqualTo(5.0 + 3)

@@ -172,7 +172,6 @@ class DoubleTapGestureSupport(
           //Possibly detecting the first tap
           @ms val currentStartTime = start0EventTime ?: return reset()
 
-          //Calculate the press time
           @ms val pressDuration = now - currentStartTime
 
           //Check for the duration of the "press"
@@ -193,7 +192,6 @@ class DoubleTapGestureSupport(
           //Possibly detecting the second tap
           @ms val currentStartTime = start1EventTime ?: return reset()
 
-          //Calculate the press time
           @ms val pressDuration = now - currentStartTime
 
           //Check for the duration of the "press"

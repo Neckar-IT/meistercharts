@@ -126,7 +126,6 @@ open class ContentAreaDebugLayer(
     @Zoomed @px val width = calculator.contentAreaRelative2zoomedX(1 - 2 * inRelative) - 2 * inAbsolute
     @Zoomed @px val height = calculator.contentAreaRelative2zoomedY(1 - 2 * inRelative) - 2 * inAbsolute
 
-    //Outer line
     gc.strokeRect(x0, y0, width, height)
   }
 

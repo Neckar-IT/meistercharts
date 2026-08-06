@@ -27,7 +27,6 @@ class Layouter {
    * @param  minSpaceBetweenElements the minimum space between two elements
    */
   fun calculateCenters(elementSizes: DoubleArray, minSpaceBetweenElements: Double = 0.0): DoubleArray {
-    //Contains the center values
     val centers = DoubleArray(elementSizes.size)
 
     var startOfElement = 0.0
@@ -53,7 +52,6 @@ class Layouter {
     //The distance between two elements
     val distance = netDistance + minSpaceBetweenElements
 
-    //Contains the center values
     val centers = DoubleArray(elementSizes.size)
 
     var lastCenter = 0.0

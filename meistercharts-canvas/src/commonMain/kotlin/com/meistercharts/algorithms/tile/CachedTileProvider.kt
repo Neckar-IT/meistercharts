@@ -42,7 +42,6 @@ class CachedTileProvider(
     get() = delegate.tileSize
 
   override fun getTile(identifier: TileIdentifier): Tile? {
-    //Returns the cached tile - if found
     GlobalTilesCache[identifier]?.let { cachedTile ->
       //Mark the tile as "new" to avoid premature eviction from the cache
       GlobalTilesCache.markAsNew(identifier)
@@ -50,7 +49,6 @@ class CachedTileProvider(
     }
 
     return delegate.getTile(identifier)?.also { newTile ->
-      //Store in cache
       GlobalTilesCache[identifier] = newTile
     }
   }

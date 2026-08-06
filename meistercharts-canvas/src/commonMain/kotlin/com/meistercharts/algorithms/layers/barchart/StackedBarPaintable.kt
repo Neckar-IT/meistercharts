@@ -376,7 +376,7 @@ class StackedBarPaintable(
       val gapAtZero = hasPositiveAndNegativeSegments
       @Zoomed val totalGapsSizeAtZero = if (gapAtZero) configuration.segmentsGap else 0.0
 
-      //Calculate the total size of all gaps (summed up). This value is then distributed to each segment - depending on the size of each segment
+      //Total size of all gaps, later distributed across segments by their size
       @Zoomed val totalGapsSizePositive = gapCountPositive * configuration.segmentsGap + totalGapsSizeAtZero / 2.0
       @Zoomed val totalGapsSizeNegative = gapCountNegative * configuration.segmentsGap + totalGapsSizeAtZero / 2.0
 
@@ -390,7 +390,7 @@ class StackedBarPaintable(
         Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(totalGapsSizeNegative)
       }
 
-      //The gap between two segments (the visible gap has the same size for all locations - independent of the size of the adjacent segments)
+      //Gap between two segments; the visible gap is the same everywhere, independent of adjacent segment sizes
       segmentGap = when (configuration.orientation) {
         Orientation.Vertical -> calculator.zoomed2contentAreaRelativeY(configuration.segmentsGap)
         Orientation.Horizontal -> calculator.zoomed2contentAreaRelativeX(configuration.segmentsGap)
@@ -519,7 +519,6 @@ class StackedBarPaintable(
       gc.translate(x, y)
       gc.font(configuration.valueLabelFont)
 
-      //Paint the background
       if (configuration.paintBackground) {
         gc.lineWidth = configuration.backgroundLineWidth
         gc.fill(configuration.backgroundColor)

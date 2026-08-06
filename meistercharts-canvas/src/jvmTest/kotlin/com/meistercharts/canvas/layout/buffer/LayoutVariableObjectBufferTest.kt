@@ -122,7 +122,6 @@ class LayoutVariableObjectBufferTest {
     confirmVerified(layoutObject)
     clearMocks(layoutObject, answers = false)
 
-    //Clear
     buffer.clear() //resets the size to 0
 
     assertThat(buffer.size).isEqualTo(0)

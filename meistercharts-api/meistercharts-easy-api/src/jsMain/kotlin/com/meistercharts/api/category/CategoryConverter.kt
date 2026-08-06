@@ -102,29 +102,6 @@ object CategoryConverter {
     return MultiProvider.forListModulo(currentValues)
   }
 
-  //fun toCategoryModel(jsData: CategoriesBulletChartData): CategorySeriesModel? {
-  //  val jsCategories = jsData.categories ?: return null // null indicates no change
-  //  var maxJsCategoriesValuesCount = 0
-  //  // this list will contain all valid categories; a category is valid if values are provided
-  //  val categories = mutableListOf<Category>()
-  //  for (jsCategory in jsCategories) {
-  //    val size = jsCategory?.values?.size ?: break // the first null-value indicates that there will be no more categories -> bail out
-  //    maxJsCategoriesValuesCount = max(maxJsCategoriesValuesCount, size)
-  //
-  //    categories.add(Category(jsCategory.label?.let { TextKey.simple(it) } ?: TextKey.empty))
-  //  }
-  //
-  //  val series = List(maxJsCategoriesValuesCount) { index -> MutableSeries(TextKey.simple(index.toString()), categories.size) }
-  //  for ((jsCategoryIndex, jsCategory) in jsCategories.withIndex()) {
-  //    val jsCategoryValues = jsCategory?.values ?: break // the first null-value indicates that there will be no more categories -> bail out
-  //    for ((jsCategoryValueIndex, value) in jsCategoryValues.withIndex()) {
-  //      series[jsCategoryValueIndex].setValueAt(jsCategoryIndex, value)
-  //    }
-  //  }
-  //
-  //  return DefaultCategorySeriesModel(categories, series)
-  //}
-
   /**
    * Extracts the category images contained in [jsData]
    */

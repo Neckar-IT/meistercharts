@@ -235,7 +235,6 @@ class Layers(val chartId: ChartId) {
    * Adds [newLayer] to this [Layers] before the first layers that is not of type [LayerType.Background].
    */
   fun addAboveBackground(newLayer: Layer): @PaintingOrder Int {
-    //Find the last background layer
     val insertionIndex = layers.indexOfLast { it.type == LayerType.Background } + 1
     addLayerAt(newLayer, insertionIndex)
     return insertionIndex
@@ -245,7 +244,6 @@ class Layers(val chartId: ChartId) {
    * Adds the new layer before the first layer that is not of type [LayerType.Background] and [LayerType.Content]
    */
   fun addAboveContent(newLayer: Layer): @PaintingOrder Int {
-    //Find the last background/content layer
     val insertionIndex = layers.indexOfLast { it.type == LayerType.Background || it.type == LayerType.Content } + 1
     addLayerAt(newLayer, insertionIndex)
     return insertionIndex
@@ -273,7 +271,6 @@ class Layers(val chartId: ChartId) {
         }
       }
 
-      //Calculate the repaint duration for the current layer
       LayerPaintDuration(layer, layer.description, measureTime.toDouble(DurationUnit.MILLISECONDS))
     }
 

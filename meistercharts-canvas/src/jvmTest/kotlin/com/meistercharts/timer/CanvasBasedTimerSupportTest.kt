@@ -84,7 +84,6 @@ class CanvasBasedTimerSupportTest {
   fun `delay function calls all callbacks after their respective delays`(nowProvider: VirtualNowProvider) {
     val callbacksCalled = mutableListOf<Boolean>()
 
-    //Register callbacks
     5.fastFor { i ->
       callbacksCalled.add(false)
 

@@ -71,7 +71,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.21"
+aws-sdk-kotlin = "1.8.22"
 
 apache-poi = "5.5.1"
 
@@ -170,6 +170,8 @@ javafx = "25.0.4"
 netty = "4.2.16.Final"
 
 rxkotlin = "2.4.0"
+
+graalvm-polyglot = "25.2.4"
 
 
 [libraries]
@@ -308,7 +310,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.50.2"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.50.3"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -387,6 +389,12 @@ clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
 
 commons-compress = "org.apache.commons:commons-compress:1.28.0"
+
+graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm-polyglot" }
+
+graalvm-polyglot-js-community = { group = "org.graalvm.polyglot", name = "js-community", version.ref = "graalvm-polyglot" }
+
+graalvm-polyglot-js-isolate-community = { group = "org.graalvm.polyglot", name = "js-isolate-community", version.ref = "graalvm-polyglot" }
 
 kotlin-csv = { group = "com.github.doyaaaaaken", name = "kotlin-csv", version.ref = "kotlin-csv" }
 

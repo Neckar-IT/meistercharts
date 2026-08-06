@@ -153,7 +153,6 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
     @Normalized val topLine = findTopLine(imageData, anchorY, font) / scaleFactorY
     @Normalized val bottomLine = findBottomLine(imageData, anchorY) / scaleFactorY
 
-    //Calculate the "real" center
     @Normalized val delta = (bottomLine - topLine)
 
     //the "optimal" center, where we expect the center to be aligned
@@ -182,7 +181,6 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
           return y + emptyLineCounter //returns the row below that must contain a value
         }
       } else {
-        //Reset the empty line
         emptyLineCounter = 0
       }
     }

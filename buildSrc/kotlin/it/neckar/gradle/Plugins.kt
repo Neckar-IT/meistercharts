@@ -160,6 +160,11 @@ object Plugins {
    * Configures python projects
    */
   const val python: String = "it.neckar.python"
+
+  /**
+   * Wires a product that owns a spec project to the extracted spec generator
+   */
+  const val specGenerator: String = "it.neckar.spec-generator"
   const val base: String = "org.gradle.base"
   const val application: String = "application"
 

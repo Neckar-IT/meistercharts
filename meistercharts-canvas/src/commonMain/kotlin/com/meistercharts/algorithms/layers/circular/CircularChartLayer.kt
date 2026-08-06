@@ -56,7 +56,6 @@ class CircularChartLayer(
       //The size of the outer circle - describes the *outer* side of the line
       @Zoomed val outerRadius = contentAreaRelative2zoomed(0.5, 0.5)
         .let {
-          //take the smaller size
           min(it.width, it.height).coerceAtMost(configuration.maxDiameter / 2.0)
         }
 

@@ -33,7 +33,7 @@ import kotlin.time.Instant
  * Application related information.
  *
  * The stable value (version) comes from generated [VersionConstants].
- * Git info is a deploy metadatum, not a compile input (#2413): it is injected at the artifact
+ * Git info is a deploy metadatum, not a compile input: it is injected at the artifact
  * edges (service image env, fat-jar resource, serve-time HTML) and resolved from there at
  * runtime. No compiled artifact carries it, so builds stay a pure function of the sources.
  * Where nothing is injected (local development, plain tests) the git values are [UnknownGitValue].

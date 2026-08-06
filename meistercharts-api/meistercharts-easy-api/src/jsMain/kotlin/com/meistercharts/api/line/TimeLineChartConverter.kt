@@ -166,7 +166,6 @@ object TimeLineChartConverter {
       return null
     }
 
-    //Sort the samples by timestamp
     val sortedSamples = jsSamples.sortedBy {
       it.timestamp
     }

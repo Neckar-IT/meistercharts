@@ -201,7 +201,7 @@ open class InMemoryHistoryStorage : HistoryStorage, WritableHistoryStorage, Obse
     val earliest = bookKeeping.earliestBound(toDelete.bucketRange) ?: return DeletionReport.empty
 
     if (toDelete.start < earliest.start) {
-      //The file we want to delete is earlier than everything we have in the storage. Therefore there is nothing to delete
+      //Target is earlier than anything in storage, so there is nothing to delete
       return DeletionReport.empty
     }
 

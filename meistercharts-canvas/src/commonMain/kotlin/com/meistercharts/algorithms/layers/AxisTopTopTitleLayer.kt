@@ -168,7 +168,6 @@ class AxisTopTopTitleLayer(
             AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
             AxisConfiguration.PaintRange.Continuous -> {
-              //Paint in the content viewport
               it.chartCalculator.contentViewportMinY()
             }
           }
@@ -201,7 +200,6 @@ class AxisTopTopTitleLayer(
             AxisConfiguration.PaintRange.ContentArea -> it.chartCalculator.contentAreaRelative2windowY(0.0)
               .coerceAtLeast(it.chartCalculator.contentViewportMinY()) //do not move above content viewport margin
             AxisConfiguration.PaintRange.Continuous -> {
-              //Paint in the content viewport
               it.chartCalculator.contentViewportMinY()
             }
           }

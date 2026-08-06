@@ -186,7 +186,6 @@ class Slider(
         val distanceFromDown = state.mouseLocationOnMouseDown?.distanceTo(event.coordinates) ?: Double.MAX_VALUE
 
         if (distanceFromDown < 20) {
-          //set the slider position directly
           val deltaFromLastX = event.x - state.lastX
           @pct val newSliderLocation = 1 / paintingVariables.width * deltaFromLastX
           configuration.handlePositionChanged(newSliderLocation.coerceIn(0.0, 1.0))
@@ -196,7 +195,6 @@ class Slider(
         }
       }
 
-      //Reset the down location
       state.mouseLocationOnMouseDown = null
       state.handlePositionOnMouseDown = Double.NaN
 
@@ -308,7 +306,6 @@ class Slider(
       gc.strokeRect(paintingVariables.boundingBox)
     }
 
-    //Paint the slider area
     gc.fill(configuration.areaFill)
     gc.fillRoundedRect(0.0, -height / 2.0, paintingVariables.width, height, height / 2.0)
 
@@ -332,7 +329,6 @@ class Slider(
       }
     }
 
-    //Paint the handle
     configuration.handlePaintable.paint(paintingContext, paintingVariables.sliderLocationX, 0.0)
   }
 

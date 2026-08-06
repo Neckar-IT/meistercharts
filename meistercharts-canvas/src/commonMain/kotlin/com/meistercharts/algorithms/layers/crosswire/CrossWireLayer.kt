@@ -157,10 +157,8 @@ class CrossWireLayer(
     val chartCalculator = paintingContext.chartCalculator
     val gc = paintingContext.gc
 
-    //The location of the wire itself
     gc.translate(paintingVariables.wireLocation, 0.0)
 
-    //Paint the wire
     if (configuration.showCrossWireLine) {
       gc.stroke(configuration.wireColor)
       gc.lineWidth = configuration.wireWidth

@@ -197,12 +197,11 @@ abstract class MeisterchartBuilder(
       chartSupport.onDispose(it)
     }
 
-    //Now add all other configurations
     layerSupportConfigurations.forEach {
       layerSupport.it()
     }
 
-    // Bind the resize behavior after(!) iterating through layerSupportConfigurations to ensure that we use the correct `windowResizeBehavior`
+    // Bind resize after the layerSupportConfigurations loop so the correct `windowResizeBehavior` is used
     contentAreaSizingStrategy.bindResize(chartSupport)
     onDispose(contentAreaSizingStrategy)
 
@@ -275,7 +274,6 @@ abstract class MeisterchartBuilder(
     val chartSupport = createChartSupport()
 
     return meisterchartFactory.createChart(chartSupport, description).also { meisterchart ->
-      //Call the post-creation actions
       postCreationActions.fastForEach { action ->
         action(meisterchart)
       }

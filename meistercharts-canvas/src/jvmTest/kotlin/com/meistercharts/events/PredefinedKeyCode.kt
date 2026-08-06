@@ -990,11 +990,7 @@ enum class PredefinedKeyCode constructor(
   UNDEFINED(0x0, "Undefined"),
 
 
-  //--------------------------------------------------------------
-  //
   // Mobile and Embedded Specific Key Codes
-  //
-  //--------------------------------------------------------------
 
   /**
    * Constant for the `Softkey 0` key.

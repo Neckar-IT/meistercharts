@@ -102,7 +102,6 @@ fun FontDescriptor.combineWith(moreImportant: FontDescriptorFragment?): FontDesc
     return this
   }
 
-  //Returns directly if it is already a font descriptor
   if (moreImportant is FontDescriptor) {
     return moreImportant
   }
@@ -129,7 +128,6 @@ fun FontDescriptorFragment.combineWith(moreImportant: FontDescriptorFragment?): 
     return this
   }
 
-  //Returns directly if it is already a font descriptor
   if (moreImportant is FontDescriptor) {
     return moreImportant
   }

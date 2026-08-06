@@ -78,10 +78,6 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   private fun grow() {
     val inc = if (nbits < 20) 3 else 1
     val newnbits = nbits + inc
-    //println("newnbits=${newnbits}")
-    //if (newnbits >= 23) {
-    //    println("!!!!")
-    //}
     val new = IntMap<T>(newnbits, loadFactor, true)
 
     for (n in _keys.indices) {
@@ -209,7 +205,6 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
         size--
       }
     }
-    //for (key in keys.toList()) if (key in src..dst) remove(key)
   }
 
   data class Entry<T>(var key: Int, var value: T?)
@@ -433,10 +428,6 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   private fun grow() {
     val inc = if (nbits < 20) 3 else 1
     val newnbits = nbits + inc
-    //println("newnbits=${newnbits}")
-    //if (newnbits >= 23) {
-    //    println("!!!!")
-    //}
     val new = IntIntMap(newnbits, loadFactor, true)
 
     for (n in _keys.indices) {

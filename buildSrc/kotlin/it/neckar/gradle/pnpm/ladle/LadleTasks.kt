@@ -122,20 +122,32 @@ internal fun Project.registerLadleBuild() {
  * Story-browser packages start Ladle from their Playwright config, so the task hands the worktree's
  * Ladle port down through the environment — without it two worktrees running screenshot tests would
  * share one server and compare the wrong stories.
+ *
+ * The name is the one `registerIntegrationTestSuite` gives a JVM module its slow-test suite. No
+ * module carries both today, but a module that grows a `package.json` next to Kotlin sources would
+ * otherwise fail the whole configuration phase — hence the check in `afterEvaluate`, where the
+ * module's own build file has already run.
  */
 internal fun Project.registerJsIntegrationTest() {
   val port = ladleDevPort()
 
-  tasks.register<PnpmTask>(LadleTasks.JsIntegrationTestTaskName) {
-    description = "Runs the Playwright integration tests"
-    group = "test"
+  afterEvaluate {
+    if (tasks.findByName(LadleTasks.JsIntegrationTestTaskName) != null) {
+      logger.info("$path already has a ${LadleTasks.JsIntegrationTestTaskName} task; the pnpm integration-test script keeps to `pnpm run integration-test`")
+      return@afterEvaluate
+    }
 
-    dependsOn("build")
+    tasks.register<PnpmTask>(LadleTasks.JsIntegrationTestTaskName) {
+      description = "Runs the Playwright integration tests"
+      group = "test"
 
-    args.set(listOf("run", "integration-test"))
+      dependsOn("build")
 
-    if (port != null) {
-      environment.put(LadleTasks.LadlePortEnvironmentVariable, port.toString())
+      args.set(listOf("run", "integration-test"))
+
+      if (port != null) {
+        environment.put(LadleTasks.LadlePortEnvironmentVariable, port.toString())
+      }
     }
   }
 }

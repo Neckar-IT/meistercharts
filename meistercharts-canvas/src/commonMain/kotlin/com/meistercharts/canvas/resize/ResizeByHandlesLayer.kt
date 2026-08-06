@@ -108,7 +108,6 @@ class ResizeByHandlesLayer : AbstractLayer() {
         override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
           val coordinates = event.coordinates ?: return super.onMove(event, chartSupport)
 
-          //Update the hovering state
           val handleDirection = getHandleDirection(coordinates)
           uiState = uiState.hoveringAboveHandle(handleDirection)
 

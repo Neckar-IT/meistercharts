@@ -228,8 +228,6 @@ class Creator {
       """.trimIndent()
     )
 
-    //if (application.forCoordinates) {
-    //}
     println(
       """
           @$typeName

@@ -53,17 +53,12 @@ data class Point(
     fun middle(a: Point, b: Point): Point = Point((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
     fun angle(a: Point, b: Point): @rad Double = acos((a.dot(b)) / (a.length * b.length))
 
-    //fun angle(ax: Double, ay: Double, bx: Double, by: Double): Angle = Angle.between(ax, ay, bx, by)
-    //acos(((ax * bx) + (ay * by)) / (hypot(ax, ay) * hypot(bx, by)))
-
     fun compare(lx: Double, ly: Double, rx: Double, ry: Double): Int {
       val ret = ly.compareTo(ry)
       return if (ret == 0) lx.compareTo(rx) else ret
     }
 
     fun compare(l: Point, r: Point): Int = compare(l.x, l.y, r.x, r.y)
-
-    //fun angle(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double): Angle = Angle.between(x1 - x2, y1 - y2, x1 - x3, y1 - y3)
 
     fun distance(a: Double, b: Double): Double = kotlin.math.abs(a - b)
     fun distance(x1: Double, y1: Double, x2: Double, y2: Double): Double = kotlin.math.hypot(x1 - x2, y1 - y2)
@@ -73,14 +68,6 @@ data class Point(
 
     fun distance(a: Point, b: Point): Double = distance(a.x, a.y, b.x, b.y)
     fun distance(a: PointInt, b: PointInt): Double = distance(a.x, a.y, b.x, b.y)
-
-    //val ax = x1 - x2
-    //val ay = y1 - y2
-    //val al = hypot(ax, ay)
-    //val bx = x1 - x3
-    //val by = y1 - y3
-    //val bl = hypot(bx, by)
-    //return acos((ax * bx + ay * by) / (al * bl))
   }
 
   @IgnorableReturnValue
@@ -134,7 +121,6 @@ data class Point(
 
   fun distanceTo(that: Point): Double = distanceTo(that._x, that._y)
 
-  //fun angleTo(other: Point): Angle = Angle.between(this._x, this._y, other._x, other._y)
   fun transformed(mat: Matrix, out: Point = Point()): Point = out.setToTransform(mat, this)
   operator fun get(index: Int) = when (index) {
     0 -> x; 1 -> y
@@ -235,5 +221,3 @@ fun List<Point>.getPolylineLength(): Double {
   }
   return out
 }
-
-//fun List<Point>.bounds(out: Rectangle = Rectangle(), bb: BoundsBuilder = BoundsBuilder()): Rectangle = bb.add(this).getBounds(out)

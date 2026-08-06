@@ -141,8 +141,7 @@ data class Quadrilateral(
 
     val degreesTL = atan2(deltaYTL, deltaXTL).toDegrees()
     var degreesBR = atan2(deltaYBR, deltaXBR).toDegrees()
-    // Fix opposite angle rotation of lower side in comparison to upper side
-    // If the angle of the top-left corner is negative, the angle of the bottom-right corner should be negative as well
+    // The lower side's angle is rotated opposite to the upper side; align its sign with the top-left corner.
     degreesBR = if (degreesBR.sign == 1.0) {
       degreesBR - 180
     } else {

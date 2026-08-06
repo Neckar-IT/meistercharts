@@ -29,7 +29,6 @@ class MappedLayoutBufferTest {
       MyLayoutVariable()
     }
 
-    //Clear once at the start
     buffer.clear()
     assertThat(buffer.values).hasSize(0)
 

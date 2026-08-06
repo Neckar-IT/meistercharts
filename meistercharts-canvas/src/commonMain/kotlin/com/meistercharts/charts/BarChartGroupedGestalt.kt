@@ -159,7 +159,6 @@ class BarChartGroupedGestalt constructor(
         //the minimum size of a group
         val minGroupSize = groupedBarsPainter.configuration.minBarSize * barsCount + groupedBarsPainter.configuration.barGap * (barsCount - 1)
 
-        //Calculate the total width of category
         minGroupSize + configuration.minGapBetweenGroups
       }
 
@@ -170,7 +169,6 @@ class BarChartGroupedGestalt constructor(
           //the minimum size of a group
           val maxGroupSize = maxBarSize * barsCount + groupedBarsPainter.configuration.barGap * (barsCount - 1)
 
-          //Calculate the total width of category
           maxGroupSize + configuration.maxGapBetweenGroups
         }
       }
@@ -546,7 +544,6 @@ class BarChartGroupedGestalt constructor(
     fun applyValueRange(valueRange: ValueRange) {
       this.valueRange = valueRange
 
-      //Update the value axis layer
       if (valueRange is LinearValueRange) {
         valueAxisLayer.configuration.applyLinearScale()
       } else {

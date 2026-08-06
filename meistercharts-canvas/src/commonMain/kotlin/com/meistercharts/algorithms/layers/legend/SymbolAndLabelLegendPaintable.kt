@@ -162,7 +162,6 @@ class SymbolAndLabelLegendPaintable(
       textBlockWidth = TextLineCalculations.calculateMultilineTextWidth(gc, labels.asSizedProvider(chartSupport), configuration.maxLabelWidth)
 
 
-      //Calculate the bounding box
       val size = Size(
         width = maxSymbolWidth + configuration.symbolLabelGap + textBlockWidth, height = textBlockHeight
       )
@@ -179,7 +178,6 @@ class SymbolAndLabelLegendPaintable(
     val gc = paintingContext.gc
     gc.translate(x, y)
 
-    //Apply the text font
     gc.font(configuration.textFont())
 
     val labels = configuration.labels

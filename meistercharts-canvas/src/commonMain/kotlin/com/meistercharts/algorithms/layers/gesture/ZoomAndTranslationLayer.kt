@@ -97,10 +97,8 @@ class ZoomAndTranslationLayer(
    * The drag support detects dragging events
    */
   val dragSupport: CanvasDragSupport = CanvasDragSupport().also { dragSupport ->
-    //touchEventHandler.delegate(dragSupport.connectedTouchEventHandler(2))
     mouseEventHandler.delegate(dragSupport.connectedMouseEventHandler(configuration::translateOnMouseDragModifier.delegate()))
 
-    //Delegate the drag events
     dragSupport.handle(::mouseDragAction.delegate())
   }
 
@@ -361,11 +359,9 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
     }
 
     override fun onFinish(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): EventConsumption {
-      //Calculate the zoom
       rubberBandStartLocation?.let { rubberBandStartLocation: @Window Coordinates ->
         rubberBandCurrentLocation?.let { rubberBandCurrentLocation: @Window Coordinates ->
 
-          //The size of the rubber band
           @Zoomed val rubberBandSize: Size = rubberBandStartLocation.delta(rubberBandCurrentLocation).abs().asSize()
 
           //Keep the same aspect ratio as before, find the size (larger) with the current aspect ratio
@@ -379,7 +375,6 @@ fun ZoomAndTranslationLayer.rubberBandZoom() {
         }
       }
 
-      //Reset the values
       rubberBandStartLocation = null
       rubberBandCurrentLocation = null
 
@@ -405,7 +400,6 @@ fun Layers.addZoomAndTranslation(
   return zoomAndTranslationLayer.apply {
     addLayer(this)
 
-    //add the rubber band visualization layer
     val rubberBandVisualizationLayer = RubberBandVisualizationLayer(RubberBandVisualizationLayer.Configuration({ rubberBandStartLocation }, { rubberBandCurrentLocation }))
     addLayer(rubberBandVisualizationLayer)
   }

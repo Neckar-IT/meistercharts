@@ -127,7 +127,6 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
           minMaxAreaPainter?.begin(gc)
         }
 
-        //update the last time stuff
         lastTime = time
 
 
@@ -196,7 +195,6 @@ class AverageMinMaxHistoryCanvasTilePainter(val configuration: Configuration) : 
     averageLineStyle.apply(gc)
     averageLinePainter.paint(gc)
 
-    //Paint the points
     if (pointPainter != null) {
       pointsBuffer.fastForEachIndexed { _, x, y ->
         pointPainter.paintPoint(gc, x, y)

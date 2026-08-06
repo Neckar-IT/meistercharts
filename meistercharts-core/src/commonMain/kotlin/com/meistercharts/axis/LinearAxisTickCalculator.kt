@@ -114,7 +114,6 @@ object LinearAxisTickCalculator {
     while (current <= upperRounded && target.size < maxTickCount) {
       target.add(current)
 
-      //Calculate the next current
       index++
       current = tickBase + index * tickDistance
     }
@@ -245,7 +244,6 @@ object LinearAxisTickCalculator {
 
     @Domain val greaterTickDistance = if (smaller.isCloseToOrMoreThan(minTickDistance)) smaller else larger
 
-    //Calculate the tick count
     val tickCount = (delta / greaterTickDistance).toInt()
 
     require(tickCount <= maxTickCount) { "Invalid tick count: $tickCount" }

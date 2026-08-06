@@ -74,7 +74,6 @@ open class FancyXyLinePainter(
         return
       }
 
-      //Paint the shadow if there is one
       shadowColor.get()?.let {
         gc.strokeStyle(it)
         gc.translate(shadowOffset, shadowOffset)
@@ -90,7 +89,6 @@ open class FancyXyLinePainter(
       }
 
 
-      //Paint the path
       gc.beginPath()
       points.fastForEachIndexed { _, x, y ->
         gc.lineTo(x, y)

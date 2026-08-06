@@ -289,7 +289,6 @@ class DistanceYears(val distanceInYears: @a Int) : TimeTickDistance {
     val localDate = LocalDate.fromMillisCurrentTimeZone(millis, i18nConfiguration.timeZone)
 
     if (distanceInYears == 1) {
-      //Show every year
       return localDate.year.value.toString()
     }
 

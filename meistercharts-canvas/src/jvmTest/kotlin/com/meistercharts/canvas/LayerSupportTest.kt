@@ -137,7 +137,6 @@ class LayerSupportTest {
     assertThat(canvas.size).isEqualTo(Size.none)
     assertThat(chartState.contentAreaSize).isEqualTo(Size.none)
 
-    //Update canvas size
     canvas.size = Size.of(800.0, 600.0) //--> this results in an automatic call to resetToDefaults
     assertThat(chartState.contentAreaSize).isEqualTo(canvas.size)
 
@@ -148,7 +147,6 @@ class LayerSupportTest {
     assertThat(chartState.windowTranslation).isEqualTo(Distance.of(800 / 10.0 / 2 * expectedDefaultZoom.scaleX, 600 / 10.0 / 2 * expectedDefaultZoom.scaleY)) //Should be centered
 
 
-    //Update the canvas size further
     canvas.size = Size.of(1000.0, 720.0)
     assertThat(chartState.contentAreaSize).isEqualTo(canvas.size)
 

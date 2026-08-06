@@ -89,8 +89,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     //Iterate over data series first to avoid gaps between buckets
     visibleDecimalSeriesIndices.fastForEach { dataSeriesIndex: DecimalDataSeriesIndex ->
       if (dataSeriesIndex.value >= dataSeriesCount) {
-        //the data series with the given index does not exist. Do not paint
-        //Do not throw an exception here, because the defaults of the visible data series indices might contain data series that do not exist
+        //Skip non-existent series without throwing: the default visible indices may reference series that do not exist
         return@fastForEach
       }
 

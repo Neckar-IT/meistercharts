@@ -39,12 +39,10 @@ value class MainIndex(val value: Int) : Comparable<MainIndex> {
     return MainIndex(value - 1)
   }
 
-  // Checks if the MainIndex is at its minimum value.
   fun atMin(): Boolean {
     return value == Int.MIN_VALUE
   }
 
-  // Checks if the MainIndex is at its maximum value.
   fun atMax(): Boolean {
     return value == Int.MAX_VALUE
   }

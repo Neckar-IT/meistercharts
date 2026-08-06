@@ -75,7 +75,6 @@ class DefaultMouseEventBroker : MouseEventBroker {
   @Window
   override val mousePositionProperty: ReadOnlyObservableObject<@Window Coordinates?> = ObservableObject<@Window Coordinates?>(null)
     .also { it ->
-      //Update the mouse position property when the mouse is moved
       onMove { mouseMoveEvent ->
         it.value = mouseMoveEvent.coordinates
         Ignored

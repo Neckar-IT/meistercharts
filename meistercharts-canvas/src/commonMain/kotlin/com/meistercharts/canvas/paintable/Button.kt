@@ -135,7 +135,6 @@ class Button(
       it(event)
     }
 
-    //Disable pressed
     state = state.copy(pressed = false)
   }
 

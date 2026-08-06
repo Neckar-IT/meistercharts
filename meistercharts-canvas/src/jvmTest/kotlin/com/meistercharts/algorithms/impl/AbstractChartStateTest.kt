@@ -105,7 +105,6 @@ internal class AbstractChartStateTest {
     assertThat(chartState.zoomX).isEqualTo(1.0)
     assertThat(chartState.zoomY).isEqualTo(1.0)
 
-    //now zoom on the origin
     //Center should be held at center
 
     zoomAndPanSupport.setZoom(4.0, 4.0, Coordinates.origin, reason = UpdateReason.UserInteraction)
@@ -120,7 +119,6 @@ internal class AbstractChartStateTest {
     assertThat(chartCalculator.window2domainRelativeX(0.0)).isEqualTo(0.0)
 
 
-    //Reset zoom
     zoomAndPanSupport.setZoom(1.0, 1.0, Coordinates.origin, reason = UpdateReason.UserInteraction)
 
     //Translate by 100 pixels

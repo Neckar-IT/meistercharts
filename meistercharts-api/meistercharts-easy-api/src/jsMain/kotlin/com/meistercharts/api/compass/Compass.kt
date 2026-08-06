@@ -57,7 +57,7 @@ class Compass internal constructor(
  */
 @JsExport
 external interface CompassData {
-  // This is the interface towards the browser. There is no guaranty that we will receive non-null and well-defined values. Hence, all types are nullable.
+  // Interface towards the browser: values may be null or malformed, so all types are nullable.
   /**
    * The current value in degrees
    */

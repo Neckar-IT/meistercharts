@@ -30,7 +30,7 @@ package it.neckar.open.version
 import java.util.Properties
 
 /**
- * JVM implementation: resolves git info from the injected deploy metadata (#2413).
+ * JVM implementation: resolves git info from the injected deploy metadata.
  *
  * Chain: system property (local override, e.g. set by a run task) → environment variable
  * (baked into service images by Jib at image build) → the `META-INF/app-git-info.properties`

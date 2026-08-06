@@ -65,10 +65,8 @@ open class SimpleAreaBetweenLinesPainter(
     // Close the path
     gc.closePath()
 
-    // Fill the area between the lines
     gc.fill()
 
-    //Stroke the lines
     if (strokeLines) {
       strokeLines(gc)
     }

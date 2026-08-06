@@ -88,6 +88,16 @@ APP_BASE_NAME=${0##*/}
 # Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
 APP_HOME=$( cd -P "${APP_HOME:-./}" > /dev/null && printf '%s\n' "$PWD" ) || exit
 
+# Neckar IT local build guard: builds.slice, cross-worktree build semaphore, build ledger.
+# It caps resources and records the invocation; it never refuses one. Sourced rather than called,
+# so it can re-execute the build inside the slice and append --max-workers to "$@".
+# No-op in CI and under NIT_BUILD_GUARD=off. `verifyBuildGuard` fails when this block is missing,
+# which is how a regenerated wrapper (`./gradlew wrapper`) is caught.
+# See tools/build-guard/README.md and docs/gradle/parallel-worktree-builds.md.
+if [ -r "$APP_HOME/tools/build-guard/build-guard.sh" ]; then
+    . "$APP_HOME/tools/build-guard/build-guard.sh"
+fi
+
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD=maximum
 

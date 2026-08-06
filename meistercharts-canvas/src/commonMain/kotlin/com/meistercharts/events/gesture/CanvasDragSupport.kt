@@ -100,7 +100,6 @@ class CanvasDragSupport {
     //Remember the start time
     updateDragLocation(coordinates, eventTime)
 
-    //Call all handlers
     val draggingAllowed = handlers.consumeUntil {
       it.isDraggingAllowedFromHere(this, coordinates, chartSupport)
     }
@@ -125,13 +124,7 @@ class CanvasDragSupport {
     }
 
     if (dragging.not()) {
-      //Start dragging
       dragging = true
-      //updateDragLocation(coordinates, eventTime)
-      //
-      //return handlers.consumeUntil(Consumed) {
-      //  it.onFirstDrag(this, coordinates, chartSupport)
-      //} ?: Ignored
     }
 
     //Notify about drag

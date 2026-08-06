@@ -59,11 +59,9 @@ class ModernCompassPainter(
   ) {
     val gc = paintingContext.gc
 
-    //The radius of the inner circle
     val innerCircleRadius = radius - configuration.outerCircleWidth
 
 
-    //The outer color
     gc.fill(configuration.outerCircleColor)
     gc.fillOvalCenter(0.0, 0.0, radius * 2, radius * 2)
 

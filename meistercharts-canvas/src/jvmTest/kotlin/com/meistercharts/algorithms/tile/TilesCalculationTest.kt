@@ -79,7 +79,6 @@ class TilesCalculationTest {
     assertThat(calculator.tileIndex2contentArea(TileIndex.of(1, 0), tileSize)).isEqualTo(Coordinates(100.0, 0.0))
     assertThat(calculator.tileIndex2contentArea(TileIndex.of(0, 1), tileSize)).isEqualTo(Coordinates(0.0, 75.0))
 
-    //now translate
     chartState.windowTranslation = Distance(17.0, 14.0)
 
     //translation does not have any effects

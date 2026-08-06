@@ -72,7 +72,6 @@ class MouseWheelWithoutModifierMessageLayer(
 
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
-    //show background
     gc.fill(configuration.backgroundFill)
     gc.fillRect(0.0, 0.0, gc.width, gc.height)
 

@@ -112,7 +112,6 @@ constructor(
     //Ensure the configuration is loaded/configured
     MeisterChartsPlatform.init()
 
-    //set the instance
     @Suppress("DEPRECATION")
     chartSupport.setMeisterchartInstance(this)
 
@@ -134,8 +133,8 @@ constructor(
       htmlCanvas.recalculateCanvasRenderingSize()
     }.disposeOn(chartSupport)
 
-    // Do not(!) set the width or height attribute of canvasEle to the corresponding width or height of parentElement.
-    // The size of parentElement may depend on the size of canvasElement. Hence, the size of parentElement might be 0 at this point.
+    // Do not set canvasEle's width/height from parentElement: parentElement's size may depend on the
+    // canvas, so it can still be 0 here. Use percentage CSS instead.
     htmlCanvas.canvasElement.style.setProperty("width", "100%")
     htmlCanvas.canvasElement.style.setProperty("height", "100%")
 

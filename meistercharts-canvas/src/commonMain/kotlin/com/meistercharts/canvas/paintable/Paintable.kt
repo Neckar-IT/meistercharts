@@ -379,7 +379,6 @@ interface Paintable {
     gc.translate(x, y)
     gc.scale(scaleX, scaleY)
 
-    //Add the bounding box location
     val location = boundingBox(paintingContext).location
     paint(paintingContext, -location.x, -location.y)
   }

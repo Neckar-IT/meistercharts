@@ -77,7 +77,6 @@ class TankPaintable : Paintable {
     val tankSideTopBoundingBox = tankSideTop.boundingBox(paintingContext)
     val tankSideVerticalBoundingBox = tankSideVertical.boundingBox(paintingContext)
     val tankSideBottomBoundingBox = tankSideBottom.boundingBox(paintingContext)
-    //val wavesBoundingBox = waves.boundingBox(paintingContext)
 
     val gc = paintingContext.gc
     gc.translate(x, y)

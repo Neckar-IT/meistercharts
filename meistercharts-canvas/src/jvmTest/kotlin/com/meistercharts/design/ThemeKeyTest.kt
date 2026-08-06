@@ -34,7 +34,6 @@ class ThemeKeyTest {
     }
 
     val value = key.resolve(MyTheme)
-    //val valueProvider: IntProvider = key.invoke(MyTheme)
   }
 
   object MyTheme : DefaultTheme() {

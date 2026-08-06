@@ -51,8 +51,7 @@ fun File.createTmpFile(): File {
  * The source directory will be replaced when this method is done.*/
 fun File.replaceDirWithRename(sourceDirectory: File) {
   val backupDirectory = File(this.parentFile, this.name + ".old")
-  // Replace the old storage directory with the new, converted storage directory
-  // by first renaming storageBaseDirToConvert to a backupDirectory and then renaming newDirectory to storageBaseDirToConvert
+  // Rename this dir aside to the backup, then rename the source dir into its place.
   check(this.renameTo(backupDirectory)) { "Failed to rename <${this.absolutePath}> to backup <${backupDirectory.absolutePath}>" }
   check(sourceDirectory.renameTo(this)) { "Failed to rename source <${sourceDirectory.absolutePath}> to <${this.absolutePath}>" }
 

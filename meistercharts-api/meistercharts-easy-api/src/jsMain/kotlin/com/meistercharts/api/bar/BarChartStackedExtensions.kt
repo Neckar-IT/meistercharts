@@ -134,7 +134,6 @@ fun BarChartStackedGestalt.applyStyle(jsStyle: BarChartStackedStyle) {
   }
 
 
-  //Calculate the optimal content viewport margin top
   @px val viewportMarginTop = valueAxisSupport.calculateContentViewportMarginTop(Unit, chartSupport())
     .coerceAtLeast(categoryAxisSupport.calculateContentViewportMarginTop(Unit, chartSupport()))
   contentViewportMargin = contentViewportMargin.withTop(viewportMarginTop)

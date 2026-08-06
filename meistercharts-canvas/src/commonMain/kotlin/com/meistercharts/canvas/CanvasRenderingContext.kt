@@ -140,7 +140,6 @@ interface CanvasRenderingContext : SupportsPathActions {
      * Apply the default font first
      */
     this.font = defaultFont()
-    //Apply the theme text font descriptor fragment
     this.font(CurrentTheme.textFont)
   }
 
