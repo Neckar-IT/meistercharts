@@ -14,8 +14,15 @@ object KotlinSettings {
   val apiVersionAsString: String = apiVersion.version
 
   /**
-   * Contains the annotations we opted in for.
-   * Can be used to configure Kotlin extensions directly
+   * Contains the annotations we opted in for. Applied to every Kotlin module, so an entry has to
+   * resolve on every target — an annotation the compilation cannot see is reported as
+   * `Opt-in requirement marker '…' is unresolved` once per compilation, for no benefit.
+   *
+   * That rules out target-specific stdlib markers (`kotlin.io.path.*` is JVM-only) and third-party
+   * markers from libraries most modules do not depend on. `kotlinx.serialization.ExperimentalSerializationApi`
+   * is the one exception and stays: it is used in `internal/open/rest/model`, `internal/open/annotations`,
+   * `internal/open/commons/kotlinx-serializers` and `build-logic/plugins`, and removing it trades its
+   * 5 unresolved-marker warnings for 17 `needs opt-in` warnings.
    *
    * Look at: https://github.com/JetBrains/kotlin/blob/master/compiler/arguments/src/org/jetbrains/kotlin/arguments/description/CommonCompilerArguments.kt
    */
@@ -26,12 +33,10 @@ object KotlinSettings {
     "kotlin.js.ExperimentalJsExport",
     "kotlin.ExperimentalMultiplatform",
     "kotlin.ExperimentalUnsignedTypes",
-    "kotlin.io.path.ExperimentalPathApi",
     "kotlin.io.encoding.ExperimentalEncodingApi",
     "kotlin.uuid.ExperimentalUuidApi",
-    "kotlinx.serialization.ExperimentalSerializationApi",
-    "kotlinx.coroutines.ExperimentalCoroutinesApi",
     "kotlin.concurrent.atomics.ExperimentalAtomicApi",
+    "kotlinx.serialization.ExperimentalSerializationApi",
   )
 
   /**
@@ -75,10 +80,16 @@ object KotlinSettings {
    * Requires explicit return types on public API. Not part of [freeCompilerArgs] because the value has
    * to match `-Xexplicit-api` whenever a module turns that on — the compiler rejects the two flags
    * with different values. `Utils.configureKotlin` therefore derives it per project from
-   * `kotlin { explicitApi() }`; a module that does not set it keeps the repo-wide `warning`.
+   * `kotlin { explicitApi() }`.
+   *
+   * A module that has not opted in gets `disable` rather than `warning`. Since #2792 the compiler's
+   * warnings are reported instead of suppressed, and repo-wide `warning` contributed 419 findings of
+   * a pure style rule to the Code Quality report — drowning the diagnostics that report defects, for
+   * modules whose explicit-API cleanup is not scheduled. The flag follows the per-module rollout
+   * (#2829); it does not precede it.
    */
   fun explicitReturnTypesArg(explicitApiStrict: Boolean): String =
-    if (explicitApiStrict) "-XXexplicit-return-types=strict" else "-XXexplicit-return-types=warning"
+    if (explicitApiStrict) "-XXexplicit-return-types=strict" else "-XXexplicit-return-types=disable"
 
   val freeCompilerArgs: List<String> = buildList {
     // Opt-ins for the experimental APIs we use.
@@ -113,17 +124,24 @@ object KotlinSettings {
     //   -Xexplicit-backing-fields         explicit backing fields (`val x: T get() = field`)
     //   -Xcontext-parameters              `context(...)` parameters (the language feature itself)
     //
-    // Deferred:
+    // Deferred — the explicit-API pair. Both halves are off until the cleanup is scheduled; neither is
+    // actionable while the other reports thousands of findings into the same Code Quality report.
     //   -Xexplicit-api[=warning|strict]   also require explicit visibility on public API. #1944: 25,370
     //                                     violations at =warning (24,885 visibility + 485 return-type), far
-    //                                     above the cleanup threshold, and warnings are globally suppressed
-    //                                     anyway. Active -XXexplicit-return-types=warning covers the return half.
-    //                                     Per-module opt-in exists: `kotlin { explicitApi() }` makes
+    //                                     above the cleanup threshold. The return half is available
+    //                                     per module: `kotlin { explicitApi() }` makes
     //                                     [explicitReturnTypesArg] follow it (commons/concurrent does).
     //                                     Rolling it out to the remaining open-source modules: #2829.
+    //                                     A module that has not opted in gets `disable`: with warnings
+    //                                     reported since #2792, the repo-wide `warning` put 419 findings
+    //                                     of a pure style rule into the Code Quality report — burying the
+    //                                     diagnostics that report defects, in modules whose cleanup is
+    //                                     not scheduled. The flag follows the rollout, not the other way
+    //                                     round.
     //
     // Available but deliberately off:
-    //   -Xreport-all-warnings             no effect — warning-level diagnostics are globally suppressed (suppressWarnings=true)
+    //   -Xreport-all-warnings             promotes every warning the compiler holds back by default; the
+    //                                     warnings that matter are reported without it, and it drowns them
     //   -Xallow-returns-result-of         would force PRE-RELEASE binaries (returnsResultOf contract feeding the
     //                                     return-value checker); not worth the pre-release constraint
     //   -Xvalue-classes                   DEPRECATED flag; multi-field value classes stay experimental behind

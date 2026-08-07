@@ -71,7 +71,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.22"
+aws-sdk-kotlin = "1.8.23"
 
 apache-poi = "5.5.1"
 
@@ -167,7 +167,7 @@ mordant = "3.0.2"
 
 javafx = "25.0.4"
 
-netty = "4.2.16.Final"
+netty = "4.2.17.Final"
 
 rxkotlin = "2.4.0"
 
@@ -310,7 +310,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.50.3"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.0"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -352,7 +352,7 @@ kotlin-css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", ver
 
 chrome-devtools-kotlin = "org.hildan.chrome:chrome-devtools-kotlin:8.3.0-1589152"
 
-commons-codec = "commons-codec:commons-codec:1.22.0"
+commons-codec = "commons-codec:commons-codec:1.22.1"
 
 pdfbox-io = { group = "org.apache.pdfbox", name = "pdfbox-io", version.ref = "pdfbox" }
 

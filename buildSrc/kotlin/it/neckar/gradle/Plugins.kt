@@ -110,6 +110,14 @@ object Plugins {
   const val taskOutputLogs: String = "it.neckar.report.task-output-logs"
 
   /**
+   * Writes `build-reports/kotlin-warnings.json` — every Kotlin compiler warning this build produced,
+   * in the GitLab Code Quality schema, so the findings become inline annotations in the MR diff.
+   * Apply once to the root project.
+   * See [it.neckar.gradle.report.warnings.KotlinWarningsReportPlugin].
+   */
+  const val kotlinWarningsReport: String = "it.neckar.report.kotlin-warnings"
+
+  /**
    * Writes `build-reports/artifact-sizes.json` — the size of every deployable artifact this
    * build produced (frontend bundles, Kotlin/JS bundles, archives, install trees), split by asset type,
    * raw and gzip-compressed. Exported as OTLP metrics from the main-branch CI build. Apply once to the
@@ -206,7 +214,7 @@ object Plugins {
   const val kover: String = "org.jetbrains.kotlinx.kover"
   const val analyze: String = "ca.cutterslade.analyze"
 
-  const val copyResourcesFromDependencies: String = "it.neckar.copy-resources-from-dependencies"
+  const val webResourcesFromDependencies: String = "it.neckar.web-resources-from-dependencies"
 
   /**
    * Provides a processResources task for projects without Java/Kotlin plugin.

@@ -425,7 +425,7 @@ fun Project.configureKotlin() {
   this.extensions.findByType<KotlinProjectExtension>()?.applyKotlinConfiguration()
 
   //For JVM projects
-  extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration(suppressWarnings = true)
+  extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration()
 }
 
 /**
@@ -657,14 +657,14 @@ fun KotlinProjectExtension.applyKotlinConfiguration() {
 /**
  * Applies the kotlin configuration to the JVM target
  */
-fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration(suppressWarnings: Boolean) {
+fun KotlinJvmProjectExtension.applyJvmKotlinConfiguration() {
   compilerOptions {
     languageVersion = KotlinSettings.languageVersion
     apiVersion = KotlinSettings.apiVersion
     progressiveMode = true
     optIn = KotlinSettings.optInExperimentalAnnotations
     javaParameters = true
-    this.suppressWarnings = suppressWarnings
+    suppressWarnings = false
     extraWarnings = true
   }
 
@@ -904,11 +904,11 @@ enum class WebpackModuleType {
  * Declares no target: which platforms a module builds for is its registered target set
  * (`multiplatform(path, …)` in the project registry), applied by `declareTarget` per entry.
  */
-fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration(suppressWarnings: Boolean = true) {
+fun KotlinMultiplatformExtension.applyMultiplatformKotlinConfiguration() {
   applyKotlinConfiguration()
 
   compilerOptions {
-    this.suppressWarnings = suppressWarnings
+    suppressWarnings = false
     extraWarnings = true
   }
 }
