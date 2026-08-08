@@ -101,6 +101,9 @@ object KotlinSettings {
     add("-Xwarning-level=NOTHING_TO_INLINE:disabled") // do not warn on intentionally non-inline-worthy `inline` funs
     add("-Xreturn-value-checker=full") // report unused return values... (2.2)
     add("-Xwarning-level=RETURN_VALUE_NOT_USED:error") // ...and treat them as errors
+    // Prefixes every diagnostic with its internal name (`[USELESS_CAST] No cast needed.`). The name is what
+    // groups the warnings report by category and the key `-Xwarning-level=<NAME>:…` takes.
+    add("-Xrender-internal-diagnostic-names")
 
     // Stabilization-track features (opt-in until they become the language-version default).
     add("-Xexpect-actual-classes") // silence expect/actual-class beta warning — KT-61573

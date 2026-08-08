@@ -26,7 +26,7 @@ object KotlinWarningsCodeQualityReport {
     json.encodeToString(ListSerializer(CodeQualityFinding.serializer()), warnings.map { it.toFinding() })
 
   private fun KotlinWarning.toFinding(): CodeQualityFinding = CodeQualityFinding(
-    checkName = CheckName,
+    checkName = diagnostic ?: UnnamedDiagnosticCheckName,
     description = "$message (${targets.sorted().joinToString(", ")})",
     location = CodeQualityLocation(
       path = filePath,
@@ -35,8 +35,11 @@ object KotlinWarningsCodeQualityReport {
     fingerprint = deduplicationKey.md5(),
   )
 
-  /** One check name for every compiler diagnostic: the compiler names the rule in the message. */
-  private const val CheckName: String = "kotlin-compiler-warning"
+  /**
+   * Check name for a diagnostic the compiler reports without an internal name. Everything else is filed
+   * under its own name, so GitLab groups the annotations by category instead of under a single check.
+   */
+  private const val UnnamedDiagnosticCheckName: String = "kotlin-compiler-warning"
 
   /**
    * GitLab identifies a finding across pipelines by its fingerprint. Derived from the deduplication

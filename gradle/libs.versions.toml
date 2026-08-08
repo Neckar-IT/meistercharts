@@ -65,19 +65,19 @@ io-gitlab-arturbosch-detekt = "2.0.0-alpha.5"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.10"
+com-google-devtools-ksp = "2.3.11"
 
 org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.23"
+aws-sdk-kotlin = "1.8.24"
 
 apache-poi = "5.5.1"
 
 com-atlassian-commonmark = "0.17.0"
 
-org-commonmark = "0.29.0"
+org-commonmark = "0.30.0"
 
 # BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
@@ -310,7 +310,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.0"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.1"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

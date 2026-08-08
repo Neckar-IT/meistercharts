@@ -35,11 +35,14 @@ import java.io.File
  * Position, file and message are parsed out of the text because the Kotlin Gradle plugin exposes no
  * structured diagnostic channel — they exist solely there.
  *
- * The collection covers only tasks that actually run. An `UP-TO-DATE` or `FROM-CACHE` compilation
- * emits nothing, so the result is always "what this build compiled", never a repository-wide total.
+ * The collection covers only tasks that actually run. An `UP-TO-DATE` or `FROM-CACHE` compilation emits
+ * nothing, so what this build reports is always "what it compiled", never a repository-wide total. The
+ * fragments on disk accumulate across builds and do hold that total — see [KotlinWarningFragments].
  */
 class KotlinWarningCapture(
   private val repositoryRoot: File,
+  /** Where the per-compilation fragments are written. See [KotlinWarningFragments]. */
+  private val fragmentDirectory: File,
   private val buildOperationListenerManager: BuildOperationListenerManager,
 ) {
 
@@ -58,11 +61,25 @@ class KotlinWarningCapture(
       val target = KotlinCompileTask.targetOrNull(taskPath) ?: return
 
       text.lineSequence().forEach { line ->
-        KotlinWarningParser.parse(line, taskPath.modulePath(), target, repositoryRoot)?.let { collector.record(it) }
+        KotlinWarningParser.parse(line, taskPath.modulePath(), target, repositoryRoot)?.let { collector.record(taskPath, it) }
       }
     }
 
-    override fun finished(descriptor: BuildOperationDescriptor, finishEvent: OperationFinishEvent) = Unit
+    /**
+     * Publishes the finished compilation's findings. A task that did not run the compiler leaves its
+     * fragment untouched — its `skipMessage` names why (`UP-TO-DATE`, `FROM-CACHE`), and overwriting the
+     * fragment with the nothing it reported would lose the last real result.
+     *
+     * A compilation that ran and found nothing writes an empty fragment, which is how a cleaned-up module
+     * disappears from the report.
+     */
+    override fun finished(descriptor: BuildOperationDescriptor, finishEvent: OperationFinishEvent) {
+      val taskPath = (descriptor.details as? ExecuteTaskBuildOperationType.Details)?.taskPath ?: return
+      KotlinCompileTask.targetOrNull(taskPath) ?: return
+      if ((finishEvent.result as? ExecuteTaskBuildOperationType.Result)?.skipMessage != null) return
+
+      KotlinWarningFragments.write(fragmentDirectory, taskPath, collector.warningsOf(taskPath))
+    }
   }
 
   /** Every collected finding, ordered by location so the report is stable across builds. */

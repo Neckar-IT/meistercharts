@@ -11,6 +11,11 @@ package it.neckar.gradle.report.warnings
  * [targets] holds every Kotlin target whose compilation reported this warning. The same `commonMain`
  * diagnostic reaches `compileKotlinJvm`, `compileKotlinJs` and `compileKotlinWasmJs` separately, so
  * findings are merged on [filePath] + [line] + [column] + [message] and the targets collected.
+ *
+ * [diagnostic] is the compiler's internal diagnostic name — `USELESS_CAST`, `UNUSED_ANONYMOUS_PARAMETER` —
+ * rendered by `-Xrender-internal-diagnostic-names` and stripped off [message] again. It is the category the
+ * warnings report groups by and the key `-Xwarning-level=<NAME>:error` takes. Null for a diagnostic the
+ * compiler reports without a name.
  */
 data class KotlinWarning(
   val filePath: String,
@@ -19,6 +24,7 @@ data class KotlinWarning(
   val message: String,
   val modulePath: String,
   val targets: Set<String>,
+  val diagnostic: String? = null,
 ) {
   init {
     require(line >= 1) { "line must be 1-based but was $line for $filePath" }
@@ -28,6 +34,8 @@ data class KotlinWarning(
   /**
    * Identifies the finding across the targets that report it. Deliberately excludes [targets] and
    * [modulePath]: two targets of the same module produce the same diagnostic at the same position.
+   * [diagnostic] is excluded too — it is a property of the message, so it discriminates nothing, and
+   * keeping it out holds the GitLab Code Quality fingerprints stable across the rendering change.
    */
   val deduplicationKey: String
     get() = "$filePath:$line:$column:$message"

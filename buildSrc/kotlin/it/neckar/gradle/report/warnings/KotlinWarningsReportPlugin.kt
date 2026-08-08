@@ -7,13 +7,23 @@ import org.gradle.api.internal.GradleInternal
 import org.gradle.internal.operations.BuildOperationListenerManager
 
 /**
- * Writes `build-reports/kotlin-warnings.json` — every Kotlin compiler warning this build produced, in
- * the GitLab Code Quality schema, so the findings become inline annotations in the MR diff next to
- * Detekt's and oxlint's. Apply once, to the root project.
+ * Publishes the Kotlin compiler warnings, in two places with different lifetimes. Apply once, to the root
+ * project.
  *
- * Collection runs unconditionally, because a mode would make the report untrustworthy: the capture
- * only sees compilations that actually run, so a flag-gated build with a warm cache would report
- * almost nothing and look like a clean repository. The file always states what this build compiled.
+ * | Artefact | Written | Consumer |
+ * |---|---|---|
+ * | `build-reports/kotlin-warnings/<module>/<task>.json` | per compilation, as it finishes | the `Kotlin Compiler Warnings` card on reports.neckar.it |
+ * | `build-reports/kotlin-warnings.json` | at build end, GitLab Code Quality schema | `gitlab-ci.d/mr.yml`, inline annotations in the MR diff |
+ *
+ * The split follows the two questions being asked. The Code Quality report answers "what did *this* build
+ * compile" and is rewritten every time, which is right for a diff-scoped merge request pipeline. The
+ * fragments answer "what is in the repository": they are written only by compilations that actually ran, so
+ * the Gradle invocations that follow a cold compile run leave them alone and the stock survives until the
+ * report image is packaged. See [KotlinWarningFragments].
+ *
+ * Collection runs unconditionally, because a mode would make the report untrustworthy: the capture only
+ * sees compilations that actually run, so a flag-gated build with a warm cache would report almost nothing
+ * and look like a clean repository.
  *
  * Delegates to [KotlinWarningCapture], which resolves warnings to tasks through build operations —
  * see that class for why the task's own logger cannot do it. Reaching into Gradle's internal service
@@ -28,11 +38,12 @@ class KotlinWarningsReportPlugin : Plugin<Project> {
 
     val capture = KotlinWarningCapture(
       repositoryRoot = target.rootDir,
+      fragmentDirectory = target.structuredReportDirectory.dir(KotlinWarningFragments.DirectoryName).asFile,
       buildOperationListenerManager = gradle.services.get(BuildOperationListenerManager::class.java),
     )
     capture.install()
 
-    val reportFile = target.structuredReportDirectory.file(ReportFileName).asFile
+    val codeQualityReportFile = target.structuredReportDirectory.file(CodeQualityReportFileName).asFile
 
     // The listener is daemon-scoped and has to be removed at build end, or it keeps firing into a
     // dead capture on every later build in the same daemon. buildFinished is not
@@ -40,15 +51,15 @@ class KotlinWarningsReportPlugin : Plugin<Project> {
     gradle.buildFinished {
       capture.uninstall()
 
-      reportFile.parentFile.mkdirs()
+      codeQualityReportFile.parentFile.mkdirs()
       // Written even when empty: the `jq -s` merge in gitlab-ci.d/mr.yml reads the file
       // unconditionally, and a missing one would fail the Code Quality report of the whole pipeline.
-      reportFile.writeText(KotlinWarningsCodeQualityReport.render(capture.collectedWarnings()))
+      codeQualityReportFile.writeText(KotlinWarningsCodeQualityReport.render(capture.collectedWarnings()))
     }
   }
 
   companion object {
     /** Sits next to `build-events.jsonl` and `artifact-sizes.json` in the structured report directory. */
-    const val ReportFileName: String = "kotlin-warnings.json"
+    const val CodeQualityReportFileName: String = "kotlin-warnings.json"
   }
 }
