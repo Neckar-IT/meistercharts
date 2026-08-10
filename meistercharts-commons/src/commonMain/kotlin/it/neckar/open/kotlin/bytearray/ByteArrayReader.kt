@@ -29,11 +29,21 @@ package it.neckar.open.kotlin.bytearray
 
 import kotlin.jvm.JvmInline
 
+/**
+ * Reads primitives out of [data] sequentially, beginning at [start] and advancing an internal offset by the width of each read.
+ *
+ * [size] is an exclusive end index into [data], not a number of bytes: [remaining] subtracts the absolute offset from it. The default `0`
+ * therefore makes [hasMore] false from the start — that is the right value only for callers that read a known layout and never consult
+ * [remaining]. Use [ByteArray.reader], which passes the array's own size as the end.
+ *
+ * Reads are not bounds-checked against [size]: passing the end keeps returning bytes from [data] and only throws once the array itself ends.
+ */
 class ByteArrayReader(val data: ByteArray, val start: Int, val size: Int = 0) {
   private var offset = start
   val remaining get() = size - offset
   val hasMore get() = remaining > 0
 
+  /** Runs [callback] at the current offset and only then advances by the fixed [count] — [callback] must not move the offset itself. */
   private fun <T> move(count: Int, callback: ByteArray.(Int) -> T): T {
     val res = callback(data, this.offset)
     this.offset += count
@@ -106,6 +116,7 @@ fun ByteArrayReaderBE.s32() = bar.s32BE()
 fun ByteArrayReaderBE.f32() = bar.f32BE()
 fun ByteArrayReaderBE.f64() = bar.f64BE()
 
+/** [size] is the exclusive end index in the array, not a count of bytes following [offset]. */
 fun ByteArray.reader(offset: Int = 0, size: Int = this.size) = ByteArrayReader(this, offset, size)
 fun ByteArray.readerLE(offset: Int = 0, size: Int = this.size) = ByteArrayReaderLE(reader(offset, size))
 fun ByteArray.readerBE(offset: Int = 0, size: Int = this.size) = ByteArrayReaderBE(reader(offset, size))

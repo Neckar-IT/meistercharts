@@ -42,12 +42,18 @@ class CachedRemoteHistoryStorage(val asyncHistoryAccess: AsyncHistoryAccess) : H
       return cached
     }
 
+    // The access is allowed to answer synchronously - both call sites in this repository do.
+    // Returning null in that case discards a bucket that is already available and forces the
+    // caller into a second get() before it sees any data.
+    var answeredImmediately: HistoryBucket? = null
+
     asyncHistoryAccess.query(descriptor) {
       cache.store(descriptor, it)
+      answeredImmediately = it
       //TODO notify
     }
 
-    return null
+    return answeredImmediately
   }
 
   private val disposeSupport = DisposeSupport()

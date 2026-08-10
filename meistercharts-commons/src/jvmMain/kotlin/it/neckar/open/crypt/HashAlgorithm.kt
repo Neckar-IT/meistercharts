@@ -47,7 +47,7 @@ data class HashAlgorithm(
   /**
    * The expected length of the hash value in bits.
    */
-  val expectedLength: Int,
+  val expectedLengthInBits: Int,
 
   /**
    * The alternative names for the algorithm
@@ -57,16 +57,16 @@ data class HashAlgorithm(
 
   constructor(
     name: String,
-    expectedLength: Int,
+    expectedLengthInBits: Int,
     vararg alternativeNames: String,
   ) : this(
     name,
-    expectedLength,
+    expectedLengthInBits,
     alternativeNames.toList()
   )
 
   init {
-    require(expectedLength > 0) { "expectedLength must be > 0" }
+    require(expectedLengthInBits > 0) { "expectedLengthInBits must be > 0" }
   }
 
   /**
@@ -102,7 +102,7 @@ data class HashAlgorithm(
 
   fun calculate(messageDigest: MessageDigest, resource: URL): Hash {
     resource.openStream().use {
-      return calculate(algorithm = this, messageDigest = messageDigest, resource = it)
+      return calculate(algorithm = this, messageDigest = messageDigest, inputStream = it)
     }
   }
 
@@ -112,12 +112,12 @@ data class HashAlgorithm(
 
   fun calculate(messageDigest: MessageDigest, file: File): Hash {
     file.inputStream().buffered().use {
-      return calculate(algorithm = this, messageDigest = messageDigest, resource = it)
+      return calculate(algorithm = this, messageDigest = messageDigest, inputStream = it)
     }
   }
 
-  fun calculate(resourceIn: InputStream): Hash {
-    return calculate(algorithm = this, messageDigest = createMessageDigest(), resource = resourceIn)
+  fun calculate(inputStream: InputStream): Hash {
+    return calculate(algorithm = this, messageDigest = createMessageDigest(), inputStream = inputStream)
   }
 
   override fun toString(): String {
@@ -173,20 +173,20 @@ data class HashAlgorithm(
     }
 
     /**
-     * Calculates the hash for the given resource using the given algorithm and message digest.
+     * Calculates the hash for the content of the given input stream using the given algorithm and message digest.
      */
-    fun calculate(algorithm: HashAlgorithm, messageDigest: MessageDigest, resource: InputStream): Hash {
+    fun calculate(algorithm: HashAlgorithm, messageDigest: MessageDigest, inputStream: InputStream): Hash {
       require(algorithm.matchesName(messageDigest.algorithm)) { "Algorithm name must match. Was $algorithm but message digest has ${messageDigest.algorithm}" }
 
       messageDigest.reset()
 
-      val cache = ByteArray(255)
+      val buffer = ByteArray(255)
       while (true) {
-        val read = resource.read(cache, 0, 255)
+        val read = inputStream.read(buffer, 0, buffer.size)
         if (read <= 0) {
           break
         }
-        messageDigest.update(cache, 0, read)
+        messageDigest.update(buffer, 0, read)
       }
 
       val digest = messageDigest.digest()

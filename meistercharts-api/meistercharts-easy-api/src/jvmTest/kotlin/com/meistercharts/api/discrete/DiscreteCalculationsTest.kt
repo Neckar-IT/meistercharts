@@ -171,6 +171,55 @@ class DiscreteCalculationsTest {
   }
 
   @Test
+  fun testAllSeriesWithoutEntries() {
+    val historyConfiguration = historyConfiguration {
+      referenceEntryDataSeries(DataSeriesId(17), "Ref17", HistoryEnum.Boolean)
+      referenceEntryDataSeries(DataSeriesId(18), "Ref18", HistoryEnum.Boolean)
+    }
+
+    val data = DiscreteTimelineChartData(
+      arrayOf(
+        DiscreteDataEntriesForDataSeries(emptyArray()),
+        DiscreteDataEntriesForDataSeries(emptyArray()),
+      )
+    )
+
+    assertThat(data.toChunk(historyConfiguration)).isNull()
+  }
+
+  @Test
+  fun testFirstSeriesWithoutEntries() {
+    val historyConfiguration = historyConfiguration {
+      referenceEntryDataSeries(DataSeriesId(17), "Ref17", HistoryEnum.Boolean)
+      referenceEntryDataSeries(DataSeriesId(18), "Ref18", HistoryEnum.Boolean)
+    }
+
+    val data = DiscreteTimelineChartData(
+      arrayOf(
+        DiscreteDataEntriesForDataSeries(emptyArray()), //the first data series has not delivered anything yet
+        DiscreteDataEntriesForDataSeries(
+          arrayOf(
+            DiscreteDataEntry(1001.0, 2002.0, "the label", 1.0),
+            DiscreteDataEntry(2002.0, 4003.0, "the label2", 2.0),
+          )
+        ),
+      )
+    )
+
+    val pair = data.toChunk(historyConfiguration)
+    requireNotNull(pair) { "The entries of the second data series must not be dropped" }
+    val chunk = pair.first
+
+    assertThat(chunk.firstTimeStamp()).isEqualTo(1001.0)
+    assertThat(chunk.lastTimeStamp()).isEqualTo(4003.0)
+
+    //the first data series does not have any values
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualTo(ReferenceEntryId.NoValue)
+    //the second data series contains the entries
+    assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.one, TimestampIndex(0)).id).isEqualTo(1001)
+  }
+
+  @Test
   fun testSimple() {
     val historyConfiguration = historyConfiguration {
       referenceEntryDataSeries(DataSeriesId(17), "Ref17", HistoryEnum.Boolean)

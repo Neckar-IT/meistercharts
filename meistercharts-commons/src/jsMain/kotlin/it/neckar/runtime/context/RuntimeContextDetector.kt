@@ -55,7 +55,7 @@ object RuntimeContextDetector {
 
     // Resolve the host
     val hostname = forcedHostname
-      ?: getGlobalVariable(RuntimeContextEnv.KEY_SERVICE_HOST_ENV)?.let { Hostname(it) }
+      ?: getGlobalVariable(RuntimeContextEnv.ServiceHostKey)?.let { Hostname(it) }
       ?: getBrowserHostname()
 
     val serviceHost = serviceHostRegistry.resolveHost(hostname)
@@ -65,12 +65,12 @@ object RuntimeContextDetector {
     // DeploymentPlugin templates into the deploy config), so reading them off the host again would
     // be redundant. When nothing is configured (local/test) fall back to the conservative defaults.
     val executionEnvironment: ExecutionEnvironment = forcedExecutionEnvironment
-      ?: getGlobalVariable(RuntimeContextEnv.KEY_RUNTIME_EXECUTION_ENVIRONMENT_ENV)?.let { parseExecutionEnvironment(it) }
+      ?: getGlobalVariable(RuntimeContextEnv.ExecutionEnvironmentKey)?.let { parseExecutionEnvironment(it) }
       ?: ExecutionEnvironment.LocalDev
 
     // Get the deployment stage
     val deploymentStage = forcedDeploymentStage
-      ?: getGlobalVariable(RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV)?.let { parseDeploymentStage(it) }
+      ?: getGlobalVariable(RuntimeContextEnv.DeploymentStageKey)?.let { parseDeploymentStage(it) }
       ?: DeploymentStage.Development
 
     return RuntimeContext(

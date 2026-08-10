@@ -28,16 +28,16 @@
 package it.neckar.open.version
 
 /**
- * JS implementation: resolves git info from the injected deploy metadata.
+ * JS implementation: resolves a single git property from the injected deploy metadata.
  *
  * Chain: `globalThis.__APP_GIT_INFO__[propertyKey]` (a plain object filled at serve time —
- * Ktor templating or the nginx entrypoint) → `<meta name="app-version">` (hash only) →
+ * Ktor templating or the nginx entrypoint) → `<meta name="gitHash">` (hash only) →
  * [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node, tests) resolve to the
  * fallback without throwing: `globalThis` exists everywhere, `document` is guarded.
  */
-internal actual fun resolveGitInfo(property: GitProperty): String {
+internal actual fun resolveGitProperty(property: GitProperty): String {
   return findAppGitInfoValue(property.propertyKey)
-    ?: findMetaAppVersionValue(property)
+    ?: findMetaAppGitHashValue(property)
     ?: VersionInformation.UnknownGitValue
 }
 
@@ -59,14 +59,14 @@ private fun sanitizeInjectedValue(value: String): String? {
   return if (value.isEmpty() || value.startsWith("\${")) null else value
 }
 
-private fun findMetaAppVersionValue(property: GitProperty): String? {
+private fun findMetaAppGitHashValue(property: GitProperty): String? {
   return when (property) {
     GitProperty.Hash -> {
       val documentOrNull: dynamic = js("typeof document !== 'undefined' ? document : null")
       if (documentOrNull == null) {
         return null
       }
-      val metaElement = documentOrNull.querySelector("meta[name='app-version']")
+      val metaElement = documentOrNull.querySelector("meta[name='gitHash']")
       if (metaElement == null) {
         return null
       }

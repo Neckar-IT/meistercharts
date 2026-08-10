@@ -34,7 +34,6 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
   "name": "npm-meistercharts-minimal",
   "license": "Apache-2.0",
   "author": "NeckarIT",
-  "main": "src/index.js",
   "dependencies": {
     "@meistercharts/meistercharts": "1.38.0"
   },

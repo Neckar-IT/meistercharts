@@ -71,7 +71,7 @@ org-mongodb = "5.9.1"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.24"
+aws-sdk-kotlin = "1.8.26"
 
 apache-poi = "5.5.1"
 
@@ -81,7 +81,13 @@ org-commonmark = "0.30.0"
 
 # BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
-org-bouncycastle = "1.85"
+org-bouncycastle = "1.85.2"
+
+# bcpkix has its own version because BouncyCastle patch releases are per-module: 1.85.2 published the
+# bcprov jars only, so bcpkix-jdk18on:1.85.2 does not exist on Maven Central. A shared version ref
+# would point bcpkix at a coordinate that cannot resolve. The two keys converge again on the next
+# full release; until then they move independently.
+org-bouncycastle-pkix = "1.85"
 
 ktor = "3.5.2"
 
@@ -310,7 +316,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.1"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.3"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -504,7 +510,7 @@ asm = "org.ow2.asm:asm:9.10.1"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
-bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "org-bouncycastle" }
+bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "org-bouncycastle-pkix" }
 
 commons-cli = "commons-cli:commons-cli:1.11.0"
 

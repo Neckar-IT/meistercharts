@@ -40,7 +40,7 @@ import it.neckar.open.unit.number.Positive
  * conversion from @[DomainRelative] to [Window] (and backwards).
  *
  * Attention: Conversion from [Domain] to [DomainRelative] are done within
- * a [com.meistercharts.model.ValueRange] and out of the scope of the [ChartState]}.
+ * a [com.meistercharts.range.ValueRange] and out of the scope of the [ChartState].
  *
  */
 interface ChartState {

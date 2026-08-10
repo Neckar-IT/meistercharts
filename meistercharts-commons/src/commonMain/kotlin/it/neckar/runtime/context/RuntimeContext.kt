@@ -37,8 +37,10 @@ package it.neckar.runtime.context
  * throughout the application's lifetime.
  *
  * ## Initialization
- * * JVM: `RuntimeContext.initializeFromEnvironment(...)`. See `RuntimeContextEnv` for the environment keys that are used.
- * * JS: To Be Done
+ * * JVM: `RuntimeContext.initializeFromEnvironment(...)` reads system properties and environment variables.
+ *   See `RuntimeContextSys` and `RuntimeContextEnv` for the keys that are used.
+ * * JS: `RuntimeContext.initializeFromEnvironment(...)` reads the global browser variables
+ *   (`window.EXECUTION_ENVIRONMENT`, `window.DEPLOYMENT_STAGE`, `window.SERVICE_HOST`) and falls back to `window.location.hostname`.
  */
 data class RuntimeContext<HostType: ServiceHost>(
   /**

@@ -28,18 +28,25 @@
 package it.neckar.open.annotations
 
 /**
- * Annotation to mark an enum to be exported as an object in JavaScript.
+ * Marks an enum whose entries carry additional properties, so those properties survive into the
+ * generated OpenAPI schema and from there into TypeScript.
  *
- * This is useful for exporting enums to JavaScript that also contain values
+ * Without this annotation the OpenAPI generator emits a plain string enum (`EnumSchema`) and the
+ * entry properties are lost. With it, the generator emits a `ComponentEnumSchemaObject` instead,
+ * one object per entry - see `SchemaDescriptor` in `internal/open/rest/openapi-generator/`.
+ * `it.neckar.rest.PlatformHeader` is the reference usage: its `headerName` literals reach the
+ * frontend only because of this annotation.
  */
 @MustBeDocumented
-@Retention(AnnotationRetention.RUNTIME) //Is required to allow KSP plugin to find the annotation when calling `KSAnnotated.annotations`
+@Retention(AnnotationRetention.RUNTIME) //The OpenAPI generator looks this annotation up reflectively at runtime (findAnnotation) - BINARY would not be visible there
 annotation class ExportAsObject() {
 
   companion object {
     /**
-     * The name of the JsExport annotation.
-     * The JsExport annotation is only available in JS projects.
+     * The simple name of this annotation class, for consumers that match annotations by short name
+     * instead of by class reference (as a KSP processor does, which cannot resolve a `KClass`).
+     *
+     * Nothing in this repository reads it at the moment - the OpenAPI generator matches by class.
      */
     const val AnnotationName: String = "ExportAsObject"
 

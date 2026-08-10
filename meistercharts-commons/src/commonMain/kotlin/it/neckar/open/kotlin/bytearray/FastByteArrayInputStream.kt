@@ -29,7 +29,15 @@ package it.neckar.open.kotlin.bytearray
 
 import it.neckar.open.kotlin.lang.nextAlignedTo
 
+/**
+ * Reads primitives out of [ba] sequentially. [offset] is the read position and deliberately mutable: repositioning the stream is done by
+ * assigning to it, there is no seek method.
+ *
+ * Neither the reads nor [skip] are bounds-checked. Running past the end throws [IndexOutOfBoundsException] out of the array access instead
+ * of signalling end of stream, so callers that do not know the layout up front guard with [available] or [hasMore].
+ */
 class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
+  /** The size of the whole backing array — unaffected by [offset], unlike [available]. */
   val length: Int get() = ba.size
   val available: Int get() = ba.size - offset
   val hasMore: Boolean get() = available > 0
@@ -38,6 +46,7 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   // Skipping
   fun skip(count: Int) = run { offset += count }
 
+  /** Advances [offset] to the next multiple of [count], leaving an already aligned offset untouched. */
   fun skipToAlign(count: Int) {
     val nextPosition = offset.nextAlignedTo(count)
     skip((nextPosition - offset).toInt())
@@ -103,6 +112,11 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   fun readDoubleArrayBE(count: Int): DoubleArray = increment(count * 8) { ba.readDoubleArrayBE(offset, count) }
 
   // Variable Length
+  /**
+   * Reads a base-128 varint: seven payload bits per byte, least significant group first, bit 7 set while further bytes follow.
+   * Each `if` ends the number at one width — the fifth byte carries the last four bits, so a malformed continuation flag on it is ignored
+   * rather than overflowing.
+   */
   fun readU_VL(): Int {
     var result = readU8()
     if ((result and 0x80) == 0) return result
@@ -116,6 +130,7 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
     return result
   }
 
+  /** Reads a zig-zag encoded varint: bit 0 of the [readU_VL] value is the sign, so small negative numbers stay as short as small positive ones. */
   fun readS_VL(): Int {
     val v = readU_VL()
     val sign = ((v and 1) != 0)
@@ -126,18 +141,19 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   // String
   fun readString(len: Int) = readBytes(len).decodeToString()
 
+  /** Reads a null terminated string out of a fixed size field: always consumes [len] bytes, even when the terminator comes earlier. */
   fun readStringz(len: Int): String {
     val res = readBytes(len)
     val index = res.indexOf(0.toByte())
     return res.decodeToString(0, if (index < 0) len else index)
   }
 
+  /** Reads up to the next null byte and consumes it too. Without a terminator the rest of [ba] is returned and the stream ends at [eof]. */
   fun readStringz(): String {
     val startOffset = offset
     val index = ba.indexOf(0.toByte(), offset)
     val end = if (index >= 0) index else ba.size
-    // Note: copyOfRange(fromIndex, toIndex) — second arg is the end index (exclusive),
-    // not the length. Previously this was `end - startOffset` which truncated the result.
+    // decodeToString takes an exclusive end index, not a length.
     val str = ba.decodeToString(startOffset, end)
     offset = if (index >= 0) end + 1 else end
     return str
@@ -146,6 +162,7 @@ class FastByteArrayInputStream(val ba: ByteArray, var offset: Int = 0) {
   fun readStringVL(): String = readString(readU_VL())
 
   // Tools
+  /** Runs [callback] at the current [offset] and only then advances by the fixed [count] — [callback] must not move [offset] itself. */
   private inline fun <T> increment(count: Int, callback: () -> T): T {
     val out = callback()
     offset += count

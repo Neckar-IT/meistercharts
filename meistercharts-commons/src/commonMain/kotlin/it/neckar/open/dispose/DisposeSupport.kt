@@ -30,7 +30,10 @@ package it.neckar.open.dispose
 import it.neckar.open.collections.fastForEach
 
 /**
- * Holds actions that may be called upon dispose
+ * Holds actions that may be called upon dispose.
+ *
+ * The [mode] decides what happens after [dispose] has run: [Mode.SingleDispose] rejects any further
+ * [onDispose], [Mode.MultiDispose] accepts new actions that are then executed by the next [dispose].
  */
 class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispose {
   /**
@@ -39,13 +42,18 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
   private val disposeActions = mutableListOf<() -> Unit>()
 
   /**
-   * Is set to true if dispose has been called
+   * Is set to true if dispose has been called.
+   * [dispose] sets it before it runs the registered actions, and it stays true afterwards - also
+   * for [Mode.MultiDispose], where further actions may still be registered.
    */
   var disposed: Boolean = false
     private set
 
   /**
-   * Registers an action that is executed when [dispose] is called
+   * Registers an action that is executed when [dispose] is called.
+   *
+   * Throws an [IllegalStateException] if this has already been disposed and the [mode] is
+   * [Mode.SingleDispose] - that includes a re-entrant call from within a running dispose action.
    */
   override fun onDispose(action: () -> Unit) {
     verifyNotDisposed()
@@ -64,7 +72,8 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
     //Copy the dispose actions to avoid endless loops / recursions
     val copy = disposeActions.toList()
 
-    //Clear all actions that have been disposed
+    //Clear the registered actions before executing them - the copy above is what runs, so a second
+    //dispose (Mode.MultiDispose) never executes the same action twice
     disposeActions.clear()
 
     //Mark as disposed up front so a re-entrant onDispose during an action fails fast instead of
@@ -100,7 +109,15 @@ class DisposeSupport(val mode: Mode = Mode.SingleDispose) : Disposable, OnDispos
   }
 
   enum class Mode {
+    /**
+     * [onDispose] throws once [dispose] has been called - the support is used up.
+     */
     SingleDispose,
+
+    /**
+     * [onDispose] is accepted after [dispose] has been called. The newly registered actions are
+     * executed by the next [dispose]. Used where a set of subscriptions is replaced repeatedly.
+     */
     MultiDispose,
   }
 }

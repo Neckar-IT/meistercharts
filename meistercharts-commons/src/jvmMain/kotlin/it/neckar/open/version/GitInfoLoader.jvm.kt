@@ -30,14 +30,14 @@ package it.neckar.open.version
 import java.util.Properties
 
 /**
- * JVM implementation: resolves git info from the injected deploy metadata.
+ * JVM implementation: resolves a single git property from the injected deploy metadata.
  *
  * Chain: system property (local override, e.g. set by a run task) → environment variable
  * (baked into service images by Jib at image build) → the `META-INF/app-git-info.properties`
  * resource (packed exclusively into CLI leaf fat-jars by `configureServiceShadowJar`) →
  * [VersionInformation.UnknownGitValue].
  */
-internal actual fun resolveGitInfo(property: GitProperty): String {
+internal actual fun resolveGitProperty(property: GitProperty): String {
   return System.getProperty(property.systemProperty)
     ?: System.getenv(property.envVar)
     ?: findFatJarGitInfoValue(property.propertyKey)

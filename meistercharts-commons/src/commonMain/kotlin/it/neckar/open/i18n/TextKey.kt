@@ -33,7 +33,10 @@ import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
 /**
- * A unique key to identify a certain piece of text
+ * A unique key to identify a certain piece of text.
+ *
+ * Identity is [key] alone - [fallbackText] is ignored by [equals] and [hashCode].
+ * The map based [TextResolver]s depend on it: a lookup hits regardless of the fallback text the queried key carries.
  */
 @Serializable
 class TextKey(
@@ -42,7 +45,8 @@ class TextKey(
    */
   val key: String,
   /**
-   * The fallback text that may be used if no resolved text is available
+   * The text to fall back to. It is *not* used automatically: only a registered `FallbackTextResolver` returns it -
+   * [DefaultTextService] falls back to [key] instead.
    */
   val fallbackText: String
 ) {
@@ -65,7 +69,7 @@ class TextKey(
   }
 
   /**
-   * Returns true if the key is an empty string
+   * Returns true if [key] is an empty string - [fallbackText] is not taken into account.
    */
   fun isEmpty(): Boolean {
     return this.key.isEmpty()
@@ -96,7 +100,9 @@ class TextKey(
 }
 
 /**
- * Returns false, if this is null
+ * Returns true if this is null or its key is empty.
+ *
+ * The contract exists so that a `false` result smart casts the receiver to non-null at the call site.
  */
 inline fun TextKey?.isEmpty(): Boolean {
   contract {

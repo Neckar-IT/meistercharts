@@ -14,27 +14,20 @@ import org.gradle.kotlin.dsl.register
 import java.io.File
 
 /**
- * Contains all build information variables.
+ * The build information variables behind [GitProperty] — [value] is the key each one is written
+ * under, in the fat-jar `app-git-info.properties` resource and in `window.__APP_GIT_INFO__`.
  *
- * Used as manifest attribute names on leaf fat-jars, as Vite env file values, and as the
- * property keys behind [GitProperty].
+ * One constant per [GitProperty], no more: the only way into [getBuildInfoVarValue] is a
+ * [GitProperty.buildInfoVar], so a constant without a property is a value nothing can ask for.
+ * `gitHashShort` and `branch` used to sit here for that reason and were dropped — the short hash is
+ * derived from the full one at runtime, and the branch is not a property of a commit at all.
  */
 enum class BuildInfoVars(val value: String) {
-  /**
-   * The build date (day only) — derived from the last commit date, not the wall clock,
-   * so expanded resources stay reproducible and cacheable (#792)
-   */
-  BuildDate("buildDate"),
   /**
    * The git commit date and time (ISO 8601 format)
    */
   GitCommitDateTime("gitCommitDateTime"),
   GitHash("gitHash"),
-  GitHashShort("gitHashShort"),
-  /**
-   * The git branch name
-   */
-  Branch("branch"),
   ;
 }
 
@@ -101,11 +94,8 @@ fun Project.gitPropertyEnvironment(): Map<String, String> {
  */
 fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
   return when (buildInfoVar) {
-    BuildInfoVars.BuildDate -> buildDate
     BuildInfoVars.GitCommitDateTime -> gitCommitDateTime
     BuildInfoVars.GitHash -> gitHash
-    BuildInfoVars.GitHashShort -> gitHashShort
-    BuildInfoVars.Branch -> branch
   }
 }
 

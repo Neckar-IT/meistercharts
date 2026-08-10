@@ -1116,8 +1116,13 @@ val Project.branchTagForDocker: String
  *
  * Uses `gitHashShort`, produced by `git rev-parse --short=12 HEAD` — pinned to 12 characters
  * so the tag does not depend on the repository's object count (CI clone vs. local repo).
- * The date component is the commit date (from [gitCommitDateTime]), not the build date, so the tag
- * is a pure function of the commit: rebuilding the same commit yields the same immutable tag.
+ * The date component is the commit date (from [gitCommitDateTime]), so the tag is a pure function of
+ * the commit: rebuilding the same commit yields the same immutable tag.
+ *
+ * The base images built by `docker/docker-bake.hcl` use the same format with the pipeline date
+ * instead (`docker/_immutable-tag.sh`) — deliberately, because they are rebuilt against moving
+ * upstream images, so the same commit can produce a different image and the tags have to differ.
+ * Neither date is a build date; nothing in this repository has one.
  */
 val Project.immutableDockerTag: String
   get() {
@@ -1157,19 +1162,25 @@ val Project.gitCommitDateTime: String
     return rootProject.extra.get("gitCommitDateTime") as? String ?: throw IllegalStateException("Could not find gitCommitDateTime in extra")
   }
 /**
- * The build date (day only), derived from the last commit date — NOT the wall clock.
+ * The date of the last commit, day only — the date component of [gitCommitDateTime].
  *
- * Stable per commit: identical inputs produce identical outputs, so it is safe to embed into
- * manifests, expanded resources and generated .env files. It is the date component of
- * [gitCommitDateTime]. Defined in the root build.gradle.kts (#792).
+ * Deliberately not a build date: a wall-clock timestamp would make identical inputs produce
+ * different outputs and churn the build cache at midnight (#792). Stable per commit, so it is safe
+ * to embed into manifests, expanded resources and generated .env files. Defined in the root
+ * build.gradle.kts.
+ *
+ * There is no build date anywhere in this repository, and no room for one: `SOURCE_DATE_EPOCH=1`
+ * clamps every timestamp in a built image to 1970-01-01, which is what makes the build reproducible.
+ * The only other date in the tooling is `PIPELINE_DATE` in docker/_immutable-tag.sh, which dates a
+ * pipeline run so that base-image tags of one commit stay apart — not the artifact.
  */
-val Project.buildDate: String
+val Project.gitCommitDate: String
   get() {
-    return rootProject.extra.get("buildDate") as? String ?: throw IllegalStateException("Could not find buildDate in extra")
+    return rootProject.extra.get("gitCommitDate") as? String ?: throw IllegalStateException("Could not find gitCommitDate in extra")
   }
 
 /**
- * The current build date (initialized in /build.gradle.kts)
+ * Whether the build runs inside an IDE (initialized in /build.gradle.kts)
  */
 val Project.inIde: Boolean
   get() {

@@ -117,8 +117,8 @@ fun createHardLink(linkTarget: File, linkFile: File): Boolean {
 fun createLink(linkTarget: File, linkFile: File, linkType: LinkType): Boolean {
   if (linkFile.exists()) {
     if (linkType == LinkType.HARD) {
-      //Maybe the hard link still exists - we just don't know, so throw an exception
-      throw IOException("link target already exists: " + linkFile.absolutePath)
+      //A hard link is indistinguishable from the file it points at, so there is no way to tell whether this is the link we want - refuse.
+      throw IOException("Link file already exists, refusing to create a hard link over it: <${linkFile.absolutePath}>")
     }
 
     if (linkTarget.canonicalFile == linkFile.canonicalFile) {
@@ -173,4 +173,11 @@ fun createTempFile(prefix: String, suffix: String, parentDir: File?): File {
 }
 
 
-class AlreadyExistsWithOtherTargetException(linkTarget: File, linkFile: File) : Exception("A link still exists at <" + linkFile.absolutePath + "> but with different target: <" + linkTarget.canonicalPath + "> exected <" + linkFile.canonicalPath + ">")
+/**
+ * Thrown when a link is to be created at a location that already holds a link to a different target.
+ *
+ * @param linkTarget the target the link was requested to point at
+ * @param linkFile the existing link - it resolves to the target that is actually there
+ */
+class AlreadyExistsWithOtherTargetException(linkTarget: File, linkFile: File) :
+  Exception("A link already exists at <${linkFile.absolutePath}> but points at <${linkFile.canonicalPath}> instead of the requested target <${linkTarget.canonicalPath}>")

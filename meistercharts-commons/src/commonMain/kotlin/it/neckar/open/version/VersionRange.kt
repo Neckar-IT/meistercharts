@@ -236,25 +236,27 @@ data class VersionRange
     /**
      * Creates a new version range from the given versions that spans all given versions.
      * Looks for the smallest and largest version and uses these to create a new version range.
+     *
+     * @throws IllegalArgumentException if [versions] is empty
      */
     @JvmStatic
     fun fromVersions(versions: Iterable<Version>): VersionRange {
-      var smallest: Version? = null
-      var largest: Version? = null
+      val iterator = versions.iterator()
+      require(iterator.hasNext()) { "Need at least one version" }
 
-      for (version in versions) {
-        if (smallest == null || smallest.greaterThan(version)) {
+      //Seed both borders with the first version - no null state is required to detect the first element
+      val first = iterator.next()
+      var smallest = first
+      var largest = first
+
+      for (version in iterator) {
+        if (smallest.greaterThan(version)) {
           smallest = version
         }
 
-        if (largest == null || largest.smallerThan(version)) {
+        if (largest.smallerThan(version)) {
           largest = version
         }
-      }
-
-
-      if (smallest == null || largest == null) {
-        throw IllegalArgumentException("Need at least one version")
       }
 
       return VersionRange(smallest, largest)

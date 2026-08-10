@@ -61,9 +61,9 @@ object VersionInformation {
 
   /**
    * The git commit date and time (ISO 8601 format).
-   * Resolved at runtime from the injected deploy metadata (see [resolveGitInfo]).
+   * Resolved at runtime from the injected deploy metadata (see [resolveGitProperty]).
    */
-  val gitCommitDateTime: String by lazy { resolveGitInfo(GitProperty.CommitDateTime) }
+  val gitCommitDateTime: String by lazy { resolveGitProperty(GitProperty.CommitDateTime) }
 
   /**
    * The git commit date and time as [Instant] — null when unresolved ([UnknownGitValue]),
@@ -74,9 +74,9 @@ object VersionInformation {
 
   /**
    * The git hash of the current commit.
-   * Resolved at runtime from the injected deploy metadata (see [resolveGitInfo]).
+   * Resolved at runtime from the injected deploy metadata (see [resolveGitProperty]).
    */
-  val gitHash: String by lazy { resolveGitInfo(GitProperty.Hash) }
+  val gitHash: String by lazy { resolveGitProperty(GitProperty.Hash) }
 
   /**
    * The git hash of the current commit — null when unresolved ([UnknownGitValue]),
@@ -135,7 +135,7 @@ internal fun formatCommitDateAndShortHash(commitDateTime: String, gitHashShort: 
 }
 
 /**
- * Resolves a git property from the injected deploy metadata at runtime.
+ * Resolves the value of a single git property from the injected deploy metadata at runtime.
  *
  * JVM chain: system property ([GitProperty.systemProperty]) → environment variable
  * ([GitProperty.envVar], baked into service images at image build) → the
@@ -143,13 +143,13 @@ internal fun formatCommitDateAndShortHash(commitDateTime: String, gitHashShort: 
  * exclusively into leaf fat-jars) → [VersionInformation.UnknownGitValue].
  *
  * JS chain: `window.__APP_GIT_INFO__[propertyKey]` (filled at serve time) → `<meta
- * name="app-version">` (hash only) → [VersionInformation.UnknownGitValue]. Non-browser runtimes
+ * name="gitHash">` (hash only) → [VersionInformation.UnknownGitValue]. Non-browser runtimes
  * (Node, tests) resolve to the fallback without throwing.
  *
  * The [GitProperty] enum is generated 1:1 from the GitProperty enum in build-logic
  * ResourcesExt.kt (single source of truth), so injection and resolution cannot drift.
  */
-internal expect fun resolveGitInfo(property: GitProperty): String
+internal expect fun resolveGitProperty(property: GitProperty): String
 
 /**
  * Returns true if the given version number string contains "-SNAPSHOT"

@@ -32,12 +32,12 @@ import java.lang.management.ManagementFactory
 import kotlin.enums.enumEntries
 
 /**
- * Detects RuntimeContext from System properties, environment variables, optional config, and defaults.
+ * Detects RuntimeContext from system properties, environment variables and built-in defaults.
  *
- * Priority: System properties > Environment variables > Config map > Built-in defaults.
+ * Priority: System properties > Environment variables > Built-in defaults.
  *
- * Keys (system property or env var):
- * Defined in [RuntimeContextSys] and [RuntimeContextEnv]:
+ * The keys are defined in [RuntimeContextSys] (system properties) and [RuntimeContextEnv] (environment variables),
+ * one pair per axis: `ExecutionEnvironmentKey`, `DeploymentStageKey`, `ServiceHostKey`.
  */
 object RuntimeContextDetector {
   /**
@@ -118,8 +118,8 @@ object RuntimeContextDetector {
   private fun resolveProfile(source: Source): ExecutionEnvironment? {
     val raw = resolveStringFromSystemOrEnv(
       source = source,
-      systemPropertiesKey = RuntimeContextSys.KEY_RUNTIME_EXECUTION_ENVIRONMENT_SYS,
-      envKey = RuntimeContextEnv.KEY_RUNTIME_EXECUTION_ENVIRONMENT_ENV
+      systemPropertiesKey = RuntimeContextSys.ExecutionEnvironmentKey,
+      envKey = RuntimeContextEnv.ExecutionEnvironmentKey
     )
     return raw?.let { parseEnumRelaxed<ExecutionEnvironment>(it) }
   }
@@ -128,7 +128,7 @@ object RuntimeContextDetector {
    * Resolves the deployment stage from system properties or environment variables.
    */
   private fun resolveStage(source: Source): DeploymentStage? {
-    val raw = resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_DEPLOYMENT_STAGE_SYS, RuntimeContextEnv.KEY_DEPLOYMENT_STAGE_ENV)
+    val raw = resolveStringFromSystemOrEnv(source, RuntimeContextSys.DeploymentStageKey, RuntimeContextEnv.DeploymentStageKey)
     return raw?.let { parseEnumRelaxed<DeploymentStage>(it) }
   }
 
@@ -136,7 +136,7 @@ object RuntimeContextDetector {
    * Resolves the hostname from system properties or environments
    */
   private fun resolveHostname(source: Source): Hostname? {
-    return Hostname.nullable(resolveStringFromSystemOrEnv(source, RuntimeContextSys.KEY_SERVICE_HOST_SYS, RuntimeContextEnv.KEY_SERVICE_HOST_ENV))
+    return Hostname.nullable(resolveStringFromSystemOrEnv(source, RuntimeContextSys.ServiceHostKey, RuntimeContextEnv.ServiceHostKey))
   }
 
   /**
@@ -211,7 +211,7 @@ fun  RuntimeContext.Companion.initializeForLocalhost(
 }
 
 /**
- * Returns true if the process is (probably) currently debugging
+ * Returns true if the process is (probably) running within a unit test - detected by a JUnit frame on the current stack trace
  */
 fun guessInUnitTestEnvironment(): Boolean {
   for (element in Thread.currentThread().stackTrace) {
@@ -271,7 +271,7 @@ fun enableWaitInDebugMode() {
 }
 
 /**
- * Constant for the DEBUG_WAIT environment variable
+ * Name of the system property / environment variable that is read by [shouldWaitInDebugMode]
  *
  * See [DebugWaitHelpEnableMessage] for more information on how to enable/disable this feature
  */

@@ -40,7 +40,10 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 
 /**
- * Tests deserialization
+ * Decodes the given JSON and hands the result together with [expected] to [comparisonCheck]. Returns the decoded instance.
+ *
+ * Serialization is not exercised — use [roundTrip] unless the JSON deliberately differs from what the encoder produces
+ * (legacy payloads, hand-written samples, JSON from another system).
  */
 fun <T> testDeserialization(
   serializer: KSerializer<T>,
@@ -72,6 +75,10 @@ fun <T> testDeserialization(
   return testDeserialization(serializer, expected, inclusionStrategy, comparisonCheck) { json }
 }
 
+/**
+ * Encodes [objectToSerialize] and asserts the result equals the JSON from [json], comparing the parsed trees:
+ * key order and formatting are irrelevant, array order is not. Returns the encoded JSON.
+ */
 @IgnorableReturnValue
 inline fun <reified T> testSerialization(
   objectToSerialize: T,
@@ -90,7 +97,8 @@ inline fun <reified T> testSerialization(
 }
 
 /**
- * Tests serialization round trip
+ * Encodes [objectToSerialize], asserts the JSON equals [expectedJson], decodes it again and hands both instances to
+ * [comparisonCheck]. A null [expectedJson] skips the JSON assertion, leaving only the round trip itself under test.
  */
 @IgnorableReturnValue
 inline fun <reified T> roundTrip(
@@ -129,6 +137,10 @@ inline fun <reified T> roundTrip(
   return roundTrip(objectToSerialize, serializer, encoder, comparisonCheck, expectedJsonProvider)
 }
 
+/**
+ * Round trip against a pre-configured [encoder] instead of the default configuration — for tests that need a custom
+ * [Json] instance (own serializers module, different inclusion strategy). A null [expectedJson] skips the JSON assertion.
+ */
 @IgnorableReturnValue
 inline fun <reified T> roundTrip(
   objectToSerialize: T,
@@ -143,7 +155,8 @@ inline fun <reified T> roundTrip(
 }
 
 /**
- * Returns the deserialized object
+ * Round trip against a pre-configured [encoder]. Returns the deserialized instance; a null value from
+ * [expectedJsonProvider] skips the JSON assertion.
  */
 @IgnorableReturnValue
 inline fun <reified T> roundTrip(
@@ -161,6 +174,10 @@ inline fun <reified T> roundTrip(
   return _roundTrip(encoder, serializer, objectToSerialize, comparisonCheck, expectedJsonProvider())
 }
 
+/**
+ * Shared implementation of the [roundTrip] overloads. Public only because a public inline function may not reference
+ * private declarations; the leading underscore marks it as nothing to call directly.
+ */
 @IgnorableReturnValue
 @Suppress("FunctionName")
 fun <T> _roundTrip(
@@ -192,7 +209,8 @@ private fun <T> testDeserialization(encoder: Json, serializer: KSerializer<T>, j
 }
 
 /**
- * Serializes a list of objects
+ * Round trips the objects as a single JSON array and asserts the decoded list equals the original one. Unlike the
+ * single-object [roundTrip] the comparison is fixed to `isEqualTo`, so the elements need a meaningful `equals`.
  */
 fun <T> roundTripList(
   vararg objectsToSerialize: T,
@@ -221,7 +239,11 @@ fun <T> roundTripList(
 
 
 /**
- * Compares
+ * Compares a deserialized instance against the original. Signals failure by throwing — the return value is [Unit],
+ * so a check that only returns `false` would pass silently.
+ *
+ * Override the default (`isEqualTo`) for types whose `equals` cannot see the round trip, e.g. classes without
+ * `equals` or fields that are deliberately not serialized.
  */
 typealias ComparisonCheck<T> = (deserialized: T, originalObject: T) -> Unit
 
