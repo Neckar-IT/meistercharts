@@ -477,26 +477,26 @@ fun convexHull(points: List<Coordinates>): Hull {
   if (points.size <= 1) return Hull(points)
   val sortedPoints = points.sortedWith(compareBy({ it.x }, { it.y }))
 
-  val lowerBound = mutableListOf<Coordinates>()
+  return Hull(buildHalfHull(sortedPoints) + buildHalfHull(sortedPoints.asReversed()))
+}
+
+/**
+ * Builds one half of the monotone chain from the points in the given order.
+ *
+ * The last point is dropped: it is the first point of the other half, so concatenating both halves yields the hull without duplicates.
+ */
+private fun buildHalfHull(sortedPoints: List<Coordinates>): List<Coordinates> {
+  val halfHull = mutableListOf<Coordinates>()
+
   for (point in sortedPoints) {
-    while (lowerBound.size >= 2 && lowerBound[lowerBound.size - 2].crossProduct(lowerBound[lowerBound.size - 1], point) <= 0) {
-      lowerBound.removeAt(lowerBound.size - 1)
+    while (halfHull.size >= 2 && halfHull[halfHull.size - 2].crossProduct(halfHull[halfHull.size - 1], point) <= 0) {
+      halfHull.removeAt(halfHull.size - 1)
     }
-    lowerBound.add(point)
+    halfHull.add(point)
   }
 
-  val upperBound = mutableListOf<Coordinates>()
-  for (point in sortedPoints.asReversed()) {
-    while (upperBound.size >= 2 && upperBound[upperBound.size - 2].crossProduct(upperBound[upperBound.size - 1], point) <= 0) {
-      upperBound.removeAt(upperBound.size - 1)
-    }
-    upperBound.add(point)
-  }
-
-  lowerBound.removeAt(lowerBound.size - 1)
-  upperBound.removeAt(upperBound.size - 1)
-
-  return Hull(lowerBound + upperBound)
+  halfHull.removeAt(halfHull.size - 1)
+  return halfHull
 }
 
 @Serializable

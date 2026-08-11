@@ -30,7 +30,8 @@ package it.neckar.open.charting.api.sanitizing
 /**
  * Ensures that this enum value is in fact an enum value.
  *
- * This is a workaround because the enum values we receive are actually of type string.
+ * On the JVM this is a no-op: nothing crosses a JS boundary, so the receiver already is an enum entry. The
+ * actual exists only so that common code calling [sanitize] compiles for the JVM target.
  */
 actual inline fun <reified T : Enum<T>> T.sanitize(): T {
   return this as T

@@ -38,14 +38,14 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), Disposabl
    * The current value
    */
   override var value: T = initValue
-    set(value) {
+    set(newValue) {
       if (calledFromBind.not()) {
-        requireNotBound()
+        requireNotBound { "Setting the value to <$newValue>" }
       }
 
       val oldValue = field
-      field = value
-      notifyListenersIfChanged(oldValue, value)
+      field = newValue
+      notifyListenersIfChanged(oldValue, newValue)
     }
 
   /**
@@ -147,7 +147,7 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), Disposabl
    * For a bidirectional binding see [bindBidirectional]
    */
   fun bind(other: ReadOnlyObservableObject<T>) {
-    requireNotBound()
+    requireNotBound { "Binding to <$other>" }
     addUpstreamSubscription(other.consumeImmediately { newValue ->
       updateFromBinding(newValue)
     })
@@ -176,13 +176,20 @@ open class ObservableObject<T>(initValue: T) : DefaultObservable<T>(), Disposabl
    * Marks this observable as bound (*not* bidirectional)
    */
   fun markAsBound() {
-    requireNotBound()
+    requireNotBound { "Marking as bound" }
     isBound = true
   }
 
-  private fun requireNotBound() {
+  /**
+   * Fails if this observable is already bound to another observable.
+   *
+   * [attemptedOperation] describes what the caller tried to do and is only evaluated when the check fails:
+   * an application holds many observables, and neither the stack trace nor a plain "is bound" tells which one
+   * this is or which value was rejected.
+   */
+  private inline fun requireNotBound(attemptedOperation: () -> String) {
     check(isBound.not()) {
-      "This observable is bound to another observable"
+      "${attemptedOperation()} is not allowed - this observable is already bound to another observable. Current value: <$value>"
     }
   }
 

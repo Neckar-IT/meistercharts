@@ -30,19 +30,30 @@ package it.neckar.open.charting.api.sanitizing
 /**
  * Ensures that this enum value is in fact an enum value.
  *
- * This is a workaround because the enum values we receive are actually of type string.
+ * Values read from an `external interface` are unchecked - Kotlin/JS hands out whatever the JS object holds:
+ * an enum property arrives as its plain name string, a property declared `String` may hold a number, and a
+ * property the caller left out arrives as `undefined`, which reads as `null` even where the declared type is
+ * not nullable. Every value taken from a JS API therefore has to pass a `sanitize` overload before Kotlin
+ * code may rely on its declared type.
+ *
+ * @throws SanitizingFailedException if the value is not one of the entries of [T]
  */
 expect inline fun <reified T : Enum<T>> T.sanitize(): T
 
 /**
- * Helper method that throws an exception
+ * Raises the failure of an enum sanitization.
+ *
+ * Public because the platform actuals of [sanitize] are `inline` and may only call public API.
  */
 fun <E : Enum<E>> throwEnumConversionException(value: Enum<E>, enumEntries: List<E>, e: Throwable?): Nothing {
   throw SanitizingFailedException("Could not sanitize [$value] to Enum.\nPossible values: ${enumEntries.joinToString(", ")}", e)
 }
 
 /**
- * Sanitizes a JS boolean
+ * Sanitizes a JS boolean.
+ *
+ * The two comparisons are not redundant: the receiver may hold a number, a string or `undefined` at runtime,
+ * and comparing against both boolean values is what rejects those.
  */
 @Suppress("SimplifyBooleanWithConstants")
 fun Boolean.sanitize(): Boolean {
@@ -59,6 +70,12 @@ fun Boolean.sanitize(): Boolean {
   }
 }
 
+/**
+ * Sanitizes an optional JS boolean.
+ *
+ * `undefined` cannot be told apart from `null` here and is therefore accepted as the absent value: for a
+ * nullable property an omitted value is legal input, not a malformed one.
+ */
 fun Boolean?.sanitize(): Boolean? {
   if (this == null) {
     return null
@@ -68,10 +85,10 @@ fun Boolean?.sanitize(): Boolean? {
 }
 
 /**
- * Sanitizes a JS double
+ * Sanitizes a JS double.
  */
 fun Double.sanitize(): Double {
-  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  @Suppress("USELESS_IS_CHECK") //Only useless to the compiler: at the JS boundary the runtime type may be anything
   if ((this is Double).not()) {
     throw SanitizingFailedException("Could not sanitize [$this] to Double")
   }
@@ -79,32 +96,51 @@ fun Double.sanitize(): Double {
   return this
 }
 
+/**
+ * Sanitizes a JS int.
+ */
 fun Int.sanitize(): Int {
-  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  @Suppress("USELESS_IS_CHECK") //Only useless to the compiler: at the JS boundary the runtime type may be anything
   if ((this is Int).not()) {
     throw SanitizingFailedException("Could not sanitize [$this] to Int")
   }
   return this
 }
 
+/**
+ * Sanitizes a JS string.
+ */
 fun String.sanitize(): String {
-  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  @Suppress("USELESS_IS_CHECK") //Only useless to the compiler: at the JS boundary the runtime type may be anything
   if ((this is String).not()) {
     throw SanitizingFailedException("Could not sanitize [$this] to String")
   }
   return this
 }
 
+/**
+ * Sanitizes a JS array.
+ *
+ * Checks that the receiver is an array at all. The element type is erased and stays unchecked - sanitize the
+ * elements individually where they matter.
+ */
 fun <T> Array<T>.sanitize(): Array<T> {
-  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  @Suppress("USELESS_IS_CHECK") //Only useless to the compiler: at the JS boundary the runtime type may be anything
   if ((this is Array<T>).not()) {
     throw SanitizingFailedException("Could not sanitize [$this] to Array<T>")
   }
   return this
 }
 
+/**
+ * Sanitizes a JS list.
+ *
+ * A JS caller passes a plain array where the signature asks for a list, so an array is converted rather than
+ * rejected. The element type is erased and stays unchecked - sanitize the elements individually where they
+ * matter.
+ */
 fun <T> List<T>.sanitize(): List<T> {
-  @Suppress("USELESS_IS_CHECK") //undefined could be null
+  @Suppress("USELESS_IS_CHECK") //Only useless to the compiler: at the JS boundary the runtime type may be anything
   if (this is List<T>) return this
   //No separate ArrayList check: ArrayList implements List, so the check above already covers it.
   @Suppress("USELESS_IS_CHECK", "UNCHECKED_CAST", "SENSELESS_COMPARISON") //In JS arrays can be passed as lists
@@ -112,4 +148,7 @@ fun <T> List<T>.sanitize(): List<T> {
   throw SanitizingFailedException("Could not sanitize [$this] to List<T>")
 }
 
+/**
+ * Thrown when a value coming from a JS API does not match its declared Kotlin type.
+ */
 class SanitizingFailedException(message: String, cause: Throwable? = null) : Exception(message, cause)
