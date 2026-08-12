@@ -76,10 +76,10 @@ object DoubleArray2Serializer : KSerializer<DoubleArray2> {
   }
 
   /**
-   * Parses a byte array into a values array
+   * Parses the serialized bytes - as created by [toByteArray] - back into a [DoubleArray2]
    */
-  fun parse(values: ByteArray): DoubleArray2 {
-    val reader = ByteArrayReader(values, 0)
+  fun parse(serialized: ByteArray): DoubleArray2 {
+    val reader = ByteArrayReader(serialized, 0)
 
     val width = reader.s16BE()
     val height = reader.s16BE()

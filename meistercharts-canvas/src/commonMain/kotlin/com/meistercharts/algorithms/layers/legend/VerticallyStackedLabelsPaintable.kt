@@ -71,10 +71,17 @@ class VerticallyStackedLabelsPaintable(
 
 
       val labels = configuration.labels
+      val labelsCount = labels.size(chartSupport)
+
+      if (labelsCount == 0) {
+        //Nothing to paint - and there is no text block whose width could be calculated
+        boundingBox = Rectangle.zero
+        return
+      }
 
       @px val textBlockHeight = TextLineCalculations.calculateTextBlockHeight(
         chartSupport.canvas.gc.getFontMetrics(),
-        linesCount = labels.size(chartSupport),
+        linesCount = labelsCount,
         spaceBetweenLines = configuration.entriesGap,
       )
 

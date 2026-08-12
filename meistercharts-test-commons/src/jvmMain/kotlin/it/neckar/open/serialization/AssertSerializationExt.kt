@@ -33,6 +33,7 @@ import assertk.assertions.key
 import com.fasterxml.jackson.databind.JsonNode
 import it.neckar.open.http.Url
 import it.neckar.open.kotlin.serializers.JsonInclusionStrategy
+import it.neckar.open.kotlin.serializers.JsonPath
 import it.neckar.open.resources.getResourceSafe
 import it.neckar.open.test.utils.JsonUtils
 import it.neckar.open.test.utils.isOpenApiEqualTo as isOpenApiEqualToString
@@ -126,17 +127,14 @@ fun Assert<JsonObject>.path(vararg keys: String): Assert<JsonObject> {
 }
 
 /**
- * Value-extracting counterpart to [path]. Walks a sequence of keys and returns the leaf
- * [JsonObject]. Throws [IllegalStateException] with the path traversed so far and the available
- * keys when a step fails — use this in `val x = doc.atPath(...)` extractions where the result
- * feeds further computation.
- *
- * Example: `val schemas = generated.jsonObject.atPath("components", "schemas")`
+ * Value-extracting counterpart to [path]. Follows the [path] and returns the leaf [JsonObject].
+ * Throws [IllegalStateException] with the path traversed so far and the available keys when a step
+ * fails — use this where the result feeds further computation.
  */
-fun JsonObject.atPath(vararg keys: String): JsonObject {
+fun JsonObject.atPath(path: JsonPath): JsonObject {
   var current: JsonObject = this
   val traversed = mutableListOf<String>()
-  keys.forEach { key ->
+  path.keys.forEach { key ->
     val element = current[key]
       ?: error("Missing key \"$key\" at path [${traversed.joinToString("][") { "\"$it\"" }}]. Available keys: ${current.keys}")
     current = element as? JsonObject

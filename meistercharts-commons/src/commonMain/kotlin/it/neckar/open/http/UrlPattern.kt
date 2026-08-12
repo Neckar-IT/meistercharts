@@ -462,8 +462,8 @@ interface UrlPattern {
       return Relative3(appendUrlStrings(value, toAppend), parameterName1, parameterName2, parameterName3)
     }
 
-    override operator fun plus(toAppend: UrlParameterName): RelativeMulti {
-      return RelativeMulti(appendUrlStrings(value, toAppend.asUrlPatternParameter()), listOf(parameterName1, parameterName2, parameterName3, toAppend))
+    override operator fun plus(toAppend: UrlParameterName): Relative4 {
+      return Relative4(appendUrlStrings(value, toAppend.asUrlPatternParameter()), parameterName1, parameterName2, parameterName3, toAppend)
     }
 
     override fun plus(toAppend: UrlPattern): RelativeMulti {
@@ -499,6 +499,89 @@ interface UrlPattern {
         parameterValues[parameterName1] ?: throw IllegalArgumentException("Missing parameter [${parameterName1.value}]"),
         parameterValues[parameterName2] ?: throw IllegalArgumentException("Missing parameter [${parameterName2.value}]"),
         parameterValues[parameterName3] ?: throw IllegalArgumentException("Missing parameter [${parameterName3.value}]")
+      )
+    }
+
+    override fun toString(): String {
+      return value
+    }
+  }
+
+  /**
+   * Represents a relative URL pattern with exactly four parameters
+   *
+   * Four is what a sub-resource of a sub-resource of an embedded row takes: the PV project
+   * configuration, the inverter configuration inside it, the MPPT input inside that, and the row
+   * itself. [RelativeMulti] would carry the same URL but lose the arity from the type, and with it
+   * the compiler's guarantee that a caller passes exactly as many ids as the pattern has slots.
+   */
+  data class Relative4(
+    override val value: String,
+    val parameterName1: UrlParameterName,
+    val parameterName2: UrlParameterName,
+    val parameterName3: UrlParameterName,
+    val parameterName4: UrlParameterName,
+  ) : Relative {
+
+    init {
+      listOf(parameterName1, parameterName2, parameterName3, parameterName4).forEach { parameterName ->
+        require(value.contains("{${parameterName.value}}")) {
+          "The URL [$value] must contain the variable [${parameterName.value}]"
+        }
+      }
+    }
+
+    override val parameterNames: List<UrlParameterName>
+      get() = listOf(parameterName1, parameterName2, parameterName3, parameterName4)
+
+    override operator fun plus(toAppend: String): Relative4 {
+      return Relative4(appendUrlStrings(value, toAppend), parameterName1, parameterName2, parameterName3, parameterName4)
+    }
+
+    override operator fun plus(toAppend: UrlParameterName): RelativeMulti {
+      return RelativeMulti(appendUrlStrings(value, toAppend.asUrlPatternParameter()), parameterNames + toAppend)
+    }
+
+    override fun plus(toAppend: UrlPattern): RelativeMulti {
+      return RelativeMulti(appendUrlStrings(value, toAppend.value), parameterNames + toAppend.parameterNames)
+    }
+
+    operator fun plus(toAppend: Relative0): Relative4 {
+      return Relative4(appendUrlStrings(value, toAppend.value), parameterName1, parameterName2, parameterName3, parameterName4)
+    }
+
+    fun resolve(parameterValue1: Uuid, parameterValue2: Uuid, parameterValue3: Uuid, parameterValue4: Uuid): Url.Relative {
+      return resolve(
+        parameterValue1.toHexDashString(),
+        parameterValue2.toHexDashString(),
+        parameterValue3.toHexDashString(),
+        parameterValue4.toHexDashString(),
+      )
+    }
+
+    fun resolve(parameterValue1: String, parameterValue2: String, parameterValue3: String, parameterValue4: String): Url.Relative {
+      val replaced = value
+        .replace("{${parameterName1.value}}", parameterValue1)
+        .replace("{${parameterName2.value}}", parameterValue2)
+        .replace("{${parameterName3.value}}", parameterValue3)
+        .replace("{${parameterName4.value}}", parameterValue4)
+      return Url.relative(replaced)
+    }
+
+    override fun resolve(parameterValues: List<String>): Url.Relative {
+      require(parameterValues.size == 4) {
+        "The number of values (${parameterValues.size}) must match the number of variables (4)"
+      }
+
+      return resolve(parameterValues[0], parameterValues[1], parameterValues[2], parameterValues[3])
+    }
+
+    override fun resolve(parameterValues: Map<UrlParameterName, String>): Url.Relative {
+      return resolve(
+        parameterValues[parameterName1] ?: throw IllegalArgumentException("Missing parameter [${parameterName1.value}]"),
+        parameterValues[parameterName2] ?: throw IllegalArgumentException("Missing parameter [${parameterName2.value}]"),
+        parameterValues[parameterName3] ?: throw IllegalArgumentException("Missing parameter [${parameterName3.value}]"),
+        parameterValues[parameterName4] ?: throw IllegalArgumentException("Missing parameter [${parameterName4.value}]"),
       )
     }
 

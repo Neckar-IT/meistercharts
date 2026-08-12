@@ -21,11 +21,15 @@ import com.meistercharts.time.TimeRange
 import com.meistercharts.time.TimeRanges
 
 /**
- * A service that registers itself at a history access / storage and automatically calculates the down sampling if necessary
+ * Collects the time ranges whose down sampled data has become stale, keyed by the sampling period that has to be recalculated.
+ *
+ * This is a pure book keeping structure: it neither observes a history storage nor calculates anything.
+ * [observe] attaches it to a storage, [DownSamplingService] does the recalculation.
  */
 class DownSamplingDirtyRangesCollector {
   /**
-   * Contains all "dirty" time ranges for a given sampling period
+   * Contains all "dirty" time ranges for a given sampling period.
+   * A sampling period without an entry has nothing to recalculate.
    */
   private val dirtyTimeRanges: MutableMap<SamplingPeriod, TimeRanges> = mutableMapOf()
 
@@ -37,7 +41,10 @@ class DownSamplingDirtyRangesCollector {
   }
 
   /**
-   * Marks the given time range as dirty
+   * Marks the given time ranges as dirty.
+   *
+   * Ranges separated by at most one sample distance of [samplingPeriod] are merged into a single range. Recalculating
+   * across such a gap costs at most one additional sample and keeps the number of ranges from growing with every update.
    */
   fun markAsDirty(samplingPeriod: SamplingPeriod, additionalDirtyTimeRanges: TimeRanges) {
     val currentTimeRanges = dirtyTimeRanges[samplingPeriod] ?: TimeRanges.empty
@@ -47,14 +54,18 @@ class DownSamplingDirtyRangesCollector {
   }
 
   /**
-   * Removes all dirty time ranges for the given [samplingPeriod] and returns them
+   * Removes all dirty time ranges for the given [samplingPeriod] and returns them - null if there is nothing dirty.
+   *
+   * Claims the work: the caller is responsible for recalculating the returned ranges, they are forgotten here.
+   * Use [get] to look at the dirty ranges without taking them.
    */
   fun remove(samplingPeriod: SamplingPeriod): TimeRanges? {
     return dirtyTimeRanges.remove(samplingPeriod)
   }
 
   /**
-   * Returns the dirty time ranges for the given sampling period
+   * Returns the dirty time ranges for the given sampling period - null if there is nothing dirty.
+   * Leaves them in place; [remove] is what takes them.
    */
   operator fun get(samplingPeriod: SamplingPeriod): TimeRanges? {
     return dirtyTimeRanges[samplingPeriod]
@@ -62,7 +73,10 @@ class DownSamplingDirtyRangesCollector {
 }
 
 /**
- * Observes the given history storage and marks relevant areas as dirty
+ * Observes the given history storage and marks relevant areas as dirty.
+ *
+ * An update is recorded for the sampling period *above* the updated one: that is the level whose down sampled data was
+ * calculated from the new values. The coarsest sampling period has nothing above it, so updates there are dropped.
  */
 fun DownSamplingDirtyRangesCollector.observe(historyStorage: ObservableHistoryStorage) {
   historyStorage.observe { updateInfo ->

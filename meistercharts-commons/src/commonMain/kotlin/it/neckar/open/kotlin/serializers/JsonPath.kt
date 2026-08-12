@@ -25,39 +25,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.unit.prefix
+package it.neckar.open.kotlin.serializers
 
-import kotlin.reflect.KClass
+import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
-@Retention(AnnotationRetention.SOURCE)
-@Target(
-  AnnotationTarget.CLASS,
-  AnnotationTarget.ANNOTATION_CLASS,
-  AnnotationTarget.TYPE_PARAMETER,
-  AnnotationTarget.PROPERTY,
-  AnnotationTarget.FIELD,
-  AnnotationTarget.LOCAL_VARIABLE,
-  AnnotationTarget.VALUE_PARAMETER,
-  AnnotationTarget.CONSTRUCTOR,
-  AnnotationTarget.FUNCTION,
-  AnnotationTarget.PROPERTY_GETTER,
-  AnnotationTarget.PROPERTY_SETTER,
-  AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
-  AnnotationTarget.FILE,
-  AnnotationTarget.TYPEALIAS
-)
-@MustBeDocumented
-@Suppress("ClassName")
-@Prefix(0.000_000_000_001)
-annotation class piko(
+/**
+ * The keys to follow into a nested JSON object, in order. The empty path addresses the root.
+ *
+ * Every string is a valid key - including the empty one - therefore no invariant beyond the order.
+ */
+@JvmInline
+@Serializable
+value class JsonPath(val keys: List<String>) {
+  constructor(vararg keys: String) : this(keys.toList())
+
+  val isRoot: Boolean
+    get() = keys.isEmpty()
+
+  operator fun plus(key: String): JsonPath = JsonPath(keys + key)
+
   /**
-   * The base unit
-   * @return the base unit
+   * The dot notation - for messages, not for parsing: a key may itself contain a dot.
    */
-  val value: KClass<out Annotation>
-){
+  override fun toString(): String = keys.joinToString(".")
+
   companion object {
-    const val SYMBOL: String = "p"
+    val Root: JsonPath = JsonPath(emptyList())
+
+    /**
+     * Splits a dot-separated string into a path. Only correct as long as no key contains a dot.
+     */
+    fun parse(dotSeparated: String): JsonPath = JsonPath(dotSeparated.split("."))
   }
 }

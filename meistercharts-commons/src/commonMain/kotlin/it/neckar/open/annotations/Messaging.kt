@@ -25,41 +25,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.unit.prefix
+package it.neckar.open.annotations
 
-import kotlin.reflect.KClass
+import kotlin.annotation.AnnotationTarget.CLASS
 
 /**
+ * Marks a class as a messaging wire type: the content of a WebSocket frame, an SSE message, a
+ * webhook body, a queue entry.
+ *
+ * Messaging crosses the same boundary REST crosses, only over a different transport — so the
+ * layer-separation rules of the `neckar-rules` ruleset treat it the same way: a messaging type may
+ * carry `@Serializable` and reference other wire types, and Domain classes must not reference it.
+ *
+ * On a sealed hierarchy the annotation belongs on the root; the leaves inherit it instead of
+ * repeating it.
+ *
+ * The layer is stated here rather than read off the class name (ADL 0179). A name-based exemption
+ * fails in the wrong direction: a domain concept that happens to end in a transport word leaves the
+ * rules silently, while a forgotten annotation only produces a finding. The alternative is a
+ * `messaging` package segment — the same deliberate act, made once for a whole protocol, and the
+ * way for modules that do not want this dependency.
  */
-@Retention(AnnotationRetention.SOURCE)
-@Target(
-  AnnotationTarget.CLASS,
-  AnnotationTarget.ANNOTATION_CLASS,
-  AnnotationTarget.TYPE_PARAMETER,
-  AnnotationTarget.PROPERTY,
-  AnnotationTarget.FIELD,
-  AnnotationTarget.LOCAL_VARIABLE,
-  AnnotationTarget.VALUE_PARAMETER,
-  AnnotationTarget.CONSTRUCTOR,
-  AnnotationTarget.FUNCTION,
-  AnnotationTarget.PROPERTY_GETTER,
-  AnnotationTarget.PROPERTY_SETTER,
-  AnnotationTarget.TYPE,
-  AnnotationTarget.EXPRESSION,
-  AnnotationTarget.FILE,
-  AnnotationTarget.TYPEALIAS
-)
 @MustBeDocumented
-@Suppress("ClassName")
-@Prefix(0.000_000_000_001)
-annotation class pico(
-  /**
-   * The base unit
-   * @return the base unit
-   */
-  val value: KClass<out Annotation>
-) {
-  companion object {
-    const val SYMBOL: String = "p"
-  }
-}
+@Retention(AnnotationRetention.BINARY)
+@Target(CLASS)
+annotation class Messaging

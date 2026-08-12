@@ -25,10 +25,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.unit.prefix
+package it.neckar.open.unit.other
 
-import kotlin.reflect.KClass
-
+/**
+ * Marks a string that holds JSON text - what a `String` parameter or property named `json`, `body` or
+ * `content` says only by convention.
+ *
+ * Named `JsonText` rather than `Json` on purpose: the short name is taken by
+ * `kotlinx.serialization.json.Json`, and every place worth annotating has that one in scope.
+ */
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.CLASS,
@@ -48,16 +53,4 @@ import kotlin.reflect.KClass
   AnnotationTarget.TYPEALIAS
 )
 @MustBeDocumented
-@Suppress("ClassName")
-@Prefix(0.000_000_000_000_000_000_000_001)
-annotation class yokto(
-  /**
-   * The base unit
-   * @return the base unit
-   */
-  val value: KClass<out Annotation>
-) {
-  companion object {
-    const val SYMBOL: String = "y"
-  }
-}
+annotation class JsonText

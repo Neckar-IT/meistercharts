@@ -20,7 +20,7 @@ org-asciidoctor-jvm-pdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "org-a
 
 org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version.ref = "org-asciidoctor" }
 
-com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.1" }
+com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.2" }
 
 org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.0.2" }
 
@@ -58,7 +58,7 @@ net-bytebuddy = "1.18.10"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
-io-gitlab-arturbosch-detekt = "2.0.0-alpha.5"
+io-gitlab-arturbosch-detekt = "2.0.0-alpha.6"
 
 # detekt-gitlab-report: Detekt plugin that emits an extra Code-Climate-format
 # JSON. Hosted on the plugin author's GitLab Maven repo (see settings.gradle.kts).
@@ -68,6 +68,10 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 com-google-devtools-ksp = "2.3.11"
 
 org-mongodb = "5.9.1"
+
+# json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
+# that validates kotlinx.serialization JsonElement directly.
+io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
@@ -541,6 +545,8 @@ kotlin-test-common = { group = "org.jetbrains.kotlin", name = "kotlin-test-commo
 kotlin-test-js = { group = "org.jetbrains.kotlin", name = "kotlin-test-js", version.ref = "kotlin" }
 
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
+
+json-schema-validator = { group = "io.github.optimumcode", name = "json-schema-validator", version.ref = "io-github-optimumcode-json-schema" }
 
 kotlinx-browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "kotlinx-browser" }
 

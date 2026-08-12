@@ -29,8 +29,6 @@ package it.neckar.open.unit.prefix
 
 import kotlin.reflect.KClass
 
-/**
- */
 @Retention(AnnotationRetention.SOURCE)
 @Target(
   AnnotationTarget.CLASS,
@@ -51,8 +49,8 @@ import kotlin.reflect.KClass
 )
 @MustBeDocumented
 @Suppress("ClassName")
-@Prefix(0.000_000_000_001)
-annotation class pico(
+@Prefix(0.000_000_000_000_000_000_000_001)
+annotation class yocto(
   /**
    * The base unit
    * @return the base unit
@@ -60,6 +58,6 @@ annotation class pico(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "p"
+    const val SYMBOL: String = "y"
   }
 }

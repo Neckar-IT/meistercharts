@@ -56,9 +56,9 @@ fun JsonObjectBuilder.putNotNull(key: String, value: Boolean?) {
   }
 }
 
-fun JsonObjectBuilder.putNotEmpty(key: String, buildJsonArray: JsonArray) {
-  if (buildJsonArray.isNotEmpty()) {
-    put(key, buildJsonArray)
+fun JsonObjectBuilder.putNotEmpty(key: String, value: JsonArray) {
+  if (value.isNotEmpty()) {
+    put(key, value)
   }
 }
 
