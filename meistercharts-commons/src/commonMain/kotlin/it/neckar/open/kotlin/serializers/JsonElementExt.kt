@@ -78,6 +78,8 @@ fun JsonElement.toStringPretty(): String {
 
 /**
  * Default properties for JSON Serialization.
+ *
+ * A parser for a foreign API configures its own tolerant [Json] instead.
  */
 fun JsonBuilder.defaultJsonConfiguration(
   /**
@@ -97,5 +99,6 @@ fun JsonBuilder.defaultJsonConfiguration(
 
   this.encodeDefaults = inclusionStrategy.encodeDefaults
   this.explicitNulls = inclusionStrategy.explicitNulls
+  this.ignoreUnknownKeys = false
 }
 

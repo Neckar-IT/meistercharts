@@ -67,7 +67,7 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.11"
 
-org-mongodb = "5.9.1"
+org-mongodb = "5.9.2"
 
 # json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
 # that validates kotlinx.serialization JsonElement directly.
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.27"
+aws-sdk-kotlin = "1.8.28"
 
 apache-poi = "5.5.1"
 
@@ -117,7 +117,7 @@ de-undercouch-download = "5.7.0"
 
 com-vanniktech-maven-publish = "0.37.0"
 
-kotest-property = "6.2.3"
+kotest-property = "6.2.4"
 
 assertj = "3.27.7"
 
@@ -147,7 +147,10 @@ modbus = "1.2.2"
 
 okhttp3 = "5.4.0"
 
-opentelemetry = "1.64.0"
+opentelemetry = "1.65.0"
+
+# Alpha channel of the same release train, one -alpha release per core release. Governs opentelemetry-api-incubator.
+opentelemetry-alpha = "1.65.0-alpha"
 
 opentelemetry-instrumentation = "2.30.0-alpha"
 
@@ -201,6 +204,7 @@ kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
 mongodb-driver-bom = { group = "org.mongodb", name = "mongodb-driver-bom", version.ref = "org-mongodb" }
 opentelemetry-bom = { group = "io.opentelemetry", name = "opentelemetry-bom", version.ref = "opentelemetry" }
+opentelemetry-alpha-bom = { group = "io.opentelemetry", name = "opentelemetry-bom-alpha", version.ref = "opentelemetry-alpha" }
 opentelemetry-instrumentation-bom-alpha = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-instrumentation-bom-alpha", version.ref = "opentelemetry-instrumentation" }
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 
@@ -218,7 +222,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.6.1"
+logback-classic = "ch.qos.logback:logback-classic:1.6.2"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -320,7 +324,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.51.4"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.52.0"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
