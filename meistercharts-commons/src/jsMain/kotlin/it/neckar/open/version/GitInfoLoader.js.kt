@@ -31,13 +31,17 @@ package it.neckar.open.version
  * JS implementation: resolves a single git property from the injected deploy metadata.
  *
  * Chain: `globalThis.__APP_GIT_INFO__[propertyKey]` (a plain object filled at serve time —
- * Ktor templating or the nginx entrypoint) → `<meta name="gitHash">` (hash only) →
- * [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node, tests) resolve to the
- * fallback without throwing: `globalThis` exists everywhere, `document` is guarded.
+ * Ktor templating or the nginx entrypoint) → `<meta name="gitHash">` / `<meta
+ * name="gitCommitDateTime">` → [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node,
+ * tests) resolve to the fallback without throwing: `globalThis` exists everywhere, `document` is
+ * guarded.
+ *
+ * The meta tag is what the frontends write; the global remains first in the chain for the two
+ * lizergy frontends, which still carry it in an inline script.
  */
 internal actual fun resolveGitProperty(property: GitProperty): String {
   return findAppGitInfoValue(property.propertyKey)
-    ?: findMetaAppGitHashValue(property)
+    ?: findMetaValue(property)
     ?: VersionInformation.UnknownGitValue
 }
 
@@ -59,22 +63,22 @@ private fun sanitizeInjectedValue(value: String): String? {
   return if (value.isEmpty() || value.startsWith("\${")) null else value
 }
 
-private fun findMetaAppGitHashValue(property: GitProperty): String? {
-  return when (property) {
-    GitProperty.Hash -> {
-      val documentOrNull: dynamic = js("typeof document !== 'undefined' ? document : null")
-      if (documentOrNull == null) {
-        return null
-      }
-      val metaElement = documentOrNull.querySelector("meta[name='gitHash']")
-      if (metaElement == null) {
-        return null
-      }
-      //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
-      val content: String = metaElement.getAttribute("content") as? String ?: return null
-      sanitizeInjectedValue(content)
-    }
-
-    GitProperty.CommitDateTime -> null
+/**
+ * The meta name is the property key: `gitHash` and `gitCommitDateTime` are spelled the same in the
+ * HTML head as in the injected global.
+ */
+private fun findMetaValue(property: GitProperty): String? {
+  val documentOrNull: dynamic = js("typeof document !== 'undefined' ? document : null")
+  if (documentOrNull == null) {
+    return null
   }
+
+  val metaElement = documentOrNull.querySelector("meta[name='${property.propertyKey}']")
+  if (metaElement == null) {
+    return null
+  }
+
+  //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
+  val content: String = metaElement.getAttribute("content") as? String ?: return null
+  return sanitizeInjectedValue(content)
 }

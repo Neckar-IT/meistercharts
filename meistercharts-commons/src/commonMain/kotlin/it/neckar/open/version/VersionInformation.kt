@@ -142,9 +142,9 @@ internal fun formatCommitDateAndShortHash(commitDateTime: String, gitHashShort: 
  * `META-INF/app-git-info.properties` resource ([GitProperty.propertyKey] as key, packed
  * exclusively into leaf fat-jars) → [VersionInformation.UnknownGitValue].
  *
- * JS chain: `window.__APP_GIT_INFO__[propertyKey]` (filled at serve time) → `<meta
- * name="gitHash">` (hash only) → [VersionInformation.UnknownGitValue]. Non-browser runtimes
- * (Node, tests) resolve to the fallback without throwing.
+ * JS chain: `window.__APP_GIT_INFO__[propertyKey]` (filled at serve time) → `<meta>` of the same
+ * name → [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node, tests) resolve to the
+ * fallback without throwing.
  *
  * The [GitProperty] enum is generated 1:1 from the GitProperty enum in build-logic
  * ResourcesExt.kt (single source of truth), so injection and resolution cannot drift.
