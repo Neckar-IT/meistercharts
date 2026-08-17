@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.30"
+aws-sdk-kotlin = "1.8.31"
 
 apache-poi = "5.5.1"
 
@@ -222,7 +222,7 @@ jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-datab
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "org-slf4j" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.6.2"
+logback-classic = "ch.qos.logback:logback-classic:1.6.3"
 logstash-logback-encoder = "net.logstash.logback:logstash-logback-encoder:9.0"
 
 kotlin-build-tools-compat = { group = "org.jetbrains.kotlin", name = "kotlin-build-tools-compat", version.ref = "kotlin" }
@@ -324,7 +324,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.53.0"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.53.1"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
