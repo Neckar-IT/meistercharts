@@ -54,7 +54,7 @@ org-slf4j = "2.0.18"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.10"
+net-bytebuddy = "1.18.11"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
