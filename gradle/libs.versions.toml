@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.9.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.0" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -48,7 +48,7 @@ kotlin = "2.4.10"
 
 org-asciidoctor = "4.0.5"
 
-jackson = "2.22.1"
+jackson = "2.22.2"
 
 org-slf4j = "2.0.18"
 
@@ -145,7 +145,7 @@ mockk = "1.14.11"
 
 modbus = "1.2.2"
 
-okhttp3 = "5.4.0"
+okhttp3 = "5.5.0"
 
 opentelemetry = "1.65.0"
 
