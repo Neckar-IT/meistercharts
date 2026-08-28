@@ -18,18 +18,24 @@ package com.meistercharts.algorithms.layers.debug
 import com.meistercharts.algorithms.layers.AbstractLayer
 import com.meistercharts.algorithms.layers.LayerPaintingContext
 import com.meistercharts.algorithms.layers.LayerType
+import com.meistercharts.algorithms.layers.PaintingVariables
 import com.meistercharts.canvas.allocation.AllocationRecordingEngine
+import com.meistercharts.canvas.allocation.AllocationRecordingMode
 import com.meistercharts.canvas.paintTextBox
 import com.meistercharts.canvas.saved
 import com.meistercharts.color.Color
 import com.meistercharts.style.BoxStyle
 import it.neckar.geometry.Direction
+import it.neckar.open.unit.si.ms
 
 /**
  * Overlay that shows the current allocation recording report (top allocated types per layer).
  *
  * Only paints while [AllocationRecordingEngine.mode] is a recording mode - toggle it with
  * Ctrl+Shift+Alt+A ([ToggleDebuggingModeLayer]). JVM only; on JS the report is always empty.
+ *
+ * The report is fetched and its text rebuilt at most every [Configuration.updateRate], the frames in
+ * between reuse the last text.
  */
 class AllocationRecordingLayer(
   val configuration: Configuration = Configuration(),
@@ -38,15 +44,35 @@ class AllocationRecordingLayer(
   override val type: LayerType
     get() = LayerType.Notification
 
+  private val paintingVariables = AllocationRecordingPaintingVariables()
+
+  override fun paintingVariables(): AllocationRecordingPaintingVariables {
+    return paintingVariables
+  }
+
   override fun paint(paintingContext: LayerPaintingContext) {
-    val mode = AllocationRecordingEngine.mode
-    if (mode.recording.not()) {
+    if (AllocationRecordingEngine.mode.recording.not()) {
       return
     }
 
+    val gc = paintingContext.gc
+    gc.saved {
+      gc.translate(gc.width, 0.0)
+      gc.paintTextBox(
+        lines = paintingVariables.lines,
+        anchorDirection = Direction.TopRight,
+        anchorGapHorizontal = configuration.gap,
+        anchorGapVertical = configuration.gap,
+        boxStyle = configuration.boxStyle,
+        textColor = configuration.textColor,
+      )
+    }
+  }
+
+  private fun buildLines(mode: AllocationRecordingMode): List<String> {
     val report = AllocationRecordingEngine.currentReport()
 
-    val lines = buildList {
+    return buildList {
       add("Allocations · JFR sampled · $mode")
       if (report.layerAllocations.isEmpty()) {
         add("(no samples yet - keep interacting)")
@@ -60,23 +86,43 @@ class AllocationRecordingLayer(
         }
       }
     }
-
-    val gc = paintingContext.gc
-    gc.saved {
-      gc.translate(gc.width, 0.0)
-      gc.paintTextBox(
-        lines = lines,
-        anchorDirection = Direction.TopRight,
-        anchorGapHorizontal = configuration.gap,
-        anchorGapVertical = configuration.gap,
-        boxStyle = configuration.boxStyle,
-        textColor = configuration.textColor,
-      )
-    }
   }
 
   private fun shortTypeName(typeName: String): String {
     return if (typeName.contains('.')) typeName.substringAfterLast('.') else typeName
+  }
+
+  inner class AllocationRecordingPaintingVariables : PaintingVariables {
+    /**
+     * The lines that are painted - rebuilt at most every [Configuration.updateRate]
+     */
+    var lines: List<String> = emptyList()
+      private set
+
+    /**
+     * The mode [lines] have been built for. Null as long as nothing has been built.
+     */
+    private var linesMode: AllocationRecordingMode? = null
+
+    @ms
+    private var lastUpdatedTimestamp = 0.0
+
+    override fun calculate(paintingContext: LayerPaintingContext) {
+      val mode = AllocationRecordingEngine.mode
+      if (mode.recording.not()) {
+        return
+      }
+
+      //The report and its text allocate on the paint thread - build them on the update rate, not every frame
+      val upToDate = mode == linesMode && paintingContext.frameTimestamp - lastUpdatedTimestamp <= configuration.updateRate
+      if (upToDate) {
+        return
+      }
+
+      lines = buildLines(mode)
+      linesMode = mode
+      lastUpdatedTimestamp = paintingContext.frameTimestamp
+    }
   }
 
   class Configuration {
@@ -89,6 +135,11 @@ class AllocationRecordingLayer(
      * The number of types shown per layer (the ones with the most samples)
      */
     var maxTypesPerLayer: Int = 4
+
+    /**
+     * How much time must have passed before the report is fetched and its text rebuilt
+     */
+    var updateRate: @ms Double = 500.0
 
     var gap: Double = 10.0
     var boxStyle: BoxStyle = BoxStyle.gray

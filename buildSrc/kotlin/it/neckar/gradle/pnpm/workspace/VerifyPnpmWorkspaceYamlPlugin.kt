@@ -42,8 +42,6 @@ class VerifyPnpmWorkspaceYamlPlugin : Plugin<Project> {
 
       workspaceYamlFile = extension.workspaceYamlFile
       manualEntries = extension.manualEntries
-      // Provider defers pnpmProjects() until task realization — GradleContext.initialize
-      // runs in the root build.gradle.kts body, which is after the plugins {} block.
       expectedProjectPaths.set(target.provider {
         (Projects.pnpmProjects() + ExternalProjects.pnpmProjects() + OtherProjects.pnpmProjects()).map { it.path.filePath }
       })

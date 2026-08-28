@@ -52,10 +52,6 @@ fun Project.packageJsonContainsScript(scriptName: String): Boolean {
   return (parsePackageJson().jsonObject["scripts"]?.jsonObject?.containsKey(scriptName) == true)
 }
 
-fun Project.isDisabledProject(): Boolean {
-  return false
-}
-
 // Extension properties for build variables set via rootProject.extra in root build.gradle.kts.
 // These make the extra properties accessible as typed properties in subproject build scripts.
 

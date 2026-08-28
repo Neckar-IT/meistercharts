@@ -29,8 +29,6 @@ import it.neckar.open.unit.other.px
  * Default implementations that limits the panning depending on the zoom level.
  * This modifier ensures the content area is always fully visible when panned.
  *
- * See "[internal/closed/charting/meistercharts-canvas/doc/translation/ContentAlwaysFullyVisible.svg] for a visualization how this class works.
- *
  * On zoom factor > 1.0
  * - The top left edge of the content is always visible
  * -

@@ -42,7 +42,7 @@ package it.neckar.open.annotations
  * in a review comment, which is what the generators write.
  *
  *     @file:Generated(
- *       by = "spec-generator/generate.py",
+ *       by = "spec-generator/generate_backend.py",
  *       from = "internal/patterns/specs/entities/library/BookReview.yaml",
  *     )
  *
@@ -53,7 +53,7 @@ package it.neckar.open.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 annotation class Generated(
-  /** The tool that wrote the file, e.g. `spec-generator/generate.py`. */
+  /** The tool that wrote the file, e.g. `spec-generator/generate_backend.py`. */
   val by: String,
 
   /**

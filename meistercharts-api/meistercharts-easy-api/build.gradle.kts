@@ -17,7 +17,6 @@ import it.neckar.gradle.meisterchartsVersion
 description = """Meistercharts - Easy API"""
 
 plugins {
-  openModule
   npmBundle
   generatePackageJson
 }

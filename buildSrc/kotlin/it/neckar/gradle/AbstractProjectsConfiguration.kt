@@ -6,9 +6,6 @@ import org.gradle.api.Project
 /**
  * Applies the standard configuration to every project category exposed by [AbstractProjects].
  * Call from the "root" build script (`internal/build.gradle.kts`, `external/build.gradle.kts`).
- *
- * Disabled projects are skipped automatically — every project list method on [AbstractProjects]
- * returns only enabled projects.
  */
 fun AbstractProjects.configureProjects(baseProject: Project) {
   baseProject.configure(multiplatformProjects()) {

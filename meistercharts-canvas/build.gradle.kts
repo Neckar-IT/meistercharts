@@ -7,7 +7,6 @@ import it.neckar.gradle.addKotlinTestDependencies
 description = """Meistercharts - Canvas"""
 
 plugins {
-  openModule
   kotlinMultiPlatform
   kotlinxSerialization
 }

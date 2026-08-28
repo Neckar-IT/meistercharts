@@ -25,9 +25,6 @@ import it.neckar.open.unit.other.px
 /**
  * Default implementations that limits the panning depending on the zoom level.
  * This modifier ensures the content area is always barely visible when panned.
- *
- * See "[internal/closed/charting/meistercharts-canvas/doc/translation/ContentAlwaysBarelyVisible.svg] for a visualization how this class works.
- *
  */
 class ContentAreaAlwaysBarelyVisibleTranslationModifier(
   val delegate: ZoomAndTranslationModifier,

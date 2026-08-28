@@ -39,5 +39,9 @@ interface TimerImplementation {
    */
   fun delay(delay: Duration, callback: () -> Unit): Disposable
 
+  /**
+   * Calls the callback every [delay].
+   * The first call happens after [delay] has elapsed - never immediately.
+   */
   fun repeat(delay: Duration, callback: () -> Unit): Disposable
 }

@@ -1,8 +1,12 @@
 package it.neckar.gradle.pnpm.dependency
 
+import it.neckar.gradle.requireFileExists
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import org.gradle.api.GradleException
 import java.io.File
 
 /**
@@ -22,91 +26,63 @@ class PackageJsonParser {
     isLenient = true
   }
 
-  /**
-   * Extracts the package name from a package.json file.
-   */
-  fun extractPackageName(packageJsonFile: File): NpmPackageName? {
-    val content = packageJsonFile.readText()
-    val jsonObject = json.parseToJsonElement(content).jsonObject
-    return jsonObject["name"]?.jsonPrimitive?.content?.let { NpmPackageName(it) }
-  }
+  /** Reads and parses [packageJsonFile]; every value is then taken from the result. */
+  fun parse(packageJsonFile: File): ParsedPackageJson {
+    packageJsonFile.requireFileExists { "No package.json at ${it?.absolutePath}" }
 
-  /**
-   * Extracts the names of all scripts declared in the `scripts` section of a package.json file.
-   *
-   * Returns an empty set if the file does not exist or declares no scripts.
-   */
-  fun extractScriptNames(packageJsonFile: File): Set<String> {
-    if (packageJsonFile.isFile.not()) {
-      return emptySet()
+    val rootElement = try {
+      json.parseToJsonElement(packageJsonFile.readText())
+    } catch (e: SerializationException) {
+      // The kotlinx message names an offset and a path, never the file — one of fifty manifests.
+      throw GradleException("Malformed package.json at ${packageJsonFile.absolutePath}: ${e.message}", e)
     }
 
-    val jsonObject = json.parseToJsonElement(packageJsonFile.readText()).jsonObject
-    return jsonObject["scripts"]?.jsonObject?.keys.orEmpty()
+    return ParsedPackageJson(packageJsonFile, rootElement.asObject(packageJsonFile, "The manifest"))
   }
 
-  /**
-   * Extracts the command line of one script from a package.json file.
-   *
-   * Returns null if the file does not exist or declares no script of that name.
-   */
-  fun extractScript(packageJsonFile: File, scriptName: String): String? {
-    if (packageJsonFile.isFile.not()) {
-      return null
+}
+
+/**
+ * A package.json read and parsed once. Every value is derived here and not on each access, so a
+ * caller may read the same one repeatedly.
+ *
+ * A section of the wrong JSON type fails naming [source] and the section — kotlinx reports neither.
+ */
+class ParsedPackageJson internal constructor(private val source: File, jsonObject: JsonObject) {
+  private val scripts: JsonObject? = jsonObject["scripts"]?.asObject(source, "'scripts'")
+
+  /** Null where the manifest declares no `name`; whether that is a defect is the caller's to decide. */
+  val name: NpmPackageName? = jsonObject["name"]?.asString(source, "'name'")?.let { NpmPackageName(it) }
+
+  val scriptNames: Set<String> = scripts?.keys.orEmpty()
+
+  /** Dependencies whose version specifier starts with `workspace:`, by section. */
+  val workspaceDependencies: WorkspaceDependencies = WorkspaceDependencies(
+    dependencies = jsonObject.workspaceDependenciesOf(source, "dependencies"),
+    devDependencies = jsonObject.workspaceDependenciesOf(source, "devDependencies"),
+  )
+
+  fun script(scriptName: String): String? = scripts?.get(scriptName)?.asString(source, "script '$scriptName'")
+}
+
+private fun JsonObject.workspaceDependenciesOf(source: File, section: String): List<NpmPackageName> {
+  val deps = this[section]?.asObject(source, "'$section'") ?: return emptyList()
+
+  return deps.entries
+    .filter { (packageName, versionElement) ->
+      versionElement.asString(source, "the version of '$packageName' in '$section'").startsWith("workspace:")
     }
+    .map { (packageName, _) -> NpmPackageName(packageName) }
+}
 
-    val jsonObject = json.parseToJsonElement(packageJsonFile.readText()).jsonObject
-    return jsonObject["scripts"]?.jsonObject?.get(scriptName)?.jsonPrimitive?.content
-  }
+private fun JsonElement.asObject(source: File, what: String): JsonObject {
+  return this as? JsonObject
+    ?: throw GradleException("$what in ${source.absolutePath} must be an object, but is ${this::class.simpleName}")
+}
 
-  /**
-   * Extracts the names of all workspace dependencies from a package.json file.
-   *
-   * Workspace dependencies are identified by the `workspace:` prefix in their version specifier.
-   * Both `dependencies` and `devDependencies` sections are checked.
-   *
-   * @return List of npm package names that are workspace dependencies
-   */
-  fun extractWorkspaceDependencyNames(packageJsonFile: File): List<NpmPackageName> {
-    val content = packageJsonFile.readText()
-    val jsonObject = json.parseToJsonElement(content).jsonObject
-
-    return listOf("dependencies", "devDependencies")
-      .flatMap { section ->
-        val deps = jsonObject[section]?.jsonObject ?: return@flatMap emptyList()
-
-        deps.entries
-          .filter { (_, versionElement) ->
-            versionElement.jsonPrimitive.content.startsWith("workspace:")
-          }
-          .map { (packageName, _) -> NpmPackageName(packageName) }
-      }
-      .distinct()
-  }
-
-  /**
-   * Extracts workspace dependencies from a package.json file, separated by type.
-   *
-   * @return [WorkspaceDependencies] containing separate lists for dependencies and devDependencies
-   */
-  fun extractWorkspaceDependenciesByType(packageJsonFile: File): WorkspaceDependencies {
-    val content = packageJsonFile.readText()
-    val jsonObject = json.parseToJsonElement(content).jsonObject
-
-    fun extractFromSection(section: String): List<NpmPackageName> {
-      val deps = jsonObject[section]?.jsonObject ?: return emptyList()
-      return deps.entries
-        .filter { (_, versionElement) ->
-          versionElement.jsonPrimitive.content.startsWith("workspace:")
-        }
-        .map { (packageName, _) -> NpmPackageName(packageName) }
-    }
-
-    return WorkspaceDependencies(
-      dependencies = extractFromSection("dependencies"),
-      devDependencies = extractFromSection("devDependencies"),
-    )
-  }
+private fun JsonElement.asString(source: File, what: String): String {
+  return (this as? JsonPrimitive)?.takeIf { it.isString }?.content
+    ?: throw GradleException("$what in ${source.absolutePath} must be a string, but is $this")
 }
 
 /**
@@ -117,4 +93,7 @@ data class WorkspaceDependencies(
   val dependencies: List<NpmPackageName>,
   /** Development dependencies from the "devDependencies" section */
   val devDependencies: List<NpmPackageName>,
-)
+) {
+  /** Both sections in one list, each package once. */
+  val all: List<NpmPackageName> = (dependencies + devDependencies).distinct()
+}

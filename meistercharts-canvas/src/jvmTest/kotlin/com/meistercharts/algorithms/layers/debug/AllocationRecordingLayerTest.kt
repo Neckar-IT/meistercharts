@@ -26,6 +26,8 @@ import com.meistercharts.canvas.allocation.AllocationRecordingEngine
 import com.meistercharts.canvas.allocation.AllocationRecordingMode
 import com.meistercharts.canvas.mock.MockCanvasRenderingContext
 import com.meistercharts.loop.PaintingLoopIndex
+import assertk.*
+import assertk.assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import it.neckar.geometry.Size
@@ -45,16 +47,55 @@ class AllocationRecordingLayerTest {
     AllocationRecordingEngine.recordSample("com.meistercharts.model.Insets", 32, "ValueAxisLayer", null)
     AllocationRecordingEngine.recordSample("[D", 256, "ValueAxisLayer", null)
 
-    AllocationRecordingLayer().paint(paintingContext())
+    AllocationRecordingLayer().also {
+      it.layout(paintingContext())
+      it.paint(paintingContext())
+    }
   }
 
   @Test
   fun `does not paint while off`() {
     AllocationRecordingEngine.mode = AllocationRecordingMode.Off
-    AllocationRecordingLayer().paint(paintingContext())
+    AllocationRecordingLayer().also {
+      it.layout(paintingContext())
+      it.paint(paintingContext())
+    }
   }
 
-  private fun paintingContext(): LayerPaintingContext {
+  @Test
+  fun `rebuilds the report only once per update rate`() {
+    AllocationRecordingEngine.mode = AllocationRecordingMode.ByType
+    AllocationRecordingEngine.recordSample("com.meistercharts.model.Insets", 32, "ValueAxisLayer", null)
+
+    val layer = AllocationRecordingLayer()
+    layer.layout(paintingContext(frameTimestamp = 1000.0))
+    assertThat(layer.paintingVariables().lines).contains("1 samples")
+
+    AllocationRecordingEngine.recordSample("[D", 256, "ValueAxisLayer", null)
+
+    layer.layout(paintingContext(frameTimestamp = 1400.0))
+    assertThat(layer.paintingVariables().lines).contains("1 samples")
+
+    layer.layout(paintingContext(frameTimestamp = 1600.0))
+    assertThat(layer.paintingVariables().lines).contains("2 samples")
+  }
+
+  @Test
+  fun `rebuilds the report immediately when the mode changes`() {
+    AllocationRecordingEngine.mode = AllocationRecordingMode.ByType
+    AllocationRecordingEngine.recordSample("com.meistercharts.model.Insets", 32, "ValueAxisLayer", null)
+
+    val layer = AllocationRecordingLayer()
+    layer.layout(paintingContext(frameTimestamp = 1000.0))
+    assertThat(layer.paintingVariables().lines.first()).contains(AllocationRecordingMode.ByType.name)
+
+    AllocationRecordingEngine.mode = AllocationRecordingMode.ByTypeAndStacktrace
+
+    layer.layout(paintingContext(frameTimestamp = 1010.0))
+    assertThat(layer.paintingVariables().lines.first()).contains(AllocationRecordingMode.ByTypeAndStacktrace.name)
+  }
+
+  private fun paintingContext(frameTimestamp: Double = 10.0): LayerPaintingContext {
     val canvasSize = Size.of(800.0, 600.0)
     val canvas = MockCanvas()
     val chartSupport = ChartSupport(canvas)
@@ -64,7 +105,7 @@ class AllocationRecordingLayerTest {
     return LayerPaintingContext(
       gc = MockCanvasRenderingContext().also { it.canvasSize = canvasSize },
       layerSupport = DefaultLayerSupport(chartSupport),
-      frameTimestamp = 10.0,
+      frameTimestamp = frameTimestamp,
       frameTimestampDelta = 0.0,
       loopIndex = PaintingLoopIndex(0),
       layerLayoutIndex = LayerIndex.unknown,

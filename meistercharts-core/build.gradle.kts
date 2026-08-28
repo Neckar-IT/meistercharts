@@ -7,7 +7,6 @@ import it.neckar.gradle.addKotlinTestDependencies
 description = """Meistercharts - Core"""
 
 plugins {
-  openModule
   kotlinMultiPlatform
   kotlinxSerialization
 }

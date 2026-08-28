@@ -5,7 +5,6 @@ import it.neckar.projects.Projects
 description = """Meistercharts - Core"""
 
 plugins {
-  openModule
   kotlinMultiPlatform
   kotlinxSerialization
 }

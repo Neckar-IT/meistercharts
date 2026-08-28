@@ -58,8 +58,8 @@ class JVMTimerCoroutineImplementation(
 
     val job = repeatScope.launch {
       while (isActive) {
-        callback()
         delay(delay)
+        callback()
       }
     }
     return Disposable { job.cancel("Disposed of repeatScope") }

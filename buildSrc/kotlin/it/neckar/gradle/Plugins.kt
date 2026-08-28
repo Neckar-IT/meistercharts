@@ -126,6 +126,7 @@ object Plugins {
   const val artifactSizeReport: String = "it.neckar.report.artifact-sizes"
 
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
+  const val verifyPnpmWorkspaceDependencies: String = "it.neckar.repos.pnpm.verify-workspace-dependencies"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))

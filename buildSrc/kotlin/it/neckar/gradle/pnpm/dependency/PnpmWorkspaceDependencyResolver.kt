@@ -1,85 +1,45 @@
 package it.neckar.gradle.pnpm.dependency
 
 import it.neckar.projects.GradleProjectPath
+import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.logging.Logging
+import java.io.File
 
 /**
- * Resolves workspace dependencies for pnpm projects.
- *
- * Parses `package.json` files to extract internal workspace dependencies
- * (dependencies with `workspace:*` specifier) and maps them to Gradle project paths.
- *
- * ## Architecture
- * The resolver consists of three components:
- * 1. [PackageNameRegistry] - Maps npm package names to Gradle project paths
- * 2. [PackageJsonParser] - Parses package.json files to extract workspace dependencies
- * 3. [GradleProjectPath] - Value class for type-safe Gradle project paths
- *
- * ## Usage
- * ```kotlin
- * val resolver = PnpmWorkspaceDependencyResolver()
- * val dependencies = resolver.resolveWorkspaceDependencies(project)
- * // Returns: [GradleProjectPath(":internal:open:commons:typescript:typescript-utils"), ...]
- * ```
+ * Maps the `workspace:` dependencies a pnpm module declares in its `package.json` to the Gradle
+ * project paths of the modules providing them.
  */
 class PnpmWorkspaceDependencyResolver(
   private val packageNameRegistry: PackageNameRegistry = PackageNameRegistry.create(),
   private val packageJsonParser: PackageJsonParser = PackageJsonParser(),
 ) {
-  private val logger = Logging.getLogger(PnpmWorkspaceDependencyResolver::class.java)
-
-  /**
-   * Determines all internal workspace dependencies of a pnpm project.
-   *
-   * Parses the project's `package.json` file and extracts dependencies that use
-   * the `workspace:*` specifier, then maps them to their corresponding Gradle project paths.
-   *
-   * @return List of Gradle project paths for workspace dependencies
-   */
-  fun resolveWorkspaceDependencies(project: Project): List<GradleProjectPath> {
-    val packageJsonFile = project.file("package.json")
-
-    if (packageJsonFile.exists().not()) {
-      logger.debug("No package.json found for project ${project.path}")
-      return emptyList()
-    }
-
-    val workspacePackageNames = packageJsonParser.extractWorkspaceDependencyNames(packageJsonFile)
-
-    return resolvePackageNames(workspacePackageNames, project)
-  }
-
-  /**
-   * Determines workspace dependencies of a pnpm project, separated by type.
-   *
-   * @return [ResolvedWorkspaceDependencies] with separate lists for dependencies and devDependencies
-   */
   fun resolveWorkspaceDependenciesByType(project: Project): ResolvedWorkspaceDependencies {
-    val packageJsonFile = project.file("package.json")
-
-    if (packageJsonFile.exists().not()) {
-      logger.debug("No package.json found for project ${project.path}")
-      return ResolvedWorkspaceDependencies(emptyList(), emptyList())
-    }
-
-    val workspaceDeps = packageJsonParser.extractWorkspaceDependenciesByType(packageJsonFile)
+    val workspaceDeps = packageJsonParser.parse(packageJsonOf(project)).workspaceDependencies
 
     return ResolvedWorkspaceDependencies(
-      dependencies = resolvePackageNames(workspaceDeps.dependencies, project),
-      devDependencies = resolvePackageNames(workspaceDeps.devDependencies, project),
+      dependencies = resolvePackageNames(workspaceDeps.dependencies),
+      devDependencies = resolvePackageNames(workspaceDeps.devDependencies),
     )
   }
 
-  private fun resolvePackageNames(packageNames: List<NpmPackageName>, project: Project): List<GradleProjectPath> {
+  /**
+   * A pnpm module without a `package.json` cannot declare what it consumes, so an absent file is a
+   * defect rather than an empty dependency list — [PackageNameRegistry.create] already refuses to
+   * build a registry for such a module.
+   */
+  private fun packageJsonOf(project: Project): File {
+    val packageJsonFile = project.file("package.json")
+
+    if (packageJsonFile.isFile.not()) {
+      throw GradleException("No package.json in pnpm module '${project.path}', expected at ${packageJsonFile.absolutePath}")
+    }
+
+    return packageJsonFile
+  }
+
+  private fun resolvePackageNames(packageNames: List<NpmPackageName>): List<GradleProjectPath> {
     return packageNames
-      .mapNotNull { packageName ->
-        packageNameRegistry.findGradlePath(packageName).also { gradlePath ->
-          if (gradlePath == null) {
-            logger.warn("Could not resolve workspace dependency '$packageName' in ${project.path} to a Gradle project path")
-          }
-        }
-      }
+      .map { packageName -> packageNameRegistry.findGradlePath(packageName) }
       .distinctBy { it.path }
       .sortedBy { it.path }
   }

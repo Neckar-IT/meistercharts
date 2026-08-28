@@ -9,23 +9,31 @@ import org.gradle.api.logging.Logging
 
 /**
  * Registry that maps npm package names to their corresponding Gradle project paths.
- *
- * Use the companion [create] factory function to build the registry.
  */
-class PackageNameRegistry private constructor(
+class PackageNameRegistry internal constructor(
   private val packageNameToGradlePath: Map<NpmPackageName, GradleProjectPath>,
 ) {
-  private val logger = Logging.getLogger(PackageNameRegistry::class.java)
-
   /**
-   * Finds the Gradle project path for the given npm package name, or null if not found.
+   * The Gradle project path for [packageName].
+   *
+   * An unknown package is a defect, not an absence: dropping it removes the build-order edge and the
+   * dependency's `dist/` input, leaving the consuming module up-to-date after its dependency changed.
    */
-  fun findGradlePath(packageName: NpmPackageName): GradleProjectPath? = packageNameToGradlePath[packageName]
+  fun findGradlePath(packageName: NpmPackageName): GradleProjectPath {
+    return findGradlePathOrNull(packageName)
+      ?: throw GradleException(
+        "No pnpm module provides npm package '$packageName'. Either it is not registered as a Gradle " +
+          "project (settings.gradle.kts + Projects.kt), or its package.json declares a different 'name'. " +
+          "Registered packages: $size."
+      )
+  }
+
+  fun findGradlePathOrNull(packageName: NpmPackageName): GradleProjectPath? = packageNameToGradlePath[packageName]
 
   /**
    * Returns the number of packages in the registry.
    */
-  val size: Int get() = packageNameToGradlePath.size
+  val size: Int = packageNameToGradlePath.size
 
   companion object {
     private val logger = Logging.getLogger(PackageNameRegistry::class.java)
@@ -40,21 +48,26 @@ class PackageNameRegistry private constructor(
       pnpmProjects: List<ConfiguredProject> = Projects.pnpmProjects() + OtherProjects.pnpmProjects(),
     ): PackageNameRegistry {
       val parser = PackageJsonParser()
+      val mapping = mutableMapOf<NpmPackageName, GradleProjectPath>()
 
-      val mapping = pnpmProjects
-        .associate { configuredProject ->
-          val packageJsonFile = configuredProject.project().file("package.json")
+      pnpmProjects.forEach { configuredProject ->
+        val packageJsonFile = configuredProject.project().file("package.json")
 
-          if (packageJsonFile.exists().not()) {
-            throw GradleException("package.json not found for pnpm project '${configuredProject.path}' at ${packageJsonFile.absolutePath}")
-          }
+        val packageName = parser.parse(packageJsonFile).name
+          ?: throw GradleException(
+            "pnpm project '${configuredProject.path}' declares no 'name' in ${packageJsonFile.absolutePath}."
+          )
 
-          val packageName = parser.extractPackageName(packageJsonFile)
-            ?: throw GradleException("No 'name' field found in ${packageJsonFile.absolutePath}")
-
-          logger.debug("Mapped package '$packageName' -> '${configuredProject.path}'")
-          packageName to configuredProject.path
+        // put returns the previous holder — a second module claiming one name would otherwise
+        // silently take over the mapping and misdirect every dependency on it.
+        mapping.put(packageName, configuredProject.path)?.let { alreadyClaimedBy ->
+          throw GradleException(
+            "pnpm projects '${configuredProject.path}' and '$alreadyClaimedBy' both declare the npm package name '$packageName'."
+          )
         }
+
+        logger.debug("Mapped package '$packageName' -> '${configuredProject.path}'")
+      }
 
       logger.info("Built package name registry with ${mapping.size} entries")
       return PackageNameRegistry(mapping)

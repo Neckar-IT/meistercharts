@@ -203,3 +203,25 @@ fun <T> Collection<T>.filterAll(filterMatchers: List<(T) -> Boolean>): Collectio
     return@filter true
   }
 }
+
+/**
+ * Joins at most [maxReported] elements and counts the rest, for messages a human has to read.
+ *
+ * A message that lists every element of a large collection is one nobody reads — and an error message
+ * exists to be read. [noun] names what is being counted, in singular; the plural adds an `s`.
+ *
+ * ```kotlin
+ * listOf("a", "b", "c").abbreviated(maxReported = 2, noun = "value")  // "a, b, and 1 more value"
+ * ```
+ */
+fun Iterable<String>.abbreviated(maxReported: Int, noun: String): String {
+  require(maxReported > 0) { "maxReported must be positive but was $maxReported" }
+
+  val elements: List<String> = toList()
+  if (elements.size <= maxReported) return elements.joinToString(", ")
+
+  val remaining = elements.size - maxReported
+  val plural = if (remaining == 1) "" else "s"
+
+  return elements.take(maxReported).joinToString(", ") + ", and $remaining more $noun$plural"
+}

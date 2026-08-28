@@ -447,9 +447,12 @@ fun String.inCurlyBraces(): String {
  * Shortens the string to [maxLength]; in such case, appends the [ellipsis] (typically "…" ).
  *
  * For example, returns "ABCD…" when called for "ABCDEFHG".(5, "…")
+ *
+ * The result never exceeds [maxLength] - therefore the [ellipsis] is dropped when it does not fit.
  */
 fun String.restrictLengthWithEllipsis(maxLength: Int, ellipsis: String = "…"): String =
   if (this.length <= maxLength) this
+  else if (maxLength < ellipsis.length) this.take(maxLength)
   else this.substring(0, maxLength - ellipsis.length) + ellipsis
 
 /**
@@ -484,11 +487,6 @@ fun String.truncateToLength(maxCharacters: Int, truncationSymbol: String = "…"
   if (truncationSymbol.length > maxCharacters) {
     //we do not have any space for the truncation symbol - therefore return "!"
     return "!"
-  }
-
-  if (maxCharacters < truncationSymbol.length) {
-    //shorter than truncation symbol. Therefore, we just return the text truncated
-    return take(maxCharacters)
   }
 
   return take(maxCharacters - truncationSymbol.length) + truncationSymbol
