@@ -103,6 +103,7 @@ internal fun expandShellInclude(
 private val InlinableLibraries: List<String> = listOf(
   "secret-masking/secret-masking-lib.sh",
   "docker-lock/docker-lock-lib.sh",
+  "compose-up/compose-up-lib.sh",
   "host-provisioning/provision-lib.sh",
   "host-deploy/deploy-host-lib.sh",
   "service-deploy/deploy-service-lib.sh",

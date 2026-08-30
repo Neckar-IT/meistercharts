@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.0" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.1" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.39"
+aws-sdk-kotlin = "1.8.40"
 
 apache-poi = "5.5.1"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.5"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.6"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
