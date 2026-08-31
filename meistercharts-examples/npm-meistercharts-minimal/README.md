@@ -39,7 +39,7 @@ Your ``package.json`` should now contain the MeisterCharts dependency:
   },
   "devDependencies": {
     "webpack": "5.110.1",
-    "webpack-cli": "7.2.2"
+    "webpack-cli": "7.2.3"
   }
 }
 

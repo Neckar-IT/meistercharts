@@ -67,7 +67,7 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.11"
 
-org-mongodb = "5.10.0"
+org-mongodb = "5.11.0"
 
 # json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
 # that validates kotlinx.serialization JsonElement directly.
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.40"
+aws-sdk-kotlin = "1.8.41"
 
 apache-poi = "5.5.1"
 
@@ -131,7 +131,7 @@ kotlinx-browser = "0.5.0"
 
 kotlinx-cli = "0.3.6"
 
-kotlinx-collections-immutable = "0.5.1"
+kotlinx-collections-immutable = "0.5.2"
 
 kotlinx-coroutines = "1.11.0"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.6"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.7"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
