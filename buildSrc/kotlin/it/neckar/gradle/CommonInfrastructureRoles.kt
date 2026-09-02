@@ -145,8 +145,9 @@ fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgr
  * side by side on the deployed host.
  *
  * Consumers must supply `otel-collector-client-id` and `otel-collector-client-secret`
- * in their `secretsLoader.keys`, plus a `${host_role}` filter substitution
- * (worker hosts → "worker", others → "infrastructure").
+ * in their `secretsLoader.keys`, plus two filter substitutions: `${host_role}`
+ * (worker hosts → "worker", others → "infrastructure") and `${deployment_environment}`
+ * (the host's stage, lowercased: "production" / "development" / "demo").
  */
 fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.applyTo(this)
 

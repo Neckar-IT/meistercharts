@@ -15,8 +15,9 @@ import java.io.File
  * all, so the change merged green and never reached a single host.
  *
  * Resolution is transitive, because an include is usually reached indirectly: a service deploy
- * script inlines `service-deploy/deploy-service-lib.sh`, which in turn inlines
- * `docker-lock/docker-lock-lib.sh`. Only the first hop is visible in the script itself.
+ * script inlines `service-deploy/deploy-service-lib.sh`, which inlines
+ * `compose-up/compose-up-lib.sh`, which inlines `docker-lock/docker-lock-lib.sh`. Only the first
+ * hop is visible in the script itself.
  *
  * Purposely file-based rather than Gradle-based: these includes are folded in by copying text at
  * materialization time, so they leave no trace in the Gradle dependency graph.

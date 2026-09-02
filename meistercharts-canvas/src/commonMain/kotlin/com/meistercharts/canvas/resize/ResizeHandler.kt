@@ -31,7 +31,7 @@ interface ResizeHandler {
   }
 
   /**
-   * Is
+   * Is notified when the mouse has left the handle
    */
   fun disarmed() {
   }
@@ -40,25 +40,29 @@ interface ResizeHandler {
   }
 
   /**
-   * Is called for each resize event
+   * Is called for each resize event.
+   *
+   * The distances are the totals since [beginResizing], not the deltas since the last event, so an implementation
+   * applies them to the geometry it held then. Applying them to the geometry it has produced meanwhile loses whatever
+   * its own clamping cut off.
    */
   fun resizing(
     /**
-     * The mouse movement distance taken from the original event
+     * The mouse movement since the handle was pressed
      */
-    rawDistance: @px Distance,
+    totalDistance: @px Distance,
     /**
      * The handle direction
      */
     handleDirection: Direction,
     /**
-     * The horizontal distance (0.0 for center handles)
+     * The horizontal part of [totalDistance] (0.0 for center handles)
      */
-    deltaX: @px @Zoomed Double,
+    totalX: @px @Zoomed Double,
     /**
-     * The vertical distance (0.0 for center handles)
+     * The vertical part of [totalDistance] (0.0 for center handles)
      */
-    deltaY: @px @Zoomed Double,
+    totalY: @px @Zoomed Double,
   )
 
   fun resizingFinished() {

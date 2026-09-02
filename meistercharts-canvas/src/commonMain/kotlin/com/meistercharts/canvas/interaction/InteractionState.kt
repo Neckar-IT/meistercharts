@@ -15,8 +15,10 @@
  */
 package com.meistercharts.canvas.interaction
 
+import com.meistercharts.annotations.Domain
 import com.meistercharts.annotations.Window
 import it.neckar.geometry.Coordinates
+import it.neckar.geometry.Rectangle
 
 /**
  * What the user is currently doing with the elements of a chart - as plain data.
@@ -39,14 +41,14 @@ data class InteractionState<out E : Any>(
   val selected: E? = null,
 
   /**
-   * The element being dragged, or null if no drag is in progress.
+   * The drag in progress, or null if nothing is being dragged.
    */
-  val dragged: E? = null,
+  val drag: Drag<E>? = null,
 
   /**
-   * The element being resized, or null if no resize is in progress.
+   * The resize in progress, or null if nothing is being resized.
    */
-  val resized: E? = null,
+  val resized: Resize<E>? = null,
 
   /**
    * Where the mouse is while the user builds something that follows the pointer - a string being wired up, for
@@ -61,6 +63,18 @@ data class InteractionState<out E : Any>(
     get() = hovered?.element
 
   /**
+   * The element being dragged, or null while no drag is in progress.
+   */
+  val draggedElement: E?
+    get() = drag?.element
+
+  /**
+   * The element being resized, or null while no resize is in progress.
+   */
+  val resizedElement: E?
+    get() = resized?.element
+
+  /**
    * The role of the region under the mouse, or null if the mouse is over nothing.
    */
   val armedRole: HandleRole?
@@ -70,7 +84,7 @@ data class InteractionState<out E : Any>(
    * Returns true while the user drags or resizes something.
    */
   val changingGeometry: Boolean
-    get() = dragged != null || resized != null
+    get() = drag != null || resized != null
 
   /**
    * A short form for debug overlays and logs - the elements themselves can have very long descriptions.
@@ -80,12 +94,30 @@ data class InteractionState<out E : Any>(
       append("InteractionState(")
       append("hovered=").append(hovered?.let { "${it.element::class.simpleName}/${it.role}" } ?: "-")
       append(", selected=").append(selected?.let { it::class.simpleName } ?: "-")
-      append(", dragged=").append(dragged?.let { it::class.simpleName } ?: "-")
-      append(", resized=").append(resized?.let { it::class.simpleName } ?: "-")
+      append(", drag=").append(drag?.let { "${it.element::class.simpleName} from ${it.from}" } ?: "-")
+      append(", resized=").append(resized?.let { "${it.element::class.simpleName} from ${it.from}" } ?: "-")
       append(", pendingPoint=").append(pendingPoint ?: "-")
       append(")")
     }
   }
+
+  /**
+   * A running drag: the element and the location the gesture's total distance is applied to, taken when it started.
+   * One field, so a tool can never fall back to a location that the drag itself has already moved.
+   */
+  data class Drag<out E : Any>(
+    val element: E,
+    val from: @Domain Coordinates,
+  )
+
+  /**
+   * A running resize: the element and the geometry the gesture's total distance is applied to, taken when it started.
+   * Anchoring on it keeps the clamping on the result rather than on the path - see [Drag] for the move gesture.
+   */
+  data class Resize<out E : Any>(
+    val element: E,
+    val from: @Domain Rectangle,
+  )
 
   companion object {
     private val Empty: InteractionState<Nothing> = InteractionState()

@@ -193,6 +193,12 @@ object Plugins {
   const val jibService: String = "it.neckar.jib-service"
 
   /**
+   * Judges the HTML a project deploys: no `<script>` carrying code, because a document answering
+   * under `script-src 'self'` has it parsed into the DOM and never run. Applied per project.
+   */
+  const val noInlineScripts: String = "it.neckar.no-inline-scripts"
+
+  /**
    * Single default source for the OTel agent config: `-javaagent` + `OTEL_*` env defaults on the
    * Jib image and the local `run` task, `otelAgent { }` DSL, extension-JAR bake (#2381).
    * Bundled via `ktorServiceApplication`.

@@ -79,6 +79,15 @@ class CanvasDragSupport {
     private set
 
   /**
+   * Where the running gesture started - null while none is running. A handler that has to answer with the gesture's
+   * total distance instead of the delta since the last event takes it from here.
+   */
+  @px
+  @Window
+  var gestureStartLocation: Coordinates? = null
+    private set
+
+  /**
    * When [currentLocation] has been updated
    */
   @ms
@@ -99,6 +108,7 @@ class CanvasDragSupport {
 
     //Remember the start time
     updateDragLocation(coordinates, eventTime)
+    gestureStartLocation = coordinates
 
     val draggingAllowed = handlers.consumeUntil {
       it.isDraggingAllowedFromHere(this, coordinates, chartSupport)
@@ -140,6 +150,16 @@ class CanvasDragSupport {
     } ?: Ignored
   }
 
+  /**
+   * The distance the pointer has covered since the press that started the running gesture.
+   *
+   * Available in [Handler.isDraggingAllowedFromHere] and [Handler.onDrag]. Not in [Handler.onFinish]: [finishDragging]
+   * resets before it notifies, so a handler that needs the press location at the end keeps its own copy.
+   */
+  fun totalDistanceTo(location: @Window Coordinates): @Zoomed Distance {
+    return location.delta(gestureStartLocation.requireNotNull { "No gesture is running" })
+  }
+
   fun finishDragging(coordinates: Coordinates, chartSupport: ChartSupport): EventConsumption {
     if (dragging.not() && preparedForDragging.not()) {
       //no dragging - ignore event
@@ -161,6 +181,7 @@ class CanvasDragSupport {
     preparedForDragging = false
     dragging = false
     currentLocation = null
+    gestureStartLocation = null
     currentLocationUpdateTime = 0.0
   }
 

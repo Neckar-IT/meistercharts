@@ -82,7 +82,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
       override fun onDrag(source: CanvasDragSupport, location: Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
         require(handlesVisible) { "handlesVisible is false" }
 
-        chartSupport.resizeHandlesSupport.notifyResize((uiState as DraggingHandle).handleDirection, distance)
+        chartSupport.resizeHandlesSupport.notifyResize((uiState as DraggingHandle).handleDirection, source.totalDistanceTo(location))
         return EventConsumption.Consumed
       }
 
@@ -301,7 +301,7 @@ class ResizeByHandlesLayer : AbstractLayer() {
    * Returns the handle direction at the given coordinates
    */
   fun getHandleDirection(location: Coordinates): Direction? {
-    if (!handlesVisible) return null
+    if (handlesVisible.not()) return null
 
     val foundIndex = handleBounds.findIndex(location) ?: return null
     return foundIndex.toDirection()

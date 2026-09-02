@@ -54,7 +54,7 @@ interface InteractionTool<E : Any, M : Any> {
    * The mouse moved by [totalDistance] since the drag started.
    *
    * The distance is the total of the gesture, not the delta since the last event, so a tool can produce one command for
-   * the whole drag and the executor keeps one undo entry.
+   * the whole drag and the executor keeps one undo entry. Apply it to [InteractionState.Drag.from].
    */
   fun onDrag(totalDistance: @Zoomed Distance, state: InteractionState<E>, model: M): ToolReaction<E, M> {
     return ToolReaction.ignored(state)

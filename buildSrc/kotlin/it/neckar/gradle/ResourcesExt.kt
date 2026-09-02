@@ -100,7 +100,8 @@ fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
 }
 
 /**
- * Throws an exception if there are any "${*}" left in the files
+ * Fails the build when a copied file still carries an unresolved placeholder, as
+ * [findUnresolvedVariable] defines one.
  */
 fun <T : AbstractCopyTask> TaskProvider<T>.ensureAllVariablesHaveBeenReplaced(project: Project) {
   val copyTaskName = this.name
@@ -175,6 +176,11 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
 /**
  * Returns the unresolved `${…}` placeholder found in [line], or `null` if the line carries none.
  *
+ * The single answer to "is this an unresolved placeholder": the copy-time check
+ * [EnsureAllVariablesHaveBeenReplacedTask], `DeployTask.verifyFullyMaterialized` and
+ * `ProvisionTask.verifyFullyMaterialized` all ask it. Three patterns of their own used to disagree,
+ * and a script that passed the build aborted at deploy time on the same line.
+ *
  * A `${…}` preceded by a backslash (`\${…}`) is a deliberately escaped shell expansion: the
  * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
  * (e.g. `short=\${fqdn%%.*}` inside an `ssh "root@$host" "…"` block, where `$host` is expanded
@@ -186,16 +192,27 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * Deploy-time placeholders never carry a `:-` default, so these are not unresolved placeholders
  * either. An unescaped, default-less `${key}` that no replacement filled is a real error
  * and is returned.
+ *
+ * A bash parameter expansion whose body no deploy key could spell — `${#rendered[@]}`,
+ * `${BASH_SOURCE[0]}`, `${fqdn%%.*}` — is shell code that survived the copy intact, which is
+ * what the inlined shell libraries carry into the deployment scripts. Every other shell expansion
+ * stays indistinguishable from a placeholder and is still reported; see [variablePattern].
  */
-internal fun findUnresolvedVariable(line: String): String? {
+fun findUnresolvedVariable(line: String): String? {
   return variablePattern.findAll(line)
     .map { it.value }
     .firstOrNull { it.contains(":-").not() }
 }
 
 /**
- * Matches an unescaped variable of the form "${*}". The negative lookbehind `(?<!\\)` skips a
- * `${…}` escaped with a leading backslash (`\${…}`), which denotes an intentional runtime shell
- * expansion rather than an unresolved deployment placeholder.
+ * Matches an unescaped `${key}` whose key is spellable as a deployment placeholder: the charset
+ * covers every shape the materialization substitutes — `${tag}`, `${ElektromeisterService.port}`,
+ * `${mongodb.password@dev.elektromeister.neckar.it}`, `${image:elektromeister/elektromeister-ui}`.
+ * A body outside it carries bash syntax (`#`, `[`, `%`, `*`) that no placeholder key holds. The
+ * charset does not separate the two by itself: `${name}`, `${path/old/new}` and `${var:0:8}` are
+ * spellable as keys and are reported, so a materialized script escapes them as `\${…}`.
+ *
+ * The negative lookbehind `(?<!\\)` skips a `${…}` escaped with a leading backslash (`\${…}`),
+ * which denotes an intentional runtime shell expansion.
  */
-private val variablePattern = "(?<!\\\\)\\$\\{[^}]*}".toRegex()
+private val variablePattern = "(?<!\\\\)\\$\\{[A-Za-z0-9_.:@/-]+}".toRegex()

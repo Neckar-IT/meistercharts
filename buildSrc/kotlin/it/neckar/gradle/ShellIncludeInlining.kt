@@ -25,9 +25,11 @@ import java.io.File
  * **Transitive includes:** an inlined library may itself carry `# @inline:` markers;
  * they are resolved recursively, so a library declares its own dependencies and the
  * consuming script never has to know about them (e.g. `deploy-service-lib.sh` inlines
- * `secret-masking/secret-masking-lib.sh`, so a service deploy script that inlines the
- * former gets the latter for free). A per-expansion `seen` set drops a path already
- * inlined in the same tree, guarding against cycles and diamonds.
+ * `compose-up/compose-up-lib.sh`, which inlines `docker-lock/docker-lock-lib.sh`, so a
+ * service deploy script that inlines the first gets both). A per-expansion `seen` set drops
+ * a path already inlined in the same tree, guarding against cycles and diamonds. It starts
+ * empty at every marker line, so two markers in one script that reach the same library inline
+ * it twice — a script must not repeat what the library it inlines already brings.
  *
  * The single source of truth stays the file under `common/`; materialization
  * inlines a copy. Scripts that use a marker are always run materialized (from the
@@ -41,8 +43,15 @@ fun AbstractCopyTask.inlineCommonShellIncludes() {
   // scripts that inline it (the task would stay up-to-date on its source dir alone).
   // Listed as concrete files (not a tree rooted at `common/`, which would overlap the
   // build outputs of common subprojects and trip Gradle's implicit-dependency check).
-  inputs.files(InlinableLibraries.map { commonDir.resolve(it) }.filter { it.isFile })
-    .withPropertyName("inlinedCommonShellIncludes")
+  inputs.files(
+    InlinedLibraryInputs.map { relativePath ->
+      commonDir.resolve(relativePath).also {
+        // A renamed library that keeps its old entry here would inline fine and never
+        // re-materialize, so the hosts would keep deploying the copy made before the rename.
+        require(it.isFile) { "Declared inlinable library does not exist: ${it.absolutePath}" }
+      }
+    }
+  ).withPropertyName("inlinedCommonShellIncludes")
 
   doFirst {
     filter { line ->
@@ -64,7 +73,7 @@ internal fun expandShellInclude(
   indent: String,
   seen: MutableSet<String>,
 ): String {
-  if (!seen.add(relativePath)) {
+  if (seen.add(relativePath).not()) {
     return "$indent# @inline: $relativePath (already inlined above)"
   }
 
@@ -91,21 +100,25 @@ internal fun expandShellInclude(
 }
 
 /**
- * The shared shell snippets that may be inlined via `# @inline:`, relative to
- * `:internal:infrastructure:common`. Declared as task inputs so editing one
- * re-materializes the scripts that inline it. Add new entries here.
+ * The shared shell snippets reached by an `# @inline:` marker, relative to
+ * `:internal:infrastructure:common`. This is the task's input list, not an allowlist:
+ * [expandShellInclude] resolves any path under `common/`, so a library missing here still inlines
+ * correctly and only leaves the materialization task up-to-date after an edit to it. Add new
+ * entries here; `ShellIncludeInliningTest` fails when a marker in the repository names a library
+ * this list does not.
  *
  * Most entries are sourced libraries; `gitlab-runner/cleanup-runner-cache.sh` (run by cron on the
  * worker/git hosts) and `host-maintenance/install-maintenance-cron.sh` (piped to the host during
  * its deploy) are standalone scripts inlined into a per-host copy, so the single source under
  * `common/` stays canonical.
  */
-private val InlinableLibraries: List<String> = listOf(
+internal val InlinedLibraryInputs: List<String> = listOf(
   "secret-masking/secret-masking-lib.sh",
   "docker-lock/docker-lock-lib.sh",
   "compose-up/compose-up-lib.sh",
   "host-provisioning/provision-lib.sh",
   "host-deploy/deploy-host-lib.sh",
+  "host-keys/authorized-keys-lib.sh",
   "service-deploy/deploy-service-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
   "host-maintenance/install-maintenance-cron.sh",

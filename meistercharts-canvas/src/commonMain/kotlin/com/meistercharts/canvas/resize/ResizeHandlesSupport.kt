@@ -21,6 +21,7 @@ import it.neckar.geometry.Distance
 import it.neckar.geometry.HorizontalAlignment
 import it.neckar.geometry.Rectangle
 import it.neckar.geometry.VerticalAlignment
+import it.neckar.open.kotlin.lang.requireNotNull
 import it.neckar.open.unit.other.px
 
 
@@ -35,7 +36,7 @@ import it.neckar.open.unit.other.px
  * Each layer may register a [ResizeHandler]. The layer is only notified about resize events for its
  * resizable.
  *
- * Hot it works:
+ * How it works:
  * 1. a handler that recognizes resize-events (typically a [ResizeByHandlesLayer])
  * calls [notifyResize] every time it detects a resize
  * 2. a [Layer] with potentially resizable content passes itself and a [ResizeHandler] to [onResize].
@@ -50,9 +51,7 @@ class ResizeHandlesSupport {
    * Overwrites previous values set by other layers (if there are any).
    */
   fun setResizable(layer: Layer, bounds: Rectangle) {
-    if (resizeHandlers[layer] == null) {
-      throw IllegalStateException("Register the resize handler for layer $layer first")
-    }
+    check(resizeHandlers[layer] != null) { "Register the resize handler for layer $layer first" }
 
     this.resizableContentBounds = bounds
     this.resizableContentLayer = layer
@@ -115,14 +114,14 @@ class ResizeHandlesSupport {
   }
 
   /**
-   * Is called on a drag event
+   * Is called on a drag event with the gesture's total distance - see [ResizeHandler.resizing] for the contract.
    */
-  fun notifyResize(handleDirection: Direction, distance: @px Distance) {
-    //set values to 0.0 if a center handle is selected
-    val deltaX = if (handleDirection.horizontalAlignment == HorizontalAlignment.Center) 0.0 else distance.x
-    val deltaY = if (handleDirection.verticalAlignment == VerticalAlignment.Center) 0.0 else distance.y
+  fun notifyResize(handleDirection: Direction, totalDistance: @px Distance) {
+    //A center handle moves only the one edge it sits on - the other axis keeps its size
+    val totalX = if (handleDirection.horizontalAlignment == HorizontalAlignment.Center) 0.0 else totalDistance.x
+    val totalY = if (handleDirection.verticalAlignment == VerticalAlignment.Center) 0.0 else totalDistance.y
 
-    currentResizeHandler().resizing(distance, handleDirection, deltaX, deltaY)
+    currentResizeHandler().resizing(totalDistance, handleDirection, totalX, totalY)
   }
 
   fun notifyResizingFinished() {
@@ -133,9 +132,7 @@ class ResizeHandlesSupport {
    * Returns the current resize handler - or throws an exception if there is none
    */
   private fun currentResizeHandler(): ResizeHandler {
-    requireNotNull(resizableContentLayer) { "resizableContentLayer is required" }
-    val resizeHandler = this.resizeHandlers[resizableContentLayer]
-    requireNotNull(resizeHandler) { "resizeHandler not found for $resizableContentLayer" }
-    return resizeHandler
+    val layer = resizableContentLayer.requireNotNull { "resizableContentLayer is required" }
+    return resizeHandlers[layer].requireNotNull { "resizeHandler not found for $layer" }
   }
 }
