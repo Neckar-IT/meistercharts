@@ -290,12 +290,12 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
 
     // The event occurs when the pointer is moving while it is over an element
     canvasElement.addEventListener("mousemove", { event ->
-      notifyMouseMove(event.unsafeCast<MouseEvent>())
+      notifyMouseMoveOrDrag(event.unsafeCast<MouseEvent>())
     }, AddEventListenerOptions(passive = false))
 
     // The event occurs when the pointer is moved onto an element
     canvasElement.addEventListener("mouseenter", { event ->
-      notifyMouseEnter(event.unsafeCast<MouseEvent>())
+      notifyMouseMoveOrDrag(event.unsafeCast<MouseEvent>())
     }, AddEventListenerOptions(passive = false))
 
     // The event occurs when the pointer is moved out of an element
@@ -345,17 +345,13 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
     }
   }
 
-  private fun notifyMouseEnter(event: MouseEvent) {
-    MouseMoveEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
-      mouseEvents.notifyMove(it)
-        .cancelIfConsumed(event)
-    }
-  }
-
-  private fun notifyMouseMove(event: MouseEvent) {
-    val isPrimaryButton = event.buttons.toInt() and 1 == 1
-    if (isPrimaryButton) {
-      // treat as drag event
+  /**
+   * Serves `mousemove` and `mouseenter` alike: both have to answer whether the primary button is down, because a move
+   * is what tells CanvasDragSupport that a running gesture has been released.
+   */
+  private fun notifyMouseMoveOrDrag(event: MouseEvent) {
+    val primaryButtonIsDown = (event.buttons.toInt() and 1) == 1
+    if (primaryButtonIsDown) {
       MouseDragEvent(
         event.timeStampAsDoubleWorkaround, event.offset(),
         event.extractButton(),
@@ -365,7 +361,6 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
           .cancelIfConsumed(event)
       }
     } else {
-      // treat as "normal" mouse move event
       MouseMoveEvent(event.timeStampAsDoubleWorkaround, event.offset(), event.extractModifierCombination()).let {
         mouseEvents.notifyMove(it)
           .cancelIfConsumed(event)

@@ -1,5 +1,6 @@
 package it.neckar.gradle.report.warnings
 
+import it.neckar.gradle.report.events.RepositoryPaths
 import it.neckar.gradle.report.events.TaskOperationResolver
 import org.gradle.api.internal.tasks.execution.ExecuteTaskBuildOperationType
 import org.gradle.api.logging.LogLevel
@@ -40,12 +41,13 @@ import java.io.File
  * fragments on disk accumulate across builds and do hold that total — see [KotlinWarningFragments].
  */
 class KotlinWarningCapture(
-  private val repositoryRoot: File,
+  repositoryRoot: File,
   /** Where the per-compilation fragments are written. See [KotlinWarningFragments]. */
   private val fragmentDirectory: File,
   private val buildOperationListenerManager: BuildOperationListenerManager,
 ) {
 
+  private val paths = RepositoryPaths(repositoryRoot)
   private val resolver = TaskOperationResolver()
   private val collector = KotlinWarningCollector()
 
@@ -61,7 +63,7 @@ class KotlinWarningCapture(
       val target = KotlinCompileTask.targetOrNull(taskPath) ?: return
 
       text.lineSequence().forEach { line ->
-        KotlinWarningParser.parse(line, taskPath.modulePath(), target, repositoryRoot)?.let { collector.record(taskPath, it) }
+        KotlinWarningParser.parse(line, taskPath.modulePath(), target, paths)?.let { collector.record(taskPath, it) }
       }
     }
 

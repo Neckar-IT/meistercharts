@@ -32,6 +32,7 @@ import com.meistercharts.canvas.resizeHandlesSupport
 import com.meistercharts.events.EventConsumption
 import com.meistercharts.events.gesture.CanvasDragSupport
 import com.meistercharts.events.gesture.connectedMouseEventHandler
+import it.neckar.events.MouseDownEvent
 import it.neckar.events.MouseMoveEvent
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Direction
@@ -69,56 +70,74 @@ class ResizeByHandlesLayer : AbstractLayer() {
   private val handleBounds = BoundsMultiBuffer()
   private var handlesVisible = false
 
-  val dragSupport: CanvasDragSupport = CanvasDragSupport().also {
+  /**
+   * Ends a gesture whose release never arrived. Going through [DefaultState] separates it from the gesture the press
+   * starts - a press on the same handle would otherwise assign an equal state and notify nobody.
+   */
+  private fun endRunningGesture() {
+    if (uiState is DraggingHandle) {
+      uiState = DefaultState
+    }
+  }
+
+  private val dragSupport: CanvasDragSupport = CanvasDragSupport().also {
     it.handle(object : CanvasDragSupport.Handler {
       override fun isDraggingAllowedFromHere(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): Boolean {
-        if (handlesVisible.not()) return false
-
-        val handleIndex = handleBounds.findIndex(location) ?: return false
-        uiState = uiState.startDragging(handleIndex.toDirection())
+        val handleDirection = findHandleDirection(location) ?: return false
+        uiState = DraggingHandle(handleDirection)
         return true
       }
 
       override fun onDrag(source: CanvasDragSupport, location: Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
-        require(handlesVisible) { "handlesVisible is false" }
+        //The drag support outlives the gesture: the resizable can vanish under a pointer that is still down
+        val dragging = uiState as? DraggingHandle ?: return EventConsumption.Ignored
 
-        chartSupport.resizeHandlesSupport.notifyResize((uiState as DraggingHandle).handleDirection, source.totalDistanceTo(location))
+        chartSupport.resizeHandlesSupport.notifyResize(dragging.handleDirection, source.totalDistanceTo(location))
         return EventConsumption.Consumed
       }
 
       override fun onFinish(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): EventConsumption {
-        require(handlesVisible) { "handlesVisible is false" }
+        //A release that ends no gesture of this layer belongs to the layers below
+        if (uiState !is DraggingHandle) return EventConsumption.Ignored
 
-        val hoverHandleDirection = handleBounds.findIndex(location)?.toDirection()
-        uiState = uiState.finishedDragging(hoverHandleDirection)
+        //The gesture is over - what is left is the hover under the pointer
+        uiState = DefaultState.hoveringAboveHandle(findHandleDirection(location))
         return EventConsumption.Consumed
       }
     })
   }
 
   /**
-   * A mouse event handler that can be registered at the layer
+   * Three delegates, one job each. The drag support sits between them: a press has to end the leftover gesture before
+   * it starts the next, and the hover behind it consumes moves above a handle, which would hide them from the drag.
    */
   override val mouseEventHandler: CanvasMouseEventHandler = CanvasMouseEventHandlerBroker().apply {
-    /**
-     * Update the mouse cursor first
-     */
     delegate(
       object : CanvasMouseEventHandler {
-        override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
-          val coordinates = event.coordinates ?: return super.onMove(event, chartSupport)
-
-          val handleDirection = getHandleDirection(coordinates)
-          uiState = uiState.hoveringAboveHandle(handleDirection)
-
-          //Consume the event, if over a handle
-          return if (handleDirection != null) EventConsumption.Consumed else EventConsumption.Ignored
+        /**
+         * See [endRunningGesture]. The press itself belongs to whoever it hits, on a handle or not.
+         */
+        override fun onDown(event: MouseDownEvent, chartSupport: ChartSupport): EventConsumption {
+          endRunningGesture()
+          return EventConsumption.Ignored
         }
       }
     )
 
-    //Delegate the drag support
     delegate(dragSupport.connectedMouseEventHandler())
+
+    delegate(
+      object : CanvasMouseEventHandler {
+        override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
+          //A move without coordinates is the pointer leaving the canvas - above no handle, like a move away from one
+          val handleDirection = event.coordinates?.let { findHandleDirection(it) }
+          uiState = uiState.hoveringAboveHandle(handleDirection)
+
+          //An armed handle belongs to this layer alone - the layers below must not react to the move that armed it
+          return if (handleDirection != null) EventConsumption.Consumed else EventConsumption.Ignored
+        }
+      }
+    )
   }
 
   /**
@@ -185,11 +204,12 @@ class ResizeByHandlesLayer : AbstractLayer() {
   override fun layout(paintingContext: LayerPaintingContext) {
     super.layout(paintingContext)
 
-    val resizeHandlesSupport = paintingContext.chartSupport.resizeHandlesSupport
-    val contentBounds = resizeHandlesSupport.resizableContentBounds
+    val contentBounds = paintingContext.chartSupport.resizeHandlesSupport.resizableContentBounds(paintingContext.loopIndex)
     handlesVisible = contentBounds != null
 
-    if (handlesVisible.not() || contentBounds == null) {
+    if (contentBounds == null) {
+      //No handles left to gesture on or hover above - the element was deleted or deselected
+      uiState = DefaultState
       return
     }
 
@@ -241,13 +261,8 @@ class ResizeByHandlesLayer : AbstractLayer() {
     }
   })
 
-  /**
-   * Paints the handles
-   */
   override fun paint(paintingContext: LayerPaintingContext) {
-    val resizeHandlesSupport = paintingContext.chartSupport.resizeHandlesSupport
-    if (resizeHandlesSupport.resizableContentBounds == null) {
-      //No bounds found - do not paint
+    if (handlesVisible.not()) {
       return
     }
 
@@ -298,9 +313,9 @@ class ResizeByHandlesLayer : AbstractLayer() {
   }
 
   /**
-   * Returns the handle direction at the given coordinates
+   * Returns the handle direction at the given coordinates - null when no handle is there, or none is shown at all
    */
-  fun getHandleDirection(location: Coordinates): Direction? {
+  private fun findHandleDirection(location: Coordinates): Direction? {
     if (handlesVisible.not()) return null
 
     val foundIndex = handleBounds.findIndex(location) ?: return null

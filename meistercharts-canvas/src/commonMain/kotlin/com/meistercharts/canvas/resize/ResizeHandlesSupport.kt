@@ -16,6 +16,7 @@
 package com.meistercharts.canvas.resize
 
 import com.meistercharts.algorithms.layers.Layer
+import com.meistercharts.loop.PaintingLoopIndex
 import it.neckar.geometry.Direction
 import it.neckar.geometry.Distance
 import it.neckar.geometry.HorizontalAlignment
@@ -42,19 +43,24 @@ import it.neckar.open.unit.other.px
  * 2. a [Layer] with potentially resizable content passes itself and a [ResizeHandler] to [onResize].
  * That handler resizes the content when it gets notified about a resize event.
  * 3. the [Layer] passes itself and the current bounds of the resizable content to [setResizable]
- * everytime its layout-function is called.
+ * everytime its layout-function is called - before the [ResizeByHandlesLayer] lays out, which otherwise
+ * never sees a registration.
  * 4. the [Layer] calls [clear] when its content is no longer resizable.
+ *
+ * A registration counts for the paint loop it was made in. A layer that stops laying out at all - because it
+ * is hidden, for example - therefore loses its handles although it never reaches its [clear].
  */
 class ResizeHandlesSupport {
   /**
-   * Registers the resizable object.
+   * Registers the resizable object for [loopIndex].
    * Overwrites previous values set by other layers (if there are any).
    */
-  fun setResizable(layer: Layer, bounds: Rectangle) {
+  fun setResizable(layer: Layer, bounds: Rectangle, loopIndex: PaintingLoopIndex) {
     check(resizeHandlers[layer] != null) { "Register the resize handler for layer $layer first" }
 
     this.resizableContentBounds = bounds
     this.resizableContentLayer = layer
+    this.resizableContentLoopIndex = loopIndex
   }
 
   /**
@@ -63,16 +69,30 @@ class ResizeHandlesSupport {
   private val resizeHandlers: MutableMap<Layer, ResizeHandler?> = mutableMapOf()
 
   /**
-   * The content bounds for resizable.
+   * The content bounds of the last registration - only valid for [resizableContentLoopIndex].
    */
-  var resizableContentBounds: Rectangle? = null
-    private set
+  private var resizableContentBounds: Rectangle? = null
 
   /**
-   * The layer that has set the resizable content.
-   * The layer is required to be able to notify the correct layer about resize events
+   * The paint loop [resizableContentBounds] was registered in.
+   */
+  private var resizableContentLoopIndex: PaintingLoopIndex = PaintingLoopIndex.Unknown
+
+  /**
+   * The layer that has set the resizable content last. Outlives its [resizableContentBounds] - see [clear].
    */
   private var resizableContentLayer: Layer? = null
+
+  /**
+   * Returns the content bounds for the resizable - null if no layer has registered one in [loopIndex].
+   */
+  fun resizableContentBounds(loopIndex: PaintingLoopIndex): Rectangle? {
+    if (resizableContentLoopIndex != loopIndex) {
+      return null
+    }
+
+    return resizableContentBounds
+  }
 
   /**
    * Registers the resize handler that is notified on a resize event
@@ -82,13 +102,12 @@ class ResizeHandlesSupport {
   }
 
   /**
-   * Clears the resizable selection for the given layer
+   * Clears the resizable selection for the given layer. The layer stays the one that is notified: a gesture on the
+   * vanished resizable ends one layout later, and that notification has to reach the handler that began it.
    */
   fun clear(layer: Layer) {
     if (layer == resizableContentLayer) {
-      //Only delete content bounds, if this layer has set these values
       resizableContentBounds = null
-      resizableContentLayer = null
     }
   }
 

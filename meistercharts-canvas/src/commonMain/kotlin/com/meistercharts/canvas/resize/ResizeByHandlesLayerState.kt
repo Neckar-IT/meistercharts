@@ -18,29 +18,14 @@ package com.meistercharts.canvas.resize
 import it.neckar.geometry.Direction
 
 /**
- * The ui state of the resize by handles layer
+ * The ui state of the resize by handles layer. [DraggingHandle] is what says a gesture runs; a move above a handle is
+ * the only decision this type makes.
  */
 sealed interface ResizeByHandlesLayerState {
   /**
-   * Is called if there is a move above a handle
+   * Is called on every move, with the handle the pointer is above - null when it is above none
    */
-  fun hoveringAboveHandle(handleDirection: Direction?): ResizeByHandlesLayerState {
-    throw UnsupportedOperationException("hoveringAboveHandle not supported for $this")
-  }
-
-  /**
-   * Is called when started dragging on a handle
-   */
-  fun startDragging(handleDirection: Direction): ResizeByHandlesLayerState {
-    throw UnsupportedOperationException("startDragging not supported for $this")
-  }
-
-  /**
-   * is called when finished dragging a handle
-   */
-  fun finishedDragging(hoverHandleDirection: Direction?): ResizeByHandlesLayerState {
-    throw UnsupportedOperationException("finishedDragging not supported for $this")
-  }
+  fun hoveringAboveHandle(handleDirection: Direction?): ResizeByHandlesLayerState
 }
 
 /**
@@ -54,11 +39,6 @@ data object DefaultState : ResizeByHandlesLayerState {
 
     return HoveringOverHandle(handleDirection)
   }
-
-  override fun startDragging(handleDirection: Direction): DraggingHandle {
-    return DraggingHandle(handleDirection)
-  }
-
 }
 
 /**
@@ -80,10 +60,6 @@ data class HoveringOverHandle(
     return HoveringOverHandle(handleDirection)
   }
 
-  override fun startDragging(handleDirection: Direction): DraggingHandle {
-    return DraggingHandle(handleDirection)
-  }
-
   override fun toString(): String {
     return "Hovering above handle $handleDirection"
   }
@@ -93,20 +69,11 @@ data class HoveringOverHandle(
  * Currently dragging the handle
  */
 data class DraggingHandle(val handleDirection: Direction) : ResizeByHandlesLayerState {
-  override fun finishedDragging(hoverHandleDirection: Direction?): ResizeByHandlesLayerState {
-    if (hoverHandleDirection == null) {
-      return DefaultState
-    }
-
-    return HoveringOverHandle(hoverHandleDirection)
-  }
-
+  /**
+   * A running gesture survives every move - [ResizeByHandlesLayer] is what ends it.
+   */
   override fun hoveringAboveHandle(handleDirection: Direction?): ResizeByHandlesLayerState {
-    if (handleDirection == null) {
-      return this
-    }
-
-    return HoveringOverHandle(handleDirection)
+    return this
   }
 
   override fun toString(): String {

@@ -31,6 +31,7 @@ import com.meistercharts.events.EventConsumption.Ignored
 import it.neckar.events.ModifierCombination
 import it.neckar.events.MouseDownEvent
 import it.neckar.events.MouseDragEvent
+import it.neckar.events.MouseMoveEvent
 import it.neckar.events.MouseUpEvent
 import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
@@ -133,9 +134,7 @@ class CanvasDragSupport {
       return Ignored
     }
 
-    if (dragging.not()) {
-      dragging = true
-    }
+    dragging = true
 
     //Notify about drag
     val location = currentLocation.requireNotNull { "No current mouse location available" }
@@ -151,18 +150,21 @@ class CanvasDragSupport {
   }
 
   /**
-   * The distance the pointer has covered since the press that started the running gesture.
-   *
-   * Available in [Handler.isDraggingAllowedFromHere] and [Handler.onDrag]. Not in [Handler.onFinish]: [finishDragging]
-   * resets before it notifies, so a handler that needs the press location at the end keeps its own copy.
+   * The distance the pointer has covered since the press that started the running gesture. Available in
+   * [Handler.isDraggingAllowedFromHere] and [Handler.onDrag] - [finishDragging] resets before it notifies [Handler.onFinish].
    */
   fun totalDistanceTo(location: @Window Coordinates): @Zoomed Distance {
     return location.delta(gestureStartLocation.requireNotNull { "No gesture is running" })
   }
 
+  /**
+   * Ends a running gesture. The consumption belongs to the event that ended it, so callers that only need the
+   * side-effect may ignore the return.
+   */
+  @IgnorableReturnValue
   fun finishDragging(coordinates: Coordinates, chartSupport: ChartSupport): EventConsumption {
-    if (dragging.not() && preparedForDragging.not()) {
-      //no dragging - ignore event
+    if (preparedForDragging.not()) {
+      //No press to end - dragging is only ever set after this very flag
       return Ignored
     }
 
@@ -174,9 +176,6 @@ class CanvasDragSupport {
     } ?: Ignored
   }
 
-  /**
-   * Resets all values to.
-   */
   fun reset() {
     preparedForDragging = false
     dragging = false
@@ -225,13 +224,11 @@ class CanvasDragSupport {
 
     /**
      * Is called if a drag has been detected
-     * @return true if the event should be consumed
      */
     fun onDrag(source: CanvasDragSupport, @Window location: Coordinates, @Zoomed distance: Distance, @ms deltaTime: Double, chartSupport: ChartSupport): EventConsumption
 
     /**
      * Is called if a drag has been finished
-     * @return true if the event should be consumed
      */
     fun onFinish(source: CanvasDragSupport, @Window location: Coordinates, chartSupport: ChartSupport): EventConsumption {
       //Usually the event is consumed on finished
@@ -251,6 +248,18 @@ fun CanvasDragSupport.connectedMouseEventHandler(modifierCombination: () -> Modi
       }
 
       return prepareForDragging(event.coordinates, event.timestamp, chartSupport)
+    }
+
+    /**
+     * A move over the canvas carries no pressed button, so it reports the release of a gesture whose own release
+     * never arrived. A move without coordinates is the pointer leaving, which says nothing about the buttons.
+     */
+    override fun onMove(event: MouseMoveEvent, chartSupport: ChartSupport): EventConsumption {
+      val location = event.coordinates ?: return Ignored
+
+      //The move stays a hover for the handlers behind this one, however the finish was answered
+      finishDragging(location, chartSupport)
+      return Ignored
     }
 
     override fun onDrag(event: MouseDragEvent, chartSupport: ChartSupport): EventConsumption {

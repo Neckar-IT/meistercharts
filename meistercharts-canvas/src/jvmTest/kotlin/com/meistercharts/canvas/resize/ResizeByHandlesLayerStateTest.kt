@@ -21,11 +21,6 @@ import it.neckar.geometry.Direction
 import org.junit.jupiter.api.Test
 
 class ResizeByHandlesLayerStateTest {
-  /**
-   * Pins that hovering moves to a different handle. Before the fix, the function
-   * returned `this` and ignored the new direction — a hover from handle A to
-   * handle B left the state at HoveringOverHandle(A).
-   */
   @Test
   fun `hovering moves between handles`() {
     val initial = DefaultState.hoveringAboveHandle(Direction.TopLeft)
@@ -44,7 +39,17 @@ class ResizeByHandlesLayerStateTest {
 
   @Test
   fun `hovering with null returns to DefaultState`() {
+    assertThat(DefaultState.hoveringAboveHandle(null)).isSameInstanceAs(DefaultState)
+
     val state = HoveringOverHandle(Direction.TopLeft)
     assertThat(state.hoveringAboveHandle(null)).isEqualTo(DefaultState)
+  }
+
+  @Test
+  fun `a move during a gesture belongs to that gesture`() {
+    val dragging = DraggingHandle(Direction.TopLeft)
+
+    assertThat(dragging.hoveringAboveHandle(null)).isSameInstanceAs(dragging)
+    assertThat(dragging.hoveringAboveHandle(Direction.BottomRight)).isSameInstanceAs(dragging)
   }
 }

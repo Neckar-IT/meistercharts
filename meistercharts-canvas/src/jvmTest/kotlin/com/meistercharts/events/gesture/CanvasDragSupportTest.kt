@@ -19,25 +19,29 @@ import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.MockCanvas
+import com.meistercharts.canvas.events.CanvasMouseEventHandler
 import com.meistercharts.events.EventConsumption
+import it.neckar.events.MouseButton
+import it.neckar.events.MouseDownEvent
+import it.neckar.events.MouseMoveEvent
 import it.neckar.geometry.Coordinates
 import it.neckar.geometry.Distance
 import org.junit.jupiter.api.Test
 
-/**
- * The gesture start is what lets a handler answer with the total distance of a gesture instead of the delta since the
- * last event.
- */
 class CanvasDragSupportTest {
 
   private val chartSupport: ChartSupport = ChartSupport(MockCanvas())
 
   private val press: Coordinates = Coordinates.of(100.0, 100.0)
 
+  private val handler: RecordingHandler = RecordingHandler(draggingAllowed = true)
+
+  private val dragSupport: CanvasDragSupport = CanvasDragSupport().also { it.handle(handler) }
+
+  private val mouseEventHandler: CanvasMouseEventHandler = dragSupport.connectedMouseEventHandler()
+
   @Test
   fun `the total distance is measured from the press, not from the previous event`() {
-    val dragSupport = allowingDragSupport()
-
     assertThat(dragSupport.prepareForDragging(press, 0.0, chartSupport)).isEqualTo(EventConsumption.Consumed)
     assertThat(dragSupport.dragging(press.plus(10.0, 10.0), 16.0, chartSupport)).isEqualTo(EventConsumption.Consumed)
 
@@ -46,8 +50,6 @@ class CanvasDragSupportTest {
 
   @Test
   fun `a finished gesture leaves no start behind`() {
-    val dragSupport = allowingDragSupport()
-
     assertThat(dragSupport.prepareForDragging(press, 0.0, chartSupport)).isEqualTo(EventConsumption.Consumed)
     assertThat(dragSupport.gestureStartLocation).isEqualTo(press)
 
@@ -57,28 +59,56 @@ class CanvasDragSupportTest {
 
   @Test
   fun `a rejected press starts no gesture`() {
-    val dragSupport = CanvasDragSupport().also { it.handle(RecordingHandler(draggingAllowed = false)) }
+    val rejecting = CanvasDragSupport().also { it.handle(RecordingHandler(draggingAllowed = false)) }
 
-    assertThat(dragSupport.prepareForDragging(press, 0.0, chartSupport)).isEqualTo(EventConsumption.Ignored)
-    assertThat(dragSupport.gestureStartLocation).isNull()
+    assertThat(rejecting.prepareForDragging(press, 0.0, chartSupport)).isEqualTo(EventConsumption.Ignored)
+    assertThat(rejecting.gestureStartLocation).isNull()
   }
 
+  /**
+   * The gesture start is what lets a handler answer with the total distance instead of the delta since the last event.
+   */
   @Test
   fun `the start is available while the press is still being answered`() {
-    val handler = RecordingHandler(draggingAllowed = true)
-    val dragSupport = CanvasDragSupport().also { it.handle(handler) }
-
     assertThat(dragSupport.prepareForDragging(press, 0.0, chartSupport)).isEqualTo(EventConsumption.Consumed)
 
     assertThat(handler.startSeenOnPress).isEqualTo(press)
   }
 
-  private fun allowingDragSupport(): CanvasDragSupport {
-    return CanvasDragSupport().also { it.handle(RecordingHandler(draggingAllowed = true)) }
+  @Test
+  fun `a move over the canvas ends a running gesture`() {
+    pressPrimaryButton()
+
+    assertThat(mouseEventHandler.onMove(MouseMoveEvent(16.0, press.plus(10.0, 10.0)), chartSupport)).isEqualTo(EventConsumption.Ignored)
+
+    assertThat(handler.finishCount).isEqualTo(1)
+    assertThat(dragSupport.gestureStartLocation).isNull()
+  }
+
+  @Test
+  fun `leaving the canvas keeps a running gesture`() {
+    pressPrimaryButton()
+
+    assertThat(mouseEventHandler.onMove(MouseMoveEvent(16.0, null), chartSupport)).isEqualTo(EventConsumption.Ignored)
+
+    assertThat(handler.finishCount).isEqualTo(0)
+    assertThat(dragSupport.gestureStartLocation).isEqualTo(press)
+  }
+
+  @Test
+  fun `a move without a gesture ends nothing`() {
+    assertThat(mouseEventHandler.onMove(MouseMoveEvent(16.0, press), chartSupport)).isEqualTo(EventConsumption.Ignored)
+
+    assertThat(handler.finishCount).isEqualTo(0)
+  }
+
+  private fun pressPrimaryButton() {
+    assertThat(mouseEventHandler.onDown(MouseDownEvent(0.0, press, MouseButton.Primary), chartSupport)).isEqualTo(EventConsumption.Consumed)
   }
 
   private class RecordingHandler(val draggingAllowed: Boolean) : CanvasDragSupport.Handler {
     var startSeenOnPress: Coordinates? = null
+    var finishCount: Int = 0
 
     override fun isDraggingAllowedFromHere(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): Boolean {
       startSeenOnPress = source.gestureStartLocation
@@ -86,6 +116,11 @@ class CanvasDragSupportTest {
     }
 
     override fun onDrag(source: CanvasDragSupport, location: Coordinates, distance: Distance, deltaTime: Double, chartSupport: ChartSupport): EventConsumption {
+      return EventConsumption.Consumed
+    }
+
+    override fun onFinish(source: CanvasDragSupport, location: Coordinates, chartSupport: ChartSupport): EventConsumption {
+      finishCount++
       return EventConsumption.Consumed
     }
   }

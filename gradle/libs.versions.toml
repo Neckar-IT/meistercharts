@@ -54,7 +54,7 @@ org-slf4j = "2.0.18"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.11"
+net-bytebuddy = "1.18.12"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.41"
+aws-sdk-kotlin = "1.8.44"
 
 apache-poi = "5.5.1"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.7"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.10"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -663,7 +663,7 @@ ktor-utils = { group = "io.ktor", name = "ktor-utils", version.ref = "ktor" }
 
 ktor-websockets = { group = "io.ktor", name = "ktor-websockets", version.ref = "ktor" }
 
-lombok = "org.projectlombok:lombok:1.18.46"
+lombok = "org.projectlombok:lombok:1.18.48"
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
