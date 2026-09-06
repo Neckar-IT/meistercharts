@@ -56,11 +56,8 @@ import kotlin.time.Duration.Companion.seconds
  * `internal/closed/auth.neckar.it/integration-guide.md` for the reproduction commands.
  */
 fun AbstractCopyTask.expandOidcMiddlewareLabels() {
-  // Fingerprint the generated block as task input — a change to the generator must re-materialize
-  // consumers, and no source file of theirs reflects it.
-  // Every optional parameter appears in [FingerprintDirectives], otherwise a change to a label
-  // only some directives produce would leave this property untouched: Gradle would call the
-  // materialization up to date and the edit would never reach a server.
+  // No consumer's source reflects a generator change, so the generated block is the task input —
+  // and every optional parameter belongs in [FingerprintDirectives], or its label never moves it.
   inputs.property(
     "oidcMiddlewareLabelBlock",
     FingerprintDirectives.joinToString("\n") { expandOidcMiddlewareDirective(it) },
@@ -148,6 +145,7 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
     value.toIntOrNull().requireNotNull {
       "@oidc-middleware parameter session-max-age must be an integer (seconds) but was [$value] in [$line]"
     }.also { parsed ->
+      // Checked here rather than only in [OidcMiddlewareOptions], so the message names the directive line.
       require(parsed > 0) { "@oidc-middleware parameter session-max-age must be > 0 but was [$parsed] in [$line]" }
     }
   }?.seconds ?: OidcMiddlewareOptions.DefaultSessionMaxAge
@@ -159,8 +157,9 @@ internal fun expandOidcMiddlewareDirective(line: String): String {
     callbackUri = callbackUri?.let { CallbackUri(it) },
     sessionMaxAge = sessionMaxAge,
     tokenForwarding = if (forwardToken == BearerForwardToken) TokenForwarding.Bearer else TokenForwarding.None,
-    claimAssertion = if (assertedClaim == null || acceptedValues == null) null else
-      ClaimAssertion(ClaimName(assertedClaim), acceptedValues.split(",").map { ClaimValue(it) }),
+    claimAssertion = assertedClaim?.let { claim ->
+      ClaimAssertion(ClaimName(claim), acceptedValues.requireNotNull { "unreachable: any-of is required alongside assert-claim" }.split(",").map { ClaimValue(it) })
+    },
   )
 
   return buildList {

@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.44"
+aws-sdk-kotlin = "1.8.46"
 
 apache-poi = "5.5.1"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.10"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.12"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -429,7 +429,7 @@ jfoenix = "com.jfoenix:jfoenix:9.0.10"
 
 fontawesomefx = "de.jensd:fontawesomefx:8.9"
 
-controlsfx = "org.controlsfx:controlsfx:11.2.4"
+controlsfx = "org.controlsfx:controlsfx:11.2.5"
 
 tilesfx = "eu.hansolo:tilesfx:21.0.9"
 
