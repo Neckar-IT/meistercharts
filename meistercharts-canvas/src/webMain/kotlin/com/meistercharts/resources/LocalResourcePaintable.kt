@@ -37,9 +37,12 @@ actual class LocalResourcePaintable actual constructor(
 ) : Paintable, AbstractDelegatingPaintable() {
 
   /**
-   * The paintable that is used
+   * The paintable that is used. The image is requested over the network, so the path is resolved
+   * against [LocalResources.basePath].
    */
-  override val delegate: Paintable = if (size != null) UrlPaintable.fixedSize(relativePath, size, alignmentPoint) else UrlPaintable.naturalSize(relativePath, alignmentPoint)
+  override val delegate: Paintable = LocalResources.resolve(relativePath).let { url ->
+    if (size != null) UrlPaintable.fixedSize(url, size, alignmentPoint) else UrlPaintable.naturalSize(url, alignmentPoint)
+  }
 
   actual fun withSize(size: Size): LocalResourcePaintable {
     return LocalResourcePaintable(relativePath, size, alignmentPoint)
