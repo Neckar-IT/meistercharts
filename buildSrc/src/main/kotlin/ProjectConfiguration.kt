@@ -1,4 +1,4 @@
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import dev.detekt.gradle.extensions.DetektExtension
 import it.neckar.gradle.JvmType
 import it.neckar.gradle.Plugins
 import it.neckar.gradle.applyMultiplatformKotlinConfiguration
@@ -12,6 +12,7 @@ import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -75,8 +76,8 @@ fun Project.configureDetekt(additionalConfig: DetektExtension.() -> Unit) {
     additionalConfig()
   }
 
-  plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
-    tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) {
+  plugins.withType(dev.detekt.gradle.plugin.DetektPlugin::class) {
+    tasks.withType(dev.detekt.gradle.Detekt::class) {
       reports {
         html.required.set(true)
       }

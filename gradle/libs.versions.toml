@@ -58,7 +58,7 @@ net-bytebuddy = "1.18.12"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
-io-gitlab-arturbosch-detekt = "2.0.0-alpha.6"
+dev-detekt = "2.0.0-alpha.6"
 
 # detekt-gitlab-report: Detekt plugin that emits an extra Code-Climate-format
 # JSON. Hosted on the plugin author's GitLab Maven repo (see settings.gradle.kts).
@@ -236,7 +236,7 @@ kotlin-scripting-compiler-embeddable = { group = "org.jetbrains.kotlin", name = 
 
 kotlin-serialization-compiler-plugin-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-serialization-compiler-plugin-embeddable", version.ref = "kotlin" }
 
-guice = "com.google.inject:guice:6.0.0"
+guice = "com.google.inject:guice:7.0.0"
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 
@@ -271,8 +271,8 @@ javax-inject = "javax.inject:javax.inject:1"
 javax-annotation-api = "javax.annotation:javax.annotation-api:1.3.2"
 
 
-detekt-api = { group = "dev.detekt", name = "detekt-api", version.ref = "io-gitlab-arturbosch-detekt" }
-detekt-test = { group = "dev.detekt", name = "detekt-test", version.ref = "io-gitlab-arturbosch-detekt" }
+detekt-api = { group = "dev.detekt", name = "detekt-api", version.ref = "dev-detekt" }
+detekt-test = { group = "dev.detekt", name = "detekt-test", version.ref = "dev-detekt" }
 detekt-gitlab-report = { group = "com.gitlab.cromefire", name = "detekt-gitlab-report", version.ref = "com-gitlab-cromefire-detekt-gitlab-report" }
 
 kotlin-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin" }
@@ -686,7 +686,7 @@ trove4j = "net.sf.trove4j:trove4j:3.0.3"
 
 # Gradle plugin dependencies (used in buildSrc/build.gradle.kts)
 
-detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
+detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "dev-detekt" }
 
 jib-core = "com.google.cloud.tools:jib-core:0.28.2"
 

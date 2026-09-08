@@ -13,7 +13,7 @@ class GitlabCiInformation(private val env: Map<String, String?>) {
     get() = env.containsKey("GITLAB_CI")
 
   /**
-   * Returns true if the given pipeline-schedule env variable (e.g. `SCHEDULE_E2E_TESTS`) is set to `"true"`.
+   * Returns true if the given pipeline-schedule env variable (e.g. `SCHEDULE_RUN_MEISTERCHARTS_E2E_TESTS`) is set to `"true"`.
    */
   fun inSchedule(scheduleVariableName: String): Boolean {
     return env.getOrDefault(scheduleVariableName, "false").equals("true")

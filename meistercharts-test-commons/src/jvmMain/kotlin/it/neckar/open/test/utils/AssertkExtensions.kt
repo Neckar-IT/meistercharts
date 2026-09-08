@@ -323,7 +323,7 @@ fun <T> Assert<T?>.isNotNullAnd(assertions: Assert<T & Any>.() -> Unit) {
  * Example:
  * ```
  * assertThat(loaded.editions).hasSingleElement {
- *   prop(BookEdition::copies).isEqualTo(Edition.Copies(5000))
+ *   prop(Edition::copies).isEqualTo(Count(5000))
  * }
  * ```
  */

@@ -37,9 +37,11 @@ package it.neckar.open.collections
  *
  * 1. Implement `Selection<I, MySelection.Entry>` and add a nested `Entry` data class implementing `Selection.Entry<I>`.
  * 2. Allow `amount = 0` as a legitimate UI intermediate state. Use [entriesNonEmpty] to filter when displaying or persisting.
- * 3. Provide `with(item: I, amount: Int): Self` that upserts (`amount = 0` keeps the entry, `amount < 0` throws).
- * 4. Provide `companion object { fun empty(); operator fun invoke(item: I, amount: Int = 1) }`.
- * 5. Domain-specific aggregates (`totalPriceAt`, `totalWeight`, ...) are added per Selection — this interface only carries universal aggregates.
+ * 3. Provide `with(item, amount): Self` that upserts (`amount = 0` keeps the entry, `amount < 0` is refused).
+ * 4. Provide `companion object { fun empty(); operator fun invoke(item, amount) }` defaulting to one.
+ * 5. An entry whose amount is a value class stores it under its own name and derives [Entry.amount]
+ *    from it — the value class then carries the invariant. See the pattern doc.
+ * 6. Domain-specific aggregates (`totalPriceAt`, `totalWeight`, ...) are added per Selection — this interface only carries universal aggregates.
  *
  * See `internal/patterns/docs/kotlin/selection-with-aggregates.md` and the
  * `BookOrder` living example in the patterns project.

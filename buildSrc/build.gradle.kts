@@ -1,6 +1,9 @@
 @file:Suppress("SpellCheckingInspection")
 
-val kotlinVersion: String = "2.4.10"
+// A buildSrc build script gets no type-safe `libs.versions` accessor.
+val applicationKotlinVersion: String =
+  extensions.getByType(org.gradle.api.artifacts.VersionCatalogsExtension::class.java)
+    .named("libs").findVersion("kotlin").get().requiredVersion
 
 plugins {
   `kotlin-dsl`
@@ -44,17 +47,17 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
   // The .env rules copied in by populateBuildSrc read the file system through kotlinx-io.
   implementation(libs.kotlinx.io.core)
-  implementation(kotlin("gradle-plugin", kotlinVersion))
-  implementation(kotlin("serialization", kotlinVersion))
+  implementation(kotlin("gradle-plugin", applicationKotlinVersion))
+  implementation(kotlin("serialization", applicationKotlinVersion))
 
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
-  implementation("com.gradleup.shadow:shadow-gradle-plugin:9.6.1")
-  implementation("com.github.node-gradle:gradle-node-plugin:7.1.0")
-  implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
-  implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.9.9")
-  implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.11")
-  implementation("org.openjfx:javafx-plugin:0.1.0")
+  implementation(libs.shadow.gradle.plugin)
+  implementation(libs.node.gradle.plugin)
+  implementation(libs.detekt.gradle.plugin)
+  implementation(libs.kover.gradle.plugin)
+  implementation(libs.symbol.processing.gradle.plugin)
+  implementation(libs.javafx.plugin)
 
   testImplementation(libs.junit.jupiter.api)
 }
