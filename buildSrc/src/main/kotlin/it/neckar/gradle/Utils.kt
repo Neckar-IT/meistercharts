@@ -1204,6 +1204,13 @@ val Project.inCi: Boolean
   }
 
 /**
+ * Returns true in CI on the main branch — the one context that resolves everything the build needs
+ * from the network and fails instead of degrading gracefully.
+ */
+val Project.inCiOnMainBranch: Boolean
+  get() = inCi && onMainBranch
+
+/**
  * Returns true if the given pipeline-schedule env variable is set to `"true"`.
  *
  * Use the typed [ScheduleVariable] from [ScheduleVariable].
