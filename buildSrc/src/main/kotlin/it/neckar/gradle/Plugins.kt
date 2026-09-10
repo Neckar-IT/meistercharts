@@ -70,9 +70,9 @@ object Plugins {
   const val systemDependencies: String = "it.neckar.system-dependencies"
 
   /**
-   * Root-project counterpart: aggregates the declarations of all modules behind `verify` and
-   * writes both package lists that install them — the Ansible workstation setup's vars file and the
-   * CI image's list. See SystemDependenciesRootPlugin.
+   * Root-project counterpart: aggregates the declarations of the root build and every module behind
+   * `verify` and writes both package lists that install them — the Ansible workstation setup's vars
+   * file and the CI image's list. See SystemDependenciesRootPlugin.
    */
   const val systemDependenciesRoot: String = "it.neckar.system-dependencies-root"
 

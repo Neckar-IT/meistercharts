@@ -44,7 +44,7 @@ jvm-dependency-conflict-resolution = { id = "org.gradlex.jvm-dependency-conflict
 
 [versions]
 
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 
 org-asciidoctor = "4.0.5"
 
