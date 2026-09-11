@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.47"
+aws-sdk-kotlin = "1.8.48"
 
 apache-poi = "5.5.1"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.13"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.14"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -385,7 +385,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 
 cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4k", version.ref = "cache4k" }
 
-java-jwt = "com.auth0:java-jwt:4.6.0"
+java-jwt = "com.auth0:java-jwt:4.6.1"
 
 micrometer-core = { group = "io.micrometer", name = "micrometer-core", version.ref = "micrometer" }
 
@@ -393,7 +393,7 @@ junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-
 
 ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
 
-jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.16"
+jline-terminal-jansi = "org.jline:jline-terminal-jansi:3.30.17"
 
 gitlab4j-api = { group = "org.gitlab4j", name = "gitlab4j-api", version.ref = "gitlab4j" }
 

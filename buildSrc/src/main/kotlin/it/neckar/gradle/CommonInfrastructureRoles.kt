@@ -1,6 +1,8 @@
 package it.neckar.gradle
 
 import it.neckar.projects.Projects
+import org.gradle.api.file.CopySpec
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.AbstractCopyTask
 
 /**
@@ -30,7 +32,7 @@ private class CommonInfrastructureRole(
 
 private val CommonTraefikCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.Traefik.sourceSubdir,
-  includePattern = "docker-compose-common-*.yml",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
@@ -54,19 +56,19 @@ private val CommonOtelAgentCompose = CommonInfrastructureRole(
 
 private val CommonHostExportersCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.HostExporters.sourceSubdir,
-  includePattern = "*.yml",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
 private val CommonHostManagementCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.HostManagement.sourceSubdir,
-  includePattern = "docker-compose-common-*.yml",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
 private val CommonHostLogsCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.HostLogs.sourceSubdir,
-  includePattern = "docker-compose-common-*.yml",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
@@ -78,19 +80,13 @@ private val CommonWorkerHostScripts = CommonInfrastructureRole(
 
 private val CommonHostLandingPageCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.HostLandingPage.sourceSubdir,
-  includePattern = "docker-compose-common-*.yml",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
 private val CommonAutohealCompose = CommonInfrastructureRole(
   sourceSubdir = CommonComposeRole.Autoheal.sourceSubdir,
-  includePattern = "docker-compose-common-*.yml",
-  destinationSubdir = "docker-compose",
-)
-
-private val CommonAutohealScripts = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.Autoheal.sourceSubdir,
-  includePattern = "*.sh",
+  includePattern = CommonComposeFragmentPattern,
   destinationSubdir = "docker-compose",
 )
 
@@ -166,12 +162,11 @@ fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.ap
 fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCompose.applyTo(this)
 
 /**
- * Pulls in the shared host-management compose fragment (portainer + watchtower) into
- * `docker-compose/`. Every host runs these host-level tools via its host stack
- * (see [CommonComposeRole.HostManagement], folded into `hostStack()`).
+ * Pulls in the shared host-management compose fragment (portainer) into `docker-compose/`.
+ * Every host runs it via its host stack (see [CommonComposeRole.HostManagement], folded into
+ * `hostStack()`).
  *
- * portainer publishes only to 127.0.0.1 (SSH-tunnel access); watchtower exposes no port.
- * Neither needs secrets.
+ * portainer publishes only to 127.0.0.1 (SSH-tunnel access) and needs no secrets.
  */
 fun AbstractCopyTask.includeCommonHostManagementCompose() = CommonHostManagementCompose.applyTo(this)
 
@@ -202,23 +197,13 @@ fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
 }
 
 /**
- * Pulls in the shared restart-supervision compose fragment (autoheal + restart-guard, ADL 0177)
- * plus the guard's shell script into `docker-compose/`.
+ * Pulls in the shared restart-supervision compose fragment (autoheal, ADL 0177) into
+ * `docker-compose/`.
  *
- * Part of `hostStack()` — every host stack supervises its containers. Both sidecars act only on
- * containers labelled `autoheal=true`, so a host without such containers runs them idle.
- *
- * Copies two files into `docker-compose/`:
- * - `docker-compose-common-autoheal.yml` (compose fragment with both sidecars)
- * - `restart-guard.sh` (mounted into the guard container by the fragment)
- *
- * The fragment mounts the script via a relative path, so both files must land side by side on
- * the deployed host — same arrangement as the OTel agent and its config.
+ * Part of `hostStack()` — every host stack supervises its containers. The sidecar acts only on
+ * containers labelled `autoheal=true`, so a host without such containers runs it idle.
  */
-fun AbstractCopyTask.includeCommonAutohealCompose() {
-  CommonAutohealCompose.applyTo(this)
-  CommonAutohealScripts.applyTo(this)
-}
+fun AbstractCopyTask.includeCommonAutohealCompose() = CommonAutohealCompose.applyTo(this)
 
 /**
  * Pulls in the shared worker-host runner-registration scripts (`register-runners.sh`,
@@ -250,17 +235,36 @@ enum class CommonComposeRole(
    * The role's asset directory under `internal/infrastructure/common/`. Single home of the
    * subdir string (the role objects above reference it), and the join key for the
    * continuous-deploy common-fragment edge: a changed file under this subdir marks every
-   * continuous-deploy module consuming the role (`ContinuousDeployResolver`, #2341).
+   * continuous-deploy module consuming the role (`ContinuousDeployResolver`).
    */
   val sourceSubdir: String,
+  /**
+   * Ant patterns of the paths the role's fragment bind-mounts relative to itself, matched against
+   * the materialized `docker-compose/` directory. [includeCommonComposeRoleFiles] carries them into
+   * the host-mirroring `remote/` tree alongside the fragment.
+   */
+  val mountedPaths: List<String> = emptyList(),
 ) {
   Traefik("traefik"),
-  OtelAgent("otel-agent"),
+  OtelAgent("otel-agent", mountedPaths = listOf("otel-agent-config.yml")),
   HostExporters("host-exporters"),
   HostManagement("host-management"),
   HostLogs("host-logs"),
-  HostLandingPage("host-landing-page"),
+  HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**")),
   Autoheal("autoheal"),
+}
+
+/** Ant pattern matching every shared fragment, in a role's source directory and in the materialized one. */
+const val CommonComposeFragmentPattern: String = "docker-compose-common-*.yml"
+
+/**
+ * Includes every shared fragment, plus the paths the declared [roles] mount beside themselves —
+ * a mounted path travels with its role, so a host module never enumerates it. The fragment glob
+ * itself is role-blind; narrowing it to the declared roles is open.
+ */
+fun CopySpec.includeCommonComposeRoleFiles(roles: Provider<out Set<CommonComposeRole>>) {
+  include(CommonComposeFragmentPattern)
+  roles.get().flatMap { role -> role.mountedPaths }.forEach { include(it) }
 }
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */
