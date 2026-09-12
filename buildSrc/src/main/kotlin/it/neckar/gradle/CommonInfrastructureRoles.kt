@@ -84,12 +84,6 @@ private val CommonHostLandingPageCompose = CommonInfrastructureRole(
   destinationSubdir = "docker-compose",
 )
 
-private val CommonAutohealCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.Autoheal.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
-
 private val CommonHostLandingPageHtml = CommonInfrastructureRole(
   sourceSubdir = "${CommonComposeRole.HostLandingPage.sourceSubdir}/html",
   includePattern = "*",
@@ -197,15 +191,6 @@ fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
 }
 
 /**
- * Pulls in the shared restart-supervision compose fragment (autoheal, ADL 0177) into
- * `docker-compose/`.
- *
- * Part of `hostStack()` — every host stack supervises its containers. The sidecar acts only on
- * containers labelled `autoheal=true`, so a host without such containers runs it idle.
- */
-fun AbstractCopyTask.includeCommonAutohealCompose() = CommonAutohealCompose.applyTo(this)
-
-/**
  * Pulls in the shared worker-host runner-registration scripts (`register-runners.sh`,
  * `setup-gitlab-runner.sh`, `setup-restricted-runner.sh`). These scripts sit at the root
  * of the build output directory and are intended to be executed locally against the target
@@ -251,7 +236,6 @@ enum class CommonComposeRole(
   HostManagement("host-management"),
   HostLogs("host-logs"),
   HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**")),
-  Autoheal("autoheal"),
 }
 
 /** Ant pattern matching every shared fragment, in a role's source directory and in the materialized one. */
@@ -275,5 +259,4 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
   CommonComposeRole.HostManagement -> includeCommonHostManagementCompose()
   CommonComposeRole.HostLogs -> includeCommonHostLogsCompose()
   CommonComposeRole.HostLandingPage -> includeCommonHostLandingPageCompose()
-  CommonComposeRole.Autoheal -> includeCommonAutohealCompose()
 }

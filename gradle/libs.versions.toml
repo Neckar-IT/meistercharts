@@ -65,7 +65,7 @@ dev-detekt = "2.0.0-alpha.6"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.11"
+com-google-devtools-ksp = "2.3.12"
 
 org-mongodb = "5.11.0"
 
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.48"
+aws-sdk-kotlin = "1.8.49"
 
 apache-poi = "5.5.1"
 
@@ -157,7 +157,7 @@ opentelemetry-instrumentation = "2.31.1-alpha"
 opentelemetry-javaagent = "2.31.1"
 
 # Own release train, versioned independently of the SDK and of the instrumentation artifacts. No BOM pins the stable channel.
-opentelemetry-semconv = "1.43.0"
+opentelemetry-semconv = "1.44.0"
 
 micrometer = "1.17.1"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.14"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.15"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
