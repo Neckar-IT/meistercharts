@@ -89,3 +89,21 @@ data class PropertiesPath<T>(
 operator fun <Parent, Child, ValueType> KProperty1<Parent, Child?>.plus(childProperty: KProperty1<Child, ValueType>): PropertiesPath<ValueType> {
   return PropertiesPath(this).plus(property = childProperty)
 }
+
+/**
+ * Creates a new [PropertiesPath] that continues in [elementProperty] of every element of this
+ * list-valued property.
+ *
+ * The path reads as the same dotted string a single value produces: a document store addresses the
+ * field of every element under it, and a match on the path is a match on one of the elements.
+ */
+fun <Parent, ElementType, ValueType> KProperty1<Parent, List<ElementType>>.each(elementProperty: KProperty1<ElementType, ValueType>): PropertiesPath<ValueType> {
+  return PropertiesPath(listOf(this, elementProperty))
+}
+
+/**
+ * Continues the path in [elementProperty] of every element of the list it walked to.
+ */
+fun <ElementType, ValueType> PropertiesPath<out List<ElementType>>.each(elementProperty: KProperty1<ElementType, ValueType>): PropertiesPath<ValueType> {
+  return PropertiesPath(properties() + elementProperty)
+}

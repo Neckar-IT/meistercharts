@@ -56,6 +56,20 @@ internal object DockerComposeVolumeRewriter {
    */
   private val selinuxModes: Set<String> = setOf("z", "Z")
 
+  /**
+   * The modes of [modes] that [longSyntaxBlock] would drop: one it has no key for, and every one past
+   * the first of a family. [applyComposeBindMountGuards] refuses such an entry.
+   */
+  internal fun untranslatedModes(modes: List<String>): List<String> {
+    val carried: List<String> = listOfNotNull(
+      modes.firstOrNull { it in readOnlyModes || it in readWriteModes },
+      modes.firstOrNull { it in propagationModes },
+      modes.firstOrNull { it in selinuxModes },
+    )
+
+    return modes - carried.toSet()
+  }
+
   fun rewrite(content: String): String {
     if (content.isEmpty()) return content
     val lines = content.lines()
@@ -111,26 +125,45 @@ internal object DockerComposeVolumeRewriter {
     return output.toString()
   }
 
+  /**
+   * The long-syntax block for one short-syntax bind mount, or `null` when [entry] is a named volume
+   * or already long syntax. A bind mount that does not parse fails the build rather than passing
+   * through unguarded.
+   */
   private fun rewriteEntry(indent: String, entry: String): String? {
-    val trimmed = entry.trim()
-    if (trimmed.isEmpty()) return null
-    // Only short-syntax bind-mount entries get rewritten. Short syntax is
-    // `SOURCE:TARGET[:MODE]` where SOURCE for a bind mount must start with
-    // `/` (absolute host path) or `.` (relative). Anything else is either
-    // a named volume (no path prefix) or already-long-syntax (the entry
-    // value would start with `type:` etc.) and is passed through unchanged.
-    val first = trimmed.first()
-    if (first != '/' && first != '.') return null
-    val parts = trimmed.split(":")
-    val (source, target, mode) = when (parts.size) {
-      2 -> Triple(parts[0], parts[1], null)
-      3 -> Triple(parts[0], parts[1], parts[2])
-      else -> return null
-    }
-    if (source.isEmpty() || target.isEmpty()) return null
-    if (!target.startsWith("/")) return null
+    val trimmed: String = entry.trim()
 
-    val modes = mode?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+    // A bind-mount source starts with `/` or `.`. A named volume carries no path prefix and a
+    // long-syntax entry starts with a key, and neither is this rewrite's business; everything else
+    // is a bind mount, so a shape that does not parse is a broken compose file rather than a
+    // fourth kind of entry.
+    if (trimmed.isEmpty() || (trimmed.first() != '/' && trimmed.first() != '.')) return null
+
+    val parts: List<String> = trimmed.split(":")
+    require(parts.size in 2..3) {
+      "Bind mount [$entry] splits into ${parts.size} colon-separated parts; the short syntax is " +
+        "`SOURCE:TARGET[:MODE]`."
+    }
+
+    val source: String = parts[0]
+    val target: String = parts[1]
+    require(source.isNotEmpty() && target.isNotEmpty()) {
+      "Bind mount [$entry] leaves its source or its target empty."
+    }
+    require(target.startsWith("/")) {
+      "Bind mount [$entry] names the relative target [$target]; a path inside a container is absolute."
+    }
+
+    val modes: List<String> = parts.getOrNull(2)?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+
+    return longSyntaxBlock(indent, source, target, modes)
+  }
+
+  /**
+   * The long-syntax block for a mount already split into its parts — what
+   * [applyComposeBindMountGuards] calls, holding them from its own regex.
+   */
+  internal fun longSyntaxBlock(indent: String, source: String, target: String, modes: List<String>): String {
     val readOnly: Boolean? = when {
       modes.any { it in readOnlyModes } -> true
       modes.any { it in readWriteModes } -> false

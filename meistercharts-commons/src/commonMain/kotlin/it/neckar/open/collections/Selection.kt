@@ -35,7 +35,7 @@ package it.neckar.open.collections
  *
  * # Conventions for concrete implementations
  *
- * 1. Implement `Selection<I, MySelection.Entry>` and add a nested `Entry` data class implementing `Selection.Entry<I>`.
+ * 1. Implement `Selection<I, MySelectionEntry>` and add a `MySelectionEntry` data class implementing `Selection.Entry<I>`.
  * 2. Allow `amount = 0` as a legitimate UI intermediate state. Use [entriesNonEmpty] to filter when displaying or persisting.
  * 3. Provide `with(item, amount): Self` that upserts (`amount = 0` keeps the entry, `amount < 0` is refused).
  * 4. Provide `companion object { fun empty(); operator fun invoke(item, amount) }` defaulting to one.
