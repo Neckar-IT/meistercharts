@@ -67,7 +67,7 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.12"
 
-org-mongodb = "5.11.0"
+org-mongodb = "5.11.1"
 
 # json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
 # that validates kotlinx.serialization JsonElement directly.
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.50"
+aws-sdk-kotlin = "1.8.51"
 
 apache-poi = "5.5.1"
 
@@ -147,10 +147,10 @@ modbus = "1.2.2"
 
 okhttp3 = "5.5.0"
 
-opentelemetry = "1.65.0"
+opentelemetry = "1.66.0"
 
 # Alpha channel of the same release train, one -alpha release per core release. Governs opentelemetry-api-incubator.
-opentelemetry-alpha = "1.65.0-alpha"
+opentelemetry-alpha = "1.66.0-alpha"
 
 opentelemetry-instrumentation = "2.31.1-alpha"
 
@@ -329,7 +329,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.16"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.17"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
