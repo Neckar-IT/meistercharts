@@ -96,7 +96,7 @@ object Plugins {
   /**
    * Writes the structured build report under `build-reports/`: the streaming
    * `build-events.jsonl` (every finished task, written as it happens so a killed build still leaves a
-   * parseable record) plus the aggregates `failures.json`, `cache-report.json` and
+   * parseable record) plus the aggregates `build-result.json`, `cache-report.json` and
    * `cache-metrics.json`. Apply once to the root project.
    * See [it.neckar.gradle.report.events.BuildEventsReportPlugin].
    */

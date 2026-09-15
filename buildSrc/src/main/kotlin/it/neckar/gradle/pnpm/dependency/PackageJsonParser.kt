@@ -62,8 +62,24 @@ class ParsedPackageJson internal constructor(private val source: File, jsonObjec
     devDependencies = jsonObject.workspaceDependenciesOf(source, "devDependencies"),
   )
 
+  /**
+   * Every dependency whose version is written into the manifest itself, as `section name=version`.
+   * `catalog:` and `workspace:` name no version, `link:`, `file:` and `portal:` point at a local path.
+   */
+  val hardcodedVersionDependencies: List<String> by lazy {
+    // Lazy: every configuration parses the manifests, only verifyPnpmWorkspaceDependencies asks this.
+    listOf("dependencies", "devDependencies", "optionalDependencies", "peerDependencies").flatMap { section ->
+      jsonObject[section]?.asObject(source, "'$section'")?.entries.orEmpty().mapNotNull { (packageName, versionElement) ->
+        val version = versionElement.asString(source, "the version of '$packageName' in '$section'")
+        "$section $packageName=$version".takeIf { nonVersionSpecifierPrefixes.none { version.startsWith(it) } }
+      }
+    }
+  }
+
   fun script(scriptName: String): String? = scripts?.get(scriptName)?.asString(source, "script '$scriptName'")
 }
+
+private val nonVersionSpecifierPrefixes: List<String> = listOf("catalog:", "workspace:", "link:", "file:", "portal:")
 
 private fun JsonObject.workspaceDependenciesOf(source: File, section: String): List<NpmPackageName> {
   val deps = this[section]?.asObject(source, "'$section'") ?: return emptyList()

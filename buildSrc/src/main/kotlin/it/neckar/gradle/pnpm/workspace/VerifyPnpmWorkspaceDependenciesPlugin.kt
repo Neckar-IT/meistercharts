@@ -64,6 +64,12 @@ class VerifyPnpmWorkspaceDependenciesPlugin : Plugin<Project> {
   }
 }
 
+/**
+ * Modules whose manifests keep their own versions: lizergy is maintenance-only and changes only on
+ * explicit request.
+ */
+private val hardcodedVersionExemptPrefixes: List<String> = listOf(":internal:closed:lizergy:")
+
 abstract class VerifyPnpmWorkspaceDependenciesTask : DefaultTask() {
   /** Gradle module path to the repo-relative path of that module's `package.json`. */
   @get:Input
@@ -113,6 +119,14 @@ abstract class VerifyPnpmWorkspaceDependenciesTask : DefaultTask() {
         problems += "$modulePath and $alreadyClaimedBy both declare the npm package name '$packageName'"
       }
     }
+
+    parsedByModule
+      .filterKeys { modulePath -> hardcodedVersionExemptPrefixes.none { modulePath.path.startsWith(it) } }
+      .forEach { (modulePath, parsed) ->
+        parsed.hardcodedVersionDependencies.forEach { dependency ->
+          problems += "$modulePath writes a version into package.json instead of `catalog:`: $dependency — register it with `pnpm add` (catalogMode: strict) or in the catalog block of pnpm-workspace.yaml"
+        }
+      }
 
     val registry = PackageNameRegistry(moduleByPackageName)
 

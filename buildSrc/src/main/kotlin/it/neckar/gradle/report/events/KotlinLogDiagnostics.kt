@@ -50,6 +50,7 @@ object KotlinLogDiagnostics {
           column = parsed.column,
           code = parsed.code,
           message = parsed.message,
+          documentationLink = null,
         )
       }
   }

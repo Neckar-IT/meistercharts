@@ -319,8 +319,6 @@ testcontainers-junit-jupiter = { group = "org.testcontainers", name = "testconta
 
 testcontainers-mongodb = { group = "org.testcontainers", name = "testcontainers-mongodb", version.ref = "testcontainers" }
 
-testcontainers-minio = { group = "org.testcontainers", name = "testcontainers-minio", version.ref = "testcontainers" }
-
 aws-sdk-kotlin-s3 = { group = "aws.sdk.kotlin", name = "s3", version.ref = "aws-sdk-kotlin" }
 
 bson-kotlinx = { group = "org.mongodb", name = "bson-kotlinx", version.ref = "org-mongodb" }

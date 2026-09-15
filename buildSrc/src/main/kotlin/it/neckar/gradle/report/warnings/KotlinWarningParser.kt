@@ -12,7 +12,7 @@ import it.neckar.gradle.report.events.toModuleDirectory
  * attributed to, and the anchor for a diagnostic the compiler reports without a location.
  *
  * Errors are dropped: they never reach the Code Quality report, because a build that produced one is
- * red and its diagnostics belong in `failures.json` instead.
+ * red and its diagnostics belong in `build-result.json` instead.
  */
 object KotlinWarningParser {
 

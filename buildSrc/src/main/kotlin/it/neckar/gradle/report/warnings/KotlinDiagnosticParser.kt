@@ -17,7 +17,7 @@ import it.neckar.gradle.report.events.RepositoryPaths
  * ```
  *
  * Both severities are parsed here. [KotlinWarningParser] keeps the warnings for the Code Quality
- * report; the errors go into `failures.json` as
+ * report; the errors go into `build-result.json` as
  * [it.neckar.gradle.report.events.Diagnostic] entries of the failing compile task.
  */
 object KotlinDiagnosticParser {
