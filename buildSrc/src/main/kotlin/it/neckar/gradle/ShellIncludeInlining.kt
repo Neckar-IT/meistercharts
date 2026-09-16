@@ -108,9 +108,9 @@ internal fun expandShellInclude(
  * this list does not.
  *
  * Most entries are sourced libraries; `gitlab-runner/cleanup-runner-cache.sh` (run by cron on the
- * worker/git hosts) and `host-maintenance/install-maintenance-cron.sh` (piped to the host during
- * its deploy) are standalone scripts inlined into a per-host copy, so the single source under
- * `common/` stays canonical.
+ * worker/git hosts) is a standalone script inlined into a per-host copy, and
+ * `postgres-major-upgrade/postgres-major-upgrade.sh` (run on the host before a service stack starts)
+ * into a per-service copy, so the single source under `common/` stays canonical.
  */
 internal val InlinedLibraryInputs: List<String> = listOf(
   "secret-masking/secret-masking-lib.sh",
@@ -121,7 +121,7 @@ internal val InlinedLibraryInputs: List<String> = listOf(
   "host-keys/authorized-keys-lib.sh",
   "service-deploy/deploy-service-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
-  "host-maintenance/install-maintenance-cron.sh",
+  "postgres-major-upgrade/postgres-major-upgrade.sh",
   "worker-host/runner-identity-lib.sh",
 )
 

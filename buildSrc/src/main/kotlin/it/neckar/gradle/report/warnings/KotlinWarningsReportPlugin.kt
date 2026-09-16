@@ -1,5 +1,6 @@
 package it.neckar.gradle.report.warnings
 
+import it.neckar.gradle.report.runReportDirectory
 import it.neckar.gradle.report.structuredReportDirectory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,7 +14,7 @@ import org.gradle.internal.operations.BuildOperationListenerManager
  * | Artefact | Written | Consumer |
  * |---|---|---|
  * | `build-reports/kotlin-warnings/<module>/<task>.json` | per compilation, as it finishes | the `Kotlin Compiler Warnings` card on reports.neckar.it |
- * | `build-reports/kotlin-warnings.json` | at build end, GitLab Code Quality schema | `gitlab-ci.d/mr.yml`, inline annotations in the MR diff |
+ * | `build-reports/runs/<runId>/kotlin-warnings.json` | at build end, GitLab Code Quality schema | `gitlab-ci.d/mr.yml` through the CI copy, inline annotations in the MR diff |
  *
  * The split follows the two questions being asked. The Code Quality report answers "what did *this* build
  * compile" and is rewritten every time, which is right for a diff-scoped merge request pipeline. The
@@ -43,7 +44,7 @@ class KotlinWarningsReportPlugin : Plugin<Project> {
     )
     capture.install()
 
-    val codeQualityReportFile = target.structuredReportDirectory.file(CodeQualityReportFileName).asFile
+    val codeQualityReportFile = target.runReportDirectory.file(CodeQualityReportFileName).asFile
 
     // The listener is daemon-scoped and has to be removed at build end, or it keeps firing into a
     // dead capture on every later build in the same daemon. buildFinished is not
@@ -59,7 +60,7 @@ class KotlinWarningsReportPlugin : Plugin<Project> {
   }
 
   companion object {
-    /** Sits next to `build-events.jsonl` and `artifact-sizes.json` in the structured report directory. */
+    /** Sits next to `build-events.jsonl` and `artifact-sizes.json` in the run directory. */
     const val CodeQualityReportFileName: String = "kotlin-warnings.json"
   }
 }

@@ -572,6 +572,9 @@ fun Project.configureJunit() {
       }
     }
 
+    //Gradle's 512 MB default is too small for OpenAPI tests; 1 GB is what the runner budget in gitlab-ci.d/docs/memory-settings.md holds.
+    maxHeapSize = "1g"
+
     //Enable HTML reports
     reports.html.required.set(true)
 

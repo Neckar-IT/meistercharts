@@ -54,7 +54,7 @@ org-slf4j = "2.0.19"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.12"
+net-bytebuddy = "1.18.13"
 
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
@@ -426,6 +426,7 @@ fxgraphics2d = "org.jfree:fxgraphics2d:1.8"
 jfoenix = "com.jfoenix:jfoenix:9.0.10"
 
 fontawesomefx = "de.jensd:fontawesomefx:8.9"
+webjars-font-awesome = "org.webjars:font-awesome:4.7.0"
 
 controlsfx = "org.controlsfx:controlsfx:11.2.5"
 

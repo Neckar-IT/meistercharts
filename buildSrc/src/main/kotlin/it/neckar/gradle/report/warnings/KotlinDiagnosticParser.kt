@@ -3,8 +3,8 @@ package it.neckar.gradle.report.warnings
 import it.neckar.gradle.report.events.RepositoryPaths
 
 /**
- * Turns one line of Kotlin compiler output into a [ParsedKotlinDiagnostic] — the single place in the
- * build where the compiler's console format is read.
+ * Turns one line of Kotlin compiler output, or the message `KotlinLogDiagnostics` joined from several,
+ * into a [ParsedKotlinDiagnostic] — the single place in the build where the compiler's console format is read.
  *
  * The Kotlin Gradle plugin routes compiler diagnostics through the Gradle logger as formatted text and
  * exposes no structured channel, so the severity, the position and the diagnostic name exist only in
@@ -37,10 +37,15 @@ object KotlinDiagnosticParser {
    */
   private val DiagnosticNamePattern = Regex("""\[([A-Z][A-Z0-9_]*)]\s+(.*)""", RegexOption.DOT_MATCHES_ALL)
 
+  /** `e:`, `w:`, `i:`, `v:` — the severities the compiler and its daemon prefix a message with. */
+  private val MessageStartPattern = Regex("""[ewiv]:\s+.*""")
+
+  /** Whether [line] begins a message of the compiler or its daemon; the lines up to the next belong to it. */
+  fun startsMessage(line: String): Boolean = MessageStartPattern.matches(line)
+
   /**
-   * The diagnostic [message] carries, or `null` when the line is not compiler output. A line on a
-   * Kotlin compile task without a `w:` or `e:` prefix comes from the Gradle plugin rather than the
-   * compiler (toolchain notices, deprecation notes) and is not a code finding.
+   * The diagnostic [message] carries, or `null` for a message without a `w:` or `e:` prefix: an `i:` or `v:`
+   * line of the daemon, a toolchain notice.
    *
    * [paths] relativizes the path the compiler prints. A path outside the repository is kept absolute
    * rather than turned into a `../..` chain that resolves to nothing in a GitLab diff.

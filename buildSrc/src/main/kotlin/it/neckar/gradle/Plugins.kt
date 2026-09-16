@@ -64,6 +64,12 @@ object Plugins {
   const val verifyRepositoryChecks: String = "it.neckar.verify.repository-checks"
 
   /**
+   * Inserts the build-guard hook into the `gradlew` the `wrapper` task generates and registers
+   * `verifyGradleWrapper`. Apply once to the root project. See GradleWrapperHookPlugin.
+   */
+  const val gradleWrapperHook: String = "it.neckar.gradle-wrapper-hook"
+
+  /**
    * Lets a module declare the operating-system packages it needs to build, through a
    * `systemDependencies { }` block. See SystemDependenciesPlugin.
    */
@@ -94,7 +100,7 @@ object Plugins {
   const val buildProfileReport: String = "it.neckar.report.build-profile"
 
   /**
-   * Writes the structured build report under `build-reports/`: the streaming
+   * Writes the structured build report into `build-reports/runs/<runId>/`: the streaming
    * `build-events.jsonl` (every finished task, written as it happens so a killed build still leaves a
    * parseable record) plus the aggregates `build-result.json`, `cache-report.json` and
    * `cache-metrics.json`. Apply once to the root project.
@@ -103,14 +109,14 @@ object Plugins {
   const val buildEventsReport: String = "it.neckar.report.build-events"
 
   /**
-   * Writes `build-reports/logs/<module>/<task>.log` — each task's console output, correctly
+   * Writes `build-reports/runs/<runId>/logs/<module>/<task>.log` — each task's console output, correctly
    * attributed under parallel builds via build operations. Apply once to the root project.
    * See [it.neckar.gradle.report.events.TaskOutputLogPlugin].
    */
   const val taskOutputLogs: String = "it.neckar.report.task-output-logs"
 
   /**
-   * Writes `build-reports/kotlin-warnings.json` — every Kotlin compiler warning this build produced,
+   * Writes `build-reports/runs/<runId>/kotlin-warnings.json` — every Kotlin compiler warning this build produced,
    * in the GitLab Code Quality schema, so the findings become inline annotations in the MR diff.
    * Apply once to the root project.
    * See [it.neckar.gradle.report.warnings.KotlinWarningsReportPlugin].
@@ -118,7 +124,7 @@ object Plugins {
   const val kotlinWarningsReport: String = "it.neckar.report.kotlin-warnings"
 
   /**
-   * Writes `build-reports/artifact-sizes.json` — the size of every deployable artifact this
+   * Writes `build-reports/runs/<runId>/artifact-sizes.json` — the size of every deployable artifact this
    * build produced (frontend bundles, Kotlin/JS bundles, archives, install trees), split by asset type,
    * raw and gzip-compressed. Exported as OTLP metrics from the main-branch CI build. Apply once to the
    * root project. See [it.neckar.gradle.report.artifacts.ArtifactSizeReportPlugin].

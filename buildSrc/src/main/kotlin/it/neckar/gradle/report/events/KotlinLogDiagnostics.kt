@@ -9,12 +9,12 @@ import java.io.File
  *
  * The Kotlin compiler reports nothing through Gradle's Problems API — its diagnostics exist only as
  * the `e:` lines it prints. Those lines are already in the task's own log
- * (`build-reports/logs/<module>/<task>.log`, written by [TaskLogWriter]), attributed to exactly this
+ * (`build-reports/runs/<runId>/logs/<module>/<task>.log`, written by [TaskLogWriter]), attributed to exactly this
  * task, so reading them there needs no second capture and no cross-plugin wiring. The format is read
  * in one place, [KotlinDiagnosticParser], with a test.
  *
  * Errors only. A warning of a task that failed is not what broke it, and the warnings have their own
- * report (`build-reports/kotlin-warnings.json`).
+ * report (`kotlin-warnings.json` in the run directory).
  */
 object KotlinLogDiagnostics {
 
@@ -34,7 +34,7 @@ object KotlinLogDiagnostics {
     // Streamed and cut at [Diagnostic.MaxPerTask] rather than read whole: a compilation that logged
     // megabytes is exactly where the report writer must not be the second thing to run out of memory.
     return logFile.useLines { lines ->
-      lines
+      compilerMessagesOf(lines)
         .mapNotNull { KotlinDiagnosticParser.parse(it, paths) }
         .filter { it.severity == KotlinDiagnosticSeverity.Error }
         .distinct()
@@ -55,4 +55,18 @@ object KotlinLogDiagnostics {
       }
   }
 
+  /** One string per compiler message, its following lines included: the candidates of `NONE_APPLICABLE`. */
+  internal fun compilerMessagesOf(lines: Sequence<String>): Sequence<String> = sequence {
+    val message = mutableListOf<String>()
+    for (line in lines) {
+      if (KotlinDiagnosticParser.startsMessage(line)) {
+        if (message.isNotEmpty()) yield(message.joinToString("\n").trimEnd())
+        message.clear()
+        message += line
+      } else if (message.isNotEmpty() && message.size < Diagnostic.MaxMessageLines) {
+        message += line
+      }
+    }
+    if (message.isNotEmpty()) yield(message.joinToString("\n").trimEnd())
+  }
 }

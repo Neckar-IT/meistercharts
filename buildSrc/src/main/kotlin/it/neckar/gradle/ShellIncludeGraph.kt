@@ -8,9 +8,8 @@ import java.io.File
  *
  * Exists for the continuous-deploy resolver (#2341). A deploy candidate is connected to the diff
  * by its Gradle closure, by the images it deploys, or by the `common/` subdirs it consumes. That
- * last edge used to be fed from `composeRoles` alone, which only covers the five compose fragments
- * (traefik, otel-agent, host-exporters, host-management, host-logs). Everything a deploy script
- * inlines — the deploy libs, the docker lock, the maintenance cron installer, secret masking — lives
+ * last edge used to be fed from `composeRoles` alone, which only covers the shared compose fragments.
+ * Everything a deploy script inlines — the deploy libs, the docker lock, secret masking — lives
  * in `common/` too, but was invisible: changing `common/docker-lock/docker-lock-lib.sh` alone selected no deploy at
  * all, so the change merged green and never reached a single host.
  *
@@ -35,11 +34,16 @@ object ShellIncludeGraph {
   fun consumedCommonSubdirs(resourcesDir: File, commonDir: File): Set<String> {
     if (!resourcesDir.isDirectory) return emptySet()
 
-    val reachedPaths = linkedSetOf<String>()
-    resourcesDir.walkTopDown()
+    return resourcesDir.walkTopDown()
       .filter { it.isFile }
-      .forEach { collectReachable(it.readText(), commonDir, reachedPaths) }
+      .flatMap { script -> consumedCommonSubdirsOf(script, commonDir) }
+      .toSet()
+  }
 
+  /** The `common/<subdir>` names the single [script] reaches via `# @inline:`, resolved transitively through [commonDir]. */
+  fun consumedCommonSubdirsOf(script: File, commonDir: File): Set<String> {
+    val reachedPaths = linkedSetOf<String>()
+    collectReachable(script.readText(), commonDir, reachedPaths)
     return reachedPaths.map { it.substringBefore('/') }.toSet()
   }
 

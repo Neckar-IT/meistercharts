@@ -1,8 +1,8 @@
 package it.neckar.gradle
 
+import it.neckar.gradle.deployment.PipedScriptName
 import it.neckar.projects.Projects
-import org.gradle.api.file.CopySpec
-import org.gradle.api.provider.Provider
+import it.neckar.runtime.context.HostPath
 import org.gradle.api.tasks.AbstractCopyTask
 
 /**
@@ -13,81 +13,70 @@ import org.gradle.api.tasks.AbstractCopyTask
  * source folder, include glob and destination folder has exactly one home.
  *
  * @property sourceSubdir    subfolder under `common/` that holds the role's assets
- * @property includePattern  glob matched against files in [sourceSubdir]
+ * @property includePatterns  globs matched against files in [sourceSubdir]
  * @property destinationSubdir  subfolder inside the copy destination where matched files land
  */
 private class CommonInfrastructureRole(
   val sourceSubdir: String,
-  val includePattern: String,
+  val includePatterns: List<String>,
   val destinationSubdir: String,
 ) {
   fun applyTo(task: AbstractCopyTask) {
     val commonProjectDir = Projects.infrastructure_common.project().projectDir
     task.from(commonProjectDir.resolve(sourceSubdir)) {
-      include(includePattern)
+      includePatterns.forEach { pattern -> include(pattern) }
       into(destinationSubdir)
     }
   }
 }
 
-private val CommonTraefikCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.Traefik.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
+/** The directory on a host holding the host stack's compose file, the role fragments beside it and the host's own scripts. */
+val HostStackDirectory: HostPath = HostPath("/srv/host")
 
-private val CommonGitlabRunnerScripts = CommonInfrastructureRole(
-  sourceSubdir = "gitlab-runner",
-  includePattern = "*.sh",
-  destinationSubdir = "scripts",
-)
+/** [HostStackDirectory] within the materialized deployment directory of a host. */
+private val HostStackRemoteTreeDirectory: String = "remote${HostStackDirectory.value}"
+
+/** The directory of the materialized deployment directory holding the scripts `prepareHost` pipes into a shell on the host. */
+const val PipedScriptsDirectory: String = "piped"
+
+/** The fragments of [role] plus the paths they mount, copied beside the host stack compose file. */
+private fun composeRoleFiles(role: CommonComposeRole, carriedMountedPaths: List<String> = role.mountedPaths): CommonInfrastructureRole {
+  return CommonInfrastructureRole(
+    sourceSubdir = role.sourceSubdir,
+    includePatterns = listOf(CommonComposeFragmentPattern) + carriedMountedPaths,
+    destinationSubdir = HostStackRemoteTreeDirectory,
+  )
+}
+
+private val CommonTraefikCompose = composeRoleFiles(CommonComposeRole.Traefik)
 
 private val CommonRestrictedEgressAssets = CommonInfrastructureRole(
   sourceSubdir = "gitlab-runner/restricted-egress",
-  includePattern = "*",
+  includePatterns = listOf("*"),
   destinationSubdir = "scripts/restricted-egress",
 )
 
-private val CommonOtelAgentCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.OtelAgent.sourceSubdir,
-  includePattern = "*.yml",
-  destinationSubdir = "docker-compose",
-)
+private val CommonOtelAgentCompose = composeRoleFiles(CommonComposeRole.OtelAgent)
 
-private val CommonHostExportersCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.HostExporters.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
+private val CommonHostExportersCompose = composeRoleFiles(CommonComposeRole.HostExporters)
 
-private val CommonHostManagementCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.HostManagement.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
+private val CommonHostManagementCompose = composeRoleFiles(CommonComposeRole.HostManagement)
 
-private val CommonHostLogsCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.HostLogs.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
+private val CommonHostLogsCompose = composeRoleFiles(CommonComposeRole.HostLogs)
 
 private val CommonWorkerHostScripts = CommonInfrastructureRole(
   sourceSubdir = "worker-host",
-  includePattern = "*.sh",
+  includePatterns = listOf("*.sh"),
   destinationSubdir = "",
 )
 
-private val CommonHostLandingPageCompose = CommonInfrastructureRole(
-  sourceSubdir = CommonComposeRole.HostLandingPage.sourceSubdir,
-  includePattern = CommonComposeFragmentPattern,
-  destinationSubdir = "docker-compose",
-)
+// The mounted page directory is filled from `html/`, so only the fragment is copied from the role directory.
+private val CommonHostLandingPageCompose = composeRoleFiles(CommonComposeRole.HostLandingPage, carriedMountedPaths = emptyList())
 
 private val CommonHostLandingPageHtml = CommonInfrastructureRole(
   sourceSubdir = "${CommonComposeRole.HostLandingPage.sourceSubdir}/html",
-  includePattern = "*",
-  destinationSubdir = "docker-compose/${CommonComposeRole.HostLandingPage.sourceSubdir}",
+  includePatterns = listOf("*"),
+  destinationSubdir = "$HostStackRemoteTreeDirectory/${CommonComposeRole.HostLandingPage.sourceSubdir}",
 )
 
 /**
@@ -95,16 +84,6 @@ private val CommonHostLandingPageHtml = CommonInfrastructureRole(
  * Host declares explicitly that it plays the reverse-proxy role.
  */
 fun AbstractCopyTask.includeCommonTraefikCompose() = CommonTraefikCompose.applyTo(this)
-
-/**
- * Pulls in the shared GitLab-Runner maintenance scripts.
- * Host declares explicitly that it runs a GitLab Runner with Docker executor.
- * The deploy script is expected to scp the resulting `scripts/` folder to
- * `/srv/scripts` on the target host and to register a cron entry.
- *
- * The executable bit is preserved from the source file permissions (`chmod +x` in the repo).
- */
-fun AbstractCopyTask.includeCommonGitlabRunnerScripts() = CommonGitlabRunnerScripts.applyTo(this)
 
 /**
  * Pulls in the assets needed by `setup-restricted-runner.sh` to provision the
@@ -126,7 +105,7 @@ fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgr
  * ADL 0143 ("one agent per host"). The agent forwards local telemetry to
  * the central OTel Gateway on `monitoring-host.neckar.it`.
  *
- * Copies two files into `docker-compose/`:
+ * Copies two files beside the host stack compose file in [HostStackDirectory]:
  * - `docker-compose-common-otel-agent.yml` (compose fragment)
  * - `otel-agent-config.yml` (agent configuration)
  *
@@ -147,7 +126,7 @@ fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.ap
  * by the OTel-Collector via its sub-keyed `prometheus/<name>` receivers and form the only path for
  * host-level metric sources without a native OTel receiver (smartctl, IPMI, …).
  *
- * Copies one file into `docker-compose/`:
+ * Copies one file beside the host stack compose file in [HostStackDirectory]:
  * - `docker-compose-common-host-exporters.yml` (compose fragment with one service per exporter)
  *
  * The host's main `docker-compose.yml` pulls each exporter via `extends:` and joins it to
@@ -156,7 +135,7 @@ fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.ap
 fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCompose.applyTo(this)
 
 /**
- * Pulls in the shared host-management compose fragment (portainer) into `docker-compose/`.
+ * Pulls in the shared host-management compose fragment (portainer) beside the host stack compose file.
  * Every host runs it via its host stack (see [CommonComposeRole.HostManagement], folded into
  * `hostStack()`).
  *
@@ -165,7 +144,7 @@ fun AbstractCopyTask.includeCommonHostExportersCompose() = CommonHostExportersCo
 fun AbstractCopyTask.includeCommonHostManagementCompose() = CommonHostManagementCompose.applyTo(this)
 
 /**
- * Pulls in the shared host-logs compose fragment (Dozzle) into `docker-compose/`.
+ * Pulls in the shared host-logs compose fragment (Dozzle) beside the host stack compose file.
  *
  * Opt-in per host via an explicit `composeRole(CommonComposeRole.HostLogs)` — NOT part of
  * `hostStack()`. Dozzle is public (via Traefik) and guarded only by a Keycloak OIDC
@@ -175,9 +154,9 @@ fun AbstractCopyTask.includeCommonHostManagementCompose() = CommonHostManagement
 fun AbstractCopyTask.includeCommonHostLogsCompose() = CommonHostLogsCompose.applyTo(this)
 
 /**
- * Pulls in the shared host-landing-page compose fragment plus its static HTML into
- * `docker-compose/` (nginx serving a deliberate 200 host-info page on the host's root URL,
- * instead of the error-pages 503 fallback — #1587).
+ * Pulls in the shared host-landing-page compose fragment plus its static HTML beside the host stack
+ * compose file (nginx serving a deliberate 200 host-info page on the host's root URL,
+ * instead of the error-pages 503 fallback).
  *
  * Opt-in per host via an explicit `composeRole(CommonComposeRole.HostLandingPage)` — NOT part
  * of `hostStack()`. The page substitutes `${deployTarget}` and `${host-landing-purpose}`
@@ -210,10 +189,8 @@ fun AbstractCopyTask.includeCommonHostLandingPageCompose() {
 fun AbstractCopyTask.includeCommonWorkerHostScripts() = CommonWorkerHostScripts.applyTo(this)
 
 /**
- * The shared host-stack compose fragments a host can fold into its materialized
- * `docker-compose/` directory. Declared on the `deployment { … }` extension so the
- * host-stack deploys through the same plugin as every other container, instead of a
- * hand-rolled `processResources` configuration.
+ * The shared host-stack compose fragments a host folds into [HostStackDirectory], beside its own compose file.
+ * Declared on the `deployment { … }` extension, which materializes each declared role into the remote tree.
  */
 enum class CommonComposeRole(
   /**
@@ -224,32 +201,29 @@ enum class CommonComposeRole(
    */
   val sourceSubdir: String,
   /**
-   * Ant patterns of the paths the role's fragment bind-mounts relative to itself, matched against
-   * the materialized `docker-compose/` directory. [includeCommonComposeRoleFiles] carries them into
-   * the host-mirroring `remote/` tree alongside the fragment.
+   * Ant patterns of the paths the role's fragment bind-mounts relative to itself. A role whose mounted files lie beside its fragment
+   * copies exactly these; `HostLandingPage` copies its page from `html/` into the mounted directory.
    */
   val mountedPaths: List<String> = emptyList(),
+  /** Directories beside the fragment whose content on the host the role owns, so a file the role no longer carries is deleted there. */
+  val ownedDirectories: List<HostPath> = emptyList(),
+  /** The configs the role's container reads only at startup; a change to one restarts the container. */
+  val configPaths: List<HostPath> = emptyList(),
 ) {
   Traefik("traefik"),
-  OtelAgent("otel-agent", mountedPaths = listOf("otel-agent-config.yml")),
+  OtelAgent(
+    "otel-agent",
+    mountedPaths = listOf("otel-agent-config.yml"),
+    configPaths = listOf(HostPath("/srv/host/otel-agent-config.yml"), HostPath("/srv/host/otel-agent-config-overlay.yml")),
+  ),
   HostExporters("host-exporters"),
   HostManagement("host-management"),
   HostLogs("host-logs"),
-  HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**")),
+  HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**"), ownedDirectories = listOf(HostPath("/srv/host/host-landing-page"))),
 }
 
 /** Ant pattern matching every shared fragment, in a role's source directory and in the materialized one. */
 const val CommonComposeFragmentPattern: String = "docker-compose-common-*.yml"
-
-/**
- * Includes every shared fragment, plus the paths the declared [roles] mount beside themselves —
- * a mounted path travels with its role, so a host module never enumerates it. The fragment glob
- * itself is role-blind; narrowing it to the declared roles is open.
- */
-fun CopySpec.includeCommonComposeRoleFiles(roles: Provider<out Set<CommonComposeRole>>) {
-  include(CommonComposeFragmentPattern)
-  roles.get().flatMap { role -> role.mountedPaths }.forEach { include(it) }
-}
 
 /** Applies the [role]'s shared compose fragment to this copy task's destination. */
 fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (role) {
@@ -259,4 +233,25 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
   CommonComposeRole.HostManagement -> includeCommonHostManagementCompose()
   CommonComposeRole.HostLogs -> includeCommonHostLogsCompose()
   CommonComposeRole.HostLandingPage -> includeCommonHostLandingPageCompose()
+}
+
+/**
+ * A script under `internal/infrastructure/common/` that `prepareHost` pipes into a shell on the host, materialized into the
+ * [PipedScriptsDirectory] of every module whose declarations need it.
+ */
+enum class CommonPipedScript(val sourceSubdir: String, val fileName: PipedScriptName) {
+  /** Keeps the continuous-deploy key in root's `authorized_keys`. */
+  ContinuousDeployKey("host-keys", PipedScriptName("install-continuous-deploy-key.sh")),
+
+  /** Installs the host's maintenance crontab; its arguments are the host's extra crontab lines. */
+  MaintenanceCron("host-maintenance", PipedScriptName("install-maintenance-cron.sh")),
+  ;
+
+  /** The path relative to `internal/infrastructure/common/`. */
+  val relativePath: String
+    get() = "$sourceSubdir/${fileName.value}"
+}
+
+fun AbstractCopyTask.includeCommonPipedScript(script: CommonPipedScript) {
+  CommonInfrastructureRole(script.sourceSubdir, listOf(script.fileName.value), PipedScriptsDirectory).applyTo(this)
 }
