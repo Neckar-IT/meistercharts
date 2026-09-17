@@ -24,9 +24,9 @@ import java.io.File
  *
  * **Transitive includes:** an inlined library may itself carry `# @inline:` markers;
  * they are resolved recursively, so a library declares its own dependencies and the
- * consuming script never has to know about them (e.g. `deploy-service-lib.sh` inlines
- * `compose-up/compose-up-lib.sh`, which inlines `docker-lock/docker-lock-lib.sh`, so a
- * service deploy script that inlines the first gets both). A per-expansion `seen` set drops
+ * consuming script never has to know about them (e.g. a host's `installEnvironment.sh` inlines
+ * `host-provisioning/provision-lib.sh`, which inlines `host-keys/authorized-keys-lib.sh`, so the
+ * script gets both). A per-expansion `seen` set drops
  * a path already inlined in the same tree, guarding against cycles and diamonds. It starts
  * empty at every marker line, so two markers in one script that reach the same library inline
  * it twice — a script must not repeat what the library it inlines already brings.
@@ -115,11 +115,8 @@ internal fun expandShellInclude(
 internal val InlinedLibraryInputs: List<String> = listOf(
   "secret-masking/secret-masking-lib.sh",
   "docker-lock/docker-lock-lib.sh",
-  "compose-up/compose-up-lib.sh",
   "host-provisioning/provision-lib.sh",
-  "host-deploy/deploy-host-lib.sh",
   "host-keys/authorized-keys-lib.sh",
-  "service-deploy/deploy-service-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
   "postgres-major-upgrade/postgres-major-upgrade.sh",
   "worker-host/runner-identity-lib.sh",

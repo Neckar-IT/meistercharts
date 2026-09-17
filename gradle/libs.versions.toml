@@ -33,7 +33,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.19.1" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.19.2" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.8.51"
+aws-sdk-kotlin = "1.9.0"
 
 apache-poi = "5.5.1"
 
@@ -327,7 +327,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.17"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.54.18"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -349,7 +349,7 @@ loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.1.0"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-playwright = "com.microsoft.playwright:playwright:1.62.0"
+playwright = "com.microsoft.playwright:playwright:1.63.0"
 
 com-atlassian-commonmark-commonmark = { group = "com.atlassian.commonmark", name = "commonmark", version.ref = "com-atlassian-commonmark" }
 
@@ -426,7 +426,7 @@ fxgraphics2d = "org.jfree:fxgraphics2d:1.8"
 jfoenix = "com.jfoenix:jfoenix:9.0.10"
 
 fontawesomefx = "de.jensd:fontawesomefx:8.9"
-webjars-font-awesome = "org.webjars:font-awesome:4.7.0"
+webjars-font-awesome = "org.webjars:font-awesome:7.3.0"
 
 controlsfx = "org.controlsfx:controlsfx:11.2.5"
 

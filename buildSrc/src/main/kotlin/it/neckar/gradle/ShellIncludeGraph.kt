@@ -9,14 +9,13 @@ import java.io.File
  * Exists for the continuous-deploy resolver (#2341). A deploy candidate is connected to the diff
  * by its Gradle closure, by the images it deploys, or by the `common/` subdirs it consumes. That
  * last edge used to be fed from `composeRoles` alone, which only covers the shared compose fragments.
- * Everything a deploy script inlines — the deploy libs, the docker lock, secret masking — lives
+ * Everything a host script inlines — the docker lock, secret masking, the authorized-keys library — lives
  * in `common/` too, but was invisible: changing `common/docker-lock/docker-lock-lib.sh` alone selected no deploy at
  * all, so the change merged green and never reached a single host.
  *
- * Resolution is transitive, because an include is usually reached indirectly: a service deploy
- * script inlines `service-deploy/deploy-service-lib.sh`, which inlines
- * `compose-up/compose-up-lib.sh`, which inlines `docker-lock/docker-lock-lib.sh`. Only the first
- * hop is visible in the script itself.
+ * Resolution is transitive, because an include is usually reached indirectly:
+ * `host-provisioning/provision-lib.sh` inlines `host-keys/authorized-keys-lib.sh` and
+ * `secret-masking/secret-masking-lib.sh`. Only the first hop is visible in the script itself.
  *
  * Purposely file-based rather than Gradle-based: these includes are folded in by copying text at
  * materialization time, so they leave no trace in the Gradle dependency graph.

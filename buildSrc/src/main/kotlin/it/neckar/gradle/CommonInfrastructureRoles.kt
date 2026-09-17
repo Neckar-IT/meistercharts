@@ -30,9 +30,6 @@ private class CommonInfrastructureRole(
   }
 }
 
-/** The directory on a host holding the host stack's compose file, the role fragments beside it and the host's own scripts. */
-val HostStackDirectory: HostPath = HostPath("/srv/host")
-
 /** [HostStackDirectory] within the materialized deployment directory of a host. */
 private val HostStackRemoteTreeDirectory: String = "remote${HostStackDirectory.value}"
 
@@ -214,12 +211,12 @@ enum class CommonComposeRole(
   OtelAgent(
     "otel-agent",
     mountedPaths = listOf("otel-agent-config.yml"),
-    configPaths = listOf(HostPath("/srv/host/otel-agent-config.yml"), HostPath("/srv/host/otel-agent-config-overlay.yml")),
+    configPaths = listOf(HostPath("${HostStackDirectory.value}/otel-agent-config.yml"), HostPath("${HostStackDirectory.value}/otel-agent-config-overlay.yml")),
   ),
   HostExporters("host-exporters"),
   HostManagement("host-management"),
   HostLogs("host-logs"),
-  HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**"), ownedDirectories = listOf(HostPath("/srv/host/host-landing-page"))),
+  HostLandingPage("host-landing-page", mountedPaths = listOf("host-landing-page/**"), ownedDirectories = listOf(HostPath("${HostStackDirectory.value}/host-landing-page"))),
 }
 
 /** Ant pattern matching every shared fragment, in a role's source directory and in the materialized one. */
@@ -252,6 +249,7 @@ enum class CommonPipedScript(val sourceSubdir: String, val fileName: PipedScript
     get() = "$sourceSubdir/${fileName.value}"
 }
 
+/** Copies [script] into the [PipedScriptsDirectory] of this copy task's destination, from where `prepareHost` pipes it into a shell on the host. */
 fun AbstractCopyTask.includeCommonPipedScript(script: CommonPipedScript) {
   CommonInfrastructureRole(script.sourceSubdir, listOf(script.fileName.value), PipedScriptsDirectory).applyTo(this)
 }

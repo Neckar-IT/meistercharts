@@ -177,9 +177,9 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * Returns the unresolved `${…}` placeholder found in [line], or `null` if the line carries none.
  *
  * The single answer to "is this an unresolved placeholder": the copy-time check
- * [EnsureAllVariablesHaveBeenReplacedTask], `DeployTask.verifyFullyMaterialized` and
- * `ProvisionTask.verifyFullyMaterialized` all ask it. Three patterns of their own used to disagree,
- * and a script that passed the build aborted at deploy time on the same line.
+ * [EnsureAllVariablesHaveBeenReplacedTask] and `ProvisionTask.verifyFullyMaterialized` both ask it.
+ * Patterns of their own used to disagree, and a script that passed the build aborted at deploy time
+ * on the same line.
  *
  * A `${…}` preceded by a backslash (`\${…}`) is a deliberately escaped shell expansion: the
  * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
