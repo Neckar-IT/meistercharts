@@ -406,18 +406,18 @@ fun Project.configureKotlin() {
 
   tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs)
-    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArg())
   }
 
   tasks.withType<KotlinJvmCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJVM(project.isEnhancedCoroutinesDebuggingEnabled()))
-    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArg())
     compilerOptions.jvmDefault = JvmDefaultMode.NO_COMPATIBILITY //default methods for interfaces
   }
 
   tasks.withType<KotlinJsCompile> {
     compilerOptions.freeCompilerArgs.addAllDistinct(KotlinSettings.freeCompilerArgs + KotlinSettings.additionalFreeCompilerArgsJS)
-    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArgFor(this))
+    compilerOptions.freeCompilerArgs.add(explicitReturnTypesArg())
   }
 
 
@@ -428,35 +428,12 @@ fun Project.configureKotlin() {
   extensions.findByType<KotlinJvmProjectExtension>()?.applyJvmKotlinConfiguration()
 }
 
+private fun Task.explicitReturnTypesArg(): String =
+  KotlinSettings.explicitReturnTypesArg(KotlinSettings.CompilationScope.ofCompileTask(name))
+
 /**
  * Adds all elements that are not already in the list
  */
-/**
- * The `-XXexplicit-return-types` value for [compileTask], as a provider: a module sets
- * `kotlin { explicitApi() }` in its own build script, which runs after `configureKotlin`.
- *
- * Follows `-Xexplicit-api`, which the compiler rejects at a different value than this one — but only
- * where that flag applies. The Kotlin plugin exempts test sources from explicit-api mode, so a strict
- * value on a test compilation would demand return types on `@Test fun`s that no consumer ever sees,
- * and would clash with the disabled explicit-api of that same compilation.
- */
-private fun Project.explicitReturnTypesArgFor(compileTask: Task): Provider<String> = provider {
-  KotlinSettings.explicitReturnTypesArg(usesExplicitApiStrict() && compileTask.isTestCompilation().not())
-}
-
-/**
- * Whether this project turned on `kotlin { explicitApi() }` in strict mode.
- */
-private fun Project.usesExplicitApiStrict(): Boolean =
-  extensions.findByType<KotlinProjectExtension>()?.explicitApi == org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode.Strict
-
-/**
- * Whether this compile task builds test sources — `compileTestKotlin`, `compileTestKotlinJvm`,
- * `compileTestFixturesKotlin`. Production tasks (`compileKotlinJvm`, `compileCommonMainKotlinMetadata`)
- * never carry `Test` in their name.
- */
-private fun Task.isTestCompilation(): Boolean = name.contains("Test")
-
 private fun ListProperty<String>.addAllDistinct(elements: List<String>) {
   val newElements = get().toMutableSet()
   newElements.addAll(elements)

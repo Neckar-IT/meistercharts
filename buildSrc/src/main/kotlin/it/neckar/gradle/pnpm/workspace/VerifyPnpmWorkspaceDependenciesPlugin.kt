@@ -4,9 +4,7 @@ import it.neckar.gradle.Plugins
 import it.neckar.gradle.pnpm.dependency.NpmPackageName
 import it.neckar.gradle.pnpm.dependency.PackageJsonParser
 import it.neckar.gradle.pnpm.dependency.PackageNameRegistry
-import it.neckar.projects.ExternalProjects
 import it.neckar.projects.GradleProjectPath
-import it.neckar.projects.OtherProjects
 import it.neckar.projects.Projects
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -45,7 +43,7 @@ class VerifyPnpmWorkspaceDependenciesPlugin : Plugin<Project> {
       // Provider defers pnpmProjects() until task realization — GradleContext.initialize
       // runs in the root build.gradle.kts body, which is after the plugins {} block.
       val relativePathByModule = target.provider {
-        (Projects.pnpmProjects() + ExternalProjects.pnpmProjects() + OtherProjects.pnpmProjects())
+        Projects.pnpmProjects()
           .associate { it.path.path to "${it.path.filePath}/package.json" }
       }
 
@@ -144,7 +142,7 @@ abstract class VerifyPnpmWorkspaceDependenciesTask : DefaultTask() {
           appendLine("pnpm workspace dependency verification failed across ${packageJsonByModule.size} pnpm modules:")
           problems.forEach { appendLine("  - $it") }
           appendLine()
-          append("A module is registered in settings.gradle.kts and Projects.kt; the npm package it provides is the 'name' of its package.json.")
+          append("A module is registered in settings.gradle.kts and in Projects; the npm package it provides is the 'name' of its package.json.")
         },
       )
     }

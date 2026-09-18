@@ -2,6 +2,8 @@ package it.neckar.gradle
 
 import it.neckar.projects.ConfiguredProject
 import it.neckar.projects.KotlinTarget
+import it.neckar.projects.accessor
+import it.neckar.projects.registrationFile
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -38,9 +40,8 @@ fun KotlinMultiplatformExtension.declareTargets(project: Project, targets: Set<K
  * module holding its sources elsewhere is analysed too — `internal/open/commons/descriptors/` keeps
  * them under `build-logic/descriptors/src/` and pulls them in with `kotlin.srcDir`.
  *
- * Two exclusions: test source sets (their name ends in `Test`) and anything under the build
- * directory, which is generated code — `internal/open/version-info/` adds its generated constants
- * to `commonMain` that way.
+ * Anything under the build directory stays out: it is generated code, and `internal/open/version-info/` adds its
+ * generated constants to `commonMain` that way.
  *
  * Resolved lazily: the source sets are complete only once the module build script has run.
  */
@@ -126,8 +127,8 @@ fun Project.verifyDeclaredTargets(configuredProject: ConfiguredProject) {
         appendLine("Kotlin targets of $path deviate from its registration in the project registry.")
         appendLine("  registered: ${expectedTargetNames.joinToString(", ").ifEmpty { "<none>" }}")
         appendLine("  actual:     ${actualTargetNames.joinToString(", ").ifEmpty { "<none>" }}")
-        appendLine("A module build script must not declare a target. Register it instead:")
-        appendLine("  multiplatform(\"$path\", ${configuredProject.targets.joinToString(", ") { it.name }})")
+        appendLine("A module build script must not declare a target. Register it instead in ${registrationFile(configuredProject.path)}:")
+        appendLine("  ${configuredProject.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", ${configuredProject.targets.joinToString(", ") { it.name }})")
       }
     }
   }
@@ -158,8 +159,8 @@ fun Project.verifyTargetSourceDirectories(configuredProject: ConfiguredProject) 
   require(unregistered.isEmpty()) {
     buildString {
       appendLine("$path has source directories for Kotlin targets it is not registered for: ${unregistered.joinToString(", ")}")
-      appendLine("Nothing compiles or analyses that code. Register the target in the project registry:")
-      appendLine("  multiplatform(\"$path\", …)")
+      appendLine("Nothing compiles or analyses that code. Register the target in ${registrationFile(configuredProject.path)}:")
+      appendLine("  ${configuredProject.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", …)")
     }
   }
 }

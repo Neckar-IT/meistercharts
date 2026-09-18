@@ -1,6 +1,7 @@
 package it.neckar.gradle
 
 import it.neckar.projects.Projects
+import it.neckar.projects.project
 import org.gradle.api.tasks.AbstractCopyTask
 import java.io.File
 
@@ -36,7 +37,7 @@ import java.io.File
  * build directory), never from source.
  */
 fun AbstractCopyTask.inlineCommonShellIncludes() {
-  val commonDir = Projects.infrastructure_common.project().projectDir
+  val commonDir = Projects.infrastructure.common.project().projectDir
 
   // The inlined library files are not in the task's `from(...)` set, so declare them
   // as inputs explicitly — otherwise editing a `*-lib.sh` would not re-materialize the

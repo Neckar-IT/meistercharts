@@ -1,10 +1,8 @@
 package it.neckar.gradle.pnpm.workspace
 
-import it.neckar.gradle.Plugins
-import it.neckar.projects.ExternalProjects
-import it.neckar.projects.OtherProjects
-import it.neckar.projects.Projects
 import com.charleskorn.kaml.Yaml
+import it.neckar.gradle.Plugins
+import it.neckar.projects.Projects
 import kotlinx.serialization.Serializable
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -23,7 +21,7 @@ import java.io.File
 
 /**
  * Verifies that the committed `pnpm-workspace.yaml` `packages:` list matches the set of pnpm projects
- * declared in [Projects.pnpmProjects] and [OtherProjects.pnpmProjects] plus
+ * declared in [Projects] plus
  * [VerifyPnpmWorkspaceYamlPluginExtension.manualEntries].
  *
  * Fails fast if entries are missing, unknown, or duplicated. Order is not enforced.
@@ -38,12 +36,12 @@ class VerifyPnpmWorkspaceYamlPlugin : Plugin<Project> {
 
     target.tasks.register<VerifyPnpmWorkspaceYamlTask>(VerifyTaskName) {
       group = "verification"
-      description = "Verifies that pnpm-workspace.yaml lists the same packages as the pnpm projects from Projects/ExternalProjects/OtherProjects + manualEntries"
+      description = "Verifies that pnpm-workspace.yaml lists the same packages as the pnpm projects of the project registry + manualEntries"
 
       workspaceYamlFile = extension.workspaceYamlFile
       manualEntries = extension.manualEntries
       expectedProjectPaths.set(target.provider {
-        (Projects.pnpmProjects() + ExternalProjects.pnpmProjects() + OtherProjects.pnpmProjects()).map { it.path.filePath }
+        Projects.pnpmProjects().map { it.path.filePath }
       })
       markerFile = target.layout.buildDirectory.file("verifyPnpmWorkspaceYaml/marker.txt")
     }
@@ -62,7 +60,7 @@ interface VerifyPnpmWorkspaceYamlPluginExtension {
   val workspaceYamlFile: RegularFileProperty
 
   /**
-   * Additional entries that must appear in the `packages:` list beyond [Projects.pnpmProjects].
+   * Additional entries that must appear in the `packages:` list beyond the pnpm projects of [Projects].
    * Use for build-output paths or other locations not covered by the Gradle project graph.
    */
   val manualEntries: ListProperty<String>
@@ -115,7 +113,7 @@ abstract class VerifyPnpmWorkspaceYamlTask : DefaultTask() {
           appendLine("pnpm-workspace.yaml verification failed for ${file.path}:")
           problems.forEach { appendLine("  - $it") }
           appendLine()
-          append("Expected packages are defined by Projects.pnpmProjects() in buildSrc plus manualEntries in build.gradle.kts.")
+          append("Expected packages are the pnpm projects registered in Projects plus manualEntries in build.gradle.kts.")
         },
       )
     }

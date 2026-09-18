@@ -2,6 +2,7 @@ package it.neckar.gradle
 
 import it.neckar.gradle.deployment.PipedScriptName
 import it.neckar.projects.Projects
+import it.neckar.projects.project
 import it.neckar.runtime.context.HostPath
 import org.gradle.api.tasks.AbstractCopyTask
 
@@ -22,7 +23,7 @@ private class CommonInfrastructureRole(
   val destinationSubdir: String,
 ) {
   fun applyTo(task: AbstractCopyTask) {
-    val commonProjectDir = Projects.infrastructure_common.project().projectDir
+    val commonProjectDir = Projects.infrastructure.common.project().projectDir
     task.from(commonProjectDir.resolve(sourceSubdir)) {
       includePatterns.forEach { pattern -> include(pattern) }
       into(destinationSubdir)

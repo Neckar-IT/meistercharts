@@ -40,6 +40,30 @@ object KotlinSettings {
   )
 
   /**
+   * Warns, never fails, on a public declaration with an inferred return type: the code is valid, the finding is style.
+   */
+  fun explicitReturnTypesArg(scope: CompilationScope): String =
+    when (scope) {
+      CompilationScope.Production -> "-XXexplicit-return-types=warning"
+      CompilationScope.Test -> "-XXexplicit-return-types=disable"
+    }
+
+  enum class CompilationScope {
+    Production,
+    Test,
+    ;
+
+    companion object {
+      /**
+       * Test compile tasks (`compileTestKotlinJvm`, `compileTestFixturesKotlin`) carry `Test` in their name,
+       * production compile tasks (`compileKotlinJvm`, `compileCommonMainKotlinMetadata`) never do.
+       */
+      fun ofCompileTask(taskName: String): CompilationScope =
+        if (taskName.contains("Test")) Test else Production
+    }
+  }
+
+  /**
    * Compiler argument sources by Kotlin version (keep sorted by Kotlin version).
    *
    * Kotlin 2.4.x:
@@ -65,7 +89,7 @@ object KotlinSettings {
    *   later Kotlin release, at which point the compiler prints
    *   `The argument '<flag>' is redundant for the current language version <v>`. Drop the flag then.
    * - **Not active** — every other relevant flag, documented with its purpose and the reason it is off
-   *   (already default at LV 2.4, deferred, no effect, deprecated, …). Kept for reference, not enabled.
+   *   (already default at LV 2.4, rejected, no effect, deprecated, …). Kept for reference, not enabled.
    *
    * Scope: this catalogs language features and project-level quality / diagnostics / interop decisions for
    * Kotlin 2.2–2.4 — every flag we choose, active or not. Compiler/build-system plumbing (incremental
@@ -76,21 +100,6 @@ object KotlinSettings {
    * `grep "is redundant for the current language version"` — a flag that warns has become the LV default;
    * move it from active into the "already default" list below. See the per-version argument-source links above.
    */
-  /**
-   * Requires explicit return types on public API. Not part of [freeCompilerArgs] because the value has
-   * to match `-Xexplicit-api` whenever a module turns that on — the compiler rejects the two flags
-   * with different values. `Utils.configureKotlin` therefore derives it per project from
-   * `kotlin { explicitApi() }`.
-   *
-   * A module that has not opted in gets `disable` rather than `warning`. Since #2792 the compiler's
-   * warnings are reported instead of suppressed, and repo-wide `warning` contributed 419 findings of
-   * a pure style rule to the Code Quality report — drowning the diagnostics that report defects, for
-   * modules whose explicit-API cleanup is not scheduled. The flag follows the per-module rollout
-   * (#2829); it does not precede it.
-   */
-  fun explicitReturnTypesArg(explicitApiStrict: Boolean): String =
-    if (explicitApiStrict) "-XXexplicit-return-types=strict" else "-XXexplicit-return-types=disable"
-
   val freeCompilerArgs: List<String> = buildList {
     // Opt-ins for the experimental APIs we use.
     addAll(optInExperimentalAnnotations.map { "-opt-in=$it" })
@@ -127,20 +136,9 @@ object KotlinSettings {
     //   -Xexplicit-backing-fields         explicit backing fields (`val x: T get() = field`)
     //   -Xcontext-parameters              `context(...)` parameters (the language feature itself)
     //
-    // Deferred — the explicit-API pair. Both halves are off until the cleanup is scheduled; neither is
-    // actionable while the other reports thousands of findings into the same Code Quality report.
-    //   -Xexplicit-api[=warning|strict]   also require explicit visibility on public API. #1944: 25,370
-    //                                     violations at =warning (24,885 visibility + 485 return-type), far
-    //                                     above the cleanup threshold. The return half is available
-    //                                     per module: `kotlin { explicitApi() }` makes
-    //                                     [explicitReturnTypesArg] follow it (commons/concurrent does).
-    //                                     Rolling it out to the remaining open-source modules: #2829.
-    //                                     A module that has not opted in gets `disable`: with warnings
-    //                                     reported since #2792, the repo-wide `warning` put 419 findings
-    //                                     of a pure style rule into the Code Quality report — burying the
-    //                                     diagnostics that report defects, in modules whose cleanup is
-    //                                     not scheduled. The flag follows the rollout, not the other way
-    //                                     round.
+    // Rejected:
+    //   -Xexplicit-api[=warning|strict]   the closed modules use the open ones, so nearly every declaration stays
+    //                                     public anyway; production return types warn via [explicitReturnTypesArg]
     //
     // Available but deliberately off:
     //   -Xreport-all-warnings             promotes every warning the compiler holds back by default; the

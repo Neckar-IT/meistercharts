@@ -2,7 +2,7 @@ package it.neckar.gradle.pnpm.dependency
 
 import it.neckar.projects.ConfiguredProject
 import it.neckar.projects.GradleProjectPath
-import it.neckar.projects.OtherProjects
+import it.neckar.projects.project
 import it.neckar.projects.Projects
 import org.gradle.api.GradleException
 import org.gradle.api.logging.Logging
@@ -23,7 +23,7 @@ class PackageNameRegistry internal constructor(
     return findGradlePathOrNull(packageName)
       ?: throw GradleException(
         "No pnpm module provides npm package '$packageName'. Either it is not registered as a Gradle " +
-          "project (settings.gradle.kts + Projects.kt), or its package.json declares a different 'name'. " +
+          "project (settings.gradle.kts + Projects), or its package.json declares a different 'name'. " +
           "Registered packages: $size."
       )
   }
@@ -45,7 +45,7 @@ class PackageNameRegistry internal constructor(
      * @param pnpmProjects List of pnpm projects to scan (defaults to all pnpm projects)
      */
     fun create(
-      pnpmProjects: List<ConfiguredProject> = Projects.pnpmProjects() + OtherProjects.pnpmProjects(),
+      pnpmProjects: List<ConfiguredProject> = Projects.pnpmProjects(),
     ): PackageNameRegistry {
       val parser = PackageJsonParser()
       val mapping = mutableMapOf<NpmPackageName, GradleProjectPath>()
