@@ -133,6 +133,7 @@ object Plugins {
 
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   const val verifyPnpmWorkspaceDependencies: String = "it.neckar.repos.pnpm.verify-workspace-dependencies"
+  const val verifyPnpmLockfilePeerVariants: String = "it.neckar.repos.pnpm.verify-lockfile-peer-variants"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
   const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
   @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))

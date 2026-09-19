@@ -76,8 +76,9 @@ open class ConfiguredProject protected constructor(
   }
 
   /**
-   * A pnpm package that is not a runnable web app (config or library) — no dev server.
-   * Use [vite] / [astro] for web apps so local development picks the right dev-server strategy.
+   * A pnpm package without a Vite or Astro dev server: config, library, or a site another generator
+   * builds (Eleventy). Use [vite] / [astro] for web apps so local development picks the right
+   * dev-server strategy.
    */
   protected fun pnpm(directory: String): ConfiguredProject {
     return subproject(directory, ProjectType.Pnpm.Library)
