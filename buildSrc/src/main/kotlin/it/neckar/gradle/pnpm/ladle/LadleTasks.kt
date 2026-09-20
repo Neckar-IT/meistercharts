@@ -10,10 +10,11 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
 
 /**
- * Names the Ladle tasks share with the scripts they run, and the environment variable that carries
- * the port to the Playwright suites.
+ * Names of the Ladle tasks and scripts, and the names that connect them to the Playwright suites:
+ * the port variable, the snapshot update property, the baseline branch and directory.
  */
 internal object LadleTasks {
   /** Serves the package's Ladle stories — the pnpm script and the Gradle task share the name. */
@@ -28,8 +29,29 @@ internal object LadleTasks {
   /** Runs the package's Playwright suite through pnpm. */
   const val JsIntegrationTestTaskName: String = "integrationTest"
 
+  /** The pnpm script of the Playwright suite against the package's Ladle stories. */
+  const val IntegrationTestScriptName: String = "integration-test"
+
+  /** Unique in the repository, unlike `integrationTest`, which also names the slow JVM suites. */
+  const val LadleTestsTaskName: String = "ladleTests"
+
   /** Read by `ladleWebServer` in the shared Playwright config to place the story browser. */
   const val LadlePortEnvironmentVariable: String = "LADLE_PORT"
+
+  /** Hands `--update-snapshots` to Playwright, see [SnapshotUpdateMode]. */
+  const val UpdateSnapshotsProperty: String = "playwright.updateSnapshots"
+
+  /** Unpacks the package's baselines from [BaselineBranch] before its suite runs. */
+  const val ExtractLadleBaselinesTaskName: String = "extractLadleBaselines"
+
+  /** Every package's baselines in one commit without history. */
+  const val BaselineBranch: String = "data/ladle-baselines"
+
+  /** The remote-tracking ref of [BaselineBranch] that `git fetch` updates. */
+  const val BaselineRef: String = "refs/remotes/origin/$BaselineBranch"
+
+  /** The `snapshotDir` of `ladleSuiteConfig`, relative to the package. */
+  const val BaselineDirectory: String = "build/ladle-baselines"
 }
 
 /**
@@ -123,6 +145,8 @@ internal fun Project.registerLadleBuild() {
  * Ladle port down through the environment — without it two worktrees running screenshot tests would
  * share one server and compare the wrong stories.
  *
+ * `-Pplaywright.updateSnapshots=<value>` is passed on as `--update-snapshots`.
+ *
  * The name is the one `registerIntegrationTestSuite` gives a JVM module its slow-test suite. No
  * module carries both today, but a module that grows a `package.json` next to Kotlin sources would
  * otherwise fail the whole configuration phase — hence the check in `afterEvaluate`, where the
@@ -130,10 +154,11 @@ internal fun Project.registerLadleBuild() {
  */
 internal fun Project.registerJsIntegrationTest() {
   val port = ladleDevPort()
+  val snapshotUpdateMode = snapshotUpdateMode()
 
   afterEvaluate {
     if (tasks.findByName(LadleTasks.JsIntegrationTestTaskName) != null) {
-      logger.info("$path already has a ${LadleTasks.JsIntegrationTestTaskName} task; the pnpm integration-test script keeps to `pnpm run integration-test`")
+      logger.info("$path already has a ${LadleTasks.JsIntegrationTestTaskName} task; the pnpm ${LadleTasks.IntegrationTestScriptName} script keeps to `pnpm run ${LadleTasks.IntegrationTestScriptName}`")
       return@afterEvaluate
     }
 
@@ -143,13 +168,60 @@ internal fun Project.registerJsIntegrationTest() {
 
       dependsOn("build")
 
-      args.set(listOf("run", "integration-test"))
+      args.set(
+        buildList {
+          add("run")
+          add(LadleTasks.IntegrationTestScriptName)
+          // pnpm appends everything after the script name to the script's last command, a `--`
+          // included, which `playwright test` would read as a file filter.
+          if (snapshotUpdateMode != null) {
+            add("--update-snapshots=${snapshotUpdateMode.cliValue}")
+          }
+        },
+      )
 
       if (port != null) {
         environment.put(LadleTasks.LadlePortEnvironmentVariable, port.toString())
       }
     }
   }
+}
+
+/**
+ * Registers `ladleTests`, which the nightly schedule `run-ladle-tests` runs in every package, and
+ * `extractLadleBaselines`, which unpacks the baselines before the suite.
+ */
+internal fun Project.registerLadleTests() {
+  val snapshotUpdateMode = snapshotUpdateMode()
+
+  val extractBaselines = tasks.register<ExtractLadleBaselinesTask>(LadleTasks.ExtractLadleBaselinesTaskName) {
+    description = "Unpacks the package's screenshot baselines from ${LadleTasks.BaselineBranch} into ${LadleTasks.BaselineDirectory}/"
+    group = "test"
+
+    repositoryDirectory.set(rootProject.layout.projectDirectory)
+    packagePath.set(projectDir.relativeTo(rootDir).invariantSeparatorsPath)
+    baselineDirectory.set(layout.projectDirectory.dir(LadleTasks.BaselineDirectory))
+    this.snapshotUpdateMode.set(snapshotUpdateMode)
+  }
+
+  // Matched lazily, as `integrationTest` is registered in afterEvaluate, and by type: a JVM suite of
+  // the same name is no Ladle suite.
+  val ladleSuite = tasks.withType<PnpmTask>().matching { it.name == LadleTasks.JsIntegrationTestTaskName }
+  ladleSuite.configureEach {
+    dependsOn(extractBaselines)
+  }
+
+  tasks.register(LadleTasks.LadleTestsTaskName) {
+    description = "Runs the Playwright suite against the package's Ladle stories"
+    group = "test"
+
+    dependsOn(ladleSuite)
+  }
+}
+
+/** Null when the build only compares. */
+private fun Project.snapshotUpdateMode(): SnapshotUpdateMode? {
+  return providers.gradleProperty(LadleTasks.UpdateSnapshotsProperty).orNull?.let(SnapshotUpdateMode::parse)
 }
 
 /**
