@@ -6,6 +6,7 @@ import it.neckar.gradle.pnpm.dependency.PackageJsonParser
 import it.neckar.gradle.pnpm.dependency.PackageNameRegistry
 import it.neckar.projects.GradleProjectPath
 import it.neckar.projects.Projects
+import it.neckar.projects.RepositoryPath
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -31,6 +32,8 @@ import java.io.File
  * `packages:` list against the registered pnpm projects, this one checks the edges between them.
  * Both matter because the build derives its pnpm task wiring from those edges — an unresolvable one
  * costs the build-order edge and the dependency's `dist/` input.
+ *
+ * A package listed in [ExclusiveConsumers.Monorepo] may be declared by its one consumer only.
  */
 class VerifyPnpmWorkspaceDependenciesPlugin : Plugin<Project> {
   override fun apply(target: Project) {
@@ -38,7 +41,7 @@ class VerifyPnpmWorkspaceDependenciesPlugin : Plugin<Project> {
 
     target.tasks.register<VerifyPnpmWorkspaceDependenciesTask>(VerifyTaskName) {
       group = "verification"
-      description = "Verifies that every workspace: dependency of a pnpm module resolves to another registered pnpm module"
+      description = "Verifies that every workspace: dependency of a pnpm module resolves to another registered pnpm module and that an exclusive package is declared by its consumer only"
 
       // Provider defers pnpmProjects() until task realization — GradleContext.initialize
       // runs in the root build.gradle.kts body, which is after the plugins {} block.
@@ -133,6 +136,21 @@ abstract class VerifyPnpmWorkspaceDependenciesTask : DefaultTask() {
         if (registry.findGradlePathOrNull(packageName) == null) {
           problems += "$modulePath depends on '$packageName', which no registered pnpm module provides"
         }
+      }
+    }
+
+    val exclusiveConsumers = ExclusiveConsumers.Monorepo
+    problems += exclusiveConsumers.staleEntries(packageJsonByModule.keys)
+    val packageNameByModule = moduleByPackageName.entries.associate { (packageName, modulePath) -> modulePath to packageName }
+    parsedByModule.keys.forEach { modulePath ->
+      val packageJsonFile = packageJsonByModule.getValue(modulePath)
+      val manifest = PackageJsonManifest(
+        module = modulePath,
+        path = RepositoryPath.of(packageJsonFile, rootDir.asFile),
+        text = packageJsonFile.readText(),
+      )
+      exclusiveConsumers.foreignDeclarationsIn(manifest, packageNameByModule).forEach { declaration ->
+        problems += declaration.toString()
       }
     }
 

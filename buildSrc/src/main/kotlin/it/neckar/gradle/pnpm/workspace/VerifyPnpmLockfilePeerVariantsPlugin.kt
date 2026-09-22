@@ -9,7 +9,7 @@ import org.gradle.kotlin.dsl.register
 
 /**
  * Verifies that `pnpm-lock.yaml` installs every version of [singleCopyPackageNames] as one copy, so a
- * [PnpmPeerVariantSplit] fails the merge request gate before a module build fails on it.
+ * [PnpmPeerVariantSplit] fails the merge request gate with the packages using each copy.
  */
 class VerifyPnpmLockfilePeerVariantsPlugin : Plugin<Project> {
   override fun apply(target: Project) {

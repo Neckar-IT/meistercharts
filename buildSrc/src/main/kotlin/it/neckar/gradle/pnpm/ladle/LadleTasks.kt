@@ -23,6 +23,9 @@ internal object LadleTasks {
   /** Builds the package's stories as a static site — the content of its showcase image. */
   const val LadleBuildTaskName: String = "ladleBuild"
 
+  /** Where [LadleBuildTaskName] writes the static site, relative to the package. */
+  const val LadleBuildDirectory: String = "build/ladle"
+
   /** The pnpm script behind [LadleBuildTaskName]. */
   const val LadleBuildScriptName: String = "ladle:build"
 
@@ -134,7 +137,7 @@ internal fun Project.registerLadleBuild() {
     inputs.dir(".ladle")
     inputs.file("package.json")
     inputs.file("tsconfig.json")
-    outputs.dir(layout.projectDirectory.dir("build/ladle"))
+    outputs.dir(layout.projectDirectory.dir(LadleTasks.LadleBuildDirectory))
   }
 }
 
@@ -145,7 +148,9 @@ internal fun Project.registerLadleBuild() {
  * Ladle port down through the environment — without it two worktrees running screenshot tests would
  * share one server and compare the wrong stories.
  *
- * `-Pplaywright.updateSnapshots=<value>` is passed on as `--update-snapshots`.
+ * `-Pplaywright.updateSnapshots=<value>` is passed on as `--update-snapshots`. A package with a
+ * `ladle:build` script builds its showcase first, so its suite can load it through
+ * `openLadleBuildUnderStaticSitePolicy`.
  *
  * The name is the one `registerIntegrationTestSuite` gives a JVM module its slow-test suite. No
  * module carries both today, but a module that grows a `package.json` next to Kotlin sources would
@@ -167,6 +172,7 @@ internal fun Project.registerJsIntegrationTest() {
       group = "test"
 
       dependsOn("build")
+      dependsOn(tasks.matching { it.name == LadleTasks.LadleBuildTaskName })
 
       args.set(
         buildList {

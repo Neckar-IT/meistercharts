@@ -4,7 +4,7 @@ import it.neckar.gradle.pnpm.dependency.NpmPackageName
 
 /**
  * The installed copies of `pnpm-lock.yaml` and the dependency entries pointing at them. An unknown
- * field of an importer, a snapshot or an installing entry fails with its line number.
+ * field of an importer, a snapshot or an installing entry fails with its line number, and so does a merge conflict marker.
  */
 class PnpmLockfileGraph(
   val snapshotKeys: List<PnpmSnapshotKey>,
@@ -31,6 +31,9 @@ class PnpmLockfileGraph(
     /** Fields of a snapshot that install nothing. */
     private val snapshotFieldNamesWithoutEdges: Set<String> = setOf("transitivePeerDependencies", "optional")
 
+    /** The lines git writes into a conflict; read as a section header, a marker would skip every entry up to the next section. */
+    private val conflictMarkerPrefixes: List<String> = listOf("<<<<<<<", "|||||||", "=======", ">>>>>>>")
+
     fun parse(lockfileText: String): PnpmLockfileGraph {
       val reader = Reader()
 
@@ -38,8 +41,15 @@ class PnpmLockfileGraph(
         if (line.isBlank()) {
           return@forEachIndexed
         }
+        val lineNumber = index + 1
+        if (conflictMarkerPrefixes.any { line.startsWith(it) }) {
+          throw IllegalArgumentException(
+            "pnpm-lock.yaml line $lineNumber holds an unresolved merge conflict marker: <$line>. " +
+              "Regenerate the lockfile: git checkout origin/main -- pnpm-lock.yaml && ./gradlew :pnpmInstall",
+          )
+        }
 
-        reader.readLine(LockfileLine(lineNumber = index + 1, text = line))
+        reader.readLine(LockfileLine(lineNumber = lineNumber, text = line))
       }
 
       return reader.finish()

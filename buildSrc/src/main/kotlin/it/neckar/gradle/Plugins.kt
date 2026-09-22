@@ -201,9 +201,21 @@ object Plugins {
 
   /**
    * Judges the HTML a project deploys: no `<script>` carrying code, because a document answering
-   * under `script-src 'self'` has it parsed into the DOM and never run. Applied per project.
+   * under `script-src 'self'` has it parsed into the DOM and never run. Bundled via `frontendProject`.
    */
   const val noInlineScripts: String = "it.neckar.no-inline-scripts"
+
+  /**
+   * Checks that the built output of a frontend carries `health/live`, the file every probe reads
+   * the frontend's liveness from at `/health/live`. Bundled via `frontendProject`.
+   */
+  const val livenessFile: String = "it.neckar.liveness-file"
+
+  /**
+   * The convention of every frontend project: names what the frontend delivers once
+   * (`frontendProject { output }`) and applies `noInlineScripts` and `livenessFile` to it.
+   */
+  const val frontendProject: String = "it.neckar.frontend-project"
 
   /**
    * Single default source for the OTel agent config: `-javaagent` + `OTEL_*` env defaults on the
@@ -242,6 +254,17 @@ object Plugins {
    * Generates a self-contained `deploy` task (host + tag baked into the script) for a module.
    */
   const val deployment: String = "it.neckar.deployment"
+
+  /**
+   * The store of a service module, pulled once a day by `backups-host.neckar.it`:
+   * `backup { daily(pullTime = LocalTime(3, 0), timeZone = TimeZone.of("Europe/Berlin")) }`.
+   */
+  const val backup: String = "it.neckar.backup"
+
+  /**
+   * Check time and default retention on `backups-host.neckar.it`; collects every `backup { }` block.
+   */
+  const val backupSchedule: String = "it.neckar.backup-schedule"
 
   /**
    * Continuous-deploy opt-in for non-image deploys (#2469): the module declares its own
