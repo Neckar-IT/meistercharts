@@ -25,7 +25,7 @@ import java.io.File
  *
  * **Transitive includes:** an inlined library may itself carry `# @inline:` markers;
  * they are resolved recursively, so a library declares its own dependencies and the
- * consuming script never has to know about them (e.g. a host's `installEnvironment.sh` inlines
+ * consuming script never has to know about them (e.g. a host's `provisionEnvironment.sh` inlines
  * `host-provisioning/provision-lib.sh`, which inlines `host-keys/authorized-keys-lib.sh`, so the
  * script gets both). A per-expansion `seen` set drops
  * a path already inlined in the same tree, guarding against cycles and diamonds. It starts
@@ -120,6 +120,7 @@ internal val InlinedLibraryInputs: List<String> = listOf(
   "host-keys/authorized-keys-lib.sh",
   "gitlab-runner/cleanup-runner-cache.sh",
   "postgres-major-upgrade/postgres-major-upgrade.sh",
+  "mongodb-archive/mongodb-archive-lib.sh",
   "worker-host/runner-identity-lib.sh",
 )
 

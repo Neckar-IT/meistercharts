@@ -239,10 +239,10 @@ fun AbstractCopyTask.includeCommonComposeRole(role: CommonComposeRole) = when (r
  */
 enum class CommonPipedScript(val sourceSubdir: String, val fileName: PipedScriptName) {
   /** Keeps the continuous-deploy key in root's `authorized_keys`. */
-  ContinuousDeployKey("host-keys", PipedScriptName("install-continuous-deploy-key.sh")),
+  ContinuousDeployKey("host-keys", PipedScriptName("deploy-continuous-deploy-key.sh")),
 
-  /** Installs the host's maintenance crontab; its arguments are the host's extra crontab lines. */
-  MaintenanceCron("host-maintenance", PipedScriptName("install-maintenance-cron.sh")),
+  /** Deploys the host's maintenance crontab; its arguments are the host's extra crontab lines. */
+  MaintenanceCron("host-maintenance", PipedScriptName("deploy-maintenance-cron.sh")),
   ;
 
   /** The path relative to `internal/infrastructure/common/`. */

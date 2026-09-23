@@ -262,6 +262,11 @@ object Plugins {
   const val backup: String = "it.neckar.backup"
 
   /**
+   * The host module of a machine holding a store: places the archive recipients file and the encryption library under `/srv/host/`.
+   */
+  const val archiveEncryptionHost: String = "it.neckar.archive-encryption-host"
+
+  /**
    * Check time and default retention on `backups-host.neckar.it`; collects every `backup { }` block.
    */
   const val backupSchedule: String = "it.neckar.backup-schedule"
@@ -273,7 +278,7 @@ object Plugins {
   const val customDeployment: String = "it.neckar.custom-deployment"
 
   /**
-   * Generates a self-contained `provision` task (host baked into the script) for one-time host provisioning.
+   * Generates a self-contained `provision` task (host baked into the script) for host provisioning.
    */
   const val provisioning: String = "it.neckar.provisioning"
   const val openapiValidator: String = "it.neckar.openapi.validator"
