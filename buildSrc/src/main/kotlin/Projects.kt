@@ -8,15 +8,15 @@ import it.neckar.projects.KotlinTarget.Jvm
  * This is a local file — not overwritten by populateBuildSrc.
  */
 object Projects : AbstractProjects() {
-  val meistercharts_commons: ConfiguredProject = multiplatform(":meistercharts-commons", Jvm, Js)
-  val meistercharts_test_commons: ConfiguredProject = multiplatform(":meistercharts-test-commons", Jvm, Js)
-  val meistercharts_core: ConfiguredProject = multiplatform(":meistercharts-core", Jvm, Js)
+  val meistercharts_commons: ConfiguredProject = multiplatform(":meistercharts-commons", ProjectRole.Library, Jvm, Js)
+  val meistercharts_test_commons: ConfiguredProject = multiplatform(":meistercharts-test-commons", ProjectRole.Library, Jvm, Js)
+  val meistercharts_core: ConfiguredProject = multiplatform(":meistercharts-core", ProjectRole.Library, Jvm, Js)
 
-  val meistercharts_history_core: ConfiguredProject = multiplatform(":meistercharts-history::meistercharts-history-core", Jvm, Js)
-  val meistercharts_history_api: ConfiguredProject = multiplatform(":meistercharts-history::meistercharts-history-api", Jvm, Js)
+  val meistercharts_history_core: ConfiguredProject = multiplatform(":meistercharts-history::meistercharts-history-core", ProjectRole.Library, Jvm, Js)
+  val meistercharts_history_api: ConfiguredProject = multiplatform(":meistercharts-history::meistercharts-history-api", ProjectRole.Library, Jvm, Js)
 
-  val meistercharts_canvas: ConfiguredProject = multiplatform(":meistercharts-canvas", Jvm, Js)
-  val meistercharts_api_easy: ConfiguredProject = multiplatform(":meistercharts-api:meistercharts-easy-api", Jvm, Js)
+  val meistercharts_canvas: ConfiguredProject = multiplatform(":meistercharts-canvas", ProjectRole.Library, Jvm, Js)
+  val meistercharts_api_easy: ConfiguredProject = multiplatform(":meistercharts-api:meistercharts-easy-api", ProjectRole.Library, Jvm, Js)
 }
 
 object ExternalProjects : AbstractProjects() {

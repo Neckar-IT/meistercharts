@@ -212,8 +212,9 @@ object Plugins {
   const val livenessFile: String = "it.neckar.liveness-file"
 
   /**
-   * The convention of every frontend project: names what the frontend delivers once
-   * (`frontendProject { output }`) and applies `noInlineScripts` and `livenessFile` to it.
+   * The convention of every project registered with `ProjectRole.Frontend`, applied by `configureProjects`
+   * rather than a plugins block: names what the frontend delivers once (`frontendProject { output }`) and
+   * applies `noInlineScripts` and `livenessFile` to it.
    */
   const val frontendProject: String = "it.neckar.frontend-project"
 
@@ -267,7 +268,7 @@ object Plugins {
   const val archiveEncryptionHost: String = "it.neckar.archive-encryption-host"
 
   /**
-   * Check time and default retention on `backups-host.neckar.it`; collects every `backup { }` block.
+   * Check time and default retention of `backups.neckar.it`, the backup service on `backups-host.neckar.it`; collects every `backup { }` block.
    */
   const val backupSchedule: String = "it.neckar.backup-schedule"
 

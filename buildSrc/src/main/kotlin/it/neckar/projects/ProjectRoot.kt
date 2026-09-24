@@ -6,7 +6,7 @@ import org.gradle.api.Project
  * The root of a project registry: the Gradle root project `:`, with lookups over every registered
  * project below it.
  */
-abstract class ProjectRoot : ConfiguredProject(parent = null, relativePath = GradleProjectPath.Root, type = ProjectType.Intermediate) {
+abstract class ProjectRoot : ConfiguredProject(parent = null, relativePath = GradleProjectPath.Root, type = ProjectType.Intermediate, role = ProjectRole.Container) {
 
   /** Every registered project, parents before their subprojects; the root itself is no registration. */
   val allProjects: List<ConfiguredProject> by lazy {

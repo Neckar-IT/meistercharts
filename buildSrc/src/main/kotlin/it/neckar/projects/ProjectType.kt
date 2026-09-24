@@ -1,8 +1,9 @@
 package it.neckar.projects
 
 /**
- * The nature of a configured project. Sealed so the dev-server strategy for JS projects can be
- * expressed as a subtype of [Pnpm] rather than a parallel flag (see `it.neckar.gradle.localdev`).
+ * The toolchain and structure of a configured project; [ProjectRole] says what it does in the system.
+ * Sealed so the dev-server strategy for JS projects can be expressed as a subtype of [Pnpm] rather than
+ * a parallel flag (see `it.neckar.gradle.localdev`).
  */
 sealed interface ProjectType {
   /**

@@ -492,7 +492,7 @@ fun Project.configureNodeJsRootExtension() {
  * The JUnit Jupiter property that holds the timeout for test methods — `@Test`, `@ParameterizedTest`
  * and the other testable methods, but **not** `@BeforeEach` / `@BeforeAll` / `@AfterEach`.
  *
- * Set by [configureJunit] as a hang guard, removed again by [removePerTestTimeout].
+ * Set by [configureJunit] as a hang guard, removed again by [removeTimeoutGuards].
  */
 const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout.testable.method.default"
 
@@ -513,18 +513,55 @@ const val JunitPerTestTimeoutProperty: String = "junit.jupiter.execution.timeout
 const val JunitLifecycleTimeoutProperty: String = "junit.jupiter.execution.timeout.lifecycle.method.default"
 
 /**
- * Removes both hang guards [configureJunit] applies to every [Test] task.
+ * The JUnit Jupiter property that prints the stack of every thread on `System.out` before the
+ * timeout interrupts the test. Gradle keeps that output in the JUnit XML of the test task.
+ */
+const val JunitThreadDumpOnTimeoutProperty: String = "junit.jupiter.execution.timeout.threaddump.enabled"
+
+/** The JUnit Jupiter property that decides whether a debug session suspends the JUnit guards. */
+const val JunitTimeoutModeProperty: String = "junit.jupiter.execution.timeout.mode"
+
+/**
+ * The kotlinx.coroutines property that holds the wall-clock budget of a `runTest` body, read once
+ * per test JVM. A `runTest` call with an explicit `timeout` argument ignores it.
+ */
+const val CoroutinesTestTimeoutProperty: String = "kotlinx.coroutines.test.default_timeout"
+
+/**
+ * The budget of a test method, written in the grammar of `TimeoutDurationParser`: one integer and an
+ * optional unit. JUnit logs any other spelling as invalid and falls back to
+ * `junit.jupiter.execution.timeout.default`, which [configureJunit] leaves unset.
+ */
+const val JunitPerTestTimeout: String = "120s"
+
+/** The budget of a lifecycle method, in the spelling [JunitPerTestTimeout] describes. */
+const val JunitLifecycleTimeout: String = "600s"
+
+/**
+ * The budget of a `runTest` body, below [JunitPerTestTimeout] so that `runTest` reports a body that
+ * did not run to completion or coroutines still active after it finished. Wider than the 60s of the
+ * library, which a runner under load reaches with a test that takes seconds on an idle one.
+ */
+const val CoroutinesTestTimeout: String = "110s"
+
+/** The value `Duration.parse` reads as `Duration.INFINITE`, which leaves `runTest` unbounded. */
+const val CoroutinesTestTimeoutInfinite: String = "Infinity"
+
+/**
+ * Takes every timeout budget off a [Test] task.
  *
  * Separate test suites are the designated place for slow work — browsers, external services,
  * performance measurements — and legitimately run longer than the guards. Aborting them is
  * always a false positive, so the suites opt out instead of raising the guard for everyone.
- *
- * Must be called after [configureJunit] has been applied to the task, which is the case for every
- * suite registered from a project's build script.
  */
-fun Test.removePerTestTimeout() {
+fun Test.removeTimeoutGuards() {
+  require(systemProperties.containsKey(JunitPerTestTimeoutProperty)) {
+    "$JunitPerTestTimeoutProperty is unset on $path. Call removeTimeoutGuards() once, from a configure block that runs after configureJunit(), which writes $CoroutinesTestTimeout into $CoroutinesTestTimeoutProperty."
+  }
+
   systemProperties.remove(JunitPerTestTimeoutProperty)
   systemProperties.remove(JunitLifecycleTimeoutProperty)
+  systemProperty(CoroutinesTestTimeoutProperty, CoroutinesTestTimeoutInfinite)
 }
 
 /**
@@ -575,9 +612,9 @@ fun Project.configureJunit() {
     //Per-test-method timeout: a safety net against a single hanging test blocking the whole
     //build (a runaway test used to stall the main pipeline for tens of minutes). 120s is far
     //above any legitimate unit/functional test — anything slower belongs in a separate
-    //test suite, which opts out via `removePerTestTimeout()`.
-    //`disabled_on_debug` keeps interactive debug sessions alive.
-    systemProperty(JunitPerTestTimeoutProperty, "120s")
+    //test suite, which opts out via `removeTimeoutGuards()`.
+    //`disabled_on_debug` suspends the JUnit guards in an interactive debug session.
+    systemProperty(JunitPerTestTimeoutProperty, JunitPerTestTimeout)
 
     //Lifecycle methods (@BeforeEach/@BeforeAll/@AfterEach/@AfterAll) get their own, larger budget:
     //they are where infrastructure starts, and a Testcontainers container on a cold Docker cache has
@@ -585,8 +622,11 @@ fun Project.configureJunit() {
     //is the normal case for the first container test after 06:00 — a pull that the 120s test budget
     //aborted, reporting a TimeoutException on the test instead of the pull (#2701).
     //Still bounded: a lifecycle method that hangs indefinitely must not stall the build either.
-    systemProperty(JunitLifecycleTimeoutProperty, "600s")
-    systemProperty("junit.jupiter.execution.timeout.mode", "disabled_on_debug")
+    systemProperty(JunitLifecycleTimeoutProperty, JunitLifecycleTimeout)
+    systemProperty(JunitTimeoutModeProperty, "disabled_on_debug")
+
+    systemProperty(CoroutinesTestTimeoutProperty, CoroutinesTestTimeout)
+    systemProperty(JunitThreadDumpOnTimeoutProperty, "true")
 
     //Set the JVM properties for the tests
     //Set Coroutines Debugging - see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html
