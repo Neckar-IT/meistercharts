@@ -114,7 +114,6 @@ internal fun expandShellInclude(
  * into a per-service copy, so the single source under `common/` stays canonical.
  */
 internal val InlinedLibraryInputs: List<String> = listOf(
-  "secret-masking/secret-masking-lib.sh",
   "docker-lock/docker-lock-lib.sh",
   "host-provisioning/provision-lib.sh",
   "host-keys/authorized-keys-lib.sh",

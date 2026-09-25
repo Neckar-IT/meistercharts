@@ -48,7 +48,7 @@ kotlin = "2.4.20"
 
 org-asciidoctor = "4.0.5"
 
-jackson = "2.22.2"
+jackson = "2.22.3"
 
 org-slf4j = "2.0.19"
 
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.5"
+aws-sdk-kotlin = "1.9.6"
 
 apache-poi = "5.5.1"
 
@@ -179,15 +179,13 @@ testfx = "4.0.18"
 
 clikt = "5.1.0"
 
-mordant = "3.1.0"
-
 javafx = "25.0.4"
 
 netty = "4.2.18.Final"
 
 rxkotlin = "2.4.0"
 
-graalvm-polyglot = "25.3.4.1"
+graalvm-polyglot = "25.4.4.1.1"
 
 
 [libraries]
@@ -327,7 +325,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.2"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.3"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -403,9 +401,9 @@ gson = "com.google.code.gson:gson:2.14.0"
 
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 
-mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
-
 commons-compress = "org.apache.commons:commons-compress:1.28.0"
+
+xz = "org.tukaani:xz:1.12"
 
 graalvm-polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm-polyglot" }
 

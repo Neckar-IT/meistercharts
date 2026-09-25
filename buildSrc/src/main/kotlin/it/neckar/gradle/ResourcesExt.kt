@@ -185,7 +185,8 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
  * (e.g. `short=\${fqdn%%.*}` inside an `ssh "root@$host" "…"` block, where `$host` is expanded
  * locally but `${fqdn%%.*}` must run remotely). Such escaped occurrences are not unresolved
- * placeholders and are ignored.
+ * placeholders and are ignored. So is `$${…}`: Docker Compose reads `$$` as a literal `$`, and bash
+ * reads it as its own PID followed by plain text.
  *
  * A `${VAR:-default}` is Docker-Compose runtime interpolation with an explicit default (the
  * `.env`-friendly override pattern, e.g. `OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-agent:4317}`, #2381).
@@ -199,9 +200,15 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * stays indistinguishable from a placeholder and is still reported; see [variablePattern].
  */
 fun findUnresolvedVariable(line: String): String? {
+  return findUnresolvedVariables(line).firstOrNull()
+}
+
+/** Every unresolved `${…}` placeholder in [line] as [findUnresolvedVariable] defines one, in order of appearance. */
+fun findUnresolvedVariables(line: String): List<String> {
   return variablePattern.findAll(line)
     .map { it.value }
-    .firstOrNull { it.contains(":-").not() }
+    .filter { it.contains(":-").not() }
+    .toList()
 }
 
 /**
@@ -212,7 +219,7 @@ fun findUnresolvedVariable(line: String): String? {
  * charset does not separate the two by itself: `${name}`, `${path/old/new}` and `${var:0:8}` are
  * spellable as keys and are reported, so a materialized script escapes them as `\${…}`.
  *
- * The negative lookbehind `(?<!\\)` skips a `${…}` escaped with a leading backslash (`\${…}`),
- * which denotes an intentional runtime shell expansion.
+ * The negative lookbehind skips a `${…}` escaped with a leading backslash (`\${…}`), the runtime
+ * shell expansion, and one escaped with a leading `$` (`$${…}`), the Docker Compose escape.
  */
-private val variablePattern = "(?<!\\\\)\\$\\{[A-Za-z0-9_.:@/-]+}".toRegex()
+private val variablePattern = "(?<![\\\\$])\\$\\{[A-Za-z0-9_.:@/-]+}".toRegex()
