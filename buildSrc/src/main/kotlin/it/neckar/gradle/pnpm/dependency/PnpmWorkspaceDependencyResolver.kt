@@ -7,7 +7,7 @@ import java.io.File
 
 /**
  * Maps the `workspace:` dependencies a pnpm module declares in its `package.json` to the Gradle
- * project paths of the modules providing them.
+ * project paths, and to the projects, of the modules providing them.
  */
 class PnpmWorkspaceDependencyResolver(
   private val packageNameRegistry: PackageNameRegistry = PackageNameRegistry.create(),
@@ -19,6 +19,24 @@ class PnpmWorkspaceDependencyResolver(
     return ResolvedWorkspaceDependencies(
       dependencies = resolvePackageNames(workspaceDeps.dependencies),
       devDependencies = resolvePackageNames(workspaceDeps.devDependencies),
+    )
+  }
+
+  /**
+   * DevDependencies count: they provide shared configs and TypeScript types. A registered module
+   * without a Gradle project throws, as [PackageNameRegistry.findGradlePath] does for an unknown package.
+   */
+  fun resolveWorkspaceDependencyProjects(project: Project): WorkspaceDependencyProjects {
+    val resolved = resolveWorkspaceDependenciesByType(project)
+
+    return WorkspaceDependencyProjects(
+      (resolved.dependencies + resolved.devDependencies)
+        .distinctBy { it.path }
+        .filter { it.path != project.path }
+        .map { gradlePath ->
+          project.rootProject.findProject(gradlePath.path)
+            ?: throw GradleException("'${project.path}' depends on '${gradlePath.path}', which is registered as a pnpm module but is no project of this build")
+        },
     )
   }
 

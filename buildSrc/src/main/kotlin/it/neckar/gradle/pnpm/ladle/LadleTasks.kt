@@ -3,6 +3,8 @@ package it.neckar.gradle.pnpm.ladle
 import com.github.gradle.node.pnpm.task.PnpmTask
 import it.neckar.gradle.localdev.LocalDevPlugin
 import it.neckar.gradle.localdev.resolveWorktreePortOffsetOrNull
+import it.neckar.gradle.pnpm.dependency.PnpmWorkspaceDependencyResolver
+import it.neckar.gradle.pnpm.dependency.declareWorkspaceDependencyInputs
 import it.neckar.projects.common.LadleDevPorts
 import it.neckar.projects.common.Port
 import it.neckar.projects.common.WorktreeOffset
@@ -123,13 +125,20 @@ internal fun Project.registerLadleTasks(pnpmRunBuild: TaskProvider<PnpmTask>, ha
  * Git metadata is deliberately not an input — `.ladle/config.mjs` writes `APP_GIT_*` placeholders
  * that the serving container substitutes at start, so the output stays byte-identical per commit
  * and the task stays cacheable.
+ *
+ * The `dist/` and `package.json` of every workspace dependency are inputs: a production build
+ * resolves them to the compiled `dist/` (`commons-source-exports.ts` in `vite-config`).
  */
-internal fun Project.registerLadleBuild() {
+internal fun Project.registerLadleBuild(resolver: PnpmWorkspaceDependencyResolver) {
+  val workspaceDependencyProjects = resolver.resolveWorkspaceDependencyProjects(this)
+
   tasks.register<PnpmTask>(LadleTasks.LadleBuildTaskName) {
     description = "Builds the package's Ladle stories as a static site into build/ladle/"
     group = "build"
 
+    // Reaches the dependencies' `pnpmRunBuild` through this package's own, so their `dist/` exists first.
     dependsOn("build")
+    declareWorkspaceDependencyInputs(workspaceDependencyProjects)
 
     args.set(listOf("run", LadleTasks.LadleBuildScriptName))
 
