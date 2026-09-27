@@ -19,13 +19,15 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import it.neckar.geometry.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil
-import it.neckar.open.time.nowMillis
+import it.neckar.open.time.monotonicTimeSource
 import com.meistercharts.events.EventConsumption
 import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
 import it.neckar.events.TouchMoveEvent
 import it.neckar.events.TouchStartEvent
 import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
+import kotlin.time.DurationUnit
 
 /**
  * Detects single tab gestures.
@@ -50,7 +52,7 @@ class SingleTapGestureSupport(
    * The time of the start event.
    * Used to calculate the duration of the tap
    */
-  private var startEventTime: @ms Double? = null
+  private var startEventTime: ComparableTimeMark? = null
 
   /**
    * Reset the gesture. Returns [EventConsumption.Ignored] so callers can use `return reset()`
@@ -67,7 +69,7 @@ class SingleTapGestureSupport(
   override fun onStart(event: TouchStartEvent, chartSupport: ChartSupport): EventConsumption {
     event.ifSingleTouch {
       startCoordinates = event.firstChanged.coordinates
-      startEventTime = nowMillis()
+      startEventTime = monotonicTimeSource.markNow()
 
       //do *not* consume
       return EventConsumption.Ignored
@@ -87,7 +89,7 @@ class SingleTapGestureSupport(
       //Last finger lifted
       val currentStart = startEventTime ?: return reset()
 
-      val pressDuration = nowMillis() - currentStart
+      @ms val pressDuration = currentStart.elapsedNow().toDouble(DurationUnit.MILLISECONDS)
 
       //Check for the duration of the "press"
       if (pressDuration > maxTapDuration) {

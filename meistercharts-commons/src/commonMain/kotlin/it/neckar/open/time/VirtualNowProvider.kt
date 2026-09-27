@@ -30,14 +30,23 @@ package it.neckar.open.time
 import it.neckar.open.annotations.TestOnly
 import it.neckar.open.kotlin.lang.requireFinite
 import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.DurationUnit
+import kotlin.time.TimeSource
 
 /**
  * Implementation that returns a virtual value - should only be used for testing purposes.
  *
  *
- * ATTENTION: It is required to reset the original [NowProvider] after finishing the unit test by calling [resetNowProvider].
+ * The provider is also a [TimeSource.WithComparableMarks]: set as [monotonicTimeSource] as well, [advanceBy]
+ * moves [now] and the elapsed time of every mark by the same amount.
  *
- * This is done automatically if the annotation @VirtualTime is used for a test
+ * ATTENTION: It is required to reset the original [NowProvider] after finishing the unit test by calling [resetNowProvider],
+ * and [monotonicTimeSource] by calling [resetMonotonicTimeSource].
+ *
+ * `@WithVirtualTime` (test-utils) does both automatically.
  *
  * Example code to be used in the unit tests
  * ```
@@ -60,7 +69,7 @@ class VirtualNowProvider(
    * The initial time for the now provider
    */
   val initialNow: @ms Double,
-) : NowProvider {
+) : NowProvider, TimeSource.WithComparableMarks {
 
   init {
     require(initialNow.isFinite()) { "The initial now must be finite" }
@@ -83,6 +92,10 @@ class VirtualNowProvider(
 
   override fun nowMillis(): Double {
     return virtualNow
+  }
+
+  override fun markNow(): ComparableTimeMark {
+    return VirtualTimeMark(this, virtualNow)
   }
 
   /**
@@ -121,5 +134,55 @@ class VirtualNowProvider(
 
   override fun toString(): String {
     return "VirtualNowProvider(initialNow=${initialNow.formatUtcForDebug()}, virtualNow=${virtualNow.formatUtcForDebug()}, started=${startedRealTime.formatUtcForDebug()}, offsetBetweenStartedAndReferenceTime=$offsetBetweenStartedRealTimeAndInitialNow)"
+  }
+}
+
+/**
+ * A mark of a [VirtualNowProvider]: the virtual now at the time the mark was taken.
+ * An infinite [markedAt] stands for a mark shifted by an infinite duration, as in [TimeSource.Monotonic].
+ */
+private class VirtualTimeMark(
+  private val source: VirtualNowProvider,
+  markedAt: @ms @VirtualTime Double,
+) : ComparableTimeMark {
+
+  init {
+    require(markedAt.isNaN().not()) { "The mark must not be NaN: an infinite mark was shifted by the opposite infinite duration" }
+  }
+
+  /**
+   * Adding `0.0` turns `-0.0` into `0.0`, so [equals] and [hashCode] agree.
+   */
+  private val markedAt: @ms @VirtualTime Double = markedAt + 0.0
+
+  override fun elapsedNow(): Duration {
+    return (source.virtualNow - markedAt).milliseconds
+  }
+
+  override fun plus(duration: Duration): ComparableTimeMark {
+    return VirtualTimeMark(source, markedAt + duration.toDouble(DurationUnit.MILLISECONDS))
+  }
+
+  override fun minus(other: ComparableTimeMark): Duration {
+    require(other is VirtualTimeMark && other.source === source) {
+      "Subtracting marks from different time sources is not supported: $this and $other"
+    }
+    //Equal infinite marks are zero apart, their difference would be NaN
+    if (markedAt == other.markedAt) {
+      return Duration.ZERO
+    }
+    return (markedAt - other.markedAt).milliseconds
+  }
+
+  override fun equals(other: Any?): Boolean {
+    return other is VirtualTimeMark && other.source === source && other.markedAt == markedAt
+  }
+
+  override fun hashCode(): Int {
+    return markedAt.hashCode()
+  }
+
+  override fun toString(): String {
+    return "VirtualTimeMark(${if (markedAt.isFinite()) markedAt.formatUtcForDebug() else markedAt.toString()})"
   }
 }

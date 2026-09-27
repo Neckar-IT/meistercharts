@@ -25,6 +25,6 @@ import it.neckar.open.unit.si.ms
  */
 class CanvasBasedTimerImplementation : BaseTimerImplementation(), ChartRenderLoopListener {
   override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, relativeHighRes: @ms Double) {
-    update(frameTimestamp)
+    update()
   }
 }

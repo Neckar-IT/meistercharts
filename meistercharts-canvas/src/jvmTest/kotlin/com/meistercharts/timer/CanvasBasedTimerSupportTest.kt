@@ -43,12 +43,12 @@ class CanvasBasedTimerSupportTest {
     assertThat(wasCalled).isFalse()
 
     nowProvider.advanceBy(999.0)
-    timerSupport.update(nowProvider.nowMillis())
+    timerSupport.update()
 
     assertThat(wasCalled).isFalse()
 
     nowProvider.advanceBy(2.0)
-    timerSupport.update(nowProvider.nowMillis())
+    timerSupport.update()
 
     assertTrue(wasCalled, "The callback should have been called after the delay")
   }
@@ -63,18 +63,18 @@ class CanvasBasedTimerSupportTest {
     }
 
     nowProvider.advanceBy(0.0)
-    timerSupport.update(nowProvider.nowMillis())
+    timerSupport.update()
 
     assertThat(callCount).isEqualTo(0)
 
     nowProvider.advanceBy(1001.0)
-    timerSupport.update(nowProvider.nowMillis())
+    timerSupport.update()
 
 
     assertThat(callCount).isEqualTo(1)
 
     nowProvider.advanceBy(1001.0)
-    timerSupport.update(nowProvider.nowMillis())
+    timerSupport.update()
 
     assertThat(callCount).isEqualTo(2)
   }
@@ -104,12 +104,12 @@ class CanvasBasedTimerSupportTest {
     // Advance time and check callbacks one by one
     5.fastFor { i ->
       assertThat(callbacksCalled[i]).isFalse()
-      timerSupport.update(nowProvider.nowMillis())
+      timerSupport.update()
       assertThat(callbacksCalled[i]).isFalse()
 
       // Advance time past when the next callback is due
       nowProvider.advanceBy(1000.0)
-      timerSupport.update(nowProvider.nowMillis())
+      timerSupport.update()
 
       assertThat(callbacksCalled[i]).isTrue()
     }

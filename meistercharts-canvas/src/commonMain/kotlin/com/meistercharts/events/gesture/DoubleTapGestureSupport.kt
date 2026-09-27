@@ -19,7 +19,7 @@ import com.meistercharts.canvas.ChartSupport
 import com.meistercharts.canvas.events.CanvasTouchEventHandler
 import it.neckar.geometry.Coordinates
 import it.neckar.open.kotlin.lang.consumeUntil
-import it.neckar.open.time.nowMillis
+import it.neckar.open.time.monotonicTimeSource
 import com.meistercharts.events.EventConsumption
 import it.neckar.events.TouchCancelEvent
 import it.neckar.events.TouchEndEvent
@@ -28,6 +28,8 @@ import it.neckar.events.TouchStartEvent
 import com.meistercharts.events.gesture.SingleTapGestureSupport.Companion.DefaultMaxTapDuration
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
+import kotlin.time.DurationUnit
 
 /**
  * Detects double tab gestures.
@@ -67,19 +69,19 @@ class DoubleTapGestureSupport(
    * The time of the first start event.
    * Used to calculate the duration of the first tap
    */
-  private var start0EventTime: @ms Double? = null
+  private var start0EventTime: ComparableTimeMark? = null
 
   /**
    * The time of the first end event
    * Used to calculate the delay between two two taps
    */
-  private var end0EventTime: @ms Double? = null
+  private var end0EventTime: ComparableTimeMark? = null
 
   /**
    * The time of the second start event.
    * Used to calculate the duration of the second tap
    */
-  private var start1EventTime: @ms Double? = null
+  private var start1EventTime: ComparableTimeMark? = null
 
 
   /**
@@ -115,23 +117,23 @@ class DoubleTapGestureSupport(
         State.LookingForFirstTap -> {
           //Prepare for first tap
           start0Coordinates = event.firstChanged.coordinates
-          start0EventTime = nowMillis()
+          start0EventTime = monotonicTimeSource.markNow()
           EventConsumption.Ignored //only consume the end of the second tap
         }
 
         State.LookingForSecondTap -> {
-          @ms val now = nowMillis()
+          val now = monotonicTimeSource.markNow()
 
           //Check delay
-          @ms val currentEnd0EventTime = end0EventTime ?: return reset()
+          val currentEnd0EventTime = end0EventTime ?: return reset()
 
           //The delay between end of first tab and start
-          @ms val delay = now - currentEnd0EventTime
+          @ms val delay = currentEnd0EventTime.elapsedNow().toDouble(DurationUnit.MILLISECONDS)
           if (delay > maxDelayDuration) {
             //Restart the gesture, save as *first* tap
             reset()
             start0Coordinates = event.firstChanged.coordinates
-            start0EventTime = nowMillis()
+            start0EventTime = now
 
             return EventConsumption.Ignored
           }
@@ -167,12 +169,12 @@ class DoubleTapGestureSupport(
       //Last finger lifted
       return when (state) {
         State.LookingForFirstTap -> {
-          val now = nowMillis()
+          val now = monotonicTimeSource.markNow()
 
           //Possibly detecting the first tap
-          @ms val currentStartTime = start0EventTime ?: return reset()
+          val currentStartTime = start0EventTime ?: return reset()
 
-          @ms val pressDuration = now - currentStartTime
+          @ms val pressDuration = currentStartTime.elapsedNow().toDouble(DurationUnit.MILLISECONDS)
 
           //Check for the duration of the "press"
           if (pressDuration > maxPressDuration) {
@@ -187,12 +189,12 @@ class DoubleTapGestureSupport(
         }
 
         State.LookingForSecondTap -> {
-          val now = nowMillis()
+          val now = monotonicTimeSource.markNow()
 
           //Possibly detecting the second tap
-          @ms val currentStartTime = start1EventTime ?: return reset()
+          val currentStartTime = start1EventTime ?: return reset()
 
-          @ms val pressDuration = now - currentStartTime
+          @ms val pressDuration = currentStartTime.elapsedNow().toDouble(DurationUnit.MILLISECONDS)
 
           //Check for the duration of the "press"
           if (pressDuration > maxPressDuration) {

@@ -17,10 +17,12 @@ package com.meistercharts.events.gesture
 
 import it.neckar.geometry.Distance
 import it.neckar.open.collections.EvictingQueue
-import it.neckar.open.time.nowMillis
+import it.neckar.open.time.monotonicTimeSource
 import it.neckar.open.unit.other.px
 import it.neckar.open.unit.other.px_ms
 import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.math.E
 import kotlin.math.pow
 
@@ -84,10 +86,9 @@ class MouseSpeedCalculator {
     }
 
     //Evict all entries that a too old
-    @ms val now = nowMillis()
-    entries.removeAll { entry -> now - entry.time > MaxAge }
+    entries.removeAll { entry -> entry.createdAt.elapsedNow() > MaxAge.milliseconds }
 
-    entries.add(Entry(now, deltaTime, deltaX / deltaTime, deltaY / deltaTime))
+    entries.add(Entry(monotonicTimeSource.markNow(), deltaTime, deltaX / deltaTime, deltaY / deltaTime))
   }
 
   /**
@@ -123,10 +124,9 @@ data class Speed(
  */
 private class Entry(
   /**
-   * The time when this entry has been created
+   * The [monotonicTimeSource] mark taken when this entry has been created
    */
-  @ms
-  val time: Double,
+  val createdAt: ComparableTimeMark,
   /**
    * The time delta this entry covers
    */
@@ -146,6 +146,6 @@ private class Entry(
 ) {
 
   override fun toString(): String {
-    return "Entry{time=$time, deltaTime=$deltaTime, speedX=$speedX, speedY=$speedY}"
+    return "Entry{createdAt=$createdAt, deltaTime=$deltaTime, speedX=$speedX, speedY=$speedY}"
   }
 }

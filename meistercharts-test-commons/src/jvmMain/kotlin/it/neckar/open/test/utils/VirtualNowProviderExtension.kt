@@ -29,7 +29,9 @@ package it.neckar.open.test.utils
 
 import it.neckar.open.time.NowProvider
 import it.neckar.open.time.VirtualNowProvider
+import it.neckar.open.time.monotonicTimeSource
 import it.neckar.open.time.nowProvider
+import it.neckar.open.time.resetMonotonicTimeSource
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -38,10 +40,13 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import java.lang.reflect.Parameter
 import javax.annotation.Nonnull
+import kotlin.time.TimeSource
 
 /**
  * Extension that provides the virtual now provider as parameter.
- * Use [WithVirtualTime] at the class/method and add [VirtualNowProvider] to the test method parameters
+ * Use [WithVirtualTime] at the class/method and add [VirtualNowProvider] to the test method parameters.
+ *
+ * The provider is set as [nowProvider] and as [monotonicTimeSource], so `advanceBy` moves points in time and measured durations together.
  */
 class VirtualNowProviderExtension : AbstractResourceProvidingExtension<VirtualNowProvider>(VirtualNowProvider::class.java), BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
 
@@ -60,6 +65,11 @@ class VirtualNowProviderExtension : AbstractResourceProvidingExtension<VirtualNo
 
       override fun applyValue(value: NowProvider) {
         nowProvider = value
+        if (value is TimeSource.WithComparableMarks) {
+          monotonicTimeSource = value
+        } else {
+          resetMonotonicTimeSource()
+        }
       }
     }
   )

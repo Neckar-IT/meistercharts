@@ -111,10 +111,10 @@ fun AbstractCopyTask.includeCommonRestrictedEgressAssets() = CommonRestrictedEgr
  * file is mounted by the fragment via a relative path, so both files must land
  * side by side on the deployed host.
  *
- * Consumers must supply `otel-collector-client-id` and `otel-collector-client-secret`
+ * Consumers must supply `otel-gateway-client-id` and `otel-gateway-client-secret`
  * in their `secretsLoader.keys`, plus two filter substitutions: `${host_role}`
- * (worker hosts → "worker", others → "infrastructure") and `${deployment_environment}`
- * (the host's stage, lowercased: "production" / "development" / "demo").
+ * (worker hosts → "worker", git-host → "gitlab", others → "infrastructure") and
+ * `${deployment_environment}` (the host's stage, lowercased: "production" / "development" / "demo").
  */
 fun AbstractCopyTask.includeCommonOtelAgentCompose() = CommonOtelAgentCompose.applyTo(this)
 

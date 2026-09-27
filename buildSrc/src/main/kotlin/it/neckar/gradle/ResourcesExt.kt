@@ -33,7 +33,7 @@ enum class BuildInfoVars(val value: String) {
 
 /**
  * The git properties that are injected at the artifact edges (image env, fat-jar resource,
- * serve-time HTML) and resolved at runtime by version-info (#2413).
+ * serve-time HTML) and resolved at runtime by version-info.
  *
  * Only values that are deterministic per commit are listed — an artifact is a pure function of
  * the commit. Build date (build-process metadata, breaks rebuild idempotence) and branch
@@ -75,7 +75,7 @@ enum class GitProperty(
  * so the layers stay identical. They therefore carry the real commit on every build, on CI and
  * locally alike: a placeholder would contradict the `org.opencontainers.image.revision` label of
  * the same image, and [VersionInformation][it.neckar.open.version.VersionInformation] would report
- * a hash of all zeros where it means "unknown" (#2625).
+ * a hash of all zeros where it means "unknown".
  */
 fun Project.gitPropertyEnvironment(): Map<String, String> {
   return GitProperty.entries.associate { gitProperty ->
@@ -101,7 +101,7 @@ fun Project.getBuildInfoVarValue(buildInfoVar: BuildInfoVars): String {
 
 /**
  * Fails the build when a copied file still carries an unresolved placeholder, as
- * [findUnresolvedVariable] defines one.
+ * [findUnresolvedVariables] defines one.
  */
 fun <T : AbstractCopyTask> TaskProvider<T>.ensureAllVariablesHaveBeenReplaced(project: Project) {
   val copyTaskName = this.name
@@ -174,22 +174,22 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
 }
 
 /**
- * Returns the unresolved `${…}` placeholder found in [line], or `null` if the line carries none.
+ * Returns every unresolved `${…}` placeholder in [line], in order of appearance.
  *
  * The single answer to "is this an unresolved placeholder": the copy-time check
- * [EnsureAllVariablesHaveBeenReplacedTask] and `ProvisionTask.verifyFullyMaterialized` both ask it.
- * Patterns of their own used to disagree, and a script that passed the build aborted at deploy time
- * on the same line.
+ * [EnsureAllVariablesHaveBeenReplacedTask], `DeploymentMaterialization.placeholderFindings` and
+ * `ProvisionTask.verifyFullyMaterialized` all ask it, so the build and the provisioning run judge a line
+ * the same way.
  *
  * A `${…}` preceded by a backslash (`\${…}`) is a deliberately escaped shell expansion: the
  * deployment templating leaves it untouched on purpose so the target host evaluates it at runtime
  * (e.g. `short=\${fqdn%%.*}` inside an `ssh "root@$host" "…"` block, where `$host` is expanded
  * locally but `${fqdn%%.*}` must run remotely). Such escaped occurrences are not unresolved
  * placeholders and are ignored. So is `$${…}`: Docker Compose reads `$$` as a literal `$`, and bash
- * reads it as its own PID followed by plain text.
+ * reads it as its own PID followed by plain text. Behind `$$` a `${…}` is unescaped again, so `$$${…}` is reported.
  *
  * A `${VAR:-default}` is Docker-Compose runtime interpolation with an explicit default (the
- * `.env`-friendly override pattern, e.g. `OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-agent:4317}`, #2381).
+ * `.env`-friendly override pattern, e.g. `OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-agent:4317}`).
  * Deploy-time placeholders never carry a `:-` default, so these are not unresolved placeholders
  * either. An unescaped, default-less `${key}` that no replacement filled is a real error
  * and is returned.
@@ -199,16 +199,16 @@ private fun Task.verifyFileContainsNoVariables(file: File) {
  * what the inlined shell libraries carry into the deployment scripts. Every other shell expansion
  * stays indistinguishable from a placeholder and is still reported; see [variablePattern].
  */
-fun findUnresolvedVariable(line: String): String? {
-  return findUnresolvedVariables(line).firstOrNull()
-}
-
-/** Every unresolved `${…}` placeholder in [line] as [findUnresolvedVariable] defines one, in order of appearance. */
 fun findUnresolvedVariables(line: String): List<String> {
   return variablePattern.findAll(line)
-    .map { it.value }
+    .map { it.groupValues[1] }
     .filter { it.contains(":-").not() }
     .toList()
+}
+
+/** The first placeholder [findUnresolvedVariables] finds in [line], or `null` if the line carries none. */
+fun findUnresolvedVariable(line: String): String? {
+  return findUnresolvedVariables(line).firstOrNull()
 }
 
 /**
@@ -220,6 +220,7 @@ fun findUnresolvedVariables(line: String): List<String> {
  * spellable as keys and are reported, so a materialized script escapes them as `\${…}`.
  *
  * The negative lookbehind skips a `${…}` escaped with a leading backslash (`\${…}`), the runtime
- * shell expansion, and one escaped with a leading `$` (`$${…}`), the Docker Compose escape.
+ * shell expansion, and one escaped with a leading `$` (`$${…}`), the Docker Compose escape. The `$$` pairs
+ * before group 1 consume a literal `$$`, so only an odd run of `$` escapes the `${…}` behind it.
  */
-private val variablePattern = "(?<![\\\\$])\\$\\{[A-Za-z0-9_.:@/-]+}".toRegex()
+private val variablePattern = "(?<![\\\\$])(?:\\$\\$)*(\\$\\{[A-Za-z0-9_.:@/-]+})".toRegex()

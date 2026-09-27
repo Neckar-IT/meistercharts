@@ -20,8 +20,9 @@ import it.neckar.logging.Logger
 import it.neckar.logging.LoggerFactory
 import it.neckar.open.async.Async
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.time.nowMillis
+import it.neckar.open.time.monotonicTimeSource
 import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
@@ -61,9 +62,9 @@ class HistoryStorageCache(
   private var samplingPeriodForScheduledChunk: SamplingPeriod? = null
 
   /**
-   * The last time a scheduled chunk has been added
+   * The [monotonicTimeSource] mark of the last insertion of a scheduled chunk, or `null` before the first one
    */
-  private var lastInsertionTime: @ms Double = 0.0
+  private var lastInsertion: ComparableTimeMark? = null
 
   /**
    * Schedules the given [chunk] to be stored into the [history].
@@ -98,7 +99,7 @@ class HistoryStorageCache(
     @ms val windowMillis = window.toDouble(DurationUnit.MILLISECONDS)
 
     //Check if we can/should add immediately
-    @ms val timeSinceLastInsertion = nowMillis() - lastInsertionTime
+    @ms val timeSinceLastInsertion = lastInsertion?.elapsedNow()?.toDouble(DurationUnit.MILLISECONDS) ?: Double.POSITIVE_INFINITY
     if (timeSinceLastInsertion >= windowMillis) {
       //insert immediately - too long since last insertion
       insertScheduledChunk()
@@ -131,7 +132,7 @@ class HistoryStorageCache(
 
       history.storeWithoutCache(it, samplingPeriod)
       //Remember the last insertion time
-      lastInsertionTime = nowMillis()
+      lastInsertion = monotonicTimeSource.markNow()
     }
     scheduledChunk = null
     samplingPeriodForScheduledChunk = null

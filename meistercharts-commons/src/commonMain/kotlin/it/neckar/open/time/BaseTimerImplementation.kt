@@ -31,22 +31,51 @@ import it.neckar.open.collections.fastForEachDelete
 import it.neckar.open.collections.mutableSortedListOf
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.unit.other.Sorted
-import it.neckar.open.unit.si.ms
+import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
-import kotlin.time.DurationUnit
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 
 /**
  * Base class for timer implementations.
  * Call [update] to call all callbacks that are due.
+ *
+ * Due times are marks of [monotonicTimeSource]: a wall clock adjustment neither fires nor stalls a callback.
+ * When a test or a demo replaces [monotonicTimeSource], every pending callback keeps its remaining delay, counted from the next
+ * [update], [delay] or [repeat].
  */
 abstract class BaseTimerImplementation : TimerImplementation {
   /**
    * Calls all callbacks that are due
    */
-  fun update(now: @ms Double) {
-    //Verify if somebody should be called
+  fun update() {
+    val now = markNow()
     handleDelayCallbacks(now)
     handleRepeatCallbacks(now)
+  }
+
+  /**
+   * The source the due times of all pending callbacks are marks of.
+   */
+  private var timeSource: TimeSource.WithComparableMarks = monotonicTimeSource
+
+  /**
+   * A mark of [monotonicTimeSource]. Carries the pending due times over first, if the source has been replaced:
+   * marks of two sources cannot be compared.
+   */
+  private fun markNow(): ComparableTimeMark {
+    val current = monotonicTimeSource
+    if (current === timeSource) {
+      return current.markNow()
+    }
+
+    //One reading per source moves every due time by the same offset, which keeps the order of both lists
+    val previousNow = timeSource.markNow()
+    val now = current.markNow()
+    delayCallbacks.forEach { it.targetTime = now + (it.targetTime - previousNow) }
+    repeatCallbacks.forEach { it.targetTime = now + (it.targetTime - previousNow) }
+    timeSource = current
+    return now
   }
 
   @Sorted
@@ -61,7 +90,7 @@ abstract class BaseTimerImplementation : TimerImplementation {
   @Sorted
   private val repeatCallbacks = mutableListOf<RepeatEntry>()
 
-  private fun handleDelayCallbacks(now: @ms Double) {
+  private fun handleDelayCallbacks(now: ComparableTimeMark) {
     delayCallbacks.fastForEachDelete {
       if (it.targetTime <= now) {
         it.callback()
@@ -73,7 +102,7 @@ abstract class BaseTimerImplementation : TimerImplementation {
     }
   }
 
-  private fun handleRepeatCallbacks(now: @ms Double) {
+  private fun handleRepeatCallbacks(now: ComparableTimeMark) {
     var fired = false
 
     for (entry in repeatCallbacks) {
@@ -82,7 +111,7 @@ abstract class BaseTimerImplementation : TimerImplementation {
         break
       }
       entry.callback()
-      entry.targetTime += entry.delay
+      entry.targetTime = entry.targetTime + entry.delay
       fired = true
     }
 
@@ -99,19 +128,15 @@ abstract class BaseTimerImplementation : TimerImplementation {
       return Disposable {}
     }
 
-
-    @ms val delayInMillis = delay.toDouble(DurationUnit.MILLISECONDS)
-
-    val entry = DelayEntry(nowMillis() + delayInMillis, callback)
+    val entry = DelayEntry(markNow() + delay, callback)
     delayCallbacks.add(entry)
     return Disposable { delayCallbacks.remove(entry) }
   }
 
   override fun repeat(delay: Duration, callback: () -> Unit): Disposable {
-    @ms val delayInMillis = delay.toDouble(DurationUnit.MILLISECONDS)
-    require(delayInMillis >= 1) { "delay must be at least 1 millisecond but was $delayInMillis" }
+    require(delay >= 1.milliseconds) { "delay must be at least 1 millisecond but was $delay" }
 
-    val entry = RepeatEntry(delayInMillis, nowMillis() + delayInMillis, callback)
+    val entry = RepeatEntry(delay, markNow() + delay, callback)
     repeatCallbacks.add(entry)
     repeatCallbacks.sort()
 
@@ -121,11 +146,11 @@ abstract class BaseTimerImplementation : TimerImplementation {
   /**
    * An entry for a delay callback
    */
-  private data class DelayEntry(
+  private class DelayEntry(
     /**
      * The earliest time, when the callback should be called
      */
-    val targetTime: @ms Double,
+    var targetTime: ComparableTimeMark,
     val callback: () -> Unit,
   ) : Comparable<DelayEntry> {
     override fun compareTo(other: DelayEntry): Int {
@@ -134,18 +159,18 @@ abstract class BaseTimerImplementation : TimerImplementation {
   }
 
   /**
-   * An entry for a delay callback
+   * An entry for a repeat callback
    */
   private class RepeatEntry(
     /**
      * The delay
      */
-    val delay: @ms Double,
+    val delay: Duration,
     /**
      * The earliest time, when the callback should be called (again).
      * This value is updated after each call.
      */
-    var targetTime: @ms Double,
+    var targetTime: ComparableTimeMark,
     val callback: () -> Unit,
   ) : Comparable<RepeatEntry> {
     override fun compareTo(other: RepeatEntry): Int {
