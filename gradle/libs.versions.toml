@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.2" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.3" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -67,7 +67,7 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.12"
 
-org-mongodb = "5.11.1"
+org-mongodb = "5.13.0"
 
 # json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
 # that validates kotlinx.serialization JsonElement directly.
@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.8"
+aws-sdk-kotlin = "1.9.9"
 
 apache-poi = "5.5.1"
 
@@ -144,6 +144,8 @@ kotlinx-serialization = "1.11.0"
 mockk = "1.14.11"
 
 modbus = "1.2.2"
+
+modelcontextprotocol-kotlin-sdk = "0.15.0"
 
 okhttp3 = "5.5.0"
 
@@ -325,7 +327,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.5"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.6"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -667,6 +669,10 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 modbus-master-tcp = { group = "com.digitalpetri.modbus", name = "modbus-master-tcp", version.ref = "modbus" }
 
 modbus-slave-tcp = { group = "com.digitalpetri.modbus", name = "modbus-slave-tcp", version.ref = "modbus" }
+
+modelcontextprotocol-kotlin-sdk-client = { group = "io.modelcontextprotocol", name = "kotlin-sdk-client", version.ref = "modelcontextprotocol-kotlin-sdk" }
+
+modelcontextprotocol-kotlin-sdk-server = { group = "io.modelcontextprotocol", name = "kotlin-sdk-server", version.ref = "modelcontextprotocol-kotlin-sdk" }
 
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
 

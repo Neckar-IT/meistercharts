@@ -547,6 +547,17 @@ const val CoroutinesTestTimeout: String = "110s"
 /** The value `Duration.parse` reads as `Duration.INFINITE`, which leaves `runTest` unbounded. */
 const val CoroutinesTestTimeoutInfinite: String = "Infinity"
 
+/** The JVM flag that lets code on the classpath call restricted methods such as `System::load` without a warning. */
+const val EnableNativeAccessForClasspathFlag: String = "--enable-native-access=ALL-UNNAMED"
+
+/**
+ * Lets the test JVM call restricted methods from the classpath. The GraalVM Polyglot engine calls
+ * `System::load`; without the grant, every test JVM that loads it prints a restricted-method warning.
+ */
+fun Test.allowNativeAccessFromClasspath() {
+  jvmArgs(EnableNativeAccessForClasspathFlag)
+}
+
 /**
  * Takes every timeout budget off a [Test] task.
  *
@@ -632,6 +643,8 @@ fun Project.configureJunit() {
     //Set Coroutines Debugging - see https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html
     systemProperty("kotlinx.coroutines.debug", "on")
     jvmArgs("-Dkotlinx.coroutines.debug=on")
+
+    allowNativeAccessFromClasspath()
 
     //Testcontainers: Disable Ryuk resource reaper.
     //With the Singleton Container pattern, containers are shared across test classes
