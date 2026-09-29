@@ -148,6 +148,12 @@ object Plugins {
   const val fatJarMetadata: String = "it.neckar.shadow.fat-jar-metadata"
 
   /**
+   * Registers `verifyUnusedDependencies`, run on request, failing on a declared dependency the module does not use. Reacts to
+   * `com.autonomousapps.dependency-analysis`, so it can be applied to every project unconditionally.
+   */
+  const val unusedDependencies: String = "it.neckar.dependencies.unused-dependencies"
+
+  /**
    * Convention plugin bundling `application`, `disableDistTasks`, and `verifyMainClassExists`.
    * For CLI tools, demos, and other executable applications without Docker deployment.
    */
