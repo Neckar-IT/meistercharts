@@ -75,7 +75,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.9"
+aws-sdk-kotlin = "1.9.10"
 
 apache-poi = "5.5.1"
 
@@ -107,7 +107,7 @@ kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.1"
 
-kover = "0.9.9"
+kover = "0.9.10"
 
 node-gradle = "7.1.0"
 
@@ -279,7 +279,7 @@ kotlin-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-co
 
 im4java = "org.im4java:im4java:1.4.0"
 
-commons-lang3 = "org.apache.commons:commons-lang3:3.20.0"
+commons-lang3 = "org.apache.commons:commons-lang3:3.21.0"
 
 clikt-core = { group = "com.github.ajalt.clikt", name = "clikt-core", version.ref = "clikt" }
 
@@ -327,7 +327,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.6"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.7"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
