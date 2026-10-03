@@ -29,7 +29,6 @@ kotlin {
     jvmMain {
       dependencies {
         implementation(libs.commons.lang3)
-        implementation(libs.logback.classic)
         implementation(libs.jackson.module.kotlin)
         implementation(libs.jackson.datatype.jdk8)
         implementation(libs.jackson.datatype.jsr310)

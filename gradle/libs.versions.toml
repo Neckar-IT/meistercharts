@@ -54,8 +54,6 @@ org-slf4j = "2.0.19"
 
 com-willowtreeapps-assertk = "0.28.1"
 
-net-bytebuddy = "1.18.13"
-
 org-jetbrains-kotlin-wrappers = "2025.1.6"
 
 dev-detekt = "2.0.0-alpha.6"
@@ -78,8 +76,6 @@ testcontainers = "2.0.5"
 aws-sdk-kotlin = "1.9.11"
 
 apache-poi = "5.5.1"
-
-com-atlassian-commonmark = "0.17.0"
 
 org-commonmark = "0.30.0"
 
@@ -243,15 +239,12 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "com-willowtreeapps-assertk" }
 assertk-jvm = { group = "com.willowtreeapps.assertk", name = "assertk-jvm", version.ref = "com-willowtreeapps-assertk" }
 
-byte-buddy = { group = "net.bytebuddy", name = "byte-buddy", version.ref = "net-bytebuddy" }
-
-byte-buddy-agent = { group = "net.bytebuddy", name = "byte-buddy-agent", version.ref = "net-bytebuddy" }
-
 commons-io = "commons-io:commons-io:2.22.0"
 
 commons-math3 = "org.apache.commons:commons-math3:3.6.1"
 
 awaitility = "org.awaitility:awaitility:4.3.0"
+hamcrest = "org.hamcrest:hamcrest:3.0"
 
 measured = "io.nacular.measured:measured:0.5.0"
 
@@ -286,8 +279,10 @@ clikt-core = { group = "com.github.ajalt.clikt", name = "clikt-core", version.re
 opentelemetry-api = { group = "io.opentelemetry", name = "opentelemetry-api", version.ref = "opentelemetry" }
 
 opentelemetry-sdk = { group = "io.opentelemetry", name = "opentelemetry-sdk", version.ref = "opentelemetry" }
+opentelemetry-sdk-common = { group = "io.opentelemetry", name = "opentelemetry-sdk-common", version.ref = "opentelemetry" }
 
 opentelemetry-sdk-extension-autoconfigure = { group = "io.opentelemetry", name = "opentelemetry-sdk-extension-autoconfigure", version.ref = "opentelemetry" }
+opentelemetry-sdk-extension-autoconfigure-spi = { group = "io.opentelemetry", name = "opentelemetry-sdk-extension-autoconfigure-spi", version.ref = "opentelemetry" }
 
 opentelemetry-exporter-otlp = { group = "io.opentelemetry", name = "opentelemetry-exporter-otlp", version.ref = "opentelemetry" }
 
@@ -314,8 +309,6 @@ bson = { group = "org.mongodb", name = "bson", version.ref = "org-mongodb" }
 mongodb-driver-kotlin-coroutine = { group = "org.mongodb", name = "mongodb-driver-kotlin-coroutine", version.ref = "org-mongodb" }
 
 testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
-
-testcontainers-junit-jupiter = { group = "org.testcontainers", name = "testcontainers-junit-jupiter", version.ref = "testcontainers" }
 
 testcontainers-mongodb = { group = "org.testcontainers", name = "testcontainers-mongodb", version.ref = "testcontainers" }
 
@@ -351,10 +344,6 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 
 playwright = "com.microsoft.playwright:playwright:1.63.0"
 
-com-atlassian-commonmark-commonmark = { group = "com.atlassian.commonmark", name = "commonmark", version.ref = "com-atlassian-commonmark" }
-
-com-atlassian-commonmark-commonmark-ext-gfm-tables = { group = "com.atlassian.commonmark", name = "commonmark-ext-gfm-tables", version.ref = "com-atlassian-commonmark" }
-
 kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "org-jetbrains-kotlin-wrappers" }
 
 kotlin-react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "org-jetbrains-kotlin-wrappers" }
@@ -376,8 +365,6 @@ pdfbox-io = { group = "org.apache.pdfbox", name = "pdfbox-io", version.ref = "pd
 bcprov-jdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "org-bouncycastle" }
 
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
-
-opentelemetry-logback-mdc-v1 = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-logback-mdc-1.0", version.ref = "opentelemetry-instrumentation" }
 
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 
@@ -473,8 +460,6 @@ jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "
 xmlunit = "xmlunit:xmlunit:1.6"
 
 jsonassert = "org.skyscreamer:jsonassert:2.0-rc1"
-
-zjsonpatch = "com.flipkart.zjsonpatch:zjsonpatch:0.4.16"
 
 dev-zacsweers-kctfork-core = { group = "dev.zacsweers.kctfork", name = "core", version.ref = "dev-zacsweers-kctfork" }
 
@@ -613,8 +598,6 @@ ktor-http = { group = "io.ktor", name = "ktor-http", version.ref = "ktor" }
 ktor-io = { group = "io.ktor", name = "ktor-io", version.ref = "ktor" }
 
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization", version.ref = "ktor" }
-
-ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson", version.ref = "ktor" }
 
 ktor-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx", version.ref = "ktor" }
 

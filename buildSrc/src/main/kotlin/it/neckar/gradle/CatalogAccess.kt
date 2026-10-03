@@ -7,10 +7,10 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 
 /**
- * Provides access to the version catalog from buildSrc Kotlin source code.
+ * Provides access to the version catalog from build-logic Kotlin source code.
  *
- * In `.gradle.kts` scripts, use `libs.*` accessors directly.
- * In buildSrc Kotlin source, use `project.lib("alias")` instead.
+ * In `.gradle.kts` scripts, use the `libs.*` accessors; `build-logic/core` may use them too (`LibrariesForLibs`).
+ * In build-logic Kotlin source, `project.lib("alias")` works everywhere.
  *
  * IMPORTANT: Do not name this `libs` — it would shadow the generated
  * type-safe accessors in `.gradle.kts` scripts.

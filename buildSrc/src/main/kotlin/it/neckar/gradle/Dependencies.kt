@@ -1,8 +1,11 @@
 package it.neckar.gradle
 
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.jvm.JvmComponentDependencies
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -73,29 +76,108 @@ private fun KotlinMultiplatformExtension.jvm(scope: Scope, configure: KotlinSour
   }
 }
 
+/** A library of the version catalog, as a `libs.*` accessor returns it. */
+typealias CatalogLibrary = Provider<MinimalExternalModuleDependency>
+
 /**
- * Adds "common" annotations to the project.
- *
- * The nullability annotations come from `org.jetbrains:annotations` and must never be taken from
- * `com.intellij:annotations` again (#2605): both artifacts ship the very same
- * `org.jetbrains.annotations` and `org.intellij.lang.annotations` classes, but under different
- * Maven coordinates, so Gradle's conflict resolution cannot collapse them. Having both on the
- * runtime classpath put ~30 duplicate classes into every fat jar, with the winner decided by
- * classpath order.
+ * The libraries the helpers below add; `verifyUnusedDependencies` accepts them unused from a helper,
+ * because a standard library is not worth a declaration in every build script.
  */
-fun KotlinMultiplatformExtension.addAnnotationDependencies(project: Project, scope: Scope = Scope.Main) {
-  jvm(scope) {
-    dependencies {
-      // These must remain `api` (not `compileOnly`) because they need to be transitively visible
-      // to dependent modules that use annotations like @Nonnull, @Inject, etc.
-      api(project.lib("jsr305"))
-      api(project.lib("javax-inject"))
-      api(project.lib("javax-annotation-api"))
-      api(project.lib("org-jetbrains-annotations"))
+class StandardDependencies(libs: LibrariesForLibs) {
+  val annotations: List<CatalogLibrary> = listOf(libs.jsr305, libs.javax.inject, libs.javax.annotation.api, libs.org.jetbrains.annotations)
+
+  val kotlinJs: List<CatalogLibrary> = listOf(libs.kotlin.js)
+
+  val testCommon: List<CatalogLibrary> = listOf(
+    libs.kotlin.test.asProvider(),
+    libs.kotlin.test.common,
+    libs.kotlin.test.annotations.common,
+    libs.kotlin.reflect,
+    libs.kotlinx.coroutines.core,
+    libs.kotlinx.coroutines.test,
+    libs.assertk.asProvider(),
+  )
+
+  val testJs: List<CatalogLibrary> = listOf(libs.kotlin.test.js)
+
+  val testJvm: List<CatalogLibrary> = listOf(
+    libs.kotlin.test.junit5,
+    libs.junit.jupiter.api,
+    libs.junit.jupiter.engine,
+    libs.junit.jupiter.params,
+    libs.mockk,
+    libs.kotlinx.coroutines.debug,
+    libs.awaitility,
+    libs.logback.classic,
+  )
+
+  val ktorClient: List<CatalogLibrary> = listOf(
+    libs.kotlinx.coroutines.core,
+    libs.ktor.client.core,
+    libs.ktor.client.json,
+    libs.ktor.client.serialization,
+    libs.ktor.client.logging,
+    libs.ktor.client.content.negotiation,
+    libs.ktor.serialization.kotlinx.asProvider(),
+    libs.ktor.serialization.kotlinx.json,
+  )
+
+  val ktorClientJvm: List<CatalogLibrary> = listOf(libs.ktor.client.okhttp)
+
+  /** Added to the test scope by every Ktor client helper, whatever scope the caller passes. */
+  val ktorClientTest: List<CatalogLibrary> = listOf(libs.ktor.client.mock)
+
+  val ktorServer: List<CatalogLibrary> = listOf(
+    libs.ktor.server.core,
+    libs.ktor.server.netty,
+    libs.kotlinx.coroutines.core,
+    libs.ktor.server.asProvider(),
+    libs.ktor.server.websockets,
+    libs.ktor.server.sse,
+    libs.ktor.server.auth.asProvider(),
+    libs.ktor.server.metrics,
+    libs.ktor.server.conditional.headers,
+    libs.ktor.server.call.id,
+    libs.ktor.serialization.kotlinx.asProvider(),
+    libs.ktor.serialization.kotlinx.json,
+    libs.logback.classic,
+  )
+
+  /** Added to the test scope by every Ktor server helper, whatever scope the caller passes. */
+  val ktorServerTest: List<CatalogLibrary> = listOf(libs.ktor.server.test.host)
+
+  /** Every list above; a library in several lists appears several times. */
+  val all: List<CatalogLibrary> = (annotations + kotlinJs + testCommon + testJs + testJvm + ktorClient + ktorClientJvm + ktorClientTest + ktorServer + ktorServerTest)
+}
+
+/**
+ * The [StandardDependencies] from this project's version catalog `libs`; each call builds them anew.
+ */
+fun Project.standardDependencies(): StandardDependencies {
+  return StandardDependencies(extensions.getByType(LibrariesForLibs::class.java))
+}
+
+/**
+ * Declares [libraries] on this source set: `api` for [Scope.Main], `implementation` for [Scope.Test].
+ */
+private fun KotlinSourceSet.declare(scope: Scope, libraries: List<CatalogLibrary>) {
+  dependencies {
+    libraries.forEach {
+      when (scope) {
+        Scope.Main -> api(it)
+        Scope.Test -> implementation(it)
+      }
     }
   }
 }
 
+/**
+ * Adds the annotations; never `com.intellij:annotations` besides `org.jetbrains:annotations`, which
+ * ships the same classes under other coordinates, so a fat jar would carry them twice.
+ */
+fun KotlinMultiplatformExtension.addAnnotationDependencies(project: Project, scope: Scope = Scope.Main) {
+  jvm(scope) { declare(scope, project.standardDependencies().annotations) }
+}
 
 fun DependencyHandlerScope.addKotlinDependencies() {
   //Do nothing,
@@ -103,51 +185,11 @@ fun DependencyHandlerScope.addKotlinDependencies() {
 }
 
 /**
- * Add Kotlin related dependencies to the project.
- * Only configures JS dependencies if a JS target is registered.
+ * Add Kotlin related dependencies to the project; [StandardDependencies.kotlinJs] only with a JS target.
  */
 fun KotlinMultiplatformExtension.addKotlinDependencies(project: Project) {
   addAnnotationDependencies(project, Scope.Main)
-
-  if (hasJsTarget.not()) {
-    return
-  }
-
-  sourceSets {
-    jsMain {
-      dependencies {
-        api(project.lib("kotlin-js"))
-      }
-    }
-  }
-}
-
-private fun testDepsCommon(project: Project, add: (Any) -> Unit) {
-  add(project.lib("kotlin-test"))
-  add(project.lib("kotlin-test-common"))
-  add(project.lib("kotlin-test-annotations-common"))
-  add(project.lib("kotlin-reflect"))
-  add(project.lib("kotlinx-coroutines-core"))
-  add(project.lib("kotlinx-coroutines-test"))
-  add(project.lib("assertk"))
-}
-
-private fun testDepsJs(project: Project, add: (Any) -> Unit) {
-  add(project.lib("kotlin-test-js"))
-}
-
-private fun testDepsJvm(project: Project, add: (Any) -> Unit) {
-  add(project.lib("kotlin-test-junit5"))
-  add(project.lib("junit-jupiter-api"))
-  add(project.lib("junit-jupiter-engine"))
-  add(project.lib("junit-jupiter-params"))
-  add(project.lib("mockk"))
-  add(project.lib("byte-buddy")) // Override MockK's old ByteBuddy for Java 25 support
-  add(project.lib("byte-buddy-agent"))
-  add(project.lib("commons-io"))
-  add(project.lib("commons-math3"))
-  add(project.lib("awaitility"))
-  add(project.lib("measured"))
+  js(Scope.Main) { declare(Scope.Main, project.standardDependencies().kotlinJs) }
 }
 
 /**
@@ -156,119 +198,45 @@ private fun testDepsJvm(project: Project, add: (Any) -> Unit) {
  * - Scope.Main: Uses api() - for test-utility projects that export test functionality
  */
 fun KotlinMultiplatformExtension.addKotlinTestDependencies(project: Project, scope: Scope = Scope.Test) {
-  when (scope) {
-    Scope.Main -> {
-      common(scope) { dependencies { testDepsCommon(project) { api(it) } } }
-      js(scope) { dependencies { testDepsJs(project) { api(it) } } }
-      jvm(scope) { dependencies { testDepsJvm(project) { api(it) } } }
-    }
-
-    Scope.Test -> {
-      common(scope) { dependencies { testDepsCommon(project) { implementation(it) } } }
-      js(scope) { dependencies { testDepsJs(project) { implementation(it) } } }
-      jvm(scope) { dependencies { testDepsJvm(project) { implementation(it) } } }
-    }
-  }
-}
-
-private fun ktorClientDeps(project: Project, add: (Any) -> Unit) {
-  add(project.lib("kotlinx-coroutines-core"))
-  add(project.lib("ktor-client-core"))
-  add(project.lib("ktor-client-json"))
-  add(project.lib("ktor-client-serialization"))
-  add(project.lib("ktor-client-logging"))
-  add(project.lib("ktor-client-content-negotiation"))
-  add(project.lib("ktor-serialization-kotlinx"))
-  add(project.lib("ktor-serialization-kotlinx-json"))
-}
-
-private fun ktorClientJvmDeps(project: Project, add: (Any) -> Unit) {
-  add(project.lib("ktor-client-okhttp"))
+  val standard: StandardDependencies = project.standardDependencies()
+  common(scope) { declare(scope, standard.testCommon) }
+  js(scope) { declare(scope, standard.testJs) }
+  jvm(scope) { declare(scope, standard.testJvm) }
 }
 
 /**
- * Adds the ktor client dependencies.
+ * Adds the ktor client dependencies, and [StandardDependencies.ktorClientTest] to the test scope.
  * - Scope.Main: Uses api() - for exposing dependencies transitively
  * - Scope.Test: Uses implementation() - for test source sets
  */
 fun KotlinMultiplatformExtension.addKtorClientDependencies(project: Project, scope: Scope) {
-  when (scope) {
-    Scope.Main -> {
-      common(scope) { dependencies { ktorClientDeps(project) { api(it) } } }
-      jvm(scope) { dependencies { ktorClientJvmDeps(project) { api(it) } } }
-    }
-
-    Scope.Test -> {
-      common(scope) { dependencies { ktorClientDeps(project) { implementation(it) } } }
-      jvm(scope) { dependencies { ktorClientJvmDeps(project) { implementation(it) } } }
-    }
-  }
+  val standard: StandardDependencies = project.standardDependencies()
+  common(scope) { declare(scope, standard.ktorClient) }
+  jvm(scope) { declare(scope, standard.ktorClientJvm) }
+  common(Scope.Test) { declare(Scope.Test, standard.ktorClientTest) }
 }
 
 /**
- * Adds ktor server dependencies
+ * Adds the ktor server dependencies, and [StandardDependencies.ktorServerTest] to the test scope.
  */
 fun KotlinMultiplatformExtension.addKtorServerDependencies(project: Project, scope: Scope) {
-  jvm(scope) {
-    dependencies {
-      api(project.lib("ktor-server-core"))
-      api(project.lib("ktor-server-netty"))
-      api(project.lib("kotlinx-coroutines-core"))
-      api(project.lib("ktor-server"))
-      api(project.lib("ktor-server-websockets"))
-      api(project.lib("ktor-server-sse"))
-      api(project.lib("ktor-server-auth"))
-      api(project.lib("ktor-server-metrics"))
-      api(project.lib("ktor-server-conditional-headers"))
-      api(project.lib("ktor-server-call-id"))
-      api(project.lib("ktor-serialization-kotlinx"))
-      api(project.lib("ktor-serialization-kotlinx-json"))
-      api(project.lib("logback-classic"))
-    }
-  }
+  val standard: StandardDependencies = project.standardDependencies()
+  jvm(scope) { declare(scope, standard.ktorServer) }
+  jvm(Scope.Test) { declare(Scope.Test, standard.ktorServerTest) }
 }
 
 fun DependencyHandlerScope.addAnnotationDependencies(project: Project, scope: Scope = Scope.Main) {
-  // These must remain `api` (not `compileOnly`) because they need to be transitively visible
-  // to dependent modules that use annotations like @Nonnull, @Inject, etc.
+  // Scope.Main declares them `api`: dependent modules compile against the annotated signatures.
   val configurationName = scope.configurationName()
-
-  add(configurationName, project.lib("jsr305"))
-  add(configurationName, project.lib("javax-inject"))
-  add(configurationName, project.lib("javax-annotation-api"))
-  add(configurationName, project.lib("org-jetbrains-annotations"))
+  project.standardDependencies().annotations.forEach { add(configurationName, it) }
 }
-
 
 /**
  * Adds kotlin test dependencies
  */
 fun DependencyHandlerScope.addKotlinTestDependencies(project: Project, scope: Scope = Scope.Test) {
   val configurationName = scope.configurationName()
-  add(configurationName, project.lib("kotlin-test"))
-  add(configurationName, project.lib("kotlin-test-common"))
-  add(configurationName, project.lib("kotlin-test-annotations-common"))
-  add(configurationName, project.lib("kotlinx-coroutines-core"))
-  add(configurationName, project.lib("kotlinx-coroutines-test"))
-  add(configurationName, project.lib("kotlinx-coroutines-debug"))
-
-  add(configurationName, project.lib("kotlin-reflect"))
-  add(configurationName, project.lib("assertk"))
-
-  add(configurationName, project.lib("kotlin-test-junit5"))
-  add(configurationName, project.lib("junit-jupiter-api"))
-  add(configurationName, project.lib("junit-jupiter-engine"))
-  add(configurationName, project.lib("junit-jupiter-params"))
-
-  add(configurationName, project.lib("mockk"))
-  add(configurationName, project.lib("byte-buddy")) // Override MockK's old ByteBuddy for Java 25 support
-  add(configurationName, project.lib("byte-buddy-agent"))
-
-  add(configurationName, project.lib("commons-io"))
-  add(configurationName, project.lib("commons-math3"))
-
-  add(configurationName, project.lib("awaitility"))
-  add(configurationName, project.lib("measured"))
+  project.standardDependencies().let { it.testCommon + it.testJvm }.forEach { add(configurationName, it) }
 }
 
 internal fun Scope.configurationName(): String {
@@ -284,61 +252,25 @@ internal fun Scope.configurationName(): String {
  */
 @Suppress("UnstableApiUsage")
 fun JvmComponentDependencies.addKotlinTestDependencies(project: Project) {
-  implementation(project.lib("kotlin-test"))
-  implementation(project.lib("kotlin-test-common"))
-  implementation(project.lib("kotlin-test-annotations-common"))
-
-  implementation(project.lib("kotlin-reflect"))
-
-  implementation(project.lib("assertk"))
-  implementation(project.lib("kotlinx-coroutines-core"))
-  implementation(project.lib("kotlinx-coroutines-test"))
-
-  implementation(project.lib("kotlin-test-junit5"))
-  implementation(project.lib("junit-jupiter-api"))
-  implementation(project.lib("junit-jupiter-engine"))
-  implementation(project.lib("junit-jupiter-params"))
-
-  implementation(project.lib("mockk"))
-  implementation(project.lib("byte-buddy")) // Override MockK's old ByteBuddy for Java 25 support
-  implementation(project.lib("byte-buddy-agent"))
-
-  implementation(project.lib("commons-io"))
-  implementation(project.lib("commons-math3"))
-
-  implementation(project.lib("awaitility"))
-  implementation(project.lib("measured"))
+  project.standardDependencies().let { it.testCommon + it.testJvm }.forEach { implementation(it) }
 }
 
+/**
+ * Adds the ktor client dependencies, and [StandardDependencies.ktorClientTest] to `testImplementation`.
+ */
 fun DependencyHandler.addKtorClientDependencies(project: Project, scope: Scope = Scope.Main) {
   val configurationName = scope.configurationName()
-
-  add(configurationName, project.lib("kotlin-reflect"))
-  add(configurationName, project.lib("kotlinx-coroutines-core"))
-  add(configurationName, project.lib("ktor-client-core"))
-  add(configurationName, project.lib("ktor-client-json"))
-  add(configurationName, project.lib("ktor-client-serialization"))
-  add(configurationName, project.lib("ktor-client-logging"))
-  add(configurationName, project.lib("ktor-client-content-negotiation"))
-  add(configurationName, project.lib("ktor-serialization-kotlinx"))
-  add(configurationName, project.lib("ktor-serialization-kotlinx-json"))
-  add(configurationName, project.lib("ktor-client-okhttp"))
+  val standard: StandardDependencies = project.standardDependencies()
+  (standard.ktorClient + standard.ktorClientJvm).forEach { add(configurationName, it) }
+  standard.ktorClientTest.forEach { add(Scope.Test.configurationName(), it) }
 }
 
-
+/**
+ * Adds the ktor server dependencies, and [StandardDependencies.ktorServerTest] to `testImplementation`.
+ */
 fun DependencyHandlerScope.addKtorServerDependencies(project: Project, scope: Scope = Scope.Main) {
   val configurationName = scope.configurationName()
-
-  add(configurationName, project.lib("ktor-server-core"))
-  add(configurationName, project.lib("ktor-server-netty"))
-  add(configurationName, project.lib("kotlinx-coroutines-core"))
-  add(configurationName, project.lib("ktor-server"))
-  add(configurationName, project.lib("ktor-server-websockets"))
-  add(configurationName, project.lib("ktor-server-auth"))
-  add(configurationName, project.lib("ktor-server-metrics"))
-  add(configurationName, project.lib("ktor-server-call-id"))
-  add(configurationName, project.lib("ktor-server-conditional-headers"))
-  add(configurationName, project.lib("ktor-serialization-kotlinx"))
-  add(configurationName, project.lib("ktor-serialization-kotlinx-json"))
-  add(configurationName, project.lib("logback-classic"))
+  val standard: StandardDependencies = project.standardDependencies()
+  standard.ktorServer.forEach { add(configurationName, it) }
+  standard.ktorServerTest.forEach { add(Scope.Test.configurationName(), it) }
 }
