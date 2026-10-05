@@ -1,19 +1,12 @@
-import it.neckar.gradle.console
-import java.time.Instant
-
 import it.neckar.gradle.DevContainerInformation
 import it.neckar.gradle.GitlabCiInformation
 import it.neckar.gradle.GradleContext
-import it.neckar.gradle.Plugins
 import it.neckar.gradle.ProjectConfiguration
+import it.neckar.gradle.console
+import it.neckar.gradle.getCmdResult
+import it.neckar.gradle.isSnapshot
 import it.neckar.projects.Projects
-import it.neckar.gradle.branch
-import it.neckar.gradle.buildDate
-
-import it.neckar.gradle.ciInformation
-import it.neckar.gradle.devContainerInformation
-import it.neckar.gradle.inIde
-import it.neckar.gradle.meisterchartsVersion
+import java.time.Instant
 
 description = "meistercharts.com"
 
@@ -193,9 +186,7 @@ allprojects {
 }
 
 
-configure(Projects.multiplatformProjects()) {
-  if (this.enabled) {
-    logger.debug("Configuring multiplatform project ${this.path} for targets ${this.targets}")
-    ProjectConfiguration.configureMultiplatform(this.getProject(project), this)
-  }
+Projects.multiplatformProjects().forEach { configuredProject ->
+  logger.debug("Configuring multiplatform project ${configuredProject.path} for targets ${configuredProject.targets}")
+  ProjectConfiguration.configureMultiplatform(configuredProject.getProject(project), configuredProject)
 }

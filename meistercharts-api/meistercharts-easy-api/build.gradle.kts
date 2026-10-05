@@ -18,7 +18,6 @@ description = """Meistercharts - Easy API"""
 
 plugins {
   npmBundle
-  generatePackageJson
 }
 
 kotlin {

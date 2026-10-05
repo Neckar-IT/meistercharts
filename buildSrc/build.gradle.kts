@@ -39,6 +39,10 @@ afterEvaluate {
 
 
 dependencies {
+  // The type-safe accessors of `gradle/libs.versions.toml` (`LibrariesForLibs`) that the copied
+  // Dependencies.kt reads; Gradle has no API for them in plugin code (gradle/gradle#15383).
+  implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+
   implementation(libs.guava)
 
   implementation(libs.commons.compress)
@@ -64,30 +68,9 @@ dependencies {
 
 gradlePlugin {
   plugins {
-    register("GenerateIconsPlugin") {
-      id = "it.neckar.generate-icons"
-      implementationClass = "it.neckar.gradle.icons.GenerateIconsPlugin"
-    }
-
-    register("GenerateTypeScriptDefinitionsPlugin") {
-      id = "it.neckar.generate-ts-declaration"
-      implementationClass = "it.neckar.gradle.tsdefinition.GenerateTypeScriptDefinitionsPlugin"
-    }
     register("NpmBundlePlugin") {
       id = "it.neckar.npm-bundle"
       implementationClass = "it.neckar.gradle.npmbundle.NpmBundlePlugin"
-    }
-    register("TypescriptDefinitionGenerationPlugin") {
-      id = "it.neckar.ksp.generating.ts-plugin"
-      implementationClass = "it.neckar.gradle.kps.generating.ts.TypescriptDefinitionGenerationPlugin"
-    }
-    register("GeneratePackageJsonPlugin") {
-      id = "it.neckar.repos.generate-package-json"
-      implementationClass = "it.neckar.gradle.pnpm.packagejson.GeneratePackageJsonPlugin"
-    }
-    register("InstallPnpmDependencyPlugin") {
-      id = "it.neckar.repos.install-pnpm-dependency"
-      implementationClass = "it.neckar.gradle.packagejson.InstallPnpmDependencyPlugin"
     }
   }
 }

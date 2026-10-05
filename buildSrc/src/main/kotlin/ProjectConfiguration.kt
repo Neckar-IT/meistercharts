@@ -1,12 +1,6 @@
+package it.neckar.gradle
+
 import dev.detekt.gradle.extensions.DetektExtension
-import it.neckar.gradle.JvmType
-import it.neckar.gradle.Plugins
-import it.neckar.gradle.applyMultiplatformKotlinConfiguration
-import it.neckar.gradle.configureJunit
-import it.neckar.gradle.configureKotlin
-import it.neckar.gradle.configureToolchain
-import it.neckar.gradle.declareTargets
-import it.neckar.gradle.multiplatformDetektSourceDirectories
 import it.neckar.projects.ConfiguredProject
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.Project
@@ -25,16 +19,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  * provides only the configuration needed for MeisterCharts multiplatform modules.
  */
 object ProjectConfiguration {
-
-  /**
-   * Stubs for configuration methods referenced by AbstractProjects.kt.
-   * These project types are not used in the meistercharts standalone build.
-   */
-  fun configureKspProcessor(project: Project) {}
-  fun configurePnpm(project: Project) {}
-  fun configurePython(project: Project) {}
-  fun configureJvm(project: Project) {}
-  fun configureParentProject(project: Project) {}
 
   /**
    * Declares the module's registered Kotlin targets and the shared setup around them — the same

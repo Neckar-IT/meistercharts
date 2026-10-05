@@ -314,8 +314,8 @@ object Plugins {
   const val localDev: String = "it.neckar.local-dev"
 
   /**
-   * The `projectDeclaration { }` block: the values that describe a project, exported for other
-   * projects and generated as constants (ADL 0202, `docs/gradle/project-declaration.md`).
+   * The `productDeclaration { }` and `serviceDeclaration { }` blocks, exported for other projects and
+   * generated as constants (ADL 0202, `docs/gradle/project-declaration.md`).
    */
   const val projectDeclaration: String = "it.neckar.project-declaration"
 

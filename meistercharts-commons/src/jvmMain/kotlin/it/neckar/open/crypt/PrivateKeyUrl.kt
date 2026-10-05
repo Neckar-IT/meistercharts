@@ -28,7 +28,7 @@
 package it.neckar.open.crypt
 
 
-import javax.inject.Qualifier
+import jakarta.inject.Qualifier
 
 /**
  *

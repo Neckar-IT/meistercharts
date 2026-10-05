@@ -84,7 +84,11 @@ typealias CatalogLibrary = Provider<MinimalExternalModuleDependency>
  * because a standard library is not worth a declaration in every build script.
  */
 class StandardDependencies(libs: LibrariesForLibs) {
-  val annotations: List<CatalogLibrary> = listOf(libs.jsr305, libs.javax.inject, libs.javax.annotation.api, libs.org.jetbrains.annotations)
+  /**
+   * Guice 7 reads `jakarta.inject` only. `javax.inject` stays until the modules under
+   * `internal/closed/lizergy/` declare it themselves: https://git.neckar.it/neckarit/neckar-hub/-/issues/3398
+   */
+  val annotations: List<CatalogLibrary> = listOf(libs.jsr305, libs.jakarta.inject.api, libs.javax.inject, libs.javax.annotation.api, libs.org.jetbrains.annotations)
 
   val kotlinJs: List<CatalogLibrary> = listOf(libs.kotlin.js)
 

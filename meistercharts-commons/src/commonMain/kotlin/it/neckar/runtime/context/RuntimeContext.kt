@@ -45,7 +45,7 @@ package it.neckar.runtime.context
 data class RuntimeContext<HostType: ServiceHost>(
   /**
    * Technical execution environment — where/how the application process is running.
-   * Examples: LocalDev, Docker, Kubernetes, CI, Serverless.
+   * Examples: LocalDev, Docker, CI.
    */
   val executionEnvironment: ExecutionEnvironment,
 
@@ -92,7 +92,7 @@ data class RuntimeContext<HostType: ServiceHost>(
   companion object {
     /**
      * Technical execution environment — where/how the application process is running.
-     * Examples: LocalDev, Docker, Kubernetes, CI, Serverless.
+     * Examples: LocalDev, Docker, CI.
      */
     val executionEnvironment: ExecutionEnvironment
       get() {

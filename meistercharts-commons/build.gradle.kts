@@ -1,6 +1,8 @@
 import it.neckar.gradle.branch
-import it.neckar.gradle.buildDate
-
+import it.neckar.gradle.buildDateDay
+import it.neckar.gradle.gitCommit
+import it.neckar.gradle.gitCommitDate
+import it.neckar.gradle.gitDescribe
 import it.neckar.gradle.meisterchartsVersion
 
 description = """Meistercharts - Commons"""
