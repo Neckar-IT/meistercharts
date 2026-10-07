@@ -33,7 +33,7 @@ class ChartSupportTest {
 
 
     val renderLoopListener = object : ChartRenderLoopListener {
-      override fun render(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
+      override fun render(chartSupport: ChartSupport, frameTimestamp: Double, frameMonotonicMillis: Double) {
         callCount++
 
         if (callCount == 3) {
@@ -44,20 +44,20 @@ class ChartSupportTest {
     chartSupport.onRender(renderLoopListener)
 
     assertThat(callCount).isEqualTo(0)
-    chartSupport.render(600.0, 0.0)
+    chartSupport.render(600.0, 600.0, 0.0)
     assertThat(callCount).isEqualTo(1)
-    chartSupport.render(700.0, 100.0)
+    chartSupport.render(700.0, 700.0, 100.0)
     assertThat(callCount).isEqualTo(2)
 
     assertThat(chartSupport.renderLoopListeners).contains(renderLoopListener)
-    chartSupport.render(800.0, 200.0)
+    chartSupport.render(800.0, 800.0, 200.0)
     assertThat(callCount).isEqualTo(3)
     //Scheduled for removal, but not yet removed
     assertThat(chartSupport.renderLoopListenersToRemove).contains(renderLoopListener)
     assertThat(chartSupport.renderLoopListeners).contains(renderLoopListener)
 
     //Removed on next call to refresh
-    chartSupport.render(900.0, 300.0)
+    chartSupport.render(900.0, 900.0, 300.0)
     assertThat(callCount).isEqualTo(3)
     assertThat(chartSupport.renderLoopListenersToRemove).containsNone(renderLoopListener)
     assertThat(chartSupport.renderLoopListeners).containsNone(renderLoopListener)

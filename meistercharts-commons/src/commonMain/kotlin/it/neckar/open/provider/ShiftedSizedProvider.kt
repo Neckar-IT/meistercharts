@@ -42,7 +42,9 @@ class ShiftedSizedProvider<T>(
 
   override fun IndexMappingSupport.StoreIndex.fillIndexMapping(delegateSize: Int): Int {
     delegateSize.fastFor { originalIndex ->
-      val shiftedIndex = (originalIndex + shift) % delegateSize
+      // mod, not %: the remainder keeps the sign of the dividend, so a negative shift produced a
+      // negative index and the mapping store wrote at a negative array position.
+      val shiftedIndex = (originalIndex + shift).mod(delegateSize)
       this.storeMapping(originalIndex, shiftedIndex)
     }
     return delegateSize

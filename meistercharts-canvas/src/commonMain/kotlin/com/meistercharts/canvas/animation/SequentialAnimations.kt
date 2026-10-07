@@ -15,6 +15,8 @@
  */
 package com.meistercharts.canvas.animation
 
+import it.neckar.open.unit.si.ms
+
 /**
  * Adds several animations sequentially
  */
@@ -29,10 +31,10 @@ class SequentialAnimations(
   internal var currentAnimationIndex = 0
     private set
 
-  override fun animationFrame(frameTimestamp: Double): AnimationState {
+  override fun animationFrame(frameMonotonicMillis: @ms Double): AnimationState {
     //Search for the correct animation
     while (currentAnimationIndex < animations.size) {
-      animateCurrent(frameTimestamp).let {
+      animateCurrent(frameMonotonicMillis).let {
         if (it == AnimationState.Active) {
           return AnimationState.Active
         }
@@ -48,7 +50,7 @@ class SequentialAnimations(
    * Animates the current animation.
    * Checks the bounds
    */
-  private fun animateCurrent(frameTimestamp: Double): AnimationState {
-    return animations.getOrNull(currentAnimationIndex)?.animationFrame(frameTimestamp) ?: AnimationState.Finished
+  private fun animateCurrent(frameMonotonicMillis: @ms Double): AnimationState {
+    return animations.getOrNull(currentAnimationIndex)?.animationFrame(frameMonotonicMillis) ?: AnimationState.Finished
   }
 }

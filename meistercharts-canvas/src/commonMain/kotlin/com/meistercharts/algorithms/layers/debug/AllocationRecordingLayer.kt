@@ -104,8 +104,11 @@ class AllocationRecordingLayer(
      */
     private var linesMode: AllocationRecordingMode? = null
 
+    /**
+     * The [it.neckar.open.time.monotonicMillis] of the last update; NaN as long as nothing has been built
+     */
     @ms
-    private var lastUpdatedTimestamp = 0.0
+    private var lastUpdatedMonotonicMillis = Double.NaN
 
     override fun calculate(paintingContext: LayerPaintingContext) {
       val mode = AllocationRecordingEngine.mode
@@ -114,14 +117,14 @@ class AllocationRecordingLayer(
       }
 
       //The report and its text allocate on the paint thread - build them on the update rate, not every frame
-      val upToDate = mode == linesMode && paintingContext.frameTimestamp - lastUpdatedTimestamp <= configuration.updateRate
+      val upToDate = mode == linesMode && paintingContext.frameMonotonicMillis - lastUpdatedMonotonicMillis <= configuration.updateRate
       if (upToDate) {
         return
       }
 
       lines = buildLines(mode)
       linesMode = mode
-      lastUpdatedTimestamp = paintingContext.frameTimestamp
+      lastUpdatedMonotonicMillis = paintingContext.frameMonotonicMillis
     }
   }
 

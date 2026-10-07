@@ -71,16 +71,18 @@ data class LayerPaintingContext(
    */
   val layerSupport: LayerSupport,
   /**
-   * The time of the current frame.
-   *
-   * This timestamp can also be accessed using the [Meistercharts.renderLoop] while painting.
-   * Therefore, it is not always necessary to pass the frame timestamp as parameter
+   * The wall clock time of the current frame for the time axis; animations use [frameMonotonicMillis].
    */
   val frameTimestamp: @ms Double,
   /**
-   * The time delta to the last frame. (0 on the first paint)
+   * The [it.neckar.open.time.monotonicMillis] of the current frame; drives every animation.
+   * Also accessible using [Meistercharts.renderLoop] while painting.
    */
-  val frameTimestampDelta: @ms Double,
+  val frameMonotonicMillis: @ms Double,
+  /**
+   * The time since the last paint, measured on [it.neckar.open.time.monotonicMillis] (0 on the first paint)
+   */
+  val frameDelta: @ms Double,
 
   /**
    * The painting loop index (will overflow after about 414 days).
@@ -194,7 +196,8 @@ data class LayerPaintingContext(
       gc = gc,
       layerSupport = layerSupport,
       frameTimestamp = frameTimestamp,
-      frameTimestampDelta = frameTimestampDelta,
+      frameMonotonicMillis = frameMonotonicMillis,
+      frameDelta = frameDelta,
       loopIndex = loopIndex,
       layerLayoutIndex = layerIndexForLayout,
       layerPaintIndex = layerPaintIndex,
@@ -216,7 +219,8 @@ data class LayerPaintingContext(
       gc = gc,
       layerSupport = layerSupport,
       frameTimestamp = frameTimestamp,
-      frameTimestampDelta = frameTimestampDelta,
+      frameMonotonicMillis = frameMonotonicMillis,
+      frameDelta = frameDelta,
       loopIndex = loopIndex,
       layerLayoutIndex = layerLayoutIndex,
       layerPaintIndex = layerIndex,
@@ -319,7 +323,7 @@ fun ChartSupport.domainChartCalculator(
  * Returns the elapsed ratio for the given painting context
  */
 fun Tween.interpolate(paintingContext: LayerPaintingContext): @pct Double {
-  return this.interpolate(paintingContext.frameTimestamp)
+  return this.interpolate(paintingContext.frameMonotonicMillis)
 }
 
 /**

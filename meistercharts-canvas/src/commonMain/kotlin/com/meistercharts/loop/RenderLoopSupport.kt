@@ -22,6 +22,7 @@ import it.neckar.open.annotations.TestOnly
 import it.neckar.open.collections.fastForEach
 import it.neckar.open.dispose.Disposable
 import it.neckar.open.kotlin.lang.ifNaN
+import it.neckar.open.time.monotonicMillis
 import it.neckar.open.time.nowMillis
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.number.MayBeNaN
@@ -74,8 +75,10 @@ class RenderLoopSupport {
    */
   fun nextLoop(relativeHighRes: @ms @Relative Double) {
     @ms val now = nowMillis()
+    @ms val frameMonotonicMillis = monotonicMillis()
 
     currentFrameTimestampOrNaN = now
+    currentFrameMonotonicMillisOrNaN = frameMonotonicMillis
 
     //Cleanup
     renderLoopListeners.removeAll(renderLoopListenersToRemove)
@@ -84,10 +87,11 @@ class RenderLoopSupport {
     try {
       logger.trace { "Render Loop. relative: $relativeHighRes" }
 
-      renderLoopListeners.fastForEach { it.render(now, relativeHighRes) }
+      renderLoopListeners.fastForEach { it.render(now, frameMonotonicMillis, relativeHighRes) }
     } finally {
       //Outside the loop, reset the current frame timestamp
       currentFrameTimestampOrNaN = Double.NaN
+      currentFrameMonotonicMillisOrNaN = Double.NaN
     }
   }
 
@@ -96,6 +100,11 @@ class RenderLoopSupport {
    * Will be set to [Double.NaN] when no frame is currently being painted.
    */
   private var currentFrameTimestampOrNaN: @ms @MayBeNaN Double = Double.NaN
+
+  /**
+   * The backing field for [currentFrameMonotonicMillis]; NaN when no frame is currently being painted.
+   */
+  private var currentFrameMonotonicMillisOrNaN: @ms @MayBeNaN Double = Double.NaN
 
   /**
    * Updates the current frame timestamp. Must only be used for tests
@@ -114,6 +123,16 @@ class RenderLoopSupport {
   val currentFrameTimestamp: @ms @IsFinite Double
     get() {
       return currentFrameTimestampOrNaN.ifNaN { throw IllegalStateException("Not currently in a frame") }
+    }
+
+  /**
+   * Returns the [monotonicMillis] of the current frame - the start for tweens created while painting.
+   *
+   * ATTENTION: Will throw an exception if called from outside the frame paint method!
+   */
+  val currentFrameMonotonicMillis: @ms Double
+    get() {
+      return currentFrameMonotonicMillisOrNaN.ifNaN { throw IllegalStateException("Not currently in a frame") }
     }
 
   companion object {

@@ -149,7 +149,8 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
     }
 
     return TileCreationInfo(
-      Meistercharts.renderLoop.currentFrameTimestamp,
+      creationTime = Meistercharts.renderLoop.currentFrameTimestamp,
+      creationMonotonicMillis = Meistercharts.renderLoop.currentFrameMonotonicMillis,
       values = creationInfoValues(visibleTimeRange, renderedSamplingPeriod, timeRangeToPaint, queryResultTimeRange = TimeRange(buckets.first().start, buckets.last().end))
     )
   }

@@ -274,7 +274,7 @@ class Layers(val chartId: ChartId) {
       LayerPaintDuration(layer, layer.description, measureTime.toDouble(DurationUnit.MILLISECONDS))
     }
 
-    return PaintingStats(paintingContext.frameTimestamp, paintingContext.frameTimestampDelta, LayerPaintDurations(layerRepaintDurations))
+    return PaintingStats(paintingContext.frameTimestamp, paintingContext.frameMonotonicMillis, paintingContext.frameDelta, LayerPaintDurations(layerRepaintDurations))
   }
 
   /**

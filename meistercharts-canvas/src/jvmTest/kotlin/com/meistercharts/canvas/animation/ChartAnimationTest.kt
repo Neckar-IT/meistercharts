@@ -17,6 +17,7 @@
 
 package com.meistercharts.canvas.animation
 
+import it.neckar.open.unit.si.ms
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.canvas.ChartSupport
@@ -26,11 +27,14 @@ import com.meistercharts.canvas.MockCanvas
 import it.neckar.open.observable.ObservableDouble
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class ChartAnimationTest {
   lateinit var canvas: MockCanvas
   lateinit var chartSupport: ChartSupport
   lateinit var layerSupport: LayerSupport
+  @ms
+  private val frameStart: Double = 1_000.0
 
   @BeforeEach
   internal fun setUp() {
@@ -41,8 +45,8 @@ class ChartAnimationTest {
 
   @Test
   fun testFinished() {
-    val chartAnimation = ChartAnimation { frameTimestamp ->
-      AnimationState.finishedIf(frameTimestamp > 10_000.0)
+    val chartAnimation = ChartAnimation { frameMonotonicMillis ->
+      AnimationState.finishedIf(frameMonotonicMillis - frameStart > 10_000.0)
     }
 
     assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
@@ -50,21 +54,21 @@ class ChartAnimationTest {
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
     //Simulate an event
-    chartSupport.render(10_000.0, 100.0)
+    renderFrame(10_000.0, 100.0)
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.render(20_000.0, 200.0)
+    renderFrame(20_000.0, 200.0)
     assertThat(chartSupport.renderLoopListenersToRemove).contains(chartAnimation)
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.render(30_000.0, 300.0)
+    renderFrame(30_000.0, 300.0)
     assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
   }
 
   @Test
   fun testDispose() {
-    val chartAnimation = ChartAnimation { frameTimestamp ->
-      AnimationState.finishedIf(frameTimestamp > 10_000.0)
+    val chartAnimation = ChartAnimation { frameMonotonicMillis ->
+      AnimationState.finishedIf(frameMonotonicMillis - frameStart > 10_000.0)
     }
 
     assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
@@ -73,7 +77,7 @@ class ChartAnimationTest {
     assertThat(chartSupport.renderLoopListeners).hasSize(2)
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.render(10_000.0, 100.0)
+    renderFrame(10_000.0, 100.0)
     assertThat(chartSupport.renderLoopListeners).hasSize(2)
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
@@ -82,10 +86,10 @@ class ChartAnimationTest {
     assertThat(chartSupport.renderLoopListeners).hasSize(2)
     assertThat(chartSupport.renderLoopListeners).contains(chartAnimation)
 
-    chartSupport.render(20_000.0, 200.0)
+    renderFrame(20_000.0, 200.0)
 
     assertThat(chartSupport.renderLoopListenersToRemove).contains(chartAnimation)
-    chartSupport.render(30_000.0, 300.0)
+    renderFrame(30_000.0, 300.0)
 
     assertThat(chartSupport.renderLoopListeners).hasSize(1)
     assertThat(chartSupport.renderLoopListeners).containsNone(chartAnimation)
@@ -95,18 +99,26 @@ class ChartAnimationTest {
   fun testUsageWithProperty() {
     val positionY = ObservableDouble(0.0)
 
-    val tweenDefinition = TweenDefinition(1000.0)
-    val tween = tweenDefinition.realize(40_000.0)
+    @ms val start = 1_000.0
+    val tweenDefinition = TweenDefinition(1.seconds)
+    val tween = tweenDefinition.realize(start)
 
     val propertyTween = tween.animate(positionY::value, 7.0)
 
-    propertyTween.update(40_000.0)
+    propertyTween.update(start)
     assertThat(positionY.value).isEqualTo(0.0)
 
-    propertyTween.update(41_000.0)
+    propertyTween.update(start + 1000.0)
     assertThat(positionY.value).isEqualTo(7.0)
 
-    propertyTween.update(40_500.0)
+    propertyTween.update(start + 500.0)
     assertThat(positionY.value).isEqualTo(3.5)
+  }
+
+  /**
+   * Renders a frame [elapsedMillis] after [frameStart]
+   */
+  private fun renderFrame(elapsedMillis: Double, relativeHighRes: Double) {
+    chartSupport.render(elapsedMillis, frameStart + elapsedMillis, relativeHighRes)
   }
 }

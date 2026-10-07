@@ -36,7 +36,7 @@ class LogPaintEventsDebugLayer : AbstractLayer() {
     val chartState = paintingContext.chartSupport.currentChartState
 
     logger.debug {
-      """Repaint called @ ${dateFormat.format(paintingContext.frameTimestamp, paintingContext.i18nConfiguration)} (delta: ${paintingContext.frameTimestampDelta}) ms
+      """Repaint called @ ${dateFormat.format(paintingContext.frameTimestamp, paintingContext.i18nConfiguration)} (delta: ${paintingContext.frameDelta})
         |   Content Area Size: ${chartState.contentAreaSize}
         |   Window translation: ${chartState.windowTranslation}
         |   Zoom: ${chartState.zoom}

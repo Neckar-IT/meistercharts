@@ -106,11 +106,16 @@ fun Int.signExtend(bits: Int): Int = (this shl (32 - bits)) shr (32 - bits) // I
 /** Takes n[bits] of [this] [Long], and extends the last bit, creating a plain [Long] in one's complement */
 fun Long.signExtend(bits: Int): Long = (this shl (64 - bits)) shr (64 - bits) // Long.SIZE_BITS
 
-/** Creates an [Int] with [this] bits set to 1 */
-fun Int.mask(): Int = (1 shl this) - 1
+/**
+ * Creates an [Int] with [this] bits set to 1.
+ *
+ * The full width is a case of its own: `shl` uses the low five bits of the shift, so `1 shl 32` is 1
+ * and the subtraction answered 0 instead of every bit set.
+ */
+fun Int.mask(): Int = if (this >= Int.SIZE_BITS) -1 else (1 shl this) - 1
 
-/** Creates a [Long] with [this] bits set to 1 */
-fun Long.mask(): Long = (1L shl this.toInt()) - 1L
+/** Creates a [Long] with [this] bits set to 1. The full width is a case of its own, as in [Int.mask]. */
+fun Long.mask(): Long = if (this >= Long.SIZE_BITS) -1L else (1L shl this.toInt()) - 1L
 
 /** Extracts [count] bits at [offset] from [this] [Int] */
 fun Int.extract(offset: Int, count: Int): Int = (this ushr offset) and count.mask()

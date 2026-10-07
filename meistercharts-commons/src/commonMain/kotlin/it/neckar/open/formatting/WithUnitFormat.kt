@@ -61,7 +61,7 @@ class WithUnitFormat(
    * In most cases it is preferred to use a [CachedNumberFormat] instead.
    */
   fun formatWithUnit(value: Double, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
-    val formattedValue = delegate.format(value, i18nConfiguration)
+    val formattedValue = delegate.format(value, i18nConfiguration, whitespaceConfig)
 
     return appendUnit(formattedValue, unit(), whitespaceConfig)
   }
@@ -72,7 +72,7 @@ class WithUnitFormat(
      * This method can be used instead of a [WithUnitFormat] instance to avoid unnecessary object creation.
      */
     fun formatWithUnit(value: Double, valueFormat: NumberFormat, unitLabel: String, i18nConfiguration: I18nConfiguration = CurrentI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
-      val formattedValue = valueFormat.format(value, i18nConfiguration)
+      val formattedValue = valueFormat.format(value, i18nConfiguration, whitespaceConfig)
       return appendUnit(formattedValue, unitLabel, whitespaceConfig)
     }
 

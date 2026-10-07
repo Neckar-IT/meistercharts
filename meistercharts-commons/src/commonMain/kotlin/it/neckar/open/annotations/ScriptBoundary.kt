@@ -25,31 +25,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.time.io
+package it.neckar.open.annotations
 
-import it.neckar.time.Millis
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
+import kotlin.annotation.AnnotationTarget.CLASS
 
-actual object MillisAsIsoDateTimeSerializer : KSerializer<Millis> {
-  actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("MillisAsIsoDateTime", PrimitiveKind.STRING)
-
-  actual override fun serialize(encoder: Encoder, value: Millis) {
-    // new Date(NaN).toISOString() throws a RangeError that names neither the value nor the field.
-    require(value.millis.isFinite()) { "Cannot serialize [$value] as ISO date time" }
-
-    encoder.encodeString(jsIsoString(value.millis).toString())
-  }
-
-  actual override fun deserialize(decoder: Decoder): Millis {
-    return Millis(jsDateParse(decoder.decodeString()))
-  }
-}
-
-private fun jsIsoString(millis: Double): JsString = js("new Date(millis).toISOString()")
-
-private fun jsDateParse(isoString: String): Double = js("Date.parse(isoString)")
+/**
+ * Marks a class at the boundary of a pricing or quote script: it builds the `@DataView` input the
+ * script is called with, or calls the script.
+ *
+ * Such a class lives in the domain package next to the domain classes it reads from, yet it handles
+ * the script's wire types. The layer-separation rules of the `neckar-rules` ruleset treat it as
+ * infrastructure: it may reference Entity, REST/DataView and Domain types.
+ *
+ * ```kotlin
+ * @ScriptBoundary
+ * class BookOrderPricingScriptExecutor {
+ *   fun price(script: JavaScriptCode, order: BookOrderResolvedView): Quote { … }
+ * }
+ * ```
+ */
+@MustBeDocumented
+@Retention(AnnotationRetention.BINARY)
+@Target(CLASS)
+annotation class ScriptBoundary

@@ -45,6 +45,9 @@ import kotlin.jvm.JvmOverloads
 class Cache<K, V>
 @Deprecated("use cache() method instead to allow use for better logging", level = DeprecationLevel.WARNING)
 @JvmOverloads constructor(
+  /**
+   * The maximum number of entries, at least 1; see [CacheMap.maxSize]
+   */
   maxSize: Int = 16,
   /**
    * Is called when an element is removed from the cache
@@ -126,19 +129,12 @@ class Cache<K, V>
   var cacheMissCounter: Int = 0
 
   /**
-   * Removes all elements the predicate returns true for
+   * Removes all elements the predicate returns true for. Every removed entry is freed.
    */
   fun removeIf(predicate: (K) -> Boolean) {
     lock.write {
-      val iterator = map.iterator()
-
-      while (iterator.hasNext()) {
-        val entry = iterator.next()
-
-        if (predicate(entry.key)) {
-          iterator.remove()
-        }
-      }
+      // Through CacheMap.removeIf: an iterator over the delegate's entries removes without free.
+      map.removeIf(predicate)
     }
   }
 

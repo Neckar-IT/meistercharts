@@ -27,6 +27,10 @@
  */
 package it.neckar.open.time
 
+import it.neckar.open.unit.si.ms
+import kotlin.concurrent.Volatile
+import kotlin.time.ComparableTimeMark
+import kotlin.time.DurationUnit
 import kotlin.time.TimeSource
 
 /**
@@ -42,3 +46,22 @@ var monotonicTimeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic
 fun resetMonotonicTimeSource() {
   monotonicTimeSource = TimeSource.Monotonic
 }
+
+/**
+ * The milliseconds elapsed on [monotonicTimeSource] since the first call for that source; only the difference of two values is an elapsed time.
+ * Code that subtracts times on every frame subtracts these values: [kotlin.time.Duration] arithmetic allocates on Kotlin/JS.
+ * Replacing [monotonicTimeSource] restarts the values at 0.
+ */
+fun monotonicMillis(): @ms Double {
+  val source = monotonicTimeSource
+  val origin = monotonicOrigin?.takeIf { it.source === source } ?: MonotonicOrigin(source, source.markNow()).also { monotonicOrigin = it }
+  return (source.markNow() - origin.mark).toDouble(DurationUnit.MILLISECONDS)
+}
+
+/**
+ * The mark [monotonicMillis] counts from, together with the source it was taken from
+ */
+private class MonotonicOrigin(val source: TimeSource.WithComparableMarks, val mark: ComparableTimeMark)
+
+@Volatile
+private var monotonicOrigin: MonotonicOrigin? = null

@@ -289,9 +289,13 @@ sealed interface Url {
     }
 
     /**
-     * Appends something to the URL
+     * Appends something to the URL.
+     *
+     * A path segment after a query parameter or a fragment would land inside that value, so it is
+     * rejected here as it is in [Relative.plus].
      */
     override operator fun plus(toAppend: String): Absolute {
+      requireAppendableAfter(value, toAppend)
       return Absolute(appendUrlStrings(value, toAppend))
     }
 
@@ -346,10 +350,13 @@ sealed interface Url {
     }
 
     /**
-     * Returns true if the URL has an explicit port specified.
+     * Returns true if the URL names a port of its own.
+     *
+     * Asked of the host part, not of everything after the scheme: a colon in a path or a query value
+     * is no port, and [port] reads the host part too.
      */
     fun hasExplicitPort(): Boolean {
-      return withoutProtocol().contains(":")
+      return hostPartWithPort().contains(":")
     }
 
     /**
@@ -417,9 +424,11 @@ sealed interface Url {
     }
 
     /**
-     * Appends something to the URL
+     * Appends something to the URL. A path segment after a query parameter or a fragment is rejected,
+     * as it is in [Relative.plus].
      */
     override operator fun plus(toAppend: String): RootRelative {
+      requireAppendableAfter(value, toAppend)
       return RootRelative(appendUrlStrings(value, toAppend))
     }
 
@@ -456,13 +465,7 @@ sealed interface Url {
      * Appends something to the URL
      */
     override operator fun plus(toAppend: String): Relative {
-      // Check if we're trying to append a path after a query parameter or fragment
-      if ((value.contains("?") || value.contains("#"))
-          && !toAppend.startsWith("?")
-          && !toAppend.startsWith("&")
-          && !toAppend.startsWith("#")) {
-        throw IllegalArgumentException("Cannot append path segment [$toAppend] after query parameter or fragment in [$value]")
-      }
+      requireAppendableAfter(value, toAppend)
       return Relative(appendUrlStrings(value, toAppend))
     }
 
@@ -492,6 +495,20 @@ sealed interface Url {
  * - Fragment identifiers (starting with #) are appended directly
  * - Multiple slashes at boundaries are normalized to a single slash
  */
+/**
+ * Rejects a path segment appended after a query parameter or a fragment: `appendUrlStrings` would put
+ * it inside that value, so `https://neckar.it/search?q=a` plus `page` would read
+ * `https://neckar.it/search?q=a/page`. A `?`, `&` or `#` is appended as the parameter or fragment it is.
+ */
+internal fun requireAppendableAfter(value: String, toAppend: String) {
+  if (value.contains("?").not() && value.contains("#").not()) {
+    return
+  }
+  require(toAppend.startsWith("?") || toAppend.startsWith("&") || toAppend.startsWith("#")) {
+    "Cannot append path segment [$toAppend] after query parameter or fragment in [$value]"
+  }
+}
+
 fun appendUrlStrings(value: String, toAppend: String): String {
   if (value.isEmpty()) {
     return toAppend

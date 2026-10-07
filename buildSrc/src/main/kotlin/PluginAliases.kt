@@ -184,6 +184,18 @@ inline val PluginDependenciesSpec.archiveEncryptionHost: PluginDependencySpec
 inline val PluginDependenciesSpec.backupSchedule: PluginDependencySpec
   get() = id(Plugins.backupSchedule)
 
+inline val PluginDependenciesSpec.delivery: PluginDependencySpec
+  get() = id(Plugins.delivery)
+
+inline val PluginDependenciesSpec.hostDeclaration: PluginDependencySpec
+  get() = id(Plugins.hostDeclaration)
+
+inline val PluginDependenciesSpec.localhostInfrastructure: PluginDependencySpec
+  get() = id(Plugins.localhostInfrastructure)
+
+inline val PluginDependenciesSpec.moduleGroup: PluginDependencySpec
+  get() = id(Plugins.moduleGroup)
+
 inline val PluginDependenciesSpec.customDeployment: PluginDependencySpec
   get() = id(Plugins.customDeployment)
 

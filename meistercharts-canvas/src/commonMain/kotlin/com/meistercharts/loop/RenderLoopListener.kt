@@ -25,14 +25,17 @@ import it.neckar.open.unit.si.ms
 fun interface RenderLoopListener {
   fun render(
     /**
-     * The current time (absolute) for this frame.
-     * Do *not* use this value for animations.
+     * The "now" of this frame for time axes and translation over time; never for animations.
      */
     frameTimestamp: @ms @IsFinite Double,
 
     /**
-     * The relative time - with higher precision.
-     * This value should be used for animations.
+     * The [it.neckar.open.time.monotonicMillis] of this frame; drives every animation.
+     */
+    frameMonotonicMillis: @ms Double,
+
+    /**
+     * The platform's display refresh time; keeps render throttling on real time while demos pause the virtual time.
      */
     relativeHighRes: @ms @Relative Double,
   )

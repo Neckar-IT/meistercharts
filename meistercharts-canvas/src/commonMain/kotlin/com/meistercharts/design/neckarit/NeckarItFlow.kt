@@ -23,8 +23,11 @@ import com.meistercharts.canvas.animation.Tween
 import com.meistercharts.geometry.BezierCurve
 import com.meistercharts.geometry.BezierCurveRect
 import it.neckar.geometry.Coordinates
-import it.neckar.open.time.nowMillis
+import it.neckar.open.time.monotonicMillis
+import it.neckar.open.time.monotonicTimeSource
 import it.neckar.open.unit.si.ms
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 
 /**
  * Describes the Neckar IT flow shape
@@ -129,10 +132,10 @@ object NeckarItFlow {
   var tween0EndX: Tween = Tween.constant(0.0)
   var tween0EndY: Tween = Tween.constant(0.0)
 
-  var tween0Control0X: Tween = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween0Control0Y: Tween = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween0Control1X: Tween = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween0Control1Y: Tween = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween0Control0X: Tween = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween0Control0Y: Tween = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween0Control1X: Tween = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween0Control1Y: Tween = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
 
   var tween1StartX: Tween = Tween.constant(0.0)
@@ -140,10 +143,10 @@ object NeckarItFlow {
   var tween1EndX: Tween = Tween.constant(0.0)
   var tween1EndY: Tween = Tween.constant(0.0)
 
-  var tween1Control0X: Tween = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween1Control0Y: Tween = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween1Control1X: Tween = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween1Control1Y: Tween = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween1Control0X: Tween = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween1Control0Y: Tween = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween1Control1X: Tween = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween1Control1Y: Tween = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
 
   var tween2StartX: Tween = Tween.constant(0.0)
@@ -151,10 +154,10 @@ object NeckarItFlow {
   var tween2EndX: Tween = Tween.constant(0.0)
   var tween2EndY: Tween = Tween.constant(0.0)
 
-  var tween2Control0X: Tween = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween2Control0Y: Tween = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween2Control1X: Tween = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween2Control1Y: Tween = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween2Control0X: Tween = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween2Control0Y: Tween = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween2Control1X: Tween = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween2Control1Y: Tween = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
 
   var tween3StartX: Tween = Tween.constant(0.0)
@@ -162,60 +165,83 @@ object NeckarItFlow {
   var tween3EndX: Tween = Tween.constant(0.0)
   var tween3EndY: Tween = Tween.constant(0.0)
 
-  var tween3Control0X: Tween = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween3Control0Y: Tween = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween3Control1X: Tween = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-  var tween3Control1Y: Tween = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween3Control0X: Tween = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween3Control0Y: Tween = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween3Control1X: Tween = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+  var tween3Control1Y: Tween = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
   /**
    * Uniform movement
    */
   fun configureForUniformMovement() {
-    tween0Control0X = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control0Y = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control1X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control1Y = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tweenTimeSource = monotonicTimeSource
+    lastConfiguration = ::configureForUniformMovement
+    tween0Control0X = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control0Y = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control1X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control1Y = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween1Control0X = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control0Y = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control1X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control1Y = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control0X = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control0Y = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control1X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control1Y = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween2Control0X = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control0Y = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control1X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control1Y = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control0X = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control0Y = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control1X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control1Y = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween3Control0X = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control0Y = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control1X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control1Y = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control0X = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control0Y = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control1X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control1Y = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
   }
+
+  /**
+   * The time source the tweens have been started from; demos replace [monotonicTimeSource] on every start.
+   */
+  private var tweenTimeSource: TimeSource.WithComparableMarks = monotonicTimeSource
+
+  /**
+   * The configuration applied last; repeated when [monotonicTimeSource] has been replaced
+   */
+  private var lastConfiguration: () -> Unit = ::configureForRandomAlsoStartAndEnd
 
   init {
     configureForRandomAlsoStartAndEnd()
   }
 
+  /**
+   * Restarts the tweens when [monotonicTimeSource] has been replaced: [monotonicMillis] restarts at 0 for a new source.
+   */
+  private fun restartTweensOnNewTimeSource() {
+    if (tweenTimeSource !== monotonicTimeSource) {
+      lastConfiguration()
+    }
+  }
+
   fun configureForRandom() {
-    tween0Control0X = Tween(nowMillis(), 5000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control0Y = Tween(nowMillis(), 3000.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control1X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0Control1Y = Tween(nowMillis(), 2800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tweenTimeSource = monotonicTimeSource
+    lastConfiguration = ::configureForRandom
+    tween0Control0X = Tween(monotonicMillis(), 5000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control0Y = Tween(monotonicMillis(), 3000.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control1X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0Control1Y = Tween(monotonicMillis(), 2800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween1Control0X = Tween(nowMillis(), 4200.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control0Y = Tween(nowMillis(), 5300.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control1X = Tween(nowMillis(), 4700.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1Control1Y = Tween(nowMillis(), 3100.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control0X = Tween(monotonicMillis(), 4200.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control0Y = Tween(monotonicMillis(), 5300.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control1X = Tween(monotonicMillis(), 4700.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1Control1Y = Tween(monotonicMillis(), 3100.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween2Control0X = Tween(nowMillis(), 2200.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control0Y = Tween(nowMillis(), 4900.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control1X = Tween(nowMillis(), 3500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2Control1Y = Tween(nowMillis(), 3800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control0X = Tween(monotonicMillis(), 2200.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control0Y = Tween(monotonicMillis(), 4900.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control1X = Tween(monotonicMillis(), 3500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2Control1Y = Tween(monotonicMillis(), 3800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween3Control0X = Tween(nowMillis(), 4500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control0Y = Tween(nowMillis(), 4700.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control1X = Tween(nowMillis(), 3700.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3Control1Y = Tween(nowMillis(), 4100.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control0X = Tween(monotonicMillis(), 4500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control0Y = Tween(monotonicMillis(), 4700.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control1X = Tween(monotonicMillis(), 3700.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3Control1Y = Tween(monotonicMillis(), 4100.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
   }
 
   const val controlPointModificationFactor: Double = 0.1
@@ -223,29 +249,31 @@ object NeckarItFlow {
 
   fun configureForRandomAlsoStartAndEnd() {
     configureForRandom()
+    lastConfiguration = ::configureForRandomAlsoStartAndEnd
 
-    tween0StartY = Tween(nowMillis(), 3700.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween0EndY = Tween(nowMillis(), 3200.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0StartY = Tween(monotonicMillis(), 3700.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween0EndY = Tween(monotonicMillis(), 3200.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween1StartY = Tween(nowMillis(), 2500.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween1EndY = Tween(nowMillis(), 4200.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1StartY = Tween(monotonicMillis(), 2500.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween1EndY = Tween(monotonicMillis(), 4200.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween2StartY = Tween(nowMillis(), 3900.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween2EndY = Tween(nowMillis(), 3700.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2StartY = Tween(monotonicMillis(), 3900.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween2EndY = Tween(monotonicMillis(), 3700.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
 
-    tween3StartY = Tween(nowMillis(), 5100.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
-    tween3EndY = Tween(nowMillis(), 4800.0, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3StartY = Tween(monotonicMillis(), 5100.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
+    tween3EndY = Tween(monotonicMillis(), 4800.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
   }
 
   /**
-   * Returns the tweened shape 0 for the given point in time
+   * Returns the tweened shape 0 for the given frame time
    */
-  fun shape0(now: @ms Double): @DomainRelative BezierCurveRect {
+  fun shape0(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
+    restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween0StartX.interpolate(now) * startEndPointModificationFactor, tween0StartY.interpolate(now) * startEndPointModificationFactor),
-      Coordinates.of(tween0Control0X.interpolate(now) * controlPointModificationFactor, tween0Control0Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween0Control1X.interpolate(now) * controlPointModificationFactor, tween0Control1Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween0EndX.interpolate(now) * startEndPointModificationFactor, tween0EndY.interpolate(now) * startEndPointModificationFactor)
+      Coordinates.of(tween0StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween0StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
+      Coordinates.of(tween0Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween0Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween0Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween0Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween0EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween0EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
     )
 
     return shape0 + BezierCurveRect(
@@ -255,14 +283,15 @@ object NeckarItFlow {
   }
 
   /**
-   * Returns the tweened shape for the given point in time
+   * Returns the tweened shape for the given frame time
    */
-  fun shape1(now: @ms Double): @DomainRelative BezierCurveRect {
+  fun shape1(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
+    restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(now) * startEndPointModificationFactor, tween1StartY.interpolate(now) * startEndPointModificationFactor),
-      Coordinates.of(tween1Control0X.interpolate(now) * controlPointModificationFactor, tween1Control0Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween1Control1X.interpolate(now) * controlPointModificationFactor, tween1Control1Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(now) * startEndPointModificationFactor, tween1EndY.interpolate(now) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
+      Coordinates.of(tween1Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween1Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween1Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween1Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
     )
 
     return shape1 + BezierCurveRect(
@@ -272,14 +301,15 @@ object NeckarItFlow {
   }
 
   /**
-   * Returns the tweened shape for the given point in time
+   * Returns the tweened shape for the given frame time
    */
-  fun shape2(now: @ms Double): @DomainRelative BezierCurveRect {
+  fun shape2(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
+    restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(now) * startEndPointModificationFactor, tween1StartY.interpolate(now) * startEndPointModificationFactor),
-      Coordinates.of(tween2Control0X.interpolate(now) * controlPointModificationFactor, tween2Control0Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween2Control1X.interpolate(now) * controlPointModificationFactor, tween2Control1Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(now) * startEndPointModificationFactor, tween1EndY.interpolate(now) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
+      Coordinates.of(tween2Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween2Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween2Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween2Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
     )
 
     return shape2 + BezierCurveRect(
@@ -289,14 +319,15 @@ object NeckarItFlow {
   }
 
   /**
-   * Returns the tweened shape for the given point in time
+   * Returns the tweened shape for the given frame time
    */
-  fun shape3(now: @ms Double): @DomainRelative BezierCurveRect {
+  fun shape3(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
+    restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(now) * startEndPointModificationFactor, tween1StartY.interpolate(now) * startEndPointModificationFactor),
-      Coordinates.of(tween3Control0X.interpolate(now) * controlPointModificationFactor, tween3Control0Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween3Control1X.interpolate(now) * controlPointModificationFactor, tween3Control1Y.interpolate(now) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(now) * startEndPointModificationFactor, tween1EndY.interpolate(now) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
+      Coordinates.of(tween3Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween3Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween3Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween3Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
     )
 
     return shape3 + BezierCurveRect(

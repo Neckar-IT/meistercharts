@@ -485,9 +485,10 @@ inline fun <T> ArrayList<T>.fastIterateRemove(callback: (T) -> Boolean): ArrayLi
 }
 
 /**
- * Returns the max value - but always at least [fallbackValue].
+ * Returns the largest value [callback] produces, or [fallbackValue] for an empty list.
  *
- * If the list is empty the [fallbackValue] is returned
+ * `NaN` propagates, as it does through `maxOf`, and the seed is the infinity, so an infinite
+ * element wins.
  */
 inline fun <T> List<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size
@@ -495,19 +496,20 @@ inline fun <T> List<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (
     return fallbackValue
   }
 
-  var max = -Double.MAX_VALUE
+  var max = Double.NEGATIVE_INFINITY
   var n = 0
   while (n < currentSize) {
-    max = callback(this[n++]).coerceAtLeast(max)
+    max = maxOf(max, callback(this[n++]))
   }
 
   return max
 }
 
 /**
- * Returns the max value - but always at least [fallbackValue].
+ * Returns the largest value [callback] produces, or [fallbackValue] for an empty array.
  *
- * If the list is empty the [fallbackValue] is returned
+ * `NaN` propagates, as it does through `maxOf`, and the seed is the infinity, so an infinite
+ * element wins.
  */
 inline fun <T> Array<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size
@@ -515,10 +517,10 @@ inline fun <T> Array<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: 
     return fallbackValue
   }
 
-  var max = -Double.MAX_VALUE
+  var max = Double.NEGATIVE_INFINITY
   var n = 0
   while (n < currentSize) {
-    max = callback(this[n++]).coerceAtLeast(max)
+    max = maxOf(max, callback(this[n++]))
   }
 
   return max

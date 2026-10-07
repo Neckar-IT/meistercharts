@@ -104,7 +104,7 @@ class PaintStatisticsSupport(
         return 0.0
       }
 
-      @ms val deltaMillis = last.frameTimestamp - first.frameTimestamp
+      @ms val deltaMillis = last.frameMonotonicMillis - first.frameMonotonicMillis
       return _paintingStatsList.size / deltaMillis * 1000.0
     }
 

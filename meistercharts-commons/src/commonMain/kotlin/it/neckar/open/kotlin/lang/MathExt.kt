@@ -318,11 +318,16 @@ infix fun Double.umod(other: Double): Double {
 ////////////////////
 ////////////////////
 
-/** Returns the next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
-fun Int.nextAlignedTo(align: Int) = if (this.isAlignedTo(align)) this else (((this / align) + 1) * align)
+/**
+ * Returns the next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself.
+ *
+ * Through [floorDiv], not `/`: integer division truncates towards zero, so `(-5 / 4 + 1) * 4` stepped
+ * up to 0 rather than to -4.
+ */
+fun Int.nextAlignedTo(align: Int) = if (this.isAlignedTo(align)) this else ((this.floorDiv(align) + 1) * align)
 
 /** Returns the next value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
-fun Long.nextAlignedTo(align: Long) = if (this.isAlignedTo(align)) this else (((this / align) + 1) * align)
+fun Long.nextAlignedTo(align: Long) = if (this.isAlignedTo(align)) this else ((this.floorDiv(align) + 1) * align)
 
 /** Returns the previous value of [this] that is multiple of [align]. If [this] is already multiple, returns itself. */
 fun Int.prevAlignedTo(align: Int) = if (this.isAlignedTo(align)) this else nextAlignedTo(align) - align
@@ -479,16 +484,34 @@ fun Double.smoothstep(edge0: Double, edge1: Double): Double {
 }
 
 
-fun log(v: Int, base: Int): Int = log(v.toDouble(), base.toDouble()).toInt()
+/**
+ * The largest exponent with `base^result <= v`.
+ *
+ * Counted rather than computed through `ln(v)/ln(base)`: that quotient is inexact, and on an exact
+ * power it falls just short — `ln(1000)/ln(10)` is 2.9999999999999996, so the truncation answered 2.
+ */
+fun log(v: Int, base: Int): Int {
+  require(v > 0) { "Expected a positive value but was $v" }
+  require(base > 1) { "Expected a base above 1 but was $base" }
+
+  var result = 0
+  var remaining = v / base
+  while (remaining > 0) {
+    result++
+    remaining /= base
+  }
+  return result
+}
+
 fun ln(v: Int): Int = ln(v.toDouble()).toInt()
-fun log2(v: Int): Int = log(v.toDouble(), 2.0).toInt()
-fun log10(v: Int): Int = log(v.toDouble(), 10.0).toInt()
+fun log2(v: Int): Int = log(v, 2)
+fun log10(v: Int): Int = log(v, 10)
 
 fun signNonZeroM1(x: Double): Int = if (x <= 0) -1 else +1
 fun signNonZeroP1(x: Double): Int = if (x >= 0) +1 else -1
 
-fun Int.nextMultipleOf(multiple: Int) = if (this.isMultipleOf(multiple)) this else (((this / multiple) + 1) * multiple)
-fun Long.nextMultipleOf(multiple: Long) = if (this.isMultipleOf(multiple)) this else (((this / multiple) + 1) * multiple)
+fun Int.nextMultipleOf(multiple: Int) = if (this.isMultipleOf(multiple)) this else ((this.floorDiv(multiple) + 1) * multiple)
+fun Long.nextMultipleOf(multiple: Long) = if (this.isMultipleOf(multiple)) this else ((this.floorDiv(multiple) + 1) * multiple)
 
 fun Int.prevMultipleOf(multiple: Int) = if (this.isMultipleOf(multiple)) this else nextMultipleOf(multiple) - multiple
 fun Long.prevMultipleOf(multiple: Long) = if (this.isMultipleOf(multiple)) this else nextMultipleOf(multiple) - multiple

@@ -39,7 +39,7 @@ import kotlin.reflect.KClass
  * Serializes a [KClass] by its fully qualified name
  */
 object KClassSerializer : KSerializer<KClass<*>> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("KType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("KClass", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: KClass<*>) {
     encoder.encodeString(value.java.name)

@@ -182,6 +182,10 @@ interface UrlPattern {
     }
 
     override operator fun plus(toAppend: UrlPattern): Relative {
+      // A pattern without a variable stays a Relative0: RelativeMulti requires at least one.
+      if (toAppend.parameterNames.isEmpty()) {
+        return Relative0(appendUrlStrings(value, toAppend.value))
+      }
       return RelativeMulti(appendUrlStrings(value, toAppend.value), parameterNames + toAppend.parameterNames)
     }
 
@@ -249,6 +253,10 @@ interface UrlPattern {
     }
 
     override operator fun plus(toAppend: UrlPattern): Relative {
+      // A pattern without a variable stays a Relative0: RelativeMulti requires at least one.
+      if (toAppend.parameterNames.isEmpty()) {
+        return Relative0(appendUrlStrings(value, toAppend.value))
+      }
       return RelativeMulti(appendUrlStrings(value, toAppend.value), toAppend.parameterNames)
     }
 

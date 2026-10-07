@@ -19,4 +19,4 @@ Minimal MeisterCharts examples using a **timeLineChart** to demonstrate the usag
 
 ### JSFiddle Examples
 
-*See [build/fiddle-links.md](build/fiddle-links.md)*
+*`./gradlew :internal:open:meistercharts:generateFiddleExamplesUrl` writes the links to `build/fiddle-links.md`.*

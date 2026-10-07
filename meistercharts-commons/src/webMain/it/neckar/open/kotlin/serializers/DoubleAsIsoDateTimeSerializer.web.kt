@@ -49,6 +49,9 @@ actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
   actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
 
   actual override fun serialize(encoder: Encoder, value: @ms Double) {
+    // formatUtc writes "NaN" and "∞", which parseUtc cannot read back.
+    require(value.isFinite()) { "Cannot serialize [$value] as ISO date time" }
+
     encoder.encodeString(value.formatUtc())
   }
 

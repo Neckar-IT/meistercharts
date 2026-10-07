@@ -212,8 +212,10 @@ fun @ct Double.formatCents(i18nConfiguration: I18nConfiguration = DefaultI18nCon
 }
 
 fun Double.prettyFormat(numberOfDecimals: Int = 2, useGrouping: Boolean = true, i18nConfiguration: I18nConfiguration = DefaultI18nConfiguration, whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String {
-  val prePoint = floor()
-  val postPoint = this - prePoint
+  val postPoint = this - floor()
+  // Through the locale-aware format, like the else branch: Double.toString() would write a
+  // trailing `.0` and an ASCII decimal point whatever the configuration says.
+  val prePoint = floor().format(0, useGrouping, i18nConfiguration, whitespaceConfig)
   return when (postPoint) {
     1.0 / 10.0 -> "$prePoint ⅒"
     1.0 / 9.0 -> "$prePoint ⅑"

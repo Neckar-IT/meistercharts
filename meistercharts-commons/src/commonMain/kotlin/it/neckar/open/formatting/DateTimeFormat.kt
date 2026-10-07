@@ -139,7 +139,7 @@ fun humanizedDate(@ms timestamp: Double, i18nConfiguration: I18nConfiguration, n
 /**
  * Formats a date-time in accordance to the ISO format 8601 (https://en.wikipedia.org/wiki/ISO_8601)
  *
- * Example: `2001-09-08T21:46:40:00Z`
+ * Example: `2001-09-09T01:46:40.000Z`
  *
  * This formatter always returns "Z" (UTC) as time zone
  */

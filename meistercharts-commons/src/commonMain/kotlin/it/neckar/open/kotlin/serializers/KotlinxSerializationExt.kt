@@ -142,9 +142,8 @@ fun SerialDescriptor.toPrimitiveType(): KClass<*>? {
 }
 
 /**
- * Returns true if the given class is serialized as a primitive.
- *
- * Returns true if the class is a primitive type or a sealed class with only primitive types.
+ * Returns true if the class's own serializer writes a primitive. A sealed hierarchy does not: its
+ * descriptor carries `PolymorphicKind.SEALED`, whatever its subtypes write.
  */
 @OptIn(InternalSerializationApi::class)
 fun KClass<*>.isSerializedAsPrimitive(): Boolean {

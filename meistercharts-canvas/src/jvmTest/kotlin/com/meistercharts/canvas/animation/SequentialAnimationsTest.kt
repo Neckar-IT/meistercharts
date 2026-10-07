@@ -17,11 +17,15 @@
 
 package com.meistercharts.canvas.animation
 
+import it.neckar.open.unit.si.ms
 import assertk.*
 import assertk.assertions.*
 import org.junit.jupiter.api.Test
 
 class SequentialAnimationsTest {
+  @ms
+  private val start: Double = 1_000.0
+
   @Test
   fun testIt() {
     val sequentialAnimations = SequentialAnimations(
@@ -35,34 +39,34 @@ class SequentialAnimationsTest {
     assertThat(sequentialAnimations.animations).hasSize(3)
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(0)
 
-    sequentialAnimations.animationFrame(1.0).let {
+    sequentialAnimations.animationFrame(start + 1.0).let {
       assertThat(it).isEqualTo(AnimationState.Active)
     }
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(0)
 
-    sequentialAnimations.animationFrame(10.0)
+    sequentialAnimations.animationFrame(start + 10.0)
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(0)
-    sequentialAnimations.animationFrame(10.1)
+    sequentialAnimations.animationFrame(start + 10.1)
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(1)
 
-    sequentialAnimations.animationFrame(20.1).let {
+    sequentialAnimations.animationFrame(start + 20.1).let {
       assertThat(it).isEqualTo(AnimationState.Active)
     }
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(2)
 
     //Does *NOT* reset!
-    sequentialAnimations.animationFrame(0.1)
+    sequentialAnimations.animationFrame(start + 0.1)
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(2)
 
     //Does *NOT* reset!
-    sequentialAnimations.animationFrame(30.1).let {
+    sequentialAnimations.animationFrame(start + 30.1).let {
       assertThat(it).isEqualTo(AnimationState.Finished)
     }
     assertThat(sequentialAnimations.currentAnimationIndex).isEqualTo(3)
 
   }
 
-  private fun animation(finishedAfter: Double) = Animated { frameTimestamp ->
-    AnimationState.finishedIf(frameTimestamp > finishedAfter)
+  private fun animation(finishedAfter: Double): Animated = Animated { frameMonotonicMillis ->
+    AnimationState.finishedIf(frameMonotonicMillis > start + finishedAfter)
   }
 }

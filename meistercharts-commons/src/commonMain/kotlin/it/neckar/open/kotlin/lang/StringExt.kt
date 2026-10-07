@@ -31,13 +31,6 @@ import it.neckar.open.annotations.Hot
 import it.neckar.open.unit.other.Inclusive
 
 
-/**
- *
- * stripQuotes
- *
- * @param this@stripQuotes a String object.
- * @return a String object.
- */
 fun String.stripQuotes(): String {
   var updatedValue = this
 
@@ -324,8 +317,10 @@ fun String.encodeForCssIdentifier(): String {
 }
 
 /**
- * Wraps a single line of text into multiple lines. Words are identified by [wrapOn]
- * Leading and trailing spaces for each line as stripped
+ * Wraps a single line of text into multiple lines, breaking at the last [wrapOn] that still fits.
+ *
+ * A line keeps its spaces: `" a bc".wrap(2)` answers `[" a", "bc"]`, and the [wrapOn] the break
+ * consumed is the only character dropped.
  */
 fun String.wrap(
   /**

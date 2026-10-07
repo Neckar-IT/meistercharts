@@ -52,12 +52,12 @@ class PropertyTween(
   /**
    * Calculates and assigns the new property value
    */
-  fun update(timestamp: @ms Double): AnimationState {
-    if (tween.isFinished(timestamp)) {
+  fun update(frameMonotonicMillis: @ms Double): AnimationState {
+    if (tween.isFinished(frameMonotonicMillis)) {
       return AnimationState.Finished
     }
 
-    @pct val interpolatedRatio = tween.interpolate(timestamp)
+    @pct val interpolatedRatio = tween.interpolate(frameMonotonicMillis)
 
     val delta = targetValue - startValue
     val updatedValue = startValue + delta * interpolatedRatio
@@ -67,8 +67,8 @@ class PropertyTween(
     return AnimationState.Active
   }
 
-  override fun animationFrame(frameTimestamp: Double): AnimationState {
-    return update(frameTimestamp)
+  override fun animationFrame(frameMonotonicMillis: @ms Double): AnimationState {
+    return update(frameMonotonicMillis)
   }
 }
 

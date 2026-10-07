@@ -36,13 +36,13 @@ class ChartAnimation(
   /**
    * Updates the consumer with an updated value
    */
-  override fun render(chartSupport: ChartSupport, frameTimestamp: Double, refreshDelta: Double) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, frameMonotonicMillis: @ms Double) {
     if (disposeSupport.disposed) {
       unregister(chartSupport)
       return
     }
 
-    val animationState = animated.animationFrame(frameTimestamp)
+    val animationState = animated.animationFrame(frameMonotonicMillis)
 
     if (animationState == AnimationState.Finished) {
       dispose()
@@ -50,8 +50,6 @@ class ChartAnimation(
       return
     }
 
-    //@pct val interpolated = tween.interpolate(frameTimestamp)
-    //setter(startValue + (targetValue - startValue) * interpolated)
 
     chartSupport.markAsDirty(DirtyReason.Animation)
   }
@@ -83,7 +81,7 @@ fun interface Animated {
   /**
    * Returns the state of the animation
    */
-  fun animationFrame(frameTimestamp: @ms Double): AnimationState
+  fun animationFrame(frameMonotonicMillis: @ms Double): AnimationState
 }
 
 

@@ -97,9 +97,11 @@ interface DoublesProvider : HasSize, MultiDoublesProvider<SizedProviderIndex> {
       throw NoSuchElementException("Can not return max value")
     }
 
-    var currentMax: Double = -Double.MAX_VALUE
+    // Seeded with the infinity and reduced with maxOf: -Double.MAX_VALUE as a seed came out as the
+    // answer for an infinite element, and coerceAtLeast on the accumulator swallowed a NaN.
+    var currentMax: Double = Double.NEGATIVE_INFINITY
     currentSize.fastFor {
-      currentMax = currentMax.coerceAtLeast(get(it))
+      currentMax = maxOf(currentMax, get(it))
     }
 
     return currentMax

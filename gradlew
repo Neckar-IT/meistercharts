@@ -88,6 +88,7 @@ APP_BASE_NAME=${0##*/}
 # Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
 APP_HOME=$( cd -P "${APP_HOME:-./}" > /dev/null && printf '%s\n' "$PWD" ) || exit
 
+# shellcheck shell=sh
 # Neckar IT build guard and run supervision, see tools/build-guard/README.md.
 # Sourced rather than called, so it can re-execute the build inside the slice and add --max-workers.
 # Inserted by the `wrapper` task from tools/build-guard/gradlew-hook.sh; `verifyGradleWrapper` checks it.

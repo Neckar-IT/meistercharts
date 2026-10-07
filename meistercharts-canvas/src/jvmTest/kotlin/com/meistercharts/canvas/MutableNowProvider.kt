@@ -13,26 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.canvas.animation
+package com.meistercharts.canvas
 
+import it.neckar.open.time.NowProvider
 import it.neckar.open.unit.si.ms
 
 /**
- * Represents an actual animation
+ * A wall clock a test sets, also backwards; `VirtualNowProvider` only moves forward.
  */
-interface Animation {
-  /**
-   * The time when the animation has been started / will be started
-   */
-  val startTime: @ms Double
-
-  /**
-   * Returns true if the animation has been finished at the given point in time.
-   */
-  fun isFinished(timestamp: @ms Double): Boolean
-
-  /**
-   * Returns the elapsed time since start.
-   */
-  fun elapsedTime(timestamp: @ms Double): @ms Double = timestamp - startTime
+internal class MutableNowProvider(var now: @ms Double) : NowProvider {
+  override fun nowMillis(): @ms Double {
+    return now
+  }
 }

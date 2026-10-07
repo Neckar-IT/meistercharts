@@ -276,12 +276,13 @@ class DefaultLayerSupport(
   private val missingResourcesHandlers: MutableList<MissingResourcesHandler> = mutableListOf()
 
   @Hot
-  override fun paint(frameTimestamp: @ms Double, delta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet) {
+  override fun paint(frameTimestamp: @ms Double, frameMonotonicMillis: @ms Double, frameDelta: @ms Double, paintingLoopIndex: PaintingLoopIndex, dirtyReasons: DirtyReasonBitSet) {
     val paintingContext = LayerPaintingContext(
       gc = chartSupport.canvas.gc,
       layerSupport = this,
       frameTimestamp = frameTimestamp,
-      frameTimestampDelta = delta,
+      frameMonotonicMillis = frameMonotonicMillis,
+      frameDelta = frameDelta,
       loopIndex = paintingLoopIndex,
       layerLayoutIndex = LayerIndex.unknown,
       layerPaintIndex = LayerIndex.unknown,

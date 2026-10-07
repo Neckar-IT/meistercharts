@@ -65,8 +65,8 @@ class ChartTranslateOverTimeService(val chartSupport: ChartSupport) : ChartRende
    */
   var roundingStrategy: RoundingStrategy = RoundingStrategy.quarter
 
-  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, refreshDelta: @ms Double) {
-    if (!animated) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, frameMonotonicMillis: @ms Double) {
+    if (animated.not()) {
       return
     }
 

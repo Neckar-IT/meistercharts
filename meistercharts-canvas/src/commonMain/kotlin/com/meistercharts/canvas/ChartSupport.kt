@@ -70,6 +70,7 @@ import it.neckar.open.observable.ObservableBoolean
 import it.neckar.open.observable.ReadOnlyObservableObject
 import it.neckar.open.unit.number.IsFinite
 import it.neckar.open.unit.other.pct
+import it.neckar.open.unit.number.MayBeNaN
 import it.neckar.open.unit.si.ms
 import it.neckar.open.unit.time.RelativeMillis
 import kotlin.contracts.InvocationKind
@@ -351,10 +352,9 @@ class ChartSupport(
   private var nextEarliestRenderHighRes: @RelativeMillis Double = 0.0
 
   /**
-   * The last time we painted
+   * The [it.neckar.open.time.monotonicMillis] of the last paint; NaN before the first paint
    */
-  @ms
-  private var lastPaintTime = 0.0
+  private var lastPaintMonotonicMillis: @ms @MayBeNaN Double = Double.NaN
 
   /**
    * The last painting index
@@ -367,7 +367,7 @@ class ChartSupport(
    *
    * Use [markAsDirty] instead to mark the canvas as dirty and trigger a paint as soon as possible.
    */
-  override fun render(frameTimestamp: @ms @IsFinite Double, relativeHighRes: @RelativeMillis Double) {
+  override fun render(frameTimestamp: @ms @IsFinite Double, frameMonotonicMillis: @ms Double, relativeHighRes: @RelativeMillis Double) {
     logger.trace { "Render ${frameTimestamp.formatUtc()} $relativeHighRes" }
 
     require(disposeSupport.disposed.not()) {
@@ -402,7 +402,7 @@ class ChartSupport(
     }
 
     renderLoopListeners.fastForEach {
-      it.render(chartSupport = this, frameTimestamp = frameTimestamp, relativeHighRes = relativeHighRes)
+      it.render(chartSupport = this, frameTimestamp = frameTimestamp, frameMonotonicMillis = frameMonotonicMillis)
     }
 
     //If somebody has marked the canvas as dirty it is repainted
@@ -430,8 +430,8 @@ class ChartSupport(
           canvas.gc.applyDefaults()
 
           canvas.gc.saved {
-            @ms val repaintDelta = if (lastPaintTime == 0.0) 0.0 else frameTimestamp - lastPaintTime
-            lastPaintTime = frameTimestamp
+            @ms val frameDelta = if (lastPaintMonotonicMillis.isNaN()) 0.0 else frameMonotonicMillis - lastPaintMonotonicMillis
+            lastPaintMonotonicMillis = frameMonotonicMillis
 
             val paintingLoopIndex = lastPaintingLoopIndex.next().also {
               lastPaintingLoopIndex = it
@@ -445,7 +445,7 @@ class ChartSupport(
 
             try {
               for (i in 0 until paintListeners.size) {
-                paintListeners[i].paint(frameTimestamp, repaintDelta, paintingLoopIndex, dirtyReasons)
+                paintListeners[i].paint(frameTimestamp, frameMonotonicMillis, frameDelta, paintingLoopIndex, dirtyReasons)
               }
             } finally {
               CurrentPaintingContext.clear()
@@ -523,13 +523,13 @@ fun interface ChartRenderLoopListener {
   fun render(
     chartSupport: ChartSupport,
     /**
-     * The timestamp of the current frame (absolute value)
+     * The timestamp of the current frame (absolute value); never for animations
      */
     frameTimestamp: @ms Double,
     /**
-     * The relative high resolution timestamp (relative)
+     * The [it.neckar.open.time.monotonicMillis] of the current frame; drives every animation
      */
-    relativeHighRes: @ms Double,
+    frameMonotonicMillis: @ms Double,
   )
 }
 
@@ -541,7 +541,8 @@ fun interface PaintListener {
    * Paints the canvas.
    *
    * @param frameTimestamp the timestamp of the current frame
-   * @param relativeHighRes the relative high resolution timestamp
+   * @param frameMonotonicMillis the [it.neckar.open.time.monotonicMillis] of the current frame
+   * @param frameDelta the time since the last paint
    * @param paintingLoopIndex the index of the paint call
    * @param dirtyReasons the reasons why the canvas is dirty
    */
@@ -549,13 +550,17 @@ fun interface PaintListener {
     /**
      * The (absolute) frame timestamp.
      *
-     * Attention: Do not use for animations. Use [relativeHighRes] instead.
+     * Attention: Do not use for animations. Use [frameMonotonicMillis] instead.
      */
     frameTimestamp: @ms Double,
     /**
-     * The relative high resolution timestamp (relative)
+     * The [it.neckar.open.time.monotonicMillis] of the current frame; drives every animation
      */
-    relativeHighRes: @ms Double,
+    frameMonotonicMillis: @ms Double,
+    /**
+     * The time since the last paint, measured on [it.neckar.open.time.monotonicMillis] (0 on the first paint)
+     */
+    frameDelta: @ms Double,
     /**
      * The current painting loop index
      */

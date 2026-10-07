@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty0
 
 /**
  * Returns multiple values - also has a size.
- * The index provided to [valueAt] is *always* a value from 0..[size].
+ * The index provided to [valueAt] is *always* a value from 0 until [size].
  * It is never an index from another context!
  *
  *

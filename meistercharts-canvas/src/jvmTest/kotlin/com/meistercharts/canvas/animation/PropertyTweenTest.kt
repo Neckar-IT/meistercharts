@@ -17,15 +17,18 @@
 
 package com.meistercharts.canvas.animation
 
+import it.neckar.open.unit.si.ms
 import assertk.*
 import assertk.assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class PropertyTweenTest {
   @Test
   fun testBasic() {
-    val tweenDefinition = TweenDefinition(1000.0)
-    val tween = tweenDefinition.realize(40_000.0)
+    @ms val start = 1_000.0
+    val tweenDefinition = TweenDefinition(1.seconds)
+    val tween = tweenDefinition.realize(start)
 
     var currentValue: Double = -1.0
 
@@ -35,13 +38,13 @@ class PropertyTweenTest {
 
     assertThat(currentValue).isEqualTo(-1.0)
 
-    propertyTween.update(40_000.0) //start of animation
+    propertyTween.update(start) //start of animation
     assertThat(currentValue).isEqualTo(3.0)
 
-    propertyTween.update(41_000.0) //end of animation
+    propertyTween.update(start + 1000.0) //end of animation
     assertThat(currentValue).isEqualTo(4.0)
 
-    propertyTween.update(40_500.0) //middle of animation
+    propertyTween.update(start + 500.0) //middle of animation
     assertThat(currentValue).isEqualTo(3.5)
   }
 }

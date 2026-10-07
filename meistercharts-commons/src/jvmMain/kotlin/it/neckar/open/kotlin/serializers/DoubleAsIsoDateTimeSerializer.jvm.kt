@@ -37,8 +37,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bson.BsonDateTime
-import org.bson.BsonTimestamp
-import org.bson.BsonValue
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
 
@@ -54,6 +52,9 @@ actual object DoubleAsIsoDateTimeSerializer : KSerializer<@ms Double> {
   actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleAsIsoDateTime", PrimitiveKind.STRING)
 
   actual override fun serialize(encoder: Encoder, value: @ms Double) {
+    // NaN.toLong() is 0, so a non-finite value would be stored as 1970-01-01 without a trace.
+    require(value.isFinite()) { "Cannot serialize [$value] as ISO date time" }
+
     when (encoder) {
       is BsonEncoder -> {
         encoder.encodeBsonValue(BsonDateTime(value.toLong()))

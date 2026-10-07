@@ -33,11 +33,7 @@ import it.neckar.open.collections.cache
  * A cache for the decimal formats
  */
 object DecimalFormatsCache {
-  /**
-   * Cache for decimal formats. The key is a [DecimalFormatKey] data class (not the
-   * Int hash of the parameters) so that two distinct configurations with a colliding
-   * Int hash do not return each other's cached format.
-   */
+  /** Keyed by [DecimalFormatKey], not by its hash: two configurations whose hashes collide are two entries. */
   private val cache = cache<DecimalFormatKey, CachedNumberFormat>("DecimalFormatsCache", 50)
 
   /**

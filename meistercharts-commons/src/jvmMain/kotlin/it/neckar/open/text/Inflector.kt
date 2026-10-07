@@ -368,7 +368,7 @@ class Inflector {
         result = result.replace(delimiterChar, '_')
       }
     }
-    return result.lowercase(Locale.getDefault())
+    return result.lowercase(Locale.ROOT)
   }
 
   /**
@@ -386,9 +386,9 @@ class Inflector {
       return ""
     }
     if (result.length == 1) {
-      return result.uppercase(Locale.getDefault())
+      return result.uppercase(Locale.ROOT)
     }
-    return "" + result.get(0).uppercaseChar() + result.substring(1).lowercase(Locale.getDefault())
+    return "" + result.get(0).uppercaseChar() + result.substring(1).lowercase(Locale.ROOT)
   }
 
   /**
@@ -501,7 +501,7 @@ class Inflector {
     if (word == null) {
       return false
     }
-    val trimmedLower = word.trim { it <= ' ' }.lowercase(Locale.getDefault())
+    val trimmedLower = word.trim { it <= ' ' }.lowercase(Locale.ROOT)
     return this.uncountables.contains(trimmedLower)
   }
 
@@ -540,7 +540,7 @@ class Inflector {
     }
     for (word in words) {
       if (word != null) {
-        uncountables.add(word.trim { it <= ' ' }.lowercase(Locale.getDefault()))
+        uncountables.add(word.trim { it <= ' ' }.lowercase(Locale.ROOT))
       }
     }
   }
@@ -649,7 +649,7 @@ class Inflector {
       // CHECKSTYLE IGNORE check FOR NEXT 1 LINES
       val sb = StringBuffer()
       while (matcher.find()) {
-        matcher.appendReplacement(sb, matcher.group(groupNumberToUppercase).uppercase(Locale.getDefault()))
+        matcher.appendReplacement(sb, matcher.group(groupNumberToUppercase).uppercase(Locale.ROOT))
       }
       matcher.appendTail(sb)
       return sb.toString()

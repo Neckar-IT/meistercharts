@@ -39,13 +39,19 @@ open class CacheMap<K, V> private constructor(
 
   override val size: Int get() = map.size
 
-  var maxSize: Int = maxSize
+  /**
+   * The maximum number of entries. A cache keeps at least one entry: the constructor and [updateMaxSize] throw an [IllegalArgumentException] for values below 1.
+   */
+  var maxSize: Int = requireValidMaxSize(maxSize)
     private set
-  fun updateMaxSize(newMaxSize: Int) {
-    this.maxSize = newMaxSize
 
-    //Reduce the size of the map. Use > (not >=) so exactly maxSize entries are kept, matching put(),
-    //and so updateMaxSize(0) empties the map instead of calling first() on an empty key set.
+  /**
+   * Sets [maxSize] and removes the oldest entries until at most [newMaxSize] entries remain.
+   */
+  fun updateMaxSize(newMaxSize: Int) {
+    this.maxSize = requireValidMaxSize(newMaxSize)
+
+    //Use > (not >=) so exactly maxSize entries are kept, matching put()
     while (size > maxSize) remove(map.keys.first())
   }
 
@@ -96,7 +102,8 @@ open class CacheMap<K, V> private constructor(
     val keysToRemove = map.keys.filter(predicate)
 
     keysToRemove.fastForEach {
-      map.remove(it)
+      // Through remove(), not map.remove(): the delegate does not call free.
+      remove(it)
     }
   }
 
@@ -104,4 +111,9 @@ open class CacheMap<K, V> private constructor(
 
   override fun equals(other: Any?): Boolean = (other is CacheMap<*, *>) && (this.map == other.map) && (this.free == other.free)
   override fun hashCode(): Int = map.hashCode() * 31 + free.hashCode()
+}
+
+private fun requireValidMaxSize(maxSize: Int): Int {
+  require(maxSize >= 1) { "A cache keeps at least one entry, got maxSize $maxSize" }
+  return maxSize
 }

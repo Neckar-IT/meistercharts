@@ -43,6 +43,7 @@ import it.neckar.geometry.Direction
 import it.neckar.geometry.Rectangle
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.formatting.intFormat
+import it.neckar.open.unit.si.ms
 
 /**
  * A layer that shows the bounds of the tiles of a [TilesLayer].
@@ -124,7 +125,7 @@ class TilesDebugLayer(
             val lines = buildList {
               add("Tile creation: ${creationInfo.creationTime.formatUtc()}")
 
-              val age = paintingContext.frameTimestamp - creationInfo.creationTime
+              @ms val age = paintingContext.frameMonotonicMillis - creationInfo.creationMonotonicMillis
               add("Age: ${intFormat.format(age)} ms")
 
               countingTileProvider?.let {

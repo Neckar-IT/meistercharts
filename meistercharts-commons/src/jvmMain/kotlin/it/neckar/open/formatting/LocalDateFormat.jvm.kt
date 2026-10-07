@@ -41,6 +41,10 @@ actual class DefaultLocalDateFormat : LocalDateFormat {
 
     val locale = i18nConfiguration.formatLocale.convert()
     val localizedDateTimePattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(FormatStyle.SHORT, null, Chronology.ofLocale(locale), locale)
-    return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern).format(javaLocalDate)
+    // With the locale: the single-argument ofPattern binds Locale.getDefault(Category.FORMAT) and
+    // takes its DecimalStyle from it, so the digits came from the JVM default, not from the pattern's locale.
+    // With the locale: the single-argument ofPattern binds Locale.getDefault(Category.FORMAT), so a
+    // text field in the pattern — the Japanese calendar's era, say — came from the JVM default.
+    return java.time.format.DateTimeFormatter.ofPattern(localizedDateTimePattern, locale).format(javaLocalDate)
   }
 }

@@ -26,9 +26,13 @@ data class PaintingStats(
    */
   @ms val frameTimestamp: Double,
   /**
-   * The time delta to the last frame
+   * The [it.neckar.open.time.monotonicMillis] of the frame; the painted frames per second are measured between these values
    */
-  @ms val frameTimestampDelta: Double,
+  val frameMonotonicMillis: @ms Double,
+  /**
+   * The time since the last paint
+   */
+  val frameDelta: @ms Double,
   /**
    * The durations of the layer repaints
    */

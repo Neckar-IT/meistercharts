@@ -147,10 +147,10 @@ constructor(
     }
 
     //Connect with the render loop
-    Meistercharts.renderLoop.onRender { frameTimestamp: @ms Double, relativeHighRes: @RelativeMillis Double ->
+    Meistercharts.renderLoop.onRender { frameTimestamp: @ms Double, frameMonotonicMillis: @ms Double, relativeHighRes: @RelativeMillis Double ->
       //Trigger size update. Do this during a refresh to avoid flickering.
       (chartSupport.canvas as CanvasJS).applySizeFromClientSize()
-      chartSupport.render(frameTimestamp, relativeHighRes)
+      chartSupport.render(frameTimestamp, frameMonotonicMillis, relativeHighRes)
     }.also {
       chartSupport.onDispose(it)  //unregister when the chart is disposed
     }

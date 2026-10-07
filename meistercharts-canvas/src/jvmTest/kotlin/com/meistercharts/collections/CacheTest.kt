@@ -68,9 +68,8 @@ class CacheTest {
 
   @Test
   fun testZeroCheck() {
-    assertFailure {
-      val cache = Cache<Int, String>(0)
-      cache[7] = "asdf"
-    }
+    assertFailure { Cache<Int, String>(0) }
+      .isInstanceOf<IllegalArgumentException>()
+      .hasMessage("A cache keeps at least one entry, got maxSize 0")
   }
 }

@@ -53,6 +53,9 @@ actual object MillisAsIsoDateTimeSerializer : KSerializer<Millis> {
   actual override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("MillisAsIsoDateTime", PrimitiveKind.STRING)
 
   actual override fun serialize(encoder: Encoder, value: Millis) {
+    // NaN.toLong() is 0, so a non-finite value would be stored as 1970-01-01 without a trace.
+    require(value.millis.isFinite()) { "Cannot serialize [$value] as ISO date time" }
+
     when (encoder) {
       is BsonEncoder -> {
         encoder.encodeBsonValue(BsonDateTime(value.millis.toLong()))

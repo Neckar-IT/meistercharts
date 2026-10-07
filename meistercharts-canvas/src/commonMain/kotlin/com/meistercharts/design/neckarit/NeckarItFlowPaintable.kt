@@ -50,26 +50,26 @@ class NeckarItFlowPaintable(
     val gc = paintingContext.gc
     gc.translate(x, y)
     val chartCalculator = paintingContext.chartCalculator
-    val timestamp =  paintingContext.frameTimestamp
+    val frameMonotonicMillis = paintingContext.frameMonotonicMillis
 
     gc.stroke(NeckarItFlow.colorShape0)
     gc.fill(NeckarItFlow.colorShape0)
-    @DomainRelative val segment0 = NeckarItFlow.shape0(timestamp)
+    @DomainRelative val segment0 = NeckarItFlow.shape0(frameMonotonicMillis)
     gc.paintBezierCurveRect(segment0)
 
     gc.stroke(NeckarItFlow.colorShape1)
     gc.fill(NeckarItFlow.colorShape1)
-    @DomainRelative val segment1 = NeckarItFlow.shape1(timestamp)
+    @DomainRelative val segment1 = NeckarItFlow.shape1(frameMonotonicMillis)
     gc.paintBezierCurveRect(segment1)
 
     gc.stroke(NeckarItFlow.colorShape2)
     gc.fill(NeckarItFlow.colorShape2)
-    @DomainRelative val segment2 = NeckarItFlow.shape2(timestamp)
+    @DomainRelative val segment2 = NeckarItFlow.shape2(frameMonotonicMillis)
     gc.paintBezierCurveRect(segment2)
 
     gc.stroke(NeckarItFlow.colorShape3)
     gc.fill(NeckarItFlow.colorShape3)
-    @DomainRelative val segment3 = NeckarItFlow.shape3(timestamp)
+    @DomainRelative val segment3 = NeckarItFlow.shape3(frameMonotonicMillis)
     gc.paintBezierCurveRect(segment3)
 
     //if (showControlPoints) {

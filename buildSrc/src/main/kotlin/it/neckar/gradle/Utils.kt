@@ -259,7 +259,7 @@ fun Project.getGitlabAccessToken(): String? {
     return fromEnv
   }
 
-  return (properties["GITLAB_API_TOKEN"] ?: properties["GITLAB_CONTAINER_ACCESS_TOKEN"]) as String?
+  return (findProperty("GITLAB_API_TOKEN") ?: findProperty("GITLAB_CONTAINER_ACCESS_TOKEN")) as String?
 }
 
 

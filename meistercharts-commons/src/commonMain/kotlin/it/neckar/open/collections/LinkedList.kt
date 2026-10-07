@@ -142,14 +142,16 @@ class LinkedList<T> {
 }
 
 /**
- * Represents one element within the linked list
+ * Represents one element within the linked list.
+ *
+ * No data class: the generated equals and hashCode would walk [next] and [previous] and end in a
+ * StackOverflowError, because two neighbouring elements point at each other. Identity is what a
+ * list element is compared by.
  */
-data class Element<T>(
+class Element<T>(
   val value: T,
   var previous: Element<T>?,
-  var next: Element<T>?
-
-
+  var next: Element<T>?,
 ) {
   override fun toString(): String {
     return "element: $value, hasPrevious: ${previous != null}, hasNext: ${next != null}"

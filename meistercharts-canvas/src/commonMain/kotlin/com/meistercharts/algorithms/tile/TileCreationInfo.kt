@@ -26,6 +26,11 @@ data class TileCreationInfo(
    * The time when the tile has been created
    */
   val creationTime: @ms Double = Meistercharts.renderLoop.currentFrameTimestamp,
+
+  /**
+   * The [it.neckar.open.time.monotonicMillis] when the tile has been created; the age of the tile is measured from it
+   */
+  val creationMonotonicMillis: @ms Double = Meistercharts.renderLoop.currentFrameMonotonicMillis,
   /**
    * Contains true if the tile itself is empty.
    * Can be used to avoid painting of empty tiles

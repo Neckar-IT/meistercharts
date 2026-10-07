@@ -18,6 +18,7 @@ package com.meistercharts.canvas
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.algorithms.layers.Layer
+import it.neckar.open.time.monotonicMillis
 import it.neckar.open.time.nowMillis
 import io.mockk.every
 import io.mockk.mockk
@@ -54,13 +55,13 @@ class LayerSupportApiTest {
 
     //Not marked as dirty
     assertThat(chartSupport.dirtySupport.dirty).isFalse()
-    chartSupport.render(nowMillis(), 1.0)
+    chartSupport.render(nowMillis(), monotonicMillis(), 1.0)
 
     chartSupport.markAsDirty(DirtyReason.Unknown)
     chartSupport.disabled = true
 
     //Repaint is disabled
-    chartSupport.render(nowMillis(), 2.0)
+    chartSupport.render(nowMillis(), monotonicMillis(), 2.0)
 
     verify(exactly = 0) {
       mockLayer.paint(any())

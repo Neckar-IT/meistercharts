@@ -39,7 +39,7 @@ object GlobalTilesCache {
     }
 
   /**
-   * Sets the cache size.
+   * Sets the cache size. The smallest valid size is 1; a smaller [newMaxSize] throws an [IllegalArgumentException].
    *
    * ATTENTION: use with care! Usually it is not required to modify this value
    */

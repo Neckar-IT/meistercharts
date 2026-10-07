@@ -35,9 +35,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
-/**
- * Returns the duration in hole weeks (at least 7 days)
- */
+/** The number of whole weeks in this duration; 13 days are one week. */
 val Duration.inWholeWeeks: Long
   get() = inWholeDays / 7
 
@@ -78,9 +76,10 @@ fun Duration.formatWithoutMillis(): String {
 }
 
 /**
- * Formats the duration in a nice, human-readable way (e.g. "vor 3 Tagen")
- * @param whitespaceConfig the whitespace configuration
- * @return the formatted string or null if the duration longer than 4 weeks
+ * Formats the duration in a nice, human-readable way (e.g. "vor 3 Tagen").
+ *
+ * Every step excludes its own unit rollover — under 60 seconds, under 7 days, under 4 weeks — so
+ * four weeks and more answer `null`: the next unit would be months, and there is none.
  */
 fun Duration.formatHumanized(whitespaceConfig: WhitespaceConfig = WhitespaceConfig.NonBreaking): String? {
   return if (inWholeMilliseconds < 0) "in der Zukunft"

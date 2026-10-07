@@ -23,17 +23,24 @@ import com.meistercharts.canvas.LayerIndex
 import com.meistercharts.canvas.MockCanvas
 import com.meistercharts.loop.PaintingLoopIndex
 import it.neckar.open.unit.si.ms
+import it.neckar.open.time.monotonicMillis
 
 object MockLayerPaintingContext {
   /**
    * Returns a new instance
    */
-  operator fun invoke(frameTimestamp: @ms Double = 10.0, frameTimestampDelta: @ms Double = 0.0, loopIndex: PaintingLoopIndex = PaintingLoopIndex(0)): LayerPaintingContext {
+  operator fun invoke(
+    frameTimestamp: @ms Double = 10.0,
+    frameMonotonicMillis: @ms Double = monotonicMillis(),
+    frameDelta: @ms Double = 0.0,
+    loopIndex: PaintingLoopIndex = PaintingLoopIndex(0),
+  ): LayerPaintingContext {
     return LayerPaintingContext(
       gc = MockCanvasRenderingContext(),
       layerSupport = DefaultLayerSupport(ChartSupport(MockCanvas())),
       frameTimestamp = frameTimestamp,
-      frameTimestampDelta = frameTimestampDelta,
+      frameMonotonicMillis = frameMonotonicMillis,
+      frameDelta = frameDelta,
       loopIndex = loopIndex,
       layerLayoutIndex = LayerIndex.unknown,
       layerPaintIndex = LayerIndex.unknown,

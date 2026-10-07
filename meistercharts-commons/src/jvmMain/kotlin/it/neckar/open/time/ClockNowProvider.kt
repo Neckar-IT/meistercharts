@@ -35,6 +35,7 @@ import it.neckar.open.unit.si.ms
  */
 actual object ClockNowProvider : NowProvider {
   actual override fun nowMillis(): @ms @IsFinite Double {
+    @Suppress("ForbiddenMethodCall") // The one place that reads the system clock; every other caller goes through nowMillis()
     return System.currentTimeMillis().toDouble()
   }
 }

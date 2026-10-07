@@ -33,14 +33,9 @@ package it.neckar.open.http
  */
 data class UrlPathSegments(
   /**
-   * The segments of the URL.
-   * The first segment is the first segment after the leading slash.
-   * E.g., for "/api/projects/123/configurations/456" the segments are:
-   * - "api"
-   * - "projects"
-   * - UrlParameterName("123")
-   * - "configurations"
-   * - UrlParameterName("456")
+   * The segments of the URL, starting with the one after the leading slash. Only a segment in braces
+   * becomes a [UrlParameterName]: `/api/projects/{projectId}/configurations/456` holds `api`,
+   * `projects`, `UrlParameterName("projectId")`, `configurations` and `456`.
    */
   val elements: List<UrlPathSegment>
 ) {

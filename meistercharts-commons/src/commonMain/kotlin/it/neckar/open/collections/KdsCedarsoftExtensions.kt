@@ -69,11 +69,14 @@ fun IntArray2.setCols(cols: Array<IntArray>) {
 }
 
 /**
- * Returns a new array with the new width
+ * Returns a new array of [newHeight] rows, holding the rows of this one from the top.
+ *
+ * A smaller height keeps the first [newHeight] rows: copying the whole source would run past the
+ * end of the shorter destination.
  */
 fun IntArray2.withHeight(newHeight: Int): IntArray2 {
   val newData = IntArray(width * newHeight)
-  data.copyInto(newData, 0, 0, data.size)
+  data.copyInto(newData, 0, 0, minOf(data.size, newData.size))
   return IntArray2(width, newHeight, newData)
 }
 

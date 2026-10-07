@@ -89,9 +89,10 @@ inline fun <T> SizedProvider<T>.fastForEach(callback: (T) -> Unit) {
 }
 
 /**
- * Returns the max value - but always at least [fallbackValue].
+ * Returns the largest value [callback] produces, or [fallbackValue] for an empty provider.
  *
- * If the provider is empty the [fallbackValue] is returned
+ * `NaN` propagates, as it does through `maxOf`: a provider carrying one answers `NaN` whatever the
+ * order of its elements.
  */
 inline fun <T> SizedProvider<T>.fastMaxBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size()
@@ -99,10 +100,12 @@ inline fun <T> SizedProvider<T>.fastMaxBy(fallbackValue: Double = Double.NaN, ca
     return fallbackValue
   }
 
-  var max = - Double.MAX_VALUE
+  // Seeded with the infinity, not with -Double.MAX_VALUE: an infinite element never beat that seed,
+  // so the seed itself came out as the answer.
+  var max = Double.NEGATIVE_INFINITY
   var n = 0
   while (n < currentSize) {
-    max = callback(this.valueAt(n)).coerceAtLeast(max)
+    max = maxOf(max, callback(this.valueAt(n)))
     n++
   }
 
@@ -111,9 +114,10 @@ inline fun <T> SizedProvider<T>.fastMaxBy(fallbackValue: Double = Double.NaN, ca
 
 
 /**
- * Returns the min value - but always at least [fallbackValue].
+ * Returns the smallest value [callback] produces, or [fallbackValue] for an empty provider.
  *
- * If the provider is empty the [fallbackValue] is returned
+ * `NaN` propagates, as it does through `minOf`: a provider carrying one answers `NaN` whatever the
+ * order of its elements.
  */
 inline fun <T> SizedProvider<T>.fastMinBy(fallbackValue: Double = Double.NaN, callback: (value: T) -> Double): Double {
   val currentSize = size()
@@ -121,10 +125,12 @@ inline fun <T> SizedProvider<T>.fastMinBy(fallbackValue: Double = Double.NaN, ca
     return fallbackValue
   }
 
-  var min = Double.MAX_VALUE
+  // Seeded with the infinity, not with Double.MAX_VALUE: an infinite element never beat that seed,
+  // so the seed itself came out as the answer.
+  var min = Double.POSITIVE_INFINITY
   var n = 0
   while (n < currentSize) {
-    min = callback(this.valueAt(n)).coerceAtMost(min)
+    min = minOf(min, callback(this.valueAt(n)))
     n++
   }
 

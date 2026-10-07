@@ -61,10 +61,10 @@ class FramesPerSecondLayer(
 
   private val paintingVariables = object : PaintingVariables {
     /**
-     * The timestamp when the layer has been updated the last time
+     * The [it.neckar.open.time.monotonicMillis] when the layer has been updated the last time; NaN before the first update
      */
     @ms
-    private var lastUpdatedTimestamp = 0.0
+    private var lastUpdatedMonotonicMillis = Double.NaN
 
     /**
      * The current value for frames per second
@@ -82,7 +82,7 @@ class FramesPerSecondLayer(
       val paintStatisticsSupport = paintingContext.layerSupport.paintStatisticsSupport
 
       //Only update the FPS every [updateRate] milliseconds
-      if (paintingContext.frameTimestamp - lastUpdatedTimestamp > configuration.updateRate) {
+      if (lastUpdatedMonotonicMillis.isNaN() || paintingContext.frameMonotonicMillis - lastUpdatedMonotonicMillis > configuration.updateRate) {
         paintedFPS = paintStatisticsSupport.paintedFPS.or0ifNaN().roundToInt()
 
         minFps = paintStatisticsSupport.minFps.or0ifNaN().roundToInt()
@@ -91,7 +91,7 @@ class FramesPerSecondLayer(
 
         optimizedFramesPercentage = 1.0 - (1.0 / paintStatisticsSupport.fps * paintStatisticsSupport.paintedFPS)
 
-        lastUpdatedTimestamp = paintingContext.frameTimestamp
+        lastUpdatedMonotonicMillis = paintingContext.frameMonotonicMillis
       }
     }
   }

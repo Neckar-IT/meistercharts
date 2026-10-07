@@ -24,7 +24,7 @@ import it.neckar.open.unit.si.ms
  * A timer support that uses the canvas render loop to execute the callbacks
  */
 class CanvasBasedTimerImplementation : BaseTimerImplementation(), ChartRenderLoopListener {
-  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, relativeHighRes: @ms Double) {
+  override fun render(chartSupport: ChartSupport, frameTimestamp: @ms Double, frameMonotonicMillis: @ms Double) {
     update()
   }
 }

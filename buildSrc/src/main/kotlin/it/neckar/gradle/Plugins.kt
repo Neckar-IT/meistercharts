@@ -279,6 +279,29 @@ object Plugins {
   const val backupSchedule: String = "it.neckar.backup-schedule"
 
   /**
+   * The delivery targets of a product with trigger, conditions and retention:
+   * `delivery { product = ProductId("…"); host("…", Fleet.DockerHost) { … } }`.
+   */
+  const val delivery: String = "it.neckar.delivery"
+
+  /**
+   * A machine with its kind, inventory source and SSH access:
+   * `hostDeclaration { kind = HostKind.Server; inventory = HostInventorySource.HetznerCloud; … }`.
+   */
+  const val hostDeclaration: String = "it.neckar.host-declaration"
+
+  /**
+   * The subdomains of the local infrastructure services on `localhost`:
+   * `localhostInfrastructure { subdomains = listOf(LocalhostSubdomain("s3"), …) }`.
+   */
+  const val localhostInfrastructure: String = "it.neckar.localhost-infrastructure"
+
+  /**
+   * A directory whose direct modules carry the prefix of its name: `verifyModuleGroup` at `check`.
+   */
+  const val moduleGroup: String = "it.neckar.module-group"
+
+  /**
    * Continuous-deploy opt-in for non-image deploys (#2469): the module declares its own
    * deploy tasks + target label instead of hosts/compose.
    */
@@ -314,8 +337,8 @@ object Plugins {
   const val localDev: String = "it.neckar.local-dev"
 
   /**
-   * The `productDeclaration { }` and `serviceDeclaration { }` blocks, exported for other projects and
-   * generated as constants (ADL 0202, `docs/gradle/project-declaration.md`).
+   * The `productDeclaration { }`, `serviceDeclaration { }`, `frontendDeclaration { }` and `infrastructureDeclaration { }` blocks and the `HostLogs` Dozzle, exported for other projects;
+   * product and service are also generated as constants (ADL 0202, `docs/gradle/project-declaration.md`).
    */
   const val projectDeclaration: String = "it.neckar.project-declaration"
 

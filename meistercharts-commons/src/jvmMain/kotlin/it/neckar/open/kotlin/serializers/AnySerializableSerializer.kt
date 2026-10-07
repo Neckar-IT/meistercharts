@@ -47,7 +47,7 @@ import kotlinx.serialization.serializer
  * Must be used with classes that have been annotated with @[Serializable].
  */
 object AnySerializableSerializer : KSerializer<Any> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnyReflectionSerializer") {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnySerializableSerializer") {
     element<String>("className")
     element<JsonElement>("content")
   }
