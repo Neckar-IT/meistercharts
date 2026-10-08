@@ -38,11 +38,8 @@ expect interface Logger {
    */
   fun getName(): String
 
-  //Currently not working -> https://youtrack.jetbrains.com/issue/KT-59785/
-  ///**
-  // * Returns true if the logger is enabled for the provided level
-  // */
-  //fun isEnabledForLevel(level: Level): Boolean
+  // workaround: until=2027-04-01 dependency=libs:kotlin verified=2.4.20 upstream=https://youtrack.jetbrains.com/issue/KT-59785
+  // isEnabledForLevel(level: Level) is absent: the actual typealias to the SLF4J interface rejects a default method of the expect interface.
 
   /**
    * Is the logger instance enabled for the TRACE level?
@@ -77,8 +74,8 @@ expect interface Logger {
   /**
    * Debugs the provided object.
    *
-   * ATTENTION: This is a workaround to be able to serialize objects in JS.
-   * It behaves differently on the JVM where the [message] is interpreted as format.
+   * Kotlin/JS cannot format [objectDebug] into the message, so the object is passed as its own argument.
+   * On the JVM the [message] is interpreted as format.
    */
   @Deprecated("Only use in special cases!!!!")
   fun debug(message: String, objectDebug: Any?);

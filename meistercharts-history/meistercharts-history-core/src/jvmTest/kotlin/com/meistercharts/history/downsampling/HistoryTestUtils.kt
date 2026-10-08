@@ -18,7 +18,9 @@ package com.meistercharts.history.downsampling
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryEnum
@@ -45,7 +47,7 @@ val nowForTests: @ms Double = 1.5900732415E12.also {
  */
 fun createDemoChunkOnlyDecimals(
   descriptor: HistoryBucketDescriptor,
-  decimalsDataSeriesCount: Int = 3,
+  decimalDataSeriesCount: DecimalDataSeriesCount = DecimalDataSeriesCount(3),
   /**
    * Provides the significand value for a given data series index and timestamp index
    */
@@ -54,7 +56,7 @@ fun createDemoChunkOnlyDecimals(
   val timestampsCount = descriptor.bucketRange.entriesCount
   @ms val distance = descriptor.bucketRange.samplingPeriod.distance
 
-  val historyConfiguration = historyConfigurationOnlyDecimals(decimalsDataSeriesCount) { dataSeriesIndex ->
+  val historyConfiguration = historyConfigurationOnlyDecimals(decimalDataSeriesCount) { dataSeriesIndex ->
     decimalDataSeries(
       DataSeriesId(1000 + dataSeriesIndex.value), TextKey("val$dataSeriesIndex", "Value $dataSeriesIndex")
     )
@@ -69,7 +71,7 @@ fun createDemoChunkOnlyDecimals(
 
 fun createDemoChunkOnlyEnums(
   descriptor: HistoryBucketDescriptor,
-  enumsDataSeriesCount: Int = 3,
+  enumDataSeriesCount: EnumDataSeriesCount = EnumDataSeriesCount(3),
   /**
    * Provides the significand value for a given data series index and timestamp index
    */
@@ -78,7 +80,7 @@ fun createDemoChunkOnlyEnums(
   val timestampsCount = descriptor.bucketRange.entriesCount
   @ms val distance = descriptor.bucketRange.samplingPeriod.distance
 
-  val historyConfiguration = historyConfigurationOnlyEnums(enumsDataSeriesCount) { dataSeriesIndex ->
+  val historyConfiguration = historyConfigurationOnlyEnums(enumDataSeriesCount) { dataSeriesIndex ->
     enumDataSeries(
       DataSeriesId(1000 + dataSeriesIndex.value), TextKey("val$dataSeriesIndex"), createDemoEnumConfiguration()
     )

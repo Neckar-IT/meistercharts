@@ -37,6 +37,7 @@ import assertk.assertions.*
 
 import java.io.File
 import java.util.Locale
+import com.meistercharts.history.DecimalDataSeriesCount
 
 fun main() {
   HistoryStorageDemo.runDemo()
@@ -116,7 +117,7 @@ fun createDemoChunkOnlyDecimals(
   val timestampsCount = descriptor.bucketRange.entriesCount
   @ms val distance = descriptor.bucketRange.samplingPeriod.distance
 
-  return historyConfigurationOnlyDecimals(dataSeriesCount) { dataSeriesIndex ->
+  return historyConfigurationOnlyDecimals(DecimalDataSeriesCount(dataSeriesCount)) { dataSeriesIndex ->
     decimalDataSeries(
       DataSeriesId(1000 + dataSeriesIndex.value),
       TextKey("val$dataSeriesIndex", "Value $dataSeriesIndex"),

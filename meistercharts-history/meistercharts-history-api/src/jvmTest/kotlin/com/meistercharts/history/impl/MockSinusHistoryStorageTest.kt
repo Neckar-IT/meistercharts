@@ -22,6 +22,8 @@ import assertk.*
 import assertk.assertions.*
 
 import org.junit.jupiter.api.Test
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
 
 /**
  */
@@ -36,7 +38,7 @@ class MockSinusHistoryStorageTest {
     val historyValues = chunk.values
 
 
-    for (dataSeriesIndex in 0 until chunk.decimalDataSeriesCount) {
+    for (dataSeriesIndex in 0 until chunk.decimalDataSeriesCount.value) {
       val (min, max) = chunk.findMinMaxValue(DecimalDataSeriesIndex(dataSeriesIndex))
 
       assertThat(min).isGreaterThan(-11000.0)
@@ -53,8 +55,8 @@ class MockSinusHistoryStorageTest {
     val historyChunk = createSinusChunk(descriptor)
 
     assertThat(historyChunk).isNotNull()
-    assertThat(historyChunk.decimalDataSeriesCount).isEqualTo(3)
-    assertThat(historyChunk.enumDataSeriesCount).isEqualTo(0)
+    assertThat(historyChunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
+    assertThat(historyChunk.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
 
     assertThat(historyChunk.timeStampsCount).isEqualTo(500)
 

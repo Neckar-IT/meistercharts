@@ -53,7 +53,7 @@ class HistoryReferenceEntryLayer(
   }
 
   override fun dataSeriesCount(): Int {
-    return configuration.historyConfiguration().referenceEntryDataSeriesCount
+    return configuration.historyConfiguration().referenceEntryDataSeriesCount.value
   }
 
   @Hot

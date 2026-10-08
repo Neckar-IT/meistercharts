@@ -27,7 +27,7 @@ package com.meistercharts.canvas.allocation
  *   API that can be toggled at runtime in a shipped build. Samples are attributed to a layer via
  *   their stacktrace (which `Layer.paint` is on the stack), so only allocations that happen during a
  *   layer paint are counted. ATTENTION: JFR *samples* - counts are relative, not exact.
- * - JS: always inert. The browser offers no generic allocation hook. [mode] can be set (the toggle is
+ * - Browser (JS, Wasm): always inert. The browser offers no generic allocation hook. [mode] can be set (the toggle is
  *   cross platform), but [currentReport] always returns [AllocationReport.empty].
  */
 expect object AllocationRecordingEngine {

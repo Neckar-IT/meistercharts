@@ -152,8 +152,10 @@ interface SupportsPathActions {
  * * lineTo
  *
  * Attention: This value is *only* required for JavaFX - HTML canvas does not have this bug.
- * The workaround value is set in com.meistercharts.fx.MeisterChartsPlatform.
+ * com.meistercharts.fx.MeisterChartsPlatform sets the JavaFX value.
  *
  * Keep the default value to 0.0
+ *
+ * workaround: until=2027-04-01 dependency=libs:javafx verified=25.0.4
  */
 var ArcPathWorkaroundEpsilon: @px Double = 0.0

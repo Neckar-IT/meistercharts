@@ -18,6 +18,7 @@ package com.meistercharts.history.impl
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
@@ -89,7 +90,7 @@ class HistoryChunkBuilderTest {
 
   @Test
   fun testBuilder() {
-    val historyConfiguration = historyConfigurationOnlyDecimals(5) { dataSeriesIndex ->
+    val historyConfiguration = historyConfigurationOnlyDecimals(DecimalDataSeriesCount(5)) { dataSeriesIndex ->
       decimalDataSeries(DataSeriesId((dataSeriesIndex.value + 1) * 2), TextKey.simple("Label $dataSeriesIndex"))
     }
 

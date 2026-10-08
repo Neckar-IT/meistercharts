@@ -34,6 +34,7 @@ import it.neckar.open.test.utils.DisableLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
+import com.meistercharts.history.DecimalDataSeriesCount
 
 /**
  */
@@ -163,7 +164,7 @@ class HistoryChunkOnlyDecimalsTest {
 
     chunk.withoutValues().let {
       assertThat(it.timeStampsCount).isEqualTo(0)
-      assertThat(it.decimalDataSeriesCount).isEqualTo(4)
+      assertThat(it.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     }
   }
 
@@ -248,7 +249,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testMergePartially() {
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     val other = historyConfiguration.chunk() {
@@ -312,7 +313,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testMerge() {
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     val other = historyConfiguration.chunk() {
@@ -394,7 +395,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testAddSignificands() {
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     assertThat(chunk.timestampCenter(TimestampIndex(0))).isEqualTo(1001.0)
@@ -409,10 +410,10 @@ class HistoryChunkOnlyDecimalsTest {
     //Now add a new timestamp with new values
     val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), null, null, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
-    assertThat(newChunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(newChunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(newChunk.timeStampsCount).isEqualTo(4)
 
     assertThat(newChunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0))).isEqualTo(1.0)
@@ -425,7 +426,7 @@ class HistoryChunkOnlyDecimalsTest {
 
   @Test
   fun testAddValues() {
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     assertThat(chunk.timestampCenter(TimestampIndex(0))).isEqualTo(1001.0)
@@ -440,10 +441,10 @@ class HistoryChunkOnlyDecimalsTest {
     //Now add a new timestamp with new values
     val newChunk = chunk.withAddedValues(1004.0, doubleArrayOf(4.0, 40.0, 400.0, 4000.0), null, null, emptyIntArray(), emptyIntArray(), emptyIntArray(), emptySet())
 
-    assertThat(chunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
-    assertThat(newChunk.decimalDataSeriesCount).isEqualTo(4)
+    assertThat(newChunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(4))
     assertThat(newChunk.timeStampsCount).isEqualTo(4)
 
     assertThat(newChunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0))).isEqualTo(1.0)

@@ -16,8 +16,10 @@
 package com.meistercharts.history.impl
 
 import com.meistercharts.annotations.Domain
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryDebug
 import com.meistercharts.history.HistoryEnumOrdinal
@@ -27,6 +29,7 @@ import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
 import com.meistercharts.history.ReferenceEntryId
@@ -45,16 +48,16 @@ class HistoryValuesBuilder(
   /**
    * The number of data serie with decimal value
    */
-  val decimalDataSeriesCount: Int,
+  val decimalDataSeriesCount: DecimalDataSeriesCount,
   /**
    * The number of data series with enum value
    */
-  val enumDataSeriesCount: Int,
+  val enumDataSeriesCount: EnumDataSeriesCount,
 
   /**
    * The number of data series with reference entries
    */
-  val referenceEntryDataSeriesCount: Int,
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount,
 
   /**
    * The number of (initial) entries (timestamps)
@@ -75,7 +78,7 @@ class HistoryValuesBuilder(
    *
    * Contains either the measured value or the average values
    */
-  var decimalValues: DoubleArray2 = DoubleArray2(decimalDataSeriesCount, initialTimestampsCount) { HistoryChunk.Pending }
+  var decimalValues: DoubleArray2 = DoubleArray2(decimalDataSeriesCount.value, initialTimestampsCount) { HistoryChunk.Pending }
     private set
 
   /**
@@ -116,7 +119,7 @@ class HistoryValuesBuilder(
    *
    * Attention: The underlying array may be changed if it is resized ([resizeTimestamps])
    */
-  var enumValues: IntArray2 = IntArray2(enumDataSeriesCount, initialTimestampsCount) { HistoryEnumSet.PendingAsInt }
+  var enumValues: IntArray2 = IntArray2(enumDataSeriesCount.value, initialTimestampsCount) { HistoryEnumSet.PendingAsInt }
     private set
 
   /**
@@ -138,13 +141,13 @@ class HistoryValuesBuilder(
    *
    * Contains either the "measured" ids or the "most-of-the-time" id
    */
-  var referenceEntryIds: IntArray2 = IntArray2(referenceEntryDataSeriesCount, initialTimestampsCount) { ReferenceEntryId.PendingAsInt }
+  var referenceEntryIds: IntArray2 = IntArray2(referenceEntryDataSeriesCount.value, initialTimestampsCount) { ReferenceEntryId.PendingAsInt }
     private set
 
   /**
    * The status entries for the reference entries
    */
-  var referenceEntryStatuses: IntArray2 = IntArray2(referenceEntryDataSeriesCount, initialTimestampsCount) { HistoryEnumSet.PendingAsInt }
+  var referenceEntryStatuses: IntArray2 = IntArray2(referenceEntryDataSeriesCount.value, initialTimestampsCount) { HistoryEnumSet.PendingAsInt }
     private set
 
   /**
@@ -187,14 +190,14 @@ class HistoryValuesBuilder(
       return
     }
 
-    decimalValues = decimalValues.resizedCopy(decimalDataSeriesCount, newTimestampsCount)
-    minValues = minValues?.resizedCopy(decimalDataSeriesCount, newTimestampsCount)
-    maxValues = maxValues?.resizedCopy(decimalDataSeriesCount, newTimestampsCount)
-    enumValues = enumValues.resizedCopy(enumDataSeriesCount, newTimestampsCount)
-    enumOrdinalsMostTime = enumOrdinalsMostTime?.resizedCopy(enumDataSeriesCount, newTimestampsCount)
-    referenceEntryIds = referenceEntryIds.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
-    referenceEntryStatuses = referenceEntryStatuses.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
-    referenceEntryDifferentIdsCount = referenceEntryDifferentIdsCount?.resizedCopy(referenceEntryDataSeriesCount, newTimestampsCount)
+    decimalValues = decimalValues.resizedCopy(decimalDataSeriesCount.value, newTimestampsCount)
+    minValues = minValues?.resizedCopy(decimalDataSeriesCount.value, newTimestampsCount)
+    maxValues = maxValues?.resizedCopy(decimalDataSeriesCount.value, newTimestampsCount)
+    enumValues = enumValues.resizedCopy(enumDataSeriesCount.value, newTimestampsCount)
+    enumOrdinalsMostTime = enumOrdinalsMostTime?.resizedCopy(enumDataSeriesCount.value, newTimestampsCount)
+    referenceEntryIds = referenceEntryIds.resizedCopy(referenceEntryDataSeriesCount.value, newTimestampsCount)
+    referenceEntryStatuses = referenceEntryStatuses.resizedCopy(referenceEntryDataSeriesCount.value, newTimestampsCount)
+    referenceEntryDifferentIdsCount = referenceEntryDifferentIdsCount?.resizedCopy(referenceEntryDataSeriesCount.value, newTimestampsCount)
   }
 
   private fun IntArray2.resizedCopy(dataSeriesCount: Int, newTimestampsCount: Int): IntArray2 {
@@ -261,19 +264,19 @@ class HistoryValuesBuilder(
       RecordingType.Calculated -> require(minValues != null && maxValues != null) { "Min/max values must be provided when recordingType is Calculated" }
     }
 
-    require(decimalDataSeriesCount == decimalValues.size) {
+    require(decimalDataSeriesCount.value == decimalValues.size) {
       "Invalid size of decimal values array. Expected <$decimalDataSeriesCount> but was <${decimalValues.size}>"
     }
 
-    val targetStartIndex = HistoryValues.calculateStartIndex(decimalDataSeriesCount, timestampIndex)
+    val targetStartIndex = HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, timestampIndex)
 
-    decimalValues.copyInto(this.decimalValues.data, targetStartIndex, 0, decimalDataSeriesCount)
-    maxValues?.copyInto(this.maxValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount)
-    minValues?.copyInto(this.minValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount)
+    decimalValues.copyInto(this.decimalValues.data, targetStartIndex, 0, decimalDataSeriesCount.value)
+    maxValues?.copyInto(this.maxValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount.value)
+    minValues?.copyInto(this.minValuesInitialized.data, targetStartIndex, 0, decimalDataSeriesCount.value)
   }
 
   fun setEnumValuesForTimestamp(timestampIndex: TimestampIndex, enumValues: @HistoryEnumSetInt IntArray, enumOrdinalsMostTime: @HistoryEnumOrdinalInt IntArray? = null) {
-    require(enumDataSeriesCount == enumValues.size) {
+    require(enumDataSeriesCount.value == enumValues.size) {
       "Invalid size of enum values array. Expected <$enumDataSeriesCount> but was <${enumValues.size}>"
     }
 
@@ -283,7 +286,7 @@ class HistoryValuesBuilder(
     }
 
     if (enumOrdinalsMostTime != null) {
-      require(enumDataSeriesCount == enumOrdinalsMostTime.size) {
+      require(enumDataSeriesCount.value == enumOrdinalsMostTime.size) {
         "Invalid size of enum winners array. Expected <$enumDataSeriesCount> but was <${enumOrdinalsMostTime.size}>"
       }
 
@@ -317,10 +320,10 @@ class HistoryValuesBuilder(
       HistoryEnumSet.isValid(it)
     }
 
-    val targetStartIndex = HistoryValues.calculateStartIndex(enumDataSeriesCount, timestampIndex)
-    enumValues.copyInto(this.enumValues.data, targetStartIndex, 0, enumDataSeriesCount)
+    val targetStartIndex = HistoryValues.calculateStartIndex(enumDataSeriesCount.value, timestampIndex)
+    enumValues.copyInto(this.enumValues.data, targetStartIndex, 0, enumDataSeriesCount.value)
 
-    enumOrdinalsMostTime?.copyInto(this.enumOrdinalsMostTimeInitialized.data, targetStartIndex, 0, enumDataSeriesCount)
+    enumOrdinalsMostTime?.copyInto(this.enumOrdinalsMostTimeInitialized.data, targetStartIndex, 0, enumDataSeriesCount.value)
   }
 
   /**
@@ -343,10 +346,10 @@ class HistoryValuesBuilder(
     referenceEntryStatuses: @HistoryEnumSetInt IntArray,
     referenceEntryDataSet: Set<ReferenceEntryData>,
   ) {
-    require(referenceEntryDataSeriesCount == referenceEntryIds.size) {
+    require(referenceEntryDataSeriesCount.value == referenceEntryIds.size) {
       "Invalid size of values array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryIds.size}>"
     }
-    require(referenceEntryDataSeriesCount == referenceEntryStatuses.size) {
+    require(referenceEntryDataSeriesCount.value == referenceEntryStatuses.size) {
       "Invalid size of values array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryStatuses.size}>"
     }
 
@@ -356,16 +359,16 @@ class HistoryValuesBuilder(
     }
 
     if (referenceEntryIdsCount != null) {
-      require(referenceEntryDataSeriesCount == referenceEntryIdsCount.size) {
+      require(referenceEntryDataSeriesCount.value == referenceEntryIdsCount.size) {
         "Invalid size of enum winners array. Expected <$referenceEntryDataSeriesCount> but was <${referenceEntryIdsCount.size}>"
       }
     }
 
-    val targetStartIndex = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, timestampIndex)
-    referenceEntryIds.copyInto(this.referenceEntryIds.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
+    val targetStartIndex = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, timestampIndex)
+    referenceEntryIds.copyInto(this.referenceEntryIds.data, targetStartIndex, 0, referenceEntryDataSeriesCount.value)
 
-    referenceEntryIdsCount?.copyInto(this.referenceEntryDifferentIdsCountInitialized.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
-    referenceEntryStatuses.copyInto(this.referenceEntryStatuses.data, targetStartIndex, 0, referenceEntryDataSeriesCount)
+    referenceEntryIdsCount?.copyInto(this.referenceEntryDifferentIdsCountInitialized.data, targetStartIndex, 0, referenceEntryDataSeriesCount.value)
+    referenceEntryStatuses.copyInto(this.referenceEntryStatuses.data, targetStartIndex, 0, referenceEntryDataSeriesCount.value)
 
     //Store all data elements
     referenceEntriesDataMapBuilder.storeAll(referenceEntryDataSet)
@@ -451,16 +454,16 @@ fun historyValues(
   /**
    * The number of decimal data series
    */
-  decimalDataSeriesCount: Int,
+  decimalDataSeriesCount: DecimalDataSeriesCount,
   /**
    * The number of enum data series
    */
-  enumDataSeriesCount: Int,
+  enumDataSeriesCount: EnumDataSeriesCount,
 
   /**
    * The number of reference entry data series
    */
-  referenceEntryDataSeriesCount: Int,
+  referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount,
 
 
   /**

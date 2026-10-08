@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.js
+package com.meistercharts.history
 
-import org.w3c.dom.Element
-
-/**
- */
+import kotlin.jvm.JvmInline
 
 /**
- * Removes the element from its parent.
- * Old workaround method - no longer required
+ * The number of data series for *reference entry* values.
  */
-@Deprecated("Workaround no longer required", ReplaceWith("this.remove()"))
-inline fun Element.removeFromParent() {
-  this.remove()
-  //parentNode?.removeChild(this) //old implementation that has been used to work around IE11 issue
+@JvmInline
+value class ReferenceEntryDataSeriesCount(val value: Int) {
+  override fun toString(): String {
+    return value.toString()
+  }
 }

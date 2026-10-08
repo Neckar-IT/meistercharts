@@ -32,7 +32,7 @@ import it.neckar.open.isUndefined
 /**
  * Ensures that this enum value is in fact an enum value.
  *
- * This is a workaround because the enum values we receive are actually of type string.
+ * The enum values received from JavaScript are strings; this converts them to the enum entry.
  */
 actual inline fun <reified T : Enum<T>> T.sanitize(): T {
   if (this.isUndefined()) {

@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.history.rest
+package com.meistercharts.history
 
-import com.meistercharts.history.SamplingPeriod
-import it.neckar.open.unit.si.ms
+import kotlin.jvm.JvmInline
 
 /**
- * Describes the time range that is queried
+ * The number of data series for *enum* values.
  */
-data class QueryRange(
-  val from: @ms Double,
-  val to: @ms Double,
-  val resolution: SamplingPeriod
-) {
+@JvmInline
+value class EnumDataSeriesCount(val value: Int) {
+  override fun toString(): String {
+    return value.toString()
+  }
 }

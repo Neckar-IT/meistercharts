@@ -63,6 +63,9 @@ import it.neckar.open.unit.si.ms
 import kotlinx.serialization.Serializable
 import kotlin.math.max
 import kotlin.math.min
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 
 
 /**
@@ -140,13 +143,13 @@ data class HistoryChunk(
   val totalDataSeriesCount: Int
     get() = configuration.totalDataSeriesCount
 
-  val decimalDataSeriesCount: Int
+  val decimalDataSeriesCount: DecimalDataSeriesCount
     get() = configuration.decimalDataSeriesCount
 
-  val enumDataSeriesCount: Int
+  val enumDataSeriesCount: EnumDataSeriesCount
     get() = configuration.enumDataSeriesCount
 
-  val referenceEntryDataSeriesCount: Int
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount
     get() = configuration.referenceEntryDataSeriesCount
 
   /**
@@ -480,13 +483,13 @@ data class HistoryChunk(
     additionalReferenceEntryDataList: @ForOnePointInTime Set<ReferenceEntryData>,
   ): HistoryChunk {
     //Convert to significands array
-    require(additionalDecimalValues.size == decimalDataSeriesCount) {
+    require(additionalDecimalValues.size == decimalDataSeriesCount.value) {
       "Invalid values size. Was <${additionalDecimalValues.size}> but expected <$decimalDataSeriesCount>"
     }
 
     requireMeasuringMode()
 
-    require(additionalDecimalValues.size == decimalDataSeriesCount) {
+    require(additionalDecimalValues.size == decimalDataSeriesCount.value) {
       "Invalid values size. Was <${additionalDecimalValues.size}> but expected <$decimalDataSeriesCount>"
     }
 
@@ -680,23 +683,23 @@ data class HistoryChunk(
       //Add the decimal values
       this.copyDecimalValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, thisRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, thisRelevantTimeStampIndex + 1),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, thisRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, thisRelevantTimeStampIndex + 1),
       )
 
       this.copyEnumValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, thisRelevantTimeStampIndex + 1)
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, thisRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, thisRelevantTimeStampIndex + 1)
       )
 
       this.copyReferenceEntryValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisRelevantTimeStampIndex + 1),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, thisRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, thisRelevantTimeStampIndex + 1),
       )
 
       //Increase the indices
@@ -716,23 +719,23 @@ data class HistoryChunk(
 
       other.copyDecimalValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, otherRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(decimalDataSeriesCount, otherRelevantTimeStampIndex + 1),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, otherRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, otherRelevantTimeStampIndex + 1),
       )
 
       other.copyEnumValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(enumDataSeriesCount, otherRelevantTimeStampIndex + 1),
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, otherRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(enumDataSeriesCount.value, otherRelevantTimeStampIndex + 1),
       )
 
       other.copyReferenceEntryValuesTo(
         mergedHistoryValuesBuilder,
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, mergedHistoryValuesTimestampIndex),
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex),
-        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, otherRelevantTimeStampIndex + 1),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, mergedHistoryValuesTimestampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, otherRelevantTimeStampIndex),
+        HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, otherRelevantTimeStampIndex + 1),
       )
 
       //Increase the indices
@@ -888,37 +891,37 @@ data class HistoryChunk(
     val newHistoryValuesBuilder = HistoryValuesBuilder(decimalDataSeriesCount, enumDataSeriesCount, referenceEntryDataSeriesCount, mergedTimeStamps.size, recordingType)
 
     //Copy my data into the new builder
-    val thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount, thisStartIndex)
-    val thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount, thisEndIndex + 1)
+    val thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, thisStartIndex)
+    val thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, thisEndIndex + 1)
     copyDecimalValuesTo(target = newHistoryValuesBuilder, targetOffset = 0, thisStartArrayIndexDecimal = thisStartArrayIndexDecimal, thisEndArrayIndexDecimal = thisEndArrayIndexDecimal)
 
-    @Inclusive val thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(this.enumDataSeriesCount, thisStartIndex)
-    @Inclusive val thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(this.enumDataSeriesCount, thisEndIndex + 1)
+    @Inclusive val thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(this.enumDataSeriesCount.value, thisStartIndex)
+    @Inclusive val thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(this.enumDataSeriesCount.value, thisEndIndex + 1)
     copyEnumValuesTo(target = newHistoryValuesBuilder, targetOffset = 0, thisStartArrayIndexEnum = thisStartArrayIndexEnum, thisEndArrayIndexEnum = thisEndArrayIndexEnum)
 
-    @Inclusive val thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, thisStartIndex)
-    @Inclusive val thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount, thisEndIndex + 1)
+    @Inclusive val thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, thisStartIndex)
+    @Inclusive val thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(this.referenceEntryDataSeriesCount.value, thisEndIndex + 1)
     copyReferenceEntryValuesTo(target = newHistoryValuesBuilder, targetOffset = 0, thisStartArrayIndexReferenceEntry = thisStartArrayIndexReferenceEntry, thisEndArrayIndexReferenceEntry = thisEndArrayIndexReferenceEntry)
 
     //Copy the data from the other chunk
     other.copyDecimalValuesTo(
       target = newHistoryValuesBuilder,
       targetOffset = thisEndArrayIndexDecimal - thisStartArrayIndexDecimal,
-      thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(other.decimalDataSeriesCount, otherStartIndex),
-      thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(other.decimalDataSeriesCount, otherEndIndex + 1)
+      thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(other.decimalDataSeriesCount.value, otherStartIndex),
+      thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(other.decimalDataSeriesCount.value, otherEndIndex + 1)
     )
 
     other.copyEnumValuesTo(
       target = newHistoryValuesBuilder, targetOffset = thisEndArrayIndexEnum - thisStartArrayIndexEnum,
-      thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(other.enumDataSeriesCount, otherStartIndex),
-      thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(other.enumDataSeriesCount, otherEndIndex + 1)
+      thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(other.enumDataSeriesCount.value, otherStartIndex),
+      thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(other.enumDataSeriesCount.value, otherEndIndex + 1)
     )
 
     other.copyReferenceEntryValuesTo(
       target = newHistoryValuesBuilder,
       targetOffset = thisEndArrayIndexReferenceEntry - thisStartArrayIndexReferenceEntry,
-      thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherStartIndex),
-      thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount, otherEndIndex + 1)
+      thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount.value, otherStartIndex),
+      thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(other.referenceEntryDataSeriesCount.value, otherEndIndex + 1)
     )
 
     return HistoryChunk(other.configuration, mergedTimeStamps, newHistoryValuesBuilder.build(), RecordingType.Measured).also {
@@ -998,20 +1001,20 @@ data class HistoryChunk(
     copyDecimalValuesTo(
       target = newHistoryValuesBuilder,
       targetOffset = 0,
-      thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount, startIndex),
-      thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount, endIndex + 1)
+      thisStartArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, startIndex),
+      thisEndArrayIndexDecimal = HistoryValues.calculateStartIndex(decimalDataSeriesCount.value, endIndex + 1)
     )
     copyEnumValuesTo(
       target = newHistoryValuesBuilder,
       targetOffset = 0,
-      thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(enumDataSeriesCount, startIndex),
-      thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(enumDataSeriesCount, endIndex + 1)
+      thisStartArrayIndexEnum = HistoryValues.calculateStartIndex(enumDataSeriesCount.value, startIndex),
+      thisEndArrayIndexEnum = HistoryValues.calculateStartIndex(enumDataSeriesCount.value, endIndex + 1)
     )
     copyReferenceEntryValuesTo(
       target = newHistoryValuesBuilder,
       targetOffset = 0,
-      thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, startIndex),
-      thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount, endIndex + 1)
+      thisStartArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, startIndex),
+      thisEndArrayIndexReferenceEntry = HistoryValues.calculateStartIndex(referenceEntryDataSeriesCount.value, endIndex + 1)
     )
 
     return HistoryChunk(configuration, newTimeStamps, newHistoryValuesBuilder.build(), recordingType).also {
@@ -1131,17 +1134,17 @@ data class HistoryChunk(
 
 
       append("Indices:".padEnd(indexAndDateColumnsWidth, ' '))
-      decimalDataSeriesCount.fastFor {
+      decimalDataSeriesCount.value.fastFor {
         append(it.toString().padStart(decimalsColumnContentWidth, ' '))
         append(" ")
       }
       append(separator)
-      enumDataSeriesCount.fastFor {
+      enumDataSeriesCount.value.fastFor {
         append(it.toString().padStart(enumColumnContentWidth, ' '))
         append(" ")
       }
       append(separator)
-      referenceEntryDataSeriesCount.fastFor {
+      referenceEntryDataSeriesCount.value.fastFor {
         append(it.toString().padStart(referenceEntryColumnContentWidth, ' '))
         append(" ")
       }
@@ -1149,17 +1152,17 @@ data class HistoryChunk(
       appendLine()
 
       append("IDs:".padEnd(indexAndDateColumnsWidth, ' '))
-      decimalDataSeriesCount.fastFor {
+      decimalDataSeriesCount.value.fastFor {
         append(getDecimalDataSeriesId(DecimalDataSeriesIndex(it)).toString().padStart(decimalsColumnContentWidth, ' '))
         append(" ")
       }
       append(separator)
-      enumDataSeriesCount.fastFor {
+      enumDataSeriesCount.value.fastFor {
         append(getEnumDataSeriesId(EnumDataSeriesIndex(it)).toString().padStart(enumColumnContentWidth, ' '))
         append(" ")
       }
       append(separator)
-      referenceEntryDataSeriesCount.fastFor {
+      referenceEntryDataSeriesCount.value.fastFor {
         append(getReferenceEntryDataSeriesId(ReferenceEntryDataSeriesIndex(it)).toString().padStart(referenceEntryColumnContentWidth, ' '))
         append(" ")
       }
@@ -1183,14 +1186,14 @@ data class HistoryChunk(
         append(" ")
         append(timestamp.formatUtc().padEnd(dateColumnWidth, ' '))
 
-        decimalDataSeriesCount.fastFor {
+        decimalDataSeriesCount.value.fastFor {
           append(getDecimalValue(DecimalDataSeriesIndex(it), timeStampIndex).toString().padStart(decimalsColumnContentWidth, ' '))
           append(" ")
         }
 
         append(separator)
 
-        enumDataSeriesCount.fastFor {
+        enumDataSeriesCount.value.fastFor {
           val dataSeriesIndex = EnumDataSeriesIndex(it)
           @MayBeNoValueOrPending val enumValue = getEnumValue(dataSeriesIndex, timeStampIndex)
 
@@ -1212,7 +1215,7 @@ data class HistoryChunk(
 
         append(separator)
 
-        referenceEntryDataSeriesCount.fastFor {
+        referenceEntryDataSeriesCount.value.fastFor {
           val dataSeriesIndex = ReferenceEntryDataSeriesIndex(it)
           @MayBeNoValueOrPending val referenceId = getReferenceEntryId(dataSeriesIndex, timeStampIndex)
 

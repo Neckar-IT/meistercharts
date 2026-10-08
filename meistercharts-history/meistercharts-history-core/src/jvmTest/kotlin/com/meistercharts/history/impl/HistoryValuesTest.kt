@@ -24,6 +24,9 @@ import assertk.assertions.*
 import it.neckar.open.test.utils.DisableLogging
 
 import org.junit.jupiter.api.Test
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 
 /**
  */
@@ -31,7 +34,7 @@ import org.junit.jupiter.api.Test
 class HistoryValuesTest {
   @Test
   fun testSerialization() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 12, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 12, RecordingType.Measured)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0), 12.0)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1), 13.0)
 
@@ -66,7 +69,7 @@ class HistoryValuesTest {
 
   @Test
   internal fun testIt() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 12, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 12, RecordingType.Measured)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0), 12.0)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1), 13.0)
 
@@ -78,7 +81,7 @@ class HistoryValuesTest {
 
   @Test
   fun testSetValues() {
-    val builder = HistoryValuesBuilder(2, 0, 0, 3, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(2), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 3, RecordingType.Measured)
 
     builder.setDecimalValuesForTimestamp(TimestampIndex(0), doubleArrayOf(7.0, 70.0), null, null)
     builder.setDecimalValuesForTimestamp(TimestampIndex(1), doubleArrayOf(8.0, 71.0), null, null)
@@ -98,7 +101,7 @@ class HistoryValuesTest {
 
   @Test
   fun testGetValues() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 12, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 12, RecordingType.Measured)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0), 12.0)
 
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1), 13.0)
@@ -119,7 +122,7 @@ class HistoryValuesTest {
 
   @Test
   fun testEquals() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 12, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 12, RecordingType.Measured)
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0), 12.0)
 
     builder.setDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1), 13.0)

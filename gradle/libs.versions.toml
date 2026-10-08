@@ -93,7 +93,7 @@ ktor = "3.6.0"
 
 com-github-docker-java = "3.7.1"
 
-com-miglayout = "11.4.3"
+com-miglayout = "11.5.1"
 
 dev-zacsweers-kctfork = "0.14.0"
 
@@ -150,9 +150,9 @@ opentelemetry = "1.66.0"
 # Alpha channel of the same release train, one -alpha release per core release. Governs opentelemetry-api-incubator.
 opentelemetry-alpha = "1.66.0-alpha"
 
-opentelemetry-instrumentation = "2.31.1-alpha"
+opentelemetry-instrumentation = "2.32.0-alpha"
 
-opentelemetry-javaagent = "2.31.1"
+opentelemetry-javaagent = "2.32.0"
 
 # Own release train, versioned independently of the SDK and of the instrumentation artifacts. No BOM pins the stable channel.
 opentelemetry-semconv = "1.44.0"

@@ -18,7 +18,9 @@ package com.meistercharts.history.downsampling
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.HistoryEnum
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.impl.HistoryChunk
 import com.meistercharts.history.impl.historyChunk
@@ -39,8 +41,8 @@ class SimpleRefsTest {
     }
 
     assertThat(chunk.timeStampsCount).isEqualTo(1)
-    assertThat(chunk.enumDataSeriesCount).isEqualTo(0)
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(1)
+    assertThat(chunk.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(1))
 
     assertThat(chunk.dump()).isEqualComparingLinesTrim(
       """

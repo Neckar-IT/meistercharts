@@ -84,7 +84,7 @@ abstract class HistoryCanvasTilePainter(private val configuration: Configuration
       )
     }
 
-    val dataSeriesCount = buckets.first().chunk.decimalDataSeriesCount
+    val dataSeriesCount = buckets.first().chunk.decimalDataSeriesCount.value
 
     //Iterate over data series first to avoid gaps between buckets
     visibleDecimalSeriesIndices.fastForEach { dataSeriesIndex: DecimalDataSeriesIndex ->

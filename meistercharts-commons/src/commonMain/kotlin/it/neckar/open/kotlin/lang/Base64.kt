@@ -74,13 +74,7 @@ fun ByteArray.toBase64UrlString(): String {
 }
 
 fun String.fromBase64Url(): ByteArray {
-  return kotlin.io.encoding.Base64.UrlSafe.decode(addBase64Padding(this))
-}
-
-//Workaround for https://youtrack.jetbrains.com/issue/KT-69846
-private fun addBase64Padding(encoded: String): String {
-  val paddingSize = (4 - (encoded.length % 4)) % 4
-  return encoded.padEnd(encoded.length + paddingSize, '=')
+  return kotlin.io.encoding.Base64.UrlSafe.withPadding(PaddingOption.PRESENT_OPTIONAL).decode(this)
 }
 
 fun String.fromBase64UrlString(): String {

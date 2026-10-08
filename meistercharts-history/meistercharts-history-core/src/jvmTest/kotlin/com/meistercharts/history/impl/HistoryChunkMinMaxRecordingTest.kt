@@ -18,6 +18,7 @@ package com.meistercharts.history.impl
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
@@ -50,7 +51,7 @@ class HistoryChunkMinMaxRecordingTest {
 
       assertThat(timestamps.size).isEqualTo(1)
       assertThat(historyValuesBuilder.timestampsCount).isEqualTo(1000) //will be resized on build
-      assertThat(historyValuesBuilder.decimalDataSeriesCount).isEqualTo(1)
+      assertThat(historyValuesBuilder.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(1))
       assertThat(historyValuesBuilder.decimalValues.size).isEqualTo(1000) //1000 * 1
 
       assertThat(nextTimestampIndex).isEqualTo(TimestampIndex.one)
@@ -101,7 +102,7 @@ class HistoryChunkMinMaxRecordingTest {
 
       assertThat(timestamps.size).isEqualTo(1)
       assertThat(historyValuesBuilder.timestampsCount).isEqualTo(1000) //will be resized on build
-      assertThat(historyValuesBuilder.decimalDataSeriesCount).isEqualTo(1)
+      assertThat(historyValuesBuilder.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(1))
       assertThat(historyValuesBuilder.decimalValues.size).isEqualTo(1000) //1000 * 1
 
       assertThat(nextTimestampIndex).isEqualTo(TimestampIndex.one)

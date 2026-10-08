@@ -31,6 +31,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.put
 
@@ -56,7 +57,19 @@ fun JsonObjectBuilder.putNotNull(key: String, value: Boolean?) {
   }
 }
 
+fun JsonObjectBuilder.putNotNull(key: String, value: Number?) {
+  if (value != null) {
+    put(key, value)
+  }
+}
+
 fun JsonObjectBuilder.putNotEmpty(key: String, value: JsonArray) {
+  if (value.isNotEmpty()) {
+    put(key, value)
+  }
+}
+
+fun JsonObjectBuilder.putNotEmpty(key: String, value: JsonObject) {
   if (value.isNotEmpty()) {
     put(key, value)
   }

@@ -17,11 +17,14 @@ package com.meistercharts.history.impl
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.TimestampIndex
@@ -36,14 +39,14 @@ import org.junit.jupiter.api.Test
 class HistoryValuesBuilderTest {
   @Test
   fun testSizeBuild() {
-    val builder = HistoryValuesBuilder(0, 0, 3, 2, RecordingType.Calculated)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(0), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(3), 2, RecordingType.Calculated)
     assertThat(builder.timestampsCount).isEqualTo(2)
     assertThat(builder.build().timeStampsCount).isEqualTo(2)
   }
 
   @Test
   fun testRefTypesResizeTest() {
-    val builder = HistoryValuesBuilder(0, 0, 3, 2, RecordingType.Calculated)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(0), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(3), 2, RecordingType.Calculated)
 
     builder.let { builder ->
       assertThat(builder.timestampsCount).isEqualTo(2)
@@ -66,7 +69,7 @@ class HistoryValuesBuilderTest {
       //assertThat(it)
       builder.build()
     }.let { values ->
-      assertThat(values.referenceEntryDataSeriesCount).isEqualTo(3)
+      assertThat(values.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(3))
       assertThat(values.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex.zero)).isEqualTo(ReferenceEntryId(7))
     }
 
@@ -107,14 +110,14 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testType() {
-    HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Measured).let {
+    HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 200, RecordingType.Measured).let {
       assertThat(it.build().decimalHistoryValues.maxValues).isNull()
       assertThat(it.build().decimalHistoryValues.minValues).isNull()
       assertThat(it.build().enumHistoryValues.mostOfTheTimeValues).isNull()
       assertThat(it.build().enumHistoryValues.mostOfTheTimeValues).isNull()
     }
 
-    val builder = HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Calculated)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 200, RecordingType.Calculated)
 
     assertThat(builder.maxValues).isNull()
     assertThat(builder.minValues).isNull()
@@ -124,14 +127,14 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testEnumValues() {
-    val builder = HistoryValuesBuilder(0, 5, 0, 200, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(0), EnumDataSeriesCount(5), ReferenceEntryDataSeriesCount(0), 200, RecordingType.Measured)
     assertThat(builder.timestampsCount).isEqualTo(200)
 
     builder.setEnumValue(EnumDataSeriesIndex.zero, TimestampIndex(1), HistoryEnumSet(7))
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.enumDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(5))
       assertThat(historyValues.timeStampsCount).isEqualTo(200)
       assertThat(historyValues.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1)).bitset).isEqualTo(7)
     }
@@ -142,7 +145,7 @@ class HistoryValuesBuilderTest {
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.enumDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(5))
       assertThat(historyValues.timeStampsCount).isEqualTo(100)
       assertThat(historyValues.getEnumValue(EnumDataSeriesIndex(0), TimestampIndex(1)).bitset).isEqualTo(7)
     }
@@ -150,14 +153,14 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testSize() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 200, RecordingType.Measured)
     assertThat(builder.timestampsCount).isEqualTo(200)
 
     builder.setDecimalValue(DecimalDataSeriesIndex.zero, TimestampIndex(1), 99.0)
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.decimalDataSeriesCount).isEqualTo(7)
+      assertThat(historyValues.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(7))
       assertThat(historyValues.timeStampsCount).isEqualTo(200)
       assertThat(historyValues.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(99.0)
     }
@@ -168,7 +171,7 @@ class HistoryValuesBuilderTest {
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.decimalDataSeriesCount).isEqualTo(7)
+      assertThat(historyValues.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(7))
       assertThat(historyValues.timeStampsCount).isEqualTo(100)
       assertThat(historyValues.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(99.0)
     }
@@ -176,7 +179,7 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testResizeSameOnlyDecimals() {
-    val builder = HistoryValuesBuilder(7, 0, 0, 200, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0), 200, RecordingType.Measured)
     assertThat(builder.timestampsCount).isEqualTo(200)
 
     val ref = builder.decimalValues
@@ -192,7 +195,7 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testResizeSameAll() {
-    val builder = HistoryValuesBuilder(7, 6, 5, 200, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(7), EnumDataSeriesCount(6), ReferenceEntryDataSeriesCount(5), 200, RecordingType.Measured)
     assertThat(builder.timestampsCount).isEqualTo(200)
 
     val ref = builder.decimalValues
@@ -208,7 +211,7 @@ class HistoryValuesBuilderTest {
 
   @Test
   fun testRefValues() {
-    val builder = HistoryValuesBuilder(0, 0, 5, 200, RecordingType.Measured)
+    val builder = HistoryValuesBuilder(DecimalDataSeriesCount(0), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(5), 200, RecordingType.Measured)
     assertThat(builder.timestampsCount).isEqualTo(200)
 
     val referenceEntryId = ReferenceEntryId(17)
@@ -224,7 +227,7 @@ class HistoryValuesBuilderTest {
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(5))
       assertThat(historyValues.timeStampsCount).isEqualTo(200)
       assertThat(historyValues.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(referenceEntryId)
       assertThat(historyValues.getReferenceEntryData(ReferenceEntryDataSeriesIndex(0), referenceEntryId)?.label).isEqualTo(label)
@@ -236,7 +239,7 @@ class HistoryValuesBuilderTest {
 
     builder.build().also { historyValues ->
       assertThat(historyValues).isNotNull()
-      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(5)
+      assertThat(historyValues.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(5))
       assertThat(historyValues.timeStampsCount).isEqualTo(100)
       assertThat(historyValues.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(1))).isEqualTo(referenceEntryId)
       assertThat(historyValues.getReferenceEntryData(ReferenceEntryDataSeriesIndex(0), referenceEntryId)?.label).isEqualTo(label)

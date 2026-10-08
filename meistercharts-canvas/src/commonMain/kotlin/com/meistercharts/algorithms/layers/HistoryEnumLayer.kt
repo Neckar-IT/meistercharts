@@ -56,7 +56,7 @@ class HistoryEnumLayer(
   }
 
   override fun dataSeriesCount(): Int {
-    return configuration.historyConfiguration().enumDataSeriesCount
+    return configuration.historyConfiguration().enumDataSeriesCount.value
   }
 
   @Hot

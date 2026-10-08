@@ -86,7 +86,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
               val options = it.options
 
               while (options.length > 0) {
-                options[0]?.removeFromParent()
+                options[0]?.remove()
               }
 
               //TODO find better implementation that avoid many reflows. see https://developers.google.com/speed/docs/insights/browser-reflow

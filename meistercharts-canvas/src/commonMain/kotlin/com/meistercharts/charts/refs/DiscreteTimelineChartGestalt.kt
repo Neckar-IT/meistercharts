@@ -477,14 +477,14 @@ class DiscreteTimelineChartGestalt(
      * Shows all available data series
      */
     fun showAllReferenceEntryDataSeries() {
-      requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount }
+      requestedVisibleReferenceEntrySeriesIndices = ReferenceEntryDataSeriesIndexProvider.indices { historyConfiguration().referenceEntryDataSeriesCount.value }
     }
 
     /**
      * Contains the actual visible reference entry series
      */
     val actualVisibleReferenceEntrySeriesIndices: ReferenceEntryDataSeriesIndexProvider = ::requestedVisibleReferenceEntrySeriesIndices.atMost {
-      historyConfiguration().referenceEntryDataSeriesCount
+      historyConfiguration().referenceEntryDataSeriesCount.value
     }
 
     /**

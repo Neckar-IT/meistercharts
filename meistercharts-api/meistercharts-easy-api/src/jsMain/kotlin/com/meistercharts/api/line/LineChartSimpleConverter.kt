@@ -140,7 +140,7 @@ object LineChartSimpleConverter {
   fun <IndexContext> toLinePainters(oldLinePainters: MultiProvider<IndexContext, CategoryLinePainter>, jsLineStyles: Array<LineChartLineStyle?>): MultiProvider<IndexContext, CategoryLinePainter> {
     val linePainters = jsLineStyles.mapIndexed { index, jsLineStyle ->
 
-      //Workaround to fix enum
+      // The JavaScript side passes the enum as string.
       val pointConnectionType: PointConnectionType? = jsLineStyle?.pointConnectionType?.let {
         PointConnectionType.valueOf(it.toString())
       }

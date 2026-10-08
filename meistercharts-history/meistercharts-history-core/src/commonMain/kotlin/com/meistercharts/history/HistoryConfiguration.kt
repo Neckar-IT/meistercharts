@@ -49,31 +49,31 @@ class HistoryConfiguration(
    */
   val totalDataSeriesCount: Int
     get() {
-      return decimalDataSeriesCount + enumDataSeriesCount + referenceEntryDataSeriesCount
+      return decimalDataSeriesCount.value + enumDataSeriesCount.value + referenceEntryDataSeriesCount.value
     }
 
   /**
    * The count of decimal data series
    */
-  val decimalDataSeriesCount: Int
+  val decimalDataSeriesCount: DecimalDataSeriesCount
     get() {
-      return decimalConfiguration.dataSeriesCount
+      return DecimalDataSeriesCount(decimalConfiguration.dataSeriesCount)
     }
 
   /**
    * The count of enum data series
    */
-  val enumDataSeriesCount: Int
+  val enumDataSeriesCount: EnumDataSeriesCount
     get() {
-      return enumConfiguration.dataSeriesCount
+      return EnumDataSeriesCount(enumConfiguration.dataSeriesCount)
     }
 
   /**
    * The count of object value data series
    */
-  val referenceEntryDataSeriesCount: Int
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount
     get() {
-      return referenceEntryConfiguration.dataSeriesCount
+      return ReferenceEntryDataSeriesCount(referenceEntryConfiguration.dataSeriesCount)
     }
 
   override fun equals(other: Any?): Boolean {
@@ -165,9 +165,9 @@ fun historyConfiguration(config: HistoryConfigurationBuilder.() -> Unit): Histor
  * @throws IllegalArgumentException if the number of created data series entries does not match the given count of data series
  */
 fun historyConfiguration(
-  decimalDataSeriesCount: Int,
-  enumDataSeriesCount: Int,
-  referenceEntrySeriesCount: Int,
+  decimalDataSeriesCount: DecimalDataSeriesCount,
+  enumDataSeriesCount: EnumDataSeriesCount,
+  referenceEntrySeriesCount: ReferenceEntryDataSeriesCount,
 
   decimalDataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) -> Unit,
   enumDataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: EnumDataSeriesIndex) -> Unit,
@@ -175,13 +175,13 @@ fun historyConfiguration(
 ): HistoryConfiguration {
 
   return historyConfiguration {
-    decimalDataSeriesCount.fastFor {
+    decimalDataSeriesCount.value.fastFor {
       decimalDataSeriesInitializer(DecimalDataSeriesIndex(it))
     }
-    enumDataSeriesCount.fastFor {
+    enumDataSeriesCount.value.fastFor {
       enumDataSeriesInitializer(EnumDataSeriesIndex(it))
     }
-    referenceEntrySeriesCount.fastFor {
+    referenceEntrySeriesCount.value.fastFor {
       referenceEntryDataSeriesInitializer(ReferenceEntryDataSeriesIndex(it))
     }
   }.also {
@@ -203,7 +203,7 @@ fun historyConfiguration(
  * IMPORTANT: It is necessary to call [HistoryConfigurationBuilder.enumDataSeries] from the given [dataSeriesInitializer]
  */
 fun historyConfigurationOnlyDecimals(
-  decimalDataSeriesCount: Int,
+  decimalDataSeriesCount: DecimalDataSeriesCount,
   dataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) -> Unit,
 ): HistoryConfiguration {
   contract {
@@ -211,14 +211,14 @@ fun historyConfigurationOnlyDecimals(
   }
 
   return historyConfiguration {
-    decimalDataSeriesCount.fastFor {
+    decimalDataSeriesCount.value.fastFor {
       dataSeriesInitializer(DecimalDataSeriesIndex(it))
     }
   }
 }
 
 fun historyConfigurationOnlyEnums(
-  enumDataSeriesCount: Int,
+  enumDataSeriesCount: EnumDataSeriesCount,
   dataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: EnumDataSeriesIndex) -> Unit,
 ): HistoryConfiguration {
   contract {
@@ -226,14 +226,14 @@ fun historyConfigurationOnlyEnums(
   }
 
   return historyConfiguration {
-    enumDataSeriesCount.fastFor {
+    enumDataSeriesCount.value.fastFor {
       dataSeriesInitializer(EnumDataSeriesIndex(it))
     }
   }
 }
 
 fun historyConfigurationOnlyReferenceEntries(
-  referenceEntryDataSeriesCount: Int,
+  referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount,
   dataSeriesInitializer: HistoryConfigurationBuilder.(dataSeriesIndex: ReferenceEntryDataSeriesIndex) -> Unit,
 ): HistoryConfiguration {
   contract {
@@ -241,7 +241,7 @@ fun historyConfigurationOnlyReferenceEntries(
   }
 
   return historyConfiguration {
-    referenceEntryDataSeriesCount.fastFor {
+    referenceEntryDataSeriesCount.value.fastFor {
       dataSeriesInitializer(ReferenceEntryDataSeriesIndex(it))
     }
   }
@@ -252,13 +252,13 @@ fun historyConfigurationOnlyReferenceEntries(
  * Adds some default values
  */
 fun createDefaultHistoryConfiguration(
-  decimalValuesCount: Int,
-  enumValuesCount: Int,
-  referenceEntrySeriesCount: Int,
+  decimalDataSeriesCount: DecimalDataSeriesCount,
+  enumDataSeriesCount: EnumDataSeriesCount,
+  referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount,
 
   enumProvider: (EnumDataSeriesIndex) -> HistoryEnum = { HistoryEnum.Boolean },
   referenceEntryStatusEnumProvider: (ReferenceEntryDataSeriesIndex) -> HistoryEnum = { HistoryEnum.Active },
-): HistoryConfiguration = historyConfiguration(decimalValuesCount, enumValuesCount, referenceEntrySeriesCount,
+): HistoryConfiguration = historyConfiguration(decimalDataSeriesCount, enumDataSeriesCount, referenceEntryDataSeriesCount,
 
   decimalDataSeriesInitializer = { dataSeriesIndex ->
     val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)

@@ -62,9 +62,9 @@ class HistoryConfigurationBuilderTest {
   @Test
   fun testAll() {
     val historyConfiguration = historyConfiguration(
-      decimalDataSeriesCount = 2,
-      enumDataSeriesCount = 3,
-      referenceEntrySeriesCount = 4,
+      decimalDataSeriesCount = DecimalDataSeriesCount(2),
+      enumDataSeriesCount = EnumDataSeriesCount(3),
+      referenceEntrySeriesCount = ReferenceEntryDataSeriesCount(4),
       decimalDataSeriesInitializer = { dataSeriesIndex: DecimalDataSeriesIndex ->
         decimalDataSeries(DataSeriesId(dataSeriesIndex.value * 10), "DN: $dataSeriesIndex")
       },

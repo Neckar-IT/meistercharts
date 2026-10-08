@@ -47,28 +47,33 @@ fun parseJsonObject(json: @JsonText String, decoder: Json = Json): JsonObject {
 }
 
 /**
- * The element at the given [path], or null if a key is missing or its parent is not an object.
+ * The element at the given [path], or null if a key is missing. Throws if a step of the path holds something other
+ * than an object; the message follows [describeAlong].
  */
 fun JsonObject.findAt(path: JsonPath): JsonElement? {
   var current: JsonElement = this
 
   path.keys.forEach { key ->
-    val childElement = (current as? JsonObject)?.get(key) ?: return null
-    current = childElement
+    val parent: JsonObject = current as? JsonObject ?: throw noElementAt(path)
+    current = parent[key] ?: return null
   }
 
   return current
 }
 
 /**
- * The element at the given [path]. Throws if a key is missing or its parent is not an object.
+ * The element at the given [path]. Throws if a key is missing or a step of the path holds something other than an object.
  *
  * The failure says where the path stops and what is there, in keys and types - never a value. An
  * unconstrained object holds whatever its owner puts there, and this message ends up in logs. See
  * [describeAlong].
  */
 fun JsonObject.getAt(path: JsonPath): JsonElement {
-  return findAt(path) ?: throw IllegalArgumentException("No element at path <$path>: ${describeAlong(path)}")
+  return findAt(path) ?: throw noElementAt(path)
+}
+
+private fun JsonObject.noElementAt(path: JsonPath): IllegalArgumentException {
+  return IllegalArgumentException("No element at path <$path>: ${describeAlong(path)}")
 }
 
 /**
@@ -88,7 +93,7 @@ inline fun <reified T> JsonObject.decodeAt(path: JsonPath, decoder: Json = Json)
 }
 
 /**
- * Decodes the element at the given [path] into [T], or returns null if there is no such element.
+ * Decodes the element at the given [path] into [T], or returns null if a key is missing. Throws like [findAt].
  */
 inline fun <reified T> JsonObject.findAndDecodeAt(path: JsonPath, decoder: Json = Json): T? {
   return findAt(path)?.let { decoder.decodeFromJsonElement<T>(it) }

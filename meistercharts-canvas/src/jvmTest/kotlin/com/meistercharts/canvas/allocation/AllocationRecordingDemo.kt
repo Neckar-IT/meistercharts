@@ -38,7 +38,7 @@ import it.neckar.geometry.Size
  * [DemoAllocatingLayer] with the layer(s) of your gestalt and paint them the same way (headless via
  * [MockCanvasRenderingContext], or drive the real render loop).
  *
- * ATTENTION: JVM only. On JS the engine is inert. JFR *samples*, so counts are relative.
+ * ATTENTION: JVM only. In the browser (JS, Wasm) the engine is inert. JFR *samples*, so counts are relative.
  */
 fun main() {
   val canvasSize = Size.of(800.0, 600.0)

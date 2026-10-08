@@ -31,9 +31,9 @@ import java.time.ZoneOffset
 @DisableLogging
 class HistoryBucketFindTest {
   val historyConfiguration: HistoryConfiguration = historyConfiguration(
-    decimalDataSeriesCount = 1,
-    enumDataSeriesCount = 0,
-    referenceEntrySeriesCount = 0,
+    decimalDataSeriesCount = DecimalDataSeriesCount(1),
+    enumDataSeriesCount = EnumDataSeriesCount(0),
+    referenceEntrySeriesCount = ReferenceEntryDataSeriesCount(0),
     decimalDataSeriesInitializer = { dataSeriesIndex ->
       decimalDataSeries(DataSeriesId(dataSeriesIndex.value), "Foo")
 

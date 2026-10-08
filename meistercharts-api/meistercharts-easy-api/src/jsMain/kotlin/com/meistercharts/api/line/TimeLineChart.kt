@@ -318,7 +318,7 @@ class TimeLineChart internal constructor(
       if (jsVisibleValueAxes.size == 1 && jsVisibleValueAxes[0] == -1) {
         //Special handling: "-1" results in all value axis visible
         val styleConfigurationsSize = jsStyle.decimalDataSeriesStyles?.size ?: 0
-        this.configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { max(styleConfigurationsSize, this.configuration.historyConfiguration.decimalDataSeriesCount) }
+        this.configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.indices { max(styleConfigurationsSize, this.configuration.historyConfiguration.decimalDataSeriesCount.value) }
       } else {
         this.configuration.requestedVisibleValueAxesIndices = DecimalDataSeriesIndexProvider.forList(jsVisibleValueAxes.toList().map { DecimalDataSeriesIndex(it) })
       }

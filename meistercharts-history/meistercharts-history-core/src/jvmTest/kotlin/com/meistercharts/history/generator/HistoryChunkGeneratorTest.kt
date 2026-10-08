@@ -34,6 +34,9 @@ import it.neckar.open.test.utils.RandomWithSeed
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 import kotlin.time.Duration.Companion.seconds
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 
 /**
  *
@@ -66,8 +69,8 @@ class HistoryChunkGeneratorTest {
 
     val historyConfiguration = historyChunkGenerator.historyConfiguration
 
-    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(0)
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(3)
+    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(0))
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(3))
     assertThat(historyConfiguration.enumConfiguration.getEnum(EnumDataSeriesIndex.one)).isEqualTo(HistoryEnum.Boolean)
 
 
@@ -132,7 +135,7 @@ class HistoryChunkGeneratorTest {
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(1), TimestampIndex(124))).isEqualTo(ReferenceEntryId(27945))
     assertThat(chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(124))).isEqualTo(ReferenceEntryId(69906))
 
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(3)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(3))
     assertThat(chunk.timeStampsCount).isEqualTo(600)
 
     assertThat((chunk.referenceEntriesDataMap as DefaultReferenceEntriesDataMap).entries.size).isEqualTo(1_690)

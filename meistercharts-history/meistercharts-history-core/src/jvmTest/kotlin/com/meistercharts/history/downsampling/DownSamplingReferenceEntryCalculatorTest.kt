@@ -17,11 +17,14 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DefaultReferenceEntriesDataMap
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.InMemoryHistoryStorage
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
@@ -42,7 +45,7 @@ import org.junit.jupiter.api.Test
 class DownSamplingReferenceEntryCalculatorTest {
   @Test
   fun testIt() {
-    val calculator = DownSamplingCalculator(0, 0, 1)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(0), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(1))
 
     calculator.addReferenceEntrySample(
       newReferenceEntries = intArrayOf(7),
@@ -74,9 +77,9 @@ class DownSamplingReferenceEntryCalculatorTest {
         }
       })
 
-    assertThat(historyChunkGenerator.historyConfiguration.decimalDataSeriesCount).isEqualTo(0)
-    assertThat(historyChunkGenerator.historyConfiguration.enumDataSeriesCount).isEqualTo(0)
-    assertThat(historyChunkGenerator.historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(1)
+    assertThat(historyChunkGenerator.historyConfiguration.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(0))
+    assertThat(historyChunkGenerator.historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
+    assertThat(historyChunkGenerator.historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(1))
 
 
     val recordedChunkLarge = historyChunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)

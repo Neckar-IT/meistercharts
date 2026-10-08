@@ -16,7 +16,9 @@
 package com.meistercharts.history.impl
 
 import com.meistercharts.annotations.Domain
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumOrdinal
@@ -26,6 +28,7 @@ import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
 import com.meistercharts.history.ReferenceEntriesDataMap
 import com.meistercharts.history.ReferenceEntryData
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
@@ -142,25 +145,25 @@ data class HistoryValues(
    */
   val totalDataSeriesCount: Int
     get() {
-      return decimalDataSeriesCount + enumDataSeriesCount + referenceEntryDataSeriesCount
+      return decimalDataSeriesCount.value + enumDataSeriesCount.value + referenceEntryDataSeriesCount.value
     }
 
   /**
    * The amount of data series with decimal values
    */
-  val decimalDataSeriesCount: Int
+  val decimalDataSeriesCount: DecimalDataSeriesCount
     get() {
-      return decimalHistoryValues.dataSeriesCount
+      return DecimalDataSeriesCount(decimalHistoryValues.dataSeriesCount)
     }
 
-  val enumDataSeriesCount: Int
+  val enumDataSeriesCount: EnumDataSeriesCount
     get() {
-      return enumHistoryValues.dataSeriesCount
+      return EnumDataSeriesCount(enumHistoryValues.dataSeriesCount)
     }
 
-  val referenceEntryDataSeriesCount: Int
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount
     get() {
-      return referenceEntryHistoryValues.dataSeriesCount
+      return ReferenceEntryDataSeriesCount(referenceEntryHistoryValues.dataSeriesCount)
     }
 
   val timeStampsCount: Int
@@ -284,7 +287,7 @@ data class HistoryValues(
    */
   @Deprecated("No longer needed?")
   fun calculateDecimalStartIndex(timeStampIndex: TimestampIndex): Int {
-    return calculateStartIndex(decimalDataSeriesCount, timeStampIndex)
+    return calculateStartIndex(decimalDataSeriesCount.value, timeStampIndex)
   }
 
   /**
@@ -293,7 +296,7 @@ data class HistoryValues(
    */
   @Deprecated("No longer needed?")
   fun calculateEnumStartIndex(timeStampIndex: TimestampIndex): Int {
-    return calculateStartIndex(enumDataSeriesCount, timeStampIndex)
+    return calculateStartIndex(enumDataSeriesCount.value, timeStampIndex)
   }
 
   fun hasDecimalMinMaxValues(): Boolean {
@@ -361,15 +364,15 @@ data class HistoryValues(
    * Returns true if the values at the given timestamp index are still pending
    */
   fun isPending(timeStampIndex: TimestampIndex): Boolean {
-    if (decimalDataSeriesCount > 0) {
+    if (decimalDataSeriesCount.value > 0) {
       return getDecimalValue(DecimalDataSeriesIndex.zero, timeStampIndex).isPending()
     }
 
-    if (enumDataSeriesCount > 0) {
+    if (enumDataSeriesCount.value > 0) {
       return getEnumValue(EnumDataSeriesIndex.zero, timeStampIndex).isPending()
     }
 
-    if (referenceEntryDataSeriesCount > 0) {
+    if (referenceEntryDataSeriesCount.value > 0) {
       return getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, timeStampIndex).isPending()
     }
 

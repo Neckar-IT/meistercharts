@@ -187,6 +187,9 @@ inline val PluginDependenciesSpec.backupSchedule: PluginDependencySpec
 inline val PluginDependenciesSpec.delivery: PluginDependencySpec
   get() = id(Plugins.delivery)
 
+inline val PluginDependenciesSpec.productsCatalog: PluginDependencySpec
+  get() = id(Plugins.productsCatalog)
+
 inline val PluginDependenciesSpec.hostDeclaration: PluginDependencySpec
   get() = id(Plugins.hostDeclaration)
 

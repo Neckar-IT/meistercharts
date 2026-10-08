@@ -59,7 +59,7 @@ class HistoryAccessApiTest {
       val bucket = it[0]
       val chunk = bucket.chunk
 
-      assertThat(chunk.decimalDataSeriesCount).isEqualTo(1)
+      assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(1))
       assertThat(chunk.isEmpty()).isFalse()
 
       assertThat(bucket.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(0))).isEqualTo(770.0)
@@ -112,7 +112,7 @@ class HistoryAccessApiTest {
       it[0].let { bucket ->
         val chunk = bucket.chunk
 
-        assertThat(chunk.decimalDataSeriesCount).isEqualTo(1)
+        assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(1))
         assertThat(chunk.timeStampsCount).isEqualTo(1)
         assertThat(chunk.isEmpty()).isFalse()
 
@@ -122,7 +122,7 @@ class HistoryAccessApiTest {
       it[1].let { bucket ->
         val chunk = bucket.chunk
 
-        assertThat(chunk.decimalDataSeriesCount).isEqualTo(1)
+        assertThat(chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(1))
         assertThat(chunk.timeStampsCount).isEqualTo(1)
         assertThat(chunk.isEmpty()).isFalse()
 

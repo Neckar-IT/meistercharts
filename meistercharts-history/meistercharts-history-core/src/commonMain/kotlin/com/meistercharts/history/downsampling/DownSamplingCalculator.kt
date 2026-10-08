@@ -16,13 +16,16 @@
 package com.meistercharts.history.downsampling
 
 import com.meistercharts.annotations.Domain
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumOrdinalInt
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.HistoryEnumSetInt
 import com.meistercharts.history.MayBeNoValueOrPending
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryDifferentIdsCountInt
@@ -56,16 +59,16 @@ class DownSamplingCalculator(
   /**
    * How many decimal data series are supported
    */
-  val decimalDataSeriesCount: Int,
+  val decimalDataSeriesCount: DecimalDataSeriesCount,
   /**
    * How many enum data series are supported
    */
-  val enumDataSeriesCount: Int,
+  val enumDataSeriesCount: EnumDataSeriesCount,
 
   /**
    * How many reference entry data series are supported
    */
-  val referenceEntryDataSeriesCount: Int,
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount,
 ) {
 
   //
@@ -75,17 +78,17 @@ class DownSamplingCalculator(
   /**
    * Contains the current average for each data series.
    */
-  private val averages: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount) { HistoryChunk.Pending }
+  private val averages: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount.value) { HistoryChunk.Pending }
 
   /**
    * The current min value for each data series
    */
-  private val minValues: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount) { HistoryChunk.Pending }
+  private val minValues: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount.value) { HistoryChunk.Pending }
 
   /**
    * The current max value for each data series
    */
-  private val maxValues: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount) { HistoryChunk.Pending }
+  private val maxValues: @Domain DoubleArray = DoubleArray(decimalDataSeriesCount.value) { HistoryChunk.Pending }
 
   /**
    * The current count of added samples for each data series. These are required to be able to update the average correctly.
@@ -96,7 +99,7 @@ class DownSamplingCalculator(
    * Temperature and distance are measured. The distance is invalid (the sensor could not measure a value) - while the temperature is valid.
    * When calculating the averages, NoValue is ignored for the distance average calculation.
    */
-  private val averageCalculationCounts: IntArray = IntArray(decimalDataSeriesCount) { 0 }
+  private val averageCalculationCounts: IntArray = IntArray(decimalDataSeriesCount.value) { 0 }
 
 
   //
@@ -106,31 +109,31 @@ class DownSamplingCalculator(
   /**
    * A bit set that contains the union of all enum options
    */
-  private val enumUnionValues: @HistoryEnumSetInt IntArray = IntArray(enumDataSeriesCount) { HistoryEnumSet.PendingAsInt }
+  private val enumUnionValues: @HistoryEnumSetInt IntArray = IntArray(enumDataSeriesCount.value) { HistoryEnumSet.PendingAsInt }
 
   /**
    * Contains the *ordinal* counters to identify which ordinal has been active the most time
    * The array contains a counter for each enum data series
    */
-  private val enumMostTimeOrdinalCounters: @HistoryEnumOrdinalInt Array<HistoryEnumOrdinalCounter> = Array(enumDataSeriesCount) { HistoryEnumOrdinalCounter() }
+  private val enumMostTimeOrdinalCounters: @HistoryEnumOrdinalInt Array<HistoryEnumOrdinalCounter> = Array(enumDataSeriesCount.value) { HistoryEnumOrdinalCounter() }
 
   /**
    * The current no-value-state ([HistoryChunk.NoValue]) for each data series.
    * If at least one entry with [HistoryChunk.NoValue] has been added, this array contains true at the corresponding position
    */
-  private val containsNoValueDecimal: BooleanArray = BooleanArray(decimalDataSeriesCount)
+  private val containsNoValueDecimal: BooleanArray = BooleanArray(decimalDataSeriesCount.value)
 
   /**
    * The current no-value-state ([HistoryEnumSet.NoValue]) for each data series.
    * If at least one entry with [HistoryEnumSet.NoValue] has been added, this array contains true at the corresponding position
    */
-  private val containsNoValueEnum: BooleanArray = BooleanArray(enumDataSeriesCount)
+  private val containsNoValueEnum: BooleanArray = BooleanArray(enumDataSeriesCount.value)
 
   /**
    * The current no-value-state for each reference entry data series.
    * If at least one entry with [ReferenceEntryId.NoValue] has been added, this array contains true at the corresponding position.
    */
-  private val containsNoValueReferenceEntry: BooleanArray = BooleanArray(referenceEntryDataSeriesCount)
+  private val containsNoValueReferenceEntry: BooleanArray = BooleanArray(referenceEntryDataSeriesCount.value)
 
   //
   //Fields for down sampling of reference entries
@@ -139,12 +142,12 @@ class DownSamplingCalculator(
   /**
    * Contains the counters for the most of the time entries
    */
-  private val referenceEntryCounters: @ReferenceEntryIdInt Array<ReferenceEntryCounter> = Array(referenceEntryDataSeriesCount) { ReferenceEntryCounter() }
+  private val referenceEntryCounters: @ReferenceEntryIdInt Array<ReferenceEntryCounter> = Array(referenceEntryDataSeriesCount.value) { ReferenceEntryCounter() }
 
   /**
    * Contains the bit set representing the union of all enum options for the statuses of a reference entry
    */
-  private val referenceEntryStatusesUnionValues: @HistoryEnumSetInt IntArray = IntArray(referenceEntryDataSeriesCount) { HistoryEnumSet.PendingAsInt }
+  private val referenceEntryStatusesUnionValues: @HistoryEnumSetInt IntArray = IntArray(referenceEntryDataSeriesCount.value) { HistoryEnumSet.PendingAsInt }
 
   /**
    * Returns the number of entries for the given data series index that have been used

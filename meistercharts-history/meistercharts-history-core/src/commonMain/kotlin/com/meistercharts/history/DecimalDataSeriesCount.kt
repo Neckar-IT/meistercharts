@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meistercharts.history.rest
+package com.meistercharts.history
+
+import kotlin.jvm.JvmInline
 
 /**
- * Request history data.
- *
- * ATTENTION: Currently the data for all data series is requested. There is not
- * way to query only some data series.
- *
+ * The number of data series for *decimal* values.
  */
-@Deprecated("Necessary???")
-data class HistoryQuery(
-  val queryRange: QueryRange,
-  //, val ids: List<DataSeriesId>
-)
+@JvmInline
+value class DecimalDataSeriesCount(val value: Int) {
+  override fun toString(): String {
+    return value.toString()
+  }
+}

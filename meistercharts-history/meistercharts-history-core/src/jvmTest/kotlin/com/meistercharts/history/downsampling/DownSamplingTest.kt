@@ -17,7 +17,9 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryBucket
 import com.meistercharts.history.HistoryBucketDescriptor
@@ -399,8 +401,8 @@ class DownSamplingTest {
     })
 
     assertThat(bucket.chunk.isEmpty()).isFalse()
-    assertThat(bucket.chunk.decimalDataSeriesCount).isEqualTo(3)
-    assertThat(bucket.chunk.enumDataSeriesCount).isEqualTo(0)
+    assertThat(bucket.chunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
+    assertThat(bucket.chunk.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
     assertThat(bucket.bucketRange.distance).isEqualTo(1.0)
     assertThat(bucket.bucketRange.entriesCount).isEqualTo(100)
     assertThat(bucket.bucketRange.duration).isEqualTo(100.0)

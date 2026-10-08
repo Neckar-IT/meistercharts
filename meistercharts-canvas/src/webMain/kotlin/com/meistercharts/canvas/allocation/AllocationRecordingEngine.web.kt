@@ -16,7 +16,7 @@
 package com.meistercharts.canvas.allocation
 
 /**
- * JS implementation - always inert.
+ * Web implementation (JS, Wasm) - always inert.
  *
  * The browser offers no generic hook to observe allocations by type at runtime, so recording is not
  * supported. [mode] can still be set (the interactive toggle is cross platform), but [currentReport]
@@ -30,6 +30,6 @@ actual object AllocationRecordingEngine {
   }
 
   actual fun reset() {
-    //Nothing to reset: no recording ever happens on JS, so no state is accumulated.
+    //Nothing to reset: no recording ever happens in the browser, so no state is accumulated.
   }
 }

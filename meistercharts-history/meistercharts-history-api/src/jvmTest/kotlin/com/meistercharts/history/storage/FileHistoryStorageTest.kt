@@ -35,6 +35,8 @@ import kotlinx.serialization.json.Json
 
 import org.junit.jupiter.api.*
 import java.io.File
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
 
 @WithTempFiles
 class FileHistoryStorageTest {
@@ -116,8 +118,8 @@ class FileHistoryStorageTest {
     val incomingChunk = incomingBucket?.chunk
 
     if (incomingChunk != null) {
-      assertThat(incomingChunk.decimalDataSeriesCount).isEqualTo(3)
-      assertThat(incomingChunk.enumDataSeriesCount).isEqualTo(0)
+      assertThat(incomingChunk.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
+      assertThat(incomingChunk.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
 
       assertThat(incomingChunk.timeStampsCount).isEqualTo(500)
 

@@ -933,7 +933,7 @@ class TimeLineChartGestalt
       val historyEnumPaintingProperties = historyEnumLayer.paintingVariables()
       val layout = historyEnumPaintingProperties.stripesLayout
 
-      configuration.actualVisibleEnumSeriesIndices.fastForEachIndexed(maxSize = configuration.historyConfiguration.enumDataSeriesCount) { visibleSeriesIndex, dataSeriesIndex ->
+      configuration.actualVisibleEnumSeriesIndices.fastForEachIndexed(maxSize = configuration.historyConfiguration.enumDataSeriesCount.value) { visibleSeriesIndex, dataSeriesIndex ->
         @MayBeNoValueOrPending val valueAtCrossWire: HistoryEnumSet = searchResult.chunk.getEnumValue(dataSeriesIndex, searchResult.timeStampIndex)
         if (valueAtCrossWire.isNoValue() || valueAtCrossWire.isPending()) {
           //Skip no value
@@ -1370,7 +1370,7 @@ class TimeLineChartGestalt
      * Respects the current decimal data series count.
      */
     val actualVisibleValueAxesIndices: DecimalDataSeriesIndexProvider = ::requestedVisibleValueAxesIndices.atMost {
-      configuration.historyConfiguration.decimalDataSeriesCount
+      configuration.historyConfiguration.decimalDataSeriesCount.value
     }
 
     /**
@@ -1396,14 +1396,14 @@ class TimeLineChartGestalt
      * The actual visible decimal series indices - respects the current history configuration
      */
     val actualVisibleDecimalSeriesIndices: DecimalDataSeriesIndexProvider = ::requestedVisibleDecimalSeriesIndices.atMost {
-      configuration.historyConfiguration.decimalDataSeriesCount
+      configuration.historyConfiguration.decimalDataSeriesCount.value
     }
 
     /**
      * Shows all lines even if the history configuration changes later on.
      */
     fun showAllDecimalSeries() {
-      requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { configuration.historyConfiguration.decimalDataSeriesCount }
+      requestedVisibleDecimalSeriesIndices = DecimalDataSeriesIndexProvider.indices { configuration.historyConfiguration.decimalDataSeriesCount.value }
     }
 
     /**
@@ -1420,21 +1420,21 @@ class TimeLineChartGestalt
       get
 
     val actualVisibleEnumSeriesIndices: EnumDataSeriesIndexProvider = ::requestVisibleEnumSeriesIndices.atMost {
-      configuration.historyConfiguration.enumDataSeriesCount
+      configuration.historyConfiguration.enumDataSeriesCount.value
     }
 
     /**
      * Shows all stripes - even if the history configuration is changed later
      */
     fun showAllEnumSeries() {
-      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { configuration.historyConfiguration.enumDataSeriesCount }
+      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { configuration.historyConfiguration.enumDataSeriesCount.value }
     }
 
     /**
      * Shows at most the given number of enum series
      */
     fun showEnumSeriesAtMost(maxCount: Int) {
-      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { maxCount.coerceAtMost(configuration.historyConfiguration.enumDataSeriesCount) }
+      requestVisibleEnumSeriesIndices = EnumDataSeriesIndexProvider.indices { maxCount.coerceAtMost(configuration.historyConfiguration.enumDataSeriesCount.value) }
     }
 
     /**
@@ -1687,7 +1687,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     Easing.inOutBack,
   )
 
-  val decimalValueGenerators = configuration.historyConfiguration.decimalDataSeriesCount.fastMap { decimalDataSeriesIndex ->
+  val decimalValueGenerators = configuration.historyConfiguration.decimalDataSeriesCount.value.fastMap { decimalDataSeriesIndex ->
     TimeBasedValueGeneratorBuilder {
       val dataSeriesValueRange = configuration.lineValueRanges.valueAt(decimalDataSeriesIndex) as LinearValueRange
       startValue = dataSeriesValueRange.center() + (random.nextDouble() - 0.5).coerceAtMost(0.2).coerceAtLeast(-0.2) * dataSeriesValueRange.delta
@@ -1705,7 +1705,7 @@ fun TimeLineChartGestalt.setUpDemo(historyStorage: WritableHistoryStorage): Disp
     EnumValueGenerator.weighted(listOf(0.49, 0.5, 0.01), 7.seconds),
   )
 
-  val referenceEntryGenerators: List<ReferenceEntryGenerator> = configuration.historyConfiguration.referenceEntryDataSeriesCount.fastMap {
+  val referenceEntryGenerators: List<ReferenceEntryGenerator> = configuration.historyConfiguration.referenceEntryDataSeriesCount.value.fastMap {
     ReferenceEntryGenerator.random()
   }
 

@@ -31,12 +31,12 @@ class HistoryConfigurationTest {
       decimalDataSeries(DataSeriesId(9), TextKey.simple("Pressure 3"))
     }
 
-    assertThat(config.decimalDataSeriesCount).isEqualTo(3)
+    assertThat(config.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
   }
 
   @Test
   fun testCreation() {
-    val historyConfiguration = historyConfiguration(3, 2, 0, decimalDataSeriesInitializer = fun HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) {
+    val historyConfiguration = historyConfiguration(DecimalDataSeriesCount(3), EnumDataSeriesCount(2), ReferenceEntryDataSeriesCount(0), decimalDataSeriesInitializer = fun HistoryConfigurationBuilder.(dataSeriesIndex: DecimalDataSeriesIndex) {
       val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
       decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
     }, enumDataSeriesInitializer = fun HistoryConfigurationBuilder.(dataSeriesIndex: EnumDataSeriesIndex) {
@@ -44,17 +44,17 @@ class HistoryConfigurationTest {
       enumDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryEnum.Boolean)
     }) { }
 
-    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(3)
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(2)
+    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(2))
     assertThat(historyConfiguration.totalDataSeriesCount).isEqualTo(5)
   }
 
   @Test
   fun testReferenceEntry() {
     val historyConfiguration = historyConfiguration(
-      decimalDataSeriesCount = 3,
-      enumDataSeriesCount = 2,
-      referenceEntrySeriesCount = 4,
+      decimalDataSeriesCount = DecimalDataSeriesCount(3),
+      enumDataSeriesCount = EnumDataSeriesCount(2),
+      referenceEntrySeriesCount = ReferenceEntryDataSeriesCount(4),
       decimalDataSeriesInitializer = { dataSeriesIndex ->
         val dataSeriesId = DataSeriesId(dataSeriesIndex.value * 100)
         decimalDataSeries(dataSeriesId, TextKey.simple("DS.$dataSeriesId"), HistoryUnit.None)
@@ -69,9 +69,9 @@ class HistoryConfigurationTest {
       }
     )
 
-    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(3)
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(2)
-    assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(3))
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(2))
+    assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
 
     assertThat(historyConfiguration.totalDataSeriesCount).isEqualTo(3 + 2 + 4)
   }

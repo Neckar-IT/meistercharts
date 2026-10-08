@@ -15,11 +15,14 @@
  */
 package com.meistercharts.history.generator
 
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryEnumSet
 import com.meistercharts.history.ReferenceEntriesDataMap
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryId
 import com.meistercharts.history.SamplingPeriod
@@ -99,7 +102,7 @@ class HistoryChunkGenerator(
     referenceEntryGenerators: List<ReferenceEntryGenerator>,
     referenceEntryStatusProvider: (referenceEntryId: ReferenceEntryId, millis: @ms Double) -> HistoryEnumSet = { _, _ -> HistoryEnumSet.NoValue },
 
-    historyConfiguration: HistoryConfiguration = createDefaultHistoryConfiguration(decimalValueGenerators.size, enumValueGenerators.size, referenceEntryGenerators.size),
+    historyConfiguration: HistoryConfiguration = createDefaultHistoryConfiguration(DecimalDataSeriesCount(decimalValueGenerators.size), EnumDataSeriesCount(enumValueGenerators.size), ReferenceEntryDataSeriesCount(referenceEntryGenerators.size)),
   ) : this(
     historyStorage = historyStorage,
     samplingPeriod = samplingPeriod,
@@ -112,26 +115,26 @@ class HistoryChunkGenerator(
 
     historyConfiguration = historyConfiguration,
   ) {
-    require(decimalValueGenerators.size == historyConfiguration.decimalDataSeriesCount) {
+    require(decimalValueGenerators.size == historyConfiguration.decimalDataSeriesCount.value) {
       "Invalid decimal value generators size. Was ${decimalValueGenerators.size} but require ${historyConfiguration.decimalDataSeriesCount}"
     }
-    require(enumValueGenerators.size == historyConfiguration.enumDataSeriesCount) {
+    require(enumValueGenerators.size == historyConfiguration.enumDataSeriesCount.value) {
       "Invalid enum value generators size. Was ${enumValueGenerators.size} but require ${historyConfiguration.enumDataSeriesCount}"
     }
-    require(referenceEntryGenerators.size == historyConfiguration.referenceEntryDataSeriesCount) {
+    require(referenceEntryGenerators.size == historyConfiguration.referenceEntryDataSeriesCount.value) {
       "Invalid reference entry value generators size. Was ${referenceEntryGenerators.size} but require ${historyConfiguration.referenceEntryDataSeriesCount}"
     }
 
     lastCreatedTimeStamp = nowMillis() //set initial time to now - helps with creation of initial data when using a virtual now provider
   }
 
-  val decimalDataSeriesCount: Int
+  val decimalDataSeriesCount: DecimalDataSeriesCount
     get() = historyConfiguration.decimalDataSeriesCount
 
-  val enumDataSeriesCount: Int
+  val enumDataSeriesCount: EnumDataSeriesCount
     get() = historyConfiguration.enumDataSeriesCount
 
-  val referenceEntryDataSeriesCount: Int
+  val referenceEntryDataSeriesCount: ReferenceEntryDataSeriesCount
     get() = historyConfiguration.referenceEntryDataSeriesCount
 
 

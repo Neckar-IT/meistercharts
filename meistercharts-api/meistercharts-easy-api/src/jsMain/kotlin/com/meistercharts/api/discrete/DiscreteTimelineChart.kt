@@ -126,7 +126,7 @@ class DiscreteTimelineChart internal constructor(
 
     val historyConfiguration = gestalt.configuration.historyConfiguration()
 
-    if (historyConfiguration.referenceEntryDataSeriesCount == 0) {
+    if (historyConfiguration.referenceEntryDataSeriesCount.value == 0) {
       logger.debug("Skip setting history since the history configuration is empty")
       return
     }

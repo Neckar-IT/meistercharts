@@ -38,13 +38,16 @@ import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 
 /**
  * Returns true if this is an interface.
  *
- * Not implemented in Kotlin at the moment: https://youtrack.jetbrains.com/issue/KT-17661/KClass-doesnt-have-isInterface-and-isEnum
+ * KClass has no isInterface, so the Java class answers.
+ *
+ * workaround: until=2027-04-01 dependency=libs:kotlin verified=2.4.20 upstream=https://youtrack.jetbrains.com/issue/KT-17661
  */
 val KClass<*>.isInterface: Boolean get() = this.java.isInterface
 
@@ -186,11 +189,17 @@ fun KClass<*>.hasSealedSuperType(): Boolean {
 }
 
 /**
- * Returns the class of the type
- * Throws an exception if the classifier is null
+ * The class of the type. Throws if the classifier is a type parameter or missing.
  */
 fun KType.asKClass(): KClass<*> {
-  return this.classifier.requireNotNull() as KClass<*>
+  return findKClass().requireNotNull { "<$this> has no class as classifier" }
+}
+
+/**
+ * The class of the type, or null if the classifier is a type parameter or missing.
+ */
+fun KType.findKClass(): KClass<*>? {
+  return this.classifier as? KClass<*>
 }
 
 /**
@@ -241,6 +250,16 @@ fun <T : Any> KClass<T>.getAllSealedSubclasses(): List<KClass<out T>> {
 }
 
 /**
+ * The `object` instance of every subclass [getAllSealedSubclasses] returns; throws if this class is not sealed or a
+ * subclass is not an `object`.
+ */
+fun <T : Any> KClass<T>.getAllSealedObjectInstances(): List<T> {
+  return getAllSealedSubclasses().map { subclass ->
+    subclass.objectInstance.requireNotNull { "Every subclass of <$qualifiedName> must be an object but <${subclass.qualifiedName}> is not" }
+  }
+}
+
+/**
  * Returns the sealed interface for this class.
  * Throws an exception if the sealed interface is not found
  */
@@ -285,6 +304,13 @@ inline fun <reified SuperType : Any> KClass<*>.findSupertype(): KType? {
   return supertypes.firstOrNull {
     it.classifier == SuperType::class
   }
+}
+
+/**
+ * The direct supertype [SuperType]; throws if this class has none.
+ */
+inline fun <reified SuperType : Any> KClass<*>.getSupertype(): KType {
+  return findSupertype<SuperType>().requireNotNull { "<$qualifiedName> has no direct supertype <${SuperType::class.qualifiedName}>" }
 }
 
 /**
@@ -350,12 +376,6 @@ fun <T : Any> T.getPropertyValueForced(propertyName: String): Any? {
   return property.getValueForced(this)
 }
 
-fun <T : Any> T.findPropertyValueForced(propertyName: String): Any? {
-  val clazz = this::class
-  val property = clazz.findProperty(propertyName) ?: return null
-  return property.getValueForced(this)
-}
-
 /**
  * Finds the property for the given name.
  * Returns null if no property is found.
@@ -405,6 +425,23 @@ fun KType.isValueClass(): Boolean {
   return this.asKClass().isValue
 }
 
+/**
+ * The type a value class wraps: the type of the single parameter of its primary constructor. Throws for any other class.
+ */
+fun KClass<*>.valueClassWrappedType(): KType {
+  require(isValue) { "<$qualifiedName> is not a value class" }
+  val parameters: List<KParameter> = primaryConstructor.requireNotNull { "Value class <$qualifiedName> has no primary constructor" }.parameters
+  require(parameters.size == 1) { "Value class <$qualifiedName> must have exactly one primary constructor parameter but has ${parameters.size}" }
+  return parameters.single().type
+}
+
+/**
+ * The parameter names of the primary constructor; empty for a class without one, such as an interface.
+ */
+fun KClass<*>.primaryConstructorParameterNames(): Set<String> {
+  return primaryConstructor?.parameters.orEmpty().mapNotNull { it.name }.toSet()
+}
+
 fun KType.isEnum(): Boolean = this.asKClass().isEnum()
 fun KType.isObject(): Boolean = this.asKClass().isObject
 fun KType.isInterface(): Boolean = this.asKClass().isInterface
@@ -425,7 +462,7 @@ fun KType.getSimpleTypeName(): String {
   val hasGenerics = rawName.contains("<") || rawName.contains(">")
 
   return if (hasGenerics) {
-    val base = (classifier as KClass<*>).simpleNameWithEnclosing
+    val base = asKClass().simpleNameWithEnclosing
     val genericsPart = rawName
       .substringBetween("<", ">")
       .split(",")
@@ -436,7 +473,7 @@ fun KType.getSimpleTypeName(): String {
       }
     "$base<$genericsPart>"
   } else {
-    (classifier as KClass<*>).simpleNameWithEnclosing
+    asKClass().simpleNameWithEnclosing
   }
 }
 

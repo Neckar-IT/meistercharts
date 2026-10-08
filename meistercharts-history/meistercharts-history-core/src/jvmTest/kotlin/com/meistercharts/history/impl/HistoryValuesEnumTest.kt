@@ -18,10 +18,13 @@ package com.meistercharts.history.impl
 import assertk.*
 import assertk.assertions.*
 import com.meistercharts.history.DataSeriesId
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnum
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.historyConfiguration
 import com.meistercharts.history.isEnumSetNoValue
@@ -56,7 +59,7 @@ class HistoryValuesEnumTest {
       enumDataSeries(DataSeriesId(17), "Enum1", enumColor)
     }
 
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(1)
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(1))
 
     val chunk = historyChunk(historyConfiguration) {
       addValues(
@@ -115,7 +118,7 @@ class HistoryValuesEnumTest {
       enumDataSeries(DataSeriesId(19), "Enum3", enumColor)
     }
 
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(3)
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(3))
 
     assertThat(historyConfiguration.enumConfiguration.getDataSeriesIndex(DataSeriesId(17)).value).isEqualTo(0)
     assertThat(historyConfiguration.enumConfiguration.getDataSeriesIndex(DataSeriesId(18)).value).isEqualTo(1)
@@ -128,7 +131,7 @@ class HistoryValuesEnumTest {
 
   @Test
   fun testEnumValues() {
-    val historyValues = historyValues(0, 3, 0, 2, RecordingType.Measured) {
+    val historyValues = historyValues(DecimalDataSeriesCount(0), EnumDataSeriesCount(3), ReferenceEntryDataSeriesCount(0), 2, RecordingType.Measured) {
       setEnumValuesForTimestamp(TimestampIndex(0), intArrayOf(7, 1, 2))
       setEnumValuesForTimestamp(TimestampIndex(1), intArrayOf(1, 1, 1))
     }
@@ -161,7 +164,7 @@ class HistoryValuesEnumTest {
     }
 
     assertThat(historyChunk.timeStampsCount).isEqualTo(2)
-    assertThat(historyChunk.enumDataSeriesCount).isEqualTo(3)
+    assertThat(historyChunk.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(3))
 
     assertThat(historyChunk.getEnumValue(EnumDataSeriesIndex.zero, TimestampIndex(0)).bitset).isEqualTo(4)
     assertThat(historyChunk.getEnumValue(EnumDataSeriesIndex.one, TimestampIndex(0)).bitset).isEqualTo(1)

@@ -18,8 +18,7 @@ package com.meistercharts.canvas.allocation
 /**
  * Controls how allocations are recorded during a paint.
  *
- * Recording only produces data on the JVM and only if the process was started with the
- * java-allocation-instrumenter agent (`-javaagent:...`). Without the agent - and on JS - the
+ * Recording only produces data on the JVM, sampled through JFR; in the browser (JS, Wasm) the
  * recording is inert (empty reports), see [AllocationRecordingEngine].
  */
 enum class AllocationRecordingMode {

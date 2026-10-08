@@ -28,15 +28,16 @@
 package it.neckar.open.kotlin.serializers
 
 import it.neckar.open.kotlin.lang.asKClass
-import it.neckar.open.kotlin.lang.findPropertyValueForced
 import it.neckar.open.kotlin.lang.getAllSealedSubclasses
 import it.neckar.open.kotlin.lang.isSealed
+import it.neckar.open.kotlin.lang.requireNotNull
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
+import kotlinx.serialization.serializerOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.allSupertypes
@@ -57,10 +58,17 @@ actual fun <S : Any> KClass<S>.verifyPlausibleForSerialization() {
 }
 
 /**
- * Returns the serial name from the [SerialName] annotation.
+ * The serial name from the [SerialName] annotation, or null if the class carries none.
  */
-fun <T : Any> KClass<T>.findSerialName(): String? {
+fun KClass<*>.findSerialName(): String? {
   return findAnnotations(SerialName::class).firstOrNull()?.value
+}
+
+/**
+ * The serial name from the [SerialName] annotation. Throws if the class carries none.
+ */
+fun KClass<*>.getSerialName(): String {
+  return findSerialName().requireNotNull { "<$qualifiedName> carries no @SerialName" }
 }
 
 /**
@@ -74,20 +82,18 @@ fun Enum<*>.findSerialName(): String? {
 }
 
 /**
- * Returns all discriminator values from the @SerialName annotations of all sealed subclasses.
- * This is useful for creating filter parameters that match discriminator values of a sealed class hierarchy.
- *
- * @return List of serial names from all concrete (non-interface) subclasses
- * @throws IllegalArgumentException if this class is not sealed
- * @throws IllegalStateException if any subclass is missing a @SerialName annotation
+ * The [SerialName] of this enum constant, else [Enum.name]: the name the serializer of a `@Serializable` enum writes.
+ */
+fun Enum<*>.serialName(): String {
+  return findSerialName() ?: name
+}
+
+/**
+ * The [SerialName] of every subclass [getAllSealedSubclasses] returns: the values the class discriminator writes.
+ * Throws if this class is not sealed or a subclass carries no [SerialName].
  */
 fun <T : Any> KClass<T>.getDiscriminatorValues(): List<String> {
-  require(isSealed) { "[$this] must be sealed to extract discriminator values" }
-
-  return getAllSealedSubclasses()
-    .map { subclass ->
-      subclass.findSerialName() ?: throw IllegalStateException("Subclass [${subclass.simpleName}] of sealed type [$simpleName] is missing @SerialName annotation")
-    }
+  return getAllSealedSubclasses().map { it.getSerialName() }
 }
 
 /**
@@ -96,17 +102,6 @@ fun <T : Any> KClass<T>.getDiscriminatorValues(): List<String> {
 fun KClass<*>.isAnnotatedAsSerializable(): Boolean {
   return findAnnotations(kotlinx.serialization.Serializable::class).isNotEmpty()
 }
-
-/**
- * Returns the type descriptors for the type parameters of this descriptor - if there are any
- */
-fun SerialDescriptor.getTypeDescriptors(): List<SerialDescriptor> {
-  val typeParameterDescriptors = this.findPropertyValueForced("typeParameterDescriptors") ?: return emptyList()
-
-  @Suppress("UNCHECKED_CAST")
-  return (typeParameterDescriptors as Array<SerialDescriptor>).toList()
-}
-
 
 /**
  * Tries to find the serial descriptor for the given type (includes generic types)
@@ -126,4 +121,11 @@ fun KType.serializer(): KSerializer<*> {
   } catch (e: SerializationException) {
     throw IllegalStateException("Cannot find serializer for type ${this}", e)
   }
+}
+
+/**
+ * The serializer for the given type (includes generic types), or null if kotlinx.serialization has none for it.
+ */
+fun KType.serializerOrNull(): KSerializer<*>? {
+  return emptySerializersModule.serializerOrNull(this)
 }

@@ -38,6 +38,9 @@ import it.neckar.open.test.utils.isEqualComparingLinesTrim
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFails
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 
 /**
  */
@@ -56,9 +59,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
       referenceEntryDataSeries(DataSeriesId(13), TextKey("temp3", "Temperature 3"), statusEnum = HistoryEnum.Active)
     }
 
-    assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(4)
-    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(0)
-    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(0)
+    assertThat(historyConfiguration.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
+    assertThat(historyConfiguration.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(0))
+    assertThat(historyConfiguration.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
 
     chunk = historyConfiguration.chunk() {
       addReferenceEntryValues(timestamp = 1001.0, 1, 10, 100, 1000, referenceEntryStatuses = intArrayOf(0b1, 0b01, 0b001, 0b0001))
@@ -240,9 +243,9 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
     chunk.withoutValues().let {
       assertThat(it.timeStampsCount).isEqualTo(0)
-      assertThat(it.decimalDataSeriesCount).isEqualTo(0)
-      assertThat(it.enumDataSeriesCount).isEqualTo(0)
-      assertThat(it.referenceEntryDataSeriesCount).isEqualTo(4)
+      assertThat(it.decimalDataSeriesCount).isEqualTo(DecimalDataSeriesCount(0))
+      assertThat(it.enumDataSeriesCount).isEqualTo(EnumDataSeriesCount(0))
+      assertThat(it.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     }
   }
 
@@ -337,7 +340,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testMergePartially() {
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     val other = historyConfiguration.chunk() {
@@ -402,7 +405,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testMerge() {
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     val other = historyConfiguration.chunk() {
@@ -484,7 +487,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testAddValues2() {
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     assertThat(chunk.timestampCenter(TimestampIndex(0))).isEqualTo(1001.0)
@@ -509,10 +512,10 @@ class HistoryChunkOnlyReferenceEntriesTest {
       additionalReferenceEntryDataList = emptySet()
     )
 
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
-    assertThat(newChunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(newChunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(newChunk.timeStampsCount).isEqualTo(4)
 
     assertThat(newChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(0))).isEqualToReferenceEntryId(1)
@@ -525,7 +528,7 @@ class HistoryChunkOnlyReferenceEntriesTest {
 
   @Test
   fun testAddValues() {
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
     assertThat(chunk.timestampCenter(TimestampIndex(0))).isEqualTo(1001.0)
@@ -550,10 +553,10 @@ class HistoryChunkOnlyReferenceEntriesTest {
       additionalReferenceEntryDataList = emptySet()
     )
 
-    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(chunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(chunk.timeStampsCount).isEqualTo(3)
 
-    assertThat(newChunk.referenceEntryDataSeriesCount).isEqualTo(4)
+    assertThat(newChunk.referenceEntryDataSeriesCount).isEqualTo(ReferenceEntryDataSeriesCount(4))
     assertThat(newChunk.timeStampsCount).isEqualTo(4)
 
     assertThat(newChunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex(0), TimestampIndex(0))).isEqualToReferenceEntryId(1)

@@ -17,10 +17,13 @@ package com.meistercharts.history.downsampling
 
 import assertk.*
 import assertk.assertions.*
+import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.DecimalDataSeriesIndex
+import com.meistercharts.history.EnumDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesIndex
 import com.meistercharts.history.HistoryEnumOrdinal
 import com.meistercharts.history.HistoryEnumSet
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.ReferenceEntryDataSeriesIndex
 import com.meistercharts.history.ReferenceEntryDifferentIdsCount
 import com.meistercharts.history.ReferenceEntryId
@@ -38,7 +41,7 @@ import org.junit.jupiter.api.Test
 class DownSamplingCalculatorTest {
   @Test
   fun testInitialValues() {
-    val calculator = DownSamplingCalculator(2, 1, 3)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(2), EnumDataSeriesCount(1), ReferenceEntryDataSeriesCount(3))
 
     assertThat(calculator.averageValue(DecimalDataSeriesIndex.zero)).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex.one)).isEqualTo(HistoryChunk.Pending)
@@ -60,7 +63,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testMinMax2() {
-    val calculator = DownSamplingCalculator(7, 0, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
@@ -78,7 +81,7 @@ class DownSamplingCalculatorTest {
     val dataSeriesIndex1 = EnumDataSeriesIndex(1)
     val dataSeriesIndex2 = EnumDataSeriesIndex(2)
 
-    val calculator = DownSamplingCalculator(0, 3, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(0), EnumDataSeriesCount(3), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.enumValue(dataSeriesIndex0)).isEnumSetPending()
     assertThat(calculator.enumValue(dataSeriesIndex1)).isEnumSetPending()
     assertThat(calculator.enumValue(dataSeriesIndex2)).isEnumSetPending()
@@ -103,7 +106,7 @@ class DownSamplingCalculatorTest {
     val dataSeriesIndex1 = EnumDataSeriesIndex(1)
     val dataSeriesIndex2 = EnumDataSeriesIndex(2)
 
-    val calculator = DownSamplingCalculator(0, 3, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(0), EnumDataSeriesCount(3), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.enumOrdinalMostTime(dataSeriesIndex0)).isEqualTo(HistoryEnumOrdinal.Pending)
     assertThat(calculator.enumOrdinalMostTime(dataSeriesIndex1)).isEqualTo(HistoryEnumOrdinal.Pending)
     assertThat(calculator.enumOrdinalMostTime(dataSeriesIndex2)).isEqualTo(HistoryEnumOrdinal.Pending)
@@ -124,7 +127,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testOverFlow() {
-    val calculator = DownSamplingCalculator(2, 0, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(2), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0))
 
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(0)
@@ -143,7 +146,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testNan2() {
-    val calculator = DownSamplingCalculator(2, 0, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(2), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(1))).isEqualTo(0)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
@@ -172,7 +175,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testMultipleCounts() {
-    val calculator = DownSamplingCalculator(2, 0, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(2), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(1))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
@@ -186,7 +189,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   internal fun testMultipleEntries() {
-    val calculator = DownSamplingCalculator(3, 4, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(3), EnumDataSeriesCount(4), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
     assertThat(calculator.averageValues()).containsExactly(HistoryChunk.Pending, HistoryChunk.Pending, HistoryChunk.Pending)
@@ -197,7 +200,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testMinMax() {
-    val calculator = DownSamplingCalculator(7, 0, 0)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(7), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(0))
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
@@ -218,7 +221,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testReset() {
-    val calculator = DownSamplingCalculator(7, 2, 3)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(7), EnumDataSeriesCount(2), ReferenceEntryDataSeriesCount(3))
     assertThat(calculator.averageValue(DecimalDataSeriesIndex(0))).isEqualTo(HistoryChunk.Pending)
     assertThat(calculator.averageCalculationCount(DecimalDataSeriesIndex(0))).isEqualTo(0)
 
@@ -249,7 +252,7 @@ class DownSamplingCalculatorTest {
 
   @Test
   fun testRefEntryCountFirstLayer() {
-    val calculator = DownSamplingCalculator(0, 0, 2)
+    val calculator = DownSamplingCalculator(DecimalDataSeriesCount(0), EnumDataSeriesCount(0), ReferenceEntryDataSeriesCount(2))
 
     assertThat(calculator.referenceEntryDifferentIdsCount(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryDifferentIdsCount.Pending)
     assertThat(calculator.referenceEntryMostOfTheTime(ReferenceEntryDataSeriesIndex.zero)).isEqualTo(ReferenceEntryId.Pending)

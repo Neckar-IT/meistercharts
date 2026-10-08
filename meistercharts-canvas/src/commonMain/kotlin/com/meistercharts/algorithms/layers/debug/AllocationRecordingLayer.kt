@@ -32,7 +32,7 @@ import it.neckar.open.unit.si.ms
  * Overlay that shows the current allocation recording report (top allocated types per layer).
  *
  * Only paints while [AllocationRecordingEngine.mode] is a recording mode - toggle it with
- * Ctrl+Shift+Alt+A ([ToggleDebuggingModeLayer]). JVM only; on JS the report is always empty.
+ * Ctrl+Shift+Alt+A ([ToggleDebuggingModeLayer]). JVM only; in the browser (JS, Wasm) the report is always empty.
  *
  * The report is fetched and its text rebuilt at most every [Configuration.updateRate], the frames in
  * between reuse the last text.

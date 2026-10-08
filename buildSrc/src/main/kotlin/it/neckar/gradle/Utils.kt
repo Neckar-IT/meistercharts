@@ -791,7 +791,8 @@ fun KotlinJsTargetDsl.executableJsApplication(
   }
 
 
-  //Workaround for problem when executing `gradle build jsBrowserDevelopmentWebpack` since Gradle 8.3
+  // workaround: until=2027-04-01 dependency=gradle:wrapper verified=9.7.1
+  // `gradle build jsBrowserDevelopmentWebpack` fails since Gradle 8.3 unless the webpack and compile-sync tasks are ordered explicitly.
   run {
     val tasks = project.tasks
 

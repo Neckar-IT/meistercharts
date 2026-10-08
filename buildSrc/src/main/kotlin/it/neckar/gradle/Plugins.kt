@@ -284,6 +284,9 @@ object Plugins {
    */
   const val delivery: String = "it.neckar.delivery"
 
+  /** The root build only: `generateProductsCatalog` writes `products-catalog.yaml` and `60-catalog.ssh_config`, `verifyProductsCatalog` compares them. */
+  const val productsCatalog: String = "it.neckar.products-catalog"
+
   /**
    * A machine with its kind, inventory source and SSH access:
    * `hostDeclaration { kind = HostKind.Server; inventory = HostInventorySource.HetznerCloud; … }`.

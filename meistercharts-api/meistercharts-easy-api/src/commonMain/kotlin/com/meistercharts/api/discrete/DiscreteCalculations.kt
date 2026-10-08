@@ -57,7 +57,7 @@ fun DiscreteTimelineChartData.toChunk(historyConfiguration: HistoryConfiguration
     return null
   }
 
-  check(historyConfiguration.referenceEntryDataSeriesCount == seriesDataCount) {
+  check(historyConfiguration.referenceEntryDataSeriesCount.value == seriesDataCount) {
     "The number of reference entry data series in the history configuration (${historyConfiguration.referenceEntryDataSeriesCount}) does not match the number of data series in the data (${seriesDataCount})"
   }
 

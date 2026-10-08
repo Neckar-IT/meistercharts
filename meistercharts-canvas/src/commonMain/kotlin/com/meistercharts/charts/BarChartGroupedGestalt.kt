@@ -453,7 +453,7 @@ class BarChartGroupedGestalt constructor(
          */
         val categoryAxisSide = categoryAxisLayer.configuration.side
         val valueAxisSide = valueAxisLayer.configuration.side
-        // FIXME: this is a workaround as long as the group-painter does not take the content area into account.
+        // TODO: the group painter ignores the content area, so the threshold side is kept out of the clip here.
         val thresholdSide = if (configuration.orientation.categoryOrientation == Orientation.Vertical) Side.Right else Side.Top
 
         contentViewportMargin.only(categoryAxisSide, valueAxisSide, thresholdSide)

@@ -25,20 +25,60 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.open.i18n.next.backend.http
-
-
-// workaround: until=2027-04-01 dependency=external:i18next-http-backend upstream=https://github.com/i18next/next-i18next/issues/1319
-// Kotlin/JS resolves i18next-http-backend only through its cjs entry.
-@JsModule("i18next-http-backend/cjs")
-@JsNonModule
-external val I18nextHttpBackend: Backend
+package it.neckar.open.kotlin.serializers
 
 /**
- * See [https://github.com/i18next/i18next-http-backend/blob/master/lib/index.js]
+ * What the serializer of a class writes, by the kind of its descriptor; [NoSerializer] when kotlinx.serialization
+ * finds no serializer for the class.
  */
-external interface Backend {
-  fun reload()
+enum class SerializedForm {
+  /**
+   * A single value of a `PrimitiveKind`: number, boolean, char or string.
+   */
+  Primitive,
 
-  //TODO add more functions
+  /**
+   * One constant of an enum class.
+   */
+  Enum,
+
+  /**
+   * A structure with named elements.
+   */
+  Class,
+
+  /**
+   * An `object` without elements.
+   */
+  Object,
+
+  /**
+   * A list of elements.
+   */
+  List,
+
+  /**
+   * Key-value pairs.
+   */
+  Map,
+
+  /**
+   * The parent of a sealed hierarchy: the serializer of the subclass writes the value, tagged with its discriminator.
+   */
+  Sealed,
+
+  /**
+   * An abstract class or interface whose subclasses a `SerializersModule` registers.
+   */
+  Open,
+
+  /**
+   * Whatever the `SerializersModule` registers for the class at runtime.
+   */
+  Contextual,
+
+  /**
+   * kotlinx.serialization has no serializer for the class, as for an interface like `List` without type arguments.
+   */
+  NoSerializer,
 }

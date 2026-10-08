@@ -15,6 +15,9 @@
  */
 package com.meistercharts.history.impl.io
 
+import com.meistercharts.history.DecimalDataSeriesCount
+import com.meistercharts.history.EnumDataSeriesCount
+import com.meistercharts.history.ReferenceEntryDataSeriesCount
 import com.meistercharts.history.TimestampIndex
 import com.meistercharts.history.impl.RecordingType
 import com.meistercharts.history.impl.historyValues
@@ -26,7 +29,7 @@ import org.junit.jupiter.api.Test
 class HistoryValuesSerializationTest {
   @Test
   fun testMeasured() {
-    val historyValues = historyValues(2, 1, 1, 3, RecordingType.Measured) {
+    val historyValues = historyValues(DecimalDataSeriesCount(2), EnumDataSeriesCount(1), ReferenceEntryDataSeriesCount(1), 3, RecordingType.Measured) {
       setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(0),
         decimalValues = doubleArrayOf(1.0, 2.0),
@@ -91,7 +94,7 @@ class HistoryValuesSerializationTest {
 
   @Test
   fun testCalculated() {
-    val historyValues = historyValues(2, 1, 1, 3, RecordingType.Calculated) {
+    val historyValues = historyValues(DecimalDataSeriesCount(2), EnumDataSeriesCount(1), ReferenceEntryDataSeriesCount(1), 3, RecordingType.Calculated) {
       setAllValuesForTimestamp(
         timestampIndex = TimestampIndex(0),
         decimalValues = doubleArrayOf(1.0, 2.0),
