@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import it.neckar.open.http.Url
 import it.neckar.open.kotlin.serializers.JsonInclusionStrategy
 import it.neckar.open.kotlin.serializers.JsonPath
+import it.neckar.open.kotlin.serializers.jsonTypeName
 import it.neckar.open.resources.getResourceSafe
 import it.neckar.open.test.utils.JsonUtils
 import it.neckar.open.test.utils.isOpenApiEqualTo as isOpenApiEqualToString
@@ -138,7 +139,7 @@ fun JsonObject.atPath(path: JsonPath): JsonObject {
     val element = current[key]
       ?: error("Missing key \"$key\" at path [${traversed.joinToString("][") { "\"$it\"" }}]. Available keys: ${current.keys}")
     current = element as? JsonObject
-      ?: error("Expected JsonObject at path [${(traversed + key).joinToString("][") { "\"$it\"" }}] but was ${element::class.simpleName}: $element")
+      ?: error("Expected JsonObject at path [${(traversed + key).joinToString("][") { "\"$it\"" }}] but was ${element.jsonTypeName()}")
     traversed.add(key)
   }
   return current
@@ -152,30 +153,30 @@ fun Assert<JsonElement>.asString(): Assert<String> = transform("asString") { ele
   when (element) {
     is JsonNull -> error("Expected JsonPrimitive but was JsonNull")
     is JsonPrimitive -> element.content
-    else -> error("Expected JsonPrimitive but was ${element::class.simpleName}: $element")
+    else -> error("Expected JsonPrimitive but was ${element.jsonTypeName()}")
   }
 }
 
 /**
- * Extracts the integer value of a [JsonPrimitive]. Fails when the primitive is not convertible
- * to [Int] (non-numeric string, floating-point, JsonNull, …).
+ * Extracts the integer value of a [JsonPrimitive]. Fails when the primitive is no whole number: a
+ * string, numeric or not, floating-point, JsonNull.
  */
 fun Assert<JsonElement>.asInt(): Assert<Int> = transform("asInt") { element ->
   val primitive = element as? JsonPrimitive
-    ?: error("Expected JsonPrimitive but was ${element::class.simpleName}: $element")
-  primitive.intOrNull
-    ?: error("Expected JsonPrimitive convertible to Int but was: $element")
+    ?: error("Expected JsonPrimitive but was ${element.jsonTypeName()}")
+  primitive.takeUnless { it.isString }?.intOrNull
+    ?: error("Expected JsonPrimitive convertible to Int but was ${primitive.jsonTypeName()}")
 }
 
 /**
- * Extracts the boolean value of a [JsonPrimitive]. Fails when the primitive is not exactly
- * `true` or `false` (string content, number, JsonNull, …).
+ * Extracts the boolean value of a [JsonPrimitive]. Fails when the primitive is not exactly the
+ * literal `true` or `false`: a string, also `"true"`, a number, JsonNull.
  */
 fun Assert<JsonElement>.asBoolean(): Assert<Boolean> = transform("asBoolean") { element ->
   val primitive = element as? JsonPrimitive
-    ?: error("Expected JsonPrimitive but was ${element::class.simpleName}: $element")
-  primitive.booleanOrNull
-    ?: error("Expected JsonPrimitive convertible to Boolean but was: $element")
+    ?: error("Expected JsonPrimitive but was ${element.jsonTypeName()}")
+  primitive.takeUnless { it.isString }?.booleanOrNull
+    ?: error("Expected JsonPrimitive convertible to Boolean but was ${primitive.jsonTypeName()}")
 }
 
 /**
@@ -185,23 +186,25 @@ fun Assert<JsonElement>.asBoolean(): Assert<Boolean> = transform("asBoolean") { 
 fun Assert<JsonObject>.requiredKeys(): Assert<List<String>> = transform("requiredKeys") { obj ->
   val required = obj["required"] ?: return@transform emptyList()
   val array = required as? JsonArray
-    ?: error("Expected 'required' to be a JsonArray but was ${required::class.simpleName}: $required")
+    ?: error("Expected 'required' to be a JsonArray but was ${required.jsonTypeName()}")
   array.map { element ->
-    val primitive = element as? JsonPrimitive
-      ?: error("Expected string in 'required' but was ${element::class.simpleName}: $element")
-    primitive.content
+    (element as? JsonPrimitive)?.takeIf { it.isString }?.content
+      ?: error("Expected string in 'required' but was ${element.jsonTypeName()}")
   }
 }
 
 /**
  * Extracts `${'$'}ref` values from an `allOf`/`oneOf`/`anyOf` array. Inline schemas without a
  * `${'$'}ref` are skipped — the result contains only the actual references in declaration order.
+ * An element that is no schema object and a `${'$'}ref` that is no string fail.
  */
 fun Assert<JsonArray>.refs(): Assert<List<String>> = transform("refs") { array ->
   array.mapNotNull { element ->
-    val obj = element as? JsonObject ?: return@mapNotNull null
+    val obj = element as? JsonObject
+      ?: error("Expected JsonObject as schema in the array but was ${element.jsonTypeName()}")
     val refElement = obj[$$"$ref"] ?: return@mapNotNull null
-    (refElement as? JsonPrimitive)?.content
+    (refElement as? JsonPrimitive)?.takeIf { it.isString }?.content
+      ?: error($$"Expected a string as '$ref' but was $${refElement.jsonTypeName()}")
   }
 }
 

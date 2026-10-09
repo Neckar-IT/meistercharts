@@ -791,8 +791,6 @@ fun KotlinJsTargetDsl.executableJsApplication(
   }
 
 
-  // workaround: until=2027-04-01 dependency=gradle:wrapper verified=9.7.1
-  // `gradle build jsBrowserDevelopmentWebpack` fails since Gradle 8.3 unless the webpack and compile-sync tasks are ordered explicitly.
   run {
     val tasks = project.tasks
 
@@ -803,10 +801,9 @@ fun KotlinJsTargetDsl.executableJsApplication(
     val jsProductionExecutableCompileSync = tasks.findByName("jsProductionExecutableCompileSync").requireNotNull()
     val jsBrowserDevelopmentRun = tasks.findByName("jsBrowserDevelopmentRun").requireNotNull() as KotlinWebpack
 
-    //Find KSP extension and add dependencies between tasks - if necessary
-    project.fixKspTaskDependencies()
-
-    //Add these artificial deps to work around issue
+    // workaround: dependency=gradle:wrapper:9.7.1 verified-on=2026-10-07
+    //Both compile sync tasks write build/js/packages/<module>/kotlin, so each webpack task reads the output of the other
+    //variant too. Without these edges Gradle 9.7.1 fails `build jsBrowserDevelopmentWebpack` with "Property has implicit dependency".
     jsBrowserProductionWebpack.mustRunAfter(jsDevelopmentExecutableCompileSync)
     jsBrowserProductionWebpack.mustRunAfter(jsProductionExecutableCompileSync)
 
@@ -818,13 +815,11 @@ fun KotlinJsTargetDsl.executableJsApplication(
 
     webpackModuleType.configure(jsBrowserProductionWebpack, varName)
     webpackModuleTypeForDev.configure(jsBrowserDevelopmentWebpack, varName)
-    webpackModuleTypeForDev.configure(jsBrowserDevelopmentWebpack, varName)
   }
 
   project.tasks.withType<KotlinJsCompile>().configureEach {
     compilerOptions {
       target = jsTargetType.value
-      //target = "es2015"
     }
   }
 
@@ -1128,7 +1123,7 @@ fun Long.formatAsMegaBytes(): String {
  */
 val Project.branch: String
   get() {
-    return rootProject.extra.get("branch") as? String ?: throw IllegalStateException("Could not find branch in extra")
+    return rootProject.extra.get(BuildVariables.Branch) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.Branch} in extra")
   }
 
 /**
@@ -1180,12 +1175,18 @@ val Project.onMainBranch: Boolean
  */
 val Project.gitHash: String
   get() {
-    return rootProject.extra.get("gitHash") as? String ?: throw IllegalStateException("Could not find gitHash in extra")
+    return rootProject.extra.get(BuildVariables.GitHash) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitHash} in extra")
   }
 
 val Project.gitHashShort: String
   get() {
-    return rootProject.extra.get("gitHashShort") as? String ?: throw IllegalStateException("Could not find gitHashShort in extra")
+    return rootProject.extra.get(BuildVariables.GitHashShort) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitHashShort} in extra")
+  }
+
+/** `git describe` of the current commit (set by `BuildVariablesPlugin`) */
+val Project.gitDescribe: String
+  get() {
+    return rootProject.extra.get(BuildVariables.GitDescribe) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitDescribe} in extra")
   }
 
 /**
@@ -1193,15 +1194,14 @@ val Project.gitHashShort: String
  */
 val Project.gitCommitDateTime: String
   get() {
-    return rootProject.extra.get("gitCommitDateTime") as? String ?: throw IllegalStateException("Could not find gitCommitDateTime in extra")
+    return rootProject.extra.get(BuildVariables.GitCommitDateTime) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitCommitDateTime} in extra")
   }
 /**
  * The date of the last commit, day only — the date component of [gitCommitDateTime].
  *
  * Deliberately not a build date: a wall-clock timestamp would make identical inputs produce
  * different outputs and churn the build cache at midnight (#792). Stable per commit, so it is safe
- * to embed into manifests, expanded resources and generated .env files. Defined in the root
- * build.gradle.kts.
+ * to embed into manifests, expanded resources and generated .env files. Set by `BuildVariablesPlugin`.
  *
  * There is no build date anywhere in this repository, and no room for one: `SOURCE_DATE_EPOCH=1`
  * clamps every timestamp in a built image to 1970-01-01, which is what makes the build reproducible.
@@ -1210,23 +1210,23 @@ val Project.gitCommitDateTime: String
  */
 val Project.gitCommitDate: String
   get() {
-    return rootProject.extra.get("gitCommitDate") as? String ?: throw IllegalStateException("Could not find gitCommitDate in extra")
+    return rootProject.extra.get(BuildVariables.GitCommitDate) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitCommitDate} in extra")
   }
 
 /**
- * Whether the build runs inside an IDE (initialized in /build.gradle.kts)
+ * Whether the build runs inside an IDE (set by `BuildVariablesPlugin`)
  */
 val Project.inIde: Boolean
   get() {
-    return rootProject.extra.get("inIde") as? Boolean ?: throw IllegalStateException("Could not find inIde in extra")
+    return rootProject.extra.get(BuildVariables.InIde) as? Boolean ?: throw IllegalStateException("Could not find ${BuildVariables.InIde} in extra")
   }
 
 /**
- * The CI information (initialized in /build.gradle.kts)
+ * The CI information (set by `BuildVariablesPlugin`)
  */
 val Project.ciInformation: GitlabCiInformation
   get() {
-    return rootProject.extra.get("ciInformation") as? GitlabCiInformation ?: throw IllegalStateException("Could not find ciInformation in extra")
+    return rootProject.extra.get(BuildVariables.CiInformation) as? GitlabCiInformation ?: throw IllegalStateException("Could not find ${BuildVariables.CiInformation} in extra")
   }
 
 /**
@@ -1280,7 +1280,7 @@ val Project.inContainer: Boolean
  */
 val Project.devContainerInformation: DevContainerInformation
   get() {
-    return rootProject.extra.get("devContainerInformation") as? DevContainerInformation ?: throw IllegalStateException("Could not find DevContainerInformation in extra")
+    return rootProject.extra.get(BuildVariables.DevContainerInformation) as? DevContainerInformation ?: throw IllegalStateException("Could not find ${BuildVariables.DevContainerInformation} in extra")
   }
 
 /**

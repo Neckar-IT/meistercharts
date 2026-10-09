@@ -25,14 +25,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package it.neckar.commons.kotlin.js.exception
+package it.neckar.open.annotations
 
+import kotlin.reflect.KClass
 
 /**
- * Returns true if this throwable has the magic message "Failed to fetch"
+ * Marks the REST super-interface of every view of one entity and names that entity, so a view
+ * leads to its domain class in one step. The OpenAPI document is unaffected by it.
  */
-fun Throwable.isFailToFetch(): Boolean {
-  return this is Error && this.message == FailToFetchErrorMessage
-}
-
-const val FailToFetchErrorMessage: String = "Failed to fetch"
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+@MustBeDocumented
+annotation class OpenApiEntityView(
+  /** The domain class of the entity; its `simpleName` is the entity name. */
+  val entity: KClass<*>,
+)

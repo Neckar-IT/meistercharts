@@ -54,6 +54,8 @@ import kotlinx.serialization.json.JsonPrimitive
  *   -> "<abrechnung.stand> holds a number"
  * ```
  */
+// The wrong type is the finding this function describes, so its text is the answer.
+@Suppress("UntypedValueSafeCast")
 fun JsonObject.describeAlong(path: JsonPath): String {
   var current: JsonElement = this
   val walked: MutableList<String> = mutableListOf()

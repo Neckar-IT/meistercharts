@@ -1,8 +1,8 @@
 package it.neckar.gradle
 
-import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
+import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.jvm.JvmComponentDependencies
 import org.gradle.api.provider.Provider
@@ -83,72 +83,74 @@ typealias CatalogLibrary = Provider<MinimalExternalModuleDependency>
  * The libraries the helpers below add; `verifyUnusedDependencies` accepts them unused from a helper,
  * because a standard library is not worth a declaration in every build script.
  */
-class StandardDependencies(libs: LibrariesForLibs) {
+class StandardDependencies(private val catalog: VersionCatalog) {
+  private fun library(alias: String): CatalogLibrary = catalog.library(alias)
+
   /**
    * Guice 7 reads `jakarta.inject` only. `javax.inject` stays until the modules under
    * `internal/closed/lizergy/` declare it themselves: https://git.neckar.it/neckarit/neckar-hub/-/issues/3398
    */
-  val annotations: List<CatalogLibrary> = listOf(libs.jsr305, libs.jakarta.inject.api, libs.javax.inject, libs.javax.annotation.api, libs.org.jetbrains.annotations)
+  val annotations: List<CatalogLibrary> = listOf(library("jsr305"), library("jakarta.inject.api"), library("javax.inject"), library("javax.annotation.api"), library("org.jetbrains.annotations"))
 
-  val kotlinJs: List<CatalogLibrary> = listOf(libs.kotlin.js)
+  val kotlinJs: List<CatalogLibrary> = listOf(library("kotlin.js"))
 
   val testCommon: List<CatalogLibrary> = listOf(
-    libs.kotlin.test.asProvider(),
-    libs.kotlin.test.common,
-    libs.kotlin.test.annotations.common,
-    libs.kotlin.reflect,
-    libs.kotlinx.coroutines.core,
-    libs.kotlinx.coroutines.test,
-    libs.assertk.asProvider(),
+    library("kotlin.test"),
+    library("kotlin.test.common"),
+    library("kotlin.test.annotations.common"),
+    library("kotlin.reflect"),
+    library("kotlinx.coroutines.core"),
+    library("kotlinx.coroutines.test"),
+    library("assertk"),
   )
 
-  val testJs: List<CatalogLibrary> = listOf(libs.kotlin.test.js)
+  val testJs: List<CatalogLibrary> = listOf(library("kotlin.test.js"))
 
   val testJvm: List<CatalogLibrary> = listOf(
-    libs.kotlin.test.junit5,
-    libs.junit.jupiter.api,
-    libs.junit.jupiter.engine,
-    libs.junit.jupiter.params,
-    libs.mockk,
-    libs.kotlinx.coroutines.debug,
-    libs.awaitility,
-    libs.logback.classic,
+    library("kotlin.test.junit5"),
+    library("junit.jupiter.api"),
+    library("junit.jupiter.engine"),
+    library("junit.jupiter.params"),
+    library("mockk"),
+    library("kotlinx.coroutines.debug"),
+    library("awaitility"),
+    library("logback.classic"),
   )
 
   val ktorClient: List<CatalogLibrary> = listOf(
-    libs.kotlinx.coroutines.core,
-    libs.ktor.client.core,
-    libs.ktor.client.json,
-    libs.ktor.client.serialization,
-    libs.ktor.client.logging,
-    libs.ktor.client.content.negotiation,
-    libs.ktor.serialization.kotlinx.asProvider(),
-    libs.ktor.serialization.kotlinx.json,
+    library("kotlinx.coroutines.core"),
+    library("ktor.client.core"),
+    library("ktor.client.json"),
+    library("ktor.client.serialization"),
+    library("ktor.client.logging"),
+    library("ktor.client.content.negotiation"),
+    library("ktor.serialization.kotlinx"),
+    library("ktor.serialization.kotlinx.json"),
   )
 
-  val ktorClientJvm: List<CatalogLibrary> = listOf(libs.ktor.client.okhttp)
+  val ktorClientJvm: List<CatalogLibrary> = listOf(library("ktor.client.okhttp"))
 
   /** Added to the test scope by every Ktor client helper, whatever scope the caller passes. */
-  val ktorClientTest: List<CatalogLibrary> = listOf(libs.ktor.client.mock)
+  val ktorClientTest: List<CatalogLibrary> = listOf(library("ktor.client.mock"))
 
   val ktorServer: List<CatalogLibrary> = listOf(
-    libs.ktor.server.core,
-    libs.ktor.server.netty,
-    libs.kotlinx.coroutines.core,
-    libs.ktor.server.asProvider(),
-    libs.ktor.server.websockets,
-    libs.ktor.server.sse,
-    libs.ktor.server.auth.asProvider(),
-    libs.ktor.server.metrics,
-    libs.ktor.server.conditional.headers,
-    libs.ktor.server.call.id,
-    libs.ktor.serialization.kotlinx.asProvider(),
-    libs.ktor.serialization.kotlinx.json,
-    libs.logback.classic,
+    library("ktor.server.core"),
+    library("ktor.server.netty"),
+    library("kotlinx.coroutines.core"),
+    library("ktor.server"),
+    library("ktor.server.websockets"),
+    library("ktor.server.sse"),
+    library("ktor.server.auth"),
+    library("ktor.server.metrics"),
+    library("ktor.server.conditional.headers"),
+    library("ktor.server.call.id"),
+    library("ktor.serialization.kotlinx"),
+    library("ktor.serialization.kotlinx.json"),
+    library("logback.classic"),
   )
 
   /** Added to the test scope by every Ktor server helper, whatever scope the caller passes. */
-  val ktorServerTest: List<CatalogLibrary> = listOf(libs.ktor.server.test.host)
+  val ktorServerTest: List<CatalogLibrary> = listOf(library("ktor.server.test.host"))
 
   /** Every list above; a library in several lists appears several times. */
   val all: List<CatalogLibrary> = (annotations + kotlinJs + testCommon + testJs + testJvm + ktorClient + ktorClientJvm + ktorClientTest + ktorServer + ktorServerTest)
@@ -158,7 +160,7 @@ class StandardDependencies(libs: LibrariesForLibs) {
  * The [StandardDependencies] from this project's version catalog `libs`; each call builds them anew.
  */
 fun Project.standardDependencies(): StandardDependencies {
-  return StandardDependencies(extensions.getByType(LibrariesForLibs::class.java))
+  return StandardDependencies(versionCatalog)
 }
 
 /**

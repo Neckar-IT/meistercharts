@@ -9,8 +9,8 @@ import org.gradle.api.provider.Provider
 /**
  * Provides access to the version catalog from build-logic Kotlin source code.
  *
- * In `.gradle.kts` scripts, use the `libs.*` accessors; `build-logic/core` may use them too (`LibrariesForLibs`).
- * In build-logic Kotlin source, `project.lib("alias")` works everywhere.
+ * In `.gradle.kts` scripts, use the `libs.*` accessors. Build-logic Kotlin source uses `project.lib("alias")`:
+ * the generated `LibrariesForLibs` of the consuming build is a different class than one compiled into the plugin.
  *
  * IMPORTANT: Do not name this `libs` — it would shadow the generated
  * type-safe accessors in `.gradle.kts` scripts.
@@ -23,8 +23,13 @@ val Project.versionCatalog: VersionCatalog
  * The alias uses the TOML notation with dashes (e.g., "ktor-client-core").
  */
 fun Project.lib(alias: String): Provider<MinimalExternalModuleDependency> {
-  return versionCatalog.findLibrary(alias).orElseThrow {
-    IllegalArgumentException("Library alias '$alias' not found in version catalog")
+  return versionCatalog.library(alias)
+}
+
+/** The library [alias] of this catalog; Gradle reads dashes and dots in an alias alike. */
+fun VersionCatalog.library(alias: String): Provider<MinimalExternalModuleDependency> {
+  return findLibrary(alias).orElseThrow {
+    IllegalArgumentException("Library alias '$alias' not found in version catalog $name")
   }
 }
 

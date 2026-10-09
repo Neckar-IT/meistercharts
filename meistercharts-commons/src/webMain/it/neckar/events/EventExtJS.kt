@@ -63,7 +63,7 @@ import org.w3c.dom.pointerevents.PointerEvent
  * The bindings declare timeStamp as Number: on JS a plain cast happens to work, but on Wasm the
  * external Number is not a Kotlin Double - the cast throws for every event.
  *
- * workaround: until=2027-04-01 dependency=libs:kotlin verified=2.4.20 upstream=https://youtrack.jetbrains.com/issue/KT-44194
+ * workaround: dependency=libs:kotlin:2.4.20 verified-on=2026-10-07 upstream=https://youtrack.jetbrains.com/issue/KT-44194
  */
 val Event.timeStampAsDoubleWorkaround: Double
   get() = timeStamp.toDouble()

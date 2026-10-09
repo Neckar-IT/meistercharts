@@ -28,7 +28,7 @@
 package it.neckar.open.i18n.next.backend.http
 
 
-// workaround: until=2027-04-01 dependency=external:i18next-http-backend upstream=https://github.com/i18next/next-i18next/issues/1319
+// workaround: dependency=external:i18next-http-backend verified-on=2026-10-07 upstream=https://github.com/i18next/next-i18next/issues/1319
 // Kotlin/JS resolves i18next-http-backend only through its cjs entry.
 @JsModule("i18next-http-backend/cjs")
 @JsNonModule

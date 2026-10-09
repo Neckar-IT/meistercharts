@@ -67,7 +67,7 @@ object KotlinSettings {
    * Compiler argument sources by Kotlin version (keep sorted by Kotlin version).
    *
    * Kotlin 2.4.x:
-   * - https://kotlinlang.org/docs/whatsnew-eap.html
+   * - https://kotlinlang.org/docs/whatsnew24.html
    *
    * Kotlin 2.3.x:
    * - https://github.com/JetBrains/kotlin/blob/v2.3.0/compiler/arguments/src/org/jetbrains/kotlin/arguments/description/CommonCompilerArguments.kt
@@ -119,12 +119,12 @@ object KotlinSettings {
     add("-Xconsistent-data-class-copy-visibility") // opt into the future default data-class copy() visibility — KT-11914
     add("-Xcontext-sensitive-resolution") // context-sensitive resolution (2.2)
     add("-Xname-based-destructuring=only-syntax") // name-based destructuring (2.3) — https://kotlinlang.org/docs/whatsnew2320.html
-    add("-Xexplicit-context-arguments") // explicit passing of context arguments via named-argument syntax (2.4) — https://kotlinlang.org/docs/whatsnew-eap.html
+    add("-Xexplicit-context-arguments") // explicit passing of context arguments via named-argument syntax (2.4) — https://kotlinlang.org/docs/whatsnew24.html
     add("-Xcollection-literals") // bracket-syntax `[]` collection literals (2.4)
     add("-Xintrinsic-const-evaluation") // IntrinsicConstEvaluation language feature (2.4)
     add("-Xlocal-type-aliases") // `typealias` inside function bodies (2.4) — enabled in #1944
 
-    // Not active — documented for reference. Status verified against the Kotlin 2.4.0 compiler (#1944).
+    // Not active — documented for reference. Status verified against language version 2.4.
     //
     // Already the DEFAULT at language version 2.4 — these language features are usable today WITHOUT any
     // flag; the flag only emits "is redundant for the current language version 2.4". Re-check on LV bumps:

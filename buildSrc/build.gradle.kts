@@ -39,10 +39,6 @@ afterEvaluate {
 
 
 dependencies {
-  // The type-safe accessors of `gradle/libs.versions.toml` (`LibrariesForLibs`) that the copied
-  // Dependencies.kt reads; Gradle has no API for them in plugin code (gradle/gradle#15383).
-  implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-
   implementation(libs.guava)
 
   implementation(libs.commons.compress)

@@ -234,9 +234,17 @@ private fun Char.isDigit(): Boolean {
   }
 }
 
+/** The option [name] as a string; null when it is unset. Any other type throws, naming the option and the JS type. */
+private fun stringOption(name: String, value: dynamic): String? {
+  if (value == null) {
+    return null
+  }
+  return value as? String ?: error("$name holds ${jsTypeOf(value)} instead of a string")
+}
+
 var Date.LocaleOptions.dateStyle: String?
   get() {
-    return asDynamic().dateStyle as? String
+    return stringOption("dateStyle", asDynamic().dateStyle)
   }
   set(value) {
     asDynamic().dateStyle = value
@@ -244,7 +252,7 @@ var Date.LocaleOptions.dateStyle: String?
 
 var Date.LocaleOptions.timeStyle: String?
   get() {
-    return asDynamic().timeStyle as? String
+    return stringOption("timeStyle", asDynamic().timeStyle)
   }
   set(value) {
     asDynamic().timeStyle = value

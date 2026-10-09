@@ -34,7 +34,7 @@ package it.neckar.open.version
  * Ktor templating or the nginx entrypoint) → `<meta name="gitHash">` / `<meta
  * name="gitCommitDateTime">` → [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node,
  * tests) resolve to the fallback without throwing: `globalThis` exists everywhere, `document` is
- * guarded.
+ * guarded. An injected value of another JS type than a string throws, naming its place.
  *
  * The meta tag is what the frontends write; the global remains first in the chain for the two
  * lizergy frontends, which still carry it in an inline script.
@@ -50,9 +50,19 @@ private fun findAppGitInfoValue(propertyKey: String): String? {
   if (appGitInfo == null) {
     return null
   }
-  //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
-  val value: String = appGitInfo[propertyKey] as? String ?: return null
+  val value: String = injectedString(appGitInfo[propertyKey], "globalThis.__APP_GIT_INFO__.$propertyKey") ?: return null
   return sanitizeInjectedValue(value)
+}
+
+/**
+ * [raw] as a static String, so Kotlin extensions apply (no smart cast on dynamic); null when it is
+ * undefined or null. Any other JS type throws, naming [place] and the type.
+ */
+private fun injectedString(raw: dynamic, place: String): String? {
+  if (raw == null) {
+    return null
+  }
+  return raw as? String ?: error("$place holds ${jsTypeOf(raw)} instead of a string")
 }
 
 /**
@@ -78,7 +88,6 @@ private fun findMetaValue(property: GitProperty): String? {
     return null
   }
 
-  //No smart cast on dynamic: bind to a static String before calling Kotlin extensions
-  val content: String = metaElement.getAttribute("content") as? String ?: return null
+  val content: String = injectedString(metaElement.getAttribute("content"), "<meta name=\"${property.propertyKey}\">") ?: return null
   return sanitizeInjectedValue(content)
 }

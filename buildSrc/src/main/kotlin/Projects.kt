@@ -19,17 +19,3 @@ object Projects : ProjectRoot() {
   val meistercharts_canvas: ConfiguredProject = multiplatform("meistercharts-canvas", ProjectRole.Library, Jvm, Js)
   val meistercharts_api_easy: ConfiguredProject = multiplatform("meistercharts-api:meistercharts-easy-api", ProjectRole.Library, Jvm, Js)
 }
-
-/**
- * The file the project at [path] is registered in; the copied MultiplatformTargets.kt names it in
- * its error messages.
- */
-fun registrationFile(@Suppress("UNUSED_PARAMETER") path: GradleProjectPath): String {
-  return "buildSrc/src/main/kotlin/Projects.kt"
-}
-
-/**
- * The expression a build script writes for this project: `Projects.findOrNull(":meistercharts-core")`.
- */
-val ConfiguredProject.accessor: String
-  get() = "Projects.findOrNull(\"$path\")"

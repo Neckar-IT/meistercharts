@@ -31,7 +31,7 @@ import kotlin.annotation.AnnotationTarget.CLASS
 
 /**
  * Marks a class at the boundary of a pricing or quote script: it builds the `@DataView` input the
- * script is called with, or calls the script.
+ * script is called with, calls the script, or turns its answer into domain types.
  *
  * Such a class lives in the domain package next to the domain classes it reads from, yet it handles
  * the script's wire types. The layer-separation rules of the `neckar-rules` ruleset treat it as

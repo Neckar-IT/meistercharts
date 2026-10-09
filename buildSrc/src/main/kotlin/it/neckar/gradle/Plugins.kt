@@ -134,10 +134,6 @@ object Plugins {
   const val verifyPnpmWorkspaceYaml: String = "it.neckar.repos.pnpm.verify-workspace-yaml"
   const val verifyPnpmWorkspaceDependencies: String = "it.neckar.repos.pnpm.verify-workspace-dependencies"
   const val verifyPnpmLockfilePeerVariants: String = "it.neckar.repos.pnpm.verify-lockfile-peer-variants"
-  @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
-  const val skipDistForApplication: String = "it.neckar.performance.skip-dist-for-application"
-  @Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
-  const val skipShadowDistZipForShadowPlugin: String = "it.neckar.performance.skip-shadow-dist-zip-for-shadow"
   const val disableDistTasks: String = "it.neckar.performance.disable-dist-tasks"
 
   /**
@@ -165,7 +161,6 @@ object Plugins {
    * and the Ktor service conventions (dependency backbone, Jib defaults, run-task port override).
    */
   const val ktorServiceApplication: String = "it.neckar.ktor-service-application"
-  const val generateIgnoreProjectSets: String = "it.neckar.generation.ignore-project-sets"
   const val generateTypesList: String = "it.neckar.generation.types-list"
   const val runDockerServices: String = "it.neckar.docker.services"
   const val ngrokTunnel: String = "it.neckar.ngrok-tunnel"
@@ -262,6 +257,9 @@ object Plugins {
    */
   const val deployment: String = "it.neckar.deployment"
 
+  /** The root build only: the deployment rules that read every module, from the images the jib modules push to `deployAllServices`. */
+  const val deploymentBuildRules: String = "it.neckar.deployment.build-rules"
+
   /**
    * The store of a service module, pulled once a day by `backups-host.neckar.it`:
    * `backup { daily(pullTime = LocalTime(3, 0), timeZone = TimeZone.of("Europe/Berlin")) }`.
@@ -284,8 +282,17 @@ object Plugins {
    */
   const val delivery: String = "it.neckar.delivery"
 
+  /** The root project of every build: the git and environment variables `gitHash`, `branch`, `ciInformation` and their siblings read. */
+  const val buildVariables: String = "it.neckar.build-variables"
+
+  /** The `settings.gradle.kts` of a project building on its own: the build logic on every build script classpath, the root build's conventions. */
+  const val standaloneSettings: String = "it.neckar.standalone-settings"
+
   /** The root build only: `generateProductsCatalog` writes `products-catalog.yaml` and `60-catalog.ssh_config`, `verifyProductsCatalog` compares them. */
   const val productsCatalog: String = "it.neckar.products-catalog"
+
+  /** The root build only: one task per `DeliveryConditions` entry answers it for `-Pproduct` and records the answer in `data/delivery-log`. */
+  const val deliveryConditions: String = "it.neckar.delivery-conditions"
 
   /**
    * A machine with its kind, inventory source and SSH access:

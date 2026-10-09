@@ -22,7 +22,8 @@ object ProjectConfiguration {
 
   /**
    * Declares the module's registered Kotlin targets and the shared setup around them — the same
-   * contract the monorepo's `configureMultiplatform` has, reduced to what this build needs.
+   * contract the monorepo's `configureMultiplatform` has, reduced to what this build needs: the checks of
+   * the declared targets against the registry (`verifyDeclaredTargets`, `verifyTargetSourceDirectories`) stay out.
    */
   fun configureMultiplatform(project: Project, configuredProject: ConfiguredProject) {
     with(project) {

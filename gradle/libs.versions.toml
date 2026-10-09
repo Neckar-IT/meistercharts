@@ -73,7 +73,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.14"
+aws-sdk-kotlin = "1.9.15"
 
 apache-poi = "5.5.1"
 
@@ -82,12 +82,6 @@ org-commonmark = "0.30.0"
 # BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
 org-bouncycastle = "1.86"
-
-# bcpkix has its own version because BouncyCastle patch releases are per-module: 1.85.2 published the
-# bcprov jars only, so bcpkix-jdk18on:1.85.2 does not exist on Maven Central. A shared version ref
-# would point bcpkix at a coordinate that cannot resolve. The two keys converge again on the next
-# full release; until then they move independently.
-org-bouncycastle-pkix = "1.86"
 
 ktor = "3.6.0"
 
@@ -179,7 +173,7 @@ clikt = "5.1.0"
 
 javafx = "25.0.4"
 
-netty = "4.2.18.Final"
+netty = "4.2.19.Final"
 
 rxkotlin = "2.4.0"
 
@@ -248,7 +242,7 @@ hamcrest = "org.hamcrest:hamcrest:3.0"
 
 measured = "io.nacular.measured:measured:0.5.0"
 
-# jackson-annotations 2.20.1 doesn't exist on Maven Central - use 2.20
+# jackson-annotations is published without a patch number since 2.20: 2.22, never 2.22.3
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.22" }
 
 guava = "com.google.guava:guava:33.7.2-jre"
@@ -322,7 +316,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.11"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.12"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -509,7 +503,7 @@ asm = "org.ow2.asm:asm:9.10.1"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
-bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "org-bouncycastle-pkix" }
+bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "org-bouncycastle" }
 
 commons-cli = "commons-cli:commons-cli:1.11.0"
 
@@ -672,7 +666,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "org-
 trove4j = "net.sf.trove4j:trove4j:3.0.3"
 
 
-# Gradle plugin dependencies (used in buildSrc/build.gradle.kts)
+# Gradle plugin dependencies (used in build-logic/core/build.gradle.kts and build-logic/plugins/build.gradle.kts)
 
 detekt-gradle-plugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "dev-detekt" }
 

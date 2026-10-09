@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.extra
 import org.gradle.process.ExecOutput
 
 /*
- * The subset of build-logic/projects' GradleProjectUtils.kt the standalone build uses. That file
+ * The subset of build-logic/core's GradleProjectUtils.kt the standalone build uses. That file
  * references monorepo projects and stays out of populateBuildSrc.
  */
 
@@ -18,8 +18,7 @@ fun Project.hasKotlinMultiplatformPlugin(): Boolean {
 val Project.gitCommit: String
   get() = rootProject.extra.get("gitCommit") as String
 
-val Project.gitDescribe: String
-  get() = rootProject.extra.get("gitDescribe") as String
+// gitDescribe comes with the copied Utils.kt.
 
 val Project.buildDateDay: String
   get() = rootProject.extra.get("buildDateDay") as String

@@ -2,8 +2,6 @@ package it.neckar.gradle
 
 import it.neckar.projects.ConfiguredProject
 import it.neckar.projects.KotlinTarget
-import it.neckar.projects.accessor
-import it.neckar.projects.registrationFile
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -111,7 +109,7 @@ fun Project.registerPrintSourceSetsTask() {
  * `wasmJs` is exempt: it is an opt-in target that only exists with `-PwasmJs=true`
  * (see [isWasmJsEnabled]), so its absence is expected rather than a defect.
  */
-fun Project.verifyDeclaredTargets(configuredProject: ConfiguredProject) {
+fun Project.verifyDeclaredTargets(configuredProject: ConfiguredProject, registration: ProjectRegistration) {
   afterEvaluate {
     val kotlinExtension = extensions.getByType(KotlinMultiplatformExtension::class.java)
 
@@ -127,8 +125,8 @@ fun Project.verifyDeclaredTargets(configuredProject: ConfiguredProject) {
         appendLine("Kotlin targets of $path deviate from its registration in the project registry.")
         appendLine("  registered: ${expectedTargetNames.joinToString(", ").ifEmpty { "<none>" }}")
         appendLine("  actual:     ${actualTargetNames.joinToString(", ").ifEmpty { "<none>" }}")
-        appendLine("A module build script must not declare a target. Register it instead in ${registrationFile(configuredProject.path)}:")
-        appendLine("  ${configuredProject.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", ${configuredProject.targets.joinToString(", ") { it.name }})")
+        appendLine("A module build script must not declare a target. Register it instead in ${registration.file}:")
+        appendLine("  ${registration.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", ${configuredProject.targets.joinToString(", ") { it.name }})")
       }
     }
   }
@@ -142,7 +140,7 @@ fun Project.verifyDeclaredTargets(configuredProject: ConfiguredProject) {
  * Intermediate source sets created by the default hierarchy template (`webMain`, `nativeMain`,
  * `appleMain`, …) are not targets and are therefore accepted.
  */
-fun Project.verifyTargetSourceDirectories(configuredProject: ConfiguredProject) {
+fun Project.verifyTargetSourceDirectories(configuredProject: ConfiguredProject, registration: ProjectRegistration) {
   val intermediateSourceSetNames = setOf("commonMain", "webMain", "nativeMain", "appleMain", "linuxMain", "mingwMain")
 
   val targetPrefixes = configuredProject.targets.map { it.mainSourceSetName }.toSet()
@@ -159,8 +157,8 @@ fun Project.verifyTargetSourceDirectories(configuredProject: ConfiguredProject) 
   require(unregistered.isEmpty()) {
     buildString {
       appendLine("$path has source directories for Kotlin targets it is not registered for: ${unregistered.joinToString(", ")}")
-      appendLine("Nothing compiles or analyses that code. Register the target in ${registrationFile(configuredProject.path)}:")
-      appendLine("  ${configuredProject.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", …)")
+      appendLine("Nothing compiles or analyses that code. Register the target in ${registration.file}:")
+      appendLine("  ${registration.accessor} = multiplatform(\"${configuredProject.relativePath.filePath}\", …)")
     }
   }
 }

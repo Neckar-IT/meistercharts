@@ -1,4 +1,5 @@
 import it.neckar.gradle.Plugins
+import it.neckar.gradle.RegistryPlugins
 import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
@@ -175,6 +176,9 @@ inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
 inline val PluginDependenciesSpec.deployment: PluginDependencySpec
   get() = id(Plugins.deployment)
 
+inline val PluginDependenciesSpec.deploymentBuildRules: PluginDependencySpec
+  get() = id(Plugins.deploymentBuildRules)
+
 inline val PluginDependenciesSpec.backup: PluginDependencySpec
   get() = id(Plugins.backup)
 
@@ -187,8 +191,14 @@ inline val PluginDependenciesSpec.backupSchedule: PluginDependencySpec
 inline val PluginDependenciesSpec.delivery: PluginDependencySpec
   get() = id(Plugins.delivery)
 
+inline val PluginDependenciesSpec.buildVariables: PluginDependencySpec
+  get() = id(Plugins.buildVariables)
+
 inline val PluginDependenciesSpec.productsCatalog: PluginDependencySpec
   get() = id(Plugins.productsCatalog)
+
+inline val PluginDependenciesSpec.deliveryConditions: PluginDependencySpec
+  get() = id(Plugins.deliveryConditions)
 
 inline val PluginDependenciesSpec.hostDeclaration: PluginDependencySpec
   get() = id(Plugins.hostDeclaration)
@@ -235,16 +245,6 @@ inline val PluginDependenciesSpec.verifyPnpmWorkspaceDependencies: PluginDepende
 inline val PluginDependenciesSpec.verifyPnpmLockfilePeerVariants: PluginDependencySpec
   get() = id(Plugins.verifyPnpmLockfilePeerVariants)
 
-@Suppress("DEPRECATION")
-@Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
-inline val PluginDependenciesSpec.skipDistForApplication: PluginDependencySpec
-  get() = id(Plugins.skipDistForApplication)
-
-@Suppress("DEPRECATION")
-@Deprecated("Use disableDistTasks instead", ReplaceWith("disableDistTasks"))
-inline val PluginDependenciesSpec.skipShadowDistZipForShadowPlugin: PluginDependencySpec
-  get() = id(Plugins.skipShadowDistZipForShadowPlugin)
-
 inline val PluginDependenciesSpec.disableDistTasks: PluginDependencySpec
   get() = id(Plugins.disableDistTasks)
 
@@ -255,7 +255,7 @@ inline val PluginDependenciesSpec.ktorServiceApplication: PluginDependencySpec
   get() = id(Plugins.ktorServiceApplication)
 
 inline val PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
-  get() = id(Plugins.generateIgnoreProjectSets)
+  get() = id(RegistryPlugins.generateIgnoreProjectSets)
 
 inline val PluginDependenciesSpec.generateTypesList: PluginDependencySpec
   get() = id(Plugins.generateTypesList)

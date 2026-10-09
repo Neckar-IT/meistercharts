@@ -1,6 +1,5 @@
 import it.neckar.gradle.DevContainerInformation
 import it.neckar.gradle.GitlabCiInformation
-import it.neckar.gradle.GradleContext
 import it.neckar.gradle.ProjectConfiguration
 import it.neckar.gradle.console
 import it.neckar.gradle.getCmdResult
@@ -9,8 +8,6 @@ import it.neckar.projects.Projects
 import java.time.Instant
 
 description = "meistercharts.com"
-
-GradleContext.initialize(gradle)
 
 
 plugins {
