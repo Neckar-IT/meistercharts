@@ -68,7 +68,7 @@ class AnsiConsole(val gradle: Gradle) {
     return if (plain) {
       content.toString()
     } else {
-      "$ESC${CSI}${color.foreground}m${content}$RESET"
+      "$Esc${Csi}${color.foreground}m${content}$Reset"
     }
   }
 
@@ -89,19 +89,19 @@ class AnsiConsole(val gradle: Gradle) {
     /**
      * Starts the ANSI code
      */
-    const val ESC: String = "\u001B"
+    const val Esc: String = "\u001B"
 
     /**
      * Control Sequence Introducer
      * Begins a control sequence
      * https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection
      */
-    const val CSI: String = "["
+    const val Csi: String = "["
 
     /**
      * Resets all ansi attributes
      */
-    const val RESET: String = "${ESC}${CSI}0m"
+    const val Reset: String = "${Esc}${Csi}0m"
   }
 }
 

@@ -128,17 +128,17 @@ sealed interface Url {
      */
     val localhostHttp: Absolute = absolute("http://localhost/")
 
-    val localhostHttp80: Absolute = localhostHttp(Port.HTTP)
+    val localhostHttp80: Absolute = localhostHttp(Port.Http)
 
-    fun localhostHttp(port: Int = Port.HTTP.value): Absolute = absolute("http://localhost:$port/")
+    fun localhostHttp(port: Int = Port.Http.value): Absolute = absolute("http://localhost:$port/")
 
-    fun localhostHttp(port: Port = Port.HTTP): Absolute = absolute("http://localhost:$port/")
+    fun localhostHttp(port: Port = Port.Http): Absolute = absolute("http://localhost:$port/")
 
     /**
      * Creates an HTTP URL. Standard port (80) is omitted for cleaner output.
      */
     @Suppress("HttpUrlsUsage")
-    fun http(host: String, port: Port = Port.HTTP): Absolute {
+    fun http(host: String, port: Port = Port.Http): Absolute {
       return if (port.value == 80) absolute("http://$host") else absolute("http://$host:$port")
     }
 
@@ -146,21 +146,21 @@ sealed interface Url {
      * Creates an HTTP URL. Standard port (80) is omitted for cleaner output.
      */
     @Suppress("HttpUrlsUsage")
-    fun http(host: Hostname, port: Port = Port.HTTP): Absolute {
+    fun http(host: Hostname, port: Port = Port.Http): Absolute {
       return if (port.value == 80) absolute("http://$host") else absolute("http://$host:$port")
     }
 
     /**
      * Creates an HTTPS URL. Standard port (443) is omitted for cleaner output.
      */
-    fun https(host: String, port: Port = Port.HTTPS): Absolute {
+    fun https(host: String, port: Port = Port.Https): Absolute {
       return if (port.value == 443) absolute("https://$host") else absolute("https://$host:$port")
     }
 
     /**
      * Creates an HTTPS URL. Standard port (443) is omitted for cleaner output.
      */
-    fun https(host: Hostname, port: Port = Port.HTTPS): Absolute {
+    fun https(host: Hostname, port: Port = Port.Https): Absolute {
       return if (port.value == 443) absolute("https://$host") else absolute("https://$host:$port")
     }
 
@@ -386,8 +386,8 @@ sealed interface Url {
       }
 
       return when (protocol().lowercase()) {
-        "http" -> Port.HTTP
-        "https" -> Port.HTTPS
+        "http" -> Port.Http
+        "https" -> Port.Https
         else -> throw IllegalStateException("Cannot guess port for protocol [${protocol()}] in URL [$value]")
       }
     }

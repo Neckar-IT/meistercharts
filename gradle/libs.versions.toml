@@ -50,7 +50,7 @@ org-asciidoctor = "4.0.5"
 
 jackson = "2.22.3"
 
-org-slf4j = "2.0.19"
+org-slf4j = "2.0.20"
 
 com-willowtreeapps-assertk = "0.28.1"
 
@@ -604,6 +604,8 @@ ktor-server = { group = "io.ktor", name = "ktor-server", version.ref = "ktor" }
 ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth", version.ref = "ktor" }
 
 ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
+
+ktor-server-body-limit = { group = "io.ktor", name = "ktor-server-body-limit", version.ref = "ktor" }
 
 ktor-server-call-id = { group = "io.ktor", name = "ktor-server-call-id", version.ref = "ktor" }
 
