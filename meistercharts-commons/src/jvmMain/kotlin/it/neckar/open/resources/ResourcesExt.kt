@@ -28,6 +28,7 @@
 package it.neckar.open.resources
 
 import it.neckar.open.http.Url
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
@@ -42,6 +43,16 @@ inline fun Class<*>.getResourceSafe(url: String): URL {
 
 fun Class<*>.getResourceSafe(url: Url): URL {
   return this.getResource(url.toString()) ?: throw FileNotFoundException("Could not find resource for <$url>")
+}
+
+/**
+ * The resource [url] as a file of the file system, for a resource directory or a file a process reads: test resources lie
+ * in `build/resources`, never in a jar.
+ */
+fun Class<*>.getResourceFileSafe(url: String): File {
+  val resource: URL = getResourceSafe(url)
+  require(resource.protocol == "file") { "<$url> lies in $resource, not in a directory of the file system" }
+  return File(resource.toURI())
 }
 
 inline fun KClass<*>.getResourceSafe(url: String): URL {

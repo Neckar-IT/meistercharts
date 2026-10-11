@@ -35,13 +35,17 @@ import java.util.Properties
  * Chain: system property (local override, e.g. set by a run task) → environment variable
  * (baked into service images by Jib at image build) → the `META-INF/app-git-info.properties`
  * resource (packed exclusively into CLI leaf fat-jars by `configureServiceShadowJar`) →
- * [VersionInformation.UnknownGitValue].
+ * [VersionInformation.UnknownValue].
  */
 internal actual fun resolveGitProperty(property: GitProperty): String {
   return System.getProperty(property.systemProperty)
     ?: System.getenv(property.envVar)
     ?: findFatJarGitInfoValue(property.propertyKey)
-    ?: VersionInformation.UnknownGitValue
+    ?: VersionInformation.UnknownValue
+}
+
+internal actual fun resolveImageDigest(): String? {
+  return System.getenv(VersionInformation.ImageDigestEnvVar)?.takeUnless { it.isEmpty() || it.startsWith("\${") }
 }
 
 private fun findFatJarGitInfoValue(propertyKey: String): String? {

@@ -150,7 +150,7 @@ data class ConsoleLogFunctions(val prefix: String) {
   }
 
   fun version(): Any? {
-    println("Git Commit: ${VersionInformation.gitHash}")
+    println("Artifact: ${VersionInformation.artifactIdentity}")
     return null
   }
 }

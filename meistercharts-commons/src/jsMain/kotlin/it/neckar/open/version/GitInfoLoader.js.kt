@@ -32,17 +32,24 @@ package it.neckar.open.version
  *
  * Chain: `globalThis.__APP_GIT_INFO__[propertyKey]` (a plain object filled at serve time —
  * Ktor templating or the nginx entrypoint) → `<meta name="gitHash">` / `<meta
- * name="gitCommitDateTime">` → [VersionInformation.UnknownGitValue]. Non-browser runtimes (Node,
+ * name="gitCommitDateTime">` → [VersionInformation.UnknownValue]. Non-browser runtimes (Node,
  * tests) resolve to the fallback without throwing: `globalThis` exists everywhere, `document` is
  * guarded. An injected value of another JS type than a string throws, naming its place.
  *
- * The meta tag is what the frontends write; the global remains first in the chain for the two
- * lizergy frontends, which still carry it in an inline script.
+ * Only hands-off frontends write these tags (lizergy also in an inline script, which is why the
+ * global comes first); every other frontend writes `<meta name="imageDigest">` instead.
  */
 internal actual fun resolveGitProperty(property: GitProperty): String {
   return findAppGitInfoValue(property.propertyKey)
     ?: findMetaValue(property)
-    ?: VersionInformation.UnknownGitValue
+    ?: VersionInformation.UnknownValue
+}
+
+/**
+ * A page reads `unpinned` and a malformed digest as not injected: it cannot fail its visitor over a diagnosis value.
+ */
+internal actual fun resolveImageDigest(): String? {
+  return findMetaContent(VersionInformation.ImageDigestMetaName)?.takeIf { ImageDigestText.isWellFormed(it) }
 }
 
 private fun findAppGitInfoValue(propertyKey: String): String? {
@@ -78,16 +85,20 @@ private fun sanitizeInjectedValue(value: String): String? {
  * HTML head as in the injected global.
  */
 private fun findMetaValue(property: GitProperty): String? {
+  return findMetaContent(property.propertyKey)
+}
+
+private fun findMetaContent(metaName: String): String? {
   val documentOrNull: dynamic = js("typeof document !== 'undefined' ? document : null")
   if (documentOrNull == null) {
     return null
   }
 
-  val metaElement = documentOrNull.querySelector("meta[name='${property.propertyKey}']")
+  val metaElement = documentOrNull.querySelector("meta[name='$metaName']")
   if (metaElement == null) {
     return null
   }
 
-  val content: String = injectedString(metaElement.getAttribute("content"), "<meta name=\"${property.propertyKey}\">") ?: return null
+  val content: String = injectedString(metaElement.getAttribute("content"), "<meta name=\"$metaName\">") ?: return null
   return sanitizeInjectedValue(content)
 }

@@ -252,10 +252,11 @@ object Plugins {
 
   const val secretsLoader: String = "it.neckar.secrets-loader"
 
-  /**
-   * Generates a self-contained `deploy` task (host + tag baked into the script) for a module.
-   */
-  const val deployment: String = "it.neckar.deployment"
+  /** `hostDeployment { }`: the deploy of a host module, whose first step brings the host system. */
+  const val hostDeployment: String = "it.neckar.host-deployment"
+
+  /** `serviceDeployment { }`: the deploy of every module with its own deploy that is no host module. */
+  const val serviceDeployment: String = "it.neckar.service-deployment"
 
   /** The root build only: the deployment rules that read every module, from the images the jib modules push to `deployAllServices`. */
   const val deploymentBuildRules: String = "it.neckar.deployment.build-rules"
@@ -317,10 +318,6 @@ object Plugins {
    */
   const val customDeployment: String = "it.neckar.custom-deployment"
 
-  /**
-   * Generates a self-contained `provision` task (host baked into the script) for host provisioning.
-   */
-  const val provisioning: String = "it.neckar.provisioning"
   const val openapiValidator: String = "it.neckar.openapi.validator"
   const val openapiGenerationConfig: String = "it.neckar.openapi.generation-config"
   const val orvalConvert: String = "it.neckar.openapi.orval-convert"

@@ -173,8 +173,11 @@ inline val PluginDependenciesSpec.resourcesConvention: PluginDependencySpec
 inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
   get() = id(Plugins.secretsLoader)
 
-inline val PluginDependenciesSpec.deployment: PluginDependencySpec
-  get() = id(Plugins.deployment)
+inline val PluginDependenciesSpec.hostDeployment: PluginDependencySpec
+  get() = id(Plugins.hostDeployment)
+
+inline val PluginDependenciesSpec.serviceDeployment: PluginDependencySpec
+  get() = id(Plugins.serviceDeployment)
 
 inline val PluginDependenciesSpec.deploymentBuildRules: PluginDependencySpec
   get() = id(Plugins.deploymentBuildRules)
@@ -211,9 +214,6 @@ inline val PluginDependenciesSpec.moduleGroup: PluginDependencySpec
 
 inline val PluginDependenciesSpec.customDeployment: PluginDependencySpec
   get() = id(Plugins.customDeployment)
-
-inline val PluginDependenciesSpec.provisioning: PluginDependencySpec
-  get() = id(Plugins.provisioning)
 
 inline val PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)

@@ -29,7 +29,7 @@ import it.neckar.open.version.isSnapshot
  * wrong here.
  *
  * The git values are passed through from [VersionInformation] unchanged: they describe the commit
- * the whole repository was built from, and they are [VersionInformation.UnknownGitValue] wherever
+ * the whole repository was built from, and they are [VersionInformation.UnknownValue] wherever
  * no deploy metadata is injected (local development, plain tests).
  */
 object MeisterChartsVersion {
@@ -61,13 +61,13 @@ object MeisterChartsVersion {
 
   /**
    * The full git hash of the commit the repository was built from, or
-   * [VersionInformation.UnknownGitValue] when nothing injected it (local development, plain tests).
+   * [VersionInformation.UnknownValue] when nothing injected it (local development, plain tests).
    */
   val gitHash: String = VersionInformation.gitHash
 
   /**
    * The shortened form of [gitHash] (see [VersionInformation.gitHashShort]), or
-   * [VersionInformation.UnknownGitValue] when the hash is unresolved.
+   * [VersionInformation.UnknownValue] when the hash is unresolved.
    */
   val gitHashShort: String = VersionInformation.gitHashShort
 

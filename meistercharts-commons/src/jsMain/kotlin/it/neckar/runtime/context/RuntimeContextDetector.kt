@@ -62,7 +62,7 @@ object RuntimeContextDetector {
 
     // Get the execution environment. The host is NOT a fallback here: stage/environment come from
     // EXECUTION_ENVIRONMENT / DEPLOYMENT_STAGE (the values the host constants declare and the
-    // DeploymentPlugin templates into the deploy config), so reading them off the host again would
+    // RemoteTreeDeploymentPlugin templates into the deploy config), so reading them off the host again would
     // be redundant. When nothing is configured (local/test) fall back to the conservative defaults.
     val executionEnvironment: ExecutionEnvironment = forcedExecutionEnvironment
       ?: getGlobalVariable(RuntimeContextEnv.ExecutionEnvironmentKey)?.let { parseExecutionEnvironment(it) }

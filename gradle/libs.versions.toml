@@ -8,7 +8,7 @@ org-jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform"
 
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.3" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.4" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 
@@ -44,7 +44,7 @@ jvm-dependency-conflict-resolution = { id = "org.gradlex.jvm-dependency-conflict
 
 [versions]
 
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 
 org-asciidoctor = "4.0.5"
 
@@ -73,7 +73,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.15"
+aws-sdk-kotlin = "1.9.16"
 
 apache-poi = "5.5.1"
 
@@ -316,7 +316,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.12"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.13"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -499,7 +499,7 @@ batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.
 
 # Added during version catalog migration
 
-asm = "org.ow2.asm:asm:9.10.1"
+asm = "org.ow2.asm:asm:9.11"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
