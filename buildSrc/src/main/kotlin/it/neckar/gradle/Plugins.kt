@@ -313,8 +313,8 @@ object Plugins {
   const val moduleGroup: String = "it.neckar.module-group"
 
   /**
-   * Continuous-deploy opt-in for non-image deploys (#2469): the module declares its own
-   * deploy tasks + target label instead of hosts/compose.
+   * The deploy declaration of a non-image deploy: the module declares its own deploy tasks, their targets and their deploy mode
+   * instead of hosts/compose.
    */
   const val customDeployment: String = "it.neckar.custom-deployment"
 

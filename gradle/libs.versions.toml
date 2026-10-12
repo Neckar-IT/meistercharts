@@ -73,7 +73,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.16"
+aws-sdk-kotlin = "1.9.17"
 
 apache-poi = "5.5.1"
 
@@ -139,10 +139,10 @@ modelcontextprotocol-kotlin-sdk = "0.15.0"
 
 okhttp3 = "5.5.0"
 
-opentelemetry = "1.66.0"
+opentelemetry = "1.67.0"
 
 # Alpha channel of the same release train, one -alpha release per core release. Governs opentelemetry-api-incubator.
-opentelemetry-alpha = "1.66.0-alpha"
+opentelemetry-alpha = "1.67.0-alpha"
 
 opentelemetry-instrumentation = "2.32.0-alpha"
 
@@ -270,6 +270,8 @@ im4java = "org.im4java:im4java:1.4.0"
 
 commons-lang3 = "org.apache.commons:commons-lang3:3.21.0"
 
+chessgame = "io.github.wolfraam:chessgame:2.3"
+
 clikt-core = { group = "com.github.ajalt.clikt", name = "clikt-core", version.ref = "clikt" }
 
 opentelemetry-api = { group = "io.opentelemetry", name = "opentelemetry-api", version.ref = "opentelemetry" }
@@ -316,7 +318,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.13"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.14"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
