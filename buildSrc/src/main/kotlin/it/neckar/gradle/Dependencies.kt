@@ -87,8 +87,8 @@ class StandardDependencies(private val catalog: VersionCatalog) {
   private fun library(alias: String): CatalogLibrary = catalog.library(alias)
 
   /**
-   * Guice 7 reads `jakarta.inject` only. `javax.inject` stays until the modules under
-   * `internal/closed/lizergy/` declare it themselves: https://git.neckar.it/neckarit/neckar-hub/-/issues/3398
+   * Guice 7 reads `jakarta.inject` only. `javax.inject` stays while the modules under
+   * `internal/closed/lizergy/` use it without declaring it.
    */
   val annotations: List<CatalogLibrary> = listOf(library("jsr305"), library("jakarta.inject.api"), library("javax.inject"), library("javax.annotation.api"), library("org.jetbrains.annotations"))
 
