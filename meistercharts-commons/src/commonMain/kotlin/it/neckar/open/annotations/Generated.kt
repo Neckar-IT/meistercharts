@@ -43,7 +43,7 @@ package it.neckar.open.annotations
  *
  *     @file:Generated(
  *       by = "spec-generator/generate_backend.py",
- *       from = "internal/patterns/specs/entities/library/BookReview.yaml",
+ *       from = "internal/patterns/specs/01-domain/entities/library/BookReview.yaml",
  *     )
  *
  * [Retention][AnnotationRetention] is RUNTIME so a test can ask a loaded class where it came from,
