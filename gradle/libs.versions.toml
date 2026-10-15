@@ -73,7 +73,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.17"
+aws-sdk-kotlin = "1.9.18"
 
 apache-poi = "5.5.1"
 
@@ -153,7 +153,7 @@ opentelemetry-semconv = "1.44.0"
 
 micrometer = "1.17.1"
 
-caffeine = "3.3.0"
+caffeine = "3.3.1"
 
 # Multiplatform in-memory cache — evaluated against Caffeine and the commons Eigenbau in #1371
 cache4k = "0.14.0"
@@ -318,7 +318,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.14"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.15"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

@@ -268,18 +268,13 @@ object Plugins {
   const val backup: String = "it.neckar.backup"
 
   /**
-   * The host module of a machine holding a store: places the archive recipients file and the encryption library under `/srv/host/`.
-   */
-  const val archiveEncryptionHost: String = "it.neckar.archive-encryption-host"
-
-  /**
    * Check time and default retention of `backups.neckar.it`, the backup service on `backups-host.neckar.it`; collects every `backup { }` block.
    */
   const val backupSchedule: String = "it.neckar.backup-schedule"
 
   /**
    * The delivery targets of a product with trigger, conditions and retention:
-   * `delivery { product = ProductId("…"); host("…", Fleet.DockerHost) { … } }`.
+   * `delivery { product = ProductId("…"); host("…", Fleet.HafenHost) { … } }`.
    */
   const val delivery: String = "it.neckar.delivery"
 

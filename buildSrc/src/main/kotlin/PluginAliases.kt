@@ -185,9 +185,6 @@ inline val PluginDependenciesSpec.deploymentBuildRules: PluginDependencySpec
 inline val PluginDependenciesSpec.backup: PluginDependencySpec
   get() = id(Plugins.backup)
 
-inline val PluginDependenciesSpec.archiveEncryptionHost: PluginDependencySpec
-  get() = id(Plugins.archiveEncryptionHost)
-
 inline val PluginDependenciesSpec.backupSchedule: PluginDependencySpec
   get() = id(Plugins.backupSchedule)
 
