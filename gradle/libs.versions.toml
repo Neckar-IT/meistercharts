@@ -73,7 +73,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.18"
+aws-sdk-kotlin = "1.9.19"
 
 apache-poi = "5.5.1"
 
@@ -318,7 +318,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.15"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.55.16"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -368,7 +368,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 
 cache4k = { group = "io.github.reactivecircus.cache4k", name = "cache4k", version.ref = "cache4k" }
 
-java-jwt = "com.auth0:java-jwt:4.6.1"
+java-jwt = "com.auth0:java-jwt:4.6.2"
 
 micrometer-core = { group = "io.micrometer", name = "micrometer-core", version.ref = "micrometer" }
 

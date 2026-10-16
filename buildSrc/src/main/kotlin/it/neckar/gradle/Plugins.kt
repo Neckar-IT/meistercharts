@@ -329,6 +329,7 @@ object Plugins {
 
   const val tailwind: String = "it.neckar.tailwind"
   const val keycloakClient: String = "it.neckar.keycloak-client"
+  const val openTofu: String = "it.neckar.opentofu"
   const val linksSiteGenerate: String = "it.neckar.links-site-generate"
 
   /**

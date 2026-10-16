@@ -269,6 +269,9 @@ inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
 inline val PluginDependenciesSpec.keycloakClient: PluginDependencySpec
   get() = id(Plugins.keycloakClient)
 
+inline val PluginDependenciesSpec.openTofu: PluginDependencySpec
+  get() = id(Plugins.openTofu)
+
 inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
   get() = id(Plugins.linksSiteGenerate)
 
