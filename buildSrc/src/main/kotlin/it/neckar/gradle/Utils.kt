@@ -23,8 +23,11 @@ import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
@@ -575,11 +578,23 @@ fun Test.removeTimeoutGuards() {
   systemProperty(CoroutinesTestTimeoutProperty, CoroutinesTestTimeoutInfinite)
 }
 
+/** The JUnit tag of `@SlowTest` in `internal/open/commons/test-utils`. */
+const val SlowTestTag: String = "slow-test"
+
+/** The [Test] task that runs only the tests tagged [SlowTestTag], registered by [configureJunit]. */
+const val SlowTestTaskName: String = "slowTest"
+
+/** The property (`-PskipSlowTests`) that drops [SlowTestTaskName] from `check`. */
+const val SkipSlowTestsProperty: String = "skipSlowTests"
+
 /**
- * Configures JUnit
+ * Configures JUnit and registers [SlowTestTaskName] next to `test` or `jvmTest`.
+ *
+ * `test` and `jvmTest` always exclude [SlowTestTag], so their cache key is the same with and without
+ * `-PskipSlowTests`. The property only drops [SlowTestTaskName] from `check`.
  */
 fun Project.configureJunit() {
-  val skipSlowTests = resolveConfigValueOrNull("skipSlowTests") != null
+  val skipSlowTests = resolveConfigValueOrNull(SkipSlowTestsProperty) != null
   if (skipSlowTests) {
     logSlowTestSkippingOnce()
   }
@@ -589,12 +604,6 @@ fun Project.configureJunit() {
       includeEngines(
         "junit-jupiter", //JUnit 5 engine
       )
-
-      //Exclude slow tests in CI MR pipelines for faster feedback
-      //Tests marked with @SlowTest annotation (uses "slow-test" tag) are skipped
-      if (skipSlowTests) {
-        excludeTags("slow-test")
-      }
     }
 
     //Gradle's 512 MB default is too small for OpenAPI tests; 1 GB is what the runner budget in gitlab-ci.d/docs/memory-settings.md holds.
@@ -652,21 +661,79 @@ fun Project.configureJunit() {
     environment("TESTCONTAINERS_RYUK_DISABLED", "true")
     environment("TESTCONTAINERS_RYUK_VERBOSE", "true")
   }
+
+  withUnitTestTask { unitTest ->
+    registerSlowTest(unitTest, skipSlowTests)
+  }
 }
 
 /**
- * Logs the "@SlowTest tests are being skipped" notice exactly once per Gradle invocation.
+ * Calls [action] with the [Test] task of the unit test classes: `test` of a Kotlin/JVM module,
+ * `jvmTest` of a Kotlin Multiplatform module with the JVM target `jvm`.
+ */
+fun Project.withUnitTestTask(action: (TaskProvider<Test>) -> Unit) {
+  plugins.withId(Plugins.java) {
+    action(tasks.named<Test>("test"))
+  }
+
+  plugins.withId(Plugins.kotlinMultiPlatform) {
+    the<KotlinMultiplatformExtension>().targets.matching { it.name == "jvm" }.configureEach {
+      action(tasks.named<Test>("jvmTest"))
+    }
+  }
+}
+
+/**
+ * Runs this task on the test classes and the classpath of [unitTest].
  *
- * `configureJunit()` runs in every project that has JVM tests, so a naive log call inside
- * the JUnit configuration block fires 80+ times per build — once per Test task per project.
- * Routing through a `rootProject.extra` flag de-duplicates to a single message.
+ * Reads [unitTest] when this task is configured. A mapped [TaskProvider] would carry [unitTest] as
+ * producer and make this task depend on it.
+ */
+fun Test.useTestClassesOf(unitTest: TaskProvider<Test>) {
+  testClassesDirs = unitTest.get().testClassesDirs
+  classpath = unitTest.get().classpath
+}
+
+/**
+ * Moves the tests tagged [SlowTestTag] from [unitTest] into [SlowTestTaskName] on the same test classes.
+ * [SlowTestTaskName] inherits the hang guards and every other setting [configureJunit] gives each [Test] task.
+ */
+private fun Project.registerSlowTest(unitTest: TaskProvider<Test>, skipSlowTests: Boolean) {
+  unitTest.configure {
+    useJUnitPlatform {
+      excludeTags(SlowTestTag)
+    }
+  }
+
+  val slowTest = tasks.register<Test>(SlowTestTaskName) {
+    description = "Runs the tests tagged @SlowTest, which ${unitTest.name} leaves out"
+    group = VerificationGroup
+    useTestClassesOf(unitTest)
+    useJUnitPlatform {
+      includeTags(SlowTestTag)
+    }
+    shouldRunAfter(unitTest)
+  }
+
+  if (skipSlowTests.not()) {
+    tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME) {
+      dependsOn(slowTest)
+    }
+  }
+}
+
+/**
+ * Logs once per Gradle invocation that `check` leaves out [SlowTestTaskName].
+ *
+ * `configureJunit()` runs in every project that has JVM tests; a `rootProject.extra` flag keeps
+ * the message to one instead of one per project.
  */
 private fun Project.logSlowTestSkippingOnce() {
-  val key = "skipSlowTestsLogged"
+  val key = "${SkipSlowTestsProperty}Logged"
   if (rootProject.extra.has(key)) return
   rootProject.extra[key] = true
   rootProject.logger.lifecycle(
-    "Skipping @SlowTest tests across all modules (remove -PskipSlowTests to include them)",
+    "check leaves out $SlowTestTaskName across all modules (remove -P$SkipSlowTestsProperty to include it)",
   )
 }
 

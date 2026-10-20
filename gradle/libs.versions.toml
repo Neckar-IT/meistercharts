@@ -14,12 +14,6 @@ com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.re
 
 edu-sc-seis-launch4j = { id = "edu.sc.seis.launch4j", version = "4.0.0" }
 
-org-asciidoctor-jvm-convert = { id = "org.asciidoctor.jvm.convert", version.ref = "org-asciidoctor" }
-
-org-asciidoctor-jvm-pdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "org-asciidoctor" }
-
-org-asciidoctor-jvm-gems = { id = "org.asciidoctor.jvm.gems", version.ref = "org-asciidoctor" }
-
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.2" }
 
 org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.1.0" }
@@ -46,9 +40,11 @@ jvm-dependency-conflict-resolution = { id = "org.gradlex.jvm-dependency-conflict
 
 kotlin = "2.4.21"
 
-org-asciidoctor = "4.0.5"
+org-asciidoctor = "5.0.3"
 
-jackson = "2.22.3"
+asciidoctorj = "3.0.1"
+
+jackson = "2.22.4"
 
 org-slf4j = "2.0.20"
 
@@ -182,13 +178,9 @@ graalvm-polyglot = "25.4.4.1.1"
 
 [libraries]
 
-asciidoctorj = { group = "org.asciidoctor", name = "asciidoctorj", version.ref = "org-asciidoctor" }
+asciidoctorj = { group = "org.asciidoctor", name = "asciidoctorj", version.ref = "asciidoctorj" }
 
 kover-jvm-agent = { group = "org.jetbrains.kotlinx", name = "kover-jvm-agent", version.ref = "kover" }
-
-asciidoctorj-pdf = { group = "org.asciidoctor", name = "asciidoctorj-pdf", version.ref = "org-asciidoctor" }
-
-asciidoctorj-diagram = { group = "org.asciidoctor", name = "asciidoctorj-diagram", version.ref = "org-asciidoctor" }
 
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-jupiter" }
@@ -501,7 +493,7 @@ batik-swing = { group = "org.apache.xmlgraphics", name = "batik-swing", version.
 
 # Added during version catalog migration
 
-asm = "org.ow2.asm:asm:9.11"
+asm = "org.ow2.asm:asm:9.11.1"
 
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 
@@ -509,7 +501,7 @@ bcpkix-jdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.
 
 commons-cli = "commons-cli:commons-cli:1.11.0"
 
-java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.17"
+java-diff-utils = "io.github.java-diff-utils:java-diff-utils:4.18"
 
 javassist = "org.javassist:javassist:3.33.0-GA"
 
@@ -694,6 +686,4 @@ maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-
 
 javafx-plugin = "org.openjfx:javafx-plugin:0.1.0"
 
-asciidoctor-gradle-jvm-pdf = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm-pdf", version.ref = "org-asciidoctor" }
-
-asciidoctor-gradle-jvm-gems = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm-gems", version.ref = "org-asciidoctor" }
+asciidoctor5-jvm-core-plugin = { group = "org.asciidoctor", name = "asciidoctor5-jvm-core-plugin", version.ref = "org-asciidoctor" }

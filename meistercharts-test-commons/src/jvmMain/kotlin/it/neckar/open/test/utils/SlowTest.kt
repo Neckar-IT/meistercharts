@@ -51,8 +51,8 @@ import org.junit.jupiter.api.Tag
  * }
  * ```
  *
- * The tag name "slow-test" is used by Gradle to exclude these tests
- * when the skipSlowTests property is set (-PskipSlowTests).
+ * The Gradle tasks `test` and `jvmTest` leave out the tag "slow-test"; the task `slowTest` runs it.
+ * `check` runs `slowTest` unless the property skipSlowTests is set (-PskipSlowTests).
  */
 @Tag("slow-test")
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)

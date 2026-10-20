@@ -227,9 +227,9 @@ object Plugins {
   const val otelAgent: String = "it.neckar.otel-agent"
   const val dockerHubPublish: String = "it.neckar.docker-hub-publish"
 
-  const val asciidoctor: String = "org.asciidoctor.jvm.convert"
+  const val asciidoctor: String = "org.asciidoctor.jvm"
   const val asciidoctorPdf: String = "org.asciidoctor.jvm.pdf"
-  const val asciidoctorGems: String = "org.asciidoctor.jvm.gems"
+  const val asciidoctorDiagram: String = "org.asciidoctor.jvm.diagram"
   const val neckarItAsciidoctor: String = "it.neckar.asciidoctor"
 
   const val kvision: String = "kvision"

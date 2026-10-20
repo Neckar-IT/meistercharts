@@ -79,8 +79,8 @@ inline val PluginDependenciesSpec.asciidoctor: PluginDependencySpec
 inline val PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
   get() = id(Plugins.asciidoctorPdf)
 
-inline val PluginDependenciesSpec.asciidoctorGems: PluginDependencySpec
-  get() = id(Plugins.asciidoctorGems)
+inline val PluginDependenciesSpec.asciidoctorDiagram: PluginDependencySpec
+  get() = id(Plugins.asciidoctorDiagram)
 
 inline val PluginDependenciesSpec.generateAuditReport: PluginDependencySpec
   get() = id(Plugins.generateAuditReport)
