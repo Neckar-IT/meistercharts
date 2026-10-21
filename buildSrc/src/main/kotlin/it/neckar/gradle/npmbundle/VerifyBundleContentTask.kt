@@ -1,10 +1,12 @@
 package it.neckar.gradle.npmbundle
 
-import it.neckar.gradle.ansiConsole
+import it.neckar.gradle.AnsiConsole
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -16,10 +18,13 @@ abstract class VerifyBundleContentTask : DefaultTask() {
   @get:InputDirectory
   abstract val workingDir: DirectoryProperty
 
+  @get:Internal
+  abstract val console: Property<AnsiConsole>
+
   @TaskAction
   fun verify() {
     val workingDirFile = workingDir.get().asFile
-    project.logger.info("Verifying bundle content in $workingDirFile")
+    logger.info("Verifying bundle content in $workingDirFile")
 
     val jsFilesExist = workingDir.asFileTree.any { it.extension == "js" }
     val packageJsonExists = workingDir.asFileTree.any { it.name == "package.json" }
@@ -28,10 +33,10 @@ abstract class VerifyBundleContentTask : DefaultTask() {
       throw GradleException("Verification failed: No .js files found in $workingDirFile")
     }
     if (packageJsonExists.not()) {
-      project.logger.lifecycle(ansiConsole.blue("Add the project's package.json to the bundled files (npmBundle.filesToBundle)."))
+      logger.lifecycle(console.get().blue("Add the project's package.json to the bundled files (npmBundle.filesToBundle)."))
       throw GradleException("Verification failed: No package.json file found in $workingDirFile")
     }
 
-    project.logger.info("Verification successful: Bundle contains .js files and a package.json in [${workingDirFile.absolutePath}]")
+    logger.info("Verification successful: Bundle contains .js files and a package.json in [${workingDirFile.absolutePath}]")
   }
 }

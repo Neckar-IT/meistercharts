@@ -67,6 +67,7 @@ fun Project.registerPrintSourceSetsTask() {
   val project = this
 
   tasks.register("printSourceSets") {
+    notCompatibleWithConfigurationCache("walks the Kotlin source sets of the project model")
     doLast {
       val ansiConsole = project.console
 

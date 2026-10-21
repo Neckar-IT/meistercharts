@@ -2,6 +2,7 @@
 
 package it.neckar.gradle.npmbundle
 
+import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.hasKotlinMultiplatformPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -121,6 +122,7 @@ class NpmBundlePlugin : Plugin<Project> {
       dependsOn(npmCopyBundleContentTask)
 
       workingDir = npmBundleExtensionProduction.workingDir
+      console.set(target.ansiConsole)
     }
 
     val verifyBundleContentTaskDevelopment = target.tasks.register<VerifyBundleContentTask>(VerifyBundleContentDevelopmentTaskName) {
@@ -130,6 +132,7 @@ class NpmBundlePlugin : Plugin<Project> {
       dependsOn(npmCopyBundleContentDevelopmentTask)
 
       workingDir = npmBundleExtensionDevelopment.workingDir
+      console.set(target.ansiConsole)
     }
 
     //Ensure that the verifyBundleContentTask is executed after the npmCopyBundleContentTask

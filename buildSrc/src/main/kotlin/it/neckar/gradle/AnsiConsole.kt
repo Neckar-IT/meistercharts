@@ -1,19 +1,13 @@
 package it.neckar.gradle
 
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
-import org.gradle.api.logging.configuration.ConsoleOutput
 import org.gradle.kotlin.dsl.extra
 
 /**
- * Represents an ansi console (with colors)
+ * Represents an ansi console (with colors); holds only [plain], so a task action can capture it for the configuration cache.
  */
-class AnsiConsole(val gradle: Gradle) {
-  constructor(project: Project) : this(project.gradle)
-
-
-  val plain: Boolean = gradle.startParameter.consoleOutput == ConsoleOutput.Plain
+class AnsiConsole(val plain: Boolean) {
 
   fun black(content: Any): String {
     return withColor(content.toString(), Color.Black)
@@ -87,6 +81,13 @@ class AnsiConsole(val gradle: Gradle) {
 
   companion object {
     /**
+     * The console of [gradle]: plain when Gradle runs with `--console=plain`.
+     */
+    fun of(gradle: Gradle): AnsiConsole {
+      return AnsiConsole(gradle.startParameter.isPlainConsole)
+    }
+
+    /**
      * Starts the ANSI code
      */
     const val Esc: String = "\u001B"
@@ -115,7 +116,7 @@ val Project.console: AnsiConsole
     if (extra.has(key)) {
       return extra.get(key) as AnsiConsole
     }
-    val value = AnsiConsole(gradle)
+    val value = AnsiConsole.of(gradle)
     extra.set(key, value)
     return value
   }
@@ -125,6 +126,3 @@ val Project.console: AnsiConsole
  */
 inline val Project.ansiConsole: AnsiConsole
   get() = console
-
-val Task.ansiConsole: AnsiConsole
-  get() = project.ansiConsole
