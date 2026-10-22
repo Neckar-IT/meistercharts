@@ -170,8 +170,20 @@ inline val PluginDependenciesSpec.webResourcesFromDependencies: PluginDependency
 inline val PluginDependenciesSpec.resourcesConvention: PluginDependencySpec
   get() = id(Plugins.resourcesConvention)
 
+inline val PluginDependenciesSpec.secretStore: PluginDependencySpec
+  get() = id(Plugins.secretStore)
+
 inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
   get() = id(Plugins.secretsLoader)
+
+inline val PluginDependenciesSpec.randomSecret: PluginDependencySpec
+  get() = id(Plugins.randomSecret)
+
+inline val PluginDependenciesSpec.mattermostBot: PluginDependencySpec
+  get() = id(Plugins.mattermostBot)
+
+inline val PluginDependenciesSpec.mattermostBots: PluginDependencySpec
+  get() = id(Plugins.mattermostBots)
 
 inline val PluginDependenciesSpec.hostDeployment: PluginDependencySpec
   get() = id(Plugins.hostDeployment)
@@ -268,6 +280,9 @@ inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
 
 inline val PluginDependenciesSpec.keycloakClient: PluginDependencySpec
   get() = id(Plugins.keycloakClient)
+
+inline val PluginDependenciesSpec.keycloakClients: PluginDependencySpec
+  get() = id(Plugins.keycloakClients)
 
 inline val PluginDependenciesSpec.openTofu: PluginDependencySpec
   get() = id(Plugins.openTofu)

@@ -250,7 +250,20 @@ object Plugins {
    */
   const val resourcesConvention: String = "it.neckar.resources-convention"
 
+  /** `secretStore { }`: the sources a module loads its secrets from, and `slot(key)` for a producer that writes one. */
+  const val secretStore: String = "it.neckar.secret-store"
+
+  /** The former ID of [secretStore], still named by the standalone builds. */
   const val secretsLoader: String = "it.neckar.secrets-loader"
+
+  /** `randomSecret(format, storeIn)`: a random value written once into a `SecretSlot` by `applyRandomSecrets`. */
+  const val randomSecret: String = "it.neckar.random-secret"
+
+  /** `mattermostBot { }`: the Mattermost bot of the module that posts with it, its token in a `SecretSlot`. */
+  const val mattermostBot: String = "it.neckar.mattermost-bot"
+
+  /** `mattermost.neckar.it` only: `applyMattermostBots` over every `mattermostBot { }` block. */
+  const val mattermostBots: String = "it.neckar.mattermost-bots"
 
   /** `hostDeployment { }`: the deploy of a host module, whose first step brings the host system. */
   const val hostDeployment: String = "it.neckar.host-deployment"
@@ -328,7 +341,13 @@ object Plugins {
   const val specHarvest: String = "it.neckar.ksp.spec-harvest"
 
   const val tailwind: String = "it.neckar.tailwind"
+
+  /** `keycloakClient("<clientId>") { }`: a Keycloak client of the module that uses it; a confidential one stores its client secret in a `SecretSlot`. */
   const val keycloakClient: String = "it.neckar.keycloak-client"
+
+  /** `auth.neckar.it` only: `applyKeycloakClients` over every `keycloakClient("<clientId>") { }` block, and `listKeycloakClients`. */
+  const val keycloakClients: String = "it.neckar.keycloak-clients"
+
   const val openTofu: String = "it.neckar.opentofu"
   const val linksSiteGenerate: String = "it.neckar.links-site-generate"
 

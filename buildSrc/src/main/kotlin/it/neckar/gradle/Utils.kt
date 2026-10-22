@@ -251,18 +251,10 @@ val Process.text: String
   }
 
 /**
- * Returns the gitlab access token - from environment or gradle.properties file.
- * Checks for GITLAB_API_TOKEN first, falls back to legacy GITLAB_CONTAINER_ACCESS_TOKEN.
+ * Returns `GITLAB_API_TOKEN` from the environment, else from `gradle.properties`.
  */
 fun Project.getGitlabAccessToken(): String? {
-  val fromEnv = System.getenv("GITLAB_API_TOKEN")
-    ?: System.getenv("GITLAB_CONTAINER_ACCESS_TOKEN")
-
-  if (fromEnv != null) {
-    return fromEnv
-  }
-
-  return (findProperty("GITLAB_API_TOKEN") ?: findProperty("GITLAB_CONTAINER_ACCESS_TOKEN")) as String?
+  return System.getenv("GITLAB_API_TOKEN") ?: findProperty("GITLAB_API_TOKEN") as String?
 }
 
 
@@ -317,11 +309,7 @@ fun Project.configureJavaFX(modules: List<JavaFXModule> = listOf(JavaFXModule.CO
  * Configures the toolchain using the [JvmType] - as configured in the project.
  */
 fun Project.configureToolchain(jvmType: JvmType) {
-  when (jvmType) {
-    JvmType.JavaLatestLTS -> {
-      configureToolchainJava25LTS()
-    }
-  }
+  configureToolchain(jvmType.languageVersion)
 }
 
 /**
@@ -329,7 +317,7 @@ fun Project.configureToolchain(jvmType: JvmType) {
  * See https://en.wikipedia.org/wiki/Java_version_history for details
  */
 fun Project.configureToolchainJava25LTS(): Provider<JavaCompiler> {
-  return configureToolchain(JavaLanguageVersion.of(25))
+  return configureToolchain(JvmType.JavaLatestLTS.languageVersion)
 }
 
 /**
