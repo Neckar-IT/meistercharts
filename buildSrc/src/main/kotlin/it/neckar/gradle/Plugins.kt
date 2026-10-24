@@ -37,7 +37,6 @@ object Plugins {
 
   const val npmBundle: String = "it.neckar.npm-bundle"
   const val taskTree: String = "com.dorongold.task-tree"
-  const val taskInfo: String = "org.barfuin.gradle.taskinfo"
   const val detekt: String = "dev.detekt"
   const val pdfOverview: String = "it.neckar.pdf-overview"
   const val html2pdf: String = "it.neckar.html2pdf"
@@ -142,6 +141,9 @@ object Plugins {
    * Shadow plugin, so it can be applied to every project unconditionally.
    */
   const val fatJarMetadata: String = "it.neckar.shadow.fat-jar-metadata"
+
+  /** See [it.neckar.gradle.dependencies.CapabilityConflictPlugin]. */
+  const val capabilityConflicts: String = "it.neckar.dependencies.capability-conflicts"
 
   /**
    * Registers `verifyUnusedDependencies`, run on request, failing on a declared dependency the module does not use. Reacts to
@@ -255,9 +257,6 @@ object Plugins {
 
   /** The former ID of [secretStore], still named by the standalone builds. */
   const val secretsLoader: String = "it.neckar.secrets-loader"
-
-  /** `randomSecret(format, storeIn)`: a random value written once into a `SecretSlot` by `applyRandomSecrets`. */
-  const val randomSecret: String = "it.neckar.random-secret"
 
   /** `mattermostBot { }`: the Mattermost bot of the module that posts with it, its token in a `SecretSlot`. */
   const val mattermostBot: String = "it.neckar.mattermost-bot"

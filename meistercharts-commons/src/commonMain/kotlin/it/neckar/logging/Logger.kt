@@ -38,7 +38,7 @@ expect interface Logger {
    */
   fun getName(): String
 
-  // workaround: dependency=libs:kotlin:2.4.20 verified-on=2026-10-07 upstream=https://youtrack.jetbrains.com/issue/KT-59785
+  // workaround: dependency=libs:kotlin:2.4.20 observed-on=2026-10-07 upstream=https://youtrack.jetbrains.com/issue/KT-59785
   // isEnabledForLevel(level: Level) is absent: the actual typealias to the SLF4J interface rejects a default method of the expect interface.
 
   /**

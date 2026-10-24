@@ -116,9 +116,6 @@ inline val PluginDependenciesSpec.ngrokTunnel: PluginDependencySpec
 inline val PluginDependenciesSpec.taskTree: PluginDependencySpec
   get() = id(Plugins.taskTree)
 
-inline val PluginDependenciesSpec.taskInfo: PluginDependencySpec
-  get() = id(Plugins.taskInfo)
-
 inline val PluginDependenciesSpec.detekt: PluginDependencySpec
   get() = id(Plugins.detekt)
 
@@ -175,9 +172,6 @@ inline val PluginDependenciesSpec.secretStore: PluginDependencySpec
 
 inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
   get() = id(Plugins.secretsLoader)
-
-inline val PluginDependenciesSpec.randomSecret: PluginDependencySpec
-  get() = id(Plugins.randomSecret)
 
 inline val PluginDependenciesSpec.mattermostBot: PluginDependencySpec
   get() = id(Plugins.mattermostBot)

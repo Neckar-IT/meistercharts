@@ -21,7 +21,7 @@ fun KotlinMultiplatformExtension.declareTargets(project: Project, targets: Set<K
       KotlinTarget.Jvm -> declareJvmTarget()
       KotlinTarget.Js -> declareJsTarget(project)
       KotlinTarget.WasmJs -> declareWasmJsTarget(project)
-      KotlinTarget.LinuxX64 -> declareLinuxX64Target()
+      KotlinTarget.LinuxX64 -> declareLinuxX64Target(project)
     }
   }
 

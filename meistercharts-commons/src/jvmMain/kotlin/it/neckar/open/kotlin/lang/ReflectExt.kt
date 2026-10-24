@@ -47,7 +47,7 @@ import kotlin.reflect.jvm.javaField
  *
  * KClass has no isInterface, so the Java class answers.
  *
- * workaround: dependency=libs:kotlin:2.4.20 verified-on=2026-10-07 upstream=https://youtrack.jetbrains.com/issue/KT-17661
+ * workaround: dependency=libs:kotlin:2.4.20 observed-on=2026-10-07 upstream=https://youtrack.jetbrains.com/issue/KT-17661
  */
 val KClass<*>.isInterface: Boolean get() = this.java.isInterface
 

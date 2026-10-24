@@ -43,7 +43,6 @@ enum class ScheduleVariable(
 ) {
   BuildDockerImages("SCHEDULE_BUILD_DOCKER_IMAGES", "Schedule: build and push every Docker image"),
   DeployLizergySpielwiese("SCHEDULE_DEPLOY_LIZERGY_SPIELWIESE", "Schedule: nightly deploy of the Lizergy Spielwiese environment"),
-  DeployAuthorizedKeys("SCHEDULE_DEPLOY_AUTHORIZED_KEYS", "Schedule: deploy the declared authorized_keys to every host"),
   MirrorInfrastructureData("SCHEDULE_MIRROR_INFRASTRUCTURE_DATA", "Schedule: mirror the host inventory into the repository"),
   MirrorJwksSeeds("SCHEDULE_MIRROR_JWKS_SEEDS", "Schedule: mirror the realms' published public signature keys into the checked-in JWKS seed files, opens a merge request when a realm rotated a key. Rotates nothing and writes nothing back to Keycloak"),
   PublishMeisterchartsToGithub("SCHEDULE_PUBLISH_MEISTERCHARTS_TO_GITHUB", "Schedule: publish the MeisterCharts source code to the GitHub develop branch"),

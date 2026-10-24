@@ -34,6 +34,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.Executable
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -582,10 +584,7 @@ const val SkipSlowTestsProperty: String = "skipSlowTests"
  * `-PskipSlowTests`. The property only drops [SlowTestTaskName] from `check`.
  */
 fun Project.configureJunit() {
-  val skipSlowTests = resolveConfigValueOrNull(SkipSlowTestsProperty) != null
-  if (skipSlowTests) {
-    logSlowTestSkippingOnce()
-  }
+  val skipSlowTests = isSkipRequested(SkipSlowTestsProperty, "check leaves out $SlowTestTaskName across all modules")
 
   tasks.withType<Test>().configureEach {
     useJUnitPlatform {
@@ -711,18 +710,19 @@ private fun Project.registerSlowTest(unitTest: TaskProvider<Test>, skipSlowTests
 }
 
 /**
- * Logs once per Gradle invocation that `check` leaves out [SlowTestTaskName].
+ * Logs [message] once per Gradle invocation when the skip [property] is set, and returns whether it is set.
  *
- * `configureJunit()` runs in every project that has JVM tests; a `rootProject.extra` flag keeps
- * the message to one instead of one per project.
+ * Called once per project and property; a `rootProject.extra` flag per property keeps the message to one per build.
  */
-private fun Project.logSlowTestSkippingOnce() {
-  val key = "${SkipSlowTestsProperty}Logged"
-  if (rootProject.extra.has(key)) return
-  rootProject.extra[key] = true
-  rootProject.logger.lifecycle(
-    "check leaves out $SlowTestTaskName across all modules (remove -P$SkipSlowTestsProperty to include it)",
-  )
+private fun Project.isSkipRequested(property: String, message: String): Boolean {
+  if (resolveConfigValueOrNull(property) == null) return false
+
+  val key = "${property}Logged"
+  if (rootProject.extra.has(key).not()) {
+    rootProject.extra[key] = true
+    rootProject.logger.lifecycle("$message (remove -P$property to include it)")
+  }
+  return true
 }
 
 /**
@@ -856,7 +856,7 @@ fun KotlinJsTargetDsl.executableJsApplication(
     val jsProductionExecutableCompileSync = tasks.findByName("jsProductionExecutableCompileSync").requireNotNull()
     val jsBrowserDevelopmentRun = tasks.findByName("jsBrowserDevelopmentRun").requireNotNull() as KotlinWebpack
 
-    // workaround: dependency=gradle:wrapper:9.7.1 verified-on=2026-10-07
+    // workaround: dependency=gradle:wrapper:9.7.1 observed-on=2026-10-07
     //Both compile sync tasks write build/js/packages/<module>/kotlin, so each webpack task reads the output of the other
     //variant too. Without these edges Gradle 9.7.1 fails `build jsBrowserDevelopmentWebpack` with "Property has implicit dependency".
     jsBrowserProductionWebpack.mustRunAfter(jsDevelopmentExecutableCompileSync)
@@ -1057,11 +1057,26 @@ fun KotlinMultiplatformExtension.declareJsTarget(project: Project) {
   }
 }
 
+/** The property (`-PskipNativeReleaseLink`) that drops the release link of every Kotlin/Native executable from `assemble`. */
+const val SkipNativeReleaseLinkProperty: String = "skipNativeReleaseLink"
+
 /**
  * Declares the `linuxX64` target.
+ *
+ * Under `-PskipNativeReleaseLink` the release link task stays registered, so `internal/closed/worktree-hud/start.sh` still builds it by name.
  */
-fun KotlinMultiplatformExtension.declareLinuxX64Target() {
-  linuxX64()
+fun KotlinMultiplatformExtension.declareLinuxX64Target(project: Project) {
+  val target = linuxX64()
+  val skipNativeReleaseLink = project.isSkipRequested(SkipNativeReleaseLinkProperty, "assemble leaves out the release link of every Kotlin/Native executable")
+  if (skipNativeReleaseLink.not()) return
+
+  // Runs after the Kotlin plugin's binaries.all, so this assemble action follows the one that adds the link task provider.
+  target.binaries.withType<Executable>().matching { it.buildType == NativeBuildType.RELEASE }.all {
+    val releaseLinkTaskName = linkTaskName
+    project.tasks.named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
+      setDependsOn(dependsOn.filterNot { it is TaskProvider<*> && it.name == releaseLinkTaskName })
+    }
+  }
 }
 
 /**

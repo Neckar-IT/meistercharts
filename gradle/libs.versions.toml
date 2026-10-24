@@ -16,8 +16,6 @@ edu-sc-seis-launch4j = { id = "edu.sc.seis.launch4j", version = "4.0.0" }
 
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.2" }
 
-org-barfuin-gradle-taskinfo = { id = "org.barfuin.gradle.taskinfo", version = "3.1.0" }
-
 org-jetbrains-intellij = { id = "org.jetbrains.intellij", version = "1.17.4" }
 
 org-jetbrains-gradle-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.4.1" }
@@ -33,14 +31,11 @@ de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-unde
 
 me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 
-# Fails the build when two coordinates ship the same classes. Configured in the root build.gradle.kts.
-jvm-dependency-conflict-resolution = { id = "org.gradlex.jvm-dependency-conflict-resolution", version = "2.5" }
-
 [versions]
 
 kotlin = "2.4.21"
 
-org-asciidoctor = "5.0.3"
+org-asciidoctor = "5.1.0"
 
 asciidoctorj = "3.0.1"
 
@@ -69,11 +64,11 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.20"
+aws-sdk-kotlin = "1.9.23"
 
-apache-poi = "5.5.1"
+apache-poi = "6.0.0"
 
-org-commonmark = "0.30.1"
+org-commonmark = "0.31.0"
 
 # BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
@@ -83,11 +78,11 @@ ktor = "3.6.0"
 
 com-github-docker-java = "3.7.1"
 
-com-miglayout = "11.5.1"
+com-miglayout = "11.5.2"
 
 dev-zacsweers-kctfork = "0.14.0"
 
-org-apache-xmlgraphics = "1.19"
+org-apache-xmlgraphics = "1.20"
 
 kotlin-csv = "1.10.0"
 
@@ -98,6 +93,8 @@ kover = "0.9.11"
 node-gradle = "7.1.0"
 
 shadow = "9.6.1"
+
+jvm-dependency-conflict-resolution = "2.5"
 
 de-undercouch-download = "5.7.0"
 
@@ -147,7 +144,7 @@ opentelemetry-javaagent = "2.32.0"
 # Own release train, versioned independently of the SDK and of the instrumentation artifacts. No BOM pins the stable channel.
 opentelemetry-semconv = "1.44.0"
 
-micrometer = "1.17.1"
+micrometer = "1.17.2"
 
 caffeine = "3.3.1"
 
@@ -159,7 +156,7 @@ jmh = "1.37"
 
 pdfbox = "3.0.8"
 
-metadata-extractor = "2.21.0"
+metadata-extractor = "2.22.0"
 
 gitlab4j = "6.3.0"
 
@@ -167,7 +164,7 @@ testfx = "4.0.18"
 
 clikt = "5.1.0"
 
-javafx = "25.0.4"
+javafx = "25.0.5"
 
 netty = "4.2.19.Final"
 
@@ -310,7 +307,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.56.0"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.2"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -332,7 +329,7 @@ loki-logback-appender = "com.github.loki4j:loki-logback-appender:2.1.0"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-playwright = "com.microsoft.playwright:playwright:1.63.0"
+playwright = "com.microsoft.playwright:playwright:1.64.0"
 
 kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "org-jetbrains-kotlin-wrappers" }
 
@@ -681,6 +678,9 @@ node-gradle-plugin = { group = "com.github.node-gradle", name = "gradle-node-plu
 gradle-download-task = { group = "de.undercouch", name = "gradle-download-task", version.ref = "de-undercouch-download" }
 
 shadow-gradle-plugin = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+
+# Applied by CapabilityConflictPlugin in build-logic/plugins.
+jvm-dependency-conflict-resolution-gradle-plugin = { group = "org.gradlex", name = "jvm-dependency-conflict-resolution", version.ref = "jvm-dependency-conflict-resolution" }
 
 maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
 

@@ -156,6 +156,6 @@ interface SupportsPathActions {
  *
  * Keep the default value to 0.0
  *
- * workaround: dependency=libs:javafx:25.0.4 verified-on=2026-10-07
+ * workaround: dependency=libs:javafx:25.0.4 observed-on=2026-10-07
  */
 var ArcPathWorkaroundEpsilon: @px Double = 0.0
