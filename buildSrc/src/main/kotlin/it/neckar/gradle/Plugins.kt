@@ -299,7 +299,7 @@ object Plugins {
   /** The root build only: `generateProductsCatalog` writes `products-catalog.yaml` and `60-catalog.ssh_config`, `verifyProductsCatalog` compares them. */
   const val productsCatalog: String = "it.neckar.products-catalog"
 
-  /** The root build only: one task per `DeliveryConditions` entry answers it for `-Pproduct` and records the answer in `data/delivery-log`. */
+  /** The root build only: one task per `DeliveryConditions` entry answers it for `-Pproduct` and records the answer in the delivery log. */
   const val deliveryConditions: String = "it.neckar.delivery-conditions"
 
   /**
