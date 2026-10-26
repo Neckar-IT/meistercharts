@@ -64,7 +64,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.23"
+aws-sdk-kotlin = "1.9.24"
 
 apache-poi = "6.0.0"
 
@@ -307,7 +307,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.2"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.3"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -373,7 +373,7 @@ gitlab4j-models = { group = "org.gitlab4j", name = "gitlab4j-models", version.re
 
 domrobot = "com.inwx:domrobot:4.0.0"
 
-gson = "com.google.code.gson:gson:2.14.0"
+gson = "com.google.code.gson:gson:2.15.0"
 
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 
