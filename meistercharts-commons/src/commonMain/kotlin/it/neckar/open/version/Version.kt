@@ -28,6 +28,7 @@
 package it.neckar.open.version
 
 
+import it.neckar.open.annotations.CrossLayer
 import it.neckar.open.version.io.VersionSerializer
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmOverloads
@@ -37,6 +38,7 @@ import kotlin.jvm.JvmStatic
  * A version
  *
  */
+@CrossLayer("A version string with the same form in schema metadata, domain and REST views")
 @Serializable(with = VersionSerializer::class)
 data class Version
 /**

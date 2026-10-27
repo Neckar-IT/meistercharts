@@ -21,7 +21,7 @@ object Plugins {
   const val javaLibrary: String = "java-library"
 
   const val java: String = "java"
-  const val intellij: String = "org.jetbrains.intellij"
+  const val intellijPlatform: String = "org.jetbrains.intellij.platform"
   const val ideaExt: String = "org.jetbrains.gradle.plugin.idea-ext"
 
   const val kotlinxSerialization: String = "org.jetbrains.kotlin.plugin.serialization"

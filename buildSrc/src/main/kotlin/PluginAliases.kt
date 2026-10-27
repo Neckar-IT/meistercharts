@@ -140,8 +140,8 @@ inline val PluginDependenciesSpec.kvision: PluginDependencySpec
 inline val PluginDependenciesSpec.jib: PluginDependencySpec
   get() = id(Plugins.jib)
 
-inline val PluginDependenciesSpec.intellij: PluginDependencySpec
-  get() = id(Plugins.intellij)
+inline val PluginDependenciesSpec.intellijPlatform: PluginDependencySpec
+  get() = id(Plugins.intellijPlatform)
 
 inline val PluginDependenciesSpec.ideaExt: PluginDependencySpec
   get() = id(Plugins.ideaExt)

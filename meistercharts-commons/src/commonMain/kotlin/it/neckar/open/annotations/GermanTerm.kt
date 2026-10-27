@@ -28,7 +28,8 @@
 package it.neckar.open.annotations
 
 /**
- * Documents the German technical term for a class or property.
+ * Documents the German term for a class or property of a domain concept the users of a German product see. Internal and
+ * technical types carry none: their term is the English name.
  */
 @Repeatable
 @Target(
