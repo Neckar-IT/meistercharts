@@ -26,23 +26,21 @@ import com.meistercharts.history.HistoryConfiguration
 import com.meistercharts.history.HistoryUpdateInfo
 import com.meistercharts.history.SamplingPeriod
 import com.meistercharts.history.impl.MockSinusHistoryStorage
-import it.neckar.open.test.utils.TempFolder
-import it.neckar.open.test.utils.WithTempFiles
 import it.neckar.open.test.utils.doesNotExist
 import it.neckar.open.test.utils.getAllChildrenNames
 import kotlinx.serialization.json.Json
 
 
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import com.meistercharts.history.DecimalDataSeriesCount
 import com.meistercharts.history.EnumDataSeriesCount
 
-@WithTempFiles
 class FileHistoryStorageTest {
 
   @Test
-  fun testGetFile(@TempFolder baseDirTemp: File) {
+  fun testGetFile(@TempDir baseDirTemp: File) {
     val json: Json = Json {
       HistoryConfiguration
     }
@@ -55,7 +53,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun testStoreWithoutCacheWithSamplingPeriod(@TempFolder baseDirTemp: File) {
+  fun testStoreWithoutCacheWithSamplingPeriod(@TempDir baseDirTemp: File) {
     val json: Json = Json {
       HistoryConfiguration
     }
@@ -68,7 +66,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun testStoreWithoutCacheWithUpdateInfo(@TempFolder newTempDirectory: File){
+  fun testStoreWithoutCacheWithUpdateInfo(@TempDir newTempDirectory: File){
     val json: Json = Json {
       HistoryConfiguration
     }
@@ -83,7 +81,7 @@ class FileHistoryStorageTest {
 
 
   @Test
-  fun testHistoryStorageLoad(@TempFolder newTempDirectory: File){
+  fun testHistoryStorageLoad(@TempDir newTempDirectory: File){
     val json: Json = Json {
       HistoryConfiguration
     }
@@ -105,7 +103,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun testHistoryStorageStoreAndLoad(@TempFolder newTempDirectory: File) {
+  fun testHistoryStorageStoreAndLoad(@TempDir newTempDirectory: File) {
     val json: Json = Json {
       HistoryConfiguration
     }
@@ -129,7 +127,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun `consecutive 30-day buckets map to distinct files`(@TempFolder baseDirTemp: File) {
+  fun `consecutive 30-day buckets map to distinct files`(@TempDir baseDirTemp: File) {
     val storage = FileHistoryStorage(baseDirTemp, Json { HistoryConfiguration })
     val range = HistoryBucketRange.ThirtyDays
 
@@ -144,7 +142,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun `consecutive year-range buckets map to distinct files`(@TempFolder baseDirTemp: File) {
+  fun `consecutive year-range buckets map to distinct files`(@TempDir baseDirTemp: File) {
     val storage = FileHistoryStorage(baseDirTemp, Json { HistoryConfiguration })
 
     //OneYear buckets are 360-day, epoch-aligned, NOT calendar-aligned. Naming the file after the
@@ -159,7 +157,7 @@ class FileHistoryStorageTest {
   }
 
   @Test
-  fun testGetUpdates(@TempFolder newTempDirectory: File){
+  fun testGetUpdates(@TempDir newTempDirectory: File){
     val json: Json = Json {
       HistoryConfiguration
     }

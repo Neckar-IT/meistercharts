@@ -288,11 +288,12 @@ fun KClass<*>.findSealedInterfacesAncestors(): List<KType> {
 
 /**
  * Returns true if this class is a sealed class and shares a common ancestor with the other class.
+ *
+ * Compares the classifiers, so `Archived<E> : Response<E>` and `NotFound : Response<Nothing>` share `Response`.
  */
 fun KClass<*>.hasCommonSealedAncestorWith(other: KClass<*>): Boolean {
-  //Check if the sealed interfaces share a common ancestor
-  val myAncestors = findSealedInterfacesAncestors()
-  val otherAncestors = other.findSealedInterfacesAncestors()
+  val myAncestors = findSealedInterfacesAncestors().mapTo(mutableSetOf()) { it.classifier }
+  val otherAncestors = other.findSealedInterfacesAncestors().mapTo(mutableSetOf()) { it.classifier }
 
   return myAncestors.any { it in otherAncestors }
 }

@@ -27,23 +27,28 @@
  */
 package it.neckar.open.test.utils
 
-import org.junit.jupiter.api.extension.ExtendWith
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 
 /**
- * Sets the default locale for annotated tests.
+ * Suspends until [condition] holds, which another thread or process brings about, and throws an [IllegalStateException]
+ * naming [description] once [timeout] has passed. [condition] runs every [pollInterval].
  *
- * Example usage:
- * ```
- * @WithLocale("en_US")
- * ```
- *
- * Setting the locale to German/Germany:
- * ```
- * @WithLocale("de_DE")
- * ```
+ * Waits in real time, also under `runTest` and a `VirtualNowProvider`: the poll runs on [Dispatchers.IO], and the deadline
+ * reads `TimeSource.Monotonic`.
  */
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@Retention(AnnotationRetention.RUNTIME)
-@MustBeDocumented
-@ExtendWith(LocaleExtension::class)
-annotation class WithLocale(val value: String)
+suspend fun awaitCondition(timeout: Duration, description: () -> String, pollInterval: Duration = 10.milliseconds, condition: suspend () -> Boolean) {
+  withContext(Dispatchers.IO) {
+    // A virtual monotonicTimeSource would let the deadline pass at once or never.
+    @Suppress("MonotonicTimeSourceViaProvider")
+    val deadline = TimeSource.Monotonic.markNow() + timeout
+    while (condition().not()) {
+      check(deadline.hasNotPassedNow()) { "Timed out after $timeout waiting for ${description()}" }
+      delay(pollInterval)
+    }
+  }
+}

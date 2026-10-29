@@ -32,13 +32,13 @@ import it.neckar.datetime.minimal.fromMillisCurrentTimeZone
 import it.neckar.open.collections.DoubleArrayList
 import it.neckar.open.i18n.I18nConfiguration
 import it.neckar.open.kotlin.lang.roundDownToBase
-import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.open.time.formatUtcForDebug
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.util.DefaultTimeZone
 
-@WithTimeZone("Europe/Berlin")
+@DefaultTimeZone("Europe/Berlin")
 class TimeTickDistanceTest {
   val time: @ms Double = 1546875919_123.987_345_678_901
 
@@ -47,7 +47,7 @@ class TimeTickDistanceTest {
     assertThat(time.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:19.123Z")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceYears1000000() {
     val start = -8.704446036793058E15
@@ -96,7 +96,7 @@ class TimeTickDistanceTest {
     }
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceYears() {
     val timeTickDistance = DistanceYears(7)
@@ -117,7 +117,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[4], I18nConfiguration.US)).isEqualTo("2044")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceYears12() {
     val timeTickDistance = DistanceYears(12)
@@ -134,7 +134,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[2], I18nConfiguration.US)).isEqualTo("2040")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths6() {
     val timeTickDistance = DistanceMonths(6)
@@ -152,7 +152,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[2], I18nConfiguration.US)).isEqualTo("January 2020")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths6_2() {
     @ms val start = time + TimeConstants.millisPerDay * 40
@@ -174,7 +174,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[3], I18nConfiguration.US)).isEqualTo("July 2020")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths3() {
     val timeTickDistance = DistanceMonths(3)
@@ -198,7 +198,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[3], I18nConfiguration.US)).isEqualTo("October 2019")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths2() {
     val timeTickDistance = DistanceMonths(2)
@@ -222,7 +222,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[3], I18nConfiguration.US)).isEqualTo("July 2019")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths1() {
     val timeTickDistance = DistanceMonths(1)
@@ -245,7 +245,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[3], I18nConfiguration.US)).isEqualTo("April 2019")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays15() {
     val end = time + TimeConstants.millisPerDay * 60
@@ -269,7 +269,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[3], I18nConfiguration.US)).isEqualTo("Feb 15, 2019")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays5() {
     assertThat(time.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:19.123Z")
@@ -300,7 +300,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[6], I18nConfiguration.US)).isEqualTo("Feb 5, 2019")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays1() {
     val start = 1.7040593889296738E12
@@ -320,7 +320,7 @@ class TimeTickDistanceTest {
     assertThat(timeTickDistance.formatAsOffset(ticks[1], I18nConfiguration.US)).isEqualTo("Jan 1, 2024")
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays1_2() {
     val start = 1.7040593889296738E12
@@ -344,7 +344,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays1_YearOverlap() {
     val start = 1.7038363819296738E12
@@ -368,7 +368,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceHours6() {
     val end = time + TimeConstants.millisPerHour * 40
@@ -388,7 +388,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceHours4() {
     val end = time + TimeConstants.millisPerHour * 30
@@ -409,7 +409,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMinutes10() {
     val end = time + TimeConstants.millisPerHour * 1.2
@@ -430,7 +430,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMinutes15() {
     val end = time + TimeConstants.millisPerHour * 1.2
@@ -449,7 +449,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceSeconds30() {
     val end = time + TimeConstants.millisPerMinute * 3
@@ -467,7 +467,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceSeconds10() {
     val end = time + TimeConstants.millisPerMinute * 1
@@ -485,7 +485,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMillis() {
     assertThat(time.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:19.123Z")
@@ -510,7 +510,7 @@ class TimeTickDistanceTest {
     verifyGlobalIndices(timeTickDistance, ticks)
   }
 
-  @WithTimeZone("America/New_York")
+  @DefaultTimeZone("America/New_York")
   @Test
   fun testVerySmall() {
     val start = 1.7040697786616245E12

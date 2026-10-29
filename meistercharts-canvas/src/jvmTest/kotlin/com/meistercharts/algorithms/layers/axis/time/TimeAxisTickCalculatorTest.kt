@@ -22,10 +22,10 @@ import it.neckar.datetime.minimal.TimeConstants
 import it.neckar.datetime.minimal.TimeZone
 import it.neckar.open.collections.last
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.open.unit.si.ms
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.util.DefaultTimeZone
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -38,7 +38,7 @@ import kotlin.time.DurationUnit
  *
  */
 @Disabled
-@WithTimeZone("UTC")
+@DefaultTimeZone("UTC")
 class TimeAxisTickCalculatorTest {
   @Test
   fun testTickDistance1Day() {

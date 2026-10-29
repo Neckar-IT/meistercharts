@@ -20,16 +20,15 @@ import assertk.assertions.*
 import com.meistercharts.axis.time.DistanceHours
 import com.meistercharts.axis.time.DistanceSeconds
 import it.neckar.datetime.minimal.TimeZone
-import it.neckar.open.collections.first
 import it.neckar.open.formatting.formatUtc
-import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.open.time.toDoubleMillis
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.util.DefaultTimeZone
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
-@WithTimeZone("Europe/Berlin")
+@DefaultTimeZone("Europe/Berlin")
 class TickDistanceBugTest {
   @Test
   fun testIAE() {

@@ -341,10 +341,10 @@ object Plugins {
 
   const val tailwind: String = "it.neckar.tailwind"
 
-  /** `keycloakClient("<clientId>") { }`: a Keycloak client of the module that uses it; a confidential one stores its client secret in a `SecretSlot`. */
+  /** `keycloakClient("<clientId>") { }`: a Keycloak client of the module that uses it; a confidential one names the `SecretSlot` of its client secret. */
   const val keycloakClient: String = "it.neckar.keycloak-client"
 
-  /** `auth.neckar.it` only: `applyKeycloakClients` over every `keycloakClient("<clientId>") { }` block, and `listKeycloakClients`. */
+  /** `auth.neckar.it` only: `generateKeycloakClients` writes every `keycloakClient("<clientId>") { }` block into the input of the OpenTofu root module. */
   const val keycloakClients: String = "it.neckar.keycloak-clients"
 
   const val openTofu: String = "it.neckar.opentofu"

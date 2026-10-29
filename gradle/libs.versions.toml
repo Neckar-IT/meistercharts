@@ -64,7 +64,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.24"
+aws-sdk-kotlin = "1.9.26"
 
 apache-poi = "6.0.0"
 
@@ -128,7 +128,7 @@ mockk = "1.14.11"
 
 modbus = "1.2.2"
 
-modelcontextprotocol-kotlin-sdk = "0.15.0"
+modelcontextprotocol-kotlin-sdk = "0.16.0"
 
 okhttp3 = "5.5.0"
 
@@ -137,9 +137,9 @@ opentelemetry = "1.67.0"
 # Alpha channel of the same release train, one -alpha release per core release. Governs opentelemetry-api-incubator.
 opentelemetry-alpha = "1.67.0-alpha"
 
-opentelemetry-instrumentation = "2.33.0-alpha"
+opentelemetry-instrumentation = "2.33.1-alpha"
 
-opentelemetry-javaagent = "2.33.0"
+opentelemetry-javaagent = "2.33.1"
 
 # Own release train, versioned independently of the SDK and of the instrumentation artifacts. No BOM pins the stable channel.
 opentelemetry-semconv = "1.44.0"
@@ -307,7 +307,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.3"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.4"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 

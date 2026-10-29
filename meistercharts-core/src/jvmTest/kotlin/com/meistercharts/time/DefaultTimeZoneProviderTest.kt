@@ -18,18 +18,18 @@ package com.meistercharts.time
 import assertk.*
 import assertk.assertions.*
 import it.neckar.open.i18n.SystemTimeZoneProvider
-import it.neckar.open.test.utils.WithTimeZone
 import it.neckar.datetime.minimal.TimeZone
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.util.DefaultTimeZone
 
 class DefaultTimeZoneProviderTest {
-  @WithTimeZone("Europe/Berlin")
+  @DefaultTimeZone("Europe/Berlin")
   @Test
   internal fun testBerlin() {
     assertThat(SystemTimeZoneProvider().systemTimeZone).isEqualTo(TimeZone(("Europe/Berlin")))
   }
 
-  @WithTimeZone("Asia/Tokyo")
+  @DefaultTimeZone("Asia/Tokyo")
   @Test
   internal fun testIt() {
     assertThat(SystemTimeZoneProvider().systemTimeZone).isEqualTo(TimeZone(("Asia/Tokyo")))

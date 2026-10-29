@@ -22,12 +22,11 @@ import com.meistercharts.history.HistoryBucketRange
 import it.neckar.open.formatting.dateTimeFormat
 import it.neckar.open.formatting.formatUtc
 import it.neckar.open.i18n.I18nConfiguration
-import it.neckar.open.test.utils.TempFolder
-import it.neckar.open.test.utils.WithTempFiles
 import it.neckar.open.test.utils.doesNotExist
 import it.neckar.open.time.toDoubleMillis
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -145,9 +144,8 @@ class HistoryFileStorageTest {
     assertThat(HistoryFileStorage.calculateBaseFolderValue(HistoryBucketDescriptor.forTimestamp(100000000.0 + HistoryBucketRange.HundredMillis.duration * 500, HistoryBucketRange.HundredMillis)).millis).isEqualTo(1.0005E8)
   }
 
-  @WithTempFiles
   @Test
-  internal fun testFileNamesRealistic(@TempFolder dir: File) {
+  internal fun testFileNamesRealistic(@TempDir dir: File) {
     val historyStorage = HistoryFileStorage(dir, JsonHistoryStorageSerializer())
 
     val localDate = LocalDate.of(2020, 2, 19)
@@ -168,9 +166,8 @@ class HistoryFileStorageTest {
     }
   }
 
-  @WithTempFiles
   @Test
-  internal fun testCreateFileName(@TempFolder dir: File) {
+  internal fun testCreateFileName(@TempDir dir: File) {
     val historyStorage = HistoryFileStorage(dir, JsonHistoryStorageSerializer())
 
     assertThat(historyStorage.getFileName(HistoryBucketDescriptor.forTimestamp(100000000.0, HistoryBucketRange.HundredMillis))).isEqualTo("HundredMillis/0/100000000/100000000/100000000")
@@ -181,9 +178,8 @@ class HistoryFileStorageTest {
   }
 
   @Disabled
-  @WithTempFiles
   @Test
-  internal fun testIt(@TempFolder dir: File) {
+  internal fun testIt(@TempDir dir: File) {
     val historyStorage = HistoryFileStorage(dir, JsonHistoryStorageSerializer())
 
     val descriptor = HistoryBucketDescriptor.forTimestamp(100000000.0, HistoryBucketRange.HundredMillis)

@@ -27,14 +27,13 @@
  */
 package it.neckar.open.test.utils
 
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.condition.DisabledIf
 
 /**
- * Disables tests when run headless
- *
+ * Disables a test that needs a display, such as a Swing or JavaFX window, on a host without one.
  */
-@ExtendWith(DisableIfHeadlessCondition::class)
-@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@DisabledIf("java.awt.GraphicsEnvironment#isHeadless", disabledReason = "Needs a display")
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 annotation class DisableIfHeadless
