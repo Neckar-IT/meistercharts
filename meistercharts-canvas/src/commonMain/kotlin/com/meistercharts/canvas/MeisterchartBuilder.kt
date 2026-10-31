@@ -123,7 +123,7 @@ abstract class MeisterchartBuilder(
   /**
    * How the zoom is changed between two consecutive zoom levels
    */
-  var zoomChangeFactor: Double = ZoomLevelCalculator.SQRT_2
+  var zoomChangeFactor: Double = ZoomLevelCalculator.Sqrt2
 
   /**
    * Whether the [ZoomAndTranslationLayer] should be registered that connects the user interactions

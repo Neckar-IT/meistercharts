@@ -59,10 +59,10 @@ import it.neckar.open.unit.prefix.kilo
 @Unit
 @Power
 @Name("kilowatts")
-@Symbol(kW.SYMBOL)
+@Symbol(kW.Symbol)
 @kilo(W::class)
 annotation class kW {
   companion object {
-    const val SYMBOL: String = "kW"
+    const val Symbol: String = "kW"
   }
 }

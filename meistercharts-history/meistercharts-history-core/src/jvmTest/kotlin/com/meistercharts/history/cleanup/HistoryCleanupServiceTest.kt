@@ -37,7 +37,7 @@ class HistoryCleanupServiceTest {
     val cleanupService = historyStorage.historyCleanupService
     val bookKeeping: InMemoryBookKeeping = historyStorage.bookKeeping
 
-    val start = WithVirtualTime.defaultNow
+    val start = WithVirtualTime.DefaultNow
     val samplingPeriod = SamplingPeriod.EveryHundredMillis
     val historyBucketRange = samplingPeriod.toHistoryBucketRange()
 

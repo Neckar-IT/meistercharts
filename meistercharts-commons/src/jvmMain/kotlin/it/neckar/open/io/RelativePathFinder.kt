@@ -34,8 +34,8 @@ import java.io.File
  *
  */
 object RelativePathFinder {
-  private const val BACKSLASH = '\\'
-  private const val SLASH = '/'
+  private const val Backslash = '\\'
+  private const val Slash = '/'
 
   /**
    * Calculates the relative path
@@ -51,7 +51,7 @@ object RelativePathFinder {
     // remove trailing file separator
     //
     var canonicalBase = base
-    if (base[base.length - 1] == SLASH || base[base.length - 1] == BACKSLASH) {
+    if (base[base.length - 1] == Slash || base[base.length - 1] == Backslash) {
       canonicalBase = base.substring(0, base.length - 1)
     }
 
@@ -59,7 +59,7 @@ object RelativePathFinder {
     // get canonical name of target and remove trailing separator
     //
     var canonicalTarget = target
-    if (canonicalTarget[canonicalTarget.length - 1] == SLASH || canonicalTarget[canonicalTarget.length - 1] == BACKSLASH) {
+    if (canonicalTarget[canonicalTarget.length - 1] == Slash || canonicalTarget[canonicalTarget.length - 1] == Backslash) {
       canonicalTarget = canonicalTarget.substring(0, canonicalTarget.length - 1)
     }
     if (canonicalTarget == canonicalBase) {
@@ -73,7 +73,7 @@ object RelativePathFinder {
       //
       // UNC file name, if target file doesn't also start with same
       // server name, don't go there
-      val endPrefix = canonicalBase.indexOf(BACKSLASH, 2)
+      val endPrefix = canonicalBase.indexOf(Backslash, 2)
       val prefix1 = canonicalBase.substring(0, endPrefix)
       val prefix2 = canonicalTarget.substring(0, endPrefix)
       if (prefix1 != prefix2) {
@@ -88,8 +88,8 @@ object RelativePathFinder {
           return canonicalTarget
         }
       } else {
-        if (canonicalBase[0] == SLASH) {
-          if (canonicalTarget[0] != SLASH) {
+        if (canonicalBase[0] == Slash) {
+          if (canonicalTarget[0] != Slash) {
             return canonicalTarget
           }
         }
@@ -109,7 +109,7 @@ object RelativePathFinder {
     var lastSeparator = -1
     for (i in 0 until minLength) {
       if (canonicalTarget[i] == canonicalBase[i]) {
-        if (canonicalTarget[i] == SLASH || canonicalTarget[i] == BACKSLASH) {
+        if (canonicalTarget[i] == Slash || canonicalTarget[i] == Backslash) {
           lastSeparator = i
         }
       } else {
@@ -126,7 +126,7 @@ object RelativePathFinder {
     if (canonicalBase.length > firstDifference) {
       relativePath.append("..")
       for (i in firstDifference until canonicalBase.length) {
-        if (canonicalBase[i] == SLASH || canonicalBase[i] == BACKSLASH) {
+        if (canonicalBase[i] == Slash || canonicalBase[i] == Backslash) {
           relativePath.append(separator)
           relativePath.append("..")
         }

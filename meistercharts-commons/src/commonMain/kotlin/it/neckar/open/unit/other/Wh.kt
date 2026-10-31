@@ -58,11 +58,11 @@ import it.neckar.open.unit.quantity.Power
 @Unit
 @Power
 @Name("watt-hours")
-@Symbol(Wh.SYMBOL)
+@Symbol(Wh.Symbol)
 @Definition("W·h", "J·s", "N·m·s", "kg·m²/s²")
 annotation class Wh {
   companion object {
-    const val SYMBOL: String = "Wh"
+    const val Symbol: String = "Wh"
   }
 
 }

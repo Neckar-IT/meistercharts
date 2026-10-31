@@ -58,12 +58,12 @@ import it.neckar.open.unit.prefix.milli
 @Suppress("ClassName")
 @Unit
 @Mass
-@Symbol(g.SYMBOL)
+@Symbol(g.Symbol)
 @Name("gram")
 @SiDerivedUnit
 @milli(kg::class)
 annotation class g {
   companion object {
-    const val SYMBOL: String = "g"
+    const val Symbol: String = "g"
   }
 }

@@ -60,6 +60,6 @@ annotation class pico(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "p"
+    const val Symbol: String = "p"
   }
 }

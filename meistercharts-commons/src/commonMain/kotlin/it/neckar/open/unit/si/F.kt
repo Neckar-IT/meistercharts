@@ -59,10 +59,10 @@ import it.neckar.open.unit.Symbol
 @ElectricCapacitance
 @Name("farad")
 @SiDerivedUnit(A::class, V::class, s::class, J::class)
-@Symbol(F.SYMBOL)
+@Symbol(F.Symbol)
 @Definition("A*s/V", "J/V²")
 annotation class F {
   companion object {
-    const val SYMBOL: String = "F"
+    const val Symbol: String = "F"
   }
 }

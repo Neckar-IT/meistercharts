@@ -36,32 +36,32 @@ object TimeConstants {
    *
    * 2001-09-09T01:46:40.000
    */
-  const val referenceTimestamp: @ms Double = 1.7040672E12 //Beware that changing this constant may break pixel-related regression tests!
+  const val ReferenceTimestamp: @ms Double = 1.7040672E12 //Beware that changing this constant may break pixel-related regression tests!
 
   /**
    * Milli seconds per second
    */
-  const val millisPerSecond: @ms Double = 1000.0
+  const val MillisPerSecond: @ms Double = 1000.0
 
   /**
    * Number of milliseconds in a standard minute.
    */
-  const val millisPerMinute: @ms Double = 60 * millisPerSecond
+  const val MillisPerMinute: @ms Double = 60 * MillisPerSecond
 
   /**
    * Number of milliseconds in a standard hour.
    */
-  const val millisPerHour: @ms Double = 60 * millisPerMinute
+  const val MillisPerHour: @ms Double = 60 * MillisPerMinute
 
   /**
    * Number of milliseconds in a standard day.
    */
-  const val millisPerDay: @ms Double = 24 * millisPerHour
+  const val MillisPerDay: @ms Double = 24 * MillisPerHour
 
-  const val millisPerYear: @ms Double = 365 * millisPerDay
+  const val MillisPerYear: @ms Double = 365 * MillisPerDay
 
   @Approximation
-  val millisPerDecade: @ms Double = 10 * millisPerYear
+  val millisPerDecade: @ms Double = 10 * MillisPerYear
 
   /**
    * Number of milliseconds in a century - approximation.

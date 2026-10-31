@@ -47,7 +47,7 @@ data class HistoryEnum(
     }
 
     //Since the values are stored in a bit set (int) - this is the max number of enum values
-    require(values.size <= HistoryEnumSet.maxSupportedEnumValuesCount) {
+    require(values.size <= HistoryEnumSet.MaxSupportedEnumValuesCount) {
       "Too many options. Was <${values.size}>"
     }
   }

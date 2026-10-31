@@ -53,7 +53,7 @@ import kotlin.reflect.KClass
 @MustBeDocumented
 @Suppress("ClassName")
 @Prefix(0.000_001)
-@Symbol(micro.SYMBOL)
+@Symbol(micro.Symbol)
 annotation class micro(
   /**
    * The base unit
@@ -62,6 +62,6 @@ annotation class micro(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "μ"
+    const val Symbol: String = "μ"
   }
 }

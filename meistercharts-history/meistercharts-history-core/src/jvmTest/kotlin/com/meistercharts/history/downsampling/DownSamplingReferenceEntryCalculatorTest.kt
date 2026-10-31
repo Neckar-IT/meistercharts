@@ -131,7 +131,7 @@ class DownSamplingReferenceEntryCalculatorTest {
       assertThat(historyChunk.getReferenceEntryStatus(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(1))).isEqualToHistoryEnumSet(0b01)
     }
 
-    val descriptorForDownSampling = HistoryBucketDescriptor.forTimestamp(TimeConstants.referenceTimestamp, samplingPeriod.above()!!)
+    val descriptorForDownSampling = HistoryBucketDescriptor.forTimestamp(TimeConstants.ReferenceTimestamp, samplingPeriod.above()!!)
     val downSampled = descriptorForDownSampling.calculateDownSampled(recordedBuckets)
 
     assertThat(downSampled.chunk.getReferenceEntryId(ReferenceEntryDataSeriesIndex.zero, TimestampIndex(0))).isEqualToReferenceEntryId(25912)

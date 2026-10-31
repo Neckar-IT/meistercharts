@@ -107,7 +107,7 @@ class ChartSupport(
   /**
    * How the zoom is changed between two consecutive zoom levels
    */
-  zoomChangeFactor: Double = ZoomLevelCalculator.SQRT_2,
+  zoomChangeFactor: Double = ZoomLevelCalculator.Sqrt2,
 
   /**
    * The binding strategy that is used to bind the window size to the canvas size

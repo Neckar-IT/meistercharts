@@ -58,9 +58,9 @@ import it.neckar.open.unit.quantity.Energy
 @Unit
 @Energy
 @Name("kilowatt-hour per kilowatt peak and year")
-@Symbol(kWh_kWp_a.SYMBOL)
+@Symbol(kWh_kWp_a.Symbol)
 annotation class kWh_kWp_a {
   companion object {
-    const val SYMBOL: String = "kWh per kWp and year"
+    const val Symbol: String = "kWh per kWp and year"
   }
 }

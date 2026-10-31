@@ -48,13 +48,13 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
 
   companion object {
     @PublishedApi
-    internal const val EOF = Int.MAX_VALUE - 1
+    internal const val eof = Int.MAX_VALUE - 1
 
     @PublishedApi
-    internal const val ZERO_INDEX = Int.MAX_VALUE
+    internal const val ZeroIndex = Int.MAX_VALUE
 
     @PublishedApi
-    internal const val EMPTY = 0
+    internal const val Empty = 0
   }
 
   private var capacity = 1 shl nbits
@@ -82,7 +82,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
 
     for (n in _keys.indices) {
       val k = _keys[n]
-      if (k != EMPTY) new[k] = _values[n]
+      if (k != Empty) new[k] = _values[n]
     }
 
     this.nbits = new.nbits
@@ -103,7 +103,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   operator fun contains(key: Int): Boolean = _getKeyIndex(key) >= 0
 
   private fun _getKeyIndex(key: Int): Int {
-    if (key == 0) return if (hasZero) ZERO_INDEX else -1
+    if (key == 0) return if (hasZero) ZeroIndex else -1
     val index1 = hash1(key); if (_keys[index1] == key) return index1
     val index2 = hash2(key); if (_keys[index2] == key) return index2
     val index3 = hash3(key); if (_keys[index3] == key) return index3
@@ -114,11 +114,11 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   fun remove(key: Int): Boolean {
     val index = _getKeyIndex(key)
     if (index < 0) return false
-    if (index == ZERO_INDEX) {
+    if (index == ZeroIndex) {
       hasZero = false
       zeroValue = null
     } else {
-      _keys[index] = EMPTY
+      _keys[index] = Empty
     }
     size--
     return true
@@ -136,12 +136,12 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   operator fun get(key: Int): T? {
     val index = _getKeyIndex(key)
     if (index < 0) return null
-    if (index == ZERO_INDEX) return zeroValue
+    if (index == ZeroIndex) return zeroValue
     return _values[index]
   }
 
   private fun setEmptySlot(index: Int, key: Int, value: T?): T? {
-    if (_keys[index] != EMPTY) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
+    if (_keys[index] != Empty) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
     _keys[index] = key
     _values[index] = value
     size++
@@ -161,10 +161,10 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
             return null
           }
           if (size >= growSize) grow()
-          val index1 = hash1(key); if (_keys[index1] == EMPTY) return setEmptySlot(index1, key, value)
-          val index2 = hash2(key); if (_keys[index2] == EMPTY) return setEmptySlot(index2, key, value)
-          val index3 = hash3(key); if (_keys[index3] == EMPTY) return setEmptySlot(index3, key, value)
-          for (n in stashStart until _keys.size) if (_keys[n] == EMPTY) return setEmptySlot(n, key, value)
+          val index1 = hash1(key); if (_keys[index1] == Empty) return setEmptySlot(index1, key, value)
+          val index2 = hash2(key); if (_keys[index2] == Empty) return setEmptySlot(index2, key, value)
+          val index3 = hash3(key); if (_keys[index3] == Empty) return setEmptySlot(index3, key, value)
+          for (n in stashStart until _keys.size) if (_keys[n] == Empty) return setEmptySlot(n, key, value)
           if (stashSize > 512) {
             grow()
           } else {
@@ -172,7 +172,7 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
           }
           continue@retry
         }
-        (index == ZERO_INDEX) -> return zeroValue.apply { zeroValue = value }
+        (index == ZeroIndex) -> return zeroValue.apply { zeroValue = value }
         else -> return _values[index].apply { _values[index] = value }
       }
     }
@@ -199,8 +199,8 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
     for (n in _keys.indices) {
       //println("$n: ${_keys[n]}")
       val key = _keys[n]
-      if (key != EMPTY && key in src..dst) {
-        _keys[n] = EMPTY
+      if (key != Empty && key in src..dst) {
+        _keys[n] = Empty
         _values[n] = null
         size--
       }
@@ -218,10 +218,10 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
   val pooledEntries get() = entries
 
   class Iterator<T>(val map: IntMap<T>) {
-    private var index: Int = if (map.hasZero) ZERO_INDEX else nextNonEmptyIndex(map._keys, 0)
+    private var index: Int = if (map.hasZero) ZeroIndex else nextNonEmptyIndex(map._keys, 0)
     private val entry = Entry<T?>(0, null)
 
-    fun hasNext() = index != EOF
+    fun hasNext() = index != eof
 
     fun nextEntry(): Entry<T?> = currentEntry().apply { next() }
     fun nextKey(): Int = currentKey().apply { next() }
@@ -234,42 +234,42 @@ class IntMap<T> internal constructor(private var nbits: Int, private val loadFac
     }
 
     private fun currentKey(): Int = when (index) {
-      ZERO_INDEX, EOF -> 0
+      ZeroIndex, eof -> 0
       else -> map._keys[index]
     }
 
     private fun currentValue(): T? = when (index) {
-      ZERO_INDEX -> map.zeroValue
-      EOF -> null
+      ZeroIndex -> map.zeroValue
+      eof -> null
       else -> map._values[index]
     }
 
     private fun nextNonEmptyIndex(keys: IntArray, offset: Int): Int {
-      for (n in offset until keys.size) if (keys[n] != EMPTY) return n
-      return EOF
+      for (n in offset until keys.size) if (keys[n] != Empty) return n
+      return eof
     }
 
     private fun next() {
-      if (index != EOF) index = nextNonEmptyIndex(map._keys, if (index == ZERO_INDEX) 0 else (index + 1))
+      if (index != eof) index = nextNonEmptyIndex(map._keys, if (index == ZeroIndex) 0 else (index + 1))
     }
   }
 
   @PublishedApi
   internal fun nextNonEmptyIndex(keys: IntArray, offset: Int): Int {
-    for (n in offset until keys.size) if (keys[n] != EMPTY) return n
-    return EOF
+    for (n in offset until keys.size) if (keys[n] != Empty) return n
+    return eof
   }
 
   inline fun fastKeyForEach(callback: (key: Int) -> Unit) {
-    var index: Int = if (hasZero) ZERO_INDEX else nextNonEmptyIndex(_keys, 0)
-    while (index != EOF) {
+    var index: Int = if (hasZero) ZeroIndex else nextNonEmptyIndex(_keys, 0)
+    while (index != eof) {
       callback(
         when (index) {
-          ZERO_INDEX, EOF -> 0
+          ZeroIndex, eof -> 0
           else -> _keys[index]
         }
       )
-      index = nextNonEmptyIndex(_keys, if (index == ZERO_INDEX) 0 else (index + 1))
+      index = nextNonEmptyIndex(_keys, if (index == ZeroIndex) 0 else (index + 1))
     }
   }
 
@@ -400,13 +400,13 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
 
   companion object {
     @PublishedApi
-    internal const val EOF = Int.MAX_VALUE - 1
+    internal const val eof = Int.MAX_VALUE - 1
 
     @PublishedApi
-    internal const val ZERO_INDEX = Int.MAX_VALUE
+    internal const val ZeroIndex = Int.MAX_VALUE
 
     @PublishedApi
-    internal const val EMPTY = 0
+    internal const val Empty = 0
   }
 
   private var capacity = 1 shl nbits
@@ -432,7 +432,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
 
     for (n in _keys.indices) {
       val k = _keys[n]
-      if (k != EMPTY) new[k] = _values[n]
+      if (k != Empty) new[k] = _values[n]
     }
 
     this.nbits = new.nbits
@@ -453,7 +453,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   operator fun contains(key: Int): Boolean = _getKeyIndex(key) >= 0
 
   private fun _getKeyIndex(key: Int): Int {
-    if (key == 0) return if (hasZero) ZERO_INDEX else -1
+    if (key == 0) return if (hasZero) ZeroIndex else -1
     val index1 = hash1(key); if (_keys[index1] == key) return index1
     val index2 = hash2(key); if (_keys[index2] == key) return index2
     val index3 = hash3(key); if (_keys[index3] == key) return index3
@@ -464,11 +464,11 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   fun remove(key: Int): Boolean {
     val index = _getKeyIndex(key)
     if (index < 0) return false
-    if (index == ZERO_INDEX) {
+    if (index == ZeroIndex) {
       hasZero = false
       zeroValue = 0
     } else {
-      _keys[index] = EMPTY
+      _keys[index] = Empty
     }
     size--
     return true
@@ -486,12 +486,12 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   operator fun get(key: Int): Int {
     val index = _getKeyIndex(key)
     if (index < 0) return 0
-    if (index == ZERO_INDEX) return zeroValue
+    if (index == ZeroIndex) return zeroValue
     return _values[index]
   }
 
   private fun setEmptySlot(index: Int, key: Int, value: Int): Int {
-    if (_keys[index] != EMPTY) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
+    if (_keys[index] != Empty) throw IllegalStateException("setEmptySlot called on non-empty slot index=$index key=$key")
     _keys[index] = key
     _values[index] = value
     size++
@@ -511,10 +511,10 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
             return 0
           }
           if (size >= growSize) grow()
-          val index1 = hash1(key); if (_keys[index1] == EMPTY) return setEmptySlot(index1, key, value)
-          val index2 = hash2(key); if (_keys[index2] == EMPTY) return setEmptySlot(index2, key, value)
-          val index3 = hash3(key); if (_keys[index3] == EMPTY) return setEmptySlot(index3, key, value)
-          for (n in stashStart until _keys.size) if (_keys[n] == EMPTY) return setEmptySlot(n, key, value)
+          val index1 = hash1(key); if (_keys[index1] == Empty) return setEmptySlot(index1, key, value)
+          val index2 = hash2(key); if (_keys[index2] == Empty) return setEmptySlot(index2, key, value)
+          val index3 = hash3(key); if (_keys[index3] == Empty) return setEmptySlot(index3, key, value)
+          for (n in stashStart until _keys.size) if (_keys[n] == Empty) return setEmptySlot(n, key, value)
           if (stashSize > 512) {
             grow()
           } else {
@@ -522,7 +522,7 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
           }
           continue@retry
         }
-        (index == ZERO_INDEX) -> return zeroValue.apply { zeroValue = value }
+        (index == ZeroIndex) -> return zeroValue.apply { zeroValue = value }
         else -> return _values[index].apply { _values[index] = value }
       }
     }
@@ -548,10 +548,10 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
   val pooledEntries get() = entries
 
   class Iterator(val map: IntIntMap) {
-    private var index: Int = if (map.hasZero) ZERO_INDEX else nextNonEmptyIndex(map._keys, 0)
+    private var index: Int = if (map.hasZero) ZeroIndex else nextNonEmptyIndex(map._keys, 0)
     private val entry = Entry(0, 0)
 
-    fun hasNext() = index != EOF
+    fun hasNext() = index != eof
 
     fun nextEntry(): Entry = currentEntry().apply { next() }
     fun nextKey(): Int = currentKey().apply { next() }
@@ -564,42 +564,42 @@ class IntIntMap internal constructor(private var nbits: Int, private val loadFac
     }
 
     private fun currentKey(): Int = when (index) {
-      ZERO_INDEX, EOF -> 0
+      ZeroIndex, eof -> 0
       else -> map._keys[index]
     }
 
     private fun currentValue(): Int = when (index) {
-      ZERO_INDEX -> map.zeroValue
-      EOF -> 0
+      ZeroIndex -> map.zeroValue
+      eof -> 0
       else -> map._values[index]
     }
 
     private fun nextNonEmptyIndex(keys: IntArray, offset: Int): Int {
-      for (n in offset until keys.size) if (keys[n] != EMPTY) return n
-      return EOF
+      for (n in offset until keys.size) if (keys[n] != Empty) return n
+      return eof
     }
 
     private fun next() {
-      if (index != EOF) index = nextNonEmptyIndex(map._keys, if (index == ZERO_INDEX) 0 else (index + 1))
+      if (index != eof) index = nextNonEmptyIndex(map._keys, if (index == ZeroIndex) 0 else (index + 1))
     }
   }
 
   @PublishedApi
   internal fun nextNonEmptyIndex(keys: IntArray, offset: Int): Int {
-    for (n in offset until keys.size) if (keys[n] != EMPTY) return n
-    return EOF
+    for (n in offset until keys.size) if (keys[n] != Empty) return n
+    return eof
   }
 
   inline fun fastKeyForEach(callback: (key: Int) -> Unit) {
-    var index: Int = if (hasZero) IntMap.ZERO_INDEX else nextNonEmptyIndex(_keys, 0)
-    while (index != IntMap.EOF) {
+    var index: Int = if (hasZero) IntMap.ZeroIndex else nextNonEmptyIndex(_keys, 0)
+    while (index != IntMap.eof) {
       callback(
         when (index) {
-          IntMap.ZERO_INDEX, IntMap.EOF -> 0
+          IntMap.ZeroIndex, IntMap.eof -> 0
           else -> _keys[index]
         }
       )
-      index = nextNonEmptyIndex(_keys, if (index == IntMap.ZERO_INDEX) 0 else (index + 1))
+      index = nextNonEmptyIndex(_keys, if (index == IntMap.ZeroIndex) 0 else (index + 1))
     }
   }
 

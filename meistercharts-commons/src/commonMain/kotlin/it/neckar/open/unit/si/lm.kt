@@ -60,10 +60,10 @@ import it.neckar.open.unit.Symbol
 @LuminousFlux
 @Name("lumen")
 @SiDerivedUnit(cd::class, sr::class)
-@Symbol(lm.SYMBOL)
+@Symbol(lm.Symbol)
 @Definition("cd*sr")
 annotation class lm {
   companion object {
-    const val SYMBOL: String = "lm"
+    const val Symbol: String = "lm"
   }
 }

@@ -286,7 +286,7 @@ fun Project.withTask(name: String, block: (Task) -> Unit) {
 }
 
 /**
- * The `build` lifecycle task — contributed by any language plugin or [Plugins.base].
+ * The `build` lifecycle task — contributed by any language plugin or [Plugins.Base].
  * Resolving it fails at configuration time instead of task-graph time (#2668).
  */
 val Project.buildTask: TaskProvider<Task>
@@ -296,7 +296,7 @@ val Project.buildTask: TaskProvider<Task>
  * Configures JavaFX for this project
  */
 fun Project.configureJavaFX(modules: List<JavaFXModule> = listOf(JavaFXModule.CONTROLS)) {
-  plugins.apply(Plugins.javafx)
+  plugins.apply(Plugins.Javafx)
 
   val javaFxOptions: org.openjfx.gradle.JavaFXOptions = extensions.getByType(org.openjfx.gradle.JavaFXOptions::class.java)
 
@@ -659,11 +659,11 @@ fun Project.configureJunit() {
  * `jvmTest` of a Kotlin Multiplatform module with the JVM target `jvm`.
  */
 fun Project.withUnitTestTask(action: (TaskProvider<Test>) -> Unit) {
-  plugins.withId(Plugins.java) {
+  plugins.withId(Plugins.Java) {
     action(tasks.named<Test>("test"))
   }
 
-  plugins.withId(Plugins.kotlinMultiPlatform) {
+  plugins.withId(Plugins.KotlinMultiPlatform) {
     the<KotlinMultiplatformExtension>().targets.matching { it.name == "jvm" }.configureEach {
       action(tasks.named<Test>("jvmTest"))
     }
@@ -1296,7 +1296,7 @@ val Project.inIde: Boolean
  */
 val Project.ciInformation: GitlabCiInformation
   get() {
-    return rootProject.extra.get(BuildVariables.CiInformation) as? GitlabCiInformation ?: throw IllegalStateException("Could not find ${BuildVariables.CiInformation} in extra")
+    return rootProject.extra.get(BuildVariables.ciInformation) as? GitlabCiInformation ?: throw IllegalStateException("Could not find ${BuildVariables.ciInformation} in extra")
   }
 
 /**

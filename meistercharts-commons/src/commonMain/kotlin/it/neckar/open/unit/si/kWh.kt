@@ -59,11 +59,11 @@ import it.neckar.open.unit.quantity.Energy
 @Unit
 @Energy
 @Name("kilowatt-hour")
-@Symbol(kWh.SYMBOL)
+@Symbol(kWh.Symbol)
 @SiDerivedUnit(W::class, s::class, J::class)
 @Definition("3.6kWs", "3.6kJ")
 annotation class kWh {
   companion object {
-    const val SYMBOL: String = "kWh"
+    const val Symbol: String = "kWh"
   }
 }

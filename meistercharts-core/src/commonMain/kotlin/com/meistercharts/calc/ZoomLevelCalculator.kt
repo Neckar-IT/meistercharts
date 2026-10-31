@@ -37,14 +37,14 @@ class ZoomLevelCalculator(
     get() = zoomLevel2Factor(maxZoomLevel)
 
   companion object {
-    const val SQRT_2: Double = 1.4142135623730951
-    const val SQRT_2_TWICE: Double = 2.0
+    const val Sqrt2: Double = 1.4142135623730951
+    const val Sqrt2Twice: Double = 2.0
 
     /**
      * Converts a zoom level to a zoom factor
      */
     fun zoomLevel2Factor(zoomLevel: Int): Double {
-      return SQRT_2.pow(zoomLevel.toDouble())
+      return Sqrt2.pow(zoomLevel.toDouble())
     }
   }
 }

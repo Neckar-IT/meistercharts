@@ -56,9 +56,9 @@ import it.neckar.open.annotations.meta.AllocationDescribingAnnotation
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
-@AllocationDescribingAnnotation(Hot.ALLOCATION_DESCRIPTOR)
+@AllocationDescribingAnnotation(Hot.AllocationDescriptor)
 annotation class Hot {
   companion object {
-    const val ALLOCATION_DESCRIPTOR: String = "hot-path"
+    const val AllocationDescriptor: String = "hot-path"
   }
 }

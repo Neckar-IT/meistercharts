@@ -59,9 +59,9 @@ import it.neckar.open.unit.Symbol
 @ElectricCurrent
 @Name("ampere")
 @SIBaseUnit
-@Symbol(A.SYMBOL)
+@Symbol(A.Symbol)
 annotation class A {
   companion object {
-    const val SYMBOL: String = "A"
+    const val Symbol: String = "A"
   }
 }

@@ -67,8 +67,8 @@ data class MapCoordinates(
    * Can be used when encoding the object to a GET request
    */
   object QueryParams {
-    const val latitude: String = "latitude"
-    const val longitude: String = "longitude"
+    const val Latitude: String = "latitude"
+    const val Longitude: String = "longitude"
   }
 }
 

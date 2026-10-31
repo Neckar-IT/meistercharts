@@ -33,7 +33,7 @@ import it.neckar.open.kotlin.lang.requireNotNull
 /**
  * The server root URL - should be configured in the docker compose as "environment"
  */
-const val SERVER_ROOT_URL: String = "SERVER_ROOT_URL"
+const val ServerRootUrl: String = "SERVER_ROOT_URL"
 
 /**
  * Offers access to well-known server environment variables
@@ -43,7 +43,7 @@ object ServerEnvironment {
    * The server root URL
    */
   fun findServerRootUrl(): Url.Absolute? {
-    val valueAsString = System.getenv(SERVER_ROOT_URL)
+    val valueAsString = System.getenv(ServerRootUrl)
     return valueAsString?.let {
       return Url.Absolute(it)
     }
@@ -51,7 +51,7 @@ object ServerEnvironment {
 
   fun getServerRootUrl(): Url.Absolute {
     return findServerRootUrl().requireNotNull {
-      "The server root URL is not set. Please set the environment variable $SERVER_ROOT_URL"
+      "The server root URL is not set. Please set the environment variable $ServerRootUrl"
     }
   }
 }

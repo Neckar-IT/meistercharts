@@ -59,10 +59,10 @@ import it.neckar.open.unit.Symbol
 @AmountOfSubstance
 @Name("mole")
 @SIBaseUnit
-@Symbol(mole.SYMBOL)
+@Symbol(mole.Symbol)
 annotation class mole {
   companion object {
-    const val SYMBOL: String = "mol"
+    const val Symbol: String = "mol"
   }
 
 }

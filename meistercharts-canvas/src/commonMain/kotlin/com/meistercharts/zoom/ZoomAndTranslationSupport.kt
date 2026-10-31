@@ -55,7 +55,7 @@ class ZoomAndTranslationSupport(
   /**
    * The change factor is used to calculate the new zoom level
    */
-  val zoomChangeFactor: @Positive Double = ZoomLevelCalculator.SQRT_2,
+  val zoomChangeFactor: @Positive Double = ZoomLevelCalculator.Sqrt2,
 ) {
 
   @Deprecated("Tests only!")
@@ -63,7 +63,7 @@ class ZoomAndTranslationSupport(
     chartState: MutableChartState,
     zoomAndPanModifier: ZoomAndTranslationModifier,
     zoomAndTranslationDefaults: ZoomAndTranslationDefaults,
-    zoomChangeFactor: Double = ZoomLevelCalculator.SQRT_2,
+    zoomChangeFactor: Double = ZoomLevelCalculator.Sqrt2,
   ) : this(ChartCalculator(chartState), chartState, zoomAndPanModifier, zoomAndTranslationDefaults, zoomChangeFactor)
 
   init {

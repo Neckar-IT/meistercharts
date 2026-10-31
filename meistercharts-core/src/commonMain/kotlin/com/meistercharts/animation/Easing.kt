@@ -41,7 +41,7 @@ fun interface Easing {
     /**
      * The constant that is used to calculate bouncing
      */
-    const val bounce10: Double = 1.7015401988668
+    const val Bounce10: Double = 1.7015401988668
 
     fun cubic(function: (t: @NotBoxed Double, b: @NotBoxed Double, c: @NotBoxed Double, d: @NotBoxed Double) -> @NotBoxed Double): Easing {
       return Easing { function(it, 0.0, 1.0, 1.0) }
@@ -111,8 +111,8 @@ fun interface Easing {
     val inOut: Easing = combine(incoming, out)
     val outIn: Easing = combine(out, incoming)
 
-    val inBack: Easing = Easing { it.pow(2.0) * ((bounce10 + 1.0) * it - bounce10) }
-    val outBack: Easing = Easing { val inv = it - 1.0; inv.pow(2.0) * ((bounce10 + 1.0) * inv + bounce10) + 1.0 }
+    val inBack: Easing = Easing { it.pow(2.0) * ((Bounce10 + 1.0) * it - Bounce10) }
+    val outBack: Easing = Easing { val inv = it - 1.0; inv.pow(2.0) * ((Bounce10 + 1.0) * inv + Bounce10) + 1.0 }
 
     val inOutBack: Easing = combine(inBack, outBack)
     val outInBack: Easing = combine(outBack, inBack)

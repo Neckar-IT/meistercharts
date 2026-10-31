@@ -59,10 +59,10 @@ import it.neckar.open.unit.quantity.Volume
 @Unit
 @Volume
 @SiDerivedUnit(m::class)
-@Symbol(L.SYMBOL)
+@Symbol(L.Symbol)
 @Cubic(dm::class)
 annotation class L {
   companion object {
-    const val SYMBOL: String = "L"
+    const val Symbol: String = "L"
   }
 }

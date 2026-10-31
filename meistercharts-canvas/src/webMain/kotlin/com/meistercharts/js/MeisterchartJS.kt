@@ -54,10 +54,10 @@ constructor(
       //Remove the holder from the DOM: "Everything" related to the chart will be removed/cleaned up
       it.remove()
 
-      it.addClass(MeisterChartClasses.disposed)
+      it.addClass(MeisterChartClasses.Disposed)
     }
 
-    it.classList.add(MeisterChartClasses.holder, MeisterChartClasses.chartId(chartSupport.chartId))
+    it.classList.add(MeisterChartClasses.Holder, MeisterChartClasses.chartId(chartSupport.chartId))
 
     it.appendChild(htmlCanvas.canvasElement)
     chartSupport.onDispose {

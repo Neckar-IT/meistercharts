@@ -41,7 +41,7 @@ fun File.writeTextWithRename(text: String, charset: Charset = Charsets.UTF_8) {
 
 /** Creates a corresponding tmp file for this file. The tmp file has an appendix consisting of a TMP suffix (.tmp) and the current nanoTime. */
 fun File.createTmpFile(): File {
-  return File(this.parent, this.name + SUFFIX_TMP + "_" + System.nanoTime())
+  return File(this.parent, this.name + SuffixTmp + "_" + System.nanoTime())
 }
 
 /** Creates corresponding temporary backup directories for this directory and
@@ -69,4 +69,4 @@ fun File.writeBytesWithRename(array: ByteArray) {
 }
 
 
-const val SUFFIX_TMP: String = ".tmp"
+const val SuffixTmp: String = ".tmp"

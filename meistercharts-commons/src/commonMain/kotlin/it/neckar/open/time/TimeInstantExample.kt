@@ -34,7 +34,7 @@ import kotlin.time.Instant
  */
 @Suppress("ObjectPropertyName")
 object TimeInstantExample {
-  val _2020_05_21_15_00_41_500: Instant = TimeMillisExample._2020_05_21_15_00_41_500.toInstant()
+  val _2020_05_21_15_00_41_500: Instant = TimeMillisExample.Timestamp20200521150041500.toInstant()
 
   val _2023_11_15_12_00_00_000: Instant = TimeMillisExample._2023_11_15_12_00_00_000.toInstant()
 

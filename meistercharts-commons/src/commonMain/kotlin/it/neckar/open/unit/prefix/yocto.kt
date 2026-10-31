@@ -58,6 +58,6 @@ annotation class yocto(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "y"
+    const val Symbol: String = "y"
   }
 }

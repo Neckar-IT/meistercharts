@@ -62,11 +62,11 @@ import it.neckar.open.unit.quantity.Length
 @Unit
 @Length
 @Name("airmass")
-@Symbol(AM.SYMBOL)
+@Symbol(AM.Symbol)
 @Definition("optical path length through Earth's atmosphere", "relative to path length to that at the zenith at sea level")
 annotation class AM {
   companion object {
-    const val SYMBOL: String = "AM"
+    const val Symbol: String = "AM"
   }
 
 }

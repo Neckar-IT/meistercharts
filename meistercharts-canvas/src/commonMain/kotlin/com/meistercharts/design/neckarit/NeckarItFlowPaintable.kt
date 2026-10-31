@@ -97,7 +97,7 @@ class NeckarItFlowPaintable(
     /**
      * Ratio between width and height
      */
-    const val ratio: Double = 0.21
+    const val Ratio: Double = 0.21
 
     /**
      * Returns the optimal size for a given width
@@ -110,7 +110,7 @@ class NeckarItFlowPaintable(
     /**
      * Returns the optimal height for a given width
      */
-    fun optimalHeight(width: Double): Double = width * ratio
+    fun optimalHeight(width: Double): Double = width * Ratio
 
     /**
      * Returns the paintable for a given width

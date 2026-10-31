@@ -293,9 +293,9 @@ data class Matrix(
       if (this.skewY != this.skewY) this.skewY = 0.0
 
       this.scaleY =
-        if (this.skewX > -PI_4 && this.skewX < PI_4) matrix.d / cos(this.skewX) else -matrix.c / sin(this.skewX)
+        if (this.skewX > -Pi4 && this.skewX < Pi4) matrix.d / cos(this.skewX) else -matrix.c / sin(this.skewX)
       this.scaleX =
-        if (this.skewY > -PI_4 && this.skewY < PI_4) matrix.a / cos(this.skewY) else matrix.b / sin(this.skewY)
+        if (this.skewY > -Pi4 && this.skewY < Pi4) matrix.a / cos(this.skewY) else matrix.b / sin(this.skewY)
 
       if (abs(this.skewX - this.skewY) < 0.0001) {
         this.rotation = this.skewX
@@ -366,4 +366,4 @@ data class Matrix(
 }
 
 
-const val PI_4: Double = PI / 4.0
+const val Pi4: Double = PI / 4.0

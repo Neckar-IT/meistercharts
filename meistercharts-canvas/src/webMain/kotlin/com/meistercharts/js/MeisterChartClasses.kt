@@ -21,28 +21,28 @@ import com.meistercharts.charts.ChartId
  * Contains the CSS classes used in meistercharts
  */
 object MeisterChartClasses {
-  const val canvas: String = "meistercharts-canvas"
-  const val nativeComponentsHolder: String = "meistercharts-native-components"
+  const val Canvas: String = "meistercharts-canvas"
+  const val NativeComponentsHolder: String = "meistercharts-native-components"
 
   /**
    * Is added if a chart is disposed
    */
-  const val disposed: String = "meistercharts-disposed"
+  const val Disposed: String = "meistercharts-disposed"
 
   /**
    * Class name for the holder of the chart
    */
-  const val holder: String = "meistercharts"
+  const val Holder: String = "meistercharts"
 
   /**
    * Class name for the script tag that contains the configuration (JSON).
    */
-  const val config: String = "meistercharts-config"
+  const val Config: String = "meistercharts-config"
 
   /**
    * Used for image loader elements
    */
-  const val imageLoader: String = "meistercharts-image-loader"
+  const val ImageLoader: String = "meistercharts-image-loader"
 
   fun chartId(chartId: ChartId): String {
     return "meistercharts-id-${chartId.id}"

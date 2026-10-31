@@ -36,21 +36,21 @@ object DurationMillisExample {
   /**
    * Milli seconds per second
    */
-  const val millisPerSecond: @ms Double = 1000.0
+  const val MillisPerSecond: @ms Double = 1000.0
 
   /**
    * Number of milliseconds in a standard minute.
    */
-  const val millisPerMinute: @ms Double = 60 * millisPerSecond
+  const val MillisPerMinute: @ms Double = 60 * MillisPerSecond
 
   /**
    * Number of milliseconds in a standard hour.
    */
-  const val millisPerHour: @ms Double = 60 * millisPerMinute
+  const val MillisPerHour: @ms Double = 60 * MillisPerMinute
 
   /**
    * Number of milliseconds in a standard day.
    */
-  const val millisPerDay: @ms Double = 24 * millisPerHour
+  const val MillisPerDay: @ms Double = 24 * MillisPerHour
 
 }

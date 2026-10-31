@@ -41,18 +41,18 @@ object IntRangeSerializer : KSerializer<IntRange> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("IntRange", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: IntRange) {
-    encoder.encodeString("${value.first}$delimiter${value.last}")
+    encoder.encodeString("${value.first}$Delimiter${value.last}")
   }
 
   override fun deserialize(decoder: Decoder): IntRange {
     val decodeString = decoder.decodeString()
-    val parts = decodeString.split(delimiter)
-    require(parts.size == 2) { "Expected two parts separated by $delimiter for [$decodeString]" }
+    val parts = decodeString.split(Delimiter)
+    require(parts.size == 2) { "Expected two parts separated by $Delimiter for [$decodeString]" }
     return IntRange(parts[0].toInt(), parts[1].toInt())
   }
 
   /**
    * The delimiter between the two values
    */
-  const val delimiter: String = ".."
+  const val Delimiter: String = ".."
 }

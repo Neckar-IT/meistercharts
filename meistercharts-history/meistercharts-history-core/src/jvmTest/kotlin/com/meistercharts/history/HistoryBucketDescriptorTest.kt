@@ -38,12 +38,12 @@ class HistoryBucketDescriptorTest {
   @Disabled
   @Test
   fun testPringValues() {
-    println(TimeConstants.referenceTimestamp.formatUtc())
+    println(TimeConstants.ReferenceTimestamp.formatUtc())
 
     SamplingPeriod.entries.forEach { samplingPeriod ->
       println("--------------- $samplingPeriod --> ${samplingPeriod.toHistoryBucketRange()}")
 
-      val descriptor = HistoryBucketDescriptor.forTimestamp(TimeConstants.referenceTimestamp, samplingPeriod)
+      val descriptor = HistoryBucketDescriptor.forTimestamp(TimeConstants.ReferenceTimestamp, samplingPeriod)
 
       println("start: ${descriptor.start.formatUtc()}")
       println("end: ${descriptor.end.formatUtc()}")
@@ -129,7 +129,7 @@ class HistoryBucketDescriptorTest {
   @Test
   fun testForRange() {
     @ms val duration = 1000.0 * 60 * 10
-    val timeRange = TimeRange.fromStartAndDuration(WithVirtualTime.defaultNow, duration)
+    val timeRange = TimeRange.fromStartAndDuration(WithVirtualTime.DefaultNow, duration)
 
     HistoryBucketDescriptor.forRange(timeRange.start, timeRange.end, HistoryBucketRange.TenMinutes).let {
       assertThat(timeRange.start.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")

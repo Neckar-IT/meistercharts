@@ -88,7 +88,7 @@ class MovableCrossWireLayer(
     //Move to x center of wire, bottom of the window
     @Window @px val wireLocation = paintingContext.chartCalculator.windowRelative2WindowX(configuration.locationX())
 
-    lastMarkerTopTranslation = Distance(wireLocation, gc.height - MarkerPath.totalHeight - configuration.paddingBottom)
+    lastMarkerTopTranslation = Distance(wireLocation, gc.height - MarkerPath.TotalHeight - configuration.paddingBottom)
       .also {
         gc.translate(it)
       }
@@ -174,35 +174,35 @@ private object MarkerPath {
    * The width of the marker
    */
   @px
-  const val width = 20.0
+  const val Width = 20.0
 
   /**
    * The height of the base
    */
   @px
-  const val baseHeight = 20.0
+  const val BaseHeight = 20.0
 
   /**
    * The height of the top (arrow)
    */
   @px
-  const val topHeight = 10.0
+  const val TopHeight = 10.0
 
   /**
    * The total height of the marker
    */
   @px
-  const val totalHeight = baseHeight + topHeight
+  const val TotalHeight = BaseHeight + TopHeight
 
   /**
    * The marker path that is drawn
    */
   val path = Path().also {
-    it.moveTo(-width / 2.0, totalHeight) //bottom left
-    it.lineTo(-width / 2.0, topHeight) //left
+    it.moveTo(-Width / 2.0, TotalHeight) //bottom left
+    it.lineTo(-Width / 2.0, TopHeight) //left
     it.lineTo(00.0, 0.0) //top
-    it.lineTo(width / 2.0, topHeight) //right
-    it.lineTo(width / 2.0, totalHeight) //bottom right
+    it.lineTo(Width / 2.0, TopHeight) //right
+    it.lineTo(Width / 2.0, TotalHeight) //bottom right
     it.closePath()
   }
 
@@ -210,5 +210,5 @@ private object MarkerPath {
    * a rectangle that is a (good) approximation for the path.
    * This rect can be used for mouse events / mouse over effects
    */
-  val approximationRect = Rectangle(-width / 2.0, 0.0, width, totalHeight)
+  val approximationRect = Rectangle(-Width / 2.0, 0.0, Width, TotalHeight)
 }

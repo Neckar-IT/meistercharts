@@ -62,7 +62,7 @@ class AnsiConsole(val plain: Boolean) {
     return if (plain) {
       content.toString()
     } else {
-      "$Esc${Csi}${color.foreground}m${content}$Reset"
+      "$esc${csi}${color.foreground}m${content}$Reset"
     }
   }
 
@@ -90,19 +90,19 @@ class AnsiConsole(val plain: Boolean) {
     /**
      * Starts the ANSI code
      */
-    const val Esc: String = "\u001B"
+    const val esc: String = "\u001B"
 
     /**
      * Control Sequence Introducer
      * Begins a control sequence
      * https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection
      */
-    const val Csi: String = "["
+    const val csi: String = "["
 
     /**
      * Resets all ansi attributes
      */
-    const val Reset: String = "${Esc}${Csi}0m"
+    const val Reset: String = "${esc}${csi}0m"
   }
 }
 

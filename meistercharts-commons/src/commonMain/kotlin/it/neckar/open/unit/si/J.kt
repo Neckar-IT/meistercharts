@@ -61,10 +61,10 @@ import it.neckar.open.unit.Symbol
 @Energy
 @Name("joule")
 @SiDerivedUnit(N::class, m::class)
-@Symbol(J.SYMBOL)
+@Symbol(J.Symbol)
 @Definition("N*m", "kg*m²/s²", "W*s")
 annotation class J {
   companion object {
-    const val SYMBOL: String = "J"
+    const val Symbol: String = "J"
   }
 }

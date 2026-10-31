@@ -57,12 +57,12 @@ import it.neckar.open.unit.quantity.Time
 @Suppress("ClassName")
 @Unit
 @Time
-@Symbol(ns.SYMBOL)
+@Symbol(ns.Symbol)
 @Name("nanoseconds")
 @nano(s::class)
 annotation class ns {
   companion object {
-    const val SYMBOL: String = "ns"
+    const val Symbol: String = "ns"
   }
 }
 

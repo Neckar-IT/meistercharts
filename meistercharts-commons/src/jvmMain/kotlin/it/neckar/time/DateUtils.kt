@@ -57,7 +57,7 @@ object DateUtils {
   /**
    * Pattern to format a duration as HH:mm
    */
-  const val PATTERN_HH_MM: String = "HH:mm"
+  const val PatternHhMm: String = "HH:mm"
 
   /**
    * Converts the millis to a local date with the given zone
@@ -221,8 +221,8 @@ object DateUtils {
     return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(time)
   }
 
-  private const val SECONDS_PER_HOUR: @s Long = (60 * 60).toLong()
-  private const val SECONDS_PER_MINUTE: @s Long = 60
+  private const val SecondsPerHour: @s Long = (60 * 60).toLong()
+  private const val SecondsPerMinute: @s Long = 60
 
   fun formatDurationWordsWithSeconds(duration: Duration): String {
     return formatDurationWordsWithSeconds(duration.toMillis())
@@ -231,26 +231,26 @@ object DateUtils {
   fun formatDurationWordsWithSeconds(millis: @ms Long): String {
     val sb = StringBuilder()
     var seconds: @s Long = millis / 1000 // skip milliseconds
-    if (seconds >= SECONDS_PER_HOUR) {
+    if (seconds >= SecondsPerHour) {
       if (sb.isNotEmpty()) {
         sb.append(" ")
       }
-      val hours = seconds / SECONDS_PER_HOUR
+      val hours = seconds / SecondsPerHour
       sb.append(NumberFormat.getNumberInstance().format(hours)).append("h")
-      seconds -= hours * SECONDS_PER_HOUR
+      seconds -= hours * SecondsPerHour
     }
     val twoDigitsFormat = NumberFormat.getNumberInstance()
     //always use two digits if the hour has been set
     if (sb.length > 0) {
       twoDigitsFormat.setMinimumIntegerDigits(2)
     }
-    if (seconds >= SECONDS_PER_MINUTE || sb.length > 0) {
+    if (seconds >= SecondsPerMinute || sb.length > 0) {
       if (sb.length > 0) {
         sb.append(" ")
       }
-      val minutes = seconds / SECONDS_PER_MINUTE
+      val minutes = seconds / SecondsPerMinute
       sb.append(twoDigitsFormat.format(minutes)).append("min")
-      seconds -= minutes * SECONDS_PER_MINUTE
+      seconds -= minutes * SecondsPerMinute
     }
     if (sb.length > 0) {
       sb.append(" ")
@@ -275,7 +275,7 @@ object DateUtils {
   }
 
   fun formatDurationHHmm(duration: Duration): String {
-    return DurationFormatUtils.formatDuration(duration.toMillis(), PATTERN_HH_MM)
+    return DurationFormatUtils.formatDuration(duration.toMillis(), PatternHhMm)
   }
 
   fun parseDurationHHmm(formatted: String): Duration {

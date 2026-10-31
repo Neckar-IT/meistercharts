@@ -58,7 +58,7 @@ data class EnumHistoryValues(
 
   init {
     //Verify mostOfTheTimeValues plausibility - Slow, just enable if necessary
-    if (HistoryDebug.additionalVerificationEnabled) {
+    if (HistoryDebug.AdditionalVerificationEnabled) {
       mostOfTheTimeValues?.data?.forEachIndexed { index, mostOfTheTimeValueAsInt ->
         val mostOfTheTimeValue = HistoryEnumOrdinal(mostOfTheTimeValueAsInt)
         val historyEnumSetAsInt = values.data[index]

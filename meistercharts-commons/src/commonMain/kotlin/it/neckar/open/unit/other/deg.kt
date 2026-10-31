@@ -60,12 +60,12 @@ import it.neckar.open.unit.si.rad
 @Unit
 @Angle
 @Name("degree")
-@Symbol(deg.SYMBOL)
+@Symbol(deg.Symbol)
 @DerivedUnit(rad::class)
 @Definition("1/360th of a full rotation", "π/180")
 annotation class deg {
   companion object {
-    const val SYMBOL: String = "°"
+    const val Symbol: String = "°"
   }
 
 }

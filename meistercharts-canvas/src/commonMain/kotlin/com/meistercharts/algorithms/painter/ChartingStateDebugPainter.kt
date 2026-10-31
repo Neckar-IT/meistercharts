@@ -92,7 +92,7 @@ class ChartingStateDebugPainter {
 
 
     //The factor that is used to convert view values
-    val factor = min(1 / (allDeltaX) * (canvasWidth - viewPadding * 2), 1 / (allDeltaY) * (canvasHeight - viewPadding * 2))
+    val factor = min(1 / (allDeltaX) * (canvasWidth - ViewPadding * 2), 1 / (allDeltaY) * (canvasHeight - ViewPadding * 2))
 
     //Draw the background
     gc.fillStyle(Color.white)
@@ -100,8 +100,8 @@ class ChartingStateDebugPainter {
 
     //Draw the content area
     run {
-      @px val x = viewPadding + offsetContent.x * factor
-      @px val y = viewPadding + offsetContent.y * factor
+      @px val x = ViewPadding + offsetContent.x * factor
+      @px val y = ViewPadding + offsetContent.y * factor
       @px val width = contentSize.x * factor
       @px val height = contentSize.y * factor
 
@@ -170,8 +170,8 @@ class ChartingStateDebugPainter {
 
     //Draw the window ("window")
     run {
-      @px val x = viewPadding + offsetWindow.x * factor
-      @px val y = viewPadding + offsetWindow.y * factor
+      @px val x = ViewPadding + offsetWindow.x * factor
+      @px val y = ViewPadding + offsetWindow.y * factor
       val width = windowSize.x * factor
       val height = windowSize.y * factor
 
@@ -235,7 +235,7 @@ class ChartingStateDebugPainter {
      * Padding around the graphics context
      */
     @px
-    private const val viewPadding: Double = 20.0
+    private const val ViewPadding: Double = 20.0
 
     /**
      * Fill for the content area

@@ -61,11 +61,11 @@ import it.neckar.open.unit.Symbol
 @Force
 @Name("newton")
 @SiDerivedUnit(kg::class, m_s2::class)
-@Symbol(N.SYMBOL)
+@Symbol(N.Symbol)
 @Definition("kg*m/s²")
 annotation class N {
   companion object {
-    const val SYMBOL: String = "N"
+    const val Symbol: String = "N"
   }
 
 }

@@ -62,10 +62,10 @@ import it.neckar.open.unit.quantity.Length
 @Length
 @Name("metre")
 @SIBaseUnit
-@Symbol(m.SYMBOL)
+@Symbol(m.Symbol)
 @Definition("distance travelled by light in vacuum in 1⁄299,792,458 of a second", "Obsolete: ten-millionth of the distance from the Earth's equator to the North Pole (at sea level)")
 annotation class m {
   companion object {
-    const val SYMBOL: String = "m"
+    const val Symbol: String = "m"
   }
 }

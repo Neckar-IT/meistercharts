@@ -58,6 +58,6 @@ annotation class atto(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "a"
+    const val Symbol: String = "a"
   }
 }

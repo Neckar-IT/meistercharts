@@ -63,7 +63,7 @@ class ConfigurationCalculator(
     get() = (manualMaxDistanceBetweenSamples ?: 50.0) // TODO: Calculate based on data
 
   val idealDistanceBetweenSamples: @px Double
-    get() = (manualIdealDistanceBetweenSamples ?: (minDistanceBetweenSamples * ZoomLevelCalculator.SQRT_2_TWICE))
+    get() = (manualIdealDistanceBetweenSamples ?: (minDistanceBetweenSamples * ZoomLevelCalculator.Sqrt2Twice))
       .coerceIn(minDistanceBetweenSamples, maxDistanceBetweenSamples)
 
   val maxPointsPer1000px: Double

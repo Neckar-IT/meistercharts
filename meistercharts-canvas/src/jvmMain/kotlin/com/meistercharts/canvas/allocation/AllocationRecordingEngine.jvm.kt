@@ -230,11 +230,11 @@ actual object AllocationRecordingEngine {
   private fun formatStacktrace(frames: List<FrameRef>): String {
     return frames.asSequence()
       .filter { it.className.startsWith("com.meistercharts") || it.className.startsWith("it.neckar") }
-      .take(maxStacktraceFrames)
+      .take(MaxStacktraceFrames)
       .joinToString("\n") { "${it.className}.${it.methodName}(${it.lineNumber})" }
   }
 
-  private const val maxStacktraceFrames: Int = 6
+  private const val MaxStacktraceFrames: Int = 6
 
   private val logger: Logger = LoggerFactory.getLogger("com.meistercharts.canvas.allocation.AllocationRecordingEngine")
 }

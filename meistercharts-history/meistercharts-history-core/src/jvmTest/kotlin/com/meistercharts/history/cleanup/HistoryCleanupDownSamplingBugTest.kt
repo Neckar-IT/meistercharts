@@ -51,7 +51,7 @@ class HistoryCleanupDownSamplingBugTest {
     val downSamplingService = historyStorage.downSamplingService
 
 
-    val firstDescriptorStart = WithVirtualTime.defaultNow.also {
+    val firstDescriptorStart = WithVirtualTime.DefaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 

@@ -1,110 +1,109 @@
 import it.neckar.gradle.Plugins
-import it.neckar.gradle.RegistryPlugins
 import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 
 inline val PluginDependenciesSpec.kotlinJvm: PluginDependencySpec
-  get() = id(Plugins.kotlinJvm)
+  get() = id(Plugins.KotlinJvm)
 
 inline val PluginDependenciesSpec.java: PluginDependencySpec
-  get() = id(Plugins.java)
+  get() = id(Plugins.Java)
 
 inline val PluginDependenciesSpec.javaLibrary: PluginDependencySpec
-  get() = id(Plugins.javaLibrary)
+  get() = id(Plugins.JavaLibrary)
 
 inline val PluginDependenciesSpec.dokka: PluginDependencySpec
-  get() = id(Plugins.dokka)
+  get() = id(Plugins.Dokka)
 
 inline val PluginDependenciesSpec.kotlinMultiPlatform: PluginDependencySpec
-  get() = id(Plugins.kotlinMultiPlatform)
+  get() = id(Plugins.KotlinMultiPlatform)
 
 inline val PluginDependenciesSpec.kotlinxSerialization: PluginDependencySpec
-  get() = id(Plugins.kotlinxSerialization)
+  get() = id(Plugins.KotlinxSerialization)
 
 inline val PluginDependenciesSpec.systemDependencies: PluginDependencySpec
-  get() = id(Plugins.systemDependencies)
+  get() = id(Plugins.SystemDependencies)
 
 inline val PluginDependenciesSpec.jibCli: PluginDependencySpec
-  get() = id(Plugins.jibCli)
+  get() = id(Plugins.JibCli)
 
 inline val PluginDependenciesSpec.jibService: PluginDependencySpec
-  get() = id(Plugins.jibService)
+  get() = id(Plugins.JibService)
 
 inline val PluginDependenciesSpec.otelAgent: PluginDependencySpec
   get() = id(Plugins.otelAgent)
 
 inline val PluginDependenciesSpec.dockerHubPublish: PluginDependencySpec
-  get() = id(Plugins.dockerHubPublish)
+  get() = id(Plugins.DockerHubPublish)
 
 inline val PluginDependenciesSpec.shadow: PluginDependencySpec
-  get() = id(Plugins.shadow)
+  get() = id(Plugins.Shadow)
 
 inline val PluginDependenciesSpec.launch4j: PluginDependencySpec
-  get() = id(Plugins.launch4j)
+  get() = id(Plugins.Launch4j)
 
 inline val PluginDependenciesSpec.download: PluginDependencySpec
-  get() = id(Plugins.download)
+  get() = id(Plugins.Download)
 
 inline val PluginDependenciesSpec.mavenPublish: PluginDependencySpec
-  get() = id(Plugins.mavenPublish)
+  get() = id(Plugins.MavenPublish)
 
 inline val PluginDependenciesSpec.versions: PluginDependencySpec
-  get() = id(Plugins.versions)
+  get() = id(Plugins.Versions)
 
 inline val PluginDependenciesSpec.licenseReport: PluginDependencySpec
-  get() = id(Plugins.licenseReport)
+  get() = id(Plugins.LicenseReport)
 
 inline val PluginDependenciesSpec.spotless: PluginDependencySpec
-  get() = id(Plugins.spotless)
+  get() = id(Plugins.Spotless)
 
 inline val PluginDependenciesSpec.generateIcons: PluginDependencySpec
-  get() = id(Plugins.generateIcons)
+  get() = id(Plugins.GenerateIcons)
 
 inline val PluginDependenciesSpec.provideSourceCodeFromBuildSrc: PluginDependencySpec
-  get() = id(Plugins.provideSourceCodeFromBuildSrc)
+  get() = id(Plugins.ProvideSourceCodeFromBuildSrc)
 
 inline val PluginDependenciesSpec.generateTsDeclaration: PluginDependencySpec
-  get() = id(Plugins.generateTsDeclaration)
+  get() = id(Plugins.GenerateTsDeclaration)
 
 inline val PluginDependenciesSpec.gitlabPipelines: PluginDependencySpec
-  get() = id(Plugins.gitlabPipelines)
+  get() = id(Plugins.GitlabPipelines)
 
 inline val PluginDependenciesSpec.neckarItAsciidoctor: PluginDependencySpec
-  get() = id(Plugins.neckarItAsciidoctor)
+  get() = id(Plugins.NeckarItAsciidoctor)
 
 inline val PluginDependenciesSpec.asciidoctor: PluginDependencySpec
-  get() = id(Plugins.asciidoctor)
+  get() = id(Plugins.Asciidoctor)
 
 inline val PluginDependenciesSpec.asciidoctorPdf: PluginDependencySpec
-  get() = id(Plugins.asciidoctorPdf)
+  get() = id(Plugins.AsciidoctorPdf)
 
 inline val PluginDependenciesSpec.asciidoctorDiagram: PluginDependencySpec
-  get() = id(Plugins.asciidoctorDiagram)
+  get() = id(Plugins.AsciidoctorDiagram)
 
 inline val PluginDependenciesSpec.generateAuditReport: PluginDependencySpec
-  get() = id(Plugins.generateAuditReport)
+  get() = id(Plugins.GenerateAuditReport)
 
 inline val PluginDependenciesSpec.buildProfileReport: PluginDependencySpec
-  get() = id(Plugins.buildProfileReport)
+  get() = id(Plugins.BuildProfileReport)
 
 inline val PluginDependenciesSpec.npmBundle: PluginDependencySpec
   get() = id(Plugins.npmBundle)
 
 inline val PluginDependenciesSpec.verifyMainClassExists: PluginDependencySpec
-  get() = id(Plugins.verifyMainClassExists)
+  get() = id(Plugins.VerifyMainClassExists)
 
 inline val PluginDependenciesSpec.verifyGitlabAccessToken: PluginDependencySpec
-  get() = id(Plugins.verifyGitlabAccessToken)
+  get() = id(Plugins.VerifyGitlabAccessToken)
 
 inline val PluginDependenciesSpec.additionalGitRepository: PluginDependencySpec
-  get() = id(Plugins.additionalGitRepository)
+  get() = id(Plugins.AdditionalGitRepository)
 
 inline val PluginDependenciesSpec.runDockerServices: PluginDependencySpec
-  get() = id(Plugins.runDockerServices)
+  get() = id(Plugins.RunDockerServices)
 
 inline val PluginDependenciesSpec.ngrokTunnel: PluginDependencySpec
-  get() = id(Plugins.ngrokTunnel)
+  get() = id(Plugins.NgrokTunnel)
 
 /**
  * Use task tree like this:
@@ -114,10 +113,10 @@ inline val PluginDependenciesSpec.ngrokTunnel: PluginDependencySpec
  * see https://github.com/dorongold/gradle-task-tree for documentation
  */
 inline val PluginDependenciesSpec.taskTree: PluginDependencySpec
-  get() = id(Plugins.taskTree)
+  get() = id(Plugins.TaskTree)
 
 inline val PluginDependenciesSpec.detekt: PluginDependencySpec
-  get() = id(Plugins.detekt)
+  get() = id(Plugins.Detekt)
 
 inline val PluginDependenciesSpec.jmh: PluginDependencySpec
   get() = id(Plugins.jmh)
@@ -129,94 +128,94 @@ inline val PluginDependenciesSpec.html2pdf: PluginDependencySpec
   get() = id(Plugins.html2pdf)
 
 inline val PluginDependenciesSpec.consoleReporter: PluginDependencySpec
-  get() = id(Plugins.consoleReporter)
+  get() = id(Plugins.ConsoleReporter)
 
 inline val PluginDependenciesSpec.node: PluginDependencySpec
-  get() = id(Plugins.node)
+  get() = id(Plugins.Node)
 
 inline val PluginDependenciesSpec.kvision: PluginDependencySpec
-  get() = id(Plugins.kvision)
+  get() = id(Plugins.Kvision)
 
 inline val PluginDependenciesSpec.jib: PluginDependencySpec
-  get() = id(Plugins.jib)
+  get() = id(Plugins.Jib)
 
 inline val PluginDependenciesSpec.intellijPlatform: PluginDependencySpec
-  get() = id(Plugins.intellijPlatform)
+  get() = id(Plugins.IntellijPlatform)
 
 inline val PluginDependenciesSpec.ideaExt: PluginDependencySpec
-  get() = id(Plugins.ideaExt)
+  get() = id(Plugins.IdeaExt)
 
 inline val PluginDependenciesSpec.python: PluginDependencySpec
-  get() = id(Plugins.python)
+  get() = id(Plugins.Python)
 
 inline val PluginDependenciesSpec.schemaGen: PluginDependencySpec
-  get() = id(Plugins.schemaGen)
+  get() = id(Plugins.SchemaGen)
 
 inline val PluginDependenciesSpec.kover: PluginDependencySpec
-  get() = id(Plugins.kover)
+  get() = id(Plugins.Kover)
 
 inline val PluginDependenciesSpec.javafx: PluginDependencySpec
-  get() = id(Plugins.javafx)
+  get() = id(Plugins.Javafx)
 
 inline val PluginDependenciesSpec.analyze: PluginDependencySpec
-  get() = id(Plugins.analyze)
+  get() = id(Plugins.Analyze)
 
 inline val PluginDependenciesSpec.webResourcesFromDependencies: PluginDependencySpec
-  get() = id(Plugins.webResourcesFromDependencies)
+  get() = id(Plugins.WebResourcesFromDependencies)
 
 inline val PluginDependenciesSpec.resourcesConvention: PluginDependencySpec
-  get() = id(Plugins.resourcesConvention)
+  get() = id(Plugins.ResourcesConvention)
 
 inline val PluginDependenciesSpec.secretStore: PluginDependencySpec
-  get() = id(Plugins.secretStore)
+  get() = id(Plugins.SecretStore)
 
 inline val PluginDependenciesSpec.secretsLoader: PluginDependencySpec
-  get() = id(Plugins.secretsLoader)
+  get() = id(Plugins.SecretsLoader)
 
 inline val PluginDependenciesSpec.mattermostBot: PluginDependencySpec
-  get() = id(Plugins.mattermostBot)
+  get() = id(Plugins.MattermostBot)
 
 inline val PluginDependenciesSpec.mattermostBots: PluginDependencySpec
-  get() = id(Plugins.mattermostBots)
+  get() = id(Plugins.MattermostBots)
 
 inline val PluginDependenciesSpec.hostDeployment: PluginDependencySpec
-  get() = id(Plugins.hostDeployment)
+  get() = id(Plugins.HostDeployment)
 
 inline val PluginDependenciesSpec.serviceDeployment: PluginDependencySpec
-  get() = id(Plugins.serviceDeployment)
+  get() = id(Plugins.ServiceDeployment)
 
 inline val PluginDependenciesSpec.deploymentBuildRules: PluginDependencySpec
-  get() = id(Plugins.deploymentBuildRules)
+  get() = id(Plugins.DeploymentBuildRules)
 
 inline val PluginDependenciesSpec.backup: PluginDependencySpec
-  get() = id(Plugins.backup)
+  get() = id(Plugins.Backup)
 
 inline val PluginDependenciesSpec.backupSchedule: PluginDependencySpec
-  get() = id(Plugins.backupSchedule)
+  get() = id(Plugins.BackupSchedule)
 
 inline val PluginDependenciesSpec.delivery: PluginDependencySpec
-  get() = id(Plugins.delivery)
+  get() = id(Plugins.Delivery)
 
 inline val PluginDependenciesSpec.buildVariables: PluginDependencySpec
-  get() = id(Plugins.buildVariables)
+  get() = id(Plugins.BuildVariables)
 
 inline val PluginDependenciesSpec.productsCatalog: PluginDependencySpec
-  get() = id(Plugins.productsCatalog)
+  get() = id(Plugins.ProductsCatalog)
 
 inline val PluginDependenciesSpec.deliveryConditions: PluginDependencySpec
-  get() = id(Plugins.deliveryConditions)
+  get() = id(Plugins.DeliveryConditions)
 
 inline val PluginDependenciesSpec.hostDeclaration: PluginDependencySpec
-  get() = id(Plugins.hostDeclaration)
+  get() = id(Plugins.HostDeclaration)
 
 inline val PluginDependenciesSpec.localhostInfrastructure: PluginDependencySpec
-  get() = id(Plugins.localhostInfrastructure)
+  get() = id(Plugins.LocalhostInfrastructure)
 
 inline val PluginDependenciesSpec.moduleGroup: PluginDependencySpec
-  get() = id(Plugins.moduleGroup)
+  get() = id(Plugins.ModuleGroup)
 
 inline val PluginDependenciesSpec.customDeployment: PluginDependencySpec
-  get() = id(Plugins.customDeployment)
+  get() = id(Plugins.CustomDeployment)
 
 inline val PluginDependenciesSpec.ksp: PluginDependencySpec
   get() = id(Plugins.ksp)
@@ -225,80 +224,77 @@ inline val PluginDependenciesSpec.kspBoxing: PluginDependencySpec
   get() = id(Plugins.kspBoxing)
 
 inline val PluginDependenciesSpec.specHarvest: PluginDependencySpec
-  get() = id(Plugins.specHarvest)
+  get() = id(Plugins.SpecHarvest)
 
 inline val PluginDependenciesSpec.kspSerialization: PluginDependencySpec
   get() = id(Plugins.kspSerialization)
 
 inline val PluginDependenciesSpec.openapiValidator: PluginDependencySpec
-  get() = id(Plugins.openapiValidator)
+  get() = id(Plugins.OpenapiValidator)
 
 inline val org.gradle.plugin.use.PluginDependenciesSpec.openapiGenerationConfig: PluginDependencySpec
-  get() = id(Plugins.openapiGenerationConfig)
+  get() = id(Plugins.OpenapiGenerationConfig)
 
 inline val PluginDependenciesSpec.orvalConvert: PluginDependencySpec
-  get() = id(Plugins.orvalConvert)
+  get() = id(Plugins.OrvalConvert)
 
 inline val PluginDependenciesSpec.verifyPnpmWorkspaceYaml: PluginDependencySpec
-  get() = id(Plugins.verifyPnpmWorkspaceYaml)
+  get() = id(Plugins.VerifyPnpmWorkspaceYaml)
 
 inline val PluginDependenciesSpec.verifyPnpmWorkspaceDependencies: PluginDependencySpec
-  get() = id(Plugins.verifyPnpmWorkspaceDependencies)
+  get() = id(Plugins.VerifyPnpmWorkspaceDependencies)
 
 inline val PluginDependenciesSpec.verifyPnpmLockfilePeerVariants: PluginDependencySpec
-  get() = id(Plugins.verifyPnpmLockfilePeerVariants)
+  get() = id(Plugins.VerifyPnpmLockfilePeerVariants)
 
 inline val PluginDependenciesSpec.disableDistTasks: PluginDependencySpec
-  get() = id(Plugins.disableDistTasks)
+  get() = id(Plugins.DisableDistTasks)
 
 inline val PluginDependenciesSpec.executableApplication: PluginDependencySpec
-  get() = id(Plugins.executableApplication)
+  get() = id(Plugins.ExecutableApplication)
 
 inline val PluginDependenciesSpec.ktorServiceApplication: PluginDependencySpec
-  get() = id(Plugins.ktorServiceApplication)
-
-inline val PluginDependenciesSpec.generateIgnoreProjectSets: PluginDependencySpec
-  get() = id(RegistryPlugins.generateIgnoreProjectSets)
+  get() = id(Plugins.KtorServiceApplication)
 
 inline val PluginDependenciesSpec.generateTypesList: PluginDependencySpec
-  get() = id(Plugins.generateTypesList)
+  get() = id(Plugins.GenerateTypesList)
 
 inline val PluginDependenciesSpec.typesListCollector: PluginDependencySpec
-  get() = id(Plugins.typesListCollector)
+  get() = id(Plugins.TypesListCollector)
 
 inline val PluginDependenciesSpec.pnpmKotlinInterop: PluginDependencySpec
   get() = id(Plugins.pnpmKotlinInterop)
 
 inline val PluginDependenciesSpec.tailwind: PluginDependencySpec
-  get() = id(Plugins.tailwind)
+  get() = id(Plugins.Tailwind)
 
 inline val PluginDependenciesSpec.keycloakClient: PluginDependencySpec
-  get() = id(Plugins.keycloakClient)
+  get() = id(Plugins.KeycloakClient)
 
 inline val PluginDependenciesSpec.keycloakClients: PluginDependencySpec
-  get() = id(Plugins.keycloakClients)
+  get() = id(Plugins.KeycloakClients)
 
 inline val PluginDependenciesSpec.openTofu: PluginDependencySpec
-  get() = id(Plugins.openTofu)
+  get() = id(Plugins.OpenTofu)
 
 inline val PluginDependenciesSpec.linksSiteGenerate: PluginDependencySpec
-  get() = id(Plugins.linksSiteGenerate)
+  get() = id(Plugins.LinksSiteGenerate)
 
 inline val PluginDependenciesSpec.certificates: PluginDependencySpec
-  get() = id(Plugins.certificates)
+  get() = id(Plugins.Certificates)
 
 inline val PluginDependenciesSpec.localDev: PluginDependencySpec
-  get() = id(Plugins.localDev)
+  get() = id(Plugins.LocalDev)
 
 inline val PluginDependenciesSpec.projectDeclaration: PluginDependencySpec
-  get() = id(Plugins.projectDeclaration)
+  get() = id(Plugins.ProjectDeclaration)
 
 inline val PluginDependenciesSpec.specGenerator: PluginDependencySpec
-  get() = id(Plugins.specGenerator)
+  get() = id(Plugins.SpecGenerator)
 
 inline val PluginDependenciesSpec.dependencyFence: PluginDependencySpec
-  get() = id(Plugins.dependencyFence)
+  get() = id(Plugins.DependencyFence)
 
 inline val PluginDependenciesSpec.openModule: PluginDependencySpec
-  get() = id(Plugins.openModule)
+  get() = id(Plugins.OpenModule)
 

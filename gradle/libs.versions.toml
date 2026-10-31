@@ -16,8 +16,6 @@ edu-sc-seis-launch4j = { id = "edu.sc.seis.launch4j", version = "4.0.0" }
 
 com-dorongold-task-tree = { id = "com.dorongold.task-tree", version = "4.0.2" }
 
-org-jetbrains-intellij-platform = { id = "org.jetbrains.intellij.platform", version = "2.19.0" }
-
 org-jetbrains-gradle-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.4.1" }
 
 
@@ -25,11 +23,11 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.19.2" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.20.0" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
-me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.3" }
+me-champeau-jmh = { id = "me.champeau.jmh", version = "0.7.4" }
 
 [versions]
 
@@ -56,7 +54,7 @@ com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
 com-google-devtools-ksp = "2.3.12"
 
-org-mongodb = "5.13.0"
+org-mongodb = "5.14.0"
 
 # json-schema-validator: Kotlin Multiplatform JSON Schema validator (draft 7, 2019-09, 2020-12)
 # that validates kotlinx.serialization JsonElement directly.
@@ -64,7 +62,7 @@ io-github-optimumcode-json-schema = "0.5.5"
 
 testcontainers = "2.0.5"
 
-aws-sdk-kotlin = "1.9.26"
+aws-sdk-kotlin = "1.9.28"
 
 apache-poi = "6.0.0"
 
@@ -74,7 +72,7 @@ org-commonmark = "0.31.0"
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
 org-bouncycastle = "1.86"
 
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 com-github-docker-java = "3.7.1"
 
@@ -87,6 +85,8 @@ org-apache-xmlgraphics = "1.20"
 kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.1"
+
+kmp-zip = "2.0.0"
 
 kover = "0.9.11"
 
@@ -130,7 +130,7 @@ modbus = "1.2.2"
 
 modelcontextprotocol-kotlin-sdk = "0.16.0"
 
-okhttp3 = "5.5.0"
+okhttp3 = "5.5.1"
 
 opentelemetry = "1.67.0"
 
@@ -307,7 +307,7 @@ mongodb-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", ver
 
 flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
-software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.4"
+software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.6"
 
 kaml = "com.charleskorn.kaml:kaml:0.104.0"
 
@@ -478,6 +478,10 @@ kotlin-csv-jvm = { group = "com.github.doyaaaaaken", name = "kotlin-csv-jvm", ve
 jakarta-ws-rs-api = "jakarta.ws.rs:jakarta.ws.rs-api:4.0.0"
 
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+
+kmp-zip = { group = "no.synth", name = "kmp-zip", version.ref = "kmp-zip" }
+
+kmp-zip-kotlinx = { group = "no.synth", name = "kmp-zip-kotlinx", version.ref = "kmp-zip" }
 
 kotlin-csv-js = { group = "com.github.doyaaaaaken", name = "kotlin-csv-js", version.ref = "kotlin-csv" }
 

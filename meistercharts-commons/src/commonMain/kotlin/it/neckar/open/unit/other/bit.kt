@@ -57,10 +57,10 @@ import it.neckar.open.unit.Symbol
 @Unit
 @DataAmount
 @Name("bit")
-@Symbol(bit.SYMBOL)
+@Symbol(bit.Symbol)
 annotation class bit {
   companion object {
-    const val SYMBOL: String = "bit"
+    const val Symbol: String = "bit"
   }
 
 }

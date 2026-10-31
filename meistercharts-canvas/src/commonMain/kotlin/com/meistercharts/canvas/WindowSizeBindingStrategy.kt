@@ -75,7 +75,7 @@ class DelayedWindowSizeBindingStrategy(
     canvas.sizeProperty.consumeChanges { oldValue, newValue ->
       if (oldValue.atLeastOneZero() && !newValue.atLeastOneZero()) {
         //Apply immediately if resizing from zero and cancel scheduled resizing
-        async.remove(asyncKey)
+        async.remove(AsyncKey)
         chartState.windowSize = newValue
         return@consumeChanges
       }
@@ -84,7 +84,7 @@ class DelayedWindowSizeBindingStrategy(
       chartState.windowSize = chartState.windowSize.with(newValue, axisSelection.negate())
 
       //Delay the new value for the bound axes
-      async.throttleLast(delay, asyncKey) {
+      async.throttleLast(delay, AsyncKey) {
         chartState.windowSize = chartState.windowSize.with(canvas.size, axisSelection) // use the current canvas.size! Not 'newValue'!
       }
     }.disposeOn(onDispose)
@@ -101,6 +101,6 @@ class DelayedWindowSizeBindingStrategy(
     /**
      * The key that is used for the async throttleLast calls
      */
-    private const val asyncKey: String = "size"
+    private const val AsyncKey: String = "size"
   }
 }

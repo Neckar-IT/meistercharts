@@ -59,10 +59,10 @@ import it.neckar.open.unit.Symbol
 @Pressure
 @Name("pascal")
 @SiDerivedUnit(N::class, m2::class)
-@Symbol(Pa.SYMBOL)
+@Symbol(Pa.Symbol)
 @Definition("N/m²", "kg/(m*s²)")
 annotation class Pa {
   companion object {
-    const val SYMBOL: String = "Pa"
+    const val Symbol: String = "Pa"
   }
 }

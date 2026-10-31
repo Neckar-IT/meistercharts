@@ -37,10 +37,10 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.CLASS)
 @ThreadDescribingAnnotation(
-  NonUiThread.THREAD_DESCRIPTOR
+  NonUiThread.ThreadDescriptor
 )
 annotation class NonUiThread {
   companion object {
-    const val THREAD_DESCRIPTOR: String = "non-ui-thread"
+    const val ThreadDescriptor: String = "non-ui-thread"
   }
 }

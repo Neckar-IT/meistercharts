@@ -28,7 +28,7 @@ import it.neckar.geometry.Direction
 import com.meistercharts.model.Insets
 import com.meistercharts.style.BoxStyle
 import it.neckar.open.formatting.percentageFormat
-import it.neckar.open.kotlin.lang.SpecialChars.nnbsp
+import it.neckar.open.kotlin.lang.SpecialChars.Nnbsp
 import it.neckar.open.kotlin.lang.or0ifNaN
 import it.neckar.open.unit.other.fps
 import it.neckar.open.unit.other.pct
@@ -104,7 +104,7 @@ class FramesPerSecondLayer(
   override fun paint(paintingContext: LayerPaintingContext) {
     val gc = paintingContext.gc
 
-    val text = "FPS:$nnbsp${paintingVariables.fps}, Max$nnbsp${paintingVariables.maxFps}, Min$nnbsp${paintingVariables.minFps}, PFPS:$nnbsp${paintingVariables.paintedFPS}, Optimized:$nnbsp${percentageFormat.format(paintingVariables.optimizedFramesPercentage)}"
+    val text = "FPS:$Nnbsp${paintingVariables.fps}, Max$Nnbsp${paintingVariables.maxFps}, Min$Nnbsp${paintingVariables.minFps}, PFPS:$Nnbsp${paintingVariables.paintedFPS}, Optimized:$Nnbsp${percentageFormat.format(paintingVariables.optimizedFramesPercentage)}"
 
     gc.font(configuration.font)
     gc.paintTextBox(text, Direction.TopLeft, anchorGapHorizontal = configuration.x, anchorGapVertical = configuration.y, boxStyle = configuration.boxStyle)

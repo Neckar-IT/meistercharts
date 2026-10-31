@@ -60,10 +60,10 @@ import it.neckar.open.unit.Symbol
 @Frequency
 @Name("hertz")
 @SiDerivedUnit(s::class)
-@Symbol(Hz.SYMBOL)
+@Symbol(Hz.Symbol)
 @Definition("cycles per second", "1/s")
 annotation class Hz {
   companion object {
-    const val SYMBOL: String = "Hz"
+    const val Symbol: String = "Hz"
   }
 }

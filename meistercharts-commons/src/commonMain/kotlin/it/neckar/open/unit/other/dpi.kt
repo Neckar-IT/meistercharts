@@ -59,12 +59,12 @@ import it.neckar.open.unit.si.cm
 @Unit
 @DotDensity
 @Name("Dots per Inch")
-@Symbol(dpi.SYMBOL)
+@Symbol(dpi.Symbol)
 @Definition("the number of individual dots that can be placed in a line within the span of 1 inch (2.54 cm)")
 @DerivedUnit(cm::class)
 annotation class dpi {
   companion object {
-    const val SYMBOL: String = "dpi"
+    const val Symbol: String = "dpi"
   }
 
 }

@@ -27,7 +27,7 @@ class HistoryEnumOrdinalCounter {
    * Keeps the counts.
    * The ordinal of an enum corresponds to the position within the array
    */
-  private val counts: IntArray = IntArray(HistoryEnumSet.maxSupportedEnumValuesCount) { 0 }
+  private val counts: IntArray = IntArray(HistoryEnumSet.MaxSupportedEnumValuesCount) { 0 }
 
   var containsNoValue: Boolean = false
 

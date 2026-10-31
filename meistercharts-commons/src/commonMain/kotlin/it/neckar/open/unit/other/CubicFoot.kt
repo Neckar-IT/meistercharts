@@ -60,7 +60,7 @@ import it.neckar.open.unit.si.L
 @Unit
 @Length
 @Name("Cubic foot")
-@Symbol(CubicFoot.SYMBOL)
+@Symbol(CubicFoot.Symbol)
 @DerivedUnit(L::class)
 @Definition("volume of a cube with sides of one foot", "28.3168 L")
 annotation class CubicFoot {
@@ -68,11 +68,11 @@ annotation class CubicFoot {
     /**
      * The liters per cubic foot
      */
-    const val LITRE_PER_CU_FOOT: @L Double = 28.3168
+    const val LitrePerCuFoot: @L Double = 28.3168
 
     /**
      * The "real" symbol
      */
-    const val SYMBOL: String = "ft³"
+    const val Symbol: String = "ft³"
   }
 }

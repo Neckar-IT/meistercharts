@@ -56,11 +56,11 @@ import it.neckar.open.unit.si.s
 @MustBeDocumented
 @Unit
 @Time
-@Symbol(a.SYMBOL)
+@Symbol(a.Symbol)
 @Name("Year")
 annotation class a {
   companion object {
-    const val SYMBOL: String = "a"
+    const val Symbol: String = "a"
   }
 }
 

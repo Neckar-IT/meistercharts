@@ -79,7 +79,7 @@ value class HistoryEnumOrdinal(val value: Int) {
      * The maximum value that is supported.
      * Look at [HistoryEnumSet] for details why this is the limit
      */
-    val Max: HistoryEnumOrdinal = HistoryEnumOrdinal(HistoryEnumSet.maxSupportedEnumValuesCount - 1)
+    val Max: HistoryEnumOrdinal = HistoryEnumOrdinal(HistoryEnumSet.MaxSupportedEnumValuesCount - 1)
 
 
     /**

@@ -57,10 +57,10 @@ import it.neckar.open.unit.Symbol
 @Unit
 @Length
 @Name("pixel")
-@Symbol(px.SYMBOL)
+@Symbol(px.Symbol)
 annotation class px {
   companion object {
-    const val SYMBOL: String = "px"
+    const val Symbol: String = "px"
   }
 
 }

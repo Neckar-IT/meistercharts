@@ -31,7 +31,7 @@ import it.neckar.open.unit.other.CubicFoot
 import it.neckar.open.unit.other.UsGallon
 import it.neckar.open.unit.other.`in`
 import it.neckar.open.unit.other.ft
-import it.neckar.open.unit.other.ft.Companion.MM_FEET_RATIO
+import it.neckar.open.unit.other.ft.Companion.mmFeetRatio
 import it.neckar.open.unit.si.L
 import it.neckar.open.unit.si.degC
 import it.neckar.open.unit.si.degF
@@ -67,11 +67,11 @@ object ImperialConversion {
 
   val litre2UsGallonConverter: Converter = object : Converter {
     override fun convertValue(value: @L Double): @UsGallon Double {
-      return value / UsGallon.US_GALLON_LITRE_RATIO
+      return value / UsGallon.usGallonLitreRatio
     }
 
     override fun reverseValue(convertedValue: @UsGallon Double): @L Double {
-      return convertedValue * UsGallon.US_GALLON_LITRE_RATIO
+      return convertedValue * UsGallon.usGallonLitreRatio
     }
   }
 
@@ -86,11 +86,11 @@ object ImperialConversion {
 
   val litre2cubicFootConverter: Converter = object : Converter {
     override fun convertValue(value: @L Double): @CubicFoot Double {
-      return value / CubicFoot.LITRE_PER_CU_FOOT
+      return value / CubicFoot.LitrePerCuFoot
     }
 
     override fun reverseValue(convertedValue: @CubicFoot Double): @L Double {
-      return convertedValue * CubicFoot.LITRE_PER_CU_FOOT
+      return convertedValue * CubicFoot.LitrePerCuFoot
     }
   }
 
@@ -105,11 +105,11 @@ object ImperialConversion {
 
   val meter2footConverter: Converter = object : Converter {
     override fun convertValue(value: @m Double): @ft Double {
-      return value * 1000.0 / MM_FEET_RATIO
+      return value * 1000.0 / mmFeetRatio
     }
 
     override fun reverseValue(convertedValue: @ft Double): @m Double {
-      return convertedValue / 1000.0 * MM_FEET_RATIO
+      return convertedValue / 1000.0 * mmFeetRatio
     }
   }
 
@@ -127,11 +127,11 @@ object ImperialConversion {
 
   val mm2inchConverter: Converter = object : Converter {
     override fun convertValue(value: @mm Double): @`in` Double {
-      return value / `in`.MM_RATIO
+      return value / `in`.mmRatio
     }
 
     override fun reverseValue(convertedValue: @`in` Double): @mm Double {
-      return convertedValue * `in`.MM_RATIO
+      return convertedValue * `in`.mmRatio
     }
   }
 

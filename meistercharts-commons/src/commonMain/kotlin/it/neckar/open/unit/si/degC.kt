@@ -60,11 +60,11 @@ import it.neckar.open.unit.quantity.Temperature
 @Unit
 @Temperature
 @Name("degree Celsius")
-@Symbol(degC.SYMBOL)
+@Symbol(degC.Symbol)
 @SiDerivedUnit(K::class)
 @Definition("[K]-273.15")
 annotation class degC {
   companion object {
-    const val SYMBOL: String = "°C"
+    const val Symbol: String = "°C"
   }
 }

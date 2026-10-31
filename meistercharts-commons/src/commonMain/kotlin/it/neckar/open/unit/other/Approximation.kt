@@ -57,10 +57,10 @@ import it.neckar.open.unit.Unit
 @MustBeDocumented
 @Unit
 @Name("approximation")
-@Symbol(Approximation.SYMBOL)
+@Symbol(Approximation.Symbol)
 annotation class Approximation {
   companion object {
-    const val SYMBOL: String = "≈"
+    const val Symbol: String = "≈"
   }
 
 }

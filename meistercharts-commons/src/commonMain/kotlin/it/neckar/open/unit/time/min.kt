@@ -56,12 +56,12 @@ import it.neckar.open.unit.si.s
 @Suppress("ClassName")
 @Unit
 @Time
-@Symbol(min.SYMBOL)
+@Symbol(min.Symbol)
 @Name("Minute")
 @Factor(factor = 60.0, base = s::class)
 annotation class min {
   companion object {
-    const val SYMBOL: String = "min"
+    const val Symbol: String = "min"
   }
 }
 

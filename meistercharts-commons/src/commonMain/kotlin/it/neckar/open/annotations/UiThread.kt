@@ -44,9 +44,9 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
   AnnotationTarget.CONSTRUCTOR,
   AnnotationTarget.CLASS,
 )
-@ThreadDescribingAnnotation(UiThread.THREAD_DESCRIPTOR)
+@ThreadDescribingAnnotation(UiThread.ThreadDescriptor)
 annotation class UiThread {
   companion object {
-    const val THREAD_DESCRIPTOR: String = "ui-thread"
+    const val ThreadDescriptor: String = "ui-thread"
   }
 }

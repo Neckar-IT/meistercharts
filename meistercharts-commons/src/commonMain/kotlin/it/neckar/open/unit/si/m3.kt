@@ -60,10 +60,10 @@ import it.neckar.open.unit.quantity.Volume
 @Volume
 @SiDerivedUnit(m::class)
 @Name("cubic metre")
-@Symbol(m3.SYMBOL)
+@Symbol(m3.Symbol)
 @Cubic(m::class)
 annotation class m3 {
   companion object {
-    const val SYMBOL: String = "m³"
+    const val Symbol: String = "m³"
   }
 }

@@ -58,10 +58,10 @@ import it.neckar.open.unit.Symbol
 @Unit
 @Length
 @Name("device independent pixel")
-@Symbol(dip.SYMBOL)
+@Symbol(dip.Symbol)
 annotation class dip {
   companion object {
-    const val SYMBOL: String = "dip"
+    const val Symbol: String = "dip"
   }
 
 }

@@ -126,7 +126,7 @@ class LayerSupportTest {
 
     val canvas = MockCanvas()
 
-    val chartSupport = ChartSupport(canvas, zoomAndPanModifier, ZoomAndTranslationDefaults.tenPercentMargin, ZoomLevelCalculator.SQRT_2)
+    val chartSupport = ChartSupport(canvas, zoomAndPanModifier, ZoomAndTranslationDefaults.tenPercentMargin, ZoomLevelCalculator.Sqrt2)
     BindContentAreaSize2ContentViewport().bindResize(chartSupport)
 
     val chartState = chartSupport.currentChartState
@@ -159,7 +159,7 @@ class LayerSupportTest {
   @Test
   fun testResizeStrategyBind() {
     val canvas = MockCanvas()
-    val chartSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.SQRT_2)
+    val chartSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.Sqrt2)
     BindContentAreaSize2ContentViewport().bindResize(chartSupport)
 
     assertThat(chartSupport.currentChartState.contentAreaSize).isEqualTo(Size.none)
@@ -172,7 +172,7 @@ class LayerSupportTest {
   fun testResizeStrategyFixed() {
     val canvas = MockCanvas()
     val fixedSize = Size.of(800.8, 600.6)
-    val chartSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.SQRT_2)
+    val chartSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.Sqrt2)
     FixedContentAreaSize(fixedSize).bindResize(chartSupport)
 
     assertThat(chartSupport.currentChartState.contentAreaSize).isEqualTo(fixedSize)
@@ -187,7 +187,7 @@ class LayerSupportTest {
   fun testResizeXFixedYBoundContentAreaSizing() {
     val canvas = MockCanvas()
     val fixedX = 800.8
-    val layerSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.SQRT_2)
+    val layerSupport = ChartSupport(canvas, ZoomAndTranslationModifier.none, ZoomAndTranslationDefaults.noTranslation, ZoomLevelCalculator.Sqrt2)
     FixedContentAreaWidth(fixedX).bindResize(layerSupport)
 
     assertThat(layerSupport.currentChartState.contentAreaSize.width).isEqualTo(fixedX)

@@ -23,7 +23,7 @@ import it.neckar.open.unit.other.px
  */
 data class FontSize(val size: Double) : Comparable<FontSize> {
   init {
-    require(size in 0.0..maxSize) {
+    require(size in 0.0..MaxSize) {
       "Font size out of range: <$size>"
     }
   }
@@ -46,7 +46,7 @@ data class FontSize(val size: Double) : Comparable<FontSize> {
     /**
      * The max size that is supported
      */
-    private const val maxSize = 256.0
+    private const val MaxSize = 256.0
 
     val XXS: FontSize = FontSize(8.0)
     val XS: FontSize = FontSize(10.0)
@@ -58,7 +58,7 @@ data class FontSize(val size: Double) : Comparable<FontSize> {
     /**
      * The maximum supported font size
      */
-    val Max: FontSize = FontSize(maxSize)
+    val Max: FontSize = FontSize(MaxSize)
 
 
     /**

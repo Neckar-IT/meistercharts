@@ -58,6 +58,6 @@ annotation class femto(
   val value: KClass<out Annotation>
 ){
   companion object {
-    const val SYMBOL: String = "f"
+    const val Symbol: String = "f"
   }
 }

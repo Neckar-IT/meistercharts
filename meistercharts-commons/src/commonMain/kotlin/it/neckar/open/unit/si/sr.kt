@@ -60,11 +60,11 @@ import it.neckar.open.unit.Symbol
 @SolidAngle
 @Name("steradian")
 @SiDerivedUnit(m2::class)
-@Symbol(sr.SYMBOL)
+@Symbol(sr.Symbol)
 @Definition("arccos(1-h/r)")
 annotation class sr {
   companion object {
-    const val SYMBOL: String = "sr"
+    const val Symbol: String = "sr"
   }
 
 }

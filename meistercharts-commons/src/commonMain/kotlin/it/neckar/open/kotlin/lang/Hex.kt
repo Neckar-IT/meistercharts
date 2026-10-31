@@ -28,9 +28,9 @@
 package it.neckar.open.kotlin.lang
 
 object Hex {
-  private const val DIGITS = "0123456789ABCDEF"
-  val DIGITS_UPPER: String = DIGITS.uppercase()
-  val DIGITS_LOWER: String = DIGITS.lowercase()
+  private const val Digits = "0123456789ABCDEF"
+  val DIGITS_UPPER: String = Digits.uppercase()
+  val DIGITS_LOWER: String = Digits.lowercase()
 
   fun decodeChar(c: Char): Int = when (c) {
     in '0'..'9' -> c - '0'
@@ -68,7 +68,7 @@ object Hex {
   fun encodeLower(src: ByteArray): String = encodeBase(src, DIGITS_LOWER)
   fun encodeUpper(src: ByteArray): String = encodeBase(src, DIGITS_UPPER)
 
-  private fun encodeBase(data: ByteArray, digits: String = DIGITS): String {
+  private fun encodeBase(data: ByteArray, digits: String = Digits): String {
     val out = StringBuilder(data.size * 2)
     for (n in 0 until data.size) {
       val v = data[n].toInt() and 0xFF

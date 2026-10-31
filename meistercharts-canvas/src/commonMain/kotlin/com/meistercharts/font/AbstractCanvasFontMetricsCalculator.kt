@@ -80,26 +80,26 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
 
 
   fun calculateAscentLineAscent(font: FontDescriptor): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Baseline, accentLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Baseline, AccentLineChar)
     //@px val accentLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
     return (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
   }
 
   fun calculatePLineDescent(font: FontDescriptor): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Baseline, pLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Baseline, PLineChar)
     //@px val pLineAscent = (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
     return (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
   }
 
   fun calculateCapitalHAscent(font: FontDescriptor): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Baseline, capitalHLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Baseline, CapitalHLineChar)
     //@px val capitalHLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
     return (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
   }
 
   fun calculateXLineAscent(font: FontDescriptor): @Normalized Double {
     run {
-      val imageData = createImageData(font, VerticalAlignment.Baseline, xLineChar)
+      val imageData = createImageData(font, VerticalAlignment.Baseline, XLineChar)
       //@px val xLineDescent = (findBottomLine(imageData, anchorY) - anchorY) / scaleFactorY
       return (anchorY - findTopLine(imageData, anchorY, font)) / scaleFactorY
     }
@@ -121,7 +121,7 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
    * Calculates the correction value for text baseline is TOP
    */
   fun calculateCorrectionValueTop(font: FontDescriptor, ascent: @Scaled @px Double): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Top, accentLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Top, AccentLineChar)
 
     //Start looking from the assumed base line
     @Scaled val searchBase = (anchorY + ascent).toInt()
@@ -134,7 +134,7 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
    * Calculates the correction value for bottom
    */
   fun calculateCorrectionValueBottom(font: FontDescriptor, descent: @px @Scaled Double): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Bottom, pLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Bottom, PLineChar)
 
     //Start looking from the assumed bottom
     @Scaled val searchBase = (anchorY - descent).toInt()
@@ -148,7 +148,7 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
    * Draw the text below the y value and count the pixels *above* the line
    */
   fun calculateCorrectionValueCenter(font: FontDescriptor): @Normalized Double {
-    val imageData = createImageData(font, VerticalAlignment.Center, capitalHLineChar)
+    val imageData = createImageData(font, VerticalAlignment.Center, CapitalHLineChar)
 
     @Normalized val topLine = findTopLine(imageData, anchorY, font) / scaleFactorY
     @Normalized val bottomLine = findBottomLine(imageData, anchorY) / scaleFactorY
@@ -233,26 +233,26 @@ abstract class AbstractCanvasFontMetricsCalculator<C : Canvas, GC : CanvasRender
     /**
      * The character for the accent line
      */
-    const val accentLineChar: Char = 'Á'
+    const val AccentLineChar: Char = 'Á'
 
     /**
      * The character for the "p" line
      */
-    const val pLineChar: Char = 'p'
+    const val PLineChar: Char = 'p'
 
     /**
      * The character for the "H" line
      */
-    const val capitalHLineChar: Char = 'H'
+    const val CapitalHLineChar: Char = 'H'
 
     /**
      * The character for the "x" line
      */
-    const val xLineChar: Char = 'x'
+    const val XLineChar: Char = 'x'
 
     /**
      * All line chars - only used for debugging
      */
-    const val lineChars: String = "$xLineChar$capitalHLineChar$accentLineChar$pLineChar"
+    const val LineChars: String = "$XLineChar$CapitalHLineChar$AccentLineChar$PLineChar"
   }
 }

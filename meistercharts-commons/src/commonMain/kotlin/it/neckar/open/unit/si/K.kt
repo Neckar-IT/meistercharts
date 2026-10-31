@@ -60,9 +60,9 @@ import it.neckar.open.unit.Symbol
 @Temperature
 @Name("kelvin")
 @SIBaseUnit
-@Symbol(K.SYMBOL)
+@Symbol(K.Symbol)
 annotation class K {
   companion object {
-    const val SYMBOL: String = "K"
+    const val Symbol: String = "K"
   }
 }

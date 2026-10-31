@@ -31,7 +31,7 @@ actual fun loadImageUncached(url: Url, callback: (Image) -> Unit) {
   logger.debug { "Loading image: $url" }
 
   (document.createElement("IMG") as HTMLImageElement).apply {
-    this.classList.add(MeisterChartClasses.imageLoader)
+    this.classList.add(MeisterChartClasses.ImageLoader)
 
     style.width = "${this.width} px"
     style.height = "${this.height} px"

@@ -56,9 +56,9 @@ import it.neckar.open.unit.Symbol
 @Suppress("ClassName")
 @Unit
 @Name("byte")
-@Symbol(UnsignedByte.SYMBOL)
+@Symbol(UnsignedByte.Symbol)
 annotation class UnsignedByte {
   companion object {
-    const val SYMBOL: String = "byte"
+    const val Symbol: String = "byte"
   }
 }

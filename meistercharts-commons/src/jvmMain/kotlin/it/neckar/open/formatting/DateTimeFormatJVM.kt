@@ -206,7 +206,7 @@ actual class YearMonthFormat actual constructor() : DateTimeFormat {
     }
 
     val monthYearFormatSpace: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-    val monthYearFormatNbsp: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM${SpecialChars.nbsp}yyyy")
+    val monthYearFormatNbsp: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM${SpecialChars.Nbsp}yyyy")
   }
 }
 

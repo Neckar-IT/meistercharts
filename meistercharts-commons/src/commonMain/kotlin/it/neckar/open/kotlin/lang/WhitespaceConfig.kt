@@ -43,7 +43,7 @@ enum class WhitespaceConfig(
   /**
    * Uses non breaking spaces
    */
-  NonBreaking(SpecialChars.nbsp, SpecialChars.nnbsp),
+  NonBreaking(SpecialChars.Nbsp, SpecialChars.Nnbsp),
 
   /**
    * Uses spaces
@@ -53,7 +53,7 @@ enum class WhitespaceConfig(
   /**
    * Uses always the "large" nbsp
    */
-  NonBreakingOnlyNbsp(SpecialChars.nbsp, SpecialChars.nbsp),
+  NonBreakingOnlyNbsp(SpecialChars.Nbsp, SpecialChars.Nbsp),
   ;
 
 

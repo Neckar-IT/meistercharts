@@ -264,7 +264,7 @@ class DistanceYears(val distanceInYears: @a Int) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Years
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return distanceInYears * TimeConstants.millisPerYear
+    return distanceInYears * TimeConstants.MillisPerYear
   }
 
   override fun calculateTicksInternal(start: Double, end: Double, timeZone: TimeZone): DoubleArrayList {
@@ -337,7 +337,7 @@ class DistanceMonths(val distanceInMonths: Int) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Months
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return distanceInMonths * TimeConstants.millisPerDay * 30
+    return distanceInMonths * TimeConstants.MillisPerDay * 30
   }
 
   override fun calculateTicksInternal(start: Double, end: Double, timeZone: TimeZone): DoubleArrayList {
@@ -395,7 +395,7 @@ class DistanceDays(val ticksPerMonth: TicksPerMonth) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Days
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return ticksPerMonth.worstCaseDaysDistance() * TimeConstants.millisPerDay
+    return ticksPerMonth.worstCaseDaysDistance() * TimeConstants.MillisPerDay
   }
 
   /**
@@ -563,7 +563,7 @@ class DistanceHours(val distanceInHours: Int) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Hours
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return distanceInHours * TimeConstants.millisPerHour
+    return distanceInHours * TimeConstants.MillisPerHour
   }
 
   override fun calculateTicksInternal(start: @Inclusive @ms Double, end: @Inclusive @ms Double, timeZone: TimeZone): DoubleArrayList {
@@ -584,7 +584,7 @@ class DistanceHours(val distanceInHours: Int) : TimeTickDistance {
       @ms var current = startMillis
       while (current <= end) {
         list.add(current)
-        current += distanceInHours * TimeConstants.millisPerHour
+        current += distanceInHours * TimeConstants.MillisPerHour
 
         require(list.size < 1000) {
           "List too large. Current ${current.formatUtcForDebug()}. End: ${end.formatUtcForDebug()}"
@@ -598,7 +598,7 @@ class DistanceHours(val distanceInHours: Int) : TimeTickDistance {
   }
 
   override fun calculateEstimatedIndex(millis: Double, timeZone: TimeZone): GlobalTimeIndex {
-    return GlobalTimeIndex((millis / TimeConstants.millisPerHour).toInt())
+    return GlobalTimeIndex((millis / TimeConstants.MillisPerHour).toInt())
   }
 
   @Hot
@@ -629,18 +629,18 @@ class DistanceMinutes(val distanceInMinutes: @min Int) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Minutes
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return distanceInMinutes * TimeConstants.millisPerMinute
+    return distanceInMinutes * TimeConstants.MillisPerMinute
   }
 
   override fun calculateTicksInternal(start: Double, end: Double, timeZone: TimeZone): DoubleArrayList {
-    @min val startMinuteOfEpoch = (start / TimeConstants.millisPerMinute).toIntFloor().roundDownToBase(distanceInMinutes)
-    @ms val startMillis = startMinuteOfEpoch * TimeConstants.millisPerMinute
+    @min val startMinuteOfEpoch = (start / TimeConstants.MillisPerMinute).toIntFloor().roundDownToBase(distanceInMinutes)
+    @ms val startMillis = startMinuteOfEpoch * TimeConstants.MillisPerMinute
 
     return DoubleArrayList().also { list ->
       @ms var current = startMillis
       while (current <= end) {
         list.add(current)
-        current += distanceInMinutes * TimeConstants.millisPerMinute
+        current += distanceInMinutes * TimeConstants.MillisPerMinute
 
         require(list.size < 1000) {
           "List too large. Current ${current.formatUtcForDebug()}. End: ${end.formatUtcForDebug()}"
@@ -654,7 +654,7 @@ class DistanceMinutes(val distanceInMinutes: @min Int) : TimeTickDistance {
   }
 
   override fun calculateEstimatedIndex(millis: Double, timeZone: TimeZone): GlobalTimeIndex {
-    @min val minuteOfEpoch = (millis / TimeConstants.millisPerMinute).toIntFloor()
+    @min val minuteOfEpoch = (millis / TimeConstants.MillisPerMinute).toIntFloor()
     return GlobalTimeIndex(minuteOfEpoch / distanceInMinutes)
   }
 
@@ -686,18 +686,18 @@ class DistanceSeconds(val distanceInSeconds: @s Int) : TimeTickDistance {
   override val timeMagnitude: TimeTickDistance.TimeMagnitude = TimeTickDistance.TimeMagnitude.Seconds
 
   override fun typicalDistanceForComparison(): @ms Double {
-    return distanceInSeconds * TimeConstants.millisPerSecond
+    return distanceInSeconds * TimeConstants.MillisPerSecond
   }
 
   override fun calculateTicksInternal(start: Double, end: Double, timeZone: TimeZone): DoubleArrayList {
-    @s val startSecondOfEpoch = (start / TimeConstants.millisPerSecond).roundDownToBase(distanceInSeconds.toDouble())
-    @ms val startMillis = startSecondOfEpoch * TimeConstants.millisPerSecond
+    @s val startSecondOfEpoch = (start / TimeConstants.MillisPerSecond).roundDownToBase(distanceInSeconds.toDouble())
+    @ms val startMillis = startSecondOfEpoch * TimeConstants.MillisPerSecond
 
     return DoubleArrayList().also { list ->
       @ms var current = startMillis
       while (current <= end) {
         list.add(current)
-        current += distanceInSeconds * TimeConstants.millisPerSecond
+        current += distanceInSeconds * TimeConstants.MillisPerSecond
 
         require(list.size < 1000) {
           "List too large. Current ${current.formatUtcForDebug()}. End: ${end.formatUtcForDebug()}"
@@ -711,7 +711,7 @@ class DistanceSeconds(val distanceInSeconds: @s Int) : TimeTickDistance {
   }
 
   override fun calculateEstimatedIndex(millis: Double, timeZone: TimeZone): GlobalTimeIndex {
-    @s val startSecondOfEpoch = (millis / TimeConstants.millisPerSecond) % Int.MAX_VALUE
+    @s val startSecondOfEpoch = (millis / TimeConstants.MillisPerSecond) % Int.MAX_VALUE
     return GlobalTimeIndex(startSecondOfEpoch.toIntFloor() / distanceInSeconds)
   }
 

@@ -100,7 +100,7 @@ class HistoryFileStorage(
     /**
      * The number of files that are stored within one directory
      */
-    const val filesPerFolder: Int = 500
+    const val FilesPerFolder: Int = 500
 
     /**
      * The threshold for the base folder. This is the minimum amount of time the first folder must span.
@@ -122,7 +122,7 @@ class HistoryFileStorage(
      * Rounds the given start date using the precision from the duration
      */
     private fun calculateBaseFolderStart(bucketRange: HistoryBucketRange, start: @ms Double): TimestampWithPrecision {
-      val precisionFactor = bucketRange.duration * filesPerFolder
+      val precisionFactor = bucketRange.duration * FilesPerFolder
       return TimestampWithPrecision.calculateFloor(start, precisionFactor)
     }
 
@@ -143,7 +143,7 @@ class HistoryFileStorage(
 
       //Additional base folders if required
       do {
-        val newCurrent = TimestampWithPrecision.calculateFloor(current.millis, current.precision * filesPerFolder)
+        val newCurrent = TimestampWithPrecision.calculateFloor(current.millis, current.precision * FilesPerFolder)
         require(newCurrent != current) {
           "New current <$newCurrent> must be different than current current: $current"
         }

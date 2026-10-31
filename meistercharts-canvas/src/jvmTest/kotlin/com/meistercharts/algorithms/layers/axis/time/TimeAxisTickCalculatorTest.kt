@@ -653,7 +653,7 @@ class TimeAxisTickCalculatorTest {
     val startTimestamp = 1038935515000.0
     assertThat(startTimestamp.formatUtc()).isEqualTo("2002-12-03T17:11:55.000Z")
 
-    val endTimestamp = startTimestamp + TimeConstants.millisPerSecond * 10 * 15
+    val endTimestamp = startTimestamp + TimeConstants.MillisPerSecond * 10 * 15
     assertThat(endTimestamp.formatUtc()).isEqualTo("2002-12-03T17:14:25.000Z")
 
     TimeAxisTickCalculator.calculateTickValues(

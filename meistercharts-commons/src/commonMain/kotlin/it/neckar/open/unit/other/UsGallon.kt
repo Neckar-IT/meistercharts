@@ -60,7 +60,7 @@ import it.neckar.open.unit.si.L
 @Unit
 @Length
 @Name("US gallon")
-@Symbol(UsGallon.SYMBOL)
+@Symbol(UsGallon.Symbol)
 @DerivedUnit(L::class)
 @Definition("231 cubic inches", "3.785 411 784 litres")
 annotation class UsGallon {
@@ -68,14 +68,14 @@ annotation class UsGallon {
     /**
      * The ratio used to convert litres to US gallons
      *
-     *  * UsGallon == Liter / US_GALLON_LITRE_RATIO
-     *  * Lister = UsGallon * US_GALLON_LITRE_RATIO
+     *  * UsGallon == Liter / usGallonLitreRatio
+     *  * Lister = UsGallon * usGallonLitreRatio
      */
-    const val US_GALLON_LITRE_RATIO: Double = 3.785_411_784
+    const val usGallonLitreRatio: Double = 3.785_411_784
 
     /**
      * The "real" symbol
      */
-    const val SYMBOL: String = "US gal"
+    const val Symbol: String = "US gal"
   }
 }

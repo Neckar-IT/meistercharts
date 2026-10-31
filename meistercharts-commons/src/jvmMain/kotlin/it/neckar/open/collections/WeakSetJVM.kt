@@ -39,11 +39,11 @@ actual class WeakSet<T> {
   actual operator fun contains(element: T): Boolean = backingMap.containsKey(element)
 
   actual fun add(element: T) {
-    backingMap[element] = commonValue
+    backingMap[element] = CommonValue
   }
 
   actual fun remove(element: T): Boolean {
-    return backingMap.remove(element, commonValue)
+    return backingMap.remove(element, CommonValue)
   }
 
   fun isEmpty(): Boolean {
@@ -56,6 +56,6 @@ actual class WeakSet<T> {
     }
 
   companion object {
-    private const val commonValue: Boolean = true
+    private const val CommonValue: Boolean = true
   }
 }

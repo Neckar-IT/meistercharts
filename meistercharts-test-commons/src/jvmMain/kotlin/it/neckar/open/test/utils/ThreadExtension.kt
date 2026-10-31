@@ -140,8 +140,8 @@ class ThreadExtension @JvmOverloads constructor(
       builder.append("---")
       builder.append("\n")
       builder.append(remainingThread)
-      builder.append(STACK_TRACE_ELEMENT_SEPARATOR)
-      builder.append(remainingThread.stackTrace.joinToString(STACK_TRACE_ELEMENT_SEPARATOR))
+      builder.append(StackTraceElementSeparator)
+      builder.append(remainingThread.stackTrace.joinToString(StackTraceElementSeparator))
       builder.append("\n")
     }
     builder.append("-----------------------").append("\n")
@@ -189,7 +189,7 @@ class ThreadExtension @JvmOverloads constructor(
   }
 
   companion object {
-    const val STACK_TRACE_ELEMENT_SEPARATOR: String = "\n\tat "
+    const val StackTraceElementSeparator: String = "\n\tat "
   }
 }
 

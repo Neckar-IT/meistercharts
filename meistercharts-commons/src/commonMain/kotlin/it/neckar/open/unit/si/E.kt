@@ -61,10 +61,10 @@ import it.neckar.open.unit.Symbol
 @Intensity
 @Name("irradiance")
 @SiDerivedUnit(W::class, m2::class)
-@Symbol(E.SYMBOL)
+@Symbol(E.Symbol)
 @Definition("W/m²")
 annotation class E {
   companion object {
-    const val SYMBOL: String = "E"
+    const val Symbol: String = "E"
   }
 }

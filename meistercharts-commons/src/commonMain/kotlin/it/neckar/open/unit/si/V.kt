@@ -59,11 +59,11 @@ import it.neckar.open.unit.Symbol
 @ElectricPotential
 @Name("volt")
 @SiDerivedUnit(W::class, A::class)
-@Symbol(V.SYMBOL)
+@Symbol(V.Symbol)
 @Definition("W/A", "J/A*s", "N*m/(A*s)", "J/C", "N*m/C")
 annotation class V {
   companion object {
-    const val SYMBOL: String = "V"
+    const val Symbol: String = "V"
   }
 
 }

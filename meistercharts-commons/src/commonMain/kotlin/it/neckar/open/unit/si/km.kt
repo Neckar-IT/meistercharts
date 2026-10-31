@@ -58,11 +58,11 @@ import it.neckar.open.unit.quantity.Length
 @Suppress("ClassName")
 @Unit
 @Length
-@Symbol(km.SYMBOL)
+@Symbol(km.Symbol)
 @Name("kilometre")
 @kilo(m::class)
 annotation class km {
   companion object {
-    const val SYMBOL: String = "km"
+    const val Symbol: String = "km"
   }
 }

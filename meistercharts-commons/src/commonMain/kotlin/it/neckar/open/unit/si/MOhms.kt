@@ -60,11 +60,11 @@ import it.neckar.open.unit.quantity.ElectricResistance
 @ElectricResistance
 @Name("mega Ohm")
 @SiDerivedUnit(A::class, V::class)
-@Symbol(MOhms.SYMBOL)
+@Symbol(MOhms.Symbol)
 @Definition("V/A", "J/s*A²")
 annotation class MOhms {
   companion object {
-    const val SYMBOL: String = "MΩ"
+    const val Symbol: String = "MΩ"
   }
 
 }

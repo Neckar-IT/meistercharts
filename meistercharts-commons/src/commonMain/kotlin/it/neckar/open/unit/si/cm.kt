@@ -59,11 +59,11 @@ import it.neckar.open.unit.quantity.Length
 @Suppress("ClassName")
 @Unit
 @Length
-@Symbol(cm.SYMBOL)
+@Symbol(cm.Symbol)
 @Name("centimetre")
 @centi(m::class)
 annotation class cm {
   companion object {
-    const val SYMBOL: String = "cm"
+    const val Symbol: String = "cm"
   }
 }

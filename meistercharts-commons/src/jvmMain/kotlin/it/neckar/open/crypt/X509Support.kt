@@ -79,7 +79,7 @@ open class X509Support(
    * (which is distributed) is sufficient to encrypt but not to decrypt.
    */
   fun cipher(plainText: ByteArray): ByteArray {
-    val cipher = Cipher.getInstance(RSA_OAEP)
+    val cipher = Cipher.getInstance(rsaOaep)
     cipher.init(Cipher.ENCRYPT_MODE, certificate.publicKey, OaepParameters)
     return cipher.doFinal(plainText)
   }
@@ -89,7 +89,7 @@ open class X509Support(
    */
   @RequiresPrivateKey
   fun decipher(bytes: ByteArray): ByteArray {
-    val cipher = Cipher.getInstance(RSA_OAEP)
+    val cipher = Cipher.getInstance(rsaOaep)
     cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(), OaepParameters)
     return cipher.doFinal(bytes)
   }
@@ -99,7 +99,7 @@ open class X509Support(
    */
   @RequiresPrivateKey
   fun sign(plainText: ByteArray): it.neckar.open.crypt.Signature {
-    val signature = Signature.getInstance(SHA_256_WITH_RSA)
+    val signature = Signature.getInstance(sha256WithRsa)
     signature.initSign(getPrivateKey())
 
     signature.update(plainText)
@@ -110,7 +110,7 @@ open class X509Support(
    * Verifies the signature for the given plain text using the certificate.
    */
   fun verifySignature(plainText: ByteArray, signature: it.neckar.open.crypt.Signature): Boolean {
-    val sign = Signature.getInstance(SHA_256_WITH_RSA)
+    val sign = Signature.getInstance(sha256WithRsa)
     sign.initVerify(certificate)
     sign.update(plainText)
     return sign.verify(signature.getBytes())
@@ -125,10 +125,10 @@ open class X509Support(
   }
 
   companion object {
-    const val RSA: String = "RSA"
-    const val RSA_OAEP: String = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
-    const val SHA_256_WITH_RSA: String = "SHA256withRSA"
-    private const val X_509_CERTIFICATE_TYPE = "X.509"
+    const val rsa: String = "RSA"
+    const val rsaOaep: String = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
+    const val sha256WithRsa: String = "SHA256withRSA"
+    private const val x509CertificateType = "X.509"
 
     /**
      * OAEP parameters that pin both the label digest and the MGF1 digest to SHA-256.
@@ -164,7 +164,7 @@ open class X509Support(
       //We have an url --> return it
       DataInputStream(privateKeyUrl.openStream()).use { inputStream ->
         val keyBytes = IOUtils.toByteArray(inputStream)
-        val keyFactory = KeyFactory.getInstance(RSA)
+        val keyFactory = KeyFactory.getInstance(rsa)
 
         val privSpec = PKCS8EncodedKeySpec(keyBytes)
         return keyFactory.generatePrivate(privSpec) as RSAPrivateKey
@@ -180,7 +180,7 @@ open class X509Support(
     fun readCertificate(certificateUrl: URL): X509Certificate {
       //Read the certificate from the url
       DataInputStream(certificateUrl.openStream()).use { inputStream ->
-        val cf = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+        val cf = CertificateFactory.getInstance(x509CertificateType)
         return cf.generateCertificate(inputStream) as X509Certificate
       }
     }
@@ -194,7 +194,7 @@ open class X509Support(
        */
       certPath: Path,
     ): X509Certificate {
-      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+      val certificateFactory = CertificateFactory.getInstance(x509CertificateType)
 
       certPath.inputStream().use { inputStream ->
         val certificate = certificateFactory.generateCertificate(inputStream)
@@ -218,7 +218,7 @@ open class X509Support(
        */
       base64Certificate: Base64CertificatePem,
     ): X509Certificate {
-      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+      val certificateFactory = CertificateFactory.getInstance(x509CertificateType)
 
       // Use the decodeToString() method from Base64CertificatePem to get the PEM content
       val pemContent = base64Certificate.decodeToString()
@@ -244,7 +244,7 @@ open class X509Support(
        */
       certPath: Path,
     ): List<X509Certificate> {
-      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+      val certificateFactory = CertificateFactory.getInstance(x509CertificateType)
 
       return certPath.inputStream().use { inputStream ->
         certificateFactory.generateCertificates(inputStream)
@@ -266,7 +266,7 @@ open class X509Support(
        */
       pemBytes: ByteArray,
     ): List<X509Certificate> {
-      val certificateFactory = CertificateFactory.getInstance(X_509_CERTIFICATE_TYPE)
+      val certificateFactory = CertificateFactory.getInstance(x509CertificateType)
 
       return ByteArrayInputStream(pemBytes).use { inputStream ->
         certificateFactory.generateCertificates(inputStream)

@@ -225,17 +225,17 @@ class TimeRange(
     /**
      * The time range that starts at the reference timestamp and ends one minute later
      */
-    val oneMinuteSinceReference: TimeRange = fromStartAndDuration(TimeConstants.referenceTimestamp, 60.0 * 1000.0)
+    val oneMinuteSinceReference: TimeRange = fromStartAndDuration(TimeConstants.ReferenceTimestamp, 60.0 * 1000.0)
 
     /**
      * The time range that starts at the reference timestamp and ends one hour later
      */
-    val oneHourSinceReference: TimeRange = fromStartAndDuration(TimeConstants.referenceTimestamp, 60.0 * 60.0 * 1000.0)
+    val oneHourSinceReference: TimeRange = fromStartAndDuration(TimeConstants.ReferenceTimestamp, 60.0 * 60.0 * 1000.0)
 
     /**
      * The time range that starts at the reference timestamp and ends one day later
      */
-    val oneDaySinceReference: TimeRange = fromStartAndDuration(TimeConstants.referenceTimestamp, 24.0 * 60.0 * 60.0 * 1000.0)
+    val oneDaySinceReference: TimeRange = fromStartAndDuration(TimeConstants.ReferenceTimestamp, 24.0 * 60.0 * 60.0 * 1000.0)
 
     /**
      * Creates a new time range from two values that may be unsorted (value1 might be smaller or larger than value 0)

@@ -108,7 +108,7 @@ class CanvasFontMetricsCalculatorJS(
       canvasRenderingContext.context.textAlign = CanvasTextAlign.LEFT
 
       //Draw each letter on the same space to improve performance when evaluating
-      heightCalculationText.forEach { char ->
+      HeightCalculationText.forEach { char ->
         canvasRenderingContext.context.fillText(char.toString(), 0.0, 0.0)
       }
     }
@@ -121,7 +121,7 @@ class CanvasFontMetricsCalculatorJS(
      * The text that is used to calculate the "high" value (including umlauts)
      */
     @Deprecated("use only one char")
-    private const val heightCalculationText = "BpÅÁqÜgÖfÄPqLT"
+    private const val HeightCalculationText = "BpÅÁqÜgÖfÄPqLT"
 
     val logger: Logger = LoggerFactory.getLogger("com.meistercharts.js.CanvasFontMetricsCalculatorJS")
   }

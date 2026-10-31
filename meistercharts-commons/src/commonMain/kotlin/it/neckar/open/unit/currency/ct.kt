@@ -59,10 +59,10 @@ import it.neckar.open.unit.quantity.Currency
 @Unit
 @Currency
 @Name("Cent")
-@Symbol(ct.SYMBOL)
+@Symbol(ct.Symbol)
 @centi(EUR::class)
 annotation class ct {
   companion object {
-    const val SYMBOL: String = "ct"
+    const val Symbol: String = "ct"
   }
 }

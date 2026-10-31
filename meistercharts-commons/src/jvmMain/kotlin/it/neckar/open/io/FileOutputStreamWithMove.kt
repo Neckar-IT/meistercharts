@@ -44,7 +44,7 @@ class FileOutputStreamWithMove(val file: File) : FilterOutputStream(null) {
   /**
    * The tmp file that is written first
    */
-  val tmpFile: File = File(file.parent, file.name + SUFFIX_TMP + "_" + System.nanoTime()).also {
+  val tmpFile: File = File(file.parent, file.name + SuffixTmp + "_" + System.nanoTime()).also {
     it.deleteOnExit()
 
     this.out = it.outputStream().buffered()
@@ -75,7 +75,7 @@ class FileOutputStreamWithMove(val file: File) : FilterOutputStream(null) {
     /**
      * The suffix for the tmp file
      */
-    const val SUFFIX_TMP: String = ".tmp"
+    const val SuffixTmp: String = ".tmp"
   }
 }
 

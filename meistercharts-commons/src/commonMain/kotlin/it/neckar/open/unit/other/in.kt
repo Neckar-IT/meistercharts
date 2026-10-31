@@ -62,31 +62,31 @@ import it.neckar.open.unit.si.m
 @MustBeDocumented
 @Length
 @Name("inch")
-@Symbol(`in`.SYMBOL)
-@AlternativeSymbols(`in`.ALTERNATIVE_SYMBOL, `in`.SYMBOL_SAFE)
+@Symbol(`in`.Symbol)
+@AlternativeSymbols(`in`.AlternativeSymbol, `in`.SymbolSafe)
 @Unit
 @DerivedUnit(m::class)
 @Definition("0.0254 m", "12 inches = 1 foot")
 annotation class `in` {
   companion object {
     /**
-     * 1 ft = FEET_RATIO in
+     * 1 ft = FeetRatio in
      */
-    const val FEET_RATIO: Int = 12
+    const val FeetRatio: Int = 12
 
     /**
-     * Conversion to mm: n * MM_RATIO
+     * Conversion to mm: n * mmRatio
      */
-    const val MM_RATIO: Double = 25.4
+    const val mmRatio: Double = 25.4
 
 
-    const val SYMBOL: String = "″"
+    const val Symbol: String = "″"
     /**
      * This is a "safe" symbol - that is not correct!
      */
 
-    const val SYMBOL_SAFE: String = "\""
+    const val SymbolSafe: String = "\""
 
-    const val ALTERNATIVE_SYMBOL: String = "in"
+    const val AlternativeSymbol: String = "in"
   }
 }

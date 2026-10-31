@@ -58,11 +58,11 @@ import it.neckar.open.unit.Symbol
 @Unit
 @Time
 @SIBaseUnit
-@Symbol(s.SYMBOL)
+@Symbol(s.Symbol)
 @Name("second")
 annotation class s {
   companion object {
-    const val SYMBOL: String = "s"
+    const val Symbol: String = "s"
   }
 
 }

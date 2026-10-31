@@ -30,7 +30,7 @@ package it.neckar.open.threads
 /**
  * The name the JavaFX runtime gives its application (UI) thread.
  */
-const val FxApplicationThreadName: String = "JavaFX Application Thread"
+const val fxApplicationThreadName: String = "JavaFX Application Thread"
 
 /**
  * Whether [threadName] is the name of the JavaFX Application Thread.
@@ -39,7 +39,7 @@ const val FxApplicationThreadName: String = "JavaFX Application Thread"
  * `jdk.jfr.consumer.RecordedThread` from a JFR event) - not only to a live [Thread].
  */
 fun isFxApplicationThreadName(threadName: String?): Boolean {
-  return threadName == FxApplicationThreadName
+  return threadName == fxApplicationThreadName
 }
 
 /**

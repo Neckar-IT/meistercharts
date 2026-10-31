@@ -58,10 +58,10 @@ import it.neckar.open.unit.prefix.kibi
 @Unit
 @DataAmount
 @Name("kibibyte")
-@Symbol(KiB.SYMBOL)
+@Symbol(KiB.Symbol)
 @kibi(B::class)
 annotation class KiB {
   companion object {
-    const val SYMBOL: String = "KiB"
+    const val Symbol: String = "KiB"
   }
 }

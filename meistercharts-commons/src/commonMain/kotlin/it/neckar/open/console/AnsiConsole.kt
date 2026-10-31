@@ -76,7 +76,7 @@ class AnsiConsole {
    * Returns the content with bold formatting.
    */
   fun bold(content: Any): String {
-    return "$ESC${CSI}1m${content}$RESET"
+    return "$esc${csi}1m${content}$Reset"
   }
 
   fun clearScreen(): String {
@@ -101,7 +101,7 @@ class AnsiConsole {
   }
 
   fun withColor(content: Any, color: Color): String {
-    return "$ESC$CSI${color.foreground}m${content}$RESET"
+    return "$esc$csi${color.foreground}m${content}$Reset"
   }
 
   enum class Color(val foreground: String, val background: String) {
@@ -121,18 +121,18 @@ class AnsiConsole {
     /**
      * Starts the ANSI code
      */
-    const val ESC: String = "\u001B"
+    const val esc: String = "\u001B"
 
     /**
      * Control Sequence Introducer
      * Begins a control sequence
      * https://en.wikipedia.org/wiki/ANSI_escape_code#CSIsection
      */
-    const val CSI: String = "["
+    const val csi: String = "["
 
     /**
      * Resets all ansi attributes
      */
-    const val RESET: String = "$ESC${CSI}0m"
+    const val Reset: String = "$esc${csi}0m"
   }
 }

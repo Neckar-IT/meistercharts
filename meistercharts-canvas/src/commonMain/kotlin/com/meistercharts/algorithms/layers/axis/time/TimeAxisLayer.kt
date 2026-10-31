@@ -523,7 +523,7 @@ object Iso8601TickFormat : TimeAxisTickFormat {
   override fun computeMaxTickLength(paintingContext: LayerPaintingContext, tickDistance: TimeTickDistance): @px Double {
     return paintingContext.gc.calculateTextWidth(
       format(
-        TimeConstants.referenceTimestamp,
+        TimeConstants.ReferenceTimestamp,
         tickDistance,
         paintingContext.i18nConfiguration
       )

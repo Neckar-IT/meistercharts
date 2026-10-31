@@ -20,5 +20,5 @@ package com.meistercharts.history
  * Can be used to identify
  */
 object HistoryDebug {
-  const val additionalVerificationEnabled: Boolean = false
+  const val AdditionalVerificationEnabled: Boolean = false
 }

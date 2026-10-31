@@ -119,9 +119,9 @@ class DateFormatJvmTest {
 
   @Test
   fun yearMonthFormat() {
-    assertThat(yearMonthFormat.format(now, I18nConfiguration.Germany)).isEqualTo("März${SpecialChars.nbsp}2021")
-    assertThat(yearMonthFormat.format(now, englishBerlin)).isEqualTo("March${SpecialChars.nbsp}2021")
-    assertThat(yearMonthFormat.format(now, englishTokyo)).isEqualTo("March${SpecialChars.nbsp}2021")
+    assertThat(yearMonthFormat.format(now, I18nConfiguration.Germany)).isEqualTo("März${SpecialChars.Nbsp}2021")
+    assertThat(yearMonthFormat.format(now, englishBerlin)).isEqualTo("March${SpecialChars.Nbsp}2021")
+    assertThat(yearMonthFormat.format(now, englishTokyo)).isEqualTo("March${SpecialChars.Nbsp}2021")
   }
 
   @Test

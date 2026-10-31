@@ -34,7 +34,7 @@ import it.neckar.open.unit.si.ms
  */
 @Suppress("ObjectPropertyName")
 object TimeMillisExample {
-  const val _2020_05_21_15_00_41_500: @ms Double = 1.5900732415E12
+  const val Timestamp20200521150041500: @ms Double = 1.5900732415E12
 
   val _2023_11_15_12_00_00_000: @ms Double = 1700049600000.0.also {
     requireMatchesFormattedUtc(it, "2023-11-15T12:00:00.000Z")
@@ -69,7 +69,7 @@ object TimeMillisExample {
   }
 
   init {
-    require(_2020_05_21_15_00_41_500.formatUtcForDebug() == "2020-05-21T15:00:41.500Z") { "TimeMillisExample _2020_05_21_15_00_41_500 mismatch: ${_2020_05_21_15_00_41_500.formatUtcForDebug()}" }
+    require(Timestamp20200521150041500.formatUtcForDebug() == "2020-05-21T15:00:41.500Z") { "TimeMillisExample Timestamp20200521150041500 mismatch: ${Timestamp20200521150041500.formatUtcForDebug()}" }
     require(_2019_01_07_15_45_19_123_987_345_678_901.formatUtcForDebug() == "2019-01-07T15:45:19.123Z") { "TimeMillisExample _2019_01_07_15_45_19_123_987_345_678_901 mismatch: ${_2019_01_07_15_45_19_123_987_345_678_901.formatUtcForDebug()}" }
     require(_2022_07_29_09_38_04_141Z.formatUtcForDebug() == "2022-07-29T07:38:04.141Z") { "TimeMillisExample _2022_07_29_09_38_04_141Z mismatch: ${_2022_07_29_09_38_04_141Z.formatUtcForDebug()}" }
     require(_2019_01_07_10_11_59_123Z.formatUtcForDebug() == "2019-01-07T10:11:59.123Z") { "TimeMillisExample _2019_01_07_10_11_59_123Z mismatch: ${_2019_01_07_10_11_59_123Z.formatUtcForDebug()}" }
@@ -80,7 +80,7 @@ object TimeMillisExample {
   }
 
   val entries: List<@ms Double> = listOf(
-    _2020_05_21_15_00_41_500,
+    Timestamp20200521150041500,
     _2019_01_07_15_45_19_123_987_345_678_901,
     _2022_07_29_09_38_04_141Z,
     _2019_01_07_10_11_59_123Z,

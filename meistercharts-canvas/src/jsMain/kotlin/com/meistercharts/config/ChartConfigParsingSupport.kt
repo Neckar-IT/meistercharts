@@ -52,7 +52,7 @@ class ChartConfigParsingSupport(
   /**
    * Returns the configuration for the chart represented by the provided [chartSupport].
    *
-   * This method can be used to find the (first) script tag within the canvas holder with the class [MeisterChartClasses.config]
+   * This method can be used to find the (first) script tag within the canvas holder with the class [MeisterChartClasses.Config]
    */
   inline fun <reified T> parseChartsConfig(chartSupport: ChartSupport): T {
     val jsonContent = getJsonContent(chartSupport)
@@ -81,7 +81,7 @@ class ChartConfigParsingSupport(
       if (it.nodeName == "SCRIPT") {
         val scriptElement = it as HTMLScriptElement
         require(scriptElement.type == "application/json") { "The script element must have the type 'application/json'" }
-        require(scriptElement.className.contains(MeisterChartClasses.config)) { "The script element must have the class '${MeisterChartClasses.config}'" }
+        require(scriptElement.className.contains(MeisterChartClasses.Config)) { "The script element must have the class '${MeisterChartClasses.Config}'" }
 
         return scriptElement.text
 

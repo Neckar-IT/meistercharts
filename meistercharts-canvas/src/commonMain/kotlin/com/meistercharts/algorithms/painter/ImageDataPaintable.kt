@@ -42,7 +42,7 @@ class ImageDataPaintable(data: Url, fixedSize: @px Size? = null) : Paintable {
   }
 
   companion object {
-    const val prefix: String = "data:image"
+    const val Prefix: String = "data:image"
   }
 }
 

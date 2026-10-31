@@ -451,7 +451,7 @@ class DiscreteTimelineChartGestalt(
      *
      * @see contentAreaDurationProperty
      */
-    val contentAreaTimeRangeProperty: ReadOnlyObservableObject<TimeRange> = contentAreaDurationProperty.map { duration -> TimeRange.fromStartAndDuration(TimeConstants.referenceTimestamp, duration) }
+    val contentAreaTimeRangeProperty: ReadOnlyObservableObject<TimeRange> = contentAreaDurationProperty.map { duration -> TimeRange.fromStartAndDuration(TimeConstants.ReferenceTimestamp, duration) }
     val contentAreaTimeRange: TimeRange by contentAreaTimeRangeProperty
 
     var minimumSamplingPeriod: SamplingPeriod = TimeLineChartGestalt.defaultMinimumSamplingPeriod

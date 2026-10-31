@@ -59,10 +59,10 @@ import it.neckar.open.unit.Symbol
 @ElectricCharge
 @Name("coulomb")
 @SiDerivedUnit(A::class, s::class)
-@Symbol(C.SYMBOL)
+@Symbol(C.Symbol)
 @Definition("A*s")
 annotation class C {
   companion object {
-    const val SYMBOL: String = "C"
+    const val Symbol: String = "C"
   }
 }

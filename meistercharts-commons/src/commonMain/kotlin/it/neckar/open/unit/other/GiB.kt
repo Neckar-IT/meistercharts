@@ -57,11 +57,11 @@ import it.neckar.open.unit.prefix.gibi
 @MustBeDocumented@Unit
 @DataAmount
 @Name("gibibyte")
-@Symbol(GiB.SYMBOL)
+@Symbol(GiB.Symbol)
 @gibi(B::class)
 annotation class GiB {
   companion object {
-    const val SYMBOL: String = "GiB"
+    const val Symbol: String = "GiB"
   }
 
 }

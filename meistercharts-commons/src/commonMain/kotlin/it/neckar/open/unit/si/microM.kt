@@ -59,11 +59,11 @@ import it.neckar.open.unit.quantity.Length
 @MustBeDocumented
 @Unit
 @Length
-@Symbol(microM.SYMBOL)
+@Symbol(microM.Symbol)
 @Name("micrometer")
 @micro(m::class)
 annotation class microM {
   companion object {
-    const val SYMBOL: String = "μm"
+    const val Symbol: String = "μm"
   }
 }

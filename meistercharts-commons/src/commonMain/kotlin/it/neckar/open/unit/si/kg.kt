@@ -57,10 +57,10 @@ import it.neckar.open.unit.Symbol
 @Unit
 @Mass
 @SIBaseUnit
-@Symbol(kg.SYMBOL)
+@Symbol(kg.Symbol)
 @Name("kilogram")
 annotation class kg {
   companion object {
-    const val SYMBOL: String = "kg"
+    const val Symbol: String = "kg"
   }
 }

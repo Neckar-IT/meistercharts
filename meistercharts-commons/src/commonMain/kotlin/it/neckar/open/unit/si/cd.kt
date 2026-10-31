@@ -60,9 +60,9 @@ import it.neckar.open.unit.quantity.LuminousIntensity
 @LuminousIntensity
 @Name("candela")
 @SIBaseUnit
-@Symbol(cd.SYMBOL)
+@Symbol(cd.Symbol)
 annotation class cd {
   companion object {
-    const val SYMBOL: String = "cd"
+    const val Symbol: String = "cd"
   }
 }

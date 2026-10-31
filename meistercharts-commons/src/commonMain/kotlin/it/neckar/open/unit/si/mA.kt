@@ -59,11 +59,11 @@ import it.neckar.open.unit.quantity.Length
 @Suppress("ClassName")
 @Unit
 @Length
-@Symbol(mA.SYMBOL)
+@Symbol(mA.Symbol)
 @Name("milli Ampere")
 @milli(A::class)
 annotation class mA {
   companion object {
-    const val SYMBOL: String = "mA"
+    const val Symbol: String = "mA"
   }
 }

@@ -39,9 +39,9 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@ThreadDescribingAnnotation(NonBlocking.THREAD_DESCRIPTOR)
+@ThreadDescribingAnnotation(NonBlocking.ThreadDescriptor)
 annotation class NonBlocking {
   companion object {
-    const val THREAD_DESCRIPTOR: String = "non-blocking"
+    const val ThreadDescriptor: String = "non-blocking"
   }
 }

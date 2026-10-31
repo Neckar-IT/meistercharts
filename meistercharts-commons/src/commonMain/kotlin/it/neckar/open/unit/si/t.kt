@@ -59,11 +59,11 @@ import it.neckar.open.unit.prefix.milli
 @Unit
 @Mass
 @SiDerivedUnit
-@Symbol(t.SYMBOL)
+@Symbol(t.Symbol)
 @Name("tonne")
 @kilo(kg::class)
 annotation class t {
   companion object {
-    const val SYMBOL: String = "t"
+    const val Symbol: String = "t"
   }
 }

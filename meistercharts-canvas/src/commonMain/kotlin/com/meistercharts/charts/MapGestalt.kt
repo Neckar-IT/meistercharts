@@ -67,22 +67,22 @@ class MapGestalt(
   val zoomInToolbarButton: Button = Button({ paintingContext, state, width, height ->
     val gc = paintingContext.gc
 
-    gc.lineWidth = toolbarButtonSymbolLineWidth
+    gc.lineWidth = ToolbarButtonSymbolLineWidth
     gc.fill(configuration.toolbarButtonBackgroundProvider(state))
     gc.stroke(configuration.toolbarButtonForegroundProvider(state))
 
-    ZoomButtons.paintZoomIn(gc, toolbarButtonSymbolSize, width, height)
-  }, toolbarButtonWidth, toolbarButtonHeight)
+    ZoomButtons.paintZoomIn(gc, ToolbarButtonSymbolSize, width, height)
+  }, ToolbarButtonWidth, ToolbarButtonHeight)
 
   val zoomOutToolbarButton: Button = Button({ paintingContext, state, width, height ->
     val gc = paintingContext.gc
     gc.fill(configuration.toolbarButtonBackgroundProvider(state))
     gc.fillRect(0.0, 0.0, width, height)
     gc.stroke(configuration.toolbarButtonForegroundProvider(state))
-    gc.lineWidth = toolbarButtonSymbolLineWidth
+    gc.lineWidth = ToolbarButtonSymbolLineWidth
 
-    ZoomButtons.paintZoomOut(gc, toolbarButtonSymbolSize, width, height)
-  }, toolbarButtonWidth, toolbarButtonHeight)
+    ZoomButtons.paintZoomOut(gc, ToolbarButtonSymbolSize, width, height)
+  }, ToolbarButtonWidth, ToolbarButtonHeight)
 
   val toolbarLayer: ToolbarLayer = ToolbarLayer(listOf(zoomInToolbarButton, zoomOutToolbarButton)) {
     gap = 20.0
@@ -188,9 +188,9 @@ class MapGestalt(
   }
 
   companion object {
-    private const val toolbarButtonWidth: @Zoomed Double = 20.0
-    private const val toolbarButtonHeight: @Zoomed Double = 20.0
-    private const val toolbarButtonSymbolSize: @Zoomed Double = 8.0
-    private const val toolbarButtonSymbolLineWidth: @Zoomed Double = 2.0
+    private const val ToolbarButtonWidth: @Zoomed Double = 20.0
+    private const val ToolbarButtonHeight: @Zoomed Double = 20.0
+    private const val ToolbarButtonSymbolSize: @Zoomed Double = 8.0
+    private const val ToolbarButtonSymbolLineWidth: @Zoomed Double = 2.0
   }
 }

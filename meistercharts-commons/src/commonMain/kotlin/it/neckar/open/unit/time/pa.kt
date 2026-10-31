@@ -54,11 +54,11 @@ import it.neckar.open.unit.quantity.Time
 @MustBeDocumented
 @Unit
 @Time
-@Symbol(pa.SYMBOL)
+@Symbol(pa.Symbol)
 @Name("per annum")
 annotation class pa {
   companion object {
-    const val SYMBOL: String = "p. a."
+    const val Symbol: String = "p. a."
   }
 }
 

@@ -53,11 +53,11 @@ import it.neckar.open.unit.quantity.Time
 @MustBeDocumented
 @Unit
 @Time
-@Symbol(Months.SYMBOL)
+@Symbol(Months.Symbol)
 @Name("Months")
 annotation class Months {
   companion object {
-    const val SYMBOL: String = "mo"
+    const val Symbol: String = "mo"
   }
 }
 

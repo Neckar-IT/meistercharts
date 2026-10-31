@@ -82,7 +82,7 @@ class DownSamplingServiceTest {
     }
 
     @ms val duration = 1000.0 * 60 * 10
-    downSamplingService.createJobs(TimeRanges.of(TimeRange.fromStartAndDuration(WithVirtualTime.defaultNow, duration)), HistoryBucketRange.TenMinutes).let {
+    downSamplingService.createJobs(TimeRanges.of(TimeRange.fromStartAndDuration(WithVirtualTime.DefaultNow, duration)), HistoryBucketRange.TenMinutes).let {
       assertThat(it).hasSize(2)
 
       (it.first().refreshRange as RefreshPartially).let {

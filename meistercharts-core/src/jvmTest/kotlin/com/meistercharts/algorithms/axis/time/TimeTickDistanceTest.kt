@@ -100,7 +100,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceYears() {
     val timeTickDistance = DistanceYears(7)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 30, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 30, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(5)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2016-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2023-01-01T05:00:00.000Z")
@@ -121,7 +121,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceYears12() {
     val timeTickDistance = DistanceYears(12)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 30, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 30, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(3)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2016-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2028-01-01T05:00:00.000Z")
@@ -138,7 +138,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceMonths6() {
     val timeTickDistance = DistanceMonths(6)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 2, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 2, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(5)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2019-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2019-07-01T04:00:00.000Z")
@@ -155,11 +155,11 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMonths6_2() {
-    @ms val start = time + TimeConstants.millisPerDay * 40
+    @ms val start = time + TimeConstants.MillisPerDay * 40
     assertThat(start.formatUtcForDebug()).isEqualTo("2019-02-16T15:45:19.123Z")
 
     val timeTickDistance = DistanceMonths(6)
-    val ticks = timeTickDistance.calculateTicks(start, start + TimeConstants.millisPerYear * 2, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(start, start + TimeConstants.MillisPerYear * 2, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(5)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2019-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2019-07-01T04:00:00.000Z")
@@ -178,7 +178,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceMonths3() {
     val timeTickDistance = DistanceMonths(3)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 2, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 2, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(9)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2019-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2019-04-01T04:00:00.000Z")
@@ -202,7 +202,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceMonths2() {
     val timeTickDistance = DistanceMonths(2)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 2, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 2, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(13)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2019-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2019-03-01T05:00:00.000Z")
@@ -226,7 +226,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceMonths1() {
     val timeTickDistance = DistanceMonths(1)
-    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.millisPerYear * 1, TimeZone.NewYork)
+    val ticks = timeTickDistance.calculateTicks(time, time + TimeConstants.MillisPerYear * 1, TimeZone.NewYork)
     assertThat(ticks.size).isEqualTo(14)
     assertThat(ticks[0].formatUtcForDebug()).isEqualTo("2019-01-01T05:00:00.000Z")
     assertThat(ticks[1].formatUtcForDebug()).isEqualTo("2019-02-01T05:00:00.000Z")
@@ -248,7 +248,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceDays15() {
-    val end = time + TimeConstants.millisPerDay * 60
+    val end = time + TimeConstants.MillisPerDay * 60
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-03-08T15:45:19.123Z")
 
     val timeTickDistance = DistanceDays(DistanceDays.TicksPerMonth.Every15Days)
@@ -274,7 +274,7 @@ class TimeTickDistanceTest {
   fun testDistanceDays5() {
     assertThat(time.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:19.123Z")
 
-    val end = time + TimeConstants.millisPerDay * 30
+    val end = time + TimeConstants.MillisPerDay * 30
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-02-06T15:45:19.123Z")
 
     val timeTickDistance = DistanceDays(DistanceDays.TicksPerMonth.Every5Days)
@@ -325,7 +325,7 @@ class TimeTickDistanceTest {
   fun testDistanceDays1_2() {
     val start = 1.7040593889296738E12
     assertThat(start.formatUtcForDebug()).isEqualTo("2023-12-31T21:49:48.929Z")
-    val end = start + TimeConstants.millisPerDay * 7
+    val end = start + TimeConstants.MillisPerDay * 7
     assertThat(end.formatUtcForDebug()).isEqualTo("2024-01-07T21:49:48.929Z")
 
     val timeTickDistance = DistanceDays(DistanceDays.TicksPerMonth.EveryDay)
@@ -349,7 +349,7 @@ class TimeTickDistanceTest {
   fun testDistanceDays1_YearOverlap() {
     val start = 1.7038363819296738E12
     assertThat(start.formatUtcForDebug()).isEqualTo("2023-12-29T07:53:01.929Z")
-    val end = start + TimeConstants.millisPerDay * 7
+    val end = start + TimeConstants.MillisPerDay * 7
     assertThat(end.formatUtcForDebug()).isEqualTo("2024-01-05T07:53:01.929Z")
 
     val timeTickDistance = DistanceDays(DistanceDays.TicksPerMonth.EveryDay)
@@ -371,7 +371,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceHours6() {
-    val end = time + TimeConstants.millisPerHour * 40
+    val end = time + TimeConstants.MillisPerHour * 40
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-09T07:45:19.123Z")
 
     val timeTickDistance = DistanceHours(6)
@@ -391,7 +391,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceHours4() {
-    val end = time + TimeConstants.millisPerHour * 30
+    val end = time + TimeConstants.MillisPerHour * 30
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-08T21:45:19.123Z")
 
     val timeTickDistance = DistanceHours(4)
@@ -412,7 +412,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMinutes10() {
-    val end = time + TimeConstants.millisPerHour * 1.2
+    val end = time + TimeConstants.MillisPerHour * 1.2
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-07T16:57:19.123Z")
 
     val timeTickDistance = DistanceMinutes(10)
@@ -433,7 +433,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceMinutes15() {
-    val end = time + TimeConstants.millisPerHour * 1.2
+    val end = time + TimeConstants.MillisPerHour * 1.2
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-07T16:57:19.123Z")
 
     val timeTickDistance = DistanceMinutes(15)
@@ -452,7 +452,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceSeconds30() {
-    val end = time + TimeConstants.millisPerMinute * 3
+    val end = time + TimeConstants.MillisPerMinute * 3
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-07T15:48:19.123Z")
 
     val timeTickDistance = DistanceSeconds(30)
@@ -470,7 +470,7 @@ class TimeTickDistanceTest {
   @DefaultTimeZone("America/New_York")
   @Test
   fun testDistanceSeconds10() {
-    val end = time + TimeConstants.millisPerMinute * 1
+    val end = time + TimeConstants.MillisPerMinute * 1
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-07T15:46:19.123Z")
 
     val timeTickDistance = DistanceSeconds(10)
@@ -489,7 +489,7 @@ class TimeTickDistanceTest {
   @Test
   fun testDistanceMillis() {
     assertThat(time.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:19.123Z")
-    val end = time + TimeConstants.millisPerSecond * 1
+    val end = time + TimeConstants.MillisPerSecond * 1
     assertThat(end.formatUtcForDebug()).isEqualTo("2019-01-07T15:45:20.123Z")
 
     val timeTickDistance = DistanceMillis(100.0)

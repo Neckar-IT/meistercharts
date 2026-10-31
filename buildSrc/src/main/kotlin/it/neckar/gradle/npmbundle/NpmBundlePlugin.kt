@@ -78,7 +78,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * Task that copies the NPM content (production)
      */
-    val npmCopyBundleContentTask = target.tasks.register<CopyBundleContentTask>(NpmCopyBundleContentTaskName) {
+    val npmCopyBundleContentTask = target.tasks.register<CopyBundleContentTask>(npmCopyBundleContentTaskName) {
       group = TaskGroup
       description = "Collects the content to the working directory"
 
@@ -96,7 +96,7 @@ class NpmBundlePlugin : Plugin<Project> {
       }
     }
 
-    val npmCopyBundleContentDevelopmentTask = target.tasks.register<CopyBundleContentTask>(NpmCopyBundleContentTaskNameDevelopment) {
+    val npmCopyBundleContentDevelopmentTask = target.tasks.register<CopyBundleContentTask>(npmCopyBundleContentTaskNameDevelopment) {
       group = TaskGroup
       description = "Collects the content to the working directory (Development)"
 
@@ -142,7 +142,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * Production task
      */
-    val gzipTask = target.tasks.register<GzipNpmModuleTask>(NpmBundleTaskName) {
+    val gzipTask = target.tasks.register<GzipNpmModuleTask>(npmBundleTaskName) {
       group = TaskGroup
       description = "Creates the npm bundle (*.tar.gz)"
 
@@ -157,7 +157,7 @@ class NpmBundlePlugin : Plugin<Project> {
     /**
      * Development task
      */
-    target.tasks.register<GzipNpmModuleTask>(NpmBundleDevelopmentTaskName) {
+    target.tasks.register<GzipNpmModuleTask>(npmBundleDevelopmentTaskName) {
       group = TaskGroup
       description = "Creates the npm bundle (*.tar.gz) - (Development)"
 
@@ -181,11 +181,11 @@ class NpmBundlePlugin : Plugin<Project> {
     const val ExtensionName: String = "npmBundle"
     const val DevelopmentExtensionName: String = "npmBundleDevelopment"
 
-    const val NpmCopyBundleContentTaskName: String = "npmCopyBundleContent"
-    const val NpmCopyBundleContentTaskNameDevelopment: String = "npmCopyBundleContentDevelopment"
+    const val npmCopyBundleContentTaskName: String = "npmCopyBundleContent"
+    const val npmCopyBundleContentTaskNameDevelopment: String = "npmCopyBundleContentDevelopment"
 
-    const val NpmBundleTaskName: String = "npmBundle"
-    const val NpmBundleDevelopmentTaskName: String = "npmBundleDevelopment"
+    const val npmBundleTaskName: String = "npmBundle"
+    const val npmBundleDevelopmentTaskName: String = "npmBundleDevelopment"
 
     const val VerifyBundleContentTaskName: String = "verifyBundleContent"
     const val VerifyBundleContentDevelopmentTaskName: String = "verifyBundleContentDevelopment"

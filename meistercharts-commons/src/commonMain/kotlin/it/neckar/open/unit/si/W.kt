@@ -61,10 +61,10 @@ import it.neckar.open.unit.quantity.Power
 @Power
 @Name("Watt")
 @SiDerivedUnit(J::class, s::class)
-@Symbol(W.SYMBOL)
+@Symbol(W.Symbol)
 @Definition("J/s", "N*m/s", "kg*m²/s³", "VA")
 annotation class W {
   companion object {
-    const val SYMBOL: String = "W"
+    const val Symbol: String = "W"
   }
 }

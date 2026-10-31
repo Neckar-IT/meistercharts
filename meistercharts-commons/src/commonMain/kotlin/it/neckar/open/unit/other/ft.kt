@@ -63,8 +63,8 @@ import it.neckar.open.unit.si.m
 @Unit
 @Length
 @Name("feet")
-@Symbol(ft.SYMBOL)
-@AlternativeSymbols(ft.ALTERNATIVE_SYMBOL, ft.SYMBOL_SAFE)
+@Symbol(ft.Symbol)
+@AlternativeSymbols(ft.AlternativeSymbol, ft.SymbolSafe)
 @DerivedUnit(m::class)
 @Definition("0.3048 m")
 annotation class ft {
@@ -72,22 +72,22 @@ annotation class ft {
     /**
      * The ratio used to convert mm to feet
      *
-     *  * mm / MM_FEET_RATIO == ft
-     *  *  1 ft = MM_FEET_RATIO * 1 mm
+     *  * mm / mmFeetRatio == ft
+     *  *  1 ft = mmFeetRatio * 1 mm
      *
      */
-    const val MM_FEET_RATIO: Double = 304.8
+    const val mmFeetRatio: Double = 304.8
 
     /**
      * The "real" symbol
      */
-    const val SYMBOL: String = "′"
+    const val Symbol: String = "′"
 
     /**
      * This is a "safe" symbol - that is not correct!
      */
-    const val SYMBOL_SAFE: String = "'"
+    const val SymbolSafe: String = "'"
 
-    const val ALTERNATIVE_SYMBOL: String = "ft"
+    const val AlternativeSymbol: String = "ft"
   }
 }

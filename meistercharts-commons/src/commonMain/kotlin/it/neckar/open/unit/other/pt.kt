@@ -59,13 +59,13 @@ import it.neckar.open.unit.si.m
 @Suppress("ClassName")
 @Unit
 @Length
-@Symbol(pt.SYMBOL)
+@Symbol(pt.Symbol)
 @Name("points")
 @DerivedUnit(m::class)
 @Definition("72 pt = 1 inch", "=0.3527 mm")
 annotation class pt {
   companion object {
-    const val SYMBOL: String = "pt"
+    const val Symbol: String = "pt"
   }
 
 }

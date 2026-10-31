@@ -58,6 +58,6 @@ annotation class zepto(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "z"
+    const val Symbol: String = "z"
   }
 }

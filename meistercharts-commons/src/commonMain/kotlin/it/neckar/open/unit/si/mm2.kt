@@ -62,10 +62,10 @@ import it.neckar.open.unit.quantity.Area
 @Area
 @SiDerivedUnit(m::class)
 @Name("square millimetre")
-@Symbol(mm2.SYMBOL)
+@Symbol(mm2.Symbol)
 @Squared(mm::class)
 annotation class mm2 {
   companion object {
-    const val SYMBOL: String = "mm²"
+    const val Symbol: String = "mm²"
   }
 }

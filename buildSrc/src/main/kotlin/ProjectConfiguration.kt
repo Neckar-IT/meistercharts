@@ -27,9 +27,9 @@ object ProjectConfiguration {
    */
   fun configureMultiplatform(project: Project, configuredProject: ConfiguredProject) {
     with(project) {
-      apply(plugin = Plugins.kotlinMultiPlatform)
-      apply(plugin = Plugins.detekt)
-      apply(plugin = Plugins.kover)
+      apply(plugin = Plugins.KotlinMultiPlatform)
+      apply(plugin = Plugins.Detekt)
+      apply(plugin = Plugins.Kover)
 
       configureKotlin()
 

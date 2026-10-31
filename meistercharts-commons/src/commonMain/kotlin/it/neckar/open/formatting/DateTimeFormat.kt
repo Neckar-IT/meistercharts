@@ -303,17 +303,17 @@ fun @ms Double.formatAsDuration(whitespaceConfig: WhitespaceConfig = WhitespaceC
   var seconds: Int = 0
   var milliseconds: Double = this
 
-  days = (milliseconds / TimeConstants.millisPerDay).toIntFloor()
-  milliseconds = milliseconds - days * TimeConstants.millisPerDay
+  days = (milliseconds / TimeConstants.MillisPerDay).toIntFloor()
+  milliseconds = milliseconds - days * TimeConstants.MillisPerDay
 
-  hours = (milliseconds / TimeConstants.millisPerHour).toIntFloor()
-  milliseconds = milliseconds - hours * TimeConstants.millisPerHour
+  hours = (milliseconds / TimeConstants.MillisPerHour).toIntFloor()
+  milliseconds = milliseconds - hours * TimeConstants.MillisPerHour
 
-  minutes = (milliseconds / TimeConstants.millisPerMinute).toIntFloor()
-  milliseconds = milliseconds - minutes * TimeConstants.millisPerMinute
+  minutes = (milliseconds / TimeConstants.MillisPerMinute).toIntFloor()
+  milliseconds = milliseconds - minutes * TimeConstants.MillisPerMinute
 
-  seconds = (milliseconds / TimeConstants.millisPerSecond).toIntFloor()
-  milliseconds = milliseconds - seconds * TimeConstants.millisPerSecond
+  seconds = (milliseconds / TimeConstants.MillisPerSecond).toIntFloor()
+  milliseconds = milliseconds - seconds * TimeConstants.MillisPerSecond
 
   return buildString {
     var addedSomething = false

@@ -60,10 +60,10 @@ import it.neckar.open.unit.quantity.Fraction
 @Unit
 @Fraction
 @Name("percentage")
-@Symbol(pct.SYMBOL)
+@Symbol(pct.Symbol)
 annotation class pct {
   companion object {
-    const val SYMBOL: String = "%"
+    const val Symbol: String = "%"
   }
 
 }

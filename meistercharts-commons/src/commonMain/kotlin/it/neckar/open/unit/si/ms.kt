@@ -58,12 +58,12 @@ import it.neckar.open.unit.quantity.Time
 @Suppress("ClassName")
 @Unit
 @Time
-@Symbol(ms.SYMBOL)
+@Symbol(ms.Symbol)
 @Name("milliseconds")
 @milli(s::class)
 annotation class ms {
   companion object {
-    const val SYMBOL: String = "ms"
+    const val Symbol: String = "ms"
   }
 }
 

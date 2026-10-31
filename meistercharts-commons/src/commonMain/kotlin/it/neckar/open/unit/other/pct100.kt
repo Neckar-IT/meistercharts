@@ -58,9 +58,9 @@ import it.neckar.open.unit.Unit
 @Suppress("ClassName")
 @Unit
 @Name("percentage")
-@Symbol(pct100.SYMBOL)
+@Symbol(pct100.Symbol)
 annotation class pct100 {
   companion object {
-    const val SYMBOL: String = "%"
+    const val Symbol: String = "%"
   }
 }

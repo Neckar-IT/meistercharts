@@ -61,13 +61,13 @@ import it.neckar.open.unit.si.s
 @Suppress("ClassName")
 @Unit
 @Time
-@Symbol(ms.SYMBOL)
+@Symbol(ms.Symbol)
 @Name("relative milliseconds")
 @milli(s::class)
 @Relative
 annotation class RelativeMillis {
   companion object {
-    const val SYMBOL: String = "ms"
+    const val Symbol: String = "ms"
   }
 }
 

@@ -88,7 +88,7 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
    * Iterates over all bits and calls the callback for all set bits
    */
   inline fun fastForSetBits(function: (HistoryEnumOrdinal) -> Unit) {
-    maxSupportedEnumValuesCount.fastFor { ordinalAsInt ->
+    MaxSupportedEnumValuesCount.fastFor { ordinalAsInt ->
       val ordinal = HistoryEnumOrdinal(ordinalAsInt)
 
       if (isSet(ordinal)) {
@@ -196,7 +196,7 @@ value class HistoryEnumSet(val bitset: @HistoryEnumSetInt Int) {
     /**
      * The maximum number of supported enum values
      */
-    const val maxSupportedEnumValuesCount: Int = 30
+    const val MaxSupportedEnumValuesCount: Int = 30
 
     /**
      * The max supported value that is still allowed

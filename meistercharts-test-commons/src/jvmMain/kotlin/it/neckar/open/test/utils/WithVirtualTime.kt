@@ -40,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @ExtendWith(VirtualNowProviderExtension::class)
-annotation class WithVirtualTime(val value: @ms Double = defaultNow) {
+annotation class WithVirtualTime(val value: @ms Double = DefaultNow) {
 
   companion object {
     /**
@@ -56,6 +56,6 @@ annotation class WithVirtualTime(val value: @ms Double = defaultNow) {
      * * it is just a few hours before clock change to daylight saving time
      * * it has 2.5 milliseconds
      */
-    const val defaultNow: @ms Double = 1616881523002.5 //2021-03-27T21:45:23.002 UTC
+    const val DefaultNow: @ms Double = 1616881523002.5 //2021-03-27T21:45:23.002 UTC
   }
 }

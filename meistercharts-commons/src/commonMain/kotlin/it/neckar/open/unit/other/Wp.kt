@@ -58,11 +58,11 @@ import it.neckar.open.unit.quantity.Power
 @Unit
 @Power
 @Name("watt-peak")
-@Symbol(Wp.SYMBOL)
+@Symbol(Wp.Symbol)
 @Definition("W under given circumstances (light intensity: 1000W/m², airmass 1.5, cells temperature 25°C)")
 annotation class Wp {
   companion object {
-    const val SYMBOL: String = "Wp"
+    const val Symbol: String = "Wp"
   }
 
 }

@@ -58,11 +58,11 @@ import it.neckar.open.unit.prefix.milli
 @Suppress("ClassName")
 @Unit
 @Length
-@Symbol(mm.SYMBOL)
+@Symbol(mm.Symbol)
 @Name("millimetre")
 @milli(m::class)
 annotation class mm {
   companion object {
-    const val SYMBOL: String = "mm"
+    const val Symbol: String = "mm"
   }
 }

@@ -84,10 +84,10 @@ class CanvasJS(type: CanvasType) : AbstractCanvas(type), Disposable {
    * The html canvas element
    */
   val canvasElement: HTMLCanvasElement = (document.createElement("CANVAS") as HTMLCanvasElement).also {
-    it.classList.add(MeisterChartClasses.canvas)
+    it.classList.add(MeisterChartClasses.Canvas)
 
     disposeSupport.onDispose {
-      it.classList.add(MeisterChartClasses.disposed)
+      it.classList.add(MeisterChartClasses.Disposed)
     }
   }
 

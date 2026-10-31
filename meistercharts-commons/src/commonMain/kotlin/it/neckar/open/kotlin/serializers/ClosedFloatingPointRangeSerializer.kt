@@ -41,16 +41,16 @@ object ClosedFloatingPointRangeSerializer : KSerializer<ClosedFloatingPointRange
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ClosedFloatingPointRange", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: ClosedFloatingPointRange<Double>) {
-    encoder.encodeString("${value.start}$delimiter${value.endInclusive}")
+    encoder.encodeString("${value.start}$Delimiter${value.endInclusive}")
 
   }
 
   override fun deserialize(decoder: Decoder): ClosedFloatingPointRange<Double> {
     val decodeString = decoder.decodeString()
-    val parts = decodeString.split(delimiter)
-    require(parts.size == 2) { "Expected two parts separated by $delimiter for [$decodeString]" }
+    val parts = decodeString.split(Delimiter)
+    require(parts.size == 2) { "Expected two parts separated by $Delimiter for [$decodeString]" }
     return parts[0].toDouble()..parts[1].toDouble()
   }
 
-  const val delimiter: String = ".."
+  const val Delimiter: String = ".."
 }

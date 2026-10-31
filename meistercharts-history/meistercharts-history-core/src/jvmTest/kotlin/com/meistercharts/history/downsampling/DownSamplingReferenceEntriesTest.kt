@@ -252,7 +252,7 @@ class DownSamplingReferenceEntriesTest {
     val generated = chunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)
     requireNotNull(generated)
 
-    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
+    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.ReferenceTimestamp, TimeConstants.ReferenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
     assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
     assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 
@@ -316,7 +316,7 @@ class DownSamplingReferenceEntriesTest {
     val generated = chunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)
     requireNotNull(generated)
 
-    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
+    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.ReferenceTimestamp, TimeConstants.ReferenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
     assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
     assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 
@@ -382,7 +382,7 @@ class DownSamplingReferenceEntriesTest {
     val generated = chunkGenerator.forTimeRange(TimeRange.oneMinuteSinceReference)
     requireNotNull(generated)
 
-    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.referenceTimestamp, TimeConstants.referenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
+    assertThat(generated.timeRange()).isEqualTo(TimeRange(TimeConstants.ReferenceTimestamp, TimeConstants.ReferenceTimestamp + 60_000 - 100)) //plus 1 minute, minus the last entry
     assertThat(generated.firstTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z") //plus 1 minute, minus the last entry
     assertThat(generated.lastTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:59.900Z") //plus 1 minute, minus the last entry
 

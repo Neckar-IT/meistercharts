@@ -291,7 +291,7 @@ class HistoryValuesBuilder(
       }
 
       //Verify content
-      if (HistoryDebug.additionalVerificationEnabled) {
+      if (HistoryDebug.AdditionalVerificationEnabled) {
         enumOrdinalsMostTime.forEachIndexed { index, mostOfTheTimeValueAsInt ->
           val mostOfTheTimeValue = HistoryEnumOrdinal(mostOfTheTimeValueAsInt)
           val historyEnumSetAsInt = enumValues[index]

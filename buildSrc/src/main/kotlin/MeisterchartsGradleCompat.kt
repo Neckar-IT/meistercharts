@@ -10,7 +10,7 @@ import org.gradle.process.ExecOutput
  */
 
 fun Project.hasKotlinMultiplatformPlugin(): Boolean {
-  return pluginManager.findPlugin(Plugins.kotlinMultiPlatform) != null
+  return pluginManager.findPlugin(Plugins.KotlinMultiPlatform) != null
 }
 
 // The build variables the root build.gradle.kts sets on rootProject.extra, typed for the module build scripts.

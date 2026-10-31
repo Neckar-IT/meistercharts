@@ -57,10 +57,10 @@ import it.neckar.open.unit.quantity.Speed
 @Suppress("ClassName")
 @Unit
 @Speed
-@Symbol(rpm.SYMBOL)
+@Symbol(rpm.Symbol)
 @Name("rpm")
 annotation class rpm {
   companion object {
-    const val SYMBOL: String = "rpm"
+    const val Symbol: String = "rpm"
   }
 }

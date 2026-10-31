@@ -62,9 +62,9 @@ import it.neckar.open.unit.quantity.Length
 @Length
 @Name("deci meter")
 @deci(m::class)
-@Symbol(dm.SYMBOL)
+@Symbol(dm.Symbol)
 annotation class dm {
   companion object {
-    const val SYMBOL: String = "dm"
+    const val Symbol: String = "dm"
   }
 }

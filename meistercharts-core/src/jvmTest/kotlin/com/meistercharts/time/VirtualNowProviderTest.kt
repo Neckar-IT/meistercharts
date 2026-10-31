@@ -113,12 +113,12 @@ class VirtualNowProviderTest {
 
   @Test
   fun testPlus(virtualNowProvider: VirtualNowProvider) {
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.DefaultNow)
 
     virtualNowProvider.advanceBy(100.0)
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow + 100.0)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.DefaultNow + 100.0)
 
     virtualNowProvider.advanceBy(0.0)
-    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.defaultNow + 100.0)
+    assertThat(virtualNowProvider.nowMillis()).isEqualTo(WithVirtualTime.DefaultNow + 100.0)
   }
 }

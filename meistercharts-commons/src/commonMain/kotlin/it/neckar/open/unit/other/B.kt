@@ -60,12 +60,12 @@ import it.neckar.open.unit.Symbol
 @Unit
 @DataAmount
 @Name("byte")
-@Symbol(B.SYMBOL)
+@Symbol(B.Symbol)
 @DerivedUnit(bit::class)
 @Definition("8bit")
 annotation class B {
   companion object {
-    const val SYMBOL: String = "B"
+    const val Symbol: String = "B"
   }
 
 }

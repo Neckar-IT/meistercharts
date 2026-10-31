@@ -62,7 +62,7 @@ class SwingMemoryLeakVerifier<T> {
    */
   fun assertGarbageCollected() {
     val runtime = Runtime.getRuntime()
-    for (ignored in 0 until MAX_GC_ITERATIONS) {
+    for (ignored in 0 until MaxGcIterations) {
       runtime.runFinalization()
       runtime.gc()
       if (objectUnderTest == null) {
@@ -72,13 +72,13 @@ class SwingMemoryLeakVerifier<T> {
       // Pause for a while and then go back around the loop to try again...
       try {
         EventQueue.invokeAndWait(NoOp()) // Wait for the AWT event queue to have completed processing
-        Thread.sleep(GC_SLEEP_TIME.toLong())
+        Thread.sleep(gcSleepTime.toLong())
       } catch (_: InterruptedException) {
         // Ignore any interrupts and just try again...
       } catch (_: InvocationTargetException) {
       }
     }
-    assertThat(objectUnderTest, "object should not exist after $MAX_GC_ITERATIONS collections").isNull()
+    assertThat(objectUnderTest, "object should not exist after $MaxGcIterations collections").isNull()
   }
 
   private class NoOp : Runnable {
@@ -86,7 +86,7 @@ class SwingMemoryLeakVerifier<T> {
   }
 
   companion object {
-    private const val MAX_GC_ITERATIONS = 50
-    private const val GC_SLEEP_TIME = 100
+    private const val MaxGcIterations = 50
+    private const val gcSleepTime = 100
   }
 }

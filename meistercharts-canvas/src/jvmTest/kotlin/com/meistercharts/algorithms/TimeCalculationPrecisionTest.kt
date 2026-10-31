@@ -126,7 +126,7 @@ class TimeCalculationPrecisionTest {
 
   @Test
   fun testMaxValues() {
-    assertThat(TimeConstants.referenceTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
+    assertThat(TimeConstants.ReferenceTimestamp.formatUtc()).isEqualTo("2024-01-01T00:00:00.000Z")
 
     val contentAreaTimeRange = TimeRange.oneMinuteSinceReference
 

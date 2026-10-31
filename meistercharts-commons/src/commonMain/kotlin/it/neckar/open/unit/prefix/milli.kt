@@ -52,7 +52,7 @@ import kotlin.reflect.KClass
 )
 @MustBeDocumented
 @Suppress("ClassName")
-@Symbol(milli.SYMBOL)
+@Symbol(milli.Symbol)
 @Prefix(0.001)
 annotation class milli(
   /**
@@ -62,6 +62,6 @@ annotation class milli(
   val value: KClass<out Annotation>
 ) {
   companion object {
-    const val SYMBOL: String = "m"
+    const val Symbol: String = "m"
   }
 }

@@ -59,10 +59,10 @@ import it.neckar.open.unit.Symbol
 @Angle
 @Name("radian")
 @SiDerivedUnit(m::class)
-@Symbol(rad.SYMBOL)
+@Symbol(rad.Symbol)
 annotation class rad {
   companion object {
-    const val SYMBOL: String = "rad"
+    const val Symbol: String = "rad"
   }
 
 }

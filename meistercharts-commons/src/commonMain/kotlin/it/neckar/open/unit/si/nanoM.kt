@@ -60,11 +60,11 @@ import it.neckar.open.unit.quantity.Length
 @MustBeDocumented
 @Unit
 @Length
-@Symbol(nanoM.SYMBOL)
+@Symbol(nanoM.Symbol)
 @Name("nanometer")
 @nano(m::class)
 annotation class nanoM {
   companion object {
-    const val SYMBOL: String = "nm"
+    const val Symbol: String = "nm"
   }
 }

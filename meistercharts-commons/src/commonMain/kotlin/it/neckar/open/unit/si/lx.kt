@@ -60,10 +60,10 @@ import it.neckar.open.unit.quantity.Illuminance
 @Illuminance
 @Name("lux")
 @SiDerivedUnit(lm::class, m2::class)
-@Symbol(lx.SYMBOL)
+@Symbol(lx.Symbol)
 @Definition("lm/m²", "cd*sr/m²")
 annotation class lx {
   companion object {
-    const val SYMBOL: String = "lx"
+    const val Symbol: String = "lx"
   }
 }

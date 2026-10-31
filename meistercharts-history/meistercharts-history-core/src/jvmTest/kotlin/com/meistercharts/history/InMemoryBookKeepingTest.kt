@@ -50,7 +50,7 @@ internal class InMemoryBookKeepingTest {
 
   @Test
   fun testFixBounds() {
-    val timestamp = WithVirtualTime.defaultNow.also {
+    val timestamp = WithVirtualTime.DefaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 
@@ -111,7 +111,7 @@ internal class InMemoryBookKeepingTest {
 
   private fun addAndDownSample(historyStorage: InMemoryHistoryStorage) {
     val samplingPeriod: SamplingPeriod = SamplingPeriod.EveryHundredMillis
-    val startTimestamp = WithVirtualTime.defaultNow.also {
+    val startTimestamp = WithVirtualTime.DefaultNow.also {
       assertThat(it.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z")
     }
 

@@ -39,8 +39,8 @@ object NeckarItFlow {
   val colorShape0: Color = Color.rgba(0, 46, 70, 1.0)
 
 
-  const val halfWidthLeft0: Double = 0.23 / 2.0
-  const val halfWidthRight0: Double = 0.26 / 2.0
+  const val HalfWidthLeft0: Double = 0.23 / 2.0
+  const val HalfWidthRight0: Double = 0.26 / 2.0
 
   /**
    * The shape0 - without animation
@@ -48,21 +48,21 @@ object NeckarItFlow {
   @DomainRelative
   val shape0: BezierCurveRect = BezierCurveRect(
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.44 - halfWidthLeft0),
-      control1 = Coordinates(0.23, 1.0 - 0.63 - halfWidthLeft0),
-      end = Coordinates(1.00, 1.0 - 0.97 - halfWidthRight0),
-      control2 = Coordinates(0.78, 1.0 - 0.51 - halfWidthRight0),
+      start = Coordinates(0.00, 1.0 - 0.44 - HalfWidthLeft0),
+      control1 = Coordinates(0.23, 1.0 - 0.63 - HalfWidthLeft0),
+      end = Coordinates(1.00, 1.0 - 0.97 - HalfWidthRight0),
+      control2 = Coordinates(0.78, 1.0 - 0.51 - HalfWidthRight0),
     ),
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.44 + halfWidthLeft0),
-      control1 = Coordinates(0.23, 1.0 - 0.63 + halfWidthLeft0),
-      end = Coordinates(1.00, 1.0 - 0.97 + halfWidthRight0),
-      control2 = Coordinates(0.78, 1.0 - 0.51 + halfWidthRight0),
+      start = Coordinates(0.00, 1.0 - 0.44 + HalfWidthLeft0),
+      control1 = Coordinates(0.23, 1.0 - 0.63 + HalfWidthLeft0),
+      end = Coordinates(1.00, 1.0 - 0.97 + HalfWidthRight0),
+      control2 = Coordinates(0.78, 1.0 - 0.51 + HalfWidthRight0),
     )
   )
 
-  const val halfWidthLeft1: Double = 0.39 / 2.0
-  const val halfWidthRight1: Double = 0.52 / 2.0
+  const val HalfWidthLeft1: Double = 0.39 / 2.0
+  const val HalfWidthRight1: Double = 0.52 / 2.0
 
   /**
    * The shape1 - without animation
@@ -70,21 +70,21 @@ object NeckarItFlow {
   @DomainRelative
   private val shape1: BezierCurveRect = BezierCurveRect(
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.65 - halfWidthLeft1),
-      control1 = Coordinates(0.17, 1.0 - 0.81 - halfWidthLeft1),
-      end = Coordinates(1.00, 1.0 - 0.69 - halfWidthRight1),
-      control2 = Coordinates(0.82, 1.0 - 0.12 - halfWidthRight1),
+      start = Coordinates(0.00, 1.0 - 0.65 - HalfWidthLeft1),
+      control1 = Coordinates(0.17, 1.0 - 0.81 - HalfWidthLeft1),
+      end = Coordinates(1.00, 1.0 - 0.69 - HalfWidthRight1),
+      control2 = Coordinates(0.82, 1.0 - 0.12 - HalfWidthRight1),
     ),
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.65 + halfWidthLeft1),
-      control1 = Coordinates(0.17, 1.0 - 0.81 + halfWidthLeft1),
-      end = Coordinates(1.00, 1.0 - 0.69 + halfWidthRight1),
-      control2 = Coordinates(0.82, 1.0 - 0.12 + halfWidthRight1),
+      start = Coordinates(0.00, 1.0 - 0.65 + HalfWidthLeft1),
+      control1 = Coordinates(0.17, 1.0 - 0.81 + HalfWidthLeft1),
+      end = Coordinates(1.00, 1.0 - 0.69 + HalfWidthRight1),
+      control2 = Coordinates(0.82, 1.0 - 0.12 + HalfWidthRight1),
     )
   )
 
-  const val halfWidthLeft2: Double = 0.23 / 2.0
-  const val halfWidthRight2: Double = 0.25 / 2.0
+  const val HalfWidthLeft2: Double = 0.23 / 2.0
+  const val HalfWidthRight2: Double = 0.25 / 2.0
 
   /**
    * The shape2 - without animation
@@ -92,21 +92,21 @@ object NeckarItFlow {
   @DomainRelative
   private val shape2: BezierCurveRect = BezierCurveRect(
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.49 - halfWidthLeft2),
-      control1 = Coordinates(0.19, 1.0 - 0.69 - halfWidthLeft2),
-      end = Coordinates(1.00, 1.0 - 0.89 - halfWidthRight2),
-      control2 = Coordinates(0.76, 1.0 - 0.45 - halfWidthRight2),
+      start = Coordinates(0.00, 1.0 - 0.49 - HalfWidthLeft2),
+      control1 = Coordinates(0.19, 1.0 - 0.69 - HalfWidthLeft2),
+      end = Coordinates(1.00, 1.0 - 0.89 - HalfWidthRight2),
+      control2 = Coordinates(0.76, 1.0 - 0.45 - HalfWidthRight2),
     ),
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.49 + halfWidthLeft2),
-      control1 = Coordinates(0.19, 1.0 - 0.69 + halfWidthLeft2),
-      end = Coordinates(1.00, 1.0 - 0.89 + halfWidthRight2),
-      control2 = Coordinates(0.76, 1.0 - 0.45 + halfWidthRight2),
+      start = Coordinates(0.00, 1.0 - 0.49 + HalfWidthLeft2),
+      control1 = Coordinates(0.19, 1.0 - 0.69 + HalfWidthLeft2),
+      end = Coordinates(1.00, 1.0 - 0.89 + HalfWidthRight2),
+      control2 = Coordinates(0.76, 1.0 - 0.45 + HalfWidthRight2),
     )
   )
 
-  const val halfWidthLeft3: Double = 0.16 / 2.0
-  const val halfWidthRight3: Double = 0.19 / 2.0
+  const val HalfWidthLeft3: Double = 0.16 / 2.0
+  const val HalfWidthRight3: Double = 0.19 / 2.0
 
   /**
    * The shape3 - without animation
@@ -114,16 +114,16 @@ object NeckarItFlow {
   @DomainRelative
   private val shape3: BezierCurveRect = BezierCurveRect(
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.85 - halfWidthLeft3),
-      control1 = Coordinates(0.16, 1.0 - 1.00 - halfWidthLeft3),
-      end = Coordinates(1.00, 1.0 - 0.49 - halfWidthRight3),
-      control2 = Coordinates(0.78, 1.0 - 0.00 - halfWidthRight3)
+      start = Coordinates(0.00, 1.0 - 0.85 - HalfWidthLeft3),
+      control1 = Coordinates(0.16, 1.0 - 1.00 - HalfWidthLeft3),
+      end = Coordinates(1.00, 1.0 - 0.49 - HalfWidthRight3),
+      control2 = Coordinates(0.78, 1.0 - 0.00 - HalfWidthRight3)
     ),
     BezierCurve(
-      start = Coordinates(0.00, 1.0 - 0.85 + halfWidthLeft3),
-      control1 = Coordinates(0.16, 1.0 - 1.00 + halfWidthLeft3),
-      end = Coordinates(1.00, 1.0 - 0.49 + halfWidthRight3),
-      control2 = Coordinates(0.78, 1.0 - 0.00 + halfWidthRight3)
+      start = Coordinates(0.00, 1.0 - 0.85 + HalfWidthLeft3),
+      control1 = Coordinates(0.16, 1.0 - 1.00 + HalfWidthLeft3),
+      end = Coordinates(1.00, 1.0 - 0.49 + HalfWidthRight3),
+      control2 = Coordinates(0.78, 1.0 - 0.00 + HalfWidthRight3)
     )
   )
 
@@ -244,8 +244,8 @@ object NeckarItFlow {
     tween3Control1Y = Tween(monotonicMillis(), 4100.milliseconds, Easing.inOut, AnimationRepeatType.RepeatAutoReverse)
   }
 
-  const val controlPointModificationFactor: Double = 0.1
-  const val startEndPointModificationFactor: Double = 0.05
+  const val ControlPointModificationFactor: Double = 0.1
+  const val StartEndPointModificationFactor: Double = 0.05
 
   fun configureForRandomAlsoStartAndEnd() {
     configureForRandom()
@@ -270,10 +270,10 @@ object NeckarItFlow {
   fun shape0(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
     restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween0StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween0StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
-      Coordinates.of(tween0Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween0Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween0Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween0Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween0EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween0EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
+      Coordinates.of(tween0StartX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween0StartY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor),
+      Coordinates.of(tween0Control0X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween0Control0Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween0Control1X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween0Control1Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween0EndX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween0EndY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor)
     )
 
     return shape0 + BezierCurveRect(
@@ -288,10 +288,10 @@ object NeckarItFlow {
   fun shape1(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
     restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
-      Coordinates.of(tween1Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween1Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween1Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween1Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor),
+      Coordinates.of(tween1Control0X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween1Control0Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween1Control1X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween1Control1Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor)
     )
 
     return shape1 + BezierCurveRect(
@@ -306,10 +306,10 @@ object NeckarItFlow {
   fun shape2(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
     restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
-      Coordinates.of(tween2Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween2Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween2Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween2Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor),
+      Coordinates.of(tween2Control0X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween2Control0Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween2Control1X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween2Control1Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor)
     )
 
     return shape2 + BezierCurveRect(
@@ -324,10 +324,10 @@ object NeckarItFlow {
   fun shape3(frameMonotonicMillis: @ms Double): @DomainRelative BezierCurveRect {
     restartTweensOnNewTimeSource()
     val modifierCurve = BezierCurve(
-      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor),
-      Coordinates.of(tween3Control0X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween3Control0Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween3Control1X.interpolate(frameMonotonicMillis) * controlPointModificationFactor, tween3Control1Y.interpolate(frameMonotonicMillis) * controlPointModificationFactor),
-      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * startEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * startEndPointModificationFactor)
+      Coordinates.of(tween1StartX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1StartY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor),
+      Coordinates.of(tween3Control0X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween3Control0Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween3Control1X.interpolate(frameMonotonicMillis) * ControlPointModificationFactor, tween3Control1Y.interpolate(frameMonotonicMillis) * ControlPointModificationFactor),
+      Coordinates.of(tween1EndX.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor, tween1EndY.interpolate(frameMonotonicMillis) * StartEndPointModificationFactor)
     )
 
     return shape3 + BezierCurveRect(

@@ -37,9 +37,9 @@ import it.neckar.open.annotations.meta.ThreadDescribingAnnotation
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.CONSTRUCTOR)
-@ThreadDescribingAnnotation(AnyThread.THREAD_DESCRIPTOR)
+@ThreadDescribingAnnotation(AnyThread.ThreadDescriptor)
 annotation class AnyThread {
   companion object {
-    const val THREAD_DESCRIPTOR: String = "any-thread"
+    const val ThreadDescriptor: String = "any-thread"
   }
 }

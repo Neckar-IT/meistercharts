@@ -55,9 +55,9 @@ import it.neckar.open.unit.quantity.Pressure
 @Unit
 @Pressure
 @Name("Megapascal")
-@Symbol(MPa.SYMBOL)
+@Symbol(MPa.Symbol)
 annotation class  MPa {
   companion object {
-    const val SYMBOL: String = "MPa"
+    const val Symbol: String = "MPa"
   }
 }

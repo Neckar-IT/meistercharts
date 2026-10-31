@@ -31,21 +31,21 @@ object SpecialChars {
   /**
    * Non-breaking space
    */
-  const val nbsp: Char = Typography.nbsp
+  const val Nbsp: Char = Typography.nbsp
 
   /**
    * Narrow non-breaking space
    */
-  const val nnbsp: Char = '\u202F'
+  const val Nnbsp: Char = '\u202F'
 
-  const val thinSpace: Char = '\u2009'
-  const val hairSpace: Char = '\u200A'
-  const val zeroWidthSpace: Char = '\u200B'
-  const val enSpace: Char = '\u2002'
-  const val emSpace: Char = '\u2003'
-  const val figureSpace: Char = '\u2007'
-  const val punctuationSpace: Char = '\u2008'
-  const val mathematicalSpace: Char = '\u205F'
+  const val ThinSpace: Char = '\u2009'
+  const val HairSpace: Char = '\u200A'
+  const val ZeroWidthSpace: Char = '\u200B'
+  const val EnSpace: Char = '\u2002'
+  const val EmSpace: Char = '\u2003'
+  const val FigureSpace: Char = '\u2007'
+  const val PunctuationSpace: Char = '\u2008'
+  const val MathematicalSpace: Char = '\u205F'
 }
 
 /**
@@ -57,16 +57,16 @@ fun String.replaceUnusualSpaces(): String {
 
   for (char in this) {
     when (char) {
-      SpecialChars.nbsp,
-      SpecialChars.nnbsp, // Narrow No-Break Space (NNBSP)
-      SpecialChars.thinSpace, // Thin Space
-      SpecialChars.hairSpace, // Hair Space
-      SpecialChars.zeroWidthSpace, // Zero Width Space
-      SpecialChars.enSpace, // En Space
-      SpecialChars.emSpace, // Em Space
-      SpecialChars.figureSpace, // Figure Space
-      SpecialChars.punctuationSpace, // Punctuation Space
-      SpecialChars.mathematicalSpace,  // Medium Mathematical Space (MMSP)
+      SpecialChars.Nbsp,
+      SpecialChars.Nnbsp, // Narrow No-Break Space (NNBSP)
+      SpecialChars.ThinSpace, // Thin Space
+      SpecialChars.HairSpace, // Hair Space
+      SpecialChars.ZeroWidthSpace, // Zero Width Space
+      SpecialChars.EnSpace, // En Space
+      SpecialChars.EmSpace, // Em Space
+      SpecialChars.FigureSpace, // Figure Space
+      SpecialChars.PunctuationSpace, // Punctuation Space
+      SpecialChars.MathematicalSpace,  // Medium Mathematical Space (MMSP)
       -> stringBuilder.append(' ')
 
       else -> stringBuilder.append(char)

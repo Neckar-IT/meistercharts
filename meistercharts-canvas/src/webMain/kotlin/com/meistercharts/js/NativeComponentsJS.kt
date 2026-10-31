@@ -44,7 +44,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
    * The div that holds all elements
    */
   val div: HTMLDivElement = (document.createElement("DIV") as HTMLDivElement).also { div ->
-    div.classList.add(MeisterChartClasses.nativeComponentsHolder)
+    div.classList.add(MeisterChartClasses.NativeComponentsHolder)
 
     //Set the style to 100%
     div.style.setProperty("width", "100%")
@@ -59,7 +59,7 @@ class NativeComponentsJS(chartSupport: ChartSupport) {
 
   init {
     chartSupport.onDispose {
-      div.addClass(MeisterChartClasses.disposed)
+      div.addClass(MeisterChartClasses.Disposed)
     }
 
     chartSupport.nativeComponentsSupport.onComponent(object : NativeComponentsHandler {

@@ -56,12 +56,12 @@ import it.neckar.open.unit.si.s
 @Suppress("ClassName")
 @Unit
 @Time
-@Symbol(h.SYMBOL)
+@Symbol(h.Symbol)
 @Name("Hour")
 @Factor(factor = 3600.0, base = s::class)
 annotation class h {
   companion object {
-    const val SYMBOL: String = "h"
+    const val Symbol: String = "h"
   }
 }
 
