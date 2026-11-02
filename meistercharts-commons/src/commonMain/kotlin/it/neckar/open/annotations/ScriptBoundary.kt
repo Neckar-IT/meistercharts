@@ -40,7 +40,7 @@ import kotlin.annotation.AnnotationTarget.CLASS
  * ```kotlin
  * @ScriptBoundary
  * class BookOrderPricingScriptExecutor {
- *   fun price(script: JavaScriptCode, order: BookOrderResolvedView): Quote { … }
+ *   fun price(script: JavaScriptCode, order: BookOrderPricingView): Quote { … }
  * }
  * ```
  */

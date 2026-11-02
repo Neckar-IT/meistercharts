@@ -34,14 +34,15 @@ import it.neckar.logging.LoggerLocalStorage
 import it.neckar.logging.LoggerName
 import it.neckar.logging.ShortenedLoggerName
 import it.neckar.open.collections.fastForEach
-import it.neckar.open.version.VersionInformation
 
 
 /**
- * Is registered at the window object and provides some functions to interact with the logging framework
+ * Is registered at the window object and provides some functions to interact with the logging framework.
+ *
+ * `version()` prints the result of [artifactIdentity], e.g. `VersionInformation.artifactIdentity` of the registering frontend.
  */
 @JsExport
-data class ConsoleLogFunctions(val prefix: String) {
+data class ConsoleLogFunctions(val prefix: String, private val artifactIdentity: () -> String) {
   override fun toString(): String {
     return "The Console functions!"
   }
@@ -150,7 +151,7 @@ data class ConsoleLogFunctions(val prefix: String) {
   }
 
   fun version(): Any? {
-    println("Artifact: ${VersionInformation.artifactIdentity}")
+    println("Artifact: ${artifactIdentity()}")
     return null
   }
 }

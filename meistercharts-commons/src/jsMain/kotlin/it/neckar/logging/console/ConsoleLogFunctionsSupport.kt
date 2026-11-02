@@ -38,15 +38,15 @@ object ConsoleLogFunctionsSupport {
   private val logger: Logger = LoggerFactory.getLogger("it.neckar.logging.console.ConsoleLogFunctionsSupport")
 
   /**
-   * Registers the console log functions at the window object
+   * Registers the console log functions at the window object; `version()` prints the result of [artifactIdentity]
    */
-  fun init(name: String) {
-    logger.debug("Initializing console log functions for $name")
+  fun init(prefix: ConsoleLogPrefix, artifactIdentity: () -> String) {
+    logger.debug("Initializing console log functions for $prefix")
 
-    val currentObject = window.asDynamic()[name]
+    val currentObject = window.asDynamic()[prefix.value]
     if (currentObject != null) {
-      logger.warn("Object [$name] already exists in the global scope. Overwriting it!")
+      logger.warn("Object [$prefix] already exists in the global scope. Overwriting it!")
     }
-    window.asDynamic()[name] = ConsoleLogFunctions(name)
+    window.asDynamic()[prefix.value] = ConsoleLogFunctions(prefix.value, artifactIdentity)
   }
 }

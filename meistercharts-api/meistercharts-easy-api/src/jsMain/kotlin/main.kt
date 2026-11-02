@@ -17,10 +17,12 @@ import com.meistercharts.js.MeisterChartsPlatform
 import it.neckar.logging.Level
 import it.neckar.logging.LogConfigurer
 import it.neckar.logging.console.ConsoleLogFunctionsSupport
+import it.neckar.logging.console.ConsoleLogPrefix
+import it.neckar.open.version.VersionInformation
 
 fun main() {
   LogConfigurer.initializeFromLocalStorage(Level.WARN)
-  ConsoleLogFunctionsSupport.init("meistercharts")
+  ConsoleLogFunctionsSupport.init(ConsoleLogPrefix("meistercharts")) { VersionInformation.artifactIdentity }
 
   MeisterChartsPlatform.init()
 }
