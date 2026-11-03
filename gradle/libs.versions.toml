@@ -23,7 +23,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.20.0" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.20.1" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -52,7 +52,9 @@ dev-detekt = "2.0.0-alpha.6"
 # 0.5.0 is the first release that supports Detekt 2.
 com-gitlab-cromefire-detekt-gitlab-report = "0.5.0"
 
-com-google-devtools-ksp = "2.3.13"
+# workaround: dependency=libs:com-google-devtools-ksp:2.3.12 observed-on=2026-11-02 upstream=https://github.com/google/ksp/issues/3286
+# 2.3.13 loses library symbols when KSP tasks run concurrently in one daemon and caches the empty output; renovate.json skips it.
+com-google-devtools-ksp = "2.3.12"
 
 org-mongodb = "5.14.0"
 
@@ -66,7 +68,7 @@ aws-sdk-kotlin = "1.9.29"
 
 apache-poi = "6.0.0"
 
-org-commonmark = "0.31.0"
+org-commonmark = "0.32.0"
 
 # BouncyCastle publishes one build per JDK baseline. This repository builds on Java 25, so only the
 # jdk18on line (Java 8 and up) is used - never the jdk15to18 line (Java 5 to 8) or the jdk14 line.
@@ -86,7 +88,7 @@ kotlin-csv = "1.10.0"
 
 kotlinx-io = "0.9.2"
 
-kmp-zip = "2.0.0"
+kmp-zip = "2.1.0"
 
 kover = "0.9.11"
 

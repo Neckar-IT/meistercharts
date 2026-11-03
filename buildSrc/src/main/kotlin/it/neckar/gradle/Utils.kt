@@ -1218,9 +1218,9 @@ val Project.branchTagForDocker: String
  * The date component is the commit date (from [gitCommitDateTime]), so the tag is a pure function of
  * the commit: rebuilding the same commit yields the same immutable tag.
  *
- * The base images built by `docker/docker-bake.hcl` use the same format with the pipeline date
- * instead (`docker/_immutable-tag.sh`) — deliberately, because they are rebuilt against moving
- * upstream images, so the same commit can produce a different image and the tags have to differ.
+ * The base images built by `docker/docker-bake.hcl` use the same format with the date of the pipeline
+ * that pushed them (`docker/_immutable-tag.sh`). That date is their only record of publication: their image
+ * config says 1970-01-01, and the hash in the same tag gives the commit date.
  * Neither date is a build date; nothing in this repository has one.
  */
 val Project.immutableDockerTag: String
@@ -1275,8 +1275,8 @@ val Project.gitCommitDateTime: String
  *
  * There is no build date anywhere in this repository, and no room for one: `SOURCE_DATE_EPOCH=1`
  * clamps every timestamp in a built image to 1970-01-01, which is what makes the build reproducible.
- * The only other date in the tooling is `PIPELINE_DATE` in docker/_immutable-tag.sh, which dates a
- * pipeline run so that base-image tags of one commit stay apart — not the artifact.
+ * The only other date in the tooling is `PIPELINE_DATE` in docker/_immutable-tag.sh, which dates the
+ * pipeline run that pushed a base image, not the artifact.
  */
 val Project.gitCommitDate: String
   get() {
@@ -1323,20 +1323,20 @@ fun Project.inSchedule(scheduleVariable: ScheduleVariable): Boolean {
   return ciInformation.inSchedule(scheduleVariable.variableName)
 }
 
-/** Extra-property key: the schedule variable gating a module's `jib`. Set by [gateJibToSchedule], read by `verifyDeploymentImages`. */
+/** Extra-property key: the schedule variable gating a module's `jib` and `jibBuildTar`. Set by [gateJibToSchedule], read by `verifyDeploymentImages`. */
 const val ScheduleGatedJibExtraKey: String = "scheduleGatedJibVariable"
 
 /**
- * Runs the module's `jib` only in [scheduleVariable]'s scheduled pipeline (always outside CI), so a
- * main-push jib cannot overwrite the schedule's image with an empty build. Records the gate as an
- * extra property so `verifyDeploymentImages` rejects pairing it with `continuousDeploy()` — that
- * would deploy an image the main pipeline never builds (#2694). [reason] shows when the task skips.
+ * Runs `jib` and `jibBuildTar` in CI only in [scheduleVariable]'s pipeline, so main never pushes this image and the reproducibility schedule skips it;
+ * the extra property [ScheduleGatedJibExtraKey] lets `verifyDeploymentImages` reject `continuousDeploy()`.
  */
 fun Project.gateJibToSchedule(scheduleVariable: ScheduleVariable, reason: String) {
   val gatingProject: Project = this
   extra[ScheduleGatedJibExtraKey] = scheduleVariable.variableName
-  tasks.named("jib").configure {
-    onlyIf(reason) { gatingProject.inCi.not() || gatingProject.inSchedule(scheduleVariable) }
+  listOf("jib", "jibBuildTar").forEach { taskName ->
+    tasks.named(taskName) {
+      onlyIf(reason) { gatingProject.inCi.not() || gatingProject.inSchedule(scheduleVariable) }
+    }
   }
 }
 

@@ -20,6 +20,12 @@ enum class Scope {
 }
 
 /**
+ * Returns true if this multiplatform extension has a JVM target registered.
+ */
+val KotlinMultiplatformExtension.hasJvmTarget: Boolean
+  get() = targets.findByName("jvm") != null
+
+/**
  * Returns true if this multiplatform extension has a JS target registered.
  */
 val KotlinMultiplatformExtension.hasJsTarget: Boolean
@@ -63,6 +69,10 @@ private fun KotlinMultiplatformExtension.js(scope: Scope, configure: KotlinSourc
 }
 
 private fun KotlinMultiplatformExtension.jvm(scope: Scope, configure: KotlinSourceSet.() -> Unit) {
+  if (hasJvmTarget.not()) {
+    return
+  }
+
   sourceSets {
     when (scope) {
       Scope.Main -> {

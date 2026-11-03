@@ -19,11 +19,11 @@ private const val SchedulePrefix: String = "SCHEDULE_"
  *
  * | Derived | Form | Example |
  * |---|---|---|
- * | enum constant | PascalCase | `VerifyBaseImageLocks` |
- * | [variableName] | `SCHEDULE_` + SCREAMING_SNAKE | `SCHEDULE_VERIFY_BASE_IMAGE_LOCKS` |
- * | job file under `gitlab-ci.d/schedule/` | the name plus `.yml` | `verify-base-image-locks.yml` |
- * | `PipelineSchedule.description` | the name in title case | `Verify Base Image Locks` |
- * | job titles inside the file | `⏲ ` plus a [ScheduleVerb] and its object | `⏲ verify the base image locks` |
+ * | enum constant | PascalCase | `VerifyDockerImageTags` |
+ * | [variableName] | `SCHEDULE_` + SCREAMING_SNAKE | `SCHEDULE_VERIFY_DOCKER_IMAGE_TAGS` |
+ * | job file under `gitlab-ci.d/schedule/` | the name plus `.yml` | `verify-docker-image-tags.yml` |
+ * | `PipelineSchedule.description` | the name in title case | `Verify Docker Image Tags` |
+ * | job titles inside the file | `⏲ ` plus a [ScheduleVerb] and its object | `⏲ verify the docker image tags` |
  *
  * Only the description and the job titles may spell a proper name the way it is written —
  * `Mirror JWKS Seeds`, not `Mirror Jwks Seeds`. `verifyGitlabCiVariables` compares them against
@@ -41,7 +41,6 @@ enum class ScheduleVariable(
   val variableName: String,
   val description: String,
 ) {
-  BuildDockerImages("SCHEDULE_BUILD_DOCKER_IMAGES", "Schedule: build and push every Docker image"),
   DeployLizergySpielwiese("SCHEDULE_DEPLOY_LIZERGY_SPIELWIESE", "Schedule: nightly deploy of the Lizergy Spielwiese environment"),
   MirrorInfrastructureData("SCHEDULE_MIRROR_INFRASTRUCTURE_DATA", "Schedule: mirror the host inventory into the repository"),
   MirrorJwksSeeds("SCHEDULE_MIRROR_JWKS_SEEDS", "Schedule: mirror the realms' published public signature keys into the checked-in JWKS seed files, opens a merge request when a realm rotated a key. Rotates nothing and writes nothing back to Keycloak"),
@@ -59,13 +58,14 @@ enum class ScheduleVariable(
   SnapshotElektromeisterMongodb("SCHEDULE_SNAPSHOT_ELEKTROMEISTER_MONGODB", "Schedule: nightly Elektromeister MongoDB snapshot upload to the Package Registry"),
   TestElektromeisterMigration("SCHEDULE_TEST_ELEKTROMEISTER_MIGRATION", "Schedule: nightly Elektromeister migration test against the production snapshot"),
   TestLizergySpielwiese("SCHEDULE_TEST_LIZERGY_SPIELWIESE", "Schedule: nightly Playwright end-to-end tests against Lizergy Spielwiese, publishes the report image"),
-  VerifyBaseImageLocks("SCHEDULE_VERIFY_BASE_IMAGE_LOCKS", "Schedule: watchdog that verifies the pinned base image digests against the registry and their source commits against the git history"),
+  VerifyApplicationImageReproducibility("SCHEDULE_VERIFY_APPLICATION_IMAGE_REPRODUCIBILITY", "Schedule: build every application image twice, the second time with new file mtimes and without the build cache, and compare the config digests"),
+  VerifyBaseImageReproducibility("SCHEDULE_VERIFY_BASE_IMAGE_REPRODUCIBILITY", "Schedule: rebuild every base image without push and compare its digest with the registry"),
   VerifyDockerImageTags("SCHEDULE_VERIFY_DOCKER_IMAGE_TAGS", "Schedule: retraction watchdog that verifies the pinned Docker image tags and digests and the pinned downloads still exist"),
   VerifyStandaloneBuilds("SCHEDULE_VERIFY_STANDALONE_BUILDS", "Schedule: weekly watchdog that builds every standalone-capable project from an empty Gradle home, so its dependencies must resolve from the public repositories"),
   ;
 
   /**
-   * The one name this schedule is known by, `<verb>-<object>` — `verify-base-image-locks`. Names its
+   * The one name this schedule is known by, `<verb>-<object>` — `verify-docker-image-tags`. Names its
    * job file, and is what the enum constant, the [variableName], the description and the job titles
    * are checked against.
    */
