@@ -158,6 +158,11 @@ object Plugins {
   const val ExecutableApplication: String = "it.neckar.executable-application"
 
   /**
+   * Registers `assembleCommandLineTool`, which places the executable of a tool started from `tools/bin/` in `build/command-line-tool/`.
+   */
+  const val CommandLineTool: String = "it.neckar.command-line-tool"
+
+  /**
    * Convention plugin for Ktor services deployed as Docker images.
    * Extends `executableApplication` with `jibService` for Docker image building, the OTel agent,
    * and the Ktor service conventions (dependency backbone, Jib defaults, run-task port override).

@@ -21,6 +21,7 @@ open class ConfiguredProject protected constructor(
    * [ProjectType.KotlinMultiplatform].
    */
   val targets: Set<KotlinTarget> = emptySet(),
+  val inclusion: BuildInclusion = BuildInclusion.Always,
 ) {
 
   /**
@@ -57,12 +58,12 @@ open class ConfiguredProject protected constructor(
   val hasJvmTarget: Boolean
     get() = targets.contains(KotlinTarget.Jvm)
 
-  protected fun jvm(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.KotlinJvm, role)
+  protected fun jvm(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.KotlinJvm, role, inclusion = inclusion)
   }
 
-  protected fun kspProcessor(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.KspProcessor, role)
+  protected fun kspProcessor(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.KspProcessor, role, inclusion = inclusion)
   }
 
   /**
@@ -73,11 +74,11 @@ open class ConfiguredProject protected constructor(
    * target out — there is no default set, because an implicit "jvm + js" is what previously made
    * `multiplatformJvmOnly` claim a target list its modules did not have.
    */
-  protected fun multiplatform(directory: String, role: ProjectRole, vararg targets: KotlinTarget): ConfiguredProject {
+  protected fun multiplatform(directory: String, role: ProjectRole, vararg targets: KotlinTarget, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
     require(targets.isNotEmpty()) { "Multiplatform project $directory must declare at least one Kotlin target" }
     require(targets.size == targets.distinct().size) { "Multiplatform project $directory declares a duplicate Kotlin target: ${targets.toList()}" }
 
-    return subproject(directory, ProjectType.KotlinMultiplatform, role, targets.toSet())
+    return subproject(directory, ProjectType.KotlinMultiplatform, role, targets.toSet(), inclusion)
   }
 
   /**
@@ -85,30 +86,30 @@ open class ConfiguredProject protected constructor(
    * builds (Eleventy). Use [vite] / [astro] for web apps so local development picks the right
    * dev-server strategy.
    */
-  protected fun pnpm(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.Pnpm.Library, role)
+  protected fun pnpm(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.Pnpm.Library, role, inclusion = inclusion)
   }
 
   /**
    * A pnpm web app served by a Vite dev server during local development.
    */
-  protected fun vite(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.Pnpm.Vite, role)
+  protected fun vite(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.Pnpm.Vite, role, inclusion = inclusion)
   }
 
   /**
    * A pnpm web app served by an Astro dev server during local development.
    */
-  protected fun astro(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.Pnpm.Astro, role)
+  protected fun astro(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.Pnpm.Astro, role, inclusion = inclusion)
   }
 
-  protected fun python(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.Python, role)
+  protected fun python(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.Python, role, inclusion = inclusion)
   }
 
-  protected fun ideaPlugin(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.IdeaPlugin, role)
+  protected fun ideaPlugin(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.IdeaPlugin, role, inclusion = inclusion)
   }
 
   protected fun intermediate(directory: String): ConfiguredProject {
@@ -119,12 +120,18 @@ open class ConfiguredProject protected constructor(
     return subproject(directory, ProjectType.ProjectParent, ProjectRole.Container)
   }
 
-  protected fun other(directory: String, role: ProjectRole): ConfiguredProject {
-    return subproject(directory, ProjectType.Other, role)
+  protected fun other(directory: String, role: ProjectRole, inclusion: BuildInclusion = BuildInclusion.Always): ConfiguredProject {
+    return subproject(directory, ProjectType.Other, role, inclusion = inclusion)
   }
 
-  private fun subproject(directory: String, type: ProjectType, role: ProjectRole, targets: Set<KotlinTarget> = emptySet()): ConfiguredProject {
-    return ConfiguredProject(this, GradleProjectPath(":$directory"), type, role, targets)
+  private fun subproject(
+    directory: String,
+    type: ProjectType,
+    role: ProjectRole,
+    targets: Set<KotlinTarget> = emptySet(),
+    inclusion: BuildInclusion = BuildInclusion.Always,
+  ): ConfiguredProject {
+    return ConfiguredProject(this, GradleProjectPath(":$directory"), type, role, targets, inclusion)
   }
 
   /**

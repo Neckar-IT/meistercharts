@@ -253,6 +253,9 @@ inline val PluginDependenciesSpec.disableDistTasks: PluginDependencySpec
 inline val PluginDependenciesSpec.executableApplication: PluginDependencySpec
   get() = id(Plugins.ExecutableApplication)
 
+inline val PluginDependenciesSpec.commandLineTool: PluginDependencySpec
+  get() = id(Plugins.CommandLineTool)
+
 inline val PluginDependenciesSpec.ktorServiceApplication: PluginDependencySpec
   get() = id(Plugins.KtorServiceApplication)
 
