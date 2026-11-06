@@ -48,6 +48,7 @@ enum class ScheduleVariable(
   PublishReports("SCHEDULE_PUBLISH_REPORTS", "Schedule: full report sweep (build + tests + Detekt + Kover + pnpm-audit + build profile) and reports.neckar.it image rebuild"),
   PublishSonatypeSnapshots("SCHEDULE_PUBLISH_SONATYPE_SNAPSHOTS", "Schedule: deploy the open-source artifacts to Sonatype Snapshots"),
   ReconcileContinuousDeploy("SCHEDULE_RECONCILE_CONTINUOUS_DEPLOY", "Schedule: re-run the main build and deploy in reconcile mode, catching up whatever a failed main pipeline left undeployed and publishing every site whose output changed that day or the day before"),
+  ReportDependencyVersions("SCHEDULE_REPORT_DEPENDENCY_VERSIONS", "Schedule: measure every dependency held in two or more versions and export the result to Prometheus"),
   ResetSnapshotHistory("SCHEDULE_RESET_SNAPSHOT_HISTORY", "Schedule: weekly rolling-squash of the neckar-hub-gitlab-data snapshot history (collapse commits older than 7 days)"),
   RunChromeTests("SCHEDULE_RUN_CHROME_TESTS", "Schedule: Chrome browser integration tests"),
   RunHousekeeping("SCHEDULE_RUN_HOUSEKEEPING", "Schedule: housekeeping jobs (license headers, lock files, generated sources, registry cleanup)"),
@@ -138,6 +139,9 @@ enum class ScheduleVerb(val word: String) {
 
   /** Brings a system back to what the repository declares. */
   Reconcile("reconcile"),
+
+  /** Measures a state and exports the result; changes nothing in this repository. */
+  Report("report"),
 
   /** Discards accumulated state and starts it over. */
   Reset("reset"),

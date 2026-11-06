@@ -151,6 +151,9 @@ object Plugins {
    */
   const val UnusedDependencies: String = "it.neckar.dependencies.unused-dependencies"
 
+  /** See [it.neckar.gradle.dependencies.versions.DependencyVersionsReportPlugin]; applied to every project. */
+  const val DependencyVersionsReport: String = "it.neckar.dependencies.dependency-versions-report"
+
   /**
    * Convention plugin bundling `application`, `disableDistTasks`, and `verifyMainClassExists`.
    * For CLI tools, demos, and other executable applications without Docker deployment.

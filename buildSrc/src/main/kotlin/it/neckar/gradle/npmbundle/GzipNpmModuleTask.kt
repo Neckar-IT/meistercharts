@@ -5,15 +5,12 @@ import com.google.common.io.Files
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
 import org.gradle.api.DefaultTask
-import org.gradle.api.InvalidUserDataException
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import org.gradle.kotlin.dsl.property
 import java.io.FileOutputStream
 
 /**
@@ -32,14 +29,9 @@ abstract class GzipNpmModuleTask : DefaultTask() {
   @get:OutputDirectory
   abstract val targetDirectoryForArchiveProperty: DirectoryProperty
 
-  @Suppress("unused")
   @TaskAction
   fun zipContent() {
     val sourceDir = sourceDirProperty.get().asFile
-    if (!sourceDir.exists() || !sourceDir.isDirectory) {
-      throw InvalidUserDataException("Directory does not exist <${sourceDir.absolutePath}>")
-    }
-
     val dirNameInArchive = dirNameInArchiveProperty.get()
     val tarGzFile = targetDirectoryForArchiveProperty.get().asFile.child("${archiveFileNameProperty.get()}.tar.gz")
 

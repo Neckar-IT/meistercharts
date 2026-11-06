@@ -1,8 +1,5 @@
-@file:Suppress("unused")
-
 package it.neckar.gradle.npmbundle
 
-import it.neckar.gradle.ansiConsole
 import it.neckar.gradle.hasKotlinMultiplatformPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,7 +12,7 @@ import it.neckar.gradle.withTask
 /**
  * Creates a NPM module.
  *
- * The bundled package.json is the file checked in next to the Gradle project (see #1635).
+ * The bundled package.json is the file checked in next to the Gradle project, with the name and version of the extension.
  */
 class NpmBundlePlugin : Plugin<Project> {
   override fun apply(target: Project) {
@@ -42,7 +39,7 @@ class NpmBundlePlugin : Plugin<Project> {
 
       version.convention(target.version.toString())
 
-      workingDir.convention(target.layout.buildDirectory.dir("npm-work"))
+      workingDir.convention(target.layout.buildDirectory.dir(WorkingDirName))
       targetDirectoryForArchive.convention(target.layout.buildDirectory.dir("npm"))
     }
 
@@ -84,6 +81,8 @@ class NpmBundlePlugin : Plugin<Project> {
 
       destinationDir = npmBundleExtensionProduction.workingDir
       filesToBundle = npmBundleExtensionProduction.filesToBundle
+      moduleName = npmBundleExtensionProduction.moduleName
+      version = npmBundleExtensionProduction.version
 
       when {
         target.hasKotlinMultiplatformPlugin() -> {
@@ -102,6 +101,8 @@ class NpmBundlePlugin : Plugin<Project> {
 
       destinationDir = npmBundleExtensionDevelopment.workingDir
       filesToBundle = npmBundleExtensionDevelopment.filesToBundle
+      moduleName = npmBundleExtensionDevelopment.moduleName
+      version = npmBundleExtensionDevelopment.version
 
       //Add the deps automatically for Kotlin projects
       when {
@@ -122,7 +123,6 @@ class NpmBundlePlugin : Plugin<Project> {
       dependsOn(npmCopyBundleContentTask)
 
       workingDir = npmBundleExtensionProduction.workingDir
-      console.set(target.ansiConsole)
     }
 
     val verifyBundleContentTaskDevelopment = target.tasks.register<VerifyBundleContentTask>(VerifyBundleContentDevelopmentTaskName) {
@@ -132,7 +132,6 @@ class NpmBundlePlugin : Plugin<Project> {
       dependsOn(npmCopyBundleContentDevelopmentTask)
 
       workingDir = npmBundleExtensionDevelopment.workingDir
-      console.set(target.ansiConsole)
     }
 
     //Ensure that the verifyBundleContentTask is executed after the npmCopyBundleContentTask
@@ -180,6 +179,9 @@ class NpmBundlePlugin : Plugin<Project> {
 
     const val ExtensionName: String = "npmBundle"
     const val DevelopmentExtensionName: String = "npmBundleDevelopment"
+
+    /** The default of [NpmBundleExtension.workingDir] for the production bundle, below the build directory. */
+    const val WorkingDirName: String = "npm-work"
 
     const val npmCopyBundleContentTaskName: String = "npmCopyBundleContent"
     const val npmCopyBundleContentTaskNameDevelopment: String = "npmCopyBundleContentDevelopment"

@@ -2,7 +2,6 @@ package it.neckar.gradle.npmbundle
 
 import org.gradle.api.file.CopySpec
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 
 /**
@@ -10,7 +9,7 @@ import org.gradle.api.provider.Property
  */
 interface NpmBundleExtension {
   /**
-   * The module name - will be used as name for the package.json
+   * The name of the published package - will be used as name for the package.json
    */
   val moduleName: Property<String>
 
@@ -25,7 +24,7 @@ interface NpmBundleExtension {
   val archiveFileName: Property<String>
 
   /**
-   * The version number - will be used when processing the package.json template
+   * The version number - will be used as version for the package.json
    */
   val version: Property<String>
 
@@ -36,18 +35,12 @@ interface NpmBundleExtension {
   val filesToBundle: Property<CopySpec>
 
   /**
-   * The npm module directory (usually build/npm).
-   * Also contains the module name
+   * The directory that holds the unpacked npm module.
    */
   val workingDir: DirectoryProperty
 
   /**
-   * The package json template file. Will be copied to [workingDir]
-   */
-  val packageJsonTemplate: RegularFileProperty
-
-  /**
-   * The directory that contains the tar.gz that contains the package.json and the content provided by [copyContent]
+   * The directory that contains the tar.gz that contains the content of [workingDir]
    */
   val targetDirectoryForArchive: DirectoryProperty
 }

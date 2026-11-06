@@ -3,7 +3,6 @@ import it.neckar.gradle.standardOutputAsStringOnSuccess
 import it.neckar.projects.project
 
 import it.neckar.gradle.console
-import it.neckar.gradle.npmbundle.CopyBundleContentTask
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 import it.neckar.projects.Projects
@@ -100,9 +99,8 @@ tasks.register("publishNpmBundle") {
     }
 
     providers.exec {
-      workingDir = projectDir
       commandLine("npm", "publish", "--access", "public", "--tag", npmTag)
-      workingDir = file("build/npm/work")
+      workingDir = npmBundle.workingDir.get().asFile
     }.result.get().rethrowFailure()
   }
 }
@@ -135,9 +133,8 @@ tasks.register("publishNpmBundleDevelopment") {
     }
 
     providers.exec {
-      workingDir = projectDir
       commandLine("npm", "publish", "--access", "public", "--tag", npmTag)
-      workingDir = file("build/npmDevelopment/work")
+      workingDir = npmBundleDevelopment.workingDir.get().asFile
     }.result.get().rethrowFailure()
   }
 }
