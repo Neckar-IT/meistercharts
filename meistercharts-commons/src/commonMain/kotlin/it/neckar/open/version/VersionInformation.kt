@@ -30,11 +30,8 @@ package it.neckar.open.version
 import kotlin.time.Instant
 
 /**
- * Application related information.
- *
- * The stable value (version) comes from generated [VersionConstants].
- * The running artifact's identity is deploy metadata, never a compile input: a container receives
- * [imageDigestOrNull] from the deploy; a fat-jar CLI and a lizergy frontend, whose deploy sets it, carry [gitHash].
+ * Version and identity of the running artifact: a container gets [imageDigestOrNull] from the deploy, a fat-jar CLI carries
+ * [artifactKeyOrNull], a lizergy frontend gets [gitHash] from its deploy.
  */
 object VersionInformation {
   /**
@@ -43,7 +40,7 @@ object VersionInformation {
   const val UnknownValue: String = "unknown"
 
   /**
-   * Length of [gitHashShort] and of the hex part of [ImageDigestText.shortOf].
+   * Length of [gitHashShort], of the hex part of [ImageDigestText.shortOf] and of the hex part of [artifactIdentityShort] for a fat jar.
    */
   const val ShortHashLength: Int = 12
 
@@ -112,17 +109,22 @@ object VersionInformation {
   const val UnpinnedImageDigest: String = "unpinned"
 
   /**
-   * What identifies the running artifact: [imageDigestOrNull] where the deploy injects one, otherwise
-   * [gitHash] (a fat-jar CLI, a lizergy frontend whose deploy sets it).
+   * The artifact key `in-<SHA-256 over its entries>` the build wrote into the fat jar this code runs from; null where the classpath holds none.
    */
-  val artifactIdentity: String
-    get() = artifactIdentityOf(imageDigestOrNull, gitHash)
+  val artifactKeyOrNull: String? by lazy { resolveArtifactKey() }
 
   /**
-   * Display form of [artifactIdentity]: the short digest or [gitHashShort].
+   * What identifies the running artifact: [imageDigestOrNull] where the deploy injects one, otherwise
+   * [artifactKeyOrNull] of a fat-jar CLI, otherwise [gitHash] (a lizergy frontend whose deploy sets it).
+   */
+  val artifactIdentity: String
+    get() = artifactIdentityOf(imageDigestOrNull, artifactKeyOrNull, gitHash)
+
+  /**
+   * Display form of [artifactIdentity]: the short digest, the short artifact key or [gitHashShort].
    */
   val artifactIdentityShort: String
-    get() = artifactIdentityShortOf(imageDigestOrNull, gitHash)
+    get() = artifactIdentityShortOf(imageDigestOrNull, artifactKeyOrNull, gitHash)
 
   /**
    * Verbose version string that contains [artifactIdentity]
@@ -154,15 +156,18 @@ internal fun pinnedImageDigestOrNull(injected: String?): String? {
   }
 }
 
-internal fun artifactIdentityOf(imageDigest: String?, gitHash: String): String {
-  return imageDigest ?: gitHash
+internal fun artifactIdentityOf(imageDigest: String?, artifactKey: String?, gitHash: String): String {
+  return imageDigest ?: artifactKey ?: gitHash
 }
 
 /**
- * The display form of [artifactIdentityOf]: the short digest, otherwise the short git hash.
+ * The display form of [artifactIdentityOf]: the short digest, otherwise the artifact key with [VersionInformation.ShortHashLength] hex
+ * characters (`in-3668efd5ddda`), otherwise the short git hash.
  */
-internal fun artifactIdentityShortOf(imageDigest: String?, gitHash: String): String {
-  return ImageDigestText.shortOrElse(imageDigest) { gitHash.take(VersionInformation.ShortHashLength) }
+internal fun artifactIdentityShortOf(imageDigest: String?, artifactKey: String?, gitHash: String): String {
+  return ImageDigestText.shortOrElse(imageDigest) {
+    artifactKey?.take(VersionConstants.ArtifactKeyPrefix.length + VersionInformation.ShortHashLength) ?: gitHash.take(VersionInformation.ShortHashLength)
+  }
 }
 
 /**
@@ -230,21 +235,7 @@ internal fun formatCommitDateAndShortHash(commitDateTime: String, gitHashShort: 
   return "${commitDate ?: VersionInformation.UnknownValue} - ${hash ?: VersionInformation.UnknownValue}"
 }
 
-/**
- * Resolves the value of a single git property from the injected deploy metadata at runtime.
- *
- * JVM chain: system property ([GitProperty.systemProperty]) → environment variable
- * ([GitProperty.envVar], set by a compose file that names the deployed commit) → the
- * `META-INF/app-git-info.properties` resource ([GitProperty.propertyKey] as key, packed
- * exclusively into leaf fat-jars) → [VersionInformation.UnknownValue].
- *
- * JS chain: `window.__APP_GIT_INFO__[propertyKey]` (filled at serve time) → `<meta>` of the same
- * name → [VersionInformation.UnknownValue]. Non-browser runtimes (Node, tests) resolve to the
- * fallback without throwing.
- *
- * The [GitProperty] enum is generated 1:1 from the GitProperty enum in build-logic
- * ResourcesExt.kt (single source of truth), so injection and resolution cannot drift.
- */
+/** The deploy-injected value of [property], else [VersionInformation.UnknownValue]; each platform names its sources. */
 internal expect fun resolveGitProperty(property: GitProperty): String
 
 /**
@@ -253,6 +244,12 @@ internal expect fun resolveGitProperty(property: GitProperty): String
  * placeholder; on JS also for a malformed value.
  */
 internal expect fun resolveImageDigest(): String?
+
+/**
+ * Reads the artifact key from [VersionConstants.ArtifactKeyResourcePath] on the classpath; null where the resource is absent (outside a
+ * fat jar, in a browser).
+ */
+internal expect fun resolveArtifactKey(): String?
 
 /**
  * Returns true if the given version number string contains "-SNAPSHOT"

@@ -44,8 +44,6 @@ import java.io.File
 import java.io.FileFilter
 import java.io.FileNotFoundException
 import java.io.InputStream
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -643,6 +641,7 @@ fun Project.configureJunit() {
     jvmArgs("-Dkotlinx.coroutines.debug=on")
 
     allowNativeAccessFromClasspath()
+    redirectJvmCrashReportsToBuildDirectory()
 
     //Testcontainers: Disable Ryuk resource reaper.
     //With the Singleton Container pattern, containers are shared across test classes
@@ -1213,31 +1212,6 @@ val Project.branchTagForDocker: String
   }
 
 /**
- * Returns the immutable Docker tag in the format `YYYYMMDD-shortsha` (e.g. `20260326-a1b2c3d`).
- *
- * Uses `gitHashShort`, produced by `git rev-parse --short=12 HEAD` — pinned to 12 characters
- * so the tag does not depend on the repository's object count (CI clone vs. local repo).
- * The date component is the commit date (from [gitCommitDateTime]), so the tag is a pure function of
- * the commit: rebuilding the same commit yields the same immutable tag. The jib image of a site with
- * `frontendProject { publicationDate { } }` carries the publication day instead (`FrontendProjectExtension.publicationDate`).
- *
- * The base images built by `docker/docker-bake.hcl` use the same format with the date of the pipeline
- * that pushed them (`docker/_immutable-tag.sh`). That date is their only record of publication: their image
- * config says 1970-01-01, and the hash in the same tag gives the commit date.
- * Neither date is a build date.
- */
-val Project.immutableDockerTag: String
-  get() = immutableDockerTag(LocalDate.parse(gitCommitDateTime.substringBefore("T")), gitHashShort)
-
-/** The immutable Docker tag `YYYYMMDD-<gitHashShort>` of an image dated [day] and built from the commit [gitHashShort]. */
-fun immutableDockerTag(day: LocalDate, gitHashShort: String): String {
-  require(gitHashShort.length >= 7) {
-    "Git short hash too short: '$gitHashShort' (expected at least 7 characters)"
-  }
-  return "${day.format(DateTimeFormatter.BASIC_ISO_DATE)}-$gitHashShort"
-}
-
-/**
  * Returns true if the current branch is the master/main branch
  */
 val Project.onMainBranch: Boolean
@@ -1253,10 +1227,8 @@ val Project.gitHash: String
     return rootProject.extra.get(BuildVariables.GitHash) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitHash} in extra")
   }
 
-val Project.gitHashShort: String
-  get() {
-    return rootProject.extra.get(BuildVariables.GitHashShort) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitHashShort} in extra")
-  }
+/** Length of a short commit hash. */
+const val CommitShortLength: Int = 12
 
 /** `git describe` of the current commit (set by `BuildVariablesPlugin`) */
 val Project.gitDescribe: String
@@ -1336,11 +1308,12 @@ const val ScheduleGatedJibExtraKey: String = "scheduleGatedJibVariable"
  * the extra property [ScheduleGatedJibExtraKey] lets `verifyDeploymentImages` reject `continuousDeploy()`.
  */
 fun Project.gateJibToSchedule(scheduleVariable: ScheduleVariable, reason: String) {
-  val gatingProject: Project = this
   extra[ScheduleGatedJibExtraKey] = scheduleVariable.variableName
+  // Decided while configuring: a configuration cache entry cannot hold the Project an onlyIf spec reads.
+  val runsInThisPipeline: Boolean = inCi.not() || inSchedule(scheduleVariable)
   listOf("jib", "jibBuildTar").forEach { taskName ->
     tasks.named(taskName) {
-      onlyIf(reason) { gatingProject.inCi.not() || gatingProject.inSchedule(scheduleVariable) }
+      onlyIf(reason) { runsInThisPipeline }
     }
   }
 }

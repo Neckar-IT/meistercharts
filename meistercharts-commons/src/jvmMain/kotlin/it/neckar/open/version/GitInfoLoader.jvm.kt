@@ -29,18 +29,10 @@ package it.neckar.open.version
 
 import java.util.Properties
 
-/**
- * JVM implementation: resolves a single git property from the injected deploy metadata.
- *
- * Chain: system property (local override, e.g. set by a run task) → environment variable
- * (baked into service images by Jib at image build) → the `META-INF/app-git-info.properties`
- * resource (packed exclusively into CLI leaf fat-jars by `configureServiceShadowJar`) →
- * [VersionInformation.UnknownValue].
- */
+/** The system property (a run task overrides it), else the environment variable of a compose file, else [VersionInformation.UnknownValue]. */
 internal actual fun resolveGitProperty(property: GitProperty): String {
   return System.getProperty(property.systemProperty)
     ?: System.getenv(property.envVar)
-    ?: findFatJarGitInfoValue(property.propertyKey)
     ?: VersionInformation.UnknownValue
 }
 
@@ -48,19 +40,11 @@ internal actual fun resolveImageDigest(): String? {
   return System.getenv(VersionInformation.ImageDigestEnvVar)?.takeUnless { it.isEmpty() || it.startsWith("\${") }
 }
 
-private fun findFatJarGitInfoValue(propertyKey: String): String? {
-  return fatJarGitInfo?.getProperty(propertyKey)?.ifEmpty { null }
-}
-
-/**
- * The git info resource packed into CLI leaf fat-jars at packaging time, or null when absent.
- *
- * The file is created only when a fat jar is assembled — it never exists in library jars or
- * module outputs, so the volatile values cannot churn any build input. Services in containers
- * resolve via the environment variables instead.
- */
-private val fatJarGitInfo: Properties? by lazy {
-  VersionInformation::class.java.getResourceAsStream("/META-INF/app-git-info.properties")?.use { stream ->
+internal actual fun resolveArtifactKey(): String? {
+  val properties = VersionInformation::class.java.getResourceAsStream("/${VersionConstants.ArtifactKeyResourcePath}")?.use { stream ->
     Properties().apply { load(stream) }
+  } ?: return null
+  return requireNotNull(properties.getProperty(VersionConstants.ArtifactKeyPropertyName)) {
+    "${VersionConstants.ArtifactKeyResourcePath} has no property ${VersionConstants.ArtifactKeyPropertyName}"
   }
 }

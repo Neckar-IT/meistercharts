@@ -102,3 +102,6 @@ private fun findMetaContent(metaName: String): String? {
   val content: String = injectedString(metaElement.getAttribute("content"), "<meta name=\"$metaName\">") ?: return null
   return sanitizeInjectedValue(content)
 }
+
+/** A browser bundle carries no artifact key. */
+internal actual fun resolveArtifactKey(): String? = null
