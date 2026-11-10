@@ -23,7 +23,7 @@ com-javagen-schema-gen = { id = "com.javagen.schema-gen", version = "0.9.1" }
 
 ca-cutterslade-analyze = { id = "ca.cutterslade.analyze", version = "2.0.0" }
 
-com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.20.1" }
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "3.20.2" }
 
 de-undercouch-download = { id = "de.undercouch.download", version.ref = "de-undercouch-download" }
 
@@ -37,7 +37,7 @@ org-asciidoctor = "5.1.0"
 
 asciidoctorj = "3.0.1"
 
-jackson = "2.22.4"
+jackson = "2.23.0"
 
 org-slf4j = "2.0.20"
 
@@ -126,7 +126,7 @@ kotlinx-html = "0.12.0"
 
 kotlinx-serialization = "1.12.0"
 
-mockk = "1.14.11"
+mockk = "1.14.12"
 
 modbus = "1.2.2"
 
@@ -234,7 +234,7 @@ hamcrest = "org.hamcrest:hamcrest:3.0"
 measured = "io.nacular.measured:measured:0.5.0"
 
 # jackson-annotations is published without a patch number since 2.20: 2.22, never 2.22.3
-jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.22" }
+jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.23" }
 
 guava = "com.google.guava:guava:33.7.2-jre"
 
@@ -312,7 +312,8 @@ flowext = "io.github.hoc081098:FlowExt:1.0.0"
 
 software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.11"
 
-kaml = "com.charleskorn.kaml:kaml:0.104.0"
+# The maintained fork of kaml, same packages com.charleskorn.kaml; kaml itself is archived.
+kotaml = "io.heapy.kotaml:kotaml:0.113.0"
 
 night-config-toml = "com.electronwill.night-config:toml:3.9.0"
 

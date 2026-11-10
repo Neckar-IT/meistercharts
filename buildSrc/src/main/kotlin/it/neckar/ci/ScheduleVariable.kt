@@ -51,6 +51,7 @@ enum class ScheduleVariable(
   ReportDependencyVersions("SCHEDULE_REPORT_DEPENDENCY_VERSIONS", "Schedule: measure every dependency held in two or more versions and export the result to Prometheus"),
   ResetSnapshotHistory("SCHEDULE_RESET_SNAPSHOT_HISTORY", "Schedule: weekly rolling-squash of the neckar-hub-gitlab-data snapshot history (collapse commits older than 7 days)"),
   RunChromeTests("SCHEDULE_RUN_CHROME_TESTS", "Schedule: Chrome browser integration tests"),
+  RunGitlabProductEndToEndTests("SCHEDULE_RUN_GITLAB_PRODUCT_END_TO_END_TESTS", "Schedule: end-to-end tests of Autopilot and Auto Merge against their GitLab test projects"),
   RunHousekeeping("SCHEDULE_RUN_HOUSEKEEPING", "Schedule: housekeeping jobs (license headers, lock files, generated sources, registry cleanup)"),
   RunLadleTests("SCHEDULE_RUN_LADLE_TESTS", "Schedule: Playwright suites of every package that serves Ladle stories, screenshot comparisons included"),
   RunMeisterchartsE2eTests("SCHEDULE_RUN_MEISTERCHARTS_E2E_TESTS", "Schedule: MeisterCharts end-to-end tests, publishes the report"),

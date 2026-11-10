@@ -108,13 +108,6 @@ object Plugins {
   const val BuildEventsReport: String = "it.neckar.report.build-events"
 
   /**
-   * Writes `build-reports/runs/<runId>/logs/<module>/<task>.log` — each task's console output, correctly
-   * attributed under parallel builds via build operations. Apply once to the root project.
-   * See [it.neckar.gradle.report.events.TaskOutputLogPlugin].
-   */
-  const val TaskOutputLogs: String = "it.neckar.report.task-output-logs"
-
-  /**
    * Writes `build-reports/runs/<runId>/kotlin-warnings.json` — every Kotlin compiler warning this build produced,
    * in the GitLab Code Quality schema, so the findings become inline annotations in the MR diff.
    * Apply once to the root project.
@@ -320,7 +313,7 @@ object Plugins {
    * The subdomains of the local infrastructure services on `localhost`:
    * `localhostInfrastructure { subdomains = listOf(LocalhostSubdomain("s3"), …) }`.
    */
-  const val LocalhostInfrastructure: String = "it.neckar.localhost-infrastructure"
+  const val LocalhostInfrastructure: String = "it.neckar.localdev-infrastructure"
 
   /**
    * A directory whose direct modules carry the prefix of its name: `verifyModuleGroup` at `check`.

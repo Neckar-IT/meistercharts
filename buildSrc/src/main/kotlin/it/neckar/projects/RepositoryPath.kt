@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 
 /**
  * A path inside the repository, relative to its root, with forward slashes:
- * `internal/closed/adl.neckar.it/build.gradle.kts`.
+ * `internal/open/detekt/build.gradle.kts`.
  *
  * What the CI planning and the login guard exports work on — the entries of `git diff --name-only`,
  * a module's directory, the compose file that carries a directive. It is deliberately not a [java.io.File]: nothing
@@ -28,11 +28,11 @@ value class RepositoryPath(val value: String) : Comparable<RepositoryPath> {
     require(value.split('/').none { it == "." || it == ".." }) { "Repository path is written out, without '.' or '..' segments: $value" }
   }
 
-  /** The last segment: `internal/closed/adl.neckar.it/build.gradle.kts` → `build.gradle.kts`. */
+  /** The last segment: `internal/open/detekt/build.gradle.kts` → `build.gradle.kts`. */
   val fileName: String
     get() = value.substringAfterLast('/')
 
-  /** The first segment: `internal/closed/adl.neckar.it` → `internal`; a path at the root is its own. */
+  /** The first segment: `internal/open/detekt` → `internal`; a path at the root is its own. */
   val firstSegment: String
     get() = value.substringBefore('/')
 
@@ -71,7 +71,7 @@ value class RepositoryPath(val value: String) : Comparable<RepositoryPath> {
     return value.endsWith(suffix)
   }
 
-  /** The path of [segment] below this one: `internal/closed` + `adl.neckar.it` → `internal/closed/adl.neckar.it`. */
+  /** The path of [segment] below this one: `internal/open` + `detekt` → `internal/open/detekt`. */
   fun resolve(segment: String): RepositoryPath {
     require(segment.isNotBlank()) { "Segment must not be blank" }
     return RepositoryPath("$value/$segment")

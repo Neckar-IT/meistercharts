@@ -35,7 +35,7 @@ fun KotlinMultiplatformExtension.declareTargets(project: Project, targets: Set<K
  * every main source set, intermediate ones (`webMain`, `nativeMain`) included.
  *
  * Asked of the Kotlin extension rather than composed from the target set or read off `src/`, so a
- * module holding its sources elsewhere is analysed too — `internal/open/commons/descriptors/` keeps
+ * module holding its sources elsewhere is analysed too — `internal/closed/closed-descriptors/` keeps
  * them under `build-logic/descriptors/src/` and pulls them in with `kotlin.srcDir`.
  *
  * Anything under the build directory stays out: it is generated code, and `internal/open/version-info/` adds its

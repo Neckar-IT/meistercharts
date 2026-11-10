@@ -70,6 +70,5 @@ one target.
 | `meistercharts-fx` | JavaFX | JavaFX platform implementation, used as a fast development/preview platform. |
 | `meistercharts-react` / `meistercharts-react-kotlin` | React | React integration: TypeScript components and their Kotlin bindings. |
 | `meistercharts-examples` | JS | Standalone usage examples for different bundlers (npm, yarn, vite). |
-| `meistercharts-e2e-tests` | JS | Playwright end-to-end and screenshot regression tests. |
 | `meistercharts-docs` | — | This developer documentation (AsciiDoc). |
 | `meistercharts-version-info` | independent | Resolves the current version number as a constant. |
