@@ -6,7 +6,7 @@ import it.neckar.projects.KotlinTarget.Jvm
 /**
  * Project registry of the standalone meistercharts.com-sync build: `Projects.meistercharts_core` is
  * `:meistercharts-core`. populateBuildSrc copies the registry classes from
- * internal/open/build-logic/projects next to this file.
+ * internal/buildplatform/projects next to this file.
  */
 object Projects : ProjectRoot() {
   val meistercharts_commons: ConfiguredProject = multiplatform("meistercharts-commons", ProjectRole.Library, Jvm, Js)

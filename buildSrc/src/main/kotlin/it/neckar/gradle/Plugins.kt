@@ -291,7 +291,7 @@ object Plugins {
    */
   const val Delivery: String = "it.neckar.delivery"
 
-  /** The root project of every build: the git and environment variables `gitHash`, `branch`, `ciInformation` and their siblings read. */
+  /** The root project of every build: the git and environment variables `branch`, `ciInformation` and their siblings read. */
   const val BuildVariables: String = "it.neckar.build-variables"
 
   /** The `settings.gradle.kts` of a project building on its own: the build logic on every build script classpath, the root build's conventions. */

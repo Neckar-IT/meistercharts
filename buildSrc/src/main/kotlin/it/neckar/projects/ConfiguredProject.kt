@@ -25,7 +25,7 @@ open class ConfiguredProject protected constructor(
 ) {
 
   /**
-   * The full Gradle path: [OpenProjects] lies below `:internal:open` in the monorepo and below `:` in
+   * The full Gradle path: `OpenProjects` lies below `:internal:open` in the monorepo and below `:` in
    * a build rooted at `internal/open`.
    */
   val path: GradleProjectPath = parent?.path?.resolve(relativePath) ?: relativePath

@@ -1219,46 +1219,8 @@ val Project.onMainBranch: Boolean
     return rootProject.branch == "master" || rootProject.branch == "main"
   }
 
-/**
- * Returns the sha1 of the current git commit
- */
-val Project.gitHash: String
-  get() {
-    return rootProject.extra.get(BuildVariables.GitHash) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitHash} in extra")
-  }
-
 /** Length of a short commit hash. */
 const val CommitShortLength: Int = 12
-
-/** `git describe` of the current commit (set by `BuildVariablesPlugin`) */
-val Project.gitDescribe: String
-  get() {
-    return rootProject.extra.get(BuildVariables.GitDescribe) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitDescribe} in extra")
-  }
-
-/**
- * The date and time of the current git commit
- */
-val Project.gitCommitDateTime: String
-  get() {
-    return rootProject.extra.get(BuildVariables.GitCommitDateTime) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitCommitDateTime} in extra")
-  }
-/**
- * The date of the last commit, day only — the date component of [gitCommitDateTime].
- *
- * Deliberately not a build date: a wall-clock timestamp would make identical inputs produce
- * different outputs and churn the build cache at midnight (#792). Stable per commit, so it is safe
- * to embed into manifests, expanded resources and generated .env files. Set by `BuildVariablesPlugin`.
- *
- * There is no build date anywhere in this repository, and no room for one; the publication day of a site is a declared input. `SOURCE_DATE_EPOCH=1`
- * clamps every timestamp in a built image to 1970-01-01, which is what makes the build reproducible.
- * The only other date in the tooling is `PIPELINE_DATE` in docker/_immutable-tag.sh, which dates the
- * pipeline run that pushed a base image, not the artifact.
- */
-val Project.gitCommitDate: String
-  get() {
-    return rootProject.extra.get(BuildVariables.GitCommitDate) as? String ?: throw IllegalStateException("Could not find ${BuildVariables.GitCommitDate} in extra")
-  }
 
 /**
  * Whether the build runs inside an IDE (set by `BuildVariablesPlugin`)
