@@ -315,6 +315,7 @@ software-amazon-awssdk-s3 = "software.amazon.awssdk:s3:2.57.12"
 # The maintained fork of kaml, same packages com.charleskorn.kaml; kaml itself is archived.
 kotaml = "io.heapy.kotaml:kotaml:0.113.0"
 
+
 night-config-toml = "com.electronwill.night-config:toml:3.9.0"
 
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest-property" }
