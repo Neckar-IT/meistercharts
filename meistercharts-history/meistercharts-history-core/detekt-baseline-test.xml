@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ExplicitItLambdaMultipleParameters:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest${ index, it -> assertThat(it.bucketRange).isEqualTo(HistoryBucketRange.HundredMillis) assertThat(it.duration).isEqualTo(100.0) assertThat(it.start).isEqualTo(descriptor.start + index * 100.0) assertThat(it.end).isEqualTo(descriptor.start + (index + 1) * 100.0) }</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("CHECK: ###############")</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("CHECK: DataSeriesIndexProviderBoxingTest ###############")</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("CHECK: DataSeriesIndexProviderBoxingTest.withTypeDeclaration ###############")</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("CHECK: DataSeriesIndexProviderBoxingTest.withTypeDeclarationWide ###############")</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("CHECK: DataSeriesIndexProviderBoxingTest.withTypeDeclarationWideWildcard ###############")</ID>
+    <ID>ForbiddenMethodCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println("No boxing/unboxing!!!")</ID>
+    <ID>ForbiddenMethodCall:DecimalDataSeriesIndexProviderBoxingTest.kt:DecimalDataSeriesIndexProviderBoxingTest$println("CHECK: ###############")</ID>
+    <ID>ForbiddenMethodCall:DecimalDataSeriesIndexProviderBoxingTest.kt:DecimalDataSeriesIndexProviderBoxingTest$println("No boxing/unboxing!!!")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingCalculationsTest.kt:DownSamplingCalculationsTest$println("#################")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingCalculationsTest.kt:DownSamplingCalculationsTest$println(it.chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DownSamplingReferenceEntriesTest.kt:DownSamplingReferenceEntriesTest$println(bucket.chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DownSamplingReferenceEntryCalculatorTest.kt:DownSamplingReferenceEntryCalculatorTest$println(historyChunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DownSamplingSimpleRefEntriesTest.kt:DownSamplingSimpleRefEntriesTest$println(downSampled.chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("${it.name}\t-\t${it.samplingPeriod.name}")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("/bucket0-------------------")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("/downSampled-------------------")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("\t Down sampling size: ${it.downSamplingFactor()}")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("bucket0-------------------")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println("downSampled-------------------")</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println(bucket0.chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DownSamplingTest.kt:DownSamplingTest$println(downSampled.chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:HistoryAutoScaleTest.kt:HistoryAutoScaleTest$println(downSampledBucket.chunk.toString())</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorPerformanceDemo.kt:HistoryBucketDescriptorPerformanceDemo$println("Took $it ms")</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println("--------")</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println("--------------- $samplingPeriod --> ${samplingPeriod.toHistoryBucketRange()}")</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println("end: ${descriptor.end.formatUtc()}")</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println("start: ${descriptor.start.formatUtc()}")</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println()</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println(TimeConstants.ReferenceTimestamp.formatUtc())</ID>
+    <ID>ForbiddenMethodCall:HistoryBucketRangeTest.kt:HistoryBucketRangeTest$println("Level: $level -- $duration ms")</ID>
+    <ID>ForbiddenMethodCall:HistoryChunkGeneratorTest.kt:HistoryChunkGeneratorTest$println(chunk.dump())</ID>
+    <ID>ForbiddenPrintCall:DataSeriesIndexProviderBoxingJvmTest.kt:DataSeriesIndexProviderBoxingJvmTest$println</ID>
+    <ID>ForbiddenPrintCall:DecimalDataSeriesIndexProviderBoxingTest.kt:DecimalDataSeriesIndexProviderBoxingTest$println</ID>
+    <ID>ForbiddenPrintCall:DownSamplingCalculationsTest.kt:DownSamplingCalculationsTest$println</ID>
+    <ID>ForbiddenPrintCall:DownSamplingReferenceEntriesTest.kt:DownSamplingReferenceEntriesTest$println</ID>
+    <ID>ForbiddenPrintCall:DownSamplingReferenceEntryCalculatorTest.kt:DownSamplingReferenceEntryCalculatorTest$println</ID>
+    <ID>ForbiddenPrintCall:DownSamplingSimpleRefEntriesTest.kt:DownSamplingSimpleRefEntriesTest$println</ID>
+    <ID>ForbiddenPrintCall:DownSamplingTest.kt:DownSamplingTest$println</ID>
+    <ID>ForbiddenPrintCall:HistoryAutoScaleTest.kt:HistoryAutoScaleTest$println</ID>
+    <ID>ForbiddenPrintCall:HistoryBucketDescriptorPerformanceDemo.kt:HistoryBucketDescriptorPerformanceDemo$println</ID>
+    <ID>ForbiddenPrintCall:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$println</ID>
+    <ID>ForbiddenPrintCall:HistoryBucketRangeTest.kt:HistoryBucketRangeTest$println</ID>
+    <ID>ForbiddenPrintCall:HistoryChunkGeneratorTest.kt:HistoryChunkGeneratorTest$println</ID>
+    <ID>NoNameShadowing:DownSamplingDirtyRangesCollectorTest.kt:DownSamplingDirtyRangesCollectorTest${ assertThat(it.firstStart).isEqualTo(now) assertThat(it.lastEnd).isEqualTo(now + 50.0) }</ID>
+    <ID>NoNameShadowing:DownSamplingDirtyRangesCollectorTest.kt:DownSamplingDirtyRangesCollectorTest${ assertThat(it.firstStart).isEqualTo(now) assertThat(it.lastEnd).isEqualTo(now) }</ID>
+    <ID>NoNameShadowing:DownSamplingServiceTest.kt:DownSamplingServiceTest${ assertThat(it.timeRanges.firstStart).isEqualTo(102.0) assertThat(it.timeRanges.lastEnd).isEqualTo(480.0) }</ID>
+    <ID>NoNameShadowing:DownSamplingServiceTest.kt:DownSamplingServiceTest${ assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:45:23.002Z") assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z") }</ID>
+    <ID>NoNameShadowing:DownSamplingServiceTest.kt:DownSamplingServiceTest${ assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo("2021-03-27T21:50:00.000Z") assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo("2021-03-27T21:55:23.002Z") }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:22.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-89.5969, 0.0001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:23.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-77.241431, 0.00001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:45:24.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(6.129487, 0.00001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:50:00.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN() }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.000Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(38.2727, 0.001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.100Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(47.3047, 0.001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:00.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(71.605, 0.001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:01.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(92.39970, 0.001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:54:05.400Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isCloseTo(-47.101242, 0.001) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:22.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN() }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:23.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN() }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:55:24.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN() }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(first.chunk.timeStamps[it].formatUtc()).isEqualTo("2021-03-27T21:59:59.500Z") assertThat(first.chunk.getDecimalValue(DecimalDataSeriesIndex(0), TimestampIndex(it))).isNaN() }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(it).hasSize(1) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(it.timeRanges.firstStart.formatUtc()).isEqualTo(firstDescriptorStart.formatUtc()) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupDownSamplingBugTest.kt:HistoryCleanupDownSamplingBugTest${ assertThat(it.timeRanges.lastEnd.formatUtc()).isEqualTo(lastDescriptorEnd.formatUtc()) }</ID>
+    <ID>NoNameShadowing:HistoryCleanupServiceTest.kt:HistoryCleanupServiceTest${ assertThat(it).hasSize(1) }</ID>
+    <ID>UseRequireNotNull:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest$require(parent != null)</ID>
+  </CurrentIssues>
+</SmellBaseline>

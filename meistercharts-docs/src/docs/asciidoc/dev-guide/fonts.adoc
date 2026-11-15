@@ -1,0 +1,33 @@
+include::attributes.adoc[]
+
+== Fonts
+
+Es gibt zwei grundsätzliche Font-Klassen:
+
+=== FontDescriptor
+
+Ein `FontDescriptor` beschreibt einen Font vollständig.
+Alle Eigenschaft (z.B. FontFamily und FontSize) sind gesetzt.
+
+Auf jedem `CanvasRenderingContext` ist zu jedem Zeitpunkt ein FontDescriptor gesetzt - dafür sorgt die Methode #applyDefaults()
+
+=== FontDescriptorFragment
+
+Ein `FontDescriptorFragment` besitzt die selben Eigenschaften wie in Fontdescriptor.
+Allerdings sind diese Nullable.
+Durch das Setzen eines
+`FontDescriptorFragment` s kann man einzelne Aspekte eines Fonts setzen.
+So kann z.b. nur die FontSize oder das FontWeight überschrieben werden.
+
+=== Reverse Lookup des gesetzten Fonts
+// Decision: ADL 0020
+
+Der Getter `CanvasRenderingContext.font` liest den nativen Font zurück: `FontConversionCacheJS.reverse` für den CSS-Font-String des HTML-Canvas, `FontConversionCacheFX.reverse` für den JavaFX-`Font`.
+Beim Setzen speichert `CanvasRenderingContextJS` den String, den der Browser nach der Zuweisung in `context.font` meldet.
+Fehlt ein Eintrag, loggt der Getter eine Warnung und liefert `FontDescriptor.Default`.
+
+=== Nachgeladene Fonts
+// Decision: ADL 0051
+
+`MeisterChartsPlatform` meldet über `document.fonts` jeden fertig geladenen Font an `FontLoadedEventBroker.notifyLoaded()`.
+`FontMetricsCacheJS` und `FontBoundsCacheJS` leeren sich darauf, und jeder `MeisterchartJS` markiert seinen Chart mit `DirtyReason.ResourcesLoaded` für einen Repaint.

@@ -1,0 +1,75 @@
+{
+  "name": "@meistercharts/meistercharts-react",
+  "version": "0.0.0",
+  "private": false,
+  "description": "React wrapper for Meistercharts",
+  "keywords": [
+    "meistercharts",
+    "react",
+    "wrapper"
+  ],
+  "homepage": "https://meistercharts.com",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Neckar IT GmbH",
+    "email": "meistercharts@neckar.IT"
+  },
+  "repository": "https://github.com/Neckar-IT/meistercharts",
+  "files": [
+    "./dist/**/*"
+  ],
+  "type": "module",
+  "main": "./dist/meistercharts-react.js",
+  "module": "./dist/meistercharts-react.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "pnpm run build:deps && pnpm run build:noDeps",
+    "build:noDeps": "pnpm run typecheck && pnpm run lint:check && pnpm run bundle && pnpm run test:unit",
+    "build:deps": "pnpm --recursive --filter \"${npm_package_name}^...\" run --if-present build:noDeps",
+    "bundle": "vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "pnpm run lint:check",
+    "lint:check": "oxlint --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "lint:fix": "oxlint --fix --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "lint:report": "oxlint -f gitlab --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "test": "pnpm run typecheck && pnpm run test:unit",
+    "test:unit": "vitest run",
+    "test:watch": "vitest watch",
+    "ladle": "ladle serve",
+    "ladle:build": "ladle build --outDir build/ladle",
+    "push": "pnpm run build:deps && pnpm run test && pnpm run lint && pnpm run build && pnpm publish --access public",
+    "push:dry": "pnpm run build:deps && pnpm run test && pnpm run lint && pnpm run build && pnpm publish --access public --no-git-checks --dry-run"
+  },
+  "dependencies": {
+    "@meistercharts/meistercharts": "catalog:"
+  },
+  "devDependencies": {
+    "@ladle/react": "catalog:",
+    "@microsoft/api-extractor": "catalog:",
+    "@neckar-hub/oxlint-config": "workspace:*",
+    "@neckar-hub/typescript-config": "workspace:*",
+    "@neckar-hub/vite-config": "workspace:*",
+    "@testing-library/dom": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "jsdom": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-dts": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-css-injected-by-js": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
+}

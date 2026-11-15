@@ -1,0 +1,20 @@
+include::attributes.adoc[]
+
+== Usage ChartingFX
+
+=== Gradle: Minimized JAR
+
+Gradle kann nicht benötigte Files aus dem JAR entfernen.
+Dabei werden allerdings Dependencies, welche mit
+`api` eingebunden sind, *nicht* entfernt.
+
+Daher sollte die Dependency auf ChartingFX auf jeden Fall als `implementation` eingebunden werden.
+
+
+TIP: Wenn z.B. in SDDs Common-Code ausgelagert und dann genutzt wird, sollte diese Dependency mit dem Keyword
+`api` eingefügt werden.
+Damit ist dann sicher gestellt, dass der komplette Inhalt des Common-Teils im JAR-File landet.
+
+
+
+

@@ -1,0 +1,13 @@
+// Yes this file is intentionally (almost) empty!
+// ---
+// Having a blank `tsconfig.json` file prevents TypeScript from crawling up your directory tree
+// and possibly picking up a parent `tsconfig.json` (which, unsurprisingly, is very hard to debug).
+//
+// `"include": []` makes this config compile NOTHING. Without it, an empty `{}` defaults to
+// `**/*`, so any tool that picks this config (e.g. an editor TS server resolving a stray file)
+// would pull EVERY package below this directory into one program — which merges the per-frontend
+// `i18n.d.ts` `declare global { interface NeckarI18nKeys ... }` augmentations and reports a bogus
+// "cannot simultaneously extend" conflict. Each frontend is meant to be its own program.
+{
+  "include": []
+}

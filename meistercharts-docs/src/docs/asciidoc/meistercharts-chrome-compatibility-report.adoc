@@ -1,0 +1,8813 @@
+= MeisterCharts - Google Chrome Compatibility Report
+Neckar IT GmbH <https://neckar.IT>
+:doctype: article
+:revnumber: 126
+:revdate: 2024-05-21
+:sectnums!:
+:appendix-caption!:
+:experimental:
+:icons: font
+:icon-set: fas
+:chapter-label:
+:title-page:
+:hyphens: de
+:back-cover-image: image:neckar-it-back-cover.pdf[]
+:title-page-revision-display: none
+:figure-caption!:
+
+== Compatibility Report with Google Chrome
+
+This document contains the compatibility reports for Google Chrome.
+
+=== Google Chrome Release Schedule
+
+[cols="1e,^2,^2",options="header"]
+.Chrome Release Schedule
+|===
+|
+|Beta icon:code-branch[]
+|Release icon:bullseye[]
+
+|Chrome 127
+|2024-06-12
+|2024-07-17
+
+|Chrome 126
+|2024-06-05
+|2024-05-15 icon:check[]
+
+|Chrome 125
+|2024-04-17 icon:check[]
+|2024-05-08 icon:check[]
+
+|Chrome 124
+|2024-03-20 icon:check[]
+|2024-04-10 icon:check[]
+
+|Chrome 123
+|2024-02-21 icon:check[]
+|2024-03-13 icon:check[]
+
+|Chrome 122
+|2024-01-24 icon:check[]
+|2024-02-14 icon:check[]
+
+|Chrome 121
+|2023-12-06 icon:check[]
+|2024-01-17 icon:check[]
+
+|Chrome 120
+|2023-11-01 icon:check[]
+|2023-11-29 icon:check[]
+
+|Chrome 119
+|2023-09-13 icon:check[]
+|2023-10-04 icon:check[]
+
+|Chrome 118
+|2023-09-13 icon:check[]
+|2023-10-04 icon:check[]
+
+|Chrome 117
+|2023-08-16 icon:check[]
+|2023-09-06 icon:check[]
+
+|Chrome 116
+|2023-07-19 icon:check[]
+|2023-08-09 icon:check[]
+
+|Chrome 115
+|2023-05-31 icon:check[]
+|2023-06-21 icon:check[]
+
+|Chrome 114
+|2023-05-03 icon:check[]
+|2023-05-24 icon:check[]
+
+|Chrome 113
+|2023-04-06 icon:check[]
+|2023-04-26 icon:check[]
+
+|Chrome 112
+|2023-03-09 icon:check[]
+|2023-03-29 icon:check[]
+
+|Chrome 111
+|2023-02-09 icon:check[]
+|2023-03-01 icon:check[]
+
+|Chrome 110
+|2023-01-12 icon:check[]
+|2023-02-07 icon:check[]
+
+|Chrome 109
+|2022-12-01 icon:check[]
+|2023-01-10 icon:check[]
+
+|Chrome 108
+|2022-10-27 icon:check[]
+|2022-11-29 icon:check[]
+
+|Chrome 107
+|2022-09-29 icon:check[]
+|2022-10-25 icon:check[]
+
+|Chrome 106
+|2022-09-01 icon:check[]
+|2022-09-27 icon:check[]
+
+|Chrome 105
+|2022-08-04 icon:check[]
+|2022-08-30 icon:check[]
+
+|Chrome 104
+|2022-06-23 icon:check[]
+|2022-07-02 icon:check[]
+
+|Chrome 103
+|2022-05-26 icon:check[]
+|2022-06-21 icon:check[]
+
+|Chrome 102
+|2022-04-28 icon:check[]
+|2022-05-24 icon:check[]
+
+|Chrome 101
+|2022-03-31 icon:check[]
+|2022-04-26 icon:check[]
+
+|Chrome 100
+|2022-03-03 icon:check[]
+|2022-03-29 icon:check[]
+
+|Chrome 99
+|2022-02-03 icon:check[]
+|2022-03-01 icon:check[]
+
+|Chrome 98
+|2022-01-06 icon:check[]
+|2022-02-01 icon:check[]
+
+|Chrome 97
+|2021-11-18 icon:check[]
+|2022-01-04 icon:check[]
+
+|Chrome 96
+|2021-10-21 icon:check[]
+|2021-11-16 icon:check[]
+
+|Chrome 95
+|2021-09-23 icon:check[]
+|2021-10-19 icon:check[]
+
+|Chrome 94
+|2021-08-26 icon:check[]
+|2021-09-21 icon:check[]
+
+|Chrome 93
+|2021-07-29 icon:check[]
+|2021-08-05 icon:check[]
+
+|Chrome 92
+|2021-06-03 icon:check[]
+|2021-07-20 icon:check[]
+
+|Chrome 91
+|2021-04-22 icon:check[]
+|2021-05-25 icon:check[]
+
+|Chrome 90
+|2021-03-11 icon:check[]
+|2021-04-13 icon:check[]
+
+|Chrome 89
+|2021-01-28 icon:check[]
+|2021-03-02 icon:check[]
+
+|Chrome 88
+|2020-12-03 icon:check[]
+|2021-01-19 icon:check[]
+
+|Chrome 87
+|2020-10-15 icon:check[]
+|2020-11-17 icon:check[]
+
+|Chrome 86
+|2020-09-10 icon:check[]
+|2020-10-06 icon:check[]
+
+|Chrome 85
+|2020-07-30 icon:check[]
+|2020-08-25 icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 126
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 123.0.6312.4 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 125
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 123.0.6312.4 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 124
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 123.0.6312.4 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 123
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 123.0.6312.4 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 122
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 122.0.6261.6 (Official Build) beta (64-bit)
+
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 121
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 121.0.6167.16 (Official Build) beta (64-bit)
+
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 120
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 120.0.6099.18 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 119
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 119.0.5993.11 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 118
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 118.0.5993.11 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 117
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 117.0.5938.11 (Official Build) beta (64-bit)
+
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 116
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 116.0.5845.42 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 115
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 115.0.5790.13 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+
+=== Compatibility Report Chrome 114
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 114.0.5735.16 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 113
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 113.0.5672.24 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 112
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 112.0.5615.29 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 111
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 111.0.5563.19 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 110
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 110.0.5481.30 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 109
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 109.0.5414.25 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 108
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 108.0.5359.22 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 107
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 107.0.5304.18 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 106
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 106.0.5249.30 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 105
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 105.0.5195.19 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 104
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 104.0.5112.20 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 103
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 103.0.5060.24 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 102
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 102.0.5005.27 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 101
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 101.0.4951.15 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 100
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 100.0.4896.20 (Official Build) beta (64-Bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 99
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 99.0.4844.17 (Official Build) beta (64-Bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 98
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 98.0.4758.48 (Official Build) beta (64-Bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 97
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 97.0.4692.36 (Official Build) beta (64-Bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Histogram
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 96
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 96.0.4664.27 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 95
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 95.0.4638.17 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 94
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+NOTE: There appears to be some random issues regarding font loading.
+In one case the fonts did not load properly.
+This issue could not be reproduced.
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 94.0.4606.20 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 93
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+NOTE: There appears to be some random issues regarding font loading.
+In one case the fonts did not load properly.
+This issue could not be reproduced.
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Version 93.0.4577.25 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 92
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 92.0.4515.40 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 91
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+NOTE: There appears to be some random flickering when the mouse hovers over elements of the page MeisterCharts is embedded in.
+This phenomenon occurs on a single machine with Ubuntu linux and is probably caused by the graphics driver.
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 91.0.4472.19 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 90
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+NOTE: There appears to be some random flickering when the mouse hovers over elements of the page MeisterCharts is embedded in.
+This phenomenon occurs on a single machine with Ubuntu linux and is probably caused by the graphics driver.
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 90.0.4430.19 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 89
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 89.0.4389.23 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 88
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version Version 88.0.4324.27 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 87
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 87.0.4280.20 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Bar Chart Grouped
+|icon:check[]
+
+|Gestalt
+|Bar Chart Stacked
+|icon:check[]
+
+|Gestalt
+|Bar Chart with Limits
+|icon:check[]
+
+|Gestalt
+|Binary
+|icon:check[]
+
+|Gestalt
+|Category Line Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Compass (classic / modern / puristic)
+|icon:check[]
+
+|Gestalt
+|Map (with / without paintables)
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Time Line Chart
+|icon:check[]
+
+|Gestalt
+|Toolbar
+|icon:check[]
+
+|Low Level
+|Anti Aliasing
+|icon:check[]
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|Line Styles
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|(Rounded) Rectangle
+|icon:check[]
+
+|Primitives
+|SVG
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Benchmark
+|Benchmark / Performance
+|icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 86
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 85.0.4183.49 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Bar with Limits
+|icon:check[]
+
+|Gestalt
+|Compass
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Line Chart
+|icon:check[]
+
+|Gestalt
+|Map
+|icon:check[]
+
+|Gestalt
+|Bar + Line Chart
+|icon:check[]
+
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|Anti Aliasing
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Primitives
+|Translate Performance
+|-25%(!) icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 85
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+Performance-Index: -25%
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for version 85.0.4183.49 (Official Build) beta (64-bit)
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Bar with Limits
+|icon:check[]
+
+|Gestalt
+|Compass
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Line Chart
+|icon:check[]
+
+|Gestalt
+|Map
+|icon:check[]
+
+|Gestalt
+|Bar + Line Chart
+|icon:check[]
+
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|Anti Aliasing
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Primitives
+|Translate Performance
+|-25%(!) icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 84
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+Performance-Index: -25%
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Chrome Beta 84
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Bar with Limits
+|icon:check[]
+
+|Gestalt
+|Compass
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Line Chart
+|icon:check[]
+
+|Gestalt
+|Map
+|icon:check[]
+
+|Gestalt
+|Bar + Line Chart
+|icon:check[]
+
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|Anti Aliasing
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Primitives
+|Translate Performance
+|-25%(!) icon:check[]
+
+|===
+
+=== Compatibility Report Chrome 83
+
+==== Summary
+
+MeisterCharts is compatible: icon:check[]
+
+Performance-Index: -25%
+
+==== Details
+
+[cols="<1e,<2e,^1",options="header"]
+.Compatibility results for Chrome 83.0.4103.34-1
+|===
+|Category
+|Feature
+|Compatibility
+
+|Gestalt
+|Bar Chart
+|icon:check[]
+
+|Gestalt
+|Circular Chart
+|icon:check[]
+
+|Gestalt
+|Bar with Limits
+|icon:check[]
+
+|Gestalt
+|Compass
+|icon:check[]
+
+|Gestalt
+|QR Code Position Diagram
+|icon:check[]
+
+|Gestalt
+|Scatter Plot
+|icon:check[]
+
+|Gestalt
+|Line Chart
+|icon:check[]
+
+|Gestalt
+|Map
+|icon:check[]
+
+|Gestalt
+|Bar + Line Chart
+|icon:check[]
+
+
+|Low Level
+|Canvas Tiles
+|icon:check[]
+
+|Low Level
+|Clipping
+|icon:check[]
+
+|Low Level
+|Compartments
+|icon:check[]
+
+|Low Level
+|Cross Wire
+|icon:check[]
+
+|Low Level
+|History Layer
+|icon:check[]
+
+|Low Level
+|Image Translate/Rotate
+|icon:check[]
+
+|Low Level
+|Interactions
+|icon:check[]
+
+|Low Level
+|Native Components Overlay
+|icon:check[]
+
+|Low Level
+|Tooltip
+|icon:check[]
+
+
+|Low Level
+|Fonts
+|icon:check[]
+
+|Low Level
+|Font Awesome
+|icon:check[]
+
+|Low Level
+|Multi Line Texts / Text Bounds
+|icon:check[]
+
+|Low Level
+|Text Box
+|icon:check[]
+
+|Low Level
+|Text Renderer
+|icon:check[]
+
+|Low Level
+|Paintables
+|icon:check[]
+
+|Low Level
+|SVG
+|icon:check[]
+
+|Low Level
+|URL Paintables
+|icon:check[]
+
+|Low Level
+|Font Cache
+|icon:check[]
+
+|Low Level
+|Device Pixel Ratio
+|icon:check[]
+
+|Low Level
+|Target Refresh Rate
+|icon:check[]
+
+|Primitives
+|Arrows
+|icon:check[]
+
+|Primitives
+|Arc Paths
+|icon:check[]
+
+|Primitives
+|Bezier Curves
+|icon:check[]
+
+|Primitives
+|Quadratic Curves
+|icon:check[]
+
+|Primitives
+|(Rounded) Polyline
+|icon:check[]
+
+|Primitives
+|Anti Aliasing
+|icon:check[]
+
+|Primitives
+|Color Gradients
+|icon:check[]
+
+|Primitives
+|Translate Performance
+|-25%(!) icon:check[]
+
+|===
+
+==== Performance Details
+
+The performance details compare the performance in MeisterCharts related operations.
+The more points the better.
+
+[plantuml,pdfwidth=100%,format=svg]
+.Vergleich MeisterCharts Performance-Index
+----
+@startuml
+!include plantuml-style.iuml
+
+scale 11 as 45 pixels
+
+concise "Google Chrome 86 beta" as GC86beta
+concise "Google Chrome 84 beta" as GC84beta
+concise "Google Chrome 83 beta" as GC83beta
+concise "Google Chrome 82 Release" as GC82release
+
+@GC86beta
+0 is "75%"
+75.0 is {hidden}
+
+@GC84beta
+0 is "75%"
+75.0 is {hidden}
+
+@GC83beta
+0 is "75%"
+75.0 is {hidden}
+
+@GC82release
+0 is "100%"
+100.0 is {hidden}
+
+
+@enduml
+----

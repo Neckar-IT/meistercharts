@@ -1,0 +1,15 @@
+{
+  "product": "meistercharts",
+  "version": "1.11.0",
+  "releasedOn": "2021-10-18",
+  "triggeredBy": {
+    "type": "Decision",
+    "by": "Human"
+  },
+  "targets": [
+    "npm",
+    "distribution-archive",
+    "github-mirror-main"
+  ],
+  "predecessor": "meistercharts-1.10.0"
+}

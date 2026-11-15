@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:PaintingExtension.kt:radiusTopLeft == 0.0 &amp;&amp; radiusTopRight == 0.0 &amp;&amp; radiusBottomRight == 0.0 &amp;&amp; radiusBottomLeft == 0.0</ID>
+    <ID>ComplexCondition:PaintingExtension.kt:width &lt; 0.0 || height &lt; 0.0 || //we have negative width/height - therefore it is not possible to paint it width &lt; radiusTopLeft + radiusTopRight || //too small compared to the radii at the top width &lt; radiusBottomLeft + radiusBottomRight || //too small compared to the radii at the bottom height &lt; radiusTopLeft + radiusBottomLeft || //too small compared to the radii at the left side height &lt; radiusTopRight + radiusBottomRight</ID>
+    <ID>ComplexCondition:TriangleBoundsMultiCache.kt:TriangleBoundsMultiCache$locationX.betweenInclusive(x, x + width) &amp;&amp; locationY.betweenInclusive(y, y + height) &amp;&amp; rightTriangleType?.doesOverlap(locationX, locationY, x, y, width, height) == true &amp;&amp; matcher(index)</ID>
+    <ID>EmptyFunctionBlock:EventConsumptionLayer.kt:EventConsumptionLayer${ }</ID>
+    <ID>EmptyFunctionBlock:MockCanvasRenderingContext.kt:MockCanvasRenderingContext${ }</ID>
+    <ID>EmptyFunctionBlock:SegmentedLinePainter.kt:SegmentedLinePainter${ }</ID>
+    <ID>EmptyFunctionBlock:ToggleDebuggingModeLayer.kt:ToggleDebuggingModeLayer${ }</ID>
+    <ID>EmptyFunctionBlock:TransparentPaintable.kt:TransparentPaintable${ }</ID>
+  </CurrentIssues>
+</SmellBaseline>

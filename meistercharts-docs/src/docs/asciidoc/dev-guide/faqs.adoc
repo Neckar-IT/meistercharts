@@ -1,0 +1,41 @@
+include::attributes.adoc[]
+
+== FAQs
+
+=== Value Axis
+
+==== Wie kann die Value-Axis *auf* die Content-Area-Grenze gelegt werden?
+
+[source,kotlin,indent=0]
+.Value Axis on edge of Content Area
+----
+include::{demoSourceDir}/ContentAreaBindingDoc.kt[tags=valueAxisOnContentAreaBounds]
+----
+<1> Content Area ist immer gleich groß wie das Window.
+<2> FittingWithMargin als "Rand" der Content-Area verwenden -- beim Reset/Resize
+<3> Der Content-Layer wird mit einem Clip versehen.
+Dadurch wird verhindert, dass der Content über den Rand hinaus zeichnet.
+Hinter der Value-Axis ist somit kein Content sichtbar.
+<4> Wichtig: Nur bei Outwards landet die Achse auf der durch den Extend vorgegebenen Position.
+<5> Hier wird die Margin mit bei der Positionierung einberechnet.
+Extend + Margin ergeben die exakte Position der Achse.
+
+=== Paintables: Wie kann ein anderes Theme (z.B. FontAwesome anstatt MaterialIcons) aktiviert werden.
+
+Generell müssen die korrekten Stellen identifiziert werden, an denen Icons (Paintables) verwendet werden.
+Dies ist typischerweise beim `ToolbarLayer` der Fall.
+
+An der entsprechenden Stelle dann die korrekten Icons instantiieren.
+
+Es gibt keinen klassischen Support for Themes bei Icons (mehr).
+
+=== Zeichenprimitive
+
+==== Warum sehe ich eine Linie nach `stroke()` über/hinter/vor einem Rectangle (nicht)?
+
+`stroke()` zeichnet die halbe Linienbreite inner- und die andere Hälfte außerhalb der angegeben Koordinaten/Form.
+Deshalb gibt es manchmal komische Effekte.
+
+Lösungsvorschläge:
++ zuerst `fill()`, dann `stroke()` aufrufen.
+* Falls das nicht möglich ist, die entsprechenden Linien einpassen (d.h. jeweils die halbe Linienstärke links und rechts bzw. oben und unten abziehen).

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ForbiddenMethodCall:DiscreteCalculationsSampleTest.kt:DiscreteCalculationsSampleTest$println(chunk.dump())</ID>
+    <ID>ForbiddenMethodCall:DiscreteCalculationsTest.kt:DiscreteCalculationsTest$println(chunk.dump())</ID>
+    <ID>ForbiddenPrintCall:DiscreteCalculationsSampleTest.kt:DiscreteCalculationsSampleTest$println</ID>
+    <ID>ForbiddenPrintCall:DiscreteCalculationsTest.kt:DiscreteCalculationsTest$println</ID>
+  </CurrentIssues>
+</SmellBaseline>

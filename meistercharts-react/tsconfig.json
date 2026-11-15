@@ -1,0 +1,5 @@
+{
+  "extends": ["@neckar-hub/typescript-config/tsconfig.vite.json"],
+  "compilerOptions": {},
+  "include": ["./.ladle/*", "./src", "./vite.config.ts"]
+}

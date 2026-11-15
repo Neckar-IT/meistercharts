@@ -1,0 +1,19 @@
+include::attributes.adoc[]
+
+== Architecture Hints - für Layer und Gestalt
+
+Hier sind einige Vorschläge zu finden, die bei der Entwicklung neuer Gestalts helfen.
+
+=== Content Area
+
+Zunächst sollte festgelegt werden, welche Teile des Layers in der Content Area liegen.
+
+Die sinnvolle Verwendung der Content Area ist auf jeden Fall notwendig, da viele Konzepte (z.B. das Limitieren des Zoomings/Pannings) auf der Content Area aufbauen.
+
+==== Inhalt vs. "Verzierung"
+
+Es bietet sich an wirklich nur den eigentlich Inhalt selbst ohne "Verzierungen" drum herum in die Content Area zu platzieren.
+
+Insbesondere Dinge, die nicht mit gezoomt werden, sollten nicht Teil der Content Area sein.
+Statt dessen ist die Verwendung z.B. der `FittingWithMargin` sinnvoll, um Platz für die Dekorationen zu schaffen.
+

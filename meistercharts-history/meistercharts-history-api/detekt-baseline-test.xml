@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("-------------------")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("--------------------------------")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("Adding some data")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("Now: $now --> ${dateTimeFormatWithMillis.format(now, I18nConfiguration.GermanyUTC)}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("Query $now: ${result.size}\n\t$result")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("Reading the history")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("Starting up history storage demo")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tChildren: (${children.size})")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tDistance: ${descriptor.bucketRange.distance} ms")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tEntries count: ${descriptor.bucketRange.entriesCount}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tStorage dir: ${storageDir.absolutePath}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\t\t---------------")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\t\tDistance: ${it.bucketRange.distance}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\t\tEntries Count: ${it.bucketRange.entriesCount}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\t\tStart at: ${timeFormatWithMillis.format(it.start, I18nConfiguration.GermanyUTC)}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tends at: ${dateTimeFormatWithMillis.format(descriptor.end, I18nConfiguration.GermanyUTC)}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("\tstarts at: ${dateTimeFormatWithMillis.format(descriptor.start, I18nConfiguration.GermanyUTC)}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("descriptor: $descriptor")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("file: ${file.absolutePath}")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageDemo.kt:HistoryStorageDemo$println("loaded: $loaded")</ID>
+    <ID>ForbiddenMethodCall:HistoryStorageSerializerTest.kt:HistoryStorageSerializerTest$println("$serializedString")</ID>
+    <ID>ForbiddenMethodCall:HumanReadableStorageTreeDemo.kt:println("${" ".repeat(depths)} ${file.name} - ${format.format(millis, I18nConfiguration.GermanyUTC)}$size")</ID>
+    <ID>ForbiddenMethodCall:HumanReadableStorageTreeDemo.kt:println("Show the storage dir")</ID>
+    <ID>ForbiddenMethodCall:HumanReadableStorageTreeDemo.kt:println("\tStorage dir: ${storageDir.absolutePath}")</ID>
+    <ID>ForbiddenMethodCall:HumanReadableStorageTreeDemo.kt:println("range: $range")</ID>
+    <ID>ForbiddenMethodCall:MockSinusHistoryStorageDemo.kt:println("Time: ${dateTimeFormat.format(time, I18nConfiguration.Germany)} - $v0 $v1 $v2")</ID>
+    <ID>ForbiddenPrintCall:HistoryStorageDemo.kt:HistoryStorageDemo$println</ID>
+    <ID>ForbiddenPrintCall:HistoryStorageSerializerTest.kt:HistoryStorageSerializerTest$println</ID>
+    <ID>ForbiddenPrintCall:HumanReadableStorageTreeDemo.kt:println</ID>
+    <ID>ForbiddenPrintCall:MockSinusHistoryStorageDemo.kt:println</ID>
+    <ID>UseRequireNotNull:HistorySearchKtTest.kt:HistorySearchKtTest$require(it != null)</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,31 @@
+= TouchScreen
+
+== Schnittstellen
+
+* über HDMI wird das Signal übertragen
+* über USB werden die Touch Events übertragen
+
+=== Bild (HDMI)
+
+`xrandr` liefert z.B.
+
+`DP-3 connected 1920x1080+10240+0 (normal left inverted right x axis y axis) 344mm x 193mm`
+
+=== Touch (über USB)
+
+Touch Events über: `G2Touch Multi-Touch by G2TSP`
+
+`xinput list`
+
+liefert z.B.
+
+`G2Touch Multi-Touch by G2TSP              id=24  [slave  pointer  (2)]`
+
+== Tipps
+
+Der Touch-Treiber kann nicht wissen, auf welchen Screen-Bereich sich die Touch-Events beziehen.
+Daher muss das konfiguriert werden.
+
+Entsprechend der Eingaben oben:
+
+`xinput --map-to-output "G2Touch Multi-Touch by G2TSP" DP-3`

@@ -1,0 +1,15 @@
+{
+  "product": "meistercharts",
+  "version": "1.33.0",
+  "releasedOn": "2023-05-25",
+  "triggeredBy": {
+    "type": "Decision",
+    "by": "Human"
+  },
+  "targets": [
+    "npm",
+    "distribution-archive",
+    "github-mirror-main"
+  ],
+  "predecessor": "meistercharts-1.32.0"
+}

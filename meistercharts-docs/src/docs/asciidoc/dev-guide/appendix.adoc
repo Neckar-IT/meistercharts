@@ -1,0 +1,45 @@
+include::attributes.adoc[]
+
+[appendix]
+== Sichtbarkeit und Größen von Block-Elementen
+
+Gegeben ein DIV mit `style="width:200px;height:200px"`
+
+[cols="1e,^2,^2",options="header"]
+|===
+|
+|Wird beim Layout berücksichtigt
+|Größe (px)
+
+|style="visibility:hidden"
+|ja
+|200 x 200
+
+|style="display:none"
+|nein
+|0 x 0
+
+|hidden="hidden"
+|nein
+|0 x 0
+
+|===
+
+Gegeben ein DIV mit `style="width:200px;height:200px"` und ein Kind-DIV mit `style="width:200px;height:200px"`
+
+[cols="1e,^2",options="header"]
+|===
+|Parent-DIV
+|Child-DIV Größe (px)
+
+|style="visibility:hidden"
+|200 x 200
+
+|style="display:none"
+|0 x 0
+
+|hidden="hidden"
+|0 x 0
+
+|===
+

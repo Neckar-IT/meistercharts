@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:AnchorApiTest.kt:AnchorApiTest${ }</ID>
+    <ID>ForbiddenMethodCall:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest$println("$axisEndConfiguration - $intermediateValuesMode")</ID>
+    <ID>ForbiddenMethodCall:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest$println("------------------------------------------------------")</ID>
+    <ID>ForbiddenMethodCall:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest$println("max $maxTickCount ticks")</ID>
+    <ID>ForbiddenMethodCall:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest$println(it.joinToString(" ") { it.format(2) })</ID>
+    <ID>ForbiddenMethodCall:TileIndexTest.kt:TileIndexTest$println("$mainX.$subX / $mainY.$subY")</ID>
+    <ID>ForbiddenMethodCall:VirtualNowProviderTest.kt:VirtualNowProviderTest$println("deltaToRealTime = $deltaToRealTime")</ID>
+    <ID>ForbiddenMethodCall:VirtualNowProviderTest.kt:VirtualNowProviderTest$println("it = ${virtualNow.formatUtc()}")</ID>
+    <ID>ForbiddenMethodCall:VirtualNowProviderTest.kt:VirtualNowProviderTest$println("now = ${now.formatUtc()}")</ID>
+    <ID>ForbiddenPrintCall:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest$println</ID>
+    <ID>ForbiddenPrintCall:TileIndexTest.kt:TileIndexTest$println</ID>
+    <ID>ForbiddenPrintCall:VirtualNowProviderTest.kt:VirtualNowProviderTest$println</ID>
+    <ID>NoNameShadowing:LinearAxisCalculationExpectationsTest.kt:LinearAxisCalculationExpectationsTest${ it.format(2) }</ID>
+  </CurrentIssues>
+</SmellBaseline>

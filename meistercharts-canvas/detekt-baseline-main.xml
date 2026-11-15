@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:PaintingExtension.kt:radiusTopLeft == 0.0 &amp;&amp; radiusTopRight == 0.0 &amp;&amp; radiusBottomRight == 0.0 &amp;&amp; radiusBottomLeft == 0.0</ID>
+    <ID>ComplexCondition:PaintingExtension.kt:width &lt; 0.0 || height &lt; 0.0 || //we have negative width/height - therefore it is not possible to paint it width &lt; radiusTopLeft + radiusTopRight || //too small compared to the radii at the top width &lt; radiusBottomLeft + radiusBottomRight || //too small compared to the radii at the bottom height &lt; radiusTopLeft + radiusBottomLeft || //too small compared to the radii at the left side height &lt; radiusTopRight + radiusBottomRight</ID>
+    <ID>ComplexCondition:TriangleBoundsMultiCache.kt:TriangleBoundsMultiCache$locationX.betweenInclusive(x, x + width) &amp;&amp; locationY.betweenInclusive(y, y + height) &amp;&amp; rightTriangleType?.doesOverlap(locationX, locationY, x, y, width, height) == true &amp;&amp; matcher(index)</ID>
+    <ID>EmptyFunctionBlock:EventConsumptionLayer.kt:EventConsumptionLayer${ }</ID>
+    <ID>EmptyFunctionBlock:MockCanvasRenderingContext.kt:MockCanvasRenderingContext${ }</ID>
+    <ID>EmptyFunctionBlock:SegmentedLinePainter.kt:SegmentedLinePainter${ }</ID>
+    <ID>EmptyFunctionBlock:ToggleDebuggingModeLayer.kt:ToggleDebuggingModeLayer${ }</ID>
+    <ID>EmptyFunctionBlock:TransparentPaintable.kt:TransparentPaintable${ }</ID>
+    <ID>ForbiddenMethodCall:BezierCalculations.kt:BezierCalculations$println("Direct: $direct Length: $length Diff: $diff")</ID>
+    <ID>NoNameShadowing:CanvasTileProvider.kt:CanvasTile$gc</ID>
+    <ID>NoNameShadowing:ChartSupport.kt:ChartSupport${ lastPaintingLoopIndex = it }</ID>
+    <ID>NoNameShadowing:ChartingStateDebugPainter.kt:ChartingStateDebugPainter$gc</ID>
+    <ID>NoNameShadowing:DevicePixelRatioSupport.kt:DevicePixelRatioSupport${ logger.debug { "devicePixelRatio set to $it" } }</ID>
+    <ID>NoNameShadowing:PathPaintable.kt:PathPaintable${ gc.lineWidth = it }</ID>
+    <ID>ObjectLiteralToLambda:CrossWireLayer.kt:CrossWireLayer$object : LabelsProvider&lt;LabelIndex> { override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String { return configuration.valueLabelsProvider.labelAt(index, param1, param2) } }</ID>
+    <ID>ObjectLiteralToLambda:PixelValuesGestalt.kt:PixelValuesGestalt$object : MultiProvider&lt;LinesChartModelIndex, LineStyle> { override fun valueAt(index: Int): LineStyle { if (!style.showLines) { return LineStyle.Continuous // don't care } val lineWidth = when (model.mode) { PixelValueVisualizationMode.Standard -> if (index == 1) { //The average is painted with a width of 2 px 2.0 } else { 1.0 } PixelValueVisualizationMode.HeldAverages -> if (index == 0) { //The youngest line is a little bit thicker 1.5 } else { 1.0 } } return LineStyle(lineWidth = lineWidth, color = style.getLineColor(model.mode, index)) } }</ID>
+    <ID>ObjectLiteralToLambda:TimeLineChartGestalt.kt:object : MultiProvider2&lt;HudElementIndex, List&lt;String>, DecimalDataSeriesIndex, LayerPaintingContext> { override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List&lt;String> { return when (param1.value) { 0 -> listOf("${if (index == 0) "Min" else "Max"} ${configuration.thresholdValueProvider.valueAt(index, param1).format(0)}") 1 -> listOf("Target ${configuration.thresholdValueProvider.valueAt(index, param1).format(0)}") else -> emptyList() } } }</ID>
+    <ID>SpreadOperator:LineStyle.kt:(*this.dashes)</ID>
+    <ID>SpreadOperator:ScatterPlotGestalt.kt:ScatterPlotGestalt.Companion$(*xValues.data)</ID>
+    <ID>SpreadOperator:ScatterPlotGestalt.kt:ScatterPlotGestalt.Companion$(*yValues.data)</ID>
+    <ID>UnnecessaryFilter:MouseCursorSupport.kt:MouseCursorSupport$filter { it != MouseCursor.Default }</ID>
+    <ID>UnusedPrivateProperty:CategoryLineChartGestalt.kt:CategoryLineChartGestalt.Companion$private val defaultValueRange: ValueRange = ValueRange.linear(0.0, 110.0)</ID>
+    <ID>UnusedPrivateProperty:DomainXyLinePainter.kt:DomainXyLinePainter$gc: CanvasRenderingContext</ID>
+  </CurrentIssues>
+</SmellBaseline>

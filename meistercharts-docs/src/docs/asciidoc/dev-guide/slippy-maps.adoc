@@ -1,0 +1,61 @@
+include::attributes.adoc[]
+
+== Slippy Maps
+
+MeisterCharts nutzt die Slippy Maps (https://wiki.openstreetmap.org/wiki/Slippy_Map) von openstreetmap zur Darstellung von Karten in Layern.
+
+Der folgende Text ist eine Adaption von https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames.
+
+Die Idee von Slippy Maps ist eine Karte in gleich große Kacheln (bei openstreetmap 256x256 Pixel) aufzuteilen.
+Außerdem gibt es verschiedene Zoomstufen (bei openstreetmap von 0 bis 19).
+
+Jede Kachel ist durch eine X/Y-Koordinate adressierbar.
+
+* X geht von 0 (linker Rand ist 180° W) bis 2^Zoom^ - 1 (rechter Rand ist 180 °E)
+* Y geht von 0 (oberer Rand ist 85.0511° N) bis 2^Zoom^ - 1 (unterer Rand ist 85.0511 °S) in einer Mercator Projektion
+
+Alle Kacheln ergeben ein Quadrat (deshalb sind die Grenzen auf der Y-Achse so "krumm" gewählt).
+
+D.h. man kann aus jeder Kombination von Längengrad und Breitengrad plus Zoom die X/Y-Koordinate der zugehörigen Kachel berechnen.
+
+Aus X-, Y- und Zoom-Wert ergibt sich letzten Ende die URL unter der das Kachelbild von einem Slippy Maps Server abgerufen werden kann.
+
+=== SlippyMapLayer
+
+Der Layer `SlippyMapLayer` malt die Kacheln von openstreetmap.
+Intern implementiert er das `TileProvider` Interface.
+
+==== TileIndex
+Dabei wird der `TileIndex` aus dem `TileIdentifier` 1:1 übernommen.
+Man muss nur berücksichtigen, dass der Index in den entsprechen Grenzen liegt (X und Y jeweils in [0..2^Zoom^-1]).
+Ist eine Koordinate kleiner als 0, so beginnt man wieder bei 2^Zoom^-1, ist sie größer als 2^Zoom^-1, so beginnt man wieder bei 0.
+D.h. der rechte Rand einer Karte grenzt stets an den linken Rand der nächsten Karte und die Karten werden unendlich oft wiederholt.
+
+==== Zoom
+
+Der Zoom aus dem `TileIdentifier` bedarf einer Umrechnung, denn Slippy Maps unterscheidet nicht zwischen einem X- und Y-Zoomfaktor.
+Desweiteren bedeutet bei MeisterCharts ein Zoomfaktor von 1.0 kein Zoom.
+Bei Slippy Maps gibt es Zoomstufen von 0 bis 18 (bei openstreetmap von 0 bis 19).
+
+Für die Umrechnung wird dem Zoomfaktor 1.0 die Slippy Map Zoomstufe 9 zugeordnet. +
+Für das Hinauszoomen bedeutet das, dass Zoomfaktor 0.5 die Zoomstufe 8 zugeordnet wird, 0.25 wird zur Zoomstufe 7 usw. +
+Für das Hineinzoomen bedeutet das, dass Zoomfaktor 2.0 die Zoomstufe 10 zugeordnet wird, 4.0 wird zur Zoomstufe 11 usw. +
+Die Rechenvorschrift lautet also: +
+
+Zoomstufe~SlippyMap~ = 9 + log~2~(Zoom~y~)
+
+Damit log~2~(Zoom~y~) ein ganzzahliger Wert ist, muss `zoomChangeFactor` auf 2.0 gesetzt werden (standardmäßig ist es die Wurzel aus 2.0).
+Des weiteren empfiehlt sich die Verwendung von `ZoomAndTranslationModifiersBuilder.withSlippyMapZoom()`, damit der Zoom in X- und Y-Richtung stets derselbe ist und der Zoomfaktor nicht die openstreetmap Zoomstufen unter- bzw. überschreitet.
+
+==== ContentArea
+
+Die `contentAreaSizingStrategy` von MeisterCharts muss auf `FixedContentAreaSize(SlippyMapContentAreaSize)` gesetzt sein.
+So ist die Content-Area unabhängig von der Window-Größe, nämlich die Anzahl der Kacheln beim Standard-Zoom (2^SlippyMapDefaultZoom^ x 2^SlippyMapDefaultZoom^) mal 256 Pixel.
+
+==== Rechtliches
+openstreetmap ist mit der ODbL lizenziert (https://www.openstreetmap.org/copyright/en).
+Verwendet man es, so sollte man dies irgendwo kenntlich machen, entweder auf dem Canvas selbst (z.B. mit einem `MessageLayer`) oder
+auf der Website.
+
+Desweiteren sind die Kachelserver von openstreetmap nicht für den produktiven Einsatz gedacht (https://operations.osmfoundation.org/policies/tiles/).
+Für eine Demo sollte ihre Verwendung in Ordnung sein.

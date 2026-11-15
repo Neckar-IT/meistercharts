@@ -1,0 +1,276 @@
+= Bundle Size of MeisterCharts
+Neckar IT GmbH <https://neckar.IT>
+:doctype: article
+:revnumber: 1.0
+:revdate: 2020-02
+:revnumber: 1.0
+:sectnums!:
+:appendix-caption!:
+:experimental:
+:icons: font
+:icon-set: fas
+:chapter-label:
+:title-page:
+:hyphens: de
+:back-cover-image: image:neckar-it-back-cover.pdf[]
+:title-page-revision-display: none
+:figure-caption!:
+
+== Grundsätzliche Philosophie: 1 for all
+
+Es gibt zwei grundsätzliche Ansätze wie Komponenten integrieren werden können:
+
+* Viele kleine, schlanke Komponenten mit eigenen Abhängigkeiten
+* Eine gemeinsame (größere) Abhängigkeit für alle Komponenten
+
+Beide Ansätze haben Vor- und Nachteile.
+Wir haben uns nach reiflicher Analyse für den zweiten Ansatz entschieden.
+
+[plantuml,format=svg]
+.Gemeinsame Abhängigkeit für alle Komponenten
+----
+@startuml
+!include plantuml-style.iuml
+package "Components" {
+  [Bar Chart]
+  [Donut Chart]
+  [Process Values]
+  [Map]
+}
+
+package "Canvas" {
+  [Zoom Support]
+  [Painting Context]
+  [Events]
+}
+
+package "Algorithms" {
+  [Layout]
+  [Axis]
+  [Tiling]
+}
+
+node "Library" {
+  [Collections]
+  [Data Structures]
+  [Math]
+  [Observables]
+  [Time]
+}
+
+
+
+'Components to Canvas
+
+  [Bar Chart] --> [Painting Context]  : use
+  [Donut Chart] --> [Painting Context]  : use
+  [Process Values] --> [Painting Context] : use
+  [Process Values] --> [Events] : use
+  [Process Values] --> [Zoom Support] : use
+  [Map] --> [Painting Context] : use
+  [Map] --> [Events] : use
+  [Map] --> [Zoom Support] : use
+  [Map] --> [Tiling] : use
+
+'Canvas to Algo
+  [Zoom Support] --> [Layout]: use
+  [Painting Context] --> Layout
+  [Events] --> [Observables]
+
+
+'Algo to Library
+  [Layout] --> [Math]: use
+  [Layout] --> [Collections]: use
+
+  [Axis] --> [Math]: use
+  [Axis] --> [Collections]: use
+  [Axis] --> [Time]: use
+
+  [Tiling] --> [Time]: use
+  [Tiling] --> [Math]: use
+  [Tiling] --> [Observables]: use
+  [Tiling] --> [Data Structures]: use
+
+[Observables] -> [Data Structures]: use
+
+
+@enduml
+----
+
+<<<
+
+=== Eine gemeinsame, größere Abhängigkeit für alle Komponenten
+
+==== Nachteile
+
+Bei der Integration *einer* einfachen Komponente ist das Gesamt-Bundle größer als bei der Integration einer einzelnen Komponente mit handoptimierten Abhängigkeiten.
+
+Daher sieht diese Lösung bei sehr einfachen Beispielen ("Hello World") schlechter aus.
+
+==== Vorteile
+
+Sobald mehrere Komponenten genutzt werden, spielt die Architektur mit vereinheitlichten Abhängigkeiten ihre Stärken voll aus:
+
+===== Geringe Gesamtgröße
+
+Bei der Integration weiterer Komponenten bleibt die Größe aller Abhängigkeiten konstant.
+D.h. je mehr Komponenten genutzt werden, desto vorteilhafter ist die Nutzung einer gemeinsamen Basis.
+
+===== Eine Version für alle
+
+Da alle Komponenten auf der selben Basis erstellt werden und dieselbe Abhängigkeit haben, passen die Versionen immer zueinander.
+
+Alle Komponenten sind in einem Repository gepflegt und werden immer und automatisch mit refactored.
+Diese sind daher immer auf dem aktuellsten Stand.
+
+===== Keine doppelten Abhängigkeiten (unterschiedlicher Version)
+
+Es ist ausgeschlossen, dass (versehentlich) doppelte Abhängigkeiten in unterschiedlichen Versionen eingefügt werden.
+
+===== Getestete Abhängigkeiten
+
+Die eingebundenen Abhängigkeiten werden nach sorgfältiger Überprüfung eingebunden.
+Es landen keine "schnellen" Libs mit nur geringem Mehrwert im Projekt.
+
+===== Alles mit dabei
+
+Es gibt ein definiertes Bundle in welchem alle relevanten/notwendigen Funktionen enthalten sind.
+Daher entsteht kein Wildwuchs mit zusätzlichen Abhängigkeiten, die ähnliche Funktionalität auf unterschiedlichem Weg bereit stellen.
+
+===== Mehr Wiederverwendbarkeit
+
+Für eine Komponente entwickelter Code kann sehr einfach in anderen Komponenten wiederverwendet werden.
+Die konkreten Komponenten bestehen selbst nur aus einer "Konfiguration" bestehender und wiederverwendbarer Aspekte.
+
+===== Konsistenz ist gewährleistet
+
+Eine Code-Base mit gemeinsamen Abhängigkeiten und Regeln hilft bei der Einhaltung von gemeinsamen Entscheidungen und Code-Styles.
+Probleme werden einmal gelöst und können dann von allen Komponenten genutzt werden.
+
+===== Erhöhte Qualität
+
+Klare Strukturen, klare Release-Vorgaben, klare Versionen und einheitliche Abhängigkeiten sorgen für eine hohe Qualität.
+Bereits geschriebener Code kann leicht wiederverwendet werden.
+Das Rad wird nicht mehrfach neu erfunden.
+
+=== Relevante Größen
+
+An zwei Stellen ist die Bundle Size relevant.
+In beiden Fällen ist die gezippte Größe entscheidend.
+
+==== Übertragung
+
+Bei der Übertragung der Dateien über die Leitung spielt die Größe einer Rolle.
+Je geringer die Bandbreite desto relevanter die Größe.
+
+Entscheidend für die Latenz ist das komprimierte File.
+
+==== Parsing / Kompilieren
+
+Der Browser parsed bzw. kompiliert das JavaScript um es ausführen zu können.
+Je größer das Bundle, desto länger dabei die Ladezeit.
+
+Entscheidend ist dabei *nicht* die tatsächliche Größe des Bundles, sondern vielmehr der "Informations-Gehalt" des Codes.
+So spielt z.B. die Länge des Namens einer Funktion keine entscheidende Rolle beim parsen.
+
+D.h. von der Größe eines Bundles kann nicht ohne weiteres direkt auf die Performance geschlossen werden.
+
+
+===== "Informationsgehalt" ist eine gute Näherung
+
+Die Größe eines gezippten Bundles ist eine gute Näherung für den tatsächlichen Informationsgehalt.
+Unseren Erfahrungen nach ist diese Größe ein ganz passabler Indikator für die tatsächlich benötige Parsing-Zeit.
+
+Mit anderen Kompressions-Algorithmen (z.B. XZ) sind noch deutlich geringere Kompressions-Raten möglich.
+Die Korrelation zwischen File-Size und Parsing-Größe nimmt dabei jedoch wieder ab.
+
+=== Tatsächliche Größe
+
+==== Gesamtgröße <Komplett>
+
+Stand 2021-01 beträgt die Gesamtgröße inklusiver aller vorhandenen Diagram-Typen (z.B. unterschiedliche Bar-Charts, Line Chart und Plotter):
+
+* 146 KB (Zipped)
+* 115 KB (XZ)
+
+NOTE: Diese Größe wird durch zusätzliche Komponenten nur minimal zunehmen, da neue Komponenten auf bereits bestehende Abhängigkeiten und Funktionatlitäten aufbauen.
+
+==== Gesamtgröße <ohne Plotter>
+
+Der Plotter ist die mit Abstand komplexeste Komponente.
+Nicht nur von der Darstellung sondern auch in Bezug auf die Datenhaltung ist sehr viel Code enthalten.
+
+Ohne den Plotter ist die Größe von MeisterCharts:
+
+* 102 KB (Zipped)
+
+
+
+Im Projekt ist bereits ein sehr umfangreicher Support für folgende Features enthalten:
+
+* Zooming
+* Panning
+* SVG-Darstellung, SVG-Path-Supprt
+* Default-Icons
+* Viele, viele Debugging-Hilfen
+* Interaktionen
+** Mouse / Touch-Events
+** Keyboard-Events
+
+==== Vergleich zu anderen Chart-Bibliotheken
+
+Jeweils die minimized Version als ZIP-File
+
+* Chart.js: 71 KB
+* Highcharts: 95 KB
+* MeisterCharts ohne Plotter: 102 KB
+* MeisterCharts mit Plotter: 146 KB
+* Fusion Charts: 416 KB
+* Plotly.js: 961 KB
+
+[plantuml,format=svg]
+.Vergleich MeisterCharts mit anderen Chart-Bibliotheken (jeweils Minimized)
+----
+@startuml
+!include plantuml-style.iuml
+
+scale 100 as 55 pixels
+
+concise "Chart.js" as ChartJS
+concise "Highcharts" as HighCharts
+concise "MeisterCharts Min" as QCMin
+concise "MeisterCharts All" as QCAll
+concise "Fusion Charts" as FusionCharts
+concise "Plotly.js" as Plotly
+
+@0
+ChartJS is "Chart.js"
+HighCharts is "Highcharts"
+QCMin is "QC Min"
+QCAll is "QC All"
+FusionCharts is "Fusion Charts"
+Plotly is "Plotly"
+
+@71
+ChartJS is {hidden}
+
+@95
+HighCharts is {hidden}
+
+@102
+QCMin is {hidden}
+
+@146
+QCAll is {hidden}
+
+@416
+FusionCharts is {hidden}
+
+@961
+Plotly is {hidden}
+
+@enduml
+----
+
+Die Größe von MeisterCharts umfasst nur ein Bruchteil der Größe von Plotly und ist nur wenige KB größer als Chart.js.
+

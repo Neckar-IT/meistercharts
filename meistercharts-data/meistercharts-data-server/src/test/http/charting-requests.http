@@ -1,0 +1,97 @@
+GET http://localhost:8088/boom
+
+###
+
+GET http://localhost:8088
+X-NIT-Data-Client-Version:0.0.1
+
+###
+GET http://localhost:8088/version
+
+###
+GET http://localhost:8088/version/protocol
+
+###
+GET http://localhost:8088/agents
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+###
+GET http://localhost:8088/history
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+###
+GET http://localhost:8088/history/q?from=1&to=10000&resolution=1000
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+###
+GET http://localhost:8088/history/1000/10000
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+###
+OPTIONS http://localhost:8088/history/10/1578127485000
+X-NIT-Data-Client-Version:0.0.1
+
+###
+OPTIONS http://localhost:8088/history/q?from=1&to=10000&resolution=1000
+X-NIT-Data-Client-Version:0.0.1
+
+
+
+### new tests get
+GET http://localhost:8088/history/10/1.5900732E12
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+### get
+GET http://localhost:8088/history/1000/1.5927516E12
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+### get
+GET http://localhost:8088/history/100/1.5927516E12
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+### create test data
+GET http://localhost:8088/history/testData
+Authorization: Basic JS LOKI
+X-NIT-Data-Client-Version:0.0.1
+
+### query, from 1000 to 10000, sampling: 100ms
+GET http://localhost:8088/history/q?from=1000&to=10000&resolution=100
+X-NIT-Data-Client-Version:0.0.1
+
+### query, from 1.5927516E12 to 1.5927550E12, sampling: 100ms
+#From: Full Date: 2020-06-21T15:00Z
+#Millis: 0
+#To: Full Date: 2020-06-21T15:56:40Z
+#Millis: 0
+GET http://localhost:8088/history/q?from=1.5927516E12&to=1.5927550E12&resolution=100
+X-NIT-Data-Client-Version:0.0.1
+
+### query, from 1.5927516E12 to 1.5927550E12, sampling: 100ms
+#From: Full Date: 2020-06-21T15:00Z
+#Millis: 0
+#To: Full Date: 2020-06-21T15:00:00.100Z
+#Millis: 100
+GET http://localhost:8088/history/q?from=1.5927516E12&to=1.5927516001E12&resolution=100
+X-NIT-Data-Client-Version:0.0.1
+# 1.5927516E12 + 100 ms: 1.5927516001E12
+
+###
+POST http://localhost:8088/history
+X-NIT-Data-Client-Version:0.0.1
+
+###
+GET http://localhost:8088/history/100/1.5927516E12
+X-NIT-Data-Client-Version:0.0.1
+# 1.5927516E12 + 100 ms: 1.5927516001E12
+
+###
+GET http://localhost:8088/history/testData
+X-NIT-Data-Client-Version:0.0.1
+# creates test data

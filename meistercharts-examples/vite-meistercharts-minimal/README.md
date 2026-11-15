@@ -26,64 +26,19 @@ yarn add @meistercharts/meistercharts
 ```
 Your ``package.json`` should now contain the MeisterCharts dependency:
 
-```json
-{
-  "name": "vite-meistercharts-minimal",
-  "author": "NeckarIT",
-  "license": "Apache-2.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "8.3.7"
-  },
-  "dependencies": {
-    "@meistercharts/meistercharts": "1.38.0"
-  }
-}
+[`package.json`](package.json)
 
-```
 That's all you need to do. Now your project is ready to use MeisterCharts.
 The next step is to implement MeisterCharts in your code.
 
 #### Import MeisterCharts and create your first Chart
 
-```js
-import './style.css';
-import * as meisterCharts from '@meistercharts/meistercharts';
-
-let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
-
-// create the first sample data
-chart.setUpDemo();
-
-```
+[`main.js`](main.js)
 
 - Add a new div to your webpage. The ID of the div is accessed by the ``createTimeLineChartFromId`` and the
   chart will be created in this container.
 
-```HTML
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <script type="module" src="/main.js"></script>
-    <div class="example">
-      <h1>MeisterCharts Demo Vitejs</h1>
-      <div id="timeLineChart" style="width: 1000px; height:500px;">
-      </div>
-    </div>
-  </body>
-</html>
-
-```
+[`index.html`](index.html)
 
 After we created the chart you should now see the following chart on your browser
 

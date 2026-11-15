@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>NoNameShadowing:RainSensorGestalt.kt:RainSensorGestalt.Configuration${ it == Weather.Rain }</ID>
+    <ID>NoNameShadowing:RainSensorGestalt.kt:RainSensorGestalt.Configuration${ it == Weather.Snow }</ID>
+    <ID>NoNameShadowing:RainSensorGestalt.kt:RainSensorGestalt.Configuration${ it == Weather.Sunny }</ID>
+  </CurrentIssues>
+</SmellBaseline>

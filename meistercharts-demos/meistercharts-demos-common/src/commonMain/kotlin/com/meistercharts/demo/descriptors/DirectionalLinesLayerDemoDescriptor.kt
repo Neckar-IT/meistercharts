@@ -1,0 +1,132 @@
+/*
+ * Copyright 2023 Neckar IT GmbH, Mössingen, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.meistercharts.demo.descriptors
+
+import com.meistercharts.demo.configurable
+import kotlin.uuid.Uuid
+import com.meistercharts.algorithms.layers.DirectionalLinesLayer
+import com.meistercharts.algorithms.layers.LayerPaintingContext
+import com.meistercharts.algorithms.layers.addClearBackground
+import com.meistercharts.charts.ContentViewportGestalt
+import com.meistercharts.demo.MeisterchartsDemo
+import com.meistercharts.demo.MeisterchartsDemoDescriptor
+import com.meistercharts.demo.DemoCategory
+import com.meistercharts.demo.DemoQuality
+import com.meistercharts.demo.PredefinedConfiguration
+import com.meistercharts.demo.VariabilityType
+import com.meistercharts.demo.configurableDouble
+import com.meistercharts.demo.configurableEnum
+import com.meistercharts.demo.configurableInsetsSeparate
+import com.meistercharts.demo.section
+import it.neckar.geometry.Direction
+import com.meistercharts.model.Insets
+import it.neckar.open.provider.CoordinatesProvider1
+import it.neckar.open.provider.MultiProvider
+
+/**
+ * A simple hello world demo
+ */
+class DirectionalLinesLayerDemoDescriptor : MeisterchartsDemoDescriptor<Nothing> {
+  override val uuid: Uuid = Uuid.parse("66bc23ed-a809-4668-ac21-94f08bcf062b")
+  override val name: String = "Directional Lines"
+  override val category: DemoCategory = DemoCategory.Layers
+  override val quality: DemoQuality = DemoQuality.High
+  override val variabilityType: VariabilityType = VariabilityType.Stable
+
+  override fun prepareDemo(configuration: PredefinedConfiguration<Nothing>?): MeisterchartsDemo {
+    return MeisterchartsDemo(this) {
+      meistercharts {
+
+        val contentViewportGestalt = ContentViewportGestalt(Insets.all15)
+        contentViewportGestalt.configure(this)
+
+        configure {
+          layers.addClearBackground()
+
+          val config = object {
+            var x1: Double = 100.0
+            var y1: Double = 150.0
+            var x2: Double = 170.0
+            var y2: Double = 250.0
+
+            var direction1 = Direction.CenterRight
+            var direction2 = Direction.CenterRight
+            var lineEndsAtModes = DirectionalLinesLayer.LineEndsAtMode.WithinContentViewport
+          }
+
+          val location: CoordinatesProvider1<LayerPaintingContext> = object : CoordinatesProvider1<LayerPaintingContext> {
+            override fun size(param1: LayerPaintingContext): Int = 2
+
+            override fun xAt(index: Int, param1: LayerPaintingContext): Double {
+              return when (index) {
+                0 -> config.x1
+                1 -> config.x2
+                else -> throw IllegalArgumentException("Invalid index <$index>")
+              }
+            }
+
+            override fun yAt(index: Int, param1: LayerPaintingContext): Double {
+              return when (index) {
+                0 -> config.y1
+                1 -> config.y2
+                else -> throw IllegalArgumentException("Invalid index <$index>")
+              }
+            }
+          }
+
+          val layer = DirectionalLinesLayer(
+            DirectionalLinesLayer.Configuration(
+              locations = location,
+              directions = MultiProvider.invoke { index ->
+                when (index) {
+                  0 -> config.direction1
+                  1 -> config.direction2
+                  else -> throw IllegalArgumentException("Invalid index <$index>")
+                }
+              }
+            )
+          ) {
+            this.lineEndsAtMode = { config.lineEndsAtModes }
+          }
+          layers.addLayer(layer)
+
+
+          section("Line 1")
+          configurable("x:", config::x1) {
+            max = 500.0
+          }
+          configurable("y:", config::y1) {
+            max = 500.0
+          }
+          configurable("Direction", config::direction1)
+
+          section("Line 2")
+          configurable("x:", config::x2) {
+            max = 500.0
+          }
+          configurable("y:", config::y2) {
+            max = 500.0
+          }
+          configurable("Direction", config::direction2)
+
+          configurable("Line Ends At Mode", config::lineEndsAtModes)
+
+          configurableInsetsSeparate("Content Viewport", contentViewportGestalt.contentViewportMarginProperty)
+        }
+      }
+    }
+  }
+}

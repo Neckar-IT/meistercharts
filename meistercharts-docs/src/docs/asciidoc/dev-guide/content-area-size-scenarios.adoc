@@ -1,0 +1,85 @@
+include::attributes.adoc[]
+
+== Content Area: Szenarien
+
+=== Bar Chart (vertikale Bars)
+
+Bei einem Bar-Chart möchten wir die gesamte Window-Höhe für den Wertebereich der Bars verwenden.
+Wir möchten alle Bars nebeneinander sehen.
+
+==== Size:
+
+Content-Area-Size wird an den Content Viewport (== WindowsSize - contentViewportMargin) gebunden.
+
+==== Zoom
+
+Bei einem Zoom von 1/1 nutzen die Bars in ihrem Wertebereich die gesamte Content-Viewport-Höhe
+
+Es sind alle Bars nebeneinander sichtbar.
+Die Breite der Bars muss entsprechend berechnet werden.
+
+==== Höhenänderung Window
+
+Wenn sich die Höhe des Windows ändert, ändert sich die Höhe der Content Area.
+Die Bars werden proportional zur Höhe gezeichnet und passen sich daher an.
+
+==== Breitenänderung Window
+
+Wenn sich die Breite ändert, wird die ContentArea angepasst.
+Die Breite der Bars wird darauf angepasst berechnet.
+
+=== Timeline Chart (Zeit auf der X-Achse)
+
+Bei einem Timeline-Chart möchten wir die gesamte Content-Viewport-Höhe für den Wertebereich verwenden.
+Der Abstand der Punkte auf der X-Achse soll konstant sein.
+Je nach Zoom-Faktor könnten z.B. 5 Pixel einer Sekunde entsprechen.
+
+==== Size:
+
+* Die Höhe der Content Area wird an den Content Viewport (== WindowsSize - contentViewportMargin) gebunden.
+* Die Breite der Content Area hat einen fixen Wert (z.B. 1000px)
+
+==== Zoom
+
+Bei einem Zoom von 1/1 nutzen die Kurven die gesamte Content-Viewport-Höhe für ihren Wertebereich.
+In der Breite haben wir einen fixen Faktor zwischen Zeit und Pixeln.
+Dadurch können wir alle Punkte entsprechend dem Zoomfaktor erkennen.
+
+==== Höhenänderung Window
+
+Wenn sich die Höhe des Windows ändert, ändert sich die Höhe der Content Area.
+Die Kurven werden proportional zur Höhe gezeichnet und passen sich daher an.
+
+==== Breitenänderung Window
+
+Die Content-Area bleibt konstant.
+Durch die Veränderung der Breite des Windows wird nur mehr bzw. weniger Inhalt sichtbar.
+Der Abstand der Punkte auf der X-Achse bleibt konstant.
+
+=== Floorplan bzw. Karte
+
+Dabei werden Bilder der Karte bzw. des Floorplans gerendert.
+Entsprechend *muss* die Aspect Ratio berücksichtigt werden!
+
+TODO:
+==== Idee 1: Size an Content-Viewport binden: Aspect Ratio berücksichtigen
+
+Die Höhe der Content Area wird an den Content Viewport (== WindowsSize - contentViewportMargin) gebunden.
+Dabei wird aber die Aspect Ratio berücksichtigt.
+Die Content Area wird also in den Content-Viewport eingepasst, wobei die Aspect Ratio erhalten bleibt.
+
+Vorteil:
+Zoom-Faktor von 1 führt dazu, dass der gesamte Inhalt im Window sichtbar ist.
+
+==== Idee 2: Größe an Pixel-Anzahl des Bildes binden
+
+Das Bild hat eine Anzahl an Pixeln.
+Diese dient als Basis für die Größe der Content Area.
+Die Content Area hat damit eine fixe Größe.
+
+Vorteil:
+Eine Umrechnung von Domain auf Content-Area ist immer gleich.
+
+Nachteil:
+der (Default)-Zoom-Faktor hängt von der Größe des Windows an.
+Diese muss bei der Berechnung berücksichtigt werden.

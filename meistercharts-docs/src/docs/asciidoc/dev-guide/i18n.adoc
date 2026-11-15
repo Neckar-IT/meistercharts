@@ -1,0 +1,36 @@
+include::attributes.adoc[]
+
+== I18n
+
+// Decision: ADL 0018 (per-chart i18n configuration) and ADL 0012 (empty and null texts)
+=== Pro Chart
+
+Jeder Chart hält seine `I18nConfiguration` (Text-Locale, Format-Locale, Zeitzone) im `I18nSupport` seines `ChartSupport`: `chartSupport.i18nSupport`.
+Ohne eigene Konfiguration gilt `CurrentI18nConfiguration`.
+Vor jedem Paint setzt `ChartSupport` die Konfiguration als `I18nContext`; Format-Funktionen lesen `I18nContext.current`.
+
+=== Formattierung vs. Übersetzung
+
+Es können zwei Locales gesetzt werden.
+Eine wird für die Übersetzung der Texte genutzt, die andere wird für die Formattierung der Zahlen und Daten eingesetzt.
+
+Beide Locales können unabhängig voneinander konfiguriert werden.
+
+=== Text Service
+
+`DefaultTextService` fragt seine `TextResolver` der Reihe nach ab; der erste Wert ungleich `null` gewinnt.
+Antwortet kein Resolver, liefert er `TextKey.key`.
+
+`chartSupport.textService` registriert nur den `FallbackTextResolver`, der `TextKey.fallbackText` liefert.
+Eigene Resolver kommen mit `addTextResolverAtFirst` vor ihn:
+
+* `SimpleMapBasedTextResolver`: Text pro Key, ohne Locale
+* `MapBasedTextResolver`: Text pro Locale und Key, gelesen mit `I18nConfiguration.textLocale`
+* `ForceLocaleTextResolver`: fragt einen Delegate mit fester Text-Locale
+
+`setText(key, null)` entfernt einen Eintrag; die Auflösung fällt dann auf `fallbackText` zurück.
+Der leere String `""` ist ein gültiger Text und blendet den Text aus.
+
+==== Optional: Text-Key Output
+
+Für Entwicklungszwecke kann der `TextKeyTextResolver` registriert werden, welcher den Text-Key selbst zurück liefert.

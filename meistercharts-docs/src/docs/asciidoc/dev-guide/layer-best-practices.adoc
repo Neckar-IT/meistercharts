@@ -1,0 +1,217 @@
+include::attributes.adoc[]
+
+== Best Practices Layer
+
+=== Layer umfasst den gesamten Bereich
+
+Ein Layer malt grundsätzlich auf den gesamten Canvas.
+
+Falls eine Platzierung notwendig ist, gibt es zwei Ansätze:
+
+* Konfiguration über einen Wert (z.B. Crosswire)
+* Layout außerhalb (z.B. ValueAxis)
+
+==== Margin
+
+Um Abstände vom Rand zu ermöglichen, besitzt ein Layer typischerweise die Eigenschaft "margin".
+In diese kann ein Inset konfiguriert werden (auch wenn nur ein Wert für eine Seite benötigt wird).
+
+=== Translate mit String-Parameter
+
+Es ist beim Lesen des Codes nicht immer einfach nachzuvollziehen, wo die Summe der Translationen gerade hinzeigt.
+Aus diesem Grund ist eine Dokumentation des aktuelle Zustands absolut notwendig.
+
+Um die notwendigen Kommentare zu vereinfachen, gibt eine `translate`-Methode welche einen String-Parameter akzeptiert.
+Dieser Parameter ist allein zu Dokumentations-Zwecken gedacht.
+Damit ist sofort klar, wohin der aktuelle RenderingContext translatiert wurde.
+
+Empfohlene Konvention: Die Beschreibung sollte mit "to " beginnen. Z.B. "to bottom of tick label".
+
+Damit ist beim Review / Refactoring einfacher zu erkennen, was der aktuelle Zustand ist
+
+=== Translate benutzen anstatt zu rechnen
+
+Es macht den Code sehr viel einfacher, wenn der RenderingContext jeweils mit "translate" auf eine sinnvolle Position gesetzt wird.
+
+TIP: Vor jedem Methodenaufruf wird der Context translatiert.
+Eine Methode weiß (möglichst) nichts über ihre absolute Position auf dem Canvas. +
+Dadurch ist der Code deutlich leichter erweiterbar.
+
+Dadurch werden die einzelnen Painting-Teile unabhängig von der absoluten Position.
+
+So kann entsprechend leichter die Reihenfolge geändert werden oder neue Element eingeführt werden.
+
+==== Beispiel: ValueAxis
+
+Von links nach rechts hat die Value Axis folgende Elemente:
+
+* Titel + Gap (optional)
+* Achse
+* Ticks + Gap
+* Label
+
+bzw. bei anderer TickOrientation:
+
+* Titel + Gap (optional)
+* Label
+* Gap + Ticks
+* Achse
+
+
+Da jetzt jeder einzelne Teil relativ zu einem lokalen Wert paintet, ist dieser unabhängig von der Reihenfolge.
+-> Die Achse wird von der immer gleichen Methode aufgerufen.
+
+Diese unterscheidet sich auch dann nicht, wenn der Titel nicht sichtbar ist oder die TickOrientation geändert wird.
+
+=== Painting Variables in (anonymem) Objekt halten.
+
+Manchmal ist es hilfreich/notwendig einige Variablen zu speichern, die man während des Painting-Vorgangs benötigt.
+Um nicht zu viele Parameter übergeben zu müssen, bietet es sich an diese halten.
+
+Wenn diese als "private val" gemerkt werden, "verschmutzen" diese allerdings den Namespace.
+Deshalb empfiehlt sich folgender Code:
+
+[source,kotlin,indent=0]
+.Painting Variables speichern - ohne den Namespace zu "verschmutzen"
+----
+private val paintingVariables = object {
+  @px var spaceForTitle: Double = 0.0
+  @px var someOtherPaintingVariable: Double = 0.0
+}
+----
+
+Damit sind die Werte an einer Stelle zusammen gefasst.
+Der Compiler ist auch ohne Name in der Lage die Zugriffe zu ermöglichen.
+
+CAUTION: Aktuell funktionieren anonyme Objekte in JavaScript (noch) nicht.
+Daher muss für die Übergangszeit einen private Klasse angelegt werden.
+
+=== Config-Objekte und Lambdas
+
+NOTE: Dieser Abschnitt beschreibt das Lambda-Konfigurationsmuster generisch am Beispiel eines `Style`.
+Es gilt identisch für das `Configuration`-Objekt eines Layers/Gestalt (Marker `@ConfigurationDsl`, Lambda `additionalConfiguration`) und das `Style`-Objekt eines Painters/Paintable (Marker `@StyleDsl`, Lambda `styleConfiguration`).
+Welches der beiden Objekte ein Typ hält, ist in `architecture/config-objects.md` geregelt.
+
+==== Default-Konfiguration
+
+Jedes Config-Objekt hat eine Default-Konfiguration.
+
+Die Teile der Konfiguration die individuell eingestellt werden sollen, lassen sich über Lambdas konfigurieren, die an das entsprechende Objekt übergeben werden.
+Damit lässt sich beim Aufruf gleich sehr bequem der Style konfigurieren.
+
+[source,kotlin,indent=0]
+.Sub-Style-Configuration
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=styleExample]
+----
+<1> Optionales Style-Konfigurations-Lambda wird übergeben
+
+<2> Und direkt für den mit einer Default-Konfiguration versehenen Style ausgeführt.
+
+<3> Jedes Element in einem Style hat einen Standard-Wert
+
+[source,kotlin,indent=0]
+.Aufruf mit Style-Configuration
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=callWithStyleConfiguration]
+----
+<1> Es können einzelne (oder alle) Properties konfiguriert werden.
+
+==== Configuration von Sub-Styles
+
+===== Mit Lambdas (zur Vermeidung von Duplicate Code)
+
+Um nun den Style eines Styles zu konfigurieren, werden innerhalb eines Styles wiederum Lambdas gehalten.
+Dies ermöglicht es z.B. Fonts an weitere Unter-Styles zu delegieren ohne vars duplizieren zu müssen.
+
+[source,kotlin,indent=0]
+.Style-Configuration
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=subStyleExample]
+----
+<1> Übergabe der Style-Konfiguration (s.o.)
+<2> Anwenden der Style-Konfiguration (s.o.)
+<3> Im Style selbst ist ein Lambda konfiguriert, welches wiederum den Substyle konfiguriert
+<4> Das Sub-Style-Konfigurations-Lambda wird angewandt
+<5> Vorsicht wenn Properties den selben Namen haben: Shadowing-Gefahr
+
+[source,kotlin,indent=0]
+.Aufruf mit Style-Configuration
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=callWithSubStyleConfiguration]
+----
+<1> Wie oben können Properties auf dem Style selbst direkt gesetzt werden
+<2> Das Default-Konfigurations-Lambda kann neu gesetzt werden
+<3> Durch die Extension-Method `and` kann das alte Lambda ebenfalls ausgeführt werden.
+Damit ist es möglich nur einzelne Teile der Konfiguration zu überschreiben.
+In diesem Fall wird durch das "Super-Lambda" die Hintergrundfarbe gesetzt (s.o.).
+Und zusätzlich an dieser Stelle der Vordergrund.
+
+WARNING: Diese Lambdas müssen natürlich zur rechten Zeit aufgerufen werden.
+Eventuell in/vor jedem Paint!
+
+===== Mit Referenzierung der Sub-Styles
+
+Wenn mehrere Styles aus unterschiedlichen Layers zusammen gefasst werden (z.B. in *Gestalt), dann ist es wenig praktikabel diese immer per Lambda zu konfigurieren.
+
+In diesen Fällen ist es sinnvoll, die Sub-Styles als Field im eigenen Style zu halten und zu konfigurieren.
+
+[source,kotlin,indent=0]
+.Referenzierung der Sub-Styles
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=subStyleExampleRef]
+----
+<1> Aufruf mit einer StyleConfiguration, die dann direkt ausgeführt wird.
+<2> Zunächst werden die Objekte instantiiert, deren Style später referenziert werden soll
+<3> Der eigene Style erhält als Konstruktor-Argument den Sub-Style.
+<4> Der Style wird als `val` referenziert und steht somit zur Konfiguration zur Verfügung.
+<5> Selbstverständlich können weitere (eigene) Properties definiert werden
+
+
+So kann dann der referenzierte (Sub-)Style konfiguriert werden:
+
+[source,kotlin,indent=0]
+.Call mit Referenzierugn der Sub-Styles
+----
+include::{demoSourceDir}/StyleConfigurationDemo.kt[tags=callWithSubStyleRef]
+----
+<1> Wie oben können Properties auf dem Style selbst direkt gesetzt werden
+<2> Ein Property des Sub-Styles wird gesetzt.
+<3> Siehe <2>
+
+===== Wann Referenzen? Wann Lambdas?
+
+Sub-Styles sollten direkt referenziert werden, wenn diese direkt so verwendet werden sollen.
+Dies ist z.B. der Fall, wenn eine Gestalt einen oder mehrere Layer verwendet.
+
+Lambdas sind insbesondere dann sinnvoll, wenn Dinge mehrfach instantiiert werden (z.B. Painter).
+
+=== Layer.layout() und Layer.paint()
+
+Es gibt zwei Methoden im Layer die direkt nacheinander aufgerufen werden.
+
+Zunächst wird `layout()` aufgerufen.
+In dieser Methode können alle relevanten Größen (z.B. PaintingVariables) berechnet werden.
+
+Direkt anschließend wird `paint()` aufgerufen.
+
+==== Use Case
+
+Manche Layer sind von den Layout-Informationen anderer Layer abhängig (z.B. Grid von ValueAxis).
+Deshalb ist es notwendig, dass die Layer ihre Berechnungen in der richtigen Reihenfolge durchführen.
+
+Um aber z.B. das Grid auch *unterhalb* der Achse anzeigen zu können, muss die Berechnung des Layouts vom eigentlichen Painten getrennt werden.
+
+==== Regel: Allokationsfreier Hot-Path
+
+`layout()` und `paint()` laufen bei animierten/interaktiven Charts mit bis zu 60 fps.
+Damit der Garbage Collector nicht zu sichtbaren Rucklern führt, gilt:
+
+* Per-Element-Zwischenergebnisse (Tick-Positionen, Bounds, Koordinaten, Labels) werden in `layout()` in wiederverwendbare Buffer geschrieben (`com.meistercharts.canvas.layout.buffer`: `DoubleMultiBuffer`, `CoordinatesMultiBuffer`, `BoundsMultiBuffer`, `StringMultiBuffer`, `LayoutVariablesObjectBuffer`, ...). Muster: ein `paintingVariables`-Objekt mit `calculate()`.
+* `paint()` liest nur — keine Collection-Allokation (`listOf`, `map`, `filter`, `toList`, `sortedBy`), keine Objekt-Konstruktion pro Element (`Coordinates`, `Rectangle`, `Size`, `Insets`, `BoxStyle`), kein String-Building pro Element.
+* Formatter (`decimalFormat(...)`) und abgeleitete Styles (`LineStyle`, `BoxStyle`, `withAlpha`) werden gecacht, nicht pro Frame neu erzeugt — sonst wird auch der `CachedNumberFormat`-String-Cache wirkungslos.
+* `Double?`-Properties in Painting-Variablen boxen bei jeder Zuweisung — stattdessen primitives `Double` mit `Double.NaN` als Reset-Wert (siehe `LayoutVariable`).
+* Logging im Hot-Path nur über die Lambda-Form (`logger.trace { ... }`) — die String-Overload baut den Text bei jedem Durchlauf.
+* `gc.saved { }` ist `inline` (keine Allokation); `gc.delayed { }` ist es *nicht* — Lambdas dafür nicht pro Element erzeugen.
+
+Konstruktions-, Konfigurations- und Event-Handler-Code ist von dieser Regel nicht betroffen.

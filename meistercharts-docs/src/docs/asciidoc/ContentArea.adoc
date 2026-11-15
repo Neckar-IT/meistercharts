@@ -1,0 +1,45 @@
+= Begriffe um "Content Area"
+:doctype: article
+:notitle:
+:noheader:
+:nofooter:
+:experimental:
+:icons: font
+:icon-set: fas
+
+== Content Area Size
+
+Definiert, wie groß der DomainRelative-Bereich bei einem Zoom-Faktor von 1.0 gerendert wird.
+Definiert, wie viele Pixel 100% des DomainRelative-Bereichs bei einem Zoom-Faktor von 1.0 umfassen.
+
+== ContentAreaSizingStrategy
+
+=== BindContentArea2WindowSize
+
+Content Area ist immer so groß wie das Window (z.B. für Bar-Chart)
+
+=== FixedContentAreaWidth
+
+Nur die Breite ist fix – Höhe ist gleich dem Window (z.B. für Zeit-basierte Charts)
+
+=== FixedContentAreaSize
+
+Höhe und Breite fix (z.B. für StreetMaps)
+
+== Relevant bei der Darstellung
+
+=== ResizeBehavior
+
+Beim Resizen des Windows (und dadurch u.U. auch der Content Area) kann z.B.:
+
+* ein Punkt im Zentrum gehalten werden
+* Reset bei Resize
+
+=== ZoomAndTranslationDefaults
+
+Bei einem ResetZoom wird normalerweise der Zoom auf 1.0 gesetzt.
+
+Mit Hilfe der `ZoomAndTranslationDefaults` kann dieses Verhalten geändert werden.
+
+* Platz wird außen herum angezeigt (absolut oder prozentual)
+* Content Area wird eingepasst

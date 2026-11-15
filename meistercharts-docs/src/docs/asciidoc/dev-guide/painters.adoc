@@ -1,0 +1,85 @@
+include::attributes.adoc[]
+
+== Painters
+
+=== Definition
+
+Ein Painter ist ein Stück Code, welches einen einzelnen Aspekt des Zeichnens übernimmt.
+
+Dabei sollte ein Painter möglichst leichtgewichtig sein und auch möglichst geringe Anforderungen an das Model stellen.
+
+==== Abgrenzung zu Layer
+
+Ein Layer "füllt" die gesamte Fläche des Canvas.
+Er kann Interaktionen verarbeiten und hat in der Regel ein etwas komplexeres Modell.
+
+Idealerweise werden die einfachen in einem Layer verwendeten Zeichen-Operationen durch Painter erledigt.
+
+=== Existierende Painter
+
+==== LabelPainter
+
+Zeichnet eine Liste von Labels (LayoutedLabel).
+Unterstützt die Anordnung rechts oder links des Anchor-Points.
+
+===== Verwendet von
+
+* CrossWireLayer
+* DomainLabelPainter
+** OpacityLabelsCanvas (old)
+
+==== DomainLabelPainter
+
+Zeichnet ein Liste von Labels (DomainRelativeLabel).
+Verwendet dazu den LabelPainter.
+
+===== Verwendet von
+
+* OpacityLabelsCanvas (old)
+
+==== AreaPainter
+
+Paints an area (rectangle)
+
+===== Verwendet von
+
+* BlankAreaCanvas (old)
+* FovCanvas (old)
+
+==== BinaryPainter
+
+Zeichnet ein Kurve mit true/false Werten
+
+===== Verwendet von
+
+* QIntDiagram (old)
+
+==== ChartingStateDebugPainter
+
+Visualisiert den aktuellen Zustand des Charting States
+
+==== ContentAreaPainter
+
+Zeichnet ein Rechteck in der Größe der Content Area.
+Dabei ist konfigurierbar welche Seiten gezeichnet werden.
+
+===== Verwendet von
+
+* ContentAreaLayer
+* LimitsLayer
+* OpacityDiagram (old)
+
+==== XyLinePainter: DefaultXyLinePainter / DomainXyLinePainter
+
+Zeichnet eine Linie durch X/Y-Koordinaten
+
+===== Verwendet von
+
+* QIntDiagram
+
+==== XyAreaPainter
+
+Zeichnet eine Fläche unter eine Reihe von Punkten (X/Y-Koordinaten).
+
+Ähnlich wie XYLinePainter, allerdings wird die Fläche darunter ausgefüllt.
+

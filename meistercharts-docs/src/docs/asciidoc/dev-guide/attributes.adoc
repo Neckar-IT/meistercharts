@@ -1,0 +1,5 @@
+//This file contains common attributes that might/should be included in each single file.
+//Then each file can be generated on its own (if necessary)
+
+// Demo files are in meistercharts-canvas module
+:demoSourceDir: ../../../../../meistercharts-canvas/src/jvmTest/kotlin/demo

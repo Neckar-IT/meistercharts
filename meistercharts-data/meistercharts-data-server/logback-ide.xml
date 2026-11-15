@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Only for use in the IDE. Add parameter -Dlogback.configurationFile=${USER_HOME}/projects/.../logback.xml -->
+<configuration scan="true" debug="false" scanPeriod="10 seconds">
+  <root level="INFO" />
+  <logger name="com.cedarsoft.charting.server.ChartingServer" level="DEBUG" />
+</configuration>

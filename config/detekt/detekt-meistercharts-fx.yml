@@ -1,0 +1,27 @@
+#
+# Configuration file for JavaFX projects
+#
+comments:
+  AbsentOrWrongFileLicense:
+    # licenseTemplateFile option removed in detekt 2.0; AbsentOrWrongFileLicense deactivated for upgrade transparency.
+    active: false
+  DeprecatedBlockTag:
+    active: true
+  OutdatedDocumentation:
+    active: true
+    allowParamOnConstructorProperties: true
+
+#  UndocumentedPublicClass:
+#    active: false - reactivate asap
+
+style:
+  ForbiddenImport:
+    active: true
+    forbiddenImports:
+
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - "kotlin.io.print"
+      - "kotlin.io.println"
+      - "com.benasher44.uuid.uuid4"

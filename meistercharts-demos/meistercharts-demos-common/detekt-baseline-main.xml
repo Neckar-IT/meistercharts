@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:AEBPresentationDemoDescriptor.kt:AEBPresentationDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:HideAfterTimeoutLayerDemoDescriptor.kt:HideAfterTimeoutLayerDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:MouseEventsDemoDescriptor.kt:MouseEventsDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:ZoomFitDemoDescriptor.kt:ZoomFitDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:BinaryPainterDemoDescriptor.kt:MyBinaryPainterLayer${ i, it -> @DomainRelative val domainRelativeY = BinaryValueRange.toDomainRelative(it) val y = chartCalculator.domainRelative2zoomedY(domainRelativeY) binaryPainter.addCoordinate(gc, chartCalculator.domainRelative2zoomedX(0.1 * i), y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:LinePainterDemoDescriptor.kt:MyLinePainterLayer${ index, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) @Window val y = chartCalculator.domainRelative2windowY(domainRelativeY) @Window val x = chartCalculator.domainRelative2windowX(0.1 + 0.1 * index) //TODO line segment style! linePainter.addCoordinates(gc, x, y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:LinePainterDemoDescriptor.kt:MyLinePainterLayer${ index, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) @Window val y = chartCalculator.domainRelative2windowY(domainRelativeY) @Window val x = chartCalculator.domainRelative2windowX(0.1 + 0.1 * index) pointPainter.paintPoint(gc, x, y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:XyPointPainterDemoDescriptor.kt:XYPointPainterLayer${ i, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) val y = chartCalculator.domainRelative2windowY(domainRelativeY) style.pointPainter.paintPoint(gc, chartCalculator.domainRelative2windowX(0.1 * i), y) }</ID>
+    <ID>NestedBlockDepth:TextBenchmarks.kt:TextBenchmarks$private fun iterFonts</ID>
+    <ID>NoNameShadowing:BarChartGroupedGestaltDemoDescriptor.kt:BarChartGroupedGestaltDemoDescriptor$configuration</ID>
+    <ID>NoNameShadowing:BenchmarkLayer.kt:BenchmarkLayer${ val text = "${it.description} @${it.executionCount}: operation took ${decimalFormat.format(it.duration.toDouble(DurationUnit.MILLISECONDS))} ms, painting took ${decimalFormat.format(it.frameTimestampDelta.toDouble(DurationUnit.MILLISECONDS))} ms" logger.debug(text) gc.translate(0.0, 20.0) gc.paintTextBox(text, Direction.TopLeft, 10.0, 10.0, BoxStyle.none, Color.black()) }</ID>
+    <ID>NoNameShadowing:DataSeriesBenchmarks.kt:DataSeriesBenchmarks${ it.toDouble() }</ID>
+    <ID>NoNameShadowing:DiscreteTimelineChartGestaltDemoDescriptor.kt:DiscreteTimelineChartGestaltDemoDescriptor${ ReferenceEntryDataSeriesIndex(it) }</ID>
+    <ID>NoNameShadowing:EasingDemoDescriptor.kt:EasingDemoDescriptor.&lt;no name provided>${ @pct val pctIn = it.toDouble() / rectWidthHeight @pct val value = easingWithDescription.easing(pctIn) gc.lineTo(it.toDouble(), value * rectWidthHeight) }</ID>
+    <ID>NoNameShadowing:HistoryManualDownSamplingDemoDescriptor.kt:HistoryManualDownSamplingDemoDescriptor${ button("Recalculate Downsampling ${it.label}") { val dirtyRanges = downSamplingDirtyRangesCollector.remove(it) ?: return@button downSamplingService.recalculateDownSampling(dirtyRanges, it.toHistoryBucketRange()) } }</ID>
+    <ID>NoNameShadowing:HistoryManualDownSamplingDemoDescriptor.kt:HistoryManualDownSamplingDemoDescriptor${ chartSupport.onDispose(it) }</ID>
+    <ID>NoNameShadowing:HistoryRecordingDemoDescriptor.kt:HistoryRecordingDemoDescriptor${ chartSupport.onDispose(it) }</ID>
+    <ID>NoNameShadowing:TextBenchmarks.kt:TextBenchmarks${ paintingContext.gc.font(it) paintingContext.gc.calculateTextWidth(SampleText) }</ID>
+    <ID>NoNameShadowing:TextBenchmarks.kt:TextBenchmarks${ paintingContext.gc.font(it) paintingContext.gc.getFontMetrics() }</ID>
+    <ID>NoNameShadowing:TextBenchmarks.kt:TextBenchmarks${ paintingContext.gc.font(it) }</ID>
+    <ID>NoNameShadowing:TextTickAlignmentDemoDescriptor.kt:TextTickAlignmentDemoDescriptor.&lt;no name provided>${ gc.translate(0.0, 10.0 + translationForNextLine) gc.fillText("${it}3.0", 0.0, 0.0, Direction.CenterLeft) }</ID>
+    <ID>NoNameShadowing:TilesLayerDemoDescriptor.kt:TilesLayerDemoDescriptor${ layers.removeLayer(it) }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltDemoDescriptor.kt:TimeLineChartGestaltDemoDescriptor${ EnumDataSeriesIndex(it) }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltDemoDescriptor.kt:TimeLineChartGestaltDemoDescriptor.Companion${ LineStyle(Theme.chartColors.valueAt(it), 1.0, Dashes.LargeDashes) }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltDemoDescriptor.kt:TimeLineChartGestaltDemoDescriptor.Companion${ PointStylePainter(PointStyle.Dot, 2.0, snapXValues = false, snapYValues = false).apply { color = configuration.lineStyles.valueAt(it).color } }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltEnumStylesDemoDescriptor.kt:TimeLineChartGestaltEnumStylesDemoDescriptor${ EnumDataSeriesIndex(it) }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltEnumStylesDemoDescriptor.kt:TimeLineChartGestaltEnumStylesDemoDescriptor${ it().web }</ID>
+    <ID>NoNameShadowing:TimeLineChartGestaltWithToolbarDemoDescriptor.kt:TimeLineChartGestaltWithToolbarDemoDescriptor${ DecimalDataSeriesIndex(it) }</ID>
+    <ID>NoNameShadowing:TouchDoubleTapDemoDescriptor.kt:TouchDoubleTapDemoDescriptor.&lt;no name provided>${ logger.debug("Double Tap detected") lastTabCoordinates = it markAsDirty() EventConsumption.Consumed }</ID>
+    <ID>NoNameShadowing:TouchSingleTapDemoDescriptor.kt:TouchSingleTapDemoDescriptor.&lt;no name provided>${ logger.debug("Tap detected") lastTabCoordinates = it markAsDirty() EventConsumption.Consumed }</ID>
+    <ID>ObjectLiteralToLambda:HistoryManualDownSamplingDemoDescriptor.kt:HistoryManualDownSamplingDemoDescriptor$object : SamplingPeriodCalculator { override fun calculateSamplingPeriod(visibleTimeRange: TimeRange, canvasSize: Size): SamplingPeriod { return SamplingPeriod.EveryHundredMillis } }</ID>
+    <ID>ObjectLiteralToLambda:LabelPainterDemoDescriptor.kt:LabelPainterDemoDescriptor.&lt;no name provided>$object : LabelsProvider&lt;LabelIndex> { override fun valueAt(index: Int, param1: TextService, param2: I18nConfiguration): String { return "Value for $index (${decimalFormat.format(labelLocations.valueAt(index))})" } }</ID>
+    <ID>ObjectLiteralToLambda:SlowHistoryLayerDemoDescriptor.kt:SlowHistoryLayerDemoDescriptor$object : AsyncHistoryAccess { override fun query(descriptor: HistoryBucketDescriptor, consumer: (HistoryBucket) -> Unit) { consumer(historyStorage.get(descriptor)) markAsDirty() } }</ID>
+    <ID>ObjectLiteralToLambda:ThresholdsLayerDemoDescriptor.kt:ThresholdsLayerDemoDescriptor$object : MultiProvider&lt;ThresholdValues, List&lt;String>> { override fun valueAt(index: Int): List&lt;String> { //if vertical use two lines else one line return when (index) { 0 -> { if (configuration.payload == Orientation.Vertical) { listOf("Minimum value", decimalFormat2digits.format(thresholds.minThreshold)) } else { listOf("Minimum value ${decimalFormat2digits.format(thresholds.minThreshold)}") } } 1 -> { if (configuration.payload == Orientation.Vertical) { listOf("Maximum value", decimalFormat2digits.format(thresholds.maxThreshold)) } else { listOf("Maximum value ${decimalFormat2digits.format(thresholds.maxThreshold)}") } } else -> throw IndexOutOfBoundsException("$index") } } }</ID>
+    <ID>ObjectLiteralToLambda:TimeLineChartGestaltDemoDescriptor.kt:TimeLineChartGestaltDemoDescriptor.Companion$object : MultiProvider2&lt;HudElementIndex, List&lt;String>, DecimalDataSeriesIndex, LayerPaintingContext> { override fun valueAt(index: Int, param1: DecimalDataSeriesIndex, param2: LayerPaintingContext): List&lt;String> { return listOf( "Threshold for $param1", configuration.thresholdValueProvider.valueAt(index, param1).format(3) ) } }</ID>
+    <ID>SpreadOperator:BarLineShowCaseSickDemoDescriptor.kt:BarLineShowCaseSickDemoDescriptor$(*doubleArrayOf(0.0, 50.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowCaseSickDemoDescriptor.kt:BarLineShowCaseSickDemoDescriptor$(*doubleArrayOf(100.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowCaseSickDemoDescriptor.kt:BarLineShowCaseSickDemoDescriptor$(*doubleArrayOf(90.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowcaseDemoDescriptor.kt:BarLineShowcaseDemoDescriptor$(*doubleArrayOf(0.0, 50.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowcaseDemoDescriptor.kt:BarLineShowcaseDemoDescriptor$(*doubleArrayOf(100.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowcaseDemoDescriptor.kt:BarLineShowcaseDemoDescriptor$(*doubleArrayOf(25.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:BarLineShowcaseDemoDescriptor.kt:BarLineShowcaseDemoDescriptor$(*doubleArrayOf(75.0).fastMapDouble { valueRange.toDomainRelative(it) })</ID>
+    <ID>SpreadOperator:HistoryManualDownSamplingDemoDescriptor.kt:HistoryManualDownSamplingDemoDescriptor$(nowMillis(), *randomValues())</ID>
+    <ID>SpreadOperator:TimeLineChartGestaltDemoDescriptor.kt:MyHistoryChunkBuilder$(nowMillis + timestampIndex.value * samplingPeriod.distance, *randomValues(historyConfiguration.decimalDataSeriesCount.value))</ID>
+    <ID>UseRequire:MeisterchartsDemo.kt:throw IllegalArgumentException("[${this.demoDescriptor.name}] Did you mean to call configurableListWithProperty instead? for $propertyName")</ID>
+    <ID>UseRequireNotNull:BarChartGroupedGestaltDemoDescriptor.kt:BarChartGroupedGestaltDemoDescriptor$require(configuration != null) { "configuration must not be null" }</ID>
+    <ID>UseRequireNotNull:BarChartSingleDemoDescriptor.kt:BarChartSingleDemoDescriptor$require(configuration != null) { "configuration must not be null" }</ID>
+    <ID>UseRequireNotNull:BarChartStackedGestaltDemoDescriptor.kt:BarChartStackedGestaltDemoDescriptor$require(configuration != null) { "Config required" }</ID>
+    <ID>UseRequireNotNull:CategoryAxisDemoDescriptor.kt:CategoryAxisDemoDescriptor$require(configuration != null) { "CategoryAxisDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:CategoryChartLayerGroupedDemoDescriptor.kt:CategoryChartLayerGroupedDemoDescriptor$require(configuration != null) { "Config required" }</ID>
+    <ID>UseRequireNotNull:EasingDemoDescriptor.kt:EasingWithDescription.Companion$require(easing != null) { "easing must not be null for property &lt;${property.name}>" }</ID>
+    <ID>UseRequireNotNull:GreedyCategoryAxisLabelPainterDemo.kt:GreedyCategoryAxisLabelPainterDemo$require(configuration != null) { "GreedyCategoryAxisLabelPainterDemo.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:GridWithCategoryAxisDemoDescriptor.kt:GridWithCategoryAxisDemoDescriptor$require(configuration != null) { "GridWithCategoryAxisDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:GridWithValueAxisDemoDescriptor.kt:GridWithValueAxisDemoDescriptor$require(configuration != null) { "GridWithValueAxisDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:HistogramDemoDescriptor.kt:HistogramDemoDescriptor$require(configuration != null) { "configuration must not be null" }</ID>
+    <ID>UseRequireNotNull:HistoryRecordingDemoDescriptor.kt:HistoryRecordingDemoDescriptor$require(configuration != null) { "HistoryRecordingDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:LineChartLayerDemoDescriptor.kt:LineChartLayerDemoDescriptor$require(configuration != null) { "LineChartLayerDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:PaintableDemoDescriptor.kt:PaintableDemoDescriptor$require(configuration != null) { "configuration required" }</ID>
+    <ID>UseRequireNotNull:PaintablesPerformanceDemoDescriptor.kt:PaintablesPerformanceDemoDescriptor$require(configuration != null) { "Configuration required" }</ID>
+    <ID>UseRequireNotNull:StackedBarPaintableDemoDescriptor.kt:StackedBarPaintableDemoDescriptor$require(configuration != null) { "Orientation required" }</ID>
+    <ID>UseRequireNotNull:ThresholdsLayerDemoDescriptor.kt:ThresholdsLayerDemoDescriptor$require(configuration != null) { "configuration must not be null" }</ID>
+    <ID>UseRequireNotNull:TimeAxisDemoDescriptor.kt:TimeAxisDemoDescriptor$require(configuration != null) { "TimeAxisDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:TimeLineChartDemoDescriptor.kt:TimeLineChartDemoDescriptor$require(configuration != null) { "configuration must not be null" }</ID>
+    <ID>UseRequireNotNull:TimeLineChartGestaltDemoDescriptor.kt:TimeLineChartGestaltDemoDescriptor$require(configuration != null) { "config required" }</ID>
+    <ID>UseRequireNotNull:TimeLineChartGestaltEnumStylesDemoDescriptor.kt:TimeLineChartGestaltEnumStylesDemoDescriptor$require(configuration != null) { "config required" }</ID>
+    <ID>UseRequireNotNull:TimeLineChartGestaltWithToolbarDemoDescriptor.kt:TimeLineChartGestaltWithToolbarDemoDescriptor$require(configuration != null) { "config required" }</ID>
+    <ID>UseRequireNotNull:ValueAxisDemoDescriptor.kt:ValueAxisDemoDescriptor$require(configuration != null) { "ValueAxisDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:ValueAxisWithHudAndGridDemoDescriptor.kt:ValueAxisWithHudAndGridDemoDescriptor$require(configuration != null) { "ValueAxisWithHudAndGridDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>UseRequireNotNull:ValueAxisWithHudDemoDescriptor.kt:ValueAxisWithHudDemoDescriptor$require(configuration != null) { "ValueAxisWithHudDemoDescriptor.prepareDemo requires a predefined configuration" }</ID>
+    <ID>WhenInitializerRequiresExplicitType:GridWithCategoryAxisDemoDescriptor.kt:GridWithCategoryAxisDemoDescriptor$insets</ID>
+    <ID>WhenInitializerRequiresExplicitType:GridWithValueAxisDemoDescriptor.kt:GridWithValueAxisDemoDescriptor$insets</ID>
+  </CurrentIssues>
+</SmellBaseline>

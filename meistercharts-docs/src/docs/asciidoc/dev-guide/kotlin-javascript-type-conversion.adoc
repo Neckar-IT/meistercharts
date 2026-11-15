@@ -1,0 +1,110 @@
+= Type conversion between Kotlin and JavaScript
+
+== Conversion of union types
+
+=== TypeScript Declaration File
+In the TypeScript declaration file the declared property type is:
+
+[source]
+----
+number | Array<number> | null
+----
+
+However, this is not relevant for the tests further down. It is just a piece of code to satisfy the TypeScript compiler.
+In plain JavaScript we could pass whatever we want.
+
+=== Kotlin code
+Kotlin code to determine the type:
+
+[source]
+----
+  private fun printPropertyInfo(propertyName: String, property: Any?) {
+    when (property) {
+      undefined   -> println("$propertyName is undefined")
+      null        -> println("$propertyName is null")
+      is Double   -> println("$propertyName is a double value: $property")
+      is Array<*> -> println("$propertyName is an array of length ${property.size}: $property")
+      else        -> println("$propertyName has an unexpected type: $property")
+    }
+  }
+----
+
+CAUTION: The order matters! `undefined` and `null` seem to be the same.
+If you check `undefined` first, "undefined" will be printed. If you check `null` first, "null" will be printed.
+
+=== Test Results
+JavaScript value passed to Kotlin API is `[1.0]`
+
+|===
+| Kotlin type declared in external interface | Type info of value received
+
+| dynamic | array of length 1
+| Double? | array of length 1
+| Any? | array of length 1
+| DoubleArray? | array of length 1
+| DoubleArray2? | array of length 1
+| DoubleArrayList? | array of length 1
+| List<Double?>? | array of length 1
+|===
+
+JavaScript value passed to Kotlin API is `[1.0, 2.0, 3.0]`
+
+|===
+| Kotlin type declared in external interface | Type info of value received
+
+| dynamic | array of length 3
+| Double? | array of length 3
+| Any? | array of length 3
+| DoubleArray? | array of length 3
+| DoubleArray2? | array of length 3
+| DoubleArrayList? | array of length 3
+| List<Double?>? | array of length 3
+|===
+
+JavaScript value passed to Kotlin API is `4711`
+
+|===
+| Kotlin type declared in external interface | Type info of value received
+
+| dynamic | double value 4711
+| Double? | double value 4711
+| Any? | double value 4711
+| DoubleArray? | double value 4711
+| DoubleArray2? | double value 4711
+| DoubleArrayList? | double value 4711
+| List<Double?>? | double value 4711
+|===
+
+JavaScript value passed to Kotlin API is `null`
+
+|===
+| Kotlin type declared in external interface | Type info of value received
+
+| dynamic | undefined
+| Double? | undefined
+| Any? | undefined
+| DoubleArray? | undefined
+| DoubleArray2? | undefined
+| DoubleArrayList? | undefined
+| List<Double?>? | undefined
+|===
+
+JavaScript value passed to Kotlin API is `undefined`
+
+|===
+| Kotlin type declared in external interface | Type info of value received
+
+| dynamic | undefined
+| Double? | undefined
+| Any? | undefined
+| DoubleArray? | undefined
+| DoubleArray2? | undefined
+| DoubleArrayList? | undefined
+| List<Double?>? | undefined
+|===
+
+=== Consequences
+
+It does not matter which type we declare in an external interface describing the MeisterCharts API.
+On JavaScript side we can pass whichever value we want to the API (we can even pass a `String` to a property of type `Double?`).
+An exception won't be thrown unless we make an unchecked cast.

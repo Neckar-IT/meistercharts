@@ -1,0 +1,5 @@
+{
+  "extends": ["@neckar-hub/typescript-config/tsconfig.dom.json"],
+  "include": ["./src", "./vitest.config.ts", "./oxlint.config.ts"],
+  "exclude": ["dist", "build", "node_modules"]
+}

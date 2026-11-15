@@ -29,62 +29,20 @@ npm install @meistercharts/meistercharts
 ```
 Your ``package.json`` should now contain the MeisterCharts dependency:
 
-```json
-{
-  "name": "npm-meistercharts-minimal",
-  "license": "Apache-2.0",
-  "author": "NeckarIT",
-  "dependencies": {
-    "@meistercharts/meistercharts": "1.38.0"
-  },
-  "devDependencies": {
-    "webpack": "5.112.2",
-    "webpack-cli": "7.3.1"
-  }
-}
+[`package.json`](package.json)
 
-```
 That is all you need to do. Now your project is ready to use MeisterCharts.
 The next step is to implement meistercharts in your code
 
 #### Load MeisterCharts with require and create your first Chart
 In this code we implement MeisterCharts and create a new ``TimeLineChart``
 
-```js
-const meisterCharts = require('@meistercharts/meistercharts/meistercharts-easy-api');
-// create a new TimeLineChart
-let chart = meisterCharts.createTimeLineChartFromId('timeLineChart');
-
-// create the first sample data
-chart.setUpDemo();
-
-```
+[`src/main.js`](src/main.js)
 
 - Add a new div to your Webpage. The ID of the div is accessed by the ``createTimeLineChartFromId`` and the
   chart will be created in this container.
 
-```HTML
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>MeisterCharts Demo</title>
-    <link rel="stylesheet" href="./style.css"/>
-  </head>
-  <body>
-    <div class="example">
-    <h1>MeisterCharts minimal example:</h1>
-
-      <div id="timeLineChart" style="width: 1000px; height:500px;">
-      </div>
-
-      <script src="../dist/bundle.js"></script>
-
-    </div>
-  </body>
-</html>
-
-```
+[`src/index.html`](src/index.html)
 
 After we created the chart you should now see the following chart on your browser
 

@@ -1,0 +1,100 @@
+include::attributes.adoc[]
+
+== Berechnungen
+
+Es gibt verschiedene Arten von Werten in MeisterCharts.
+Diese müssen an verschiedenen Stellen umgerechnet werden.
+
+[plantuml,pdfwidth=75%]
+.Rechenwege
+----
+@startuml
+!include ./plantuml-style.iuml
+hide footbox
+
+:@Domain\n""<12.13 bar>"";
+-> Value Range\n<""10 - 20 bar"">;
+:@DomainRelative\n<""21.3%"">;
+-> Axis Orientation\n<""Bottom Up"">;
+:@ContentAreaRelative\n<""78.7%"">;
+-> Content Area Size\n<""800px / 600px"">;
+:@ContentArea\n<""472.2px"">;
+-> Zoom\n<""4.0/4.0"">;
+:@Zoomed\n<""1888.8px"">;
+-> Translation\n<""100px / 400px"">;
+:@Window\n<""2288.8px"">;
+
+@enduml
+----
+
+=== Begriffe
+
+==== Domain
+
+Der Domain-Wert stellt einen absoluten, fachlichen (i.d.R. gemessenen oder beobachteten) Wert dar.
+Dies kann z.B. ein von einem Sensor gelieferter Messwert sein.
+
+==== Value Range
+
+Die Value-Range beschreibt den Wertebereich, welcher auf einer Achse (in der Content-Area) dargestellt werden soll.
+Die Value-Range entspricht z.B. dem Wertebereich des Sensors.
+
+TIP: Es ist möglich über die eigentlichen Grenzen der Content-Area hinaus zu zeichnen. D.h. auch Werte _außerhalb_ der eigentlichen Value-Range -- und damit Content-Area -- zu zeichnen.
+Dies ist insbesondere dann hilfreich, wenn z.B. die Grenzen gar nicht einfach festgelegt werden können - z.B. bei einer Zeit-Achse.
+
+==== Domain Relative
+
+Dies entspricht dem Prozentwert innerhalb der Value Range.
+
+Bildlich gesprochen die relative Position an der Achse.
+
+==== Axis Orientation
+
+Die Achsen-Ausrichtung beschreibt die Richtung in der Werte an einer Achse aufgetragen werden.
+Typischerweise werden an der Y-Achse die Werte aufsteigend von unten nach oben dargestellt.
+
+Unter bestimmten Umständen (z.B. Sensor ist an der Decke montiert) ist aber auch die umgekehrte Richtung denkbar.
+
+==== Content Area Relative
+
+Beschreibt Werte, welche relativ zur technischen Ausrichtung der Achse dargestellt werden.
+Diese entsprechen ohne Zoom und Translation direkt den auf dem Bildschirm dargestellten Werten.
+
+==== Zoom
+
+Der Zoom - welcher als Faktor definiert ist.
+Ein Zoom-Faktor von 1.0/1.0 bedeutet dabei, dass Content Area Relative-Werte 1:1 auf dem Bildschirm dargestellt werden.
+
+Die Zoom-Faktoren können für X und Y unterschiedlich sein.
+
+==== Zoomed
+
+"Zoomed" Werte berücksichtigen bereits dem Zoom-Faktor.
+Diese werden also in genau dieser Größe dann auf dem Bildschirm dargestellt.
+Distanzen entsprechen bereits den exakten Pixel-Abständen auf dem Monitor.
+
+==== Translation
+
+Beschreibt die Verschiebung (Panning) der Darstellung auf dem Bildschirm.
+
+===== Anschaulich
+
+Eine Translation von 50/100 Pixeln kann wie folgt interpretiert werden:
+* der *Inhalt* nach rechts unten verschoben ist
+* das Fenster (der sichtbare Ausschnitt) nach links oben verschoben wurde (als -x/-y der Translation)
+
+==== Window (nur Koordinaten)
+
+Window-Koordinaten entsprechen den exakten Koordinaten innerhalb der Canvas.
+
+=== Umrechnungen
+
+==== Domain -> Domain Relative
+
+==== Domain Relative -> Content Area Relative
+
+==== Content Area Relative -> Zoomed
+
+==== Zoomed -> Window
+
+

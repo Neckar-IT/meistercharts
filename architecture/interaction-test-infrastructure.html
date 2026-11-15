@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test-Infrastruktur für Interaktionen — Konzept</title>
+<style>
+  :root {
+    --ink: #16191d;
+    --ink-soft: #4a5159;
+    --ink-faint: #7b838c;
+    --rule: #dfe3e8;
+    --rule-soft: #eef1f4;
+    --paper: #ffffff;
+    --paper-tint: #f7f9fa;
+    --accent: #75b726;
+    --warn: #c0392b;
+    --code-bg: #f4f6f8;
+    --measure: 74ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e6e9ec;
+      --ink-soft: #aab2ba;
+      --ink-faint: #7d858d;
+      --rule: #2e343a;
+      --rule-soft: #23282d;
+      --paper: #16191d;
+      --paper-tint: #1c2025;
+      --code-bg: #1c2025;
+      --warn: #e8705f;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "kern", "liga";
+  }
+
+  main { max-width: var(--measure); margin: 0 auto; }
+
+  header {
+    padding: 4rem 0 2.5rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-size: .75rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 1rem;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    letter-spacing: -.02em;
+    font-weight: 650;
+  }
+
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    margin: 3.5rem 0 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    letter-spacing: -.01em;
+    font-weight: 650;
+  }
+
+  h2 .num {
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+    margin-right: .6rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 2rem 0 .6rem;
+    font-weight: 650;
+  }
+
+  p { margin: 0 0 1rem; }
+
+  ul, ol { margin: 0 0 1rem; padding-left: 1.3rem; }
+  li { margin-bottom: .4rem; }
+
+  code {
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .875em;
+    background: var(--code-bg);
+    padding: .1em .35em;
+    border-radius: 3px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0 0 1.25rem;
+    font-size: .84rem;
+    line-height: 1.55;
+  }
+
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  .c { color: var(--ink-faint); }
+  .k { color: var(--ink-soft); font-weight: 600; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.5rem;
+    font-size: .9rem;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 650;
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 0 .8rem .5rem 0;
+    border-bottom: 1px solid var(--ink);
+    vertical-align: bottom;
+  }
+
+  td {
+    padding: .6rem .8rem .6rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+
+  td:last-child, th:last-child { padding-right: 0; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--paper-tint);
+    padding: 1rem 1.2rem;
+    margin: 0 0 1.5rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .callout.warn { border-left-color: var(--warn); }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout-title {
+    font-weight: 650;
+    font-size: .8rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 .5rem;
+  }
+
+  .layers { margin: 0 0 1.5rem; }
+
+  .layer {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .layer:first-child { border-top: 1px solid var(--rule); }
+
+  .layer-num {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-faint);
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 300;
+  }
+
+  .layer-name { font-weight: 650; margin: 0 0 .25rem; }
+  .layer-name code { background: none; padding: 0; font-size: .95em; }
+  .layer-desc { margin: 0; color: var(--ink-soft); font-size: .93rem; }
+
+  .verdict {
+    display: inline-block;
+    font-size: .7rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-weight: 650;
+    padding: .15em .5em;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .yes { background: rgba(117,183,38,.16); color: #4a7a12; }
+  .no { background: rgba(192,57,43,.13); color: #a83226; }
+  .na { background: var(--rule-soft); color: var(--ink-faint); }
+
+  @media (prefers-color-scheme: dark) {
+    .yes { color: #9ed456; }
+    .no { color: #e8705f; }
+  }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-faint);
+    font-size: .85rem;
+  }
+
+  .path {
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .82rem;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="eyebrow">MeisterCharts · Konzept</p>
+  <h1>Test-Infrastruktur für Interaktionen</h1>
+  <p class="lede">
+    Wie 100 % der Gesten in der PV-Modulplanung und der String-Planung abgedeckt werden — stabil,
+    schnell und ohne dass jemand Pixelkoordinaten pflegen muss.
+  </p>
+</header>
+
+<h2><span class="num">1</span>Warum die vorhandenen Tests nicht reichen</h2>
+
+<p>
+  Nach dem Umbau auf <code>InteractionTool</code> gibt es 118 Tests. Sie prüfen die Werkzeuge isoliert:
+  Ein <code>InteractionTarget</code> geht rein, eine Liste von Commands kommt raus. Das ist wertvoll und schnell,
+  deckt aber genau die Kette nicht ab, in der der zuletzt gefundene Defekt saß.
+</p>
+
+<table>
+  <thead>
+    <tr><th>Kettenglied</th><th>Heute abgedeckt</th><th>Was ungetestet bleibt</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>InteractionTool</code></td>
+      <td><span class="verdict yes">ja</span></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><code>Command</code> + <code>CommandExecutor</code></td>
+      <td><span class="verdict yes">ja</span></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><code>InteractionTargets</code></td>
+      <td><span class="verdict yes">ja</span></td>
+      <td>synthetische Rechtecke, nicht die echte Layout-Geometrie</td>
+    </tr>
+    <tr>
+      <td>Registrierung in <code>layout()</code></td>
+      <td><span class="verdict no">nein</span></td>
+      <td>Ein Button wird gemalt, aber nicht registriert — oder umgekehrt</td>
+    </tr>
+    <tr>
+      <td><code>CanvasDragSupport</code> + Broker-Reihenfolge</td>
+      <td><span class="verdict no">nein</span></td>
+      <td>Down auf Button startet fälschlich einen Drag; Handler-Reihenfolge kippt</td>
+    </tr>
+    <tr>
+      <td>Zusammenspiel zweier Layer</td>
+      <td><span class="verdict no">nein</span></td>
+      <td><code>beginLayout()</code> im falschen Layer räumt die Regionen des anderen weg</td>
+    </tr>
+    <tr>
+      <td>Resize über <code>ResizeHandlesSupport</code></td>
+      <td><span class="verdict no">nein</span></td>
+      <td>Achsenorientierung, Handle-Richtung, Clamping am Dachrand</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout warn">
+  <p class="callout-title">Der Kern des Problems</p>
+  <p>
+    Ein Tool-Test kann nicht fehlschlagen, wenn ein Delete-Button an der falschen Stelle registriert wird —
+    er bekommt das <code>InteractionTarget</code> ja geschenkt. Genau diese Klasse von Fehlern ist die,
+    die Nutzer sehen.
+  </p>
+</div>
+
+<h2><span class="num">2</span>Was „eine Geste“ ist</h2>
+
+<p>
+  Ohne Definition ist „100 %“ nicht messbar. Für dieses Konzept gilt:
+</p>
+
+<div class="callout">
+  <p>
+    Eine <strong>Geste</strong> ist eine Sequenz von Eingabe-Events, die auf einem definierten Vorzustand
+    zu einem fachlichen Ergebnis führt — beschrieben durch das getroffene <strong>Element</strong>,
+    die getroffene <strong>Handle-Rolle</strong> und den <strong>Vorzustand</strong> des Charts.
+  </p>
+</div>
+
+<p>
+  Daraus folgt die Abdeckungsmatrix. Sie ist ein Kreuzprodukt, keine Wunschliste:
+</p>
+
+<pre><code><span class="c">// Modulplanung</span>
+Element   ∈ { ModuleArea, UnusableArea, Module, — }
+Rolle     ∈ { Body, DeleteButton, RotateButton, ResizeHandle, — }
+Vorzustand∈ { leer, selektiert, fremd-selektiert, dragging, Modul gelöscht }
+Modus     ∈ { Planning, Rendering, Printing }
+
+<span class="c">// String-Planung</span>
+Element   ∈ { Modul in aktivem String, Modul in fremdem String, freies Modul, — }
+Vorzustand∈ { kein String aktiv, String aktiv }</code></pre>
+
+<p>
+  Das Kreuzprodukt hat mehr Zellen, als sinnvolle Gesten existieren. Jede Zelle bekommt deshalb
+  genau eines von zwei Urteilen: <span class="verdict yes">abgedeckt</span> mit Testfall, oder
+  <span class="verdict na">nicht anwendbar</span> mit Begründung — etwa „Sperrflächen haben keinen
+  Rotate-Button“. <strong>Kein stilles Weglassen.</strong> Das ist die eigentliche 100-%-Garantie:
+  nicht Fleiß, sondern eine vollständig aufgezählte Matrix mit einem Urteil pro Zelle.
+</p>
+
+<h2><span class="num">3</span>Die vier Bausteine</h2>
+
+<div class="layers">
+  <div class="layer">
+    <div class="layer-num">1</div>
+    <div>
+      <p class="layer-name"><code>GestureCatalog</code> — die Matrix als Daten</p>
+      <p class="layer-desc">
+        Jede Geste ist ein Eintrag mit Id, Beschreibung und Skript. Der Katalog ist die einzige Quelle
+        dafür, was „alle Gesten“ heißt. Neue Geste = neuer Eintrag; die Vollständigkeitsprüfung zieht daraus.
+      </p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">2</div>
+    <div>
+      <p class="layer-name"><code>PlanningChartRobot</code> — echte Events, semantische Ziele</p>
+      <p class="layer-desc">
+        Speist Maus- und Tastatur-Events in einen headless aufgebauten Chart, durch die vollständige
+        echte Kette. Ziele werden semantisch benannt (<code>on(moduleArea, DeleteButton)</code>) und
+        vom Robot über die Registry in Koordinaten aufgelöst.
+      </p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">3</div>
+    <div>
+      <p class="layer-name"><code>ChartStateSnapshot</code> — ein lesbarer Textabzug</p>
+      <p class="layer-desc">
+        Nach jeder Geste: Modell, Interaktionszustand, Undo-Stack und Cursor als normalisierter Text.
+        Ein Blick ins Diff genügt, um zu sehen, was eine Änderung angerichtet hat.
+      </p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">4</div>
+    <div>
+      <p class="layer-name"><code>GestureInvariants</code> — Regeln, die für jede Geste gelten</p>
+      <p class="layer-desc">
+        Undo-Rundlauf, Hover-Idempotenz, kein Zustandsleck nach Abbruch, Untätigkeit außerhalb des
+        Planungsmodus. Laufen automatisch über den ganzen Katalog — eine neue Geste erbt sie, ohne dass
+        jemand einen Test schreibt.
+      </p>
+    </div>
+  </div>
+</div>
+
+<h2><span class="num">4</span>Der Robot: semantische Ziele statt Pixel</h2>
+
+<p>
+  Die Infrastruktur steht bereits fast vollständig bereit. <code>MockCanvas</code>, <code>ChartSupport</code>
+  und das <code>paintingContext</code>-Muster aus
+  <span class="path">ValueAxisWithOffsetLayerPaintTest.kt:106</span> laufen headless und liegen sämtlich in
+  <code>commonMain</code>, sind also auf JVM <em>und</em> JS verfügbar;
+  <code>DefaultMouseEventBroker.notifyDown / notifyMove / notifyUp</code> ist der Einspeisepunkt,
+  <code>LayerList</code> verteilt an die Layer. Was fehlt, ist die Klammer darum.
+</p>
+
+<pre><code><span class="k">class</span> PlanningChartRobot&lt;E : Any, M : Any&gt;(
+  gestalt: ChartGestalt,
+  canvasSize: Size = Size(<span class="c">800.0</span>, <span class="c">600.0</span>),
+) {
+  <span class="c">/** Layout + Events, wie im echten Chart. Löst semantische Ziele über die Registry auf. */</span>
+  <span class="k">fun</span> hover(target: GestureTarget&lt;E&gt;)
+  <span class="k">fun</span> press(target: GestureTarget&lt;E&gt;)
+  <span class="k">fun</span> dragBy(distance: @RoofRelative @mm Distance)   <span class="c">// Dach-Millimeter, keine Pixel</span>
+  <span class="k">fun</span> release()
+  <span class="k">fun</span> key(keyStroke: KeyStroke)
+  <span class="k">fun</span> undo()
+  <span class="k">fun</span> redo()
+
+  <span class="k">fun</span> snapshot(): ChartStateSnapshot
+}
+
+<span class="k">sealed interface</span> GestureTarget&lt;out E : Any&gt; {
+  <span class="k">data class</span> On&lt;E : Any&gt;(<span class="k">val</span> element: E, <span class="k">val</span> role: HandleRole) : GestureTarget&lt;E&gt;
+  <span class="k">data object</span> Nothing : GestureTarget&lt;kotlin.Nothing&gt;      <span class="c">// leere Dachfläche</span>
+  <span class="k">data object</span> OutsideCanvas : GestureTarget&lt;kotlin.Nothing&gt;  <span class="c">// Maus verlässt den Canvas</span>
+}</code></pre>
+
+<p>
+  Der Robot führt vor jedem Event einen echten Layout-Durchlauf aus — genau wie der Canvas es tut.
+  Dadurch stimmt die Registry immer mit dem Modellzustand überein, und ein Test, der ein Modul verschiebt
+  und danach dessen Delete-Button drückt, trifft ihn an der neuen Stelle.
+</p>
+
+<div class="callout">
+  <p class="callout-title">Der wichtigste Effekt</p>
+  <p>
+    Löst <code>On(moduleArea, DeleteButton)</code> keine registrierte Region auf, schlägt der Test mit
+    <em>„Für ModuleArea ist kein DeleteButton registriert“</em> fehl — nicht mit einem stillen Klick ins
+    Leere. Damit ist „gemalt, aber nicht klickbar“ eine Testfehlermeldung statt eines Bug-Reports.
+  </p>
+</div>
+
+<h3>Nichts davon ist neu erfunden</h3>
+
+<p>
+  Die semantischen Ziele sind <strong>keine Test-Erfindung</strong>: <code>InteractionTarget(element, role, bounds)</code>
+  und <code>HandleRole</code> existieren bereits im Produktionscode und sind das Vokabular, in dem die
+  Werkzeuge ohnehin denken. Die Registry löst heute <em>Koordinate → Ziel</em> auf; der Robot braucht
+  zusätzlich die Umkehrung <em>Ziel → Koordinate</em>. Das ist eine Sichtbarkeitsfrage
+  (<code>interactionTargets</code> für den Robot erreichbar machen) plus die Punktsuche unten — kein
+  zweites Modell neben dem Produktionsmodell.
+</p>
+
+<div class="callout warn">
+  <p class="callout-title">Was ein Spike sofort aufgedeckt hat</p>
+  <p>
+    Der naive Ansatz „nimm die Mitte des Elements“ ist falsch: In der Mitte einer Modulfläche sitzt ihr
+    <em>Delete-Button</em>. Ein Klick dorthin löscht sie, statt sie zu greifen — beim Schreiben des Spikes
+    ist genau das passiert, obwohl der Autor den Code am Vortag selbst gebaut hatte.
+  </p>
+  <p>
+    Der Robot probiert deshalb mehrere Punkte im Element (Mitte, dann Richtung Ecken) und nimmt den ersten,
+    an dem <code>findTargetAt</code> wirklich das gewünschte Element <em>mit der gewünschten Rolle</em>
+    liefert. Findet er keinen, ist das ein Testfehler: <em>„Kein Punkt gefunden, an dem ModuleArea als Body
+    getroffen wird“</em> — ein vollständig von Buttons verdecktes Element ist ein echter Bedienfehler.
+  </p>
+</div>
+
+<h3>Muss <code>MockCanvas</code> dafür ausgebaut werden? Nein.</h3>
+
+<p>
+  Die naheliegende Sorge ist, dass ein headless Chart eine tragfähige Canvas-Attrappe braucht — mit
+  Font-Metriken, Bildern, Rendering. Ein lauffähiger Spike gegen den echten
+  <code>PvModulePlanningLayer</code> zeigt: <strong>nichts davon.</strong>
+</p>
+
+<table>
+  <thead>
+    <tr><th style="width:38%">Befürchtung</th><th>Realität im Spike</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Rendering muss funktionieren</td>
+      <td><code>paint()</code> wird nie aufgerufen. Regionen entstehen in <code>layout()</code> — nur das läuft.</td>
+    </tr>
+    <tr>
+      <td>Font-Metriken werden gebraucht</td>
+      <td>Die Regionen kommen aus Icon-Größen (<code>Size.PX_24</code>, <code>Size.PX_30</code>), nie aus Textbreiten.</td>
+    </tr>
+    <tr>
+      <td><code>MockCanvas</code> muss erweitert werden</td>
+      <td>Unverändert benutzbar, zusammen mit <code>MockCanvasRenderingContext</code> und <code>ChartSupport</code>.</td>
+    </tr>
+    <tr>
+      <td><code>MeisterChartsPlatform.init()</code> nötig</td>
+      <td>Nein — das gibt es nur für JavaFX und JS. Es braucht <strong>eine Zeile</strong> (siehe unten).</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Die einzige Plattform-Abhängigkeit: <code>PvRoofPlanningLayer.Configuration</code> legt beim Konstruieren
+  die Panel-PNGs als <code>LocalResourcePaintable</code> an, und deren Konstruktor fragt eine Factory. Sie ist
+  eine <code>var</code> und im Test in einer Zeile gesetzt:
+</p>
+
+<pre><code>MeisterchartsJvm.localResourcePaintableFactory =
+  JvmLocalResourcePaintableFactory { _, _, _ -> Paintable.NoOp }</code></pre>
+
+<p>
+  Der gesamte Spike — Chart aufbauen, layouten, Punkt suchen, Down schicken, Zustand prüfen — ist
+  <strong>98 Zeilen</strong>. Er hat auf Anhieb die Kette Layout → Registry → Broker → DragSupport → Tool
+  → Command durchlaufen und dabei den Mitte/Delete-Button-Fallstrick aufgedeckt. Der Robot ist im
+  Wesentlichen dieser Spike, aufgeräumt und wiederverwendbar.
+</p>
+
+<h2><span class="num">5</span>So sieht ein Test aus</h2>
+
+<pre><code>@Test
+<span class="k">fun</span> `Sperrfläche über den Dachrand hinaus ziehen wird begrenzt`() {
+  <span class="k">val</span> robot = modulePlanningRobot(PvRoofSampleModels.realistic())
+
+  robot.press(on(unusableArea, HandleRole.Body))
+  robot.dragBy(Distance(<span class="c">99_000.0</span>, <span class="c">0.0</span>))
+  robot.release()
+
+  <span class="c">// Eine explizite Kern-Aussage: worum es in dieser Geste geht</span>
+  assertThat(unusableArea.location.x)
+    .isLessThanOrEqualTo(model.roofSize.width - unusableArea.size.width)
+
+  <span class="c">// Plus der Zustandsabzug für alles Drumherum</span>
+  robot.snapshot().matchesGolden(<span class="c">"unusable-area-drag-clamped"</span>)
+}</code></pre>
+
+<p>Der zugehörige Textabzug — der ganze Chart-Zustand auf einen Blick:</p>
+
+<pre><code>=== Modell =============================================
+Dach 12000 x 8000 mm
+ModuleArea#1   Ort 400,400   Größe 11200x7200   vertikal   Module 66 (2 gelöscht)
+UnusableArea#1 Ort 9000,1750 Größe 1000x1400    Rechteck
+UnusableArea#2 Ort 2300,3500 Größe 2300x800     Dreieck/Q1
+
+=== Interaktion ========================================
+hovered   UnusableArea#1 / Body
+selected  UnusableArea#1
+dragged   —
+Cursor    Move
+
+=== Undo-Stapel ========================================
+[1] Sperrfläche verschieben      &lt;- rückgängig machbar
+    (kein Redo)</code></pre>
+
+<div class="callout warn">
+  <p class="callout-title">Warum nicht nur Golden Master</p>
+  <p>
+    Reine Snapshot-Tests verrotten: Bei einem roten Test wird der Abzug erneuert, ohne ihn zu lesen.
+    Deshalb hat <strong>jede</strong> Geste zusätzlich mindestens eine explizite Zusicherung zu ihrem Kern.
+    Der Snapshot ist das Sicherheitsnetz für unbeabsichtigte Nebenwirkungen, nicht der Test selbst.
+  </p>
+</div>
+
+<h2><span class="num">6</span>Wie 100 % gemessen werden</h2>
+
+<p>Drei Ebenen, die sich gegenseitig absichern:</p>
+
+<table>
+  <thead>
+    <tr><th style="width:20%">Ebene</th><th>Prüfung</th><th style="width:26%">Fängt</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Katalog</strong></td>
+      <td>Meta-Test: Jeder <code>GestureId</code> ist mindestens ein ausgeführter Test zugeordnet.</td>
+      <td>Geste beschrieben, aber nie getestet</td>
+    </tr>
+    <tr>
+      <td><strong>Matrix</strong></td>
+      <td>Meta-Test: Jede Zelle des Kreuzprodukts trägt ein Urteil — abgedeckt oder begründet nicht anwendbar.</td>
+      <td>Geste gar nicht erst gedacht</td>
+    </tr>
+    <tr>
+      <td><strong>Kover</strong></td>
+      <td>100 % Branch-Coverage auf <code>canvas/interaction/</code>, <code>canvas/command/</code>,
+          <code>*Tool.kt</code>, <code>*Commands.kt</code>, <code>*VisualStates.kt</code>.</td>
+      <td>Zweig, den die Matrix nicht kennt</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Die mittlere Ebene ist der Kern. Der Matrix-Test bekommt die Achsen als Aufzählungen und bildet das
+  Kreuzprodukt selbst — wächst <code>HandleRole</code> um einen Wert, werden schlagartig alle neuen
+  Kombinationen rot, bis jemand pro Zelle entschieden hat. Das ist der Unterschied zwischen
+  „wir haben 50 Tests“ und „es gibt nachweislich keine 51.“
+</p>
+
+<pre><code>@Test
+<span class="k">fun</span> `jede Kombination aus Element, Rolle und Vorzustand hat ein Urteil`() {
+  <span class="k">val</span> offen = GestureMatrix.allCells() - GestureCatalog.judgedCells()
+
+  assertThat(offen).isEmpty()   <span class="c">// Meldung listet die offenen Zellen einzeln auf</span>
+}</code></pre>
+
+<h2><span class="num">7</span>Stabilität: was ein Test niemals enthält</h2>
+
+<table>
+  <thead>
+    <tr><th style="width:32%">Verboten</th><th>Stattdessen</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Pixelkoordinaten</td>
+      <td><code>on(element, role)</code> — der Robot fragt die Registry</td>
+    </tr>
+    <tr>
+      <td>Drag-Distanzen in Pixeln</td>
+      <td><code>dragBy</code> in Dach-Millimetern; der Robot rechnet um</td>
+    </tr>
+    <tr>
+      <td>Zufalls-UUIDs</td>
+      <td>feste UUIDs aus dem Testmodell; Snapshots zeigen <code>#1</code>, <code>#2</code></td>
+    </tr>
+    <tr>
+      <td>Wanduhr-Zeit</td>
+      <td><code>nowProvider</code> festnageln; Event-Zeitstempel zählt der Robot hoch</td>
+    </tr>
+    <tr>
+      <td><code>toString()</code> auf <code>Double</code> oder Domänenobjekten im Snapshot</td>
+      <td>eigene Formatierung auf ganze Millimeter — siehe Abschnitt 8, das ist zwingend</td>
+    </tr>
+    <tr>
+      <td>Canvas-Größe implizit</td>
+      <td>fest im Robot; Charts sind zoom-frei und passen sich der Dachgröße an</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Diese Regeln sind der Grund, warum die Suite eine Layout-Änderung übersteht: Verschiebt sich der
+  Rotate-Button an eine andere Ecke, ändert sich <strong>kein einziger Test</strong> — nur die
+  Registrierung im Layer, und die Registry liefert die neue Position an alle Tests aus.
+</p>
+
+<h2><span class="num">8</span>Auf welcher Plattform laufen die Tests</h2>
+
+<p>
+  Die naheliegende Antwort wäre JVM — schnell, IDE-Integration, Debugger. Sie ist falsch, und der Grund
+  steht im Source-Set-Zuschnitt der konsumierenden Anwendung: <code>commonMain</code>, <code>jsMain</code>,
+  <code>jsTest</code> — <strong>kein</strong> <code>jvmMain</code>.
+  Die Planungs-Charts werden ausschließlich als Kotlin/JS ausgeliefert. Getestet wird heute ausschließlich
+  auf der JVM. Wir prüfen also eine Plattform, die nie beim Kunden läuft.
+</p>
+
+<h3>Gemessene Unterschiede</h3>
+
+<p>
+  Eine Probe mit identischem Quelltext in <code>jvmTest</code> und <code>jsTest</code> von
+  <code>meistercharts-canvas</code> ergab:
+</p>
+
+<table>
+  <thead>
+    <tr><th style="width:34%">Ausdruck</th><th style="width:26%">JVM</th><th style="width:26%">JS (Node)</th><th>Gleich</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>1.0.toString()</code></td><td><code>1.0</code></td><td><code>1</code></td><td><span class="verdict no">nein</span></td></tr>
+    <tr><td><code>Coordinates(400,7200)</code></td><td><code>400.0/7200.0</code></td><td><code>400/7200</code></td><td><span class="verdict no">nein</span></td></tr>
+    <tr><td><code>Size(1000,1400)</code></td><td><code>1000.0x1400.0</code></td><td><code>1000x1400</code></td><td><span class="verdict no">nein</span></td></tr>
+    <tr><td><code>(-0.0).toString()</code></td><td><code>-0.0</code></td><td><code>0</code></td><td><span class="verdict no">nein</span></td></tr>
+    <tr><td><code>10000.0 / 3.0</code></td><td colspan="2"><code>3333.3333333333335</code></td><td><span class="verdict yes">ja</span></td></tr>
+    <tr><td><code>0.1 + 0.2</code></td><td colspan="2"><code>0.30000000000000004</code></td><td><span class="verdict yes">ja</span></td></tr>
+    <tr><td><code>(11200.0/1020.0).toIntFloor()</code></td><td colspan="2"><code>10</code></td><td><span class="verdict yes">ja</span></td></tr>
+  </tbody>
+</table>
+
+<p>
+  Das Muster ist eindeutig: <strong>Die Arithmetik ist bitgenau identisch</strong> — beide Plattformen rechnen
+  IEEE-754-Doubles. Abweichend ist ausschließlich die <em>Textdarstellung</em> von Zahlen. Damit sind
+  Hit-Test, Layout-Rechnung, Tool-Logik und Commands plattformunabhängig; die Gestenlogik verhält sich
+  auf JS garantiert wie auf der JVM.
+</p>
+
+<div class="callout warn">
+  <p class="callout-title">Zwingende Folge für den Snapshot</p>
+  <p>
+    Ein Golden Master, der <code>toString()</code> auf <code>Double</code>, <code>Coordinates</code> oder
+    <code>Size</code> aufruft, ist auf JVM und JS <em>unterschiedlich</em> — man bräuchte zwei Sätze
+    Golden Files, und der Wert der Methode wäre dahin. Der Snapshot muss deshalb <strong>selbst
+    formatieren</strong>: auf ganze Millimeter runden und als <code>Int</code> ausgeben. Das war im Entwurf
+    eine Stilfrage — nach dieser Messung ist es eine Bedingung.
+  </p>
+</div>
+
+<h3>Die Empfehlung: <code>commonTest</code>, eine Quelle, zwei Läufe</h3>
+
+<p>
+  Die Gesten-Suite gehört nach <code>commonTest</code> und läuft auf beiden Plattformen — nicht als
+  Kompromiss, sondern weil beide unterschiedliche Fragen beantworten:
+</p>
+
+<table>
+  <thead>
+    <tr><th style="width:18%">Lauf</th><th style="width:16%">Dauer</th><th>Rolle</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>JVM</strong></td>
+      <td>~7–14 s</td>
+      <td>Der Entwicklungs-Loop. Einzelne Tests über <code>--tests</code> filterbar, Debugger und
+          IDE-Integration vorhanden. Hier arbeitet man.</td>
+    </tr>
+    <tr>
+      <td><strong>JS (Node)</strong></td>
+      <td>~53 s</td>
+      <td>Das Merge-Gate. Die Plattform, die tatsächlich ausgeliefert wird. Läuft in der Pipeline,
+          nicht bei jedem Speichern.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Technisch ist das tragfähig: <code>MockCanvas</code>, <code>MockCanvasRenderingContext</code> und
+  <code>ChartSupport</code> liegen in <code>commonMain</code>, der Robot ist also multiplattform-fähig.
+  <code>kotlin.test</code> ist auf der JVM lauffähig (per Probe bestätigt), und AssertK ist als
+  Multiplattform-Artefakt eingebunden — <code>kotlin-events</code>, <code>kotlin-lang</code> und
+  <code>math</code> nutzen es bereits in <code>commonTest</code>.
+</p>
+
+<h3>Was das kostet</h3>
+
+<ul>
+  <li>
+    <code>meistercharts-pv-planning</code> hat bislang weder <code>commonTest</code> noch
+    <code>jsTest</code> — beide Verzeichnisse müssen angelegt werden.
+  </li>
+  <li>
+    Die 118 bestehenden Tests nutzen <code>org.junit.jupiter.api.Test</code>. Sollen sie mitwandern,
+    ist das ein mechanischer Import-Tausch auf <code>kotlin.test.Test</code>. <strong>Kein Muss</strong> —
+    sie können bleiben, wo sie sind; nur die neue Gesten-Suite muss gemeinsam sein.
+  </li>
+  <li>
+    <code>jsTest</code> kennt keine <code>--tests</code>-Filterung, nur der Task <code>jsNodeTest</code>.
+    Ein weiterer Grund, den JS-Lauf nicht zum Arbeits-Loop zu machen.
+  </li>
+</ul>
+
+<h3>Browser-Tests: bewusst klein gehalten</h3>
+
+<p>
+  Auch der JS-Lauf läuft unter Node, nicht im Browser (<code>jsBrowserTest</code> ist SKIPPED). Ungetestet
+  bleibt damit die Brücke von echten Pointer-Events zu <code>MouseDownEvent</code> &amp; Co.
+</p>
+
+<p>
+  Dafür genügt eine Handvoll Playwright-Tests — ein Drag, ein Button-Klick, ein Tastendruck je Chart.
+  Die Gesten-Matrix über den Browser zu fahren wäre um Größenordnungen langsamer, flaky und würde nichts
+  zusätzlich absichern, weil die Logik nachweislich plattformgleich rechnet.
+  <strong>Vollständigkeit in <code>commonTest</code>, Realitätsnachweis im Browser.</strong>
+</p>
+
+<h2><span class="num">9</span>Was zu bauen ist</h2>
+
+<table>
+  <thead>
+    <tr><th style="width:44%">Datei</th><th>Inhalt</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2" style="padding-top:1rem;font-weight:650;border-bottom:1px solid var(--ink)">
+        <code>meistercharts-canvas</code> · neues Source-Set <code>src/commonTestFixtures/</code>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="path">interaction/testing/ChartRobot.kt</span></td>
+      <td>Headless-Aufbau, Layout-Durchlauf, Event-Einspeisung</td>
+    </tr>
+    <tr>
+      <td><span class="path">interaction/testing/GestureTarget.kt</span></td>
+      <td>Semantische Ziele und ihre Auflösung über die Registry</td>
+    </tr>
+    <tr>
+      <td><span class="path">interaction/testing/GestureMatrix.kt</span></td>
+      <td>Kreuzprodukt-Bildung und Urteils-Prüfung, fachfrei</td>
+    </tr>
+    <tr>
+      <td><span class="path">interaction/testing/GoldenMaster.kt</span></td>
+      <td>Textabzug lesen, vergleichen, per Flag neu schreiben</td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding-top:1.4rem;font-weight:650;border-bottom:1px solid var(--ink)">
+        <code>meistercharts-pv-planning</code> · neues Source-Set <code>src/commonTest/</code>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="path">…/testing/PlanningChartRobots.kt</span></td>
+      <td>Fachliche Robots für beide Charts, feste Testmodelle</td>
+    </tr>
+    <tr>
+      <td><span class="path">…/testing/ChartStateSnapshot.kt</span></td>
+      <td>Der normalisierte Textabzug oben</td>
+    </tr>
+    <tr>
+      <td><span class="path">…/RoofPlanningGestureCatalog.kt</span></td>
+      <td>Die Gesten der Modulplanung samt Urteilen</td>
+    </tr>
+    <tr>
+      <td><span class="path">…/StringsPlanningGestureCatalog.kt</span></td>
+      <td>Die Gesten der String-Planung samt Urteilen</td>
+    </tr>
+    <tr>
+      <td><span class="path">…/GestureInvariantsTest.kt</span></td>
+      <td>Die Regeln aus Baustein 4, über den ganzen Katalog</td>
+    </tr>
+    <tr>
+      <td><span class="path">…/GestureCoverageTest.kt</span></td>
+      <td>Die beiden Meta-Tests aus Abschnitt 6</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Der Robot gehört nach <code>meistercharts-canvas</code> und ist fachfrei: Er kennt
+  <code>InteractionTargets</code> und <code>HandleRole</code>, aber keine Modulfläche. Damit kann jedes
+  künftige interaktive Chart ihn benutzen. Das Source-Set <code>commonTestFixtures</code> hält ihn aus
+  dem Produktions-Artefakt heraus.
+</p>
+
+<h2><span class="num">10</span>Reihenfolge</h2>
+
+<table>
+  <thead>
+    <tr><th style="width:8%">Schritt</th><th>Inhalt</th><th style="width:30%">Ergebnis</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>0</strong></td>
+      <td><code>commonTest</code> in <code>meistercharts-pv-planning</code> anlegen, ein trivialer Test
+          auf JVM und JS grün</td>
+      <td>Der zweigleisige Lauf steht, bevor Inhalt entsteht</td>
+    </tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td>Robot und semantische Ziele; eine einzige Geste damit testen (Sperrfläche verschieben)</td>
+      <td>Die Kette Layout → Registry → Drag → Command läuft im Test</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td>Snapshot und Golden-Master-Vergleich, mit eigener Zahlenformatierung</td>
+      <td>Zustandsänderungen im Diff sichtbar — ein Golden File für beide Plattformen</td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td>Katalog und Matrix für die Modulplanung befüllen</td>
+      <td>Erste Zahl: abgedeckt / offen / nicht anwendbar</td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td>Invarianten über den Katalog</td>
+      <td>Undo-Rundlauf für jede Geste, ohne Einzeltests</td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td>
+      <td>String-Planung nachziehen; Kover-Schwelle scharf schalten</td>
+      <td>Matrix vollständig, Coverage-Gate greift</td>
+    </tr>
+    <tr>
+      <td><strong>6</strong></td>
+      <td>Playwright-Smoke-Tests für die Event-Brücke</td>
+      <td>Nachweis, dass echte Pointer-Events ankommen</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Die Schritte 1 und 2 sind die Investition — danach kostet eine zusätzliche Geste drei bis fünf Zeilen
+  und erbt Undo-Prüfung, Snapshot und Matrix-Buchführung automatisch. Genau das macht die 100 %
+  erreichbar <em>und</em> haltbar: Nicht die erste vollständige Suite ist das Problem, sondern die
+  zweihundertste Änderung danach.
+</p>
+
+<footer>
+  <p>
+    Konzept zur Interaction-Architektur aus
+    <a href="https://git.neckar.it/neckarit/neckar-hub/-/issues/2712">#2712</a> ·
+    Modul-Umbenennung getrennt in
+    <a href="https://git.neckar.it/neckarit/neckar-hub/-/issues/2721">#2721</a> ·
+    <span class="path">internal/open/meistercharts/architecture/interaction-test-infrastructure.html</span>
+  </p>
+</footer>
+
+</main>
+</body>
+</html>

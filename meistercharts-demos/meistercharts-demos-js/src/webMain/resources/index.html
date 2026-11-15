@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neckar IT GmbH, Mössingen, Java Developement">
+  <meta name="author" content="Neckar IT GmbH">
+  <!-- The pinned image digest: the deploy sets it in the compose file, the nginx entrypoint fills it at container start. -->
+  <meta name="imageDigest" content="${APP_IMAGE_DIGEST}">
+
+  <title>Demonstration of MeisterCharts</title>
+  <style>
+  </style>
+
+  <link href="nit-fonts.css" type="text/css" rel="stylesheet">
+  <link href="nit-styleguide-2020.css" type="text/css" rel="stylesheet">
+  <!-- Replaced with tailwind -->
+  <link href="MeisterchartsDemo.css" type="text/css" rel="stylesheet">
+
+  <link href="fonts/fontawesome/css/all.css" rel="stylesheet">
+  <link href="css/meistercharts-demos-tailwind.css" rel="stylesheet">
+
+</head>
+<body class="bg-white m-0">
+
+<!-- Contains everything -->
+<div class="select-none">
+
+  <!--Contains navigation, content(chart + description), configuration-->
+  <div id="nav-content-config-container" class="flex flex-row w-screen h-screen overflow-hidden">
+    <div id="navigation-container" class="w-[260px] shrink-0 overflow-auto">
+    </div>
+
+    <!--Contains the chart + description pane-->
+    <div id="content-container" class="flex flex-col grow">
+
+      <div id="meistercharts-container" class="grow overflow-auto">
+      </div>
+
+      <div id="description-container" class="h-[160px] shrink-0 overflow-auto">
+      </div>
+    </div>
+
+    <div id="configuration-pane-container" class="w-[380px] shrink-0 overflow-auto">
+    </div>
+
+  </div>
+
+</div>
+
+<!--Required for demo: com.meistercharts.demojs.descriptors.ConfigurationFromElementDemoDescriptor-->
+<script type="application/json" id="meistercharts-config-myChart">{
+  "message": "The Message defined in HTML script tag"
+}</script>
+
+<!--For minimized build created by Gradle-->
+<script src="meistercharts-demos-js.js" type="module"></script>
+
+</body>
+</html>

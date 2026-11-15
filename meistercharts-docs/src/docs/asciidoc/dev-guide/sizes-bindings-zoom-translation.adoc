@@ -1,0 +1,160 @@
+include::attributes.adoc[]
+
+== Größen / Resizing / (Default) Zoom / Translation
+
+In diesem Kapitel wird erklärt, wie die einzelnen Größen zusammen hängen, wie das Resizing funktioniert und wie der Default-Zoom und die Default-Translation bestimmt werden.
+
+=== Relevante Szenarien
+
+Es gibt drei relevante Szenarien, die teilweise mit unterschiedlichen Strategien abgehandelt werden.
+
+Diese Szenarien sind technisch sehr unterschiedlich, für den Benutzer erschließt jedoch intuitiv ein sehr enger Zusammenhang.
+
+Deshalb müssen diese Strategien eng aufeinander abgestimmt sein, um eine konsistente User-Experience zu ermöglichen.
+
+==== Initiale Darstellung
+
+Wenn ein MeisterCharts geöffnet wird, erwartet der User, dass initial die Daten sinnvoll dargestellt werden.
+Die gleiche Ansicht soll auch durch die "Rücksetz"-Funktion, z.B. über die Toolbar, erreicht werden.
+
+Diese Darstellung wird durch die Klasse `com.cedarsoft.charting.algorithms.impl.ZoomAndTranslationDefaults` definiert.
+
+CAUTION: Oftmals ist bei der initialen Darstellung das Datenmodell des Charts noch leer.
+Dieser Zustand muss in den entsprechenden Klassen unterstützt werden.
+Bei zeitbasierten Charts bietet sich die Verwendung von `nowMillis()` zur Bestimmung eines sinnvollen Zeitpunktes bei leerem Datenmodell an.
+
+==== Rücksetzen auf Standard-Werte ("Home"-Button)
+
+Sobald Zooming und/oder Panning verfügbar sind, ist es notwendig dem User eine Rest-Möglichkeit zu bieten.
+Dies kann z.B. durch einen Home-Button auf der Toolbar erfolgen.
+
+Nach dem Rücksetzen entspricht die Darstellung in der Regel dem der initialen Darstellung unter Berücksichtigung der nun vergangenen Zeit bzw. des veränderten (gefüllten) Datenmodells.
+
+Das Rücksetzen erfolgt über den `ZoomAndTranslationSupport`.
+
+==== Resize des Window
+
+Wenn die Fenstergröße durch eine User-Interaktion verändert wird, sind je nach Anwendungsfall unterschiedliche Verhaltensweisen gewünscht.
+
+Dabei sind zwei Dinge relevant, die zusammen spielen:
+
+===== Anpassung der ContentArea-Size
+
+Die Implementierung `com.cedarsoft.charting.canvas.ContentAreaSizingStrategy` entscheided, ob und wie die ContentArea bei einem Resize angepasst wird.
+
+Dabei wird der Zoom und die Window-Translation noch **nicht** angepasst.
+
+===== Resize-Behavior
+
+Bei jedem Resize des Window oder der ContentArea wird immer auch das
+`WindowResizeBehavior` aufgerufen.
+
+Diese Klasse sorgt für die Anpassung des Zoom-Faktors und der Window-Translation.
+
+=== Implementierungen
+
+Es gibt für die einzelnen Interfaces verschiedene Default-Implementierungen.
+
+==== `WindowSizeBindingStrategy`
+
+Reagiert auf (Plattform-)Änderungen der Größe der Komponente.
+Passt die `WindowSize` im `ChartState` an.
+
+===== `ImmediateWindowSizeBindingStrategy`
+
+Updated die Größe sofort
+
+===== `DelayedWindowSizeBindingStrategy`:
+
+Updated die Größe mit einem gewissen Delay.
+
+Dieses Verhalten ist hilfreich, wenn das Neuberechnen relativ teuer ist.
+Insbesondere im Kontext von Tiling, bei denen die Werte-Achse an der Window-Size hängt.
+
+==== `ContentAreaSizingStrategy`
+
+Diese Strategie aktualisiert die Größe der ContentArea.
+In der Regel erfolgt die Neuberechnung bei jeder Änderung der WindowSize.
+
+===== `BindContentArea2WindowSize`:
+
+Die ContentAreaSize hängt direkt an der WindowSize - eventuelle Margins werden berücksichtigt.
+Diese Strategie wird bei "normalen"/einfachen Charts wie z.B. BarChart verwendet.
+
+===== `FixedContentArea(Height/Width)`:
+
+Die Höhe und/oder Breite der ContentArea hat einen fixen Wert.
+
+Verwendung z.B. bei zeitbasierte Charts oder Maps.
+
+=== Beispiele
+
+==== Bar Chart
+
+Ein einfacher Bar Chart unterstützt kein Zooming oder Panning.
+Daraus folgt, dass die Content-Area jeweils an die Window-Size gebunden wird (`BindContentAreaSize2ContentViewport`).
+
+Da Platz für Legenden, Achsen und Titel benötigt wird, bietet sich die Verwendung der Implementierung
+`com.cedarsoft.charting.algorithms.impl.FittingWithMargin` für die initiale Ansicht und das Rücksetzen an.
+
+Als ResizeBehavior wird `ResetToDefaultsOnWindowResize` verwendet.
+
+=== Beispiel-Code
+
+==== Bar Chart
+
+example: Ein Bar Chart, bei welchem die Content-Area (welche die Bars enthält) immer vollständig angezeigt werden soll.
+An den Seiten steht noch Platz für Achsen, Legende und Titel zur Verfügung.
+
+[source,kotlin,indent=0]
+.Configure for Bar Chart
+----
+include::{demoSourceDir}/ContentAreaBindingDoc.kt[tags=barChartContentAreaSizeBinding]
+----
+<1> Content Area ist immer gleich groß wie das Window.
+
+<2> Beim Resize werden Zooming und Panning jeweils zurück gesetzt.
+Dadurch wird immer auf die Defaults (siehe 3) zurück gestellt
+
+<3> Die ContentArea wird mit Rändern fixer Größe (10 Pixel oben, 70 Pixel rechts usw.) dargestellt.
+Damit bleibt Platz für Achsen und Legende.
+
+=== Abläufe / Events / Zusammenfassung
+
+In diesem Diagram sind alle Events und Abläufe zusammen gefasst, die im Kontext von ContentArea-/Window-Size relevant sind.
+
+==== BarChart: Content Area Binding / Resize Behavior / Reset to Defaults
+
+In diesem Beispiel werden folgende Implementierungen verwendet:
+
+* windowSizeBindingStrategy: ImmediateWindowSizeBindingStrategy
+* contentAreaSizingStrategy: BindContentArea2WindowSize
+* resizeBehavior: KeepCenterOnResize
+* zoomAndTranslationDefaults: ZoomAndTranslationDefaults.noTranslation
+
+Dies entspricht den Standard-Implementierungen, welche ohne weitere Konfiguration gewählt werden.
+
+Dieses Konfiguration wird bei einfachen Charts, wie z.B. dem BarChart verwendet.
+
+[plantuml,pdfwidth=75%]
+.BindContentArea2WindowSize / KeepCenterOnResize
+----
+include::size-bindings-1.puml[]
+----
+
+==== TimelineChart: Content Area Binding / Resize Behavior / Reset to Defaults
+
+In diesem Beispiel werden folgende Implementierungen verwendet:
+
+* windowSizeBindingStrategy: DelayedWindowSizeBindingStrategy
+* contentAreaSizingStrategy: FixedContentAreaWidth
+* resizeBehavior: KeepLocation(0.8): Position des CrossWires - z.B. bei 80%
+* zoomAndTranslationDefaults: MoveDomainValueToLocation
+
+Diese Konfiguration wird z.B. bei einem Timeline-Charts mit horizontaler Zeit-Achse verwendet.
+
+[plantuml,pdfwidth=75%]
+.BindContentArea2WindowSize / KeepCenterOnResize
+----
+include::size-bindings-2.puml[]
+----

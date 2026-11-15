@@ -1,0 +1,6 @@
+/* Scans the web sources of the demo runner and the page of meistercharts-demos-js, which carries the layout classes */
+@import "tailwindcss" source(none);
+@source "../kotlin";
+@source "../../jsMain/kotlin";
+@source "../../wasmJsMain/kotlin";
+@source "../../../../meistercharts-demos-js/src/webMain/resources";

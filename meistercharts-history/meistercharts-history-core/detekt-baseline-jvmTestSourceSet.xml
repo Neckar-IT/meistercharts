@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ExplicitItLambdaMultipleParameters:HistoryBucketDescriptorTest.kt:HistoryBucketDescriptorTest${ index, it -> assertThat(it.bucketRange).isEqualTo(HistoryBucketRange.HundredMillis) assertThat(it.duration).isEqualTo(100.0) assertThat(it.start).isEqualTo(descriptor.start + index * 100.0) assertThat(it.end).isEqualTo(descriptor.start + (index + 1) * 100.0) }</ID>
+  </CurrentIssues>
+</SmellBaseline>

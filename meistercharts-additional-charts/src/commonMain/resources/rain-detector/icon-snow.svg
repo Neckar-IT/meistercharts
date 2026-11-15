@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41.4 41.4">
+  <defs>
+    <style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:2px;}</style>
+  </defs>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="_4._Zeichenfläche" data-name="4. Zeichenfläche">
+      <line class="cls-1" x1="20.7" x2="20.7" y2="41.4" />
+      <line class="cls-1" x1="41.4" y1="21.11" y2="21.11" />
+      <line class="cls-1" x1="35.34" y1="35.75" x2="6.06" y2="6.48" />
+      <line class="cls-1" x1="35.75" y1="6.2" x2="6.48" y2="35.48" />
+      <polyline class="cls-1" points="30.22 3.31 30.22 11.59 38.5 11.59" />
+      <polyline class="cls-1" points="14.85 2.07 20.7 7.92 26.55 2.07" />
+      <polyline class="cls-1" points="39.74 15.26 33.89 21.11 39.74 26.97" />
+      <polyline class="cls-1" points="26.55 40.2 20.7 34.35 14.85 40.2" />
+      <polyline class="cls-1" points="3.31 12.01 11.59 12.01 11.59 3.73" />
+      <polyline class="cls-1" points="38.3 30.64 30.02 30.64 30.02 38.92" />
+      <polyline class="cls-1" points="12.63 37.47 12.63 29.19 4.35 29.19" />
+      <polyline class="cls-1" points="2.04 27 7.89 21.15 2.04 15.29" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,69 @@
+= MeisterCharts Developers Guide
+Neckar IT GmbH <meisterCharts@neckar.it>
+v1.0, 2026-01
+:doctype: book
+//:sectnumlevels: 7
+:sectnums:
+:toc-title: Inhalt
+:appendix-caption: Appendix
+//:icons:
+:toc: left
+:source-highlighter: rouge
+:source-language: kotlin
+:experimental:
+:icons: font
+:icon-set: fas
+//:show-link-uri:
+:chapter-label:
+:back-cover-image: image:neckar-it-back-cover.pdf[]
+
+include::dev-guide/attributes.adoc[]
+
+[preface]
+== Vorwort
+
+In diesem Dokument sind die relevanten Konzepte für den Einsatz der MeisterCharts-Komponente dokumentiert.
+
+include::dev-guide/concept.adoc[]
+
+include::dev-guide/calculations.adoc[]
+
+include::dev-guide/content-area-size.adoc[]
+
+include::dev-guide/content-area-size-scenarios.adoc[]
+
+include::dev-guide/sizes-bindings-zoom-translation.adoc[]
+
+include::dev-guide/i18n.adoc[]
+
+include::dev-guide/fonts.adoc[]
+
+include::dev-guide/rendering-context.adoc[]
+
+include::dev-guide/layer-best-practices.adoc[]
+
+include::dev-guide/paintables.adoc[]
+
+include::dev-guide/painters.adoc[]
+
+include::dev-guide/tiling.adoc[]
+
+include::dev-guide/slippy-maps.adoc[]
+
+include::dev-guide/painting-performance.adoc[]
+
+include::dev-guide/history.adoc[]
+
+include::dev-guide/faqs.adoc[]
+
+include::dev-guide/architecture-hints.adoc[]
+
+//Usages + Dep management
+
+== Usage and Charting FX
+
+:leveloffset: +1
+include::dev-guide/10-usage-charting-fx.adoc[]
+:leveloffset: -1
+
+include::dev-guide/appendix.adoc[]

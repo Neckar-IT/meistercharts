@@ -1,0 +1,153 @@
+include::attributes.adoc[]
+
+== Tiling
+
+Die Idee hinter Tiling liegt darin, dass in vielen Szenarien nur wenige Daten geändert werden.
+
+Wenn das Rendering nun nicht direkt auf den Canvas, sondern in Bilder erfolgt, können diese Bilder dann verhältnismäßig schnell gepaintet werden.
+
+=== Einsatz-Szenario
+
+Tiling macht dann Sinn, wenn alle/einige dieser Kriterien erfüllt sind:
+
+==== Viele Daten / Zeichnen dauert lange / Datenaufbereitung dauert
+
+Wenn nur wenige Daten gezeichnet werden, lohnt sich der Overhead und die zusätzliche Komplexität des Tilings nicht.
+
+Nur wenn so viele Daten gezeichnet werden sollen, dass die Performance nicht ausreicht, um alle zu zeichnen, spielt Tiling seine Vorteile aus.
+
+==== Seltene Updates der Daten und/oder Updates weniger Daten
+
+Tiling setzt voraus, dass sich entweder nur wenige Daten ändern - z.B. an einer Seite ("now") werden Daten hinzugefügt - oder aber Daten ändern sich nur selten (z.B. Kartendarstellung).
+
+==== Häufige Repaints finden statt (z.B. Panning oder Interaktionen)
+
+Tiling ist dann sinnvoll, wenn Repaints sehr häufig notwendig sind.
+Dies ist insbesondere dann der Fall, wenn Interaktionen stattfinden - z.B. durch Panning oder Mouse-Over-Effekte.
+Ein anderes Szenario ist eine automatische Translation bei der die aktuelle Ansicht z.B. über die Zeit mitscrollt.
+
+==== Daten werden relativ zur Content Area gezeichnet - unabhängig vom Window
+
+Die Berechnung der Tiles funktioniert unabhängig vom aktuellen Bildausschnitt.
+Beim Erstellen eines Tiles sind nur die Grenzen in Relation zur Content Area bekannt.
+
+Daher können auch nur Elemente auf Tiles gezeichnet werden, die von der Window-Position unabhängig sind.
+
+Achsen oder andere Elemente, die an einer festen Window-Position "kleben", können und sollten nicht durch Tiles gelöst werden.
+
+=== Trennung statischer und dynamischer Teile
+
+Oftmals gibt es statische und dynamische Teile.
+So könnte z.B. ein Mouse-Over oder eine Achse eine häufigere Änderung erfordern, als andere Daten.
+
+In diesem Fall bietet sich eine Mischung aus Tiles (z.B. die Daten) und normalen Layers (z.B. die Achse und die Overlays) an.
+
+=== Konzept
+
+==== Tile
+
+Ein Tile bezeichnet ein Element, welches sich selbst auf einer Canvas zeichnen kann.
+Dies ist typischerweise ein vorgerendertes Bild - aber auch andere Implementierungen sind denkbar.
+
+===== Tile-Size
+
+Jedes Tile hat eine fixe Größe (@Zoomed) - Höhe und Breite können sich allerdings unterscheiden.
+Alles Tiles sind immer gleich groß.
+
+===== `TileIndex`
+
+Der TileIndex beschreibt die Lage eines Tiles in Relation zum Ursprung der ContentArea.
+Die linke obere Ecke des Tiles mit dem Index 0/0 befindet sich direkt auf 0/0 der Content Area.
+
+Mit Hilfe der Tile-Size und des Zoom-Faktors können Koordinaten auf einer Tile dann nach `@ContentArea` umgerechnet werden.
+
+===== `TileIdentifier`
+
+Der TileIdentifier identifiziert ein Tile eindeutig.
+Der `TileIdentifier` besteht dazu aus einem `TileIndex` sowie dem Zoom-Faktor.
+
+Der `TileIdentifier` dient dazu Tiles im Cache eindeutig zu identifizieren.
+
+===== `TileCalculator`
+
+Der `TileCalculator` bietet hilfreiche Umrechnungen beim Zeichnen eines Tiles.
+Ähnlich dem `ChartCalculator` sind dort alle notwendigen Konvertierungsmethoden vorhanden.
+
+=== `TileProvider`
+
+Ein `TileProvider` ist dafür verantwortlich die Tiles zu liefern.
+
+Verschiedene mehrfach genutzte Funktionen sind dabei bereits implementiert und können durch entsprechendes Wrappen der TileProvider wiederverwendet werden.
+
+==== CachedTileProvider (unbedingt verwenden)
+
+Dieser stellt einen Cache zur Verfügung, der die Tiles cacht und damit ein performantes Zeichnen überhaupt erst ermöglicht.
+
+Wichtig ist, dass der Cache bei den Updates der Daten korrekt gelöscht wird.
+Idealerweise werden nur die Tiles aus dem Cache entfernt, die durch die Updates der Daten auch betroffen sind.
+
+Bei Erreichen der Maximal-Größe des Caches werden die ältesten Tiles automatisch gelöscht.
+Es ist daher nur notwendig manuell Tiles zu löschen, sofern diese aufgrund von Änderungen der Daten nicht mehr aktuell sind.
+
+==== `CanvasTileProvider`
+
+Dieser TileProvider sollte genutzt werden, wenn die Tiles mithilfe einer Canvas erstellt werden.
+Dieser Provider ist der am häufigsten verwendete Provider, wenn Tiles gezeichnet werden.
+
+Der `CanvasTileProvider` nutzt einen `CanvasTilePainter`, um die Tiles zu erzeugen.
+
+NOTE: Ein CanvasTileProvider arbeitet mit einer fixen physikalischen Größe.
+D.h. die Größe eines CanvasTiles ist immer gleich groß - unabhängig von der Device Pixel Ratio.
+Die Umrechnung auf eine logische TileSize erfolgt automatisch im CanvasTileProvider und ist für den TilePainter transparent.
+
+==== Typischer Aufbau
+
+TilesLayer ⇨ CachedTileProvider ⇨ CanvasTileProvider ⇨ TilePainter (Custom Klasse)
+
+D.h. für den typischen Use-Case ist nur notwendig einen TilePainter zu implementieren.
+
+CAUTION: Wichtig - nicht das Clearen des Caches vergessen
+
+==== Edge Cases / Besonderheiten / typische Fehler
+
+===== Tile-Ränder
+
+Generell muss beachtet werden, dass z.B. Linien auch über die Ränder eines Tiles hinweg gezeichnet werden.
+Damit ist sichergestellt, dass z.B. Linien auch über die Ränder hinweg korrekt sichtbar sind.
+
+TIP: Jeweils einen Datenpunkt mehr abfragen, als für dem rechten bzw. linken Rand entsprechen.
+Damit ist sichergestellt, dass korrekt gezeichnet wird.
+
+====== Updates / Cache-Clear
+
+Dies ist auch beim Clearing der Caches zu berücksichtigen.
+Es müssen auch die Tiles neu erstellt werden, für welche diese Punkte zum Zeichnen benötigt werden - auch wenn diese nicht selbst auf dem Tile liegt.
+
+===== Dashed Lines
+
+Bei Dashed Lines sind die Ränder der Tiles relativ leicht zu erkennen, da die Dashes nicht korrekt durch gezeichnet werden.
+
+TIP: Eine mögliche Lösung besteht darin, die Dashed Line jeweils an einem Punkt beginnen zu lassen - und nicht durch alle Punkte zu zeichnen.
+Dadurch ist die Positionierung der Dashes reproduzierbar.
+Allerdings ist diese Darstellung an den Punkten nicht optimal - insbesondere wenn eine Linie optisch "durch" einen Punkt führt und/oder der Punkt sehr klein oder gar nicht dargestellt wird.
+
+===== @PhysicalPixels vs @ContentArea
+
+Der `CanvasTileProvider` unterscheidet zwischen der physikalischen Auflösung und den "logischen" Pixeln.
+
+Um die bestmögliche Qualität bei der Darstellung zu erreichen, wird ein `CanvasTile` immer 1:1 dargestellt - d.h. die Device Pixel Ratio wird nicht berücksichtigt.
+
+Um trotzdem eine korrekte Darstellung zu erreichen, wird die Skalierung automatisch durchgeführt, bevor der `CanvasTilePainter` aufgerufen wird.
+
+TIP: Die Device Pixel Ratio wird korrekt berechnet und muss bei der Implementierung eines `CanvasTilePainter` nicht berücksichtigt werden.
+
+=== Diagnose-Hilfen
+
+Um Fehler beim Tiling auf die Spur zu kommen, gibt es einige vorgefertigte Layer, welche die Diagnose erleichtern:
+
+==== `TilesDebugLayer`
+
+Dieser Layer kann einfach hinzugefügt werden und zeichnet die Tile-Grenzen.
+
+TIP: Dieser Layer ist insbesondere hilfreich, wenn seltsame Lücken auftreten.
+Mit Hilfe des Layers kann erkannt werden, ob diese Lücken an den Tile-Grenzen liegen (s.o.).

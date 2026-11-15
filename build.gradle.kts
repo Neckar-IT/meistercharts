@@ -1,189 +1,155 @@
-import it.neckar.gradle.DevContainerInformation
-import it.neckar.gradle.GitlabCiInformation
-import it.neckar.gradle.ProjectConfiguration
-import it.neckar.gradle.console
-import it.neckar.gradle.getCmdResult
-import it.neckar.gradle.isSnapshot
+import com.diffplug.gradle.spotless.SpotlessExtension
+import dev.detekt.gradle.extensions.DetektExtension
+import it.neckar.ci.Cron
+import it.neckar.gradle.Plugins
+import it.neckar.open.generated.GeneratedFileCommentSyntax
+import it.neckar.open.generated.GeneratedFileMarker
 import it.neckar.projects.Projects
-import java.time.Instant
+import it.neckar.projects.common.AbsoluteUrl
+import it.neckar.projects.common.GitBranchName
+import it.neckar.projects.common.GitTagPrefix
+import it.neckar.projects.common.GitlabComponentLabel
+import it.neckar.projects.common.NpmPackageName
+import it.neckar.projects.common.ProductId
+import it.neckar.projects.common.ProductIndex
+import it.neckar.projects.delivery.Decider
+import it.neckar.projects.delivery.DeliveryConditions
+import it.neckar.projects.delivery.RegistryCoordinate
+import it.neckar.projects.delivery.Retention
+import it.neckar.projects.delivery.Trigger
+import it.neckar.projects.delivery.VersionScheme
+import it.neckar.projects.project
 
-description = "meistercharts.com"
-
+description = "Meistercharts"
 
 plugins {
-  kotlinxSerialization apply false
-  detekt apply false
+  //dokka
+  delivery
+  moduleGroup
+  projectDeclaration
 }
 
-//Prepare the extra variables
-
-//These variables can be used in projects. They are defined as extension vals on Project in buildSrc/src/main/kotlin/Utils.kt
-val inIde: Boolean by extra(System.getProperty("idea.version") != null)
-val devContainerInformation by extra(DevContainerInformation.create())
-val ciInformation: GitlabCiInformation by extra(GitlabCiInformation.create())
-
-
-//The current build date
-val buildDate: String by extra { Instant.now().toString() }
-//The build day
-val buildDateDay: String by extra { java.time.LocalDate.now().toString() }
-//The git commit id
-val gitCommit: String by extra { arrayOf("git", "rev-parse", "--short", "HEAD").getCmdResult(project.projectDir) }
-//The date of the last git commit
-val gitCommitDate: String by extra { arrayOf("git", "log", "-1", "--date=short", "--pretty=format:%cI").getCmdResult(project.projectDir) }
-//The output of git describe. This directory has no .git of its own, so describe runs against the
-//monorepo — --exclude keeps its machine-local backup/* safety tags out of the generated sources.
-val gitDescribe: String by extra { arrayOf("git", "describe", "--tags", "--always", "--exclude", "backup/*").getCmdResult(project.projectDir) }
-
-val branch: String = arrayOf("git", "rev-parse", "--abbrev-ref", "HEAD").getCmdResult(project.projectDir).let {
-  try {
-    if (it == "HEAD") {
-      //If in detached HEAD, the next line finds the "best" branch name
-      val cmdResult = arrayOf("git", "show", "-s", "--pretty=%D", "HEAD").getCmdResult(project.projectDir)
-      println("Running in headless mode. Guessing branch names from possible values: <$cmdResult>")
-
-      val candidates = cmdResult.splitToSequence(',').map { candidate ->
-        candidate.trim()
-      }.toList()
-
-      if (candidates.isEmpty()) {
-        return@let "unknown"
-      }
-
-      if (candidates.contains("main") || candidates.contains("origin/main")) {
-        //If main, use this
-        return@let "main"
-      }
-      if (candidates.contains("master") || candidates.contains("origin/master")) {
-        //If master, use this
-        return@let "master"
-      }
-
-      //Find the shortest element that is *not* HEAD
-      candidates
-        .filterNot { candidate ->
-          candidate.startsWith("refs/") //skip pipeline refs like: "refs/pipeline/58705"
-        }
-        .sortedBy { candidate ->
-          candidate.length
-        }.firstOrNull { candidate ->
-          candidate != "HEAD"
-        } ?: "unknown"
-    } else {
-      it
-    }
-  } catch (e: Exception) {
-    logger.warn("Could not guess branch name due to ${e.message}")
-    "unknown"
-  }
-}.also {
-  extra.set("branch", it)
+productDeclaration {
+  productId = ProductId("meistercharts")
+  displayName = "MeisterCharts"
+  description = "Charting library"
+  technology = "Kotlin/JS"
+  productIndex = ProductIndex(40)
 }
 
-
-//Configure the MeisterCharts version number
-//
-//During development the version number must always be a SNAPSHOT version
-//Only increase the version number during releases. Do *NOT* merge the increased version number back to master
-val meisterchartVersionBase: String = file("meistercharts.version").readText().trim()
-
-val meisterchartsVersion: String by extra {
-  if (meisterchartVersionBase.isSnapshot()) {
-    "$meisterchartVersionBase-${gitCommit}"
-  } else {
-    meisterchartVersionBase
+idea {
+  module {
+    isDownloadSources = true
   }
 }
-
-version = meisterchartsVersion
-
-
-//Print the version numbers on the console on every gradle run
-println("------------------------------------------------------------")
-println("Build variables:")
-println("------------------------------------------------------------")
-println("\tversion                $version")
-println("\tmeisterchartsVersion   $meisterchartsVersion")
-println("\tbuildDate              $buildDate")
-println("\tbuildDateDay           $buildDateDay")
-println("\tbranch                 $branch")
-println("\tgitCommit              $gitCommit")
-println("\tgitCommitDate          $gitCommitDate")
-println("\tgitDescribe            $gitDescribe")
-println("------------------------------------------------------------")
-
-println("Java Runtime Environment: ")
-println("------------------------------------------------------------")
-println("Java Home: ${System.getProperty("java.home")}")
-println("Java Version: ${System.getProperty("java.version")}")
-println("Java Vendor: ${System.getProperty("java.vendor")}")
-
-
-if (branch == "main") {
-  //Never allow a non-development version on main
-  if (meisterchartsVersion.isSnapshot().not()) {
-    throw InvalidUserDataException("Invalid meisterchart version set. Was <$meisterchartsVersion but must be a -SNAPSHOT version on main branch!")
-  }
-}
-
 
 allprojects {
-  version = meisterchartsVersion
+  val meisterchartsProject = project(Projects.open.meistercharts)
+  val currentProject = this
 
-  repositories {
-    mavenCentral()
-  }
+  //Configure detekt license check
+  extensions.findByType(DetektExtension::class.java)?.apply {
+    val detektConfigBase = meisterchartsProject.files("../../buildplatform/config/detekt/detekt.yml")
+    val detektConfigMeistercharts = meisterchartsProject.files("config/detekt/detekt-meistercharts.yml")
+    val detektConfigMeisterchartsDemos = meisterchartsProject.files("config/detekt/detekt-meistercharts-demos.yml")
+    val detektConfigMeisterchartsFx = meisterchartsProject.files("config/detekt/detekt-meistercharts-fx.yml")
 
-  tasks.register("info") {
-    doLast {
-      println("|-------------------------------------------------")
-      println("| MEISTERCHARTS.COM ------------------------------")
-      println("|-------------------------------------------------")
-      println("| ${project.group}:${project.name}")
-      println("|-------------------------------------------------")
-      println("| ${project.description}")
-      println("|-------------------------------------------------")
+    val configFiles = when {
+      currentProject.name.contains("demos") -> {
+        files(
+          detektConfigBase,
+          detektConfigMeisterchartsDemos,
+        )
+      }
+
+      currentProject.name.endsWith("-fx") -> {
+        files(
+          detektConfigBase,
+          detektConfigMeisterchartsFx,
+        )
+      }
+
+      else -> {
+        files(
+          detektConfigBase,
+          detektConfigMeistercharts,
+        )
+      }
     }
+
+    config.setFrom(configFiles)
   }
 
   /**
-   * Prints all configured plugins
+   * Used for license formatting - Spotless ensures headers are at correct position (file start)
    */
-  tasks.register("plugins") {
-    group = "Documentation"
-    description = "Prints all configured plugins"
+  apply(plugin = Plugins.Spotless)
 
-    doLast {
-      logger.lifecycle("")
-      logger.lifecycle("---------------------------------")
-      logger.lifecycle("Plugins for ${console.green(project.path)}:")
-      logger.lifecycle("---------------------------------")
-      project.plugins.forEach {
-        logger.lifecycle("Implementation: " + console.yellow(it::class.java.name))
-      }
+  extensions.configure<SpotlessExtension> {
+    kotlin {
+      target("src/**/*.kt")
+      licenseHeaderFile(meisterchartsProject.file("../config/license-headers/apache-2.0.template"))
     }
   }
-
-  tasks.register("configurations") {
-    description = "Prints all configurations"
-    group = "Help"
-
-    doLast {
-      logger.lifecycle("--------------------------------------------------------------")
-      logger.lifecycle("${"Configuration".padEnd(45)} Resolvable Consumable")
-      logger.lifecycle("--------------------------------------------------------------")
-      configurations.forEach {
-        val resolvableSuffix = if (it.isCanBeResolved) "+" else "-"
-        val consumableSuffix = if (it.isCanBeConsumed) "+" else "-"
-        println("${it.name.padEnd(45)} $resolvableSuffix          $consumableSuffix")
-      }
-    }
-  }
-
 }
 
+tasks.register("generateFiddleExamplesUrl") {
+  val fiddleBaseUrl = "https://jsfiddle.net/gh/get/library/pure/Neckar-IT/meistercharts/tree/main/meistercharts-examples/fiddles/"
+  val scriptDir = file("meistercharts-examples/fiddles")
+  val buildDir = file("meistercharts-examples/build")
+  doLast {
+    buildDir.mkdirs()
+    val fiddleDemoAdoc = buildDir.resolve("fiddle-links.md")
+    fiddleDemoAdoc.printWriter().use { out ->
+      out.print(
+        GeneratedFileMarker(
+          by = "generateFiddleExamplesUrl",
+          source = "meistercharts-examples/fiddles (one line per demo directory)",
+          regenerateHint = "Add or remove a demo directory and re-run the task.",
+        ).render(GeneratedFileCommentSyntax.XmlComment)
+      )
+      scriptDir.listFiles()?.filter { it.isDirectory && it.name != "build" }
+        ?.map { it.name }?.forEach { demo ->
+          out.println("${fiddleBaseUrl}${demo}")
+        }
+    }
+  }
+}
 
-Projects.multiplatformProjects().forEach { configuredProject ->
-  logger.debug("Configuring multiplatform project ${configuredProject.path} for targets ${configuredProject.targets}")
-  ProjectConfiguration.configureMultiplatform(configuredProject.getProject(project), configuredProject)
+delivery {
+  product = ProductId("meistercharts")
+  tagPrefix = GitTagPrefix("meistercharts")
+  versionScheme = VersionScheme.Semver
+  versionProperty = "meistercharts.version"
+  componentLabels = listOf(GitlabComponentLabel("Component::MeisterCharts"))
+
+  registry("npm", RegistryCoordinate.NpmPackage(NpmPackageName("@meistercharts/meistercharts"))) {
+    trigger = Trigger.Decision(by = Decider.Human)
+    retention = Retention.Accumulates
+    conditions(DeliveryConditions.PipelineIsGreen, DeliveryConditions.VersionExceedsPredecessor, DeliveryConditions.NotesComplete)
+  }
+
+  registry("distribution-archive", RegistryCoordinate.GitRemote(AbsoluteUrl("https://git.neckar.it/neckarit/meistercharts-releases.git"), GitBranchName("master"))) {
+    trigger = Trigger.Decision(by = Decider.Human)
+    retention = Retention.Accumulates
+    conditions(DeliveryConditions.PipelineIsGreen, DeliveryConditions.VersionExceedsPredecessor, DeliveryConditions.NotesComplete)
+  }
+
+  registry("github-mirror-main", RegistryCoordinate.GitRemote(AbsoluteUrl("https://github.com/Neckar-IT/meistercharts"), GitBranchName("main"))) {
+    trigger = Trigger.Decision(by = Decider.Human)
+    retention = Retention.HoldsCurrentState
+    conditions(DeliveryConditions.PipelineIsGreen, DeliveryConditions.VersionExceedsPredecessor, DeliveryConditions.NotesComplete)
+  }
+
+  registry("npm-snapshots", RegistryCoordinate.NpmPackage(NpmPackageName("@meistercharts/meistercharts"))) {
+    trigger = Trigger.Schedule(Cron("0 4 * * *"))
+    retention = Retention.HoldsCurrentState
+    conditions(DeliveryConditions.PipelineIsGreen)
+  }
+
+  registry("github-mirror-develop", RegistryCoordinate.GitRemote(AbsoluteUrl("https://github.com/Neckar-IT/meistercharts"), GitBranchName("develop"))) {
+    trigger = Trigger.Schedule(Cron("0 4 * * *"))
+    retention = Retention.HoldsCurrentState
+    conditions(DeliveryConditions.PipelineIsGreen)
+  }
 }

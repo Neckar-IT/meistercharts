@@ -1,0 +1,148 @@
+@startuml
+!include ./plantuml-style.iuml
+hide footbox
+
+actor Alice
+database MeisterChartsBuilder #3b9181
+participant ChartSupport #9fd5d8
+participant WindowSizeBindingStrategy<<DelayedWindowSizeBindingStrategy>> #00a1e5
+participant ChartState #c5e5eb
+participant ContentAreaSizingStrategy<<FixedContentAreaWidth(1000.0)>> #9fd5d8
+participant ResizeBehavior<<KeepLocation(@WindowRelative 0.8)>>
+participant ZoomAndTranslationSupport
+participant ZoomAndTranslationDefaults<<MoveDomainValueToLocation>>
+
+
+== Initialization ==
+
+Alice -> MeisterChartsBuilder: build()
+MeisterChartsBuilder -> ChartSupport:initialize()
+ChartSupport -> ContentAreaSizingStrategy:bindResize(this)
+
+ContentAreaSizingStrategy -> ContentAreaSizingStrategy:calculateContentAreaSize -> (0/1000)
+ContentAreaSizingStrategy -> ResizeBehavior:handleResize(contentAreaSize=1000/0, windowSize=0/0)
+
+ResizeBehavior -> ZoomAndTranslationSupport:resetToDefaults()
+activate ZoomAndTranslationSupport #55beeb
+
+ZoomAndTranslationSupport  -> ZoomAndTranslationSupport:resetZoom()
+activate ZoomAndTranslationSupport #002e46
+
+  ZoomAndTranslationSupport -> ZoomAndTranslationDefaults:defaultZoom()
+    activate ZoomAndTranslationDefaults
+    return 1.0/1.0
+            note right
+            Nutzt die im Model
+            konfigurierte contentAreaTimeRange.
+            Nutzt meist ein Delegate für den Y-Zoom (z.B. FittingWithMargin)
+            end note
+    deactivate ZoomAndTranslationDefaults
+
+  ZoomAndTranslationSupport  -> ZoomAndTranslationSupport:setZoom(1.0/1.0)
+
+deactivate ZoomAndTranslationSupport
+
+
+ZoomAndTranslationSupport -> ZoomAndTranslationSupport:resetWindowTranslation()
+  activate ZoomAndTranslationSupport #002e46
+
+    ZoomAndTranslationSupport -> ZoomAndTranslationDefaults:defaultTranslation()
+
+      activate ZoomAndTranslationDefaults
+        ZoomAndTranslationDefaults -> ZoomAndTranslationDefaults:time2relative(nowMillis()) -> 1.05
+        note right
+        Nutzt die im Model
+        konfigurierte contentAreaTimeRange.
+        end note
+
+        ZoomAndTranslationDefaults -> ChartCalculator:domainRelative2zoomedX(1.05)
+          activate ChartCalculator
+            note left
+            Der Wert von now() wird
+            auf die Crosswire-Position bewegt.
+            end note
+
+            ChartCalculator -> ChartState:contentAreaWidth -> 1000
+              activate ChartState
+                return 1000
+                return 1100
+                return 1100
+              deactivate ChartState
+          deactivate ChartCalculator
+
+      deactivate ZoomAndTranslationDefaults
+
+  deactivate ZoomAndTranslationSupport
+
+  ZoomAndTranslationSupport -> ZoomAndTranslationSupport:setWindowTranslation(910.0/0.0)
+
+deactivate ZoomAndTranslationSupport
+
+== Window Resize ==
+
+Alice -> WindowSizeBindingStrategy:Change Window Size (800/600)
+activate WindowSizeBindingStrategy
+WindowSizeBindingStrategy -> ChartState:windowSize=800/0
+        note right
+        Nur der X-Wert wird gesetzt.
+        Der Y-Wert ist "delayed" und wird erst später gesetzt.
+        end note
+
+ChartState -> ContentAreaSizingStrategy:windowSizeProperty changed
+
+ContentAreaSizingStrategy -> ContentAreaSizingStrategy:calculateContentAreaSize -> 1000/0
+ContentAreaSizingStrategy -> ResizeBehavior:handleResize(contentAreaSize=1000/0, windowSize=800/600)
+
+ResizeBehavior -> ZoomAndTranslationSupport:resetToDefaults() [... see above ...]
+
+
+Alice -> WindowSizeBindingStrategy:Change Window Size (800/601)
+WindowSizeBindingStrategy -> ChartState:windowSize=800/0
+Alice -> WindowSizeBindingStrategy:Change Window Size (800/602)
+WindowSizeBindingStrategy -> ChartState:windowSize=800/0
+Alice -> WindowSizeBindingStrategy:Change Window Size (800/603)
+WindowSizeBindingStrategy -> ChartState:windowSize=800/0
+
+WindowSizeBindingStrategy -> WindowSizeBindingStrategy: delay (0.5s)
+        note right
+        Jetzt wird auch der (delayed) Y-Wert gesetzt
+        end note
+
+WindowSizeBindingStrategy -> ChartState:windowSize=800/603
+ChartState -> ContentAreaSizingStrategy:windowSizeProperty changed
+
+ContentAreaSizingStrategy -> ContentAreaSizingStrategy:calculateContentAreaSize -> 1000/603
+ContentAreaSizingStrategy -> ResizeBehavior:handleResize(contentAreaSize=1000/600, windowSize=800/603)
+
+ResizeBehavior -> ZoomAndTranslationSupport:resetToDefaults() [... see above ...]
+
+
+deactivate WindowSizeBindingStrategy
+
+
+== Reset Gesture (Double Click) ==
+
+Alice -> ZoomAndTranslationLayer: Double Click
+ZoomAndTranslationLayer -> ZoomAndTranslationSupport:resetToDefaults()
+
+...see above...
+
+
+'TextService -> SimpleTextResolver: translate(TextKey, Locale)
+'return String?
+'TextService -> MapBasedTextResolver: translate(TextKey, Locale)
+'return String?
+'TextService -> FallbackLocaleTextResolver: translate(TextKey, Locale)
+'
+'FallbackLocaleTextResolver -> MapBasedTextResolver : translate(TextKey, Default-Locale)
+'return String?
+'FallbackLocaleTextResolver --> TextService: String?
+'
+'TextService -> DefaultTextResolver: translate(TextKey, Locale)
+'return String?
+'
+'TextService --> Alice: String?
+
+@enduml
+
+

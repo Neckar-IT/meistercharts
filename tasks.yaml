@@ -1,0 +1,38 @@
+# MeisterCharts Task Catalog
+
+schema_version: "1.0"
+
+use_cases:
+  - name: "Build"
+    description: "Build all MeisterCharts modules"
+    tasks:
+      - id: build
+        path: "."
+        type: gradle
+        task: "build"
+        description: "Build all modules (Kotlin/MPP + JS)"
+
+  - name: "Test"
+    description: "Execute test suites"
+    tasks:
+      - id: test
+        path: "."
+        type: gradle
+        task: "test"
+        description: "Run all unit tests"
+
+  - name: "Documentation"
+    description: "Generate documentation"
+    tasks:
+      - id: docs-build
+        path: "meistercharts-docs"
+        type: gradle
+        task: "asciidoctorHtml"
+        description: "Generate AsciiDoc documentation"
+
+task_types:
+  gradle:
+    description: "Gradle build tasks (executed from monorepo root)"
+
+aliases:
+  mc: meistercharts

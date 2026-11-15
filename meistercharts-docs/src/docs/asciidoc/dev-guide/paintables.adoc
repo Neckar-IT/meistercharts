@@ -1,0 +1,103 @@
+include::attributes.adoc[]
+
+== Paintables
+
+Dieser Abschnitt erklärt was Paintables sind und wie sie benutzt werden können.
+
+=== Idee: Bilder und mehr
+
+Im Canvas möchte man immer wieder grafische Elemente darstellen: Z.B. Bilder oder Icons oder auch dynamische Komponente (z.B. einen Bar eines BarCharts).
+
+Während Bilder/Icons relativ einfach zu zeichnen sind, gibt es Use Cases, in welchen das Ergebnis dynamisch berechnet werden soll.
+
+==== Dynamische Resources
+
+Abhängig vom Use Case möchte man grafische Elemente z.B. von der aktuellen Locale (falls Texte enthalten sind) oder anderen Eigenschaften abhängig machen.
+
+=== Eigenschaften von Paintables
+
+Ein Paintable zeichnet sich an einer vorgegebenen Stelle auf den Canvas.
+Wie und mit welcher Größe dies erfolgt, wird durch das Paintable selbst konfiguriert.
+
+IMPORTANT: Es ist also nicht möglich die Größe eines Paintables von außen zu beeinflussen.
+Ausnahmen bestätigen die Regel.
+Daher müssen grundlegende Eigenschaften des Paintables bereits zum Zeitpunkt der Erzeugung gesetzt werden.
+
+==== paint-Methode
+
+Die Paint-Methode zeichnet das Paintable an der übergebenen Stelle.
+Dabei entscheidet das Paintable selbst, in welche Richtung gezeichnet wird.
+
+So werden z.B. Bilder typischerweise von der übergebenen Koordinate nach rechts unten gezeichnet.
+Ein Bar wird dagegen nach oben gezeichnet.
+Und ein Marker könnte vermutlich in alle Richtungen gezeichnet werden.
+
+Informationen über die Richtung ergeben sich aus der Bounding Box des Paintables.
+
+==== Bounding-Box
+
+Jedes Paintable kennt seine Bounding-Box.
+Die Bounding-Box beschreibt den Bereich, der von dem Paintable gefüllt wird.
+
+CAUTION: Die Bounding-Box umfasst den "wichtigen" Bereich des Paintables.
+Es ist kein Clipping-Bereich.
+So können z.B. Labels oder andere "nicht-essentielle" Dinge auch außerhalb der Bounding-Box platziert werden.
+
+Die Bounding-Box dient dazu, dass Paintables aligned werden können.
+Dies kann z.B. bei einer Toolbar wichtig sein.
+Dort sollen die Paintables nebeneinander ausgerichtet sein.
+In den allermeisten Fällen wird die Bounding-Box bei der Verwendung der Paintables nicht berücksichtigt.
+
+===== Alignment Point
+
+Der Alignment Point eines Paintables entspricht der Origin der Bounding Box.
+Der Alignment Point wird beim normalen Zeichnen eines Paintables auf die übergebene Koordinate gelegt.
+
+Der Alignment Point entspricht also dem "interessanten" Punkt eines Paintables (z.B. bei einem Marker das Zentrum).
+
+===== paintInBoundingBox
+
+Die Methode `paintInBoundingBox` kann genutzt werden, um ein Paintable ausgerichtet zu zeichnen.
+Dies kann z.B. in einer Toolbar relevant sein.
+
+Bei Verwendung der normalen Paint-Methode entscheidet das Paintable selbst, in welche Richtung es zeichnet.
+Die `paintInBoundingBox`-Methode nutzen die Informationen aus der BoundingBox des Paintables und erlauben so die Positionierung des Paintables von außen.
+
+== Resizable Paintables (TBD)
+
+Jedes Paintable hat eine Größe (durch die Bounding-Box geliefert).
+Manchmal ist es aber sinnvoll, wenn die Größe eines Paintables verändert werden kann.
+
+Dies ist z.B. sinnvoll, wenn ein Paintable in vorgegebenen Platz eingefügt werden soll.
+
+Dafür ist das Interface `ResizablePaintable` gedacht.
+
+=== Use Case
+
+Z.B. soll ein Kompass-Paintable den gesamten, verfügbaren Platz des Canvas nutzen (eventuell abzüglich einer Margin).
+Dafür kann der `ResizablePaintableLayer` benutzt werden, der automatisch die Größe des Paintables an den verfügbaren Platz anpasst.
+
+== Default Icons
+
+Unter `resources/icons` findet man alle potentielle Icons und auch die Skripte zum Herunterladen derselben.
+
+Unter `meistercharts-canvas/src/icons` sind alle Icons, die bereits in Meistercharts integriert sind und über `com.cedarsoft.resources.Icons` referenziert werden.
+
+=== Schritte zum Hinzufügen neuer Default-Icons
+
+. Kopiere die gewünschte SVG-Bild-Datei nach `meistercharts-canvas/src/icons`
+. `gradle createIconDeclarations` ausführen
+. das Bild im Code an der gewünschten Stelle über `com.cedarsoft.resources.Icons` referenzieren
+
+Hinweis: die Klasse `SvgPaintableProviders` sorgt dafür, dass zur Laufzeit das Bild aus der `Icons`-Klasse geladen wird.
+
+== `PaintableCalculator`
+
+Wenn `@DomainRelative`-Werte in einem `Paintable` gezeichnet werden sollen, kann der normale `ChartCalculator` nicht verwendet werden, da dieser immer die gesamte Breite/Höhe der `ContentArea` als Basis für Berechnungen nutzt.
+
+Bei `Paintables` soll jedoch jeweils nur die Breite/Höhe des Paintables selbst als Berechnungsgrundlage benutzt werden.
+Der `PaintableCalculator` kann im Paintable direkt instantiiert werden.
+
+=== Annotation `@PaintableArea`
+
+Diese Annotation beschreibt Werte, die relativ zum Ursprung eines Paintables sind.

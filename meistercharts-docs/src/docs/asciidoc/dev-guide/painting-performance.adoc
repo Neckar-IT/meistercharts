@@ -1,0 +1,101 @@
+include::attributes.adoc[]
+
+== Painting Performance
+
+Der Painting-Code wird 60x pro Sekunde aufgerufen.
+Idealerweise hat unser Kunde mehrere Komponente auf einer Seite.
+Daher ist die Performance des Painting-Codes von entscheidender Bedeutung.
+
+Bei 100 Komponenten und 60fps ergeben sich 6.000 Repaints pro Sekunde.
+
+=== Relevante Performance
+
+==== CPU-Performance
+
+Es muss darauf geachtet werden, dass möglichst nur notwendige Operationen durchgeführt werden.
+Ansonsten wird es langsam und der Kunden unzufrieden.
+
+==== Speicherverbrauch
+
+Jedes instantiierte Objekt bedeutet Aufwand beim Anlegen und beim Abräumen.
+Deshalb ist es wichtig im Painting-Code möglichst keine (oder wenigstens möglichst wenige) Objekte anzulegen.
+
+Ansonsten wird der Browser nach gewisser Zeit und in regelmäßigen Abständen ruckeln - und der Kunde ist unzufrieden.
+
+=== Grundsätzliche Vorgehensweise
+
+Profiling, Profiling, Profiling!
+
+CAUTION: Bitte nur das optimieren, was im Profiler auch tatsächlich auftaucht!
+
+==== Optimieren auf den Worst-Case
+
+Im Worst-Case wird 60x pro Sekunde neu gepainted: Z.B. bei Animationen über die Zeit.
+Daher optimieren wir für diesen Fall (60x pro Sekunden ein Repaint mit veränderte Werten - auch Translation und/oder Zoom).
+
+In allen anderen Fällen ist die Performance sowie besser - daher sind Optimierungen für diese nicht entscheidend.
+Sie können durchgeführt werden, wenn die Lesbarkeit des Codes darunter nicht leidet.
+
+===== Optimierungen machen dann keinen Sinn, wenn sie davon ausgehen, dass...
+
+* ... die Translation die gleiche bleibt
+* ... der Zoom-Faktor gleich bleibt
+* ... das Modell gleich bleibt
+* ... die Sprache gleich bleibt (hier eventuell Ausnahmen möglich)
+
+Es macht also keinen Sinn Zwischenergebnisse für den nächsten Paint-Vorgang zu cachen.
+
+Es lohnt sich dagegen sehr wohl, Zwischenergebnisse zu cachen, die *innerhalb* des selben Paints wieder genutzt werden.
+
+NOTE: Special Case: Interaktionen: Im Falle von Interaktionen - z.B. bei MouseMove-Events, ist es notwendig/hilfreich die Layout-Ergebnisse zu speichern.
+Damit ist es erst möglich auf entsprechende Interaktionen zu reagieren.
+
+===== `markAsDirty()` ist bereits implementiert
+
+Ein Repaint findet nur statt, wenn sich die Daten auch tatsächlich (zumindest potentiell) geändert haben.
+
+Falls keine solchen Änderungen vorhanden sind, wird auch `markAsDirty()` *nicht* aufgerufen und der Repaint unterbleibt.
+
+Daher profitieren wir bereits - ohne weiteres zutun - wenn sich Werte nicht ändern.
+
+==== Szenario: 100x auf einer Seite + `MarkAsDirtyLayer`
+
+Für Tests wird die entsprechende Komponenten 100x auf einer Seite eingebunden und durch Einfügen einer `MarkAsDirtyLayer` ein wiederholter Repaint geforct.
+
+=== Best Practices
+
+==== For-Schleifen (statt `forEach`/`map`/...)
+
+Um das Anlegen von Iterables zu vermeiden, bitte im Painting-Code direkt traditionelle For-Schleifen benutzen.
+
+==== `Enum#values` vermeiden
+
+Dieser Code benutzt im Hintergrund clone().
+Im Zweifel lieber eine manuelle #get-Methode einfügen
+
+==== Vorsicht beim Boxing
+
+===== Lambdas + primitive Datentypen
+
+Lambdas werden in Kotlin als `Function0..n` repräsentiert.
+Diese enthalten Generics als Parameter + Rückgabewert.
+
+Bei primitiven Datentypen daher selbst ein Interface definieren.
+
+===== Inline Classes
+
+Wenn diese z.B. in einem Cache als Key verwendet werden, ist ein Boxing (wegen `equals`/`hashCode`) notwendig.
+
+===== Caches + primitive Datentypen
+
+Wie bei Java auch, werden primitive Datentypen bei der Verwendung in Caches geboxt.
+
+==== Instantiieren von Lambdas vermeiden (`inline`-Methode nutzen)
+
+Im Painting-Code möglichst keine/wenig Instanzen von Lambdas anlegen.
+Entsprechende Methoden eventuell als `inline` markieren.
+
+==== Werte nur berechnen, wenn wirklich benötigt (Stichwort `when`)
+
+Manchmal werden z.B. Textbreiten nur bei bestimmten AnchorDirections benötigt.
+In diesen Fällen sollte die Text-Breite auch wirklich nur in den entsprechenden Fällen berechnet werden.

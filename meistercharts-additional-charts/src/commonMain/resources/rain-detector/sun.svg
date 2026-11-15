@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 446.25 520.93">
+  <defs>
+    <style>.cls-1{fill:#f3c500;}.cls-2{fill:none;stroke:#f3c500;stroke-miterlimit:10;}</style>
+  </defs>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="_4._Zeichenfläche" data-name="4. Zeichenfläche">
+      <g id="Sonne">
+        <path class="cls-1" d="M321.47.27a18.22,18.22,0,0,0-.22,3.48,125,125,0,0,0,125,125V0Z" />
+        <line class="cls-2" x1="370.25" y1="218.75" x2="254.25" y2="520.75" />
+        <line class="cls-2" x1="292.2" y1="186.45" x2="187.29" y2="316.05" />
+        <line class="cls-2" x1="249.25" y1="123.75" x2="0.25" y2="263.75" />
+        <line class="cls-2" x1="218.25" y1="51.75" x2="76.25" y2="63.75" />
+      </g>
+    </g>
+  </g>
+</svg>

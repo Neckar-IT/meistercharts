@@ -1,0 +1,7 @@
+#
+# Configuration file for demos
+#
+comments:
+  AbsentOrWrongFileLicense:
+    # licenseTemplateFile option removed in detekt 2.0; AbsentOrWrongFileLicense deactivated for upgrade transparency.
+    active: false

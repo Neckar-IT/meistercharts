@@ -1,0 +1,41 @@
+= Einführung in die `ChartCalculator` Klasse
+
+Die Klasse `ChartCalculator` ist ein zentraler Bestandteil der Konvertierung von Werten in verschiedenen Koordinatensystemen eines Charts.
+Die Idee ist, dass Werte auf unterschiedlichen Abstraktionsebenen und in verschiedenen Einheiten (z.B. "Domain", "Content Area", "Window") dargestellt werden.
+Diese Ebenen sind notwendig, um verschiedene Transformationen wie Zoom, Verschiebungen und Orientierung korrekt handhaben zu können.
+
+== 1. Koordinatensysteme und Wertebereiche
+
+- **Domain**: Dies ist der abstrakte Wertebereich des Charts, z.B. bei einem Zeitdiagramm sind dies Zeitwerte (z.B. in Millisekunden).
+- **DomainRelative**: Relativer Wert innerhalb des Domain-Bereichs.
+Diese Werte liegen normalerweise im Bereich von 0.0 bis 1.0 und beschreiben die relative Position eines Domain-Werts.
+- **ContentArea**: Der tatsächliche Zeichenbereich des Inhalts in Pixeln.
+Dies ist der Bereich, in dem der Chartinhalt gezeichnet wird.
+- **ContentAreaRelative**: Relativer Wert innerhalb der ContentArea, ähnlich wie bei DomainRelative.
+- **Zoomed**: Werte, die nach Anwendung von Zoom-Faktoren auf die ContentArea transformiert wurden.
+- **Window**: Der sichtbare Bereich des Fensters, in dem der Chartinhalt dargestellt wird.
+
+== 2. Transformationen zwischen den Systemen
+
+Die Hauptaufgabe des `ChartCalculator` besteht darin, Werte zwischen diesen Koordinatensystemen zu transformieren.
+Das passiert durch eine Reihe von Transformationen:
+
+- *Domain -> ContentArea*: Konvertiert einen abstrakten Wert in die tatsächlichen Koordinaten im Zeichenbereich.
+- *DomainRelative -> ContentAreaRelative*: Relativiert einen Domain-Wert auf die ContentArea.
+- *ContentArea -> Zoomed*: Anwenden von Zoom-Faktoren auf die ContentArea, um vergrößerte oder verkleinerte Koordinaten zu erhalten.
+- *Zoomed -> Window*: Transformiert Zoomed-Koordinaten in den sichtbaren Fensterbereich.
+- *Window -> ContentArea*: Umgekehrte Transformation, um von einem Fensterwert zu den tatsächlichen Zeichenbereichskoordinaten zurückzukehren.
+
+== 3. Spezifische Umrechnungen
+
+Die Klasse enthält spezifische Methoden für die Konvertierung in beide Richtungen, zum Beispiel:
+
+- `domainRelative2windowX(y: Double)`: Konvertiert einen `DomainRelative` Wert direkt in einen Fensterkoordinatenwert.
+- `window2domainRelativeX(x: Double)`: Konvertiert einen Fensterkoordinatenwert zurück in den `DomainRelative`-Wert.
+
+Es gibt auch Methoden, die Bereiche, Größen oder Deltas zwischen den Koordinatensystemen konvertieren, um z.B. Änderungen oder Verschiebungen korrekt darzustellen.
+
+== 4. Zoom und Verschiebungen
+
+Mehrere Methoden wie `withZoom()` und `withTranslation()` ermöglichen die Anpassung der `ChartState` und somit eine einfache Berechnung von vergrößerten oder verschobenen Werten.
+

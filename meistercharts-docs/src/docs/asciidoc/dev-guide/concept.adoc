@@ -1,0 +1,233 @@
+include::attributes.adoc[]
+
+== Philosophie
+
+=== HTML-First
+
+HTML ist die erste Zielplattform.
+JavaFX nehmen wir mit - und dient als schnelle Entwicklungsplattform.
+
+Daher werden Begriffe, Algorithmen und Drehrichtungen im Zweifel an HTML5 angelehnt.
+Wo die JavaFX-Philosophie abweicht, muss diese sich der HTML5-Idee unterordnen.
+
+Wir übernehmen aber sehr gerne Konzept aus JavaFX, wo diese kein (oder ein unzureichendes) Gegenpart in HTML haben.
+
+=== Bottom up / Basics first
+
+Bei der Entwicklung wird immer zunächst das "Kleine" erstellt.
+Aus diesen Bausteinen können dann Schritt für Schritt höhere Layer zusammen gefügt werden.
+
+=== Demos + Unit Tests
+
+Alle Layer und Berechnungen werden durch Unit Tests bzw.
+Demos abgesichert.
+
+==== Demos: Alles interaktiv
+
+Um sicher zu stellen, dass später die einzelnen Properties auch tatsächlich verändert werden können, erlauben unsere Demos von Anfang an das Einstellen aller Properties - auch der Styles.
+
+== Begriffe
+
+Hier sind die Begriffe definiert
+
+=== Gestalt
+
+Ein `ChartGestalt` fasst verschiedene Layer und andere Features zusammen und stellt diese unter einer einheitlichen Sicht zusammen.
+
+=== Wizard
+
+Ein `Wizard` bietet dem Benutzer gewissen Automatismen/Magie an, welche die Benutzung einer `Gestalt` vereinfacht.
+Ein `Wizard` umfasst z.B. automatische Berechnungen bezüglich Orientation und davon abhängiger Margins.
+
+=== Layer
+
+Ein Layer befindet sich "auf" der Canvas und kann Malen sowie Events verarbeiten.
+
+=== Configuration
+
+Layer und Gestalt besitzen genau ein `Configuration`-Objekt (Marker `@ConfigurationDsl`).
+Es hält die gesamte konfigurierbare Oberfläche: Daten, Verhalten und Darstellung.
+Der Konstruktor nimmt optional ein `additionalConfiguration`-Lambda, das die Defaults überschreibt.
+
+=== Style
+
+Painter und Paintable besitzen ein `Style`-Objekt (Marker `@StyleDsl`, Lambda `styleConfiguration`).
+Ein `Style` enthält ausschließlich visuelle Properties (Farben, Linienbreiten, Fonts, Abstände), in aller Regel als `var`.
+Daten und Verhalten gehören nie in einen Painter/Paintable-`Style`, sondern in die `Configuration` des besitzenden Layers bzw.
+der besitzenden Gestalt.
+
+=== Paintable
+
+Ein Paintable umfasst ein Feature, welches sich selbst zeichnen kann.
+Damit ist es möglich einzelne Aspekte wiederverwendbar zu gestalten.
+
+CAUTION: Nicht mit Painter verwechseln
+
+=== Painter
+
+Painter sind nur ein Konzept - es gibt kein Painter-Interface.
+Ein Painter ist ein Weg um Painting-Code zu verallgemeinern.
+
+CAUTION: Nicht mit Paintables verwechseln
+
+== Plattform-(Un)Abhängigkeit
+
+Für jede unterstützte Plattform (aktuell JS und JavaFX) sind plattformabhängige Implementierungen notwendig.
+Diese spezifischen Implementierungen sollen über möglichst wenige Einstiegspunkte zu erreichen sein.
+
+=== Initialisierung
+
+Um die jeweiligen Factories und die Umgebung zu initialisieren, ist es notwendig diesen Code aufzurufen:
+
+[source,kotlin,indent=0]
+.Initialisierung der Plattform
+----
+MeisterChartsPlatform.init()
+----
+
+Damit werden die jeweiligen plattformabhängigken Factories usw. registriert.
+Danach sollte es eigentlich möglich sein, nur noch mit allgemeinen Klassen zu arbeiten.
+
+Ausnahme: Das Einfügen der erzeugten Komponente in den DOM bzw.
+Scene Graph.
+
+=== MeisterChartsFactory
+
+Die Klasse `MeisterchartFactory` dient zum erzeugen aller benötigten, plattformabhängigen Instanzen.
+
+Klasse mit dem Suffix "JS" bzw "FX" müssen typischerweise nicht benutzt werden.
+Statt dessen sollte die Factory genutzt werden.
+
+Der Zugriff auf die aktuelle Factory ist einfach über `MeisterChartsFactoryAccess.factory` möglich.
+
+TIP: Einzige Ausnahme an dieser Stelle sind die Subklassen von `MeisterchartBuilder`.
+Dort gibt es jeweils eine Implementierung für JS (`MeisterchartBuilderJS`) und JavaFX (`MeisterchartBuilderFX`).
+Einzige Besonderheit: Diese liefern in der Build-Methode bereits den gecasteten Typ zurück.
+Damit ist dann eine Einbettung in die Plattform ohne weiteres möglich.
+
+== Architektur
+
+=== WebComponents (*Chart)
+
+Die WebComponents sind die eigentliche Schnittstelle für den Anwender.
+Entsprechend erhalten diese auch die "besten" Namen.
+
+Eine WebComponent definiert die API zum Anwender hin.
+
+==== (Nullable) Properties
+
+Alle Properties erhalten daher Namen und Typen, welche aus Benutzersicht einfach und leicht zu verwenden sind.
+
+Alles Properties sind immer mit Default-Werten besetzt und optional.
+Der Anwender kann diese setzen, muss aber nicht.
+
+==== Default Model
+
+Jede WebComponent bringt ein einfaches (aber ansehliches) Default-model mit.
+Damit wird erreicht, dass eine WebComponent komplett ohne Konfiguration verwendet werden kann.
+
+==== Nomenklatur: `setData()` und `setStyle()`
+
+Jede WebComponent hat zwei Methoden.
+Über diese kann - getrennt voneinander - das Modell sowie alles die Darstellung betreffende gesetzt werden.
+
+=== Gestalt
+
+Ein `ChartGestalt` fasst verschiedene Layer und andere Features zusammen und stellt diese zusammen.
+
+Die Gestalt dient dabei als Facade, welche die Benutzung einfacher macht.
+
+Properties der Gestalt können sich auf unterschiedliche Layer auswirken.
+So kann z.B. das Setzen einer Margin an mehrere Layer (z.B. Achse, BarChart und Grid) weitergegeben werden.
+
+NOTE: Eine Gestalt wiederholt nur die Properties, welche Auswirkungen auf mehrere Layer hat.
+Es werden explizit **nicht** alle Properties aller Layers (bzw. deren `Configuration`) wiederholt.
+Im Gegensatz dazu wiederholen die `WebComponents` zumindest etliche dieser Properties.
+
+==== Configuration
+
+Eine Gestalt hält genau ein `Configuration`-Objekt.
+Darin liegen sowohl die Modellwerte (in aller Regel vom Typ `Observable*`) als auch die Properties, die sich auf mehrere Layer auswirken (z.B.
+eine gemeinsame Margin).
+
+Der Benutzer muss `markAsDirty()` aufrufen, wenn Werte geändert wurden.
+Die Gestalt tut dies nicht von sich aus.
+
+==== Änderbarkeit
+
+Da die Gestalt im Zweifel auch als WebComponent veröffentlicht werden soll, muss darauf geachtet werden, dass alle relevanten Dinge nachträglich gesetzt werden können.
+
+Hintergrund: Aus JavaScript heraus ist das Setzen der Style/Data-Properties immer erst nach Instantiierung möglich.
+
+==== *Keine* Magie
+
+Eine Gestalt enthält nur die Funktionalität um die Layer auf technischer Ebene zu verknüpfen.
+
+Eine Gestalt enthält explizit keine "Magie", welche die Benutzung vereinfacht.
+Diese Vereinfachungen sind in Wizards ausgelagert.
+
+=== Wizard
+
+In vielen Fällen möchte man die Benutzung einer Gestalt vereinfachen.
+So ergibt sich z.B. aus der Position der Achsen eventuelle Margins.
+
+Diese Automatismen funktionieren nie in allen Fällen.
+Deshalb sind diese immer optional.
+
+Wizards erlauben eine bequeme, automagische Konfiguration einer Gestalt.
+Diese Wizards nutzen dafür eine bestehende Gestalt und konfigurieren diese.
+
+Da die Wizards immer optional sind, können diese beliebige Annahmen machen und auf einzelne Use Cases optimiert sein.
+
+=== Layer
+
+Ein Layer befindet sich "auf" der Canvas und kann:
+
+* Malen
+* Events verarbeiten
+
+Ein Layer ist eine technische Sicht auf ein Feature, welches sich auf das komplette Canvas bezieht.
+Typischerweise werden Layer nicht vom End-User direkt benutzt.
+Stattdessen wird der User eine Gestalt verwenden.
+
+Typischerweise hat ein Layer ein `Configuration`-Objekt, über das seine Properties konfiguriert werden.
+
+==== Unabhängige Properties für den einzelnen Layer
+
+Properties gelten nur für den einzelnen Layer.
+Daher kommt es durchaus vor, dass sich Properties in verschiedenen Layern sehr ähneln.
+Diese müssen (von der Gestalt) trotzdem immer einzeln gesetzt werden.
+Die Layer müssen möglichst unabhängig voneinander sein.
+
+NOTE: Über Extension-Methods können diese durchaus (berechnete) Werte eines anderen Layers benutzen.
+Sie sollten aber nur in Ausnahmefällen Konfigurationswerte eines anderen Layers automatisch übernehmen.
+
+Damit wird sicher gestellt, dass die Layer einfach zu testen und zu verwenden bleiben.
+
+==== Configuration
+
+Jeder Layer hält genau ein `Configuration`-Objekt, das im Konstruktor übergeben und optional per `additionalConfiguration`-Lambda angepasst wird.
+Es vereint die konfigurierbare Oberfläche des Layers: Daten *und* Darstellung.
+
+Daten werden typischerweise als Lambdas/Provider (`val`) gehalten — der Layer hält selbst keine Modellwerte.
+Rein visuelle Werte dürfen dagegen direkt als `var` liegen.
+
+=== Painter
+
+Painter sind nur ein Konzept - es gibt kein Painter-Interface.
+
+Ein Painter dient dazu die Darstellung bestimmer Funktionalitäten wiederverwendbar zu gestalten.
+Jeder Painter hat dabei eine unterschiedliche Signatur, da unterschiedliche Werte übergeben werden müssen.
+
+Painter sind daher stark an ihren Einsatz-Zweck gebunden.
+So verhält sich ein Line-Painter eben völlig unterschiedlich als z.B. ein Kompass-Painter.
+
+Ein Painter kann ein `Style`-Objekt besitzen (siehe oben) — dieses enthält ausschließlich visuelle Properties.
+
+=== Paintable
+
+Ein Paintable umfasst ein Feature, welches sich selbst zeichnen kann.
+Damit ist es möglich einzelne Aspekte wiederverwendbar zu gestalten.
+
+Die Paintable implementieren dabei ein gemeinsames Interface, womit diese in generischem Code verwendet werden können.
+

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:AEBPresentationDemoDescriptor.kt:AEBPresentationDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:HideAfterTimeoutLayerDemoDescriptor.kt:HideAfterTimeoutLayerDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:MouseEventsDemoDescriptor.kt:MouseEventsDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>EmptyFunctionBlock:ZoomFitDemoDescriptor.kt:ZoomFitDemoDescriptor.&lt;no name provided>${ }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:BinaryPainterDemoDescriptor.kt:MyBinaryPainterLayer${ i, it -> @DomainRelative val domainRelativeY = BinaryValueRange.toDomainRelative(it) val y = chartCalculator.domainRelative2zoomedY(domainRelativeY) binaryPainter.addCoordinate(gc, chartCalculator.domainRelative2zoomedX(0.1 * i), y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:LinePainterDemoDescriptor.kt:MyLinePainterLayer${ index, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) @Window val y = chartCalculator.domainRelative2windowY(domainRelativeY) @Window val x = chartCalculator.domainRelative2windowX(0.1 + 0.1 * index) //TODO line segment style! linePainter.addCoordinates(gc, x, y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:LinePainterDemoDescriptor.kt:MyLinePainterLayer${ index, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) @Window val y = chartCalculator.domainRelative2windowY(domainRelativeY) @Window val x = chartCalculator.domainRelative2windowX(0.1 + 0.1 * index) pointPainter.paintPoint(gc, x, y) }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:XyPointPainterDemoDescriptor.kt:XYPointPainterLayer${ i, it -> @DomainRelative val domainRelativeY = valueRange.toDomainRelative(it) val y = chartCalculator.domainRelative2windowY(domainRelativeY) style.pointPainter.paintPoint(gc, chartCalculator.domainRelative2windowX(0.1 * i), y) }</ID>
+    <ID>NestedBlockDepth:TextBenchmarks.kt:TextBenchmarks$private fun iterFonts</ID>
+  </CurrentIssues>
+</SmellBaseline>

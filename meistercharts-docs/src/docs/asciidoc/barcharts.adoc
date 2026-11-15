@@ -1,0 +1,112 @@
+= Bar Charts
+
+== MeisterCharts (2020-01-30)
+
+=== BarChartLayer
+
+Malt "einfache" Bars
+
+* CategoryModel
+
+=== CategoryBarPaintable
+
+Eine (bisher nur vertikale) Bar bestehend aus mehreren Segmenten. +
+
+* Category
+* ValueRange
+
+=== CategoryLayerStyle
+
+Könnte meines Erachtens auch für "einfache" Bar-Charts verwendet werden
+
+* maxBarSize: Double
+* maxBarDistance: Double?
+* layoutDirection: LayoutDirection
+
+=== CategoryModel
+
+* valueRange: ValueRange
+* categories: List<@Domain DataPoint>
+
+=== MultiBarChartLayer
+
+* hat ein CategoryModel
+* verwendet CategoryBarPaintable
+
+=== Category
+
+* values: List<@Domain Double>
+* colors: List<Color>
+* caption: TextKey?
+* image: PaintableId?
+
+=== DataPoint
+
+* value: Double,
+* caption: TextKey?,
+* image: PaintableId?,
+* color: Color
+
+
+== JavaFX
+
+=== BarChart
+`DoubleProperty barGap` The gap to leave between bars in the same category +
+`DoubleProperty categoryGap` The gap to leave between bars in separate categories +
+`ObjectProperty<ObservableList<XYChart.Series<X,​Y>>> data` +
+
+=== XYChart.Series<X,​Y>
+`ObjectProperty<ObservableList<XYChart.Data<X,​Y>>> data` ObservableList of data items that make up this series +
+`StringProperty name` The user displayable name for this series +
+`ObjectProperty<Node> node` The node to display for this series. +
+
+=== XYChart.Data<X,​Y>
+`ObjectProperty<Object> extraValue` The generic data value to be plotted in any way the chart needs. +
+`ObjectProperty<Node> node` The node to display for this data item. +
+`ObjectProperty<X> XValue` The generic data value to be plotted on the X axis. +
+`ObjectProperty<Y> YValue` The generic data value to be plotted on the Y axis. +
+
+=== Sample Code:
+[source]
+----
+XYChart.Series series1 = new XYChart.Series();
+series1.setName("2003");
+series1.getData().add(new XYChart.Data(25601.34, austria));
+series1.getData().add(new XYChart.Data(20148.82, brazil));
+series1.getData().add(new XYChart.Data(10000, france));
+series1.getData().add(new XYChart.Data(35407.15, italy));
+series1.getData().add(new XYChart.Data(12000, usa));
+
+XYChart.Series series2 = new XYChart.Series();
+series2.setName("2004");
+series2.getData().add(new XYChart.Data(57401.85, austria));
+series2.getData().add(new XYChart.Data(41941.19, brazil));
+series2.getData().add(new XYChart.Data(45263.37, france));
+series2.getData().add(new XYChart.Data(117320.16, italy));
+series2.getData().add(new XYChart.Data(14845.27, usa));
+----
+
+== JFreeChart
+
+=== KeyedValues2D
+`int getColumnIndex(Comparable key)` Returns the column index for a given key. +
+`Comparable getColumnKey(int column)` Returns the column key for a given index. +
+`List getColumnKeys()` Returns the column keys. +
+`int getRowIndex(Comparable key)` Returns the row index for a given key. +
+`Comparable getRowKey(int row)` Returns the row key for a given index. +
+`List getRowKeys()` Returns the row keys. +
+`Number getValue(Comparable rowKey, Comparable columnKey)` Returns the value associated with the specified keys. +
+
+=== Values2D
+`int getColumnCount()` Returns the number of columns in the table. +
+`int getRowCount()` Returns the number of rows in the table. +
+`Number getValue(int row, int column)` Returns a value from the table. +
+
+=== Dataset
+`DatasetGroup getGroup()` Returns the dataset group. +
+`setGroup(DatasetGroup group)` Sets the dataset group. +
+`addChangeListener(DatasetChangeListener listener)` Registers an object for notification of changes to the dataset. +
+`removeChangeListener(DatasetChangeListener listener)` Deregisters an object for notification of changes to the dataset. +
+
+=== DatasetGroup
+`String getID()` Returns the identification string for this group.

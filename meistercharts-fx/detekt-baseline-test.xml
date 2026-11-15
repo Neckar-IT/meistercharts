@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ForbiddenPrintCall:AsyncDemo.kt:AsyncDemo$println</ID>
+    <ID>ForbiddenPrintCall:CanvasPaintProviderGenerator.kt:CanvasPaintProviderGenerator$println</ID>
+    <ID>ForbiddenPrintCall:SegoeUiDesignTest.kt:SegoeUiDesignTest$println</ID>
+  </CurrentIssues>
+</SmellBaseline>

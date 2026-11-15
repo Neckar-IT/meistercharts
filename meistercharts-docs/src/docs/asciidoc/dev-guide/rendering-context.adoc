@@ -1,0 +1,129 @@
+include::attributes.adoc[]
+
+== CanvasRenderingContext
+
+Der CanvasRenderingContext ist das "Herz" auf dem gepainted wird.
+Es gibt jeweils eine Implementierung für HTML und JavaFX.
+
+=== Texte + Anchor
+
+Ein typisches Szenario ist das Painten eines Textes (oder Bildes) an eine bestimmte Stelle.
+Je nachdem an welcher Seite des Bildschirms gerendert wird, muss von rechts/links/oben/unten aus gerechnet werden.
+
+Um nicht an allen Stellen diese Berechnungen wiederholen zu müssen, bringt der CanvasRenderingContext Methoden mit, die das übernehmen.
+
+Um den Code übersichtlich und bugfrei zu halten, sollten diese Methoden auch verwendet werden.
+
+==== Anchoring = Anchor-Location + Richtung + Gap
+
+Um einen Text zu zeichnen benötigt man einen Ort (`Anchor`) und eine Richtung (`Direction`) (vertikal + horizontal) sowie einen Abstand (`gap`) in welche der Text von diesem Punkt aus gezeichnet wird.
+Ein Anchoring beinhaltet diese Aspekte.
+
+==== Shape + Direction --> Anchor
+
+Man kann aus einer Shape (aktuell nur Rectangle) und einer Richtung eine Koordinate berechnen (z.B. rechte, obere Ecke).
+Diese Koordinate kann dann wiederum als Anchor dienen.
+
+==== Anchor-Gap
+
+Die Anchor-Gap besteht aus zwei Werte:
+- anchorGapHorizontal - anchorGapVertical
+
+Diese werden - je nach Direction - unterschiedlich implementiert.
+Sie geben als positiver Wert jeweils den Abstand zum Anchor-Point an.
+D.h. abhängig von der Direction kann ein positiver Anchor-Gap-Wert nach rechts oder links auf der Achse abgetragen werden.
+
+=== Lines
+
+Linien werden in JavaFX immer zentriert auf der angegebenen Position gezeichnet.
+D.h. die Breite einer Linie wird jeweils zur Hälfte auf *beiden* Seiten addiert.
+
+Dies ist insbesondere zu berücksichtigen, wenn:
+
+* Formen mit Rand gezeichnet werden (Fill + Stroke).
+* Linien pixelgenau auf dem Bildschirm dargestellt werden sollen (Anti-Aliasing)
+
+=== Rectangles
+
+==== Malen mit Ankern
+
+Es gibt Extension-Methods, welche das Zeichnen von Rectangles mit Anchor-Direction und Gap erlaubt.
+Diese Methoden erleichtern das Zeichnen, wenn ein Rect mit einer Ecke oder dem Zentrum ausgerichtet werden soll.
+
+Die Methoden stehen sowohl für `stroke()` als auch `fill()` zur Verfügung.
+
+==== Bounds: fill vs. stroke
+
+Beim Füllen eines Rectangles wird exact die angegebene Form gefüllt.
+Konkret: Eine Rechteck mit der Größe von 100x50 Pixeln hat auf dem Bildschirm auch exakt diese Größe.
+
+Stroke zeichnet eine Linie um das angegebene Rechteck.
+Dabei liegt die Hälfte der Linie *innerhalb* der angegebenen Bounds.
+Die andere Hälfte der Linie befindet sich dagegen *außerhalb* der Bounds.
+
+Konkret: Ein Rechteck mit der Größe von 100x50 Pixeln hat auf dem Bildschirm eine Größe von 100+(LineWidth)x50+(LineWidth) Pixeln.
+Dabei ist jeweils die halbe LineWidth links und rechts bzw. oben und unten dazu gekommen.
+
+===== Zuerst fill, dann stroke
+
+Bei einem Rect mit Rand muss daher zuerst `fill()` und dann `stroke()` aufgerufen werden, da ja stroke() die halbe Linie über den gefüllten Inhalt nach innen zeichnet.
+
+===== Stroke im Hintergrund
+
+Wenn z.B. Swimlanes oder ähnliches gezeichet werden (im Hintergrund), muss die Linie entsprechend eingepasst werden.
+Dafür gibt es entsprechende Extension-Methods.
+
+Dadurch wird vermieden, dass der sichtbare Bereich über die definierte Größe hinausragt.
+
+=== Baseline
+
+Generell ist es eine gute Idee, Texte jeweils von der Baseline aus zu zeichnen.
+Damit gibt es dann auch reproduzierbare und gut aussehende Resultate.
+
+=== Farben
+
+Es gibt zwei Sichtweisen auf Farben: Zum einen die Verwendung aus dem Painter heraus um das Canvas zu konfigurieren (`CanvasPaint`).
+Zum zweiten bei der Konfiguration in einem Style (`FlatColor` bzw. `ColorDescriptor`).
+
+Diese Unterscheidung ist notwendig, da die Gradienten absolute Koordinaten zum painten auf dem Canvas benötigen, diese im Style aber natürlich nicht vorgegeben werden können/sollen.
+
+==== `CanvasPaint` - für Canvas/Layers
+
+`CanvasPaint` ist die Oberklasse für alle "farblichen" Klassen, welche direct auf einem Canvas gemalt werden können.
+Dies sind `Color` sowie die Gradienten-Klassen
+
+===== `Color`
+
+Entspricht einer durchgehenden Farbe (im Gegensatz zu Gradienten).
+Diese kann direkt auf dem Canvas gesetzt werden.
+
+===== `Canvas*Gradient`
+
+Die Gradienten-Implementierungen enthalten die absoluten Koordinaten welche vom Canvas benötigt werden.
+
+NOTE: Der Gradient wird dabei immer vom aktuellen Ursprung der GC aus gezeichnet.
+Unabhängig von den Koordinaten der Zeichnung.
+Entsprechend muss entweder der Gradient angepasst oder der Ursprung verschoben werden.
+
+==== `ColorDescriptor` - für Styles
+
+In den Styles für die Layer soll es bequem möglich sein die Gradienten zu definieren.
+Deshalb werden dort die Subklassen von
+`ColorDescriptor` verwendet.
+Diese enthalten keine absoluten Koordinaten.
+Es ist daher dem Layer überlassen die entsprechenden Konvertierungen durchzuführen.
+
+===== `Color` - für die meisten Fälle
+
+Da in den meisten Fällen ein Gradient nicht notwendig ist, wird typischerweise direkt eine Color im Style definiert.
+Eine Color kann ohne Conversion direkt an den GC übergeben werden.
+
+=== Winkel
+
+==== Drehrichtung: Uhrzeigersinn
+
+Genau wie bei HTML drehen positive Winkel im Uhrzeigersinn.
+
+==== 0(rad) entsprechen 3 Uhr
+
+Die Winkel beginnen bei 3 Uhr.

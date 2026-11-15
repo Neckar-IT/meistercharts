@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" debug="false" scanPeriod="10 seconds">
+  <root level="INFO" />
+  <logger name="com.cedarsoft.charting.server.ChartingServer" level="INFO" />
+</configuration>

@@ -1,0 +1,110 @@
+= MeisterCharts Demo
+Neckar IT GmbH <meisterCharts@neckar.it>
+v0.1, 2019-10
+:doctype: book
+//:sectnumlevels: 7
+:sectnums:
+:toc-title: Inhalt
+:appendix-caption: Der Inhalt..
+//:icons:
+:toc: left
+:source-highlighter: rouge
+:source-language: kotlin
+:experimental:
+:icons: font
+// The icon font lives beside the pages at the root, one level up.
+:stylesdir: ../css
+:icon-set: fas
+//:show-link-uri:
+:chapter-label:
+
+== Demo für Asciidoc
+
+IMPORTANT: Das ist wichtig!!!
+Enter at your own risk.
+
+NOTE: Und ein Hinweis Enter at your own risk.
+
+TIP: Und ein Tip Enter at your own risk.
+
+CAUTION: Vorsicht, Caution Enter at your own risk.
+
+WARNING: Aua, Warnung Enter at your own risk.
+
+== Text Replacements
+
+Pfeil: ->
+
+Doppel-Pfeil: =>
+
+indexterm:[Tigers,Big cats]
+
+Ellipsis ...
+
+kbd:[Ctrl+Alt+Delete]
+
+btn:[Save]
+
+
+menu:View[Zoom > Reset]
+
+Press the btn:[OK] button when you are finished.
+
+
+icon:comment[] This is a comment icon
+
+icon:file[] And a file icon
+
+icon:battery-full[] And a battery icon
+
+[quote,Ben Parker,Spiderman Movie]
+____
+With great power comes great responsibility.
+____
+
+.My header for the note
+[NOTE]
+====
+Blabla
+====
+
+[index]
+= Index
+
+link:index.html[Docs]
+
+== More Link tests
+
+:sourcedir: ../../src/commonMain/kotlin/
+:basePackage: {sourcedir}/com/cedarsoft/charting
+:basePackage2: link:{sourcedir}/com/cedarsoft/charting/[]
+:basePackageLink: link:{sourcedir}/com/cedarsoft/charting/
+
+link:{basePackage}/MeisterChartsConfiguration.kt[MeisterChartsConfiguration]
+
+{basePackageLink}/MeisterChartsConfiguration.kt[MeisterChartsConfiguration]
+
+== PlantUML Diagram
+
+.Diagram Title
+[plantuml,./diagram,png, %unbreakable]
+....
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+....
+
+[ditaa]
+----
++---------+
+| cBLU    |
+|         |
+|    +----+
+|    |cPNK|
+|    |    |
++----+----+
+----

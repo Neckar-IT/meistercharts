@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:LayerCollectionTest.kt:LayerCollectionTest.MyLayer${ }</ID>
+    <ID>EmptyFunctionBlock:LayerSupportTest.kt:LayerSupportTest.&lt;no name provided>${ }</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println( """ @$typeName @JvmInline value class ${typeName}Coordinates(val value: Coordinates){ val x: Double get() = value.x val y: Double get() = value.y ${additionalCode(application, Usage.Coordinates)} } fun Coordinates.as${typeName}(): ${typeName}Coordinates { return ${typeName}Coordinates(this) } fun Coordinates.Companion.${decapitalizedName}(width: Double, height: Double): ${typeName}Coordinates { return Coordinates.of(width, height).as${typeName}() } """.trimIndent() )</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println( """ @$typeName @JvmInline value class ${typeName}ValueX(val value: Double){ ${additionalCode(application, Usage.ValueX)} fun coerceAtMost(maximumValue: Double): ${typeName}ValueX { return ${typeName}ValueX(value.coerceAtMost(maximumValue)) } fun coerceAtLeast(minimumValue: Double): ${typeName}ValueX { return ${typeName}ValueX(value.coerceAtLeast(minimumValue)) } operator fun minus(substrahend: ${typeName}ValueX): ${typeName}ValueX { return ${typeName}ValueX(value - substrahend.value) } } fun min(first: ${typeName}ValueX, second: ${typeName}ValueX): ${typeName}ValueX { return ${typeName}ValueX(kotlin.math.min(first.value, second.value)) } fun max(first: ${typeName}ValueX, second: ${typeName}ValueX): ${typeName}ValueX { return ${typeName}ValueX(kotlin.math.max(first.value, second.value)) } @$typeName @JvmInline value class ${typeName}ValueY(val value: Double){ ${additionalCode(application, Usage.ValueY)} fun coerceAtMost(maximumValue: Double): ${typeName}ValueY { return ${typeName}ValueY(value.coerceAtMost(maximumValue)) } fun coerceAtLeast(minimumValue: Double): ${typeName}ValueY { return ${typeName}ValueY(value.coerceAtLeast(minimumValue)) } operator fun minus(substrahend: ${typeName}ValueY): ${typeName}ValueY { return ${typeName}ValueY(value - substrahend.value) } } fun min(first: ${typeName}ValueY, second: ${typeName}ValueY): ${typeName}ValueY { return ${typeName}ValueY(kotlin.math.min(first.value, second.value)) } fun max(first: ${typeName}ValueY, second: ${typeName}ValueY): ${typeName}ValueY { return ${typeName}ValueY(kotlin.math.max(first.value, second.value)) } """.trimIndent() )</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println( """ @${typeName} @JvmInline value class ${typeName}Size(val value: Size) { val width: Double get() = value.width val height: Double get() = value.height ${additionalCode(application, Usage.Size)} } fun Size.as${typeName}(): ${typeName}Size { return ${typeName}Size(this) } fun Size.Companion.${decapitalizedName}(width: Double, height: Double): ${typeName}Size { return Size.of(width, height).as${typeName}() } """.trimIndent() )</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println("------------------ ${typeName}Value ------------------")</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createDirectCalculatorMethods(source, target, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createDirectCalculatorMethods(target, source, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(source, via, target, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(source, via1, via2, target, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(source, via1, via2, via3, target, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(target, via, source, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(target, via2, via1, source, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println(createIndirectCalculatorMethods(target, via3, via2, via1, source, it))</ID>
+    <ID>ForbiddenMethodCall:AnnotationValueClassesGeneratorRunner.kt:println("------- Chart Calculator ----------------------------------")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("------------- Applying translation -------------")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("content area size: ${chartState.contentAreaSize}")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("contentAreaY = $contentAreaY px")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("domainRelative = ${NumberFormat.getPercentInstance().format(domainRelative)}")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("windowY = $windowY px")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("windowY with translation = $windowYAfterTranslation px")</ID>
+    <ID>ForbiddenMethodCall:CalculationSampleDemo.kt:CalculationSampleDemo$println("zoomedY = $zoomedY px")</ID>
+    <ID>ForbiddenMethodCall:DirtyReasonTest.kt:DirtyReasonTest$println(buildString { appendLine( "@Boxed" ) appendLine( "val entries: List&lt;DirtyReason> = listOf(" ) appendLine(valueProperties.joinToString(", ") { it.name }) appendLine( ")" ) })</ID>
+    <ID>ForbiddenMethodCall:DirtyReasonTest.kt:DirtyReasonTest$println(buildString { appendLine( "@Boxed" ) appendLine( "val entryLabels: Map&lt;DirtyReason, String> = mapOf(" ) appendLine(valueProperties.joinToString(",\n") { it.name + " to \"${it.name}\"" }) appendLine( ")" ) })</ID>
+    <ID>ForbiddenMethodCall:IconsTest.kt:IconsTest$println(it)</ID>
+    <ID>ForbiddenMethodCall:SVGPathParserTest.kt:SVGPathParserTest$println("--> $it")</ID>
+    <ID>ForbiddenMethodCall:SVGPathsTest.kt:SVGPathsTest$println("--> $it")</ID>
+    <ID>ForbiddenMethodCall:SVGPathsTest.kt:SVGPathsTest$println(it)</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("----------")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("Hz: ${1000.0 / minSupportedTileTime} Hz")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("Newest Time: ${Instant.ofEpochMilli((referenceTimestamp + Int.MAX_VALUE * timePerQuadrant).toLong())}")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("Oldest Time: ${Instant.ofEpochMilli((referenceTimestamp + Int.MIN_VALUE * timePerQuadrant).toLong())}")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("distanceInPixelsFromOrigin: $distanceInPixelsFromOrigin")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("minSupportedTileSize: $minSupportedTileSize ContentArea px")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("minSupportedTileTime: $minSupportedTileTime ms")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("naiveTileIndex: $naiveTileIndex")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("quadrantIndex: $quadrantIndex")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("reverse: ${tileIndex * tileSize + quadrantIndex * quadrantSize}")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("tileIndex: $tileIndex")</ID>
+    <ID>ForbiddenMethodCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println("timePerQuadrant: $timePerQuadrant ${timePerQuadrant.milliseconds}")</ID>
+    <ID>ForbiddenMethodCall:UpdateReasonTest.kt:UpdateReasonTest$println(buildString { appendLine( "@Boxed" ) appendLine( "val entries: List&lt;UpdateReason> = listOf(" ) appendLine(valueProperties.joinToString(", ") { it.name }) appendLine( ")" ) })</ID>
+    <ID>ForbiddenMethodCall:UpdateReasonTest.kt:UpdateReasonTest$println(buildString { appendLine( "@Boxed" ) appendLine( "val entryLabels: Map&lt;UpdateReason, String> = mapOf(" ) appendLine(valueProperties.joinToString(",\n") { it.name + " to \"${it.name}\"" }) appendLine( ")" ) })</ID>
+    <ID>ForbiddenPrintCall:AllocationRecordingDemo.kt:println</ID>
+    <ID>ForbiddenPrintCall:AnnotationValueClassesGeneratorRunner.kt:Creator$println</ID>
+    <ID>ForbiddenPrintCall:AnnotationValueClassesGeneratorRunner.kt:println</ID>
+    <ID>ForbiddenPrintCall:CalculationSampleDemo.kt:CalculationSampleDemo$println</ID>
+    <ID>ForbiddenPrintCall:DirtyReasonTest.kt:DirtyReasonTest$println</ID>
+    <ID>ForbiddenPrintCall:IconsTest.kt:IconsTest$println</ID>
+    <ID>ForbiddenPrintCall:SVGPathParserTest.kt:SVGPathParserTest$println</ID>
+    <ID>ForbiddenPrintCall:SVGPathsTest.kt:SVGPathsTest$println</ID>
+    <ID>ForbiddenPrintCall:TimeCalculationPrecisionTest.kt:TimeCalculationPrecisionTest$println</ID>
+    <ID>ForbiddenPrintCall:UpdateReasonTest.kt:UpdateReasonTest$println</ID>
+    <ID>ForbiddenPrintCall:ZIndexSortingBufferTest.kt:ZIndexSortingBufferTest$println</ID>
+  </CurrentIssues>
+</SmellBaseline>

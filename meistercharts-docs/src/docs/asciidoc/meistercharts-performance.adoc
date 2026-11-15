@@ -1,0 +1,189 @@
+= MeisterCharts Performance: im Vergleich mit Plotly.js
+Neckar IT GmbH <https://neckar.IT>
+:doctype: article
+:revnumber: 1.0
+:revdate: 2020-02
+:revnumber: 1.0
+:sectnums!:
+:appendix-caption!:
+:experimental:
+:icons: font
+:icon-set: fas
+:chapter-label:
+:title-page:
+:hyphens: de
+:back-cover-image: image:neckar-it-back-cover.pdf[]
+:title-page-revision-display: none
+:figure-caption!:
+
+== Ausgangsposition
+
+Plotly.js ist die wohl meistgenutzte OpenSource-Lösung zur Darstellung von Werten über die Zeit.
+Daher bietet sich ein Vergleich der Performance an.
+
+Die Ergebnisse können auf andere Bibliotheken übertragen werden, die eine ähnliche Architektur wie Plotly.js besitzen (z.B. Grafana).
+
+=== Architektur Plotly.js
+
+Plotly.js benutzt per Default SVG zum Rendern.
+Die Datenpunkte werden dabei in ein SVG eingebettet und dann vom Browser gezeichnet.
+
+==== Vorteil: Einfache Browser-Unterstützung
+
+Dies hat den großen Vorteil, dass damit sehr viel Browser-Funktionalität genutzt werden kann.
+Zooming und Panning sowie Animationen und Mouse-Interaktionen sind sehr einfach lösbar.
+
+==== Nachteil: Größere Datenmengen werden nicht unterstützt
+
+Sobald die Darstellung eine gewisse Anzahl an Punkten übersteigt, bricht die Performance ein.
+Bis zu einer Anzahl von vielen Hundert bis zu wenigen Tausend Punkten ist der Weg über SVG realistisch und umsetzbar.
+
+Sobald mehr Punkte dargestellt werden sollen, kommt dieser Ansatz an seine Grenzen.
+
+===== Praxisbeispiel:
+
+Wenn von einem Sensor acht Prozesswerte alle 20 ms (entspricht 50 Hz) aufzeichnet, ergeben sich daraus 400 Datenpunkte pro Sekunde.
+
+D.h. bereits nach einer Minute entspricht dies 24.000 Datenpunkten.
+
+==== Nachteil: Updates
+
+Da alle Daten als SVG vorliegen, ist das Hinzufügen und Entfernen von Datenpunkten nur recht aufwändig möglich.
+
+Selbst wenn der Umfang der Daten in einem SVG noch von Plotly.js dargestellt werden kann, so bricht die Performance dramatisch ein, sobald regelmäßig Daten aktualisiert werden.
+
+=== Fazit zur Architektur Plotly.js
+
+Die Entwickler von Plotly.js haben sich dafür entschieden geringe Datenmengen ohne regelmäßige Updates zu unterstützen.
+
+Daher ist die Architektur von Plotly.js auf diesen Einsatzzweck optimiert.
+Sobald nun schnelle Updates gewünscht werden und/oder die Menge an Datenpunkten steigt, gerät diese Architektur an ihre Grenzen.
+
+Plotly.js bietet mit dieser Architektur große Vorteile im dafür vorgesehenen Einsatzbereich: wenige und statische Daten.
+
+=== Architektur MeisterCharts
+
+Die Charting-Komponente von MeisterCharts ist dafür optimiert große Datenmengen, die sich sehr schnell ändern, darzustellen.
+Daher ist die gesamte Architektur von Grund auf für diesen Einsatzweck optimiert.
+
+Entsprechend ist die Performance in diesen Szenarien sehr viel besser als bei Plotly.js.
+
+==== Canvas-basiert
+
+Die Darstellung erfolgt auf einem Canvas.
+Damit haben wir die komplette Kontrolle über die Darstellung der Daten.
+
+Diese Darstellung hat den großen Vorteil, dass die Zeichenoperationen - insbesondere im Vergleich zu SVG - viel leichtgewichtiger sind.
+So wird deutlich weniger Speicherplatz benötigt und Updates der Daten sind sehr einfach möglich.
+
+==== Tiles
+
+Zwischenergebnisse werden von MeisterCharts als Bilder zwischengespeichert und können damit äußerst performant dargestellt werden.
+
+Dieser Ansatz nutzt den Fakt, dass in der Praxis neue Werte an jeweils einer Stelle (in aller Regel auf der rechten Seite) hinzugefügt bzw. entfernt werden.
+Damit sind Updates sehr, sehr einfach und performant möglich.
+
+==== Zusammenfassen von Werten
+
+MeisterCharts ist für beliebig große Datenmengen vorbereitet - einzige Einschränkung ist die Quelle der Daten (in der Regel der Hauptspeicher).
+Dies wird dadurch ermöglicht, dass Werte zusammen gefasst werden, wenn das Zoom-Level dies erfordert.
+
+Auf einem Bildschirm können nicht mehr Werte gleichzeitig dargestellt werden, als physikalische Pixel vorhanden sind.
+Entsprechend ist es häufig notwendig mehrere Datenpunkte sinnvoll zusammen zu fassen.
+
+==== Nachteil: Komplexität
+
+Erkauft werden diese Vorteile durch eine deutlich höhere Komplexität.
+In MeisterCharts mussten Probleme gelöst werden, die sich bei Plotly.js überhaupt nicht stellen.
+
+== Benchmark
+
+Der folgende Benchmark zeigt die Performance-Unterschiede im beschriebenen Szenario mit sich (relativ) häufig ändernden Werten.
+Die Updates sind zusammen mit der (relativ) hohen Menge an Datenpunkten die Ursache für die schlechte Performance von Plotly.js.
+
+.Plotly.js - Schnell (genug) im richtigen Einsatzgebiet
+[%unbreakable]
+****
+In Szenarien mit weniger Punkten und insbesondere ohne Updates der Daten, sähe die Performance von Plotly.js besser aus.
+
+Plotly.js ist für einen anderen Einsatzzweck konzipiert.
+Entsprechend liegt die Performance in diesen Szenarien im zu erwartenden Bereich.
+
+Da die gewählte Architektur Ursache für die Performance ist, wird sich diese auch in Zukunft nicht wesentlich verbessern.
+****
+
+=== Szenario
+
+Basis für den Benchmark sind die Minimal-Anforderungen, die gemäß unserer Projekt-Erfahrung an die Darstellung von Sensor-Werten gestellt werden.
+
+Dies sind die maximalen Werte, bei denen Plotly.js immerhin noch bedienbar bleibt.
+MeisterCharts ist für weit größere Datenmengen vorbereitet.
+
+==== Eckdaten
+
+* 8 Kurven
+* maximal 600 Werte pro Kurve (4.800 Datenpunkte insgesamt)
+* ein neuer Wert pro Kurve alle 100 ms
+* Browser: Google Chrome auf modernem Desktop
+
+===== Frames per Second
+
+[plantuml,format=svg]
+.Vergleich der FPS bei 4.800 Datenpunkten
+----
+@startuml
+!include plantuml-style.iuml
+
+scale 6 as 45 pixels
+
+concise "FPS Plotly.js" as Plotly
+concise "FPS MeisterCharts" as QC
+
+@Plotly
+0 is "9.6 FPS"
+9.6 is {hidden}
+
+@QC
+0 is "MeisterCharts - 60 FPS"
+59 is {hidden}
+
+@9.6 <-> @59 : Faktor 6.6
+
+
+@enduml
+----
+
+Während Plotly.js bei diesem Szenario bereits lange im CPU-Limit angelangt ist, erreicht MeisterCharts mit großen CPU-Reserven die maximal mögliche FPS.
+
+Die Menge an Daten spielt dabei eine untergeordnete Rolle.
+Diese Performance wird auch mit 1.000.000 Punkten erreicht.
+
+===== CPU-Last
+
+Die CPU-Last zeigt die Reserven, die bei MeisterCharts noch vorhanden sind.
+
+[plantuml,format=svg]
+.Vergleich CPU-Last bei 4.800 Datenpunkten
+----
+@startuml
+!include plantuml-style.iuml
+
+scale 10 as 45 pixels
+
+concise "CPU Last Plotly.js" as Plotly
+concise "CPU Last MeisterCharts" as QC
+
+@Plotly
+0 is "Plotly.js (99, 5%)"
+99.5 is {hidden}
+
+@QC
+0 is "MeisterCharts - (59,5 %)"
+59.5 is {hidden}
+
+@60 <-> @100 : 40%
+
+
+@enduml
+----
+

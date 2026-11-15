@@ -1,0 +1,129 @@
+include::attributes.adoc[]
+
+== History
+
+=== Grundlegende Ideen
+
+==== Timestamps + Grenzen
+
+Die Grenzen werden durch mathematische Rundung auf "runde" Werte gelegt.
+Diese Berechnung erfolgt gegen die Basis der Timestamps (1.1.1970).
+
+===== Zeitzonen
+
+Es gibt alle möglichen "krummen" Zeitzonen.
+Daher ist es (sowieso) nicht möglich alles oberhalb von Minuten-Werte sinnvoll direkt zu nutzen.
+Es sind immer Konvertierungen und andere Zusammenfassungen möglich.
+
+Daher ist es egal wo in den größeren Buckets (Stunde, Tag etc) die Grenzen liegen bzw. ob diese mit echten, kalendarischen Grenzen überein stimmen.
+
+Die Berechnungen erfolgen im Rahmen der Enum `HistoryBucketRange`.
+
+==== Downsampling
+
+Sobald Zooming unterstützt wird, wird es notwendig das Zusammenfassen von Datenpunkten zu unterstützten.
+
+===== Verbesserte Übersicht
+
+Auf einem Monitor können nur so viele Datenpunkte angezeigt werden, wie auch Pixel zur Verfügung stehen.
+Je weiter herausgezoomt wird, desto wichtiger wird die Aufbereitung der Daten, um die Wahrnehmbarkeit zu verbessern.
+
+====== Durchschnitt
+
+Wichtigster Wert ist dazu das arithmetische Mittel, welches in den entsprechenden Zoom-Stufen angezeigt wird.
+
+====== Min/Max
+
+Um Extrem-Fälle nicht zu verstecken, werden außerdem Min und Max berechnet.
+Diese können dann (z.B. als "Stäbchen") angezeigt werden.
+
+===== Performance
+
+Mindestens so wichtig sind Performance-Aspekte.
+Es sollen möglichst wenige Punkte gezeichnet bzw. beim Zeichnen berücksichtigt werden müssen.
+
+== Essentielle Klassen
+
+=== SamplingPeriod
+
+Beschreibt die Auflösung (im Sinne von Abstand zwischen Datenpunkten).
+
+Hat eine 1:1-Beziehung mit der `HistoryBucketRange`.
+
+=== HistoryBucketRange
+
+Beschreibt einen Zeitbereich, welcher von einem Bucket abgedeckt wird.
+Enthält *keinen* Start/Endzeitpunkt.
+
+Hat eine 1:1-Beziehung mit der `SamplingPeriod`.
+
+=== HistoryBucketDescriptor
+
+Identifiziert eindeutig einen HistoryBucket.
+
+Enthält dazu die `HistoryBucketRange` (und dadurch auch eine Länge) und einen "Index".
+Dieser Index definiert welcher Bucket seit 1970 gemeint ist.
+
+Durch diese Informationen sind Start und Ende des Buckets eindeutig definiert.
+
+=== HistoryBucket (High Level)
+
+Ein Bucket hat klar definierte Ränder, die auf gerade Grenzen liegen.
+Ein `HistoryBucketDescriptor` enthält alle Informationen, um einen Bucket zu beschreiben.
+
+Ein Bucket enthält seine Daten in Form eines Chunks.
+
+Objekte dieser Klasse sollten möglichst immer verwendet werden, sobald Berechnungen oder ähnliches durchgeführt werden.
+
+=== Chunk (Low Level)
+
+Ein Chunk entspricht "rohen" Historien-Daten welche nicht (unbedingt) auf "geraden" Grenzen liegen.
+Diese werden z.B. von einem Sensor übertragen.
+
+Ein Chunk wird auch von einem Bucket gehalten - in diesem Fall dann natürlich "zufällig" auf gerade Grenzen.
+
+== Technische Funktion Downsampling
+
+=== Grundkonzept
+
+==== Möglichst selten, möglichst wenig neu berechnen
+
+Das Berechnen des Downsampling ist relativ CPU-aufwändig.
+Aus diesem Grund soll möglichst selten das Downsampling neu berechnet werden.
+
+Gleichzeitig sollen möglichst nur die Bereiche neu berechnet werden, bei welchen auch tatsächlich ein Update der zugrunde liegenden Daten erfolgt ist.
+
+=== Funktionsweise Übersicht
+
+Zunächst werden automatisch jene Bereiche als "dirty" markiert, welche ein Update der Daten erfahren haben.
+
+Jedes mal wenn z.B. Daten mit einer SamplingPeriod von 100 ms eingetragen werden, wird dieser exakte Zeitbereich für die nächst höhere SamplingPeriod (1 Sekunde) als dirty markiert.
+Die entsprechenden Zeitbereiche werden dann zusammen gefasst, so dass idealerweise bei regelmäßigen Updates ein größerer Dirty-Zeitbereich entsteht.
+
+Zum geeigneten Zeitpunkt wird dann der entsprechende Bereich im 1-Sekunden-Bereich neu berechnet und in die History-Storage eingestellt.
+Durch dieses Update wird wiederum der entsprechende Bereich der nächsten Ebene als dirty markiert und so fort.
+
+==== `HistoryUpdateInfo`
+
+Die Klasse `HistoryUpdateInfo` enthält den exakten Zeitbereich, welcher sich geändert hat.
+Dieser Bereich wird auch beim Berechnen des Downsampling und aktualisieren des HistoryStorage beibehalten.
+Dadurch wird erreicht, dass wirklich nur die minimalen Zeitbereich auch tatsäclich als dirty markiert werden.
+
+=== Funktionsweise detailliert
+
+==== Dirty Ranges Collection
+
+Die Klasse `DownSamplingDirtyRangesCollector` sammelt die Bereiche ein, für welche ein Downsampling neu berechnet werden muss.
+Dazu wird die Methode `observe` aufgerufen und der Collector damit an einem `HistoryStorage` registriert.
+
+Die Dirty Ranges werden automatisch zusammen gefügt, so dass im Normalbetrieb nur einzelne, große `TimeRanges` entstehen.
+
+==== Downsampling-Berechnung
+
+Der `DownSamplingService` übernimmt die Berechnungen des Downsamplings.
+
+Der Service nutzt einen HistoryService zum Lesen der Daten und zum Schreiben der neu berechneten Downsampling-Werte.
+
+Die Berechnung des Downsamplings wird zum richtigen Zeitpunkt vom `TimerSupport` aufgerufen.
+Diese wird durch `downSamplingService.scheduleDownsampling` aktiviert.
+

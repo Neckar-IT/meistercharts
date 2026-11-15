@@ -1,0 +1,57 @@
+# Builds every release of this read-only mirror with Gradle; develop gives priority to the current sources and is not built here.
+# The npm examples build on every push: they install the published @meistercharts/meistercharts.
+name: build
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  gradle:
+    # A release tag points at the commit of main, which this job builds already.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          persist-credentials: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew build
+
+  examples:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example:
+          - name: npm-meistercharts-minimal
+            install: npm ci
+            build: npx webpack
+          - name: yarn-meistercharts-minimal
+            install: yarn install --frozen-lockfile
+            build: yarn webpack
+          - name: vite-meistercharts-minimal
+            install: npm ci
+            build: npm run build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - working-directory: meistercharts-examples/${{ matrix.example.name }}
+        run: |
+          ${{ matrix.example.install }}
+          ${{ matrix.example.build }}

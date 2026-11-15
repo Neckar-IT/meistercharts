@@ -1,0 +1,188 @@
+include::attributes.adoc[]
+
+== Content Area
+
+=== Veranschaulichung der Content Area Size
+
+Wenn der Zoom Faktor 1.0/1.0 ist, dann wird der Domain-Relative Bereich von 0..1 genau in dieser Größe gerendert.
+Das ist *unabhängig* von der Window-Size. D.h. egal wie groß das Window ist, das Chart wird mit entsprechenden
+Dimensionen gerendert.
+
+==== Beispiel-Rechnungen
+
+Content Area Size: 1024px x 768px
+
+===== Y-Achse
+
+Domain Relative 0.75 -> 768px * 0.75 = 576px im Window
+
+===== X-Achse
+
+Domain Relative 0.66 -> 1024 * 0.75 = 675,84px im Window
+
+==== In einem Satz I
+Die Content-Area-Size definiert, wie groß der DomainRelative-Bereich bei einem Zoom-Faktor von 1.0 gerendert wird.
+
+==== In einem Satz II
+Die Content-Area-Size definiert, wieviele Pixel 100% des DomainRelative-Bereichs bei einem Zoom-Faktor von 1.0 umfassen.
+
+=== Zusammenhang mit WindowSize
+
+Grundsätzlich ist die Window-Size von der ContentAreaSize unabhängig.
+Diese Größen *können* aneinander gebunden
+werden, müssen aber nicht.
+
+=== Strategien um die ContentArea-Size zu setzen
+
+Die Größe der ContentArea kann aufgrund unterschiedlicher Werte berechnet werden.
+Dabei können X und Y-Achse unterschiedlichen Strategien folgen.
+
+==== Strategie 1: Anhand der Window-Size
+Die Größe des Windows ergibt die Content-Area-Size.Dies hat den Effekt, dass beim Zoom-Faktor
+von 1.0 der gesamte Werte-Bereich im Window sichtbar ist.
+
+===== Diese Strategie benutzen, wenn...
+
+\... es wichtiger ist den gesamten (@DomainRelative) Bereich zu sehen, als einzelne Details zu erkennen.
+
+==== Strategie 2: "Sinnvolle" Werte (fachlich motiviert)
+Der fachliche Hintergrund kann die Größe der Content-Area vorgeben.
+
+===== Diese Strategie benutzen, wenn...
+
+\... es wichtiger ist die einzelnen Datenpunkte / einzelne Details zu erkennen, als den gesamten Bereich zu sehen.
+
+===== Beispiel: Anzahl/Abstand Datenpunkte
+* Ein Sensor liefert alle 100ms einen Datenpunkt (10 Punkte/s).
+* In der Darstellung soll ein Datenpunkt 5 Pixel umfassen (um "bequem" gerendert werden zu können)
+* Die ValueRange der Zeit umfasst eine Minute
+
+Daraus ergibt sich:
+* 10 Punkte/s * 60s = 600 Punkte
+* \* 5 Pixel/Punkt = 3000 Pixel
+
+===== Anschaulich
+Bei einem Zoom-Faktor von 1.0 zeigt das Diagramm einen Datenpunkt alle 5 Pixel an.Unabhängig von der Fenstergröße so
+viele eben Platz haben.
+
+Damit alle Datenpunkte für 1 Minute bei einem Zoom-Faktor von 1.0 sichtbar sind, müsste das Window mindestens 3000 Pixel groß sein.
+
+===== Misch-Strategien (eventuell hilfreich)
+
+Es wäre denkbar, dass eine gewisse Mindestgröße durch die fachlichen Anforderungen vorgegeben wird.
+Darüber hinaus
+könnte die Content-Area sich an das Window anpassen.
+
+Dies kann sinnvoll sein, um bei extrem kleine Fenster bestimmte Dinge zu erkennen.
+
+==== Diagramm-Typen / Strategien
+
+Folgende Strategien sind notwendig, um die ContentArea-Size zu berechnen/zu aktualisieren
+
+==== X + Y-Achse gebunden
+
+===== Für: "Chart ohne Zoom + Pan"
+* Zoom ist auf 1.0/1.0 fixiert
+* Window Translation ist auf 0.0/0.0 fixiert
+
+Bei diesen Diagrammen möchte man *immer* alle Werte sehen.
+
+Deshalb muss bei einem Resize des Windows der Inhalt entsprechend angepasst werden.Dies wird erreicht, indem
+die ContentAreaSize direkt an die WindowSize gebunden wird.
+
+==== Y-Achse gebunden, X-Achse fachlich vorgegeben
+
+===== Für: "Zeit-Chart"
+* Zoom + Pan werden unterstützt
+
+Wir möchten im Diagramm die einzelnen Datenpunkte auf der Zeitachse gut erkennen können.Daher ist die Breite der
+Content-Area vorgegeben (z.B. 5 Pixel pro Datenpunkt).
+
+Die Y-Achse soll sich dagegen der Window-Size anpassen, damit jeweils der gesamte Wertebereich sichbar wird.
+
+==== Y-Achse fachlich vorgegeben, X-Achse gebunden
+
+Siehe oben.
+Zeit-Achse befindet sich an Y.
+
+==== Y- und X-Achse fachlich vorgegeben
+
+===== Für: "Graph-Darstellung"
+
+===== Für: "Koordinaten-basierter Chart" - z.B. Maps
+Wir möchten einen Graph darstellen, dabei sollen die einzelnen Knoten immer im selben Abstand/Relation zueinander dargestellt werden.
+
+Daher haben Änderungen der Window-Size keine Auswirkungen auf die Content-Area-Size.
+
+=== Beispiel-Code
+
+[source,kotlin,indent=0]
+.How to bind the ContentAreaSize
+----
+include::{demoSourceDir}/ContentAreaBindingDoc.kt[tags=bindContentAreaSize]
+----
+<1> Content Area ist immer gleich groß wie das Window.
+Diese Strategie ist sinnvoll für Charts, bei denen nicht gescrollt wird.
+
+<2> Die Breite ist fix, die Höhe der Content Area wird an das Window angepasst.
+Diese Strategie ist für Charts mit einer (endlosen) Zeit-Achse sinnvoll.
+
+<3> Die Content Area hat eine fixe Größe.
+Diese Strategie ist für Charts im Stile von Maps sinnvoll, die über beide Achsen gescrollt werden.
+
+=== FAQ
+
+==== "Welche Länge in Pixeln hat meine Linie von z.B `@DomainRelative 0.45`?"
+
+Die Länge der Linie ist von der Content Area Size + Zoom Faktor abhängig.
+Sie ist **nicht** von der Window-Size abhängig.
+
+===== Formel:
+`Content-Area-Size * Domain-Relative-Wert * Zoom-Faktor`
+
+**Aber:** Manchmal ist die ContentAreaSize an die Window-Size gebunden.
+
+==== "Was passiert, wenn ich die Window Size verkleinere/vergrößere?"
+An der Darstellung des Diagrams selbst nichts!
+
+Allein der sichtbare Ausschnitt wird verkleinert/vergrößert!
+
+===== Aber manchmal doch:
+In manchen/vielen Szenarien ist es sinnvoll, die ContentAreaSize (bzw. einzelne Achsen davon) an die Window-Size zu binden.
+
+D.h. durch die Änderung der Window-Size ändert sich die ContentAreaSize.Und dadurch wird dann die Darstellung des Diagramms
+doch skaliert.
+
+==== "Wie kann eine Linie (mit fixer @DomainRelative Länge) länger gerendert werden?"
+Durch die Änderung von:
+
+* Zoom Faktor
+* ContentAreaSize
+
+==== "Wie groß sollte die fachlich definierte ContentAreaSize sein?"
+
+===== "Ich habe einen Datenpunkt all 100 ms. Diese sollen mit einem Abstand von 5 Pixeln dargestellt werden"
+
+Einen Entfernung von 5 Pixeln für 100ms kann durch eine beliebige Kombination von ContentAreaSize + DomainRelative Bereich erreicht werden.
+
+Aus Gründen der Nachvollziehbarkeit ist es hilfreich, wenn sich die ContentAreaSize im Bereich von "üblichen/verständlichen" Bildschirmauflösungen
+bewegt.Technisch notwendig ist das aber nicht.
+
+===== Mögliche ContentArea-Breiten für verschiedene Zeiträume bei 5 px pro 100 ms
+Beispiel-Rechnungen, um zu zeigen, wie @DomainRelative und ContentAreaSize zusammen spielen.
+
+.Mögliche ContentArea-Breiten für verschiedene Zeiträume bei 5 px pro 100 ms
+[cols="2,2,1,2",options="header"]
+|===
+|Zeitraum (@DomainRelative 0..1)|Zeitraum (@DomainRelative 0..1)|Anzahl Datenpunkte| Breite @ContentArea
+
+|1 s    | 1 s   | 10    | 50 px
+|5 s    | 5 s   | 50    | 250 px
+|10 s    | 10 s    | 100    | 500 px
+|1 min    |  60 s    |600    |3000 px
+|1 h    | 3,600 s   | 36,000    | 180,000 px
+|===
+
+Soll also der _@DomainRelative_-Bereich z.B. eine Minute umfassen, so muss die ContentArea-Breite auf 3000 Pixel gesetzt werden.
+
+

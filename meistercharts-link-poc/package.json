@@ -1,0 +1,35 @@
+{
+  "name": "@neckar-hub/meistercharts-link-poc",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Reference for a pnpm project using the meistercharts-easy-api bundle of the current source",
+  "author": {
+    "name": "Neckar IT GmbH",
+    "email": "info@neckar.it"
+  },
+  "type": "module",
+  "scripts": {
+    "build:noDeps": "pnpm run typecheck && pnpm run lint:check && pnpm run test:unit",
+    "test": "pnpm run typecheck && pnpm run test:unit",
+    "lint": "pnpm run lint:check",
+    "typecheck": "tsc --noEmit",
+    "lint:check": "oxlint --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "lint:fix": "oxlint --fix --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "lint:report": "oxlint -f gitlab --type-aware --type-check --report-unused-disable-directives-severity=error --disable-nested-config .",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@meistercharts/meistercharts": "link:../meistercharts-api/meistercharts-easy-api/build/npm-work"
+  },
+  "devDependencies": {
+    "@neckar-hub/oxlint-config": "workspace:*",
+    "@neckar-hub/typescript-config": "workspace:*",
+    "@neckar-hub/vite-config": "workspace:*",
+    "@types/node": "catalog:",
+    "jsdom": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

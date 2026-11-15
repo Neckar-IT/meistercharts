@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:EmptyHistoryStorage.kt:EmptyHistoryStorage${ }</ID>
+    <ID>EmptyFunctionBlock:MockSinusHistoryStorage.kt:MockSinusHistoryStorage${ }</ID>
+    <ID>EmptyFunctionBlock:MockWritableHistoryStorage.kt:MockWritableHistoryStorage${ }</ID>
+  </CurrentIssues>
+</SmellBaseline>

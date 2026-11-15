@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:EmptyHistoryStorage.kt:EmptyHistoryStorage${ }</ID>
+    <ID>EmptyFunctionBlock:MockSinusHistoryStorage.kt:MockSinusHistoryStorage${ }</ID>
+    <ID>EmptyFunctionBlock:MockWritableHistoryStorage.kt:MockWritableHistoryStorage${ }</ID>
+    <ID>SpreadOperator:HistoryChunkBuilder.kt:(currentTimestamp, *values)</ID>
+    <ID>SpreadOperator:HistoryChunkBuilder.kt:(timestamp, *valuesForTimeStamp)</ID>
+    <ID>UseRequire:HistoryChunk.kt:HistoryChunk$throw IllegalArgumentException("No data found. Range: ${start.formatUtc()} - ${end.formatUtc()} ")</ID>
+    <ID>UseRequireNotNull:DecimalHistoryValues.kt:DecimalHistoryValues$require(maxValues != null) { "maxValues must not be null if minValues have been set" }</ID>
+    <ID>UseRequireNotNull:DecimalHistoryValues.kt:DecimalHistoryValues$require(minValues != null) { "minValues must not be null if maxValues have been set" }</ID>
+    <ID>UseRequireNotNull:HistoryStorageCache.kt:HistoryStorageCache$require(samplingPeriod != null) { "Sampling period must not be null" }</ID>
+    <ID>UseRequireNotNull:HistoryValuesBuilder.kt:HistoryValuesBuilder$require(enumOrdinalsMostTime!=null) { "enumOrdinalsMostTime must be provided when recordingType is Calculated" }</ID>
+    <ID>UseRequireNotNull:HistoryValuesBuilder.kt:HistoryValuesBuilder$require(referenceEntryIdsCount != null) { "referenceEntryIdsCount must be provided when recordingType is Calculated" }</ID>
+  </CurrentIssues>
+</SmellBaseline>

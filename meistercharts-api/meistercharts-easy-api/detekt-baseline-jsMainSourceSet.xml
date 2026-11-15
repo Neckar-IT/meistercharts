@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:CircularChartExtensions.kt:{ }</ID>
+    <ID>EmptyFunctionBlock:CompassExtensions.kt:{ }</ID>
+    <ID>EmptyFunctionBlock:HistogramExtensions.kt:{ }</ID>
+    <ID>EmptyFunctionBlock:MapWithStackedBarsChartExtensions.kt:{ }</ID>
+  </CurrentIssues>
+</SmellBaseline>

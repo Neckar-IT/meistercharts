@@ -1,0 +1,202 @@
+= MeisterCharts - Release-Planung und Kompatibilität: Unterstützte Browser und Release-Zeitpunkte
+Neckar IT GmbH <https://neckar.IT>
+:doctype: article
+:revnumber: 1.0
+:revdate: 2020-02
+:revnumber: 1.0
+:sectnums!:
+:appendix-caption!:
+:experimental:
+:icons: font
+:icon-set: fas
+:chapter-label:
+:title-page:
+:hyphens: de
+:back-cover-image: image:neckar-it-back-cover.pdf[]
+:title-page-revision-display: none
+:figure-caption!:
+
+== 100% kompatibel mit üblichen Browsern
+
+MeisterCharts wird dauerhaft und kontinuierlich weiter entwickelt.
+Wir garantieren die 100%-ige Kompatibilität zu den unterstützten Plattformen.
+
+Wir garantieren, dass MeisterCharts immer aktuell gehalten wird und mit den aktuellen Browsern funktioniert.
+
+== Philosophie: Latest Version
+
+Wir unterstützten jeweils die aktuellste Version.
+Alle Komponenten und Diagramme basieren jeweils auf der aktuellsten MeisterCharts-Version.
+
+Damit ist sicher gestellt, dass alle Komponenten auf der jeweils aktuellen Zielplattform funktionieren.
+
+.Wir folgen der Web-Philosophie
+****
+Aus Sicherheitsgründen ist es unbedingt notwendig, jeweils die aktuellste Browser-Version einzusetzen.
+
+Diese Browser-Versionen bringen immer auch neue Features und - leider - zum Teil auch Inkompatibilitäten mit.
+Daher ist es im Web-Umfeld unumgänglich, alle Libraries regelmäßig zu aktualisieren.
+****
+
+=== Abwärtskompatibilität
+
+Die Abwärtskompatibilität wird durch eine stabile API ermöglicht.
+
+Die MeisterCharts-Architektur umfasst klar definierte Layer.
+Mit Hilfe dieser Architektur ist es möglich eine effiziente Weiterentwicklung bei gleichzeitiger Abwärtskompatibität zu ermöglichen.
+
+==== Aufbau der Layer
+
+Der oberste Layer (welcher die eigentlichen WebComponents enthält) dient als Fassade.
+Damit ist eine stabile API garantiert während gleichzeitig die Weiterentwicklung ohne Einschränkung möglich ist.
+
+[plantuml,pdfwidth=7cm]
+.MeisterCharts Layer-Architektur
+----
+@startuml
+!include ./plantuml-style.iuml
+hide footbox
+
+#a7c2e1:**WebComponents**\n<//public API (backwards compatible)//>;
+->
+:**Gestalts**\n<//internal API - (developing)//>;
+->
+:**Layers**\n<//internal API - (developing)//>;
+->
+:**Painters**\n<//internal API - (developing)//>;
+->
+:**Low Level API**\n<//Browser specific//>;
+
+@enduml
+----
+
+Alle WebComponents haben bei MeisterCharts eine abwärtskompatible API.
+Diese API ist von der internen API innerhalb der MeisterCharts-Bibliothek strikt getrennt.
+
+Dies führt an einigen Stellen zu einer gewissen Verdoppelung des Codes, erlaubt aber die effiziente Weiterentwicklung der Bibliothek ohne zu viel Rücksicht auf die bereits veröffentlichte API nehmen zu müssen.
+
+===== Erweiterbarkeit
+
+Die API ist so designed, dass Erweiterungen jederzeit möglich sind.
+
+.Sinnvolle Defaults für alle Properties
+****
+Jede Eigenschaft erhält sinnvolle Default-Werte.
+
+Bei der Nutzung müssen deshalb nur die Properties gesetzt werden, die für den aktuellen Anwendungsfall relevant sind.
+
+Daher ist eine WebComponent auch ohne jegliche Konfiguration nutzbar.
+****
+
+== Unterstützte Browser
+
+MeisterCharts unterstützt alle üblichen Browser.
+Je nach Bedeutung der Browser ist die Unterstützung unterschiedlich organisiert.
+
+So garantieren wir eine 100%-ige Unterstützung von Google Chrome bereits vier Wochen vor Release der aktuellsten Version.
+Bei den anderen Browsern wird die jeweils aktuelle Version unterstützt.
+
+* Google Chrome (_führende Plattform_)
+* IE11
+* Firefox
+* Android Chrome
+* iOS Safari
+
+=== Google Chrome (führende Plattform)
+
+MeisterCharts unterstützt als führende Zielplattform Google Chrome.
+
+Wir garantieren die vollständige Kompatibilität zur jeweils aktuellsten Google Chrome Version.
+
+==== Release-Zyklus
+
+Alle sechs Wochen erscheint eine neue Google Chrome Version footnote:[https://chromium.googlesource.com/chromium/src/+/master/docs/process/release_cycle.md].
+Diese erreicht mit nur sehr geringer Verzögerung die Endgeräte.
+
+Es ist daher notwendig die Kompatibilität zu diesen Versionen sehr frühzeitig herzustellen.
+
+==== Kompatibilität bereits vier Wochen vor(!) Release
+
+Wir garantieren die Veröffentlichung einer kompatiblen MeisterCharts-Version bereits vier Wochen **vor Release** einer neuen Google Chrome Version.
+
+Damit bleibt noch genügend Zeit um die aktualisierte MeisterCharts-Version zu integrieren.
+
+==== Zeitablauf
+
+Die erste Google Chrome Beta-Version erscheint fünf Wochen vor dem geplantem Release.
+Direkt nach dem Erscheinen dieser Beta beginnen wir mit den Kompatibiliäts-Tests.
+
+Eventuell notwendig werdende Änderungen werden von uns direkt durchgeführt.
+
+Ein aktualisiertes MeisterCharts-Release erfolgt planmäßig spätestens eine Woche nach Erscheinen der Chrome-Beta - und damit vier Wochen vor Release von Google Chrome.
+
+[plantuml,format=svg]
+.MeisterCharts Release - in Korrelation zu Google Chrome Release
+----
+@startuml
+!include plantuml-style.iuml
+scale 2 as 40 pixels
+
+concise "Google Chrome" as GC
+concise "MeisterCharts" as QC
+
+@GC
+0 is "Beta"
+3 is {hidden}
+35 is "Stable Cut"
+42 is "Release"
+49 is {hidden}
+
+@1 <-> @42 : 5 Wochen zwischen Beta und Release
+
+@QC
+1 is "Test/Update"
+8 is "Release"
+12 is {hidden}
+
+@8 <-> @42 : mindestens 4 Wochen
+
+
+@enduml
+----
+
+==== Zeitfenster für Integration von MeisterCharts
+
+Daraus ergibt sich ein Zeitfenster von vier Wochen, in denen die aktuellste MeisterCharts-Version integriert werden kann, bevor die Google Chrome Version überhaupt die Endgeräte erreicht.
+
+Damit ist genügend Zeit vorhanden, um die aktuelle MeisterCharts-Versionen rechtzeitig beim Kunden zu deployen.
+
+=== Firefox
+
+Google Chrome ist die führende Zielplattform für MeisterCharts.
+Entsprechend ist der Release-Zyklus von MeisterCharts an die Releases von Chrome angelehnt.
+
+Bei jedem MeisterCharts-Release wird die Kompatibiliät mit der dann jeweils aktuellen Firefox-Version sicher gestellt.
+
+==== Firefox Release-Zyklus
+
+Firefox erscheint in der Regel alle vier Wochen in einer neuen Version.
+Wir beobachten die angekündigten Changes in Firefox und führen bei Bedarf zusätzliche Tests und Zwischen-Releases durch.
+
+==== MeisterCharts-Kompatibilität mit Firefox
+
+MeisterCharts ist 100%-ig kompatibel mit Firefox.
+In seltenen Fällen kann es nach Release von Firefox einige wenige Tage zu kleineren Inkompatibilitäten kommen.
+Diese werden beim nächsten planmäßigen MeisterCharts-Release behoben.
+
+Falls größere Probleme durch ein neues Firefox-Release entstehen sollten, führen wir zeitnah ein zusätzliches MeisterCharts-Release durch.
+
+=== Internet Explorer 11
+
+Der Internet Explorer 11 wird in der aktuellsten Version auf Windows 10 unterstützt.
+
+Neue Versionen des IE 11 umfassen in aller Regel ausschließlich Sicherheitsupdates.
+Daher ist nicht damit zu rechnen, dass Inkompatibilitäten durch neue Releases entstehen.
+
+Jedes Release wird routinemäßig ebenfalls auf dem IE 11 getestet.
+
+=== Weitere auf WebKit aufbauende Browser
+
+Alle weiteren auf WebKit aufbauenden Browser sind durch die ausführlichen Tests mit Google Chrome automatisch mit abgedeckt.
+
+Wir führen bei den Releases zusätzlich weitere Tests mit den aktuellsten Versionen von iOS Safari sowie Chrome auf Android durch.

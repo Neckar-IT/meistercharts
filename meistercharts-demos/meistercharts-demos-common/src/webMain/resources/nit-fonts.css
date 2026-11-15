@@ -1,0 +1,47 @@
+/* fonts used by Neckar IT */
+
+/**
+font-faces for variable fonts require additional css properties to define what the font is capable of:
+font-style: Defines which style the font is capable of. Also allows to define a font slant, eg: oblique 0deg 12deg;
+font-weight: Defines which weights the font includes, eg: 200 700
+font-stretch: Defines to which width the font can be stretched, eg: 75% 100%
+Supplying these value ranges will keep the browser from attempting to render an axis outside that range if the appropriate attribute is used.
+Source: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_fonts/Variable_fonts_guide
+
+To find out what the font is capable of, the font can be inspected: Ubuntu -> Open font by double-clicking -> Info -> under "Variation Axes"
+For a full list of variation axes and how to include custom axes: https://fonts.google.com/knowledge/using_type/styling_type_on_the_web_with_variable_fonts
+ */
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight:  200 700;
+  font-stretch: normal;
+  src: url('fonts/Oswald.ttf') format('truetype-variations');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  src: url('fonts/OpenSans.ttf') format('truetype-variations');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  src: url('fonts/OpenSans-Italic.ttf') format('truetype-variations');
+}
+
+/* Material Icons*/
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 100 700;
+  font-stretch: normal;
+  src: url('fonts/MaterialIcons.ttf') format('truetype-variations');
+
+}
