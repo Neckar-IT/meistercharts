@@ -8,4 +8,4 @@ tasks.named("pnpmRunBuild") {
   dependsOn(Projects.open.meistercharts.meisterchartsApi.meisterchartsEasyApi.buildTask)
 }
 
-// `ladle` and its `run` alias come from the pnpm configuration, with this worktree's port wired in.
+// `storybook` and its `run` alias come from the pnpm configuration, with this worktree's port wired in.

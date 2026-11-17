@@ -2,6 +2,7 @@
  * Imports
  */
 
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChartGrouped } from "./BarChartGrouped";
 
 /**
@@ -21,7 +22,17 @@ const config = {
 };
 
 /**
+ * Meta Information
+ */
+
+const meta = { title: "Bar Chart Grouped" } satisfies Meta;
+
+export default meta;
+
+/**
  * Stories
  */
 
-export const Minimal = () => <BarChartGrouped configuration={config} />;
+export const Minimal: StoryObj<typeof meta> = {
+  render: () => <BarChartGrouped configuration={config} />,
+};

@@ -2,7 +2,7 @@
  * Imports
  */
 
-import type { Story } from "@ladle/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Histogram } from "./Histogram";
 
 /**
@@ -21,7 +21,17 @@ const data = {
 };
 
 /**
+ * Meta Information
+ */
+
+const meta = { title: "Histogram" } satisfies Meta;
+
+export default meta;
+
+/**
  * Stories
  */
 
-export const Minimal: Story = () => <Histogram configuration={{ data }} />;
+export const Minimal: StoryObj<typeof meta> = {
+  render: () => <Histogram configuration={{ data }} />,
+};

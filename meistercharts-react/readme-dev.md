@@ -31,14 +31,14 @@ The build output will be placed into `./dist`
 
 The script `pnpm push` will run all the steps above.
 
-## Run Ladle
+## Run Storybook
 
 Run
 
 ```
-gradle ladle
+./gradlew :internal:open:meistercharts:meistercharts-react:storybook
 ```
 
-to build meistercharts-easy-api and start ladle.
+to build meistercharts-easy-api and start Storybook.
 
-`pnpm ladle` starts ladle alone.
+`pnpm storybook` starts Storybook alone.

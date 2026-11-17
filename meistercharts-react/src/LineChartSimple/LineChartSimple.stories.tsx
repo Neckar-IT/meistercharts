@@ -2,6 +2,7 @@
  * Imports
  */
 
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LineChartSimple } from "./LineChartSimple";
 
 /**
@@ -23,7 +24,17 @@ const config = {
 };
 
 /**
+ * Meta Information
+ */
+
+const meta = { title: "Line Chart Simple" } satisfies Meta;
+
+export default meta;
+
+/**
  * Stories
  */
 
-export const Minimal = () => <LineChartSimple configuration={config} />;
+export const Minimal: StoryObj<typeof meta> = {
+  render: () => <LineChartSimple configuration={config} />,
+};

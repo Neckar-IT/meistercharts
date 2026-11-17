@@ -2,6 +2,7 @@
  * Imports
  */
 
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BulletChart } from "./BulletChart";
 
 /**
@@ -16,9 +17,21 @@ const config = {
 };
 
 /**
+ * Meta Information
+ */
+
+const meta = { title: "Bullet Chart" } satisfies Meta;
+
+export default meta;
+
+/**
  * Stories
  */
 
-export const Minimal = () => <BulletChart configuration={config} />;
+export const Minimal: StoryObj<typeof meta> = {
+  render: () => <BulletChart configuration={config} />,
+};
 
-export const CustomHeight = () => <BulletChart configuration={config} style={{ height: "300px" }} />;
+export const CustomHeight: StoryObj<typeof meta> = {
+  render: () => <BulletChart configuration={config} style={{ height: "300px" }} />,
+};
