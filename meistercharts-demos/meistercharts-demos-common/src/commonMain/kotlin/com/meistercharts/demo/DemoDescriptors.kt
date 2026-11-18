@@ -324,6 +324,7 @@ import com.meistercharts.demo.descriptors.history.TimeLineChartGestaltOnlyEnumDe
 import com.meistercharts.demo.descriptors.history.TimeLineChartGestaltWithToolbarDemoDescriptor
 import com.meistercharts.demo.descriptors.history.TimeLineChartHistoryConfigDemoDescriptor
 import com.meistercharts.demo.descriptors.history.TimeLineChartWithOnDemandHistoryConfigurationDemoDescriptor
+import com.meistercharts.demo.descriptors.zeitstrahl.ZeitstrahlPocDemoDescriptor
 import kotlin.uuid.Uuid
 
 /**
@@ -643,6 +644,7 @@ object DemoDescriptors {
     NeckarITSloganWithFlowGestaltDemoDescriptor(),
     TankDemoDescriptor(),
     TimelineChartRestDemoDescriptor(),
+    ZeitstrahlPocDemoDescriptor(),
   )
 
 
